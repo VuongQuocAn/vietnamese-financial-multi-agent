@@ -2,7 +2,10 @@
 
 Ngày cập nhật: **2026-10-25** (Asia/Bangkok).
 
-Task đang thực hiện: **M0-01 — Initialize Project Repository**.
+Task: **M0-01 — Initialize Project Repository**.
+
+Trạng thái: **Hoàn thành phần khởi tạo và tiêu chí cho phép báo cáo trở ngại
+xác thực. Push đang bị chặn; CI trên GitHub chưa chạy.**
 
 ## Đã thực hiện
 
@@ -27,15 +30,45 @@ Môi trường Windows, Python 3.12.0, Ruff 0.17.2, pytest 9.1.1.
 | `python -m pytest tests/unit` | 11 passed |
 | `python -m pip check` | Không có dependency lỗi |
 | Build wheel, cài vào thư mục kiểm tra riêng | Đạt; import đủ 10 package, wheel chỉ chứa code package và metadata |
+| Phân tích cấu trúc YAML của CI | Hợp lệ; đúng triggers, quyền đọc, matrix Python và các lệnh kiểm tra; chưa chạy trên GitHub |
 | `git diff --cached --check` và rà soát tập commit | Đạt; 34 file văn bản/chỗ giữ thư mục, không có dữ liệu gốc hoặc secrets được phát hiện |
 | Liên kết Markdown và bảo toàn báo cáo gốc | Liên kết nội bộ hợp lệ; SHA-256 báo cáo không đổi |
 
 ## Git và GitHub
 
-Đã khởi tạo Git trên `main`. Chưa tạo initial commit hoặc push tại bản ghi này.
-Repository đúng tên chưa tồn tại; sẽ tạo private theo M0-01. Repository cũ
-`Mutil_Agent_Financial_Report` đang public và có code C1–C5 nên được giữ nguyên.
-CI GitHub Actions chưa chạy.
+- Nhánh local: `main`.
+- Initial commit: `9eb4483f4be4029c014a3a9552dfb5a1a91c8fea`.
+- Đã tạo và xác nhận repository **private**:
+  [VuongQuocAn/vietnamese-financial-multi-agent](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent).
+- `origin`: `https://github.com/VuongQuocAn/vietnamese-financial-multi-agent.git`.
+- Repository cũ `Mutil_Agent_Financial_Report` public, có code C1–C5 được giữ nguyên.
+- GitHub từ chối push vì token OAuth của GitHub CLI thiếu scope `workflow` để
+  tạo/cập nhật `.github/workflows/ci.yml`. Repository GitHub vẫn rỗng; chưa có
+  nhánh remote hoặc CI run. Không bỏ file CI để vượt qua giới hạn quyền.
+- Kiểm tra SSH chưa kết nối được vì máy chưa có host key GitHub được tin cậy;
+  không tắt xác minh host key hoặc tự thay đổi quyền xác thực.
+- Git local đã cấu hình credential helper dùng GitHub CLI hiện có, chỉ trong
+  `.git/config` của repository; không lưu token vào file được theo dõi.
+
+## Bước cần người dùng thực hiện để hoàn tất push
+
+Trong PowerShell tại thư mục repository, cấp thêm scope `workflow` qua luồng
+đăng nhập chính thức, sau đó push (không cần tạo lại repository):
+
+```powershell
+& 'C:\Program Files\GitHub CLI\gh.exe' auth refresh --hostname github.com --scopes workflow
+git push -u origin main
+```
+
+Sau khi push thành công, kiểm tra workflow bằng:
+
+```powershell
+& 'C:\Program Files\GitHub CLI\gh.exe' run list --repo VuongQuocAn/vietnamese-financial-multi-agent
+```
+
+CI đã cấu hình lint/format và unit tests trên Python 3.11/3.12, nhưng hiện chỉ
+có kết quả chạy local Python 3.12.0. Cần cập nhật trạng thái GitHub/CI sau khi
+có kết quả thực tế. Không có task nghiệp vụ tiếp theo được tự triển khai.
 
 ## Giới hạn
 
