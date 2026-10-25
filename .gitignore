@@ -36,13 +36,19 @@ credentials*.json
 *.pem
 *.key
 
-# Dữ liệu gốc và kết quả OCR đã có trong workspace; không đưa lên Git
+# Bảo vệ cả vị trí cũ nếu dữ liệu được chép lại vào thư mục gốc
 /Financial_Report/
 /Financial_Report_OCR/
 /docs/report_midterm.docx
 
-# Chỉ theo dõi chỗ giữ thư mục mẫu; chưa có dữ liệu được duyệt để commit
+# Financial datasets: không theo dõi dữ liệu ở bất kỳ giai đoạn nào
 /data/*
+/data/raw/
+/data/processed/
+/data/normalized/
+/data/canonical/
+
+# Chỉ theo dõi chỗ giữ thư mục mẫu; chưa có dữ liệu được duyệt để commit
 !/data/samples/
 /data/samples/*
 !/data/samples/.gitkeep

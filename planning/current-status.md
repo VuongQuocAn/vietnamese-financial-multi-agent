@@ -2,76 +2,105 @@
 
 Ngày cập nhật: **2026-10-25** (Asia/Bangkok).
 
-Task: **M0-01 — Initialize Project Repository**.
+Task: **M0-02 — Reorganize Financial Dataset & Commit to GitHub**.
 
-Trạng thái: **Hoàn thành phần khởi tạo và tiêu chí cho phép báo cáo trở ngại
-xác thực. Push đang bị chặn; CI trên GitHub chưa chạy.**
+Trạng thái: **Chưa hoàn thành. Phần local đã di chuyển, kiểm tra và commit;
+push còn chờ quyền `workflow`, CI trên GitHub chưa chạy.**
 
-## Đã thực hiện
+## Dữ liệu local
 
-- Kiểm tra workspace: chưa có Git repository; có sẵn dữ liệu và báo cáo giữa kỳ.
-- Đọc kiến trúc và các phần liên quan trong báo cáo; tạo tài liệu nền tảng bằng
-  tiếng Việt, đánh dấu các quyết định chưa chốt là `TBD`.
-- Tạo skeleton Python, cấu hình đóng gói, Ruff, pytest và CI.
-- Thêm quy tắc loại dữ liệu gốc, OCR, báo cáo tham chiếu và secrets khỏi Git.
-- Xác nhận Git 2.53.0, Python 3.12.0; GitHub CLI 2.103.2 nằm ngoài PATH tại
-  `C:\Program Files\GitHub CLI\gh.exe`, đã đăng nhập tài khoản `VuongQuocAn`.
+| Nguồn cũ → vị trí mới | File trước/sau | Byte trước/sau |
+| --- | ---: | ---: |
+| `Financial_Report/` → `data/raw/Financial_Report/` | 500 / 500 | 1.490.251.896 / 1.490.251.896 |
+| `Financial_Report_OCR/` → `data/processed/Financial_Report_OCR/` | 8.627 / 8.627 | 837.428.529 / 837.428.529 |
+| Tổng | 9.127 / 9.127 | 2.327.680.425 / 2.327.680.425 |
 
-## Kết quả kiểm tra local
+- Di chuyển trong cùng ổ đĩa; đích chưa tồn tại, không ghi đè hoặc chỉnh sửa file.
+- Cấu trúc con, kích thước, thời gian sửa và định danh toàn bộ file/thư mục khớp.
+- SHA-256 của 18 mẫu khớp; chỉ hash 16.580.761 byte mẫu thay vì toàn bộ dataset.
+- Đọc thành công 6 JSON; xác minh cấu trúc và giải mã thành công 12 PNG.
+- Mẫu bao phủ ba mã BBS, BCC, BED ở năm đầu/cuối. Dataset có năm kỳ 2021–2025.
+- `data/normalized/`, `data/canonical/` đã tạo và đang rỗng; `data/samples/` giữ
+  nguyên. Các thư mục dữ liệu đều bị Git bỏ qua, chỉ theo dõi `samples/.gitkeep`.
+- Manifest metadata và hash mẫu lưu local trong `.venv/`, không được commit.
 
-Môi trường Windows, Python 3.12.0, Ruff 0.17.2, pytest 9.1.1.
+## Cấu hình và tài liệu
 
-| Kiểm tra | Kết quả |
+Bổ sung `FINANCIAL_REPORT_DIR`, `FINANCIAL_OCR_DIR`, `NORMALIZED_DATA_DIR`,
+`CANONICAL_DATA_DIR` bằng đường dẫn tương đối trong `.env.example`.
+Skeleton chưa có bộ nạp cấu hình trung tâm; không thêm implementation.
+README và `docs/dataset.md` mô tả bố cục mới, giới hạn kiểm tra mẫu và cách ánh
+xạ đường dẫn `/content/drive/...` mà không sửa JSON gốc. AGENTS bổ sung quy tắc
+bảo toàn raw/OCR và không commit dataset lớn hoặc thông tin nhạy cảm.
+
+## Kiểm tra Git và quyền truy cập
+
+- Working tree sạch trước task, 34 file được theo dõi; chưa có dataset trong index.
+- `.gitignore` đã kiểm tra với đủ 9.127 file dữ liệu và các đường dẫn đại diện
+  cho normalized/canonical, secrets và cache. `.env.example`, code và
+  `data/samples/.gitkeep` vẫn được phép theo dõi.
+- Chỉ bảy file cấu hình/tài liệu của task thay đổi và được stage; không có dữ
+  liệu lớn, secrets hoặc đường dẫn cá nhân được phát hiện trong các file này.
+  Source, unit tests, `pyproject.toml`, CI và các file ngoài phạm vi giữ nguyên.
+- Rà soát 30 blob trong hai commit lịch sử local: không thấy dataset, `.env`
+  thực tế, blob lớn, mẫu secrets phổ biến hoặc đường dẫn tuyệt đối cá nhân.
+  Đây là kiểm tra theo đường dẫn/kích thước và mẫu nhận diện, không phải bảo đảm
+  phát hiện mọi loại secret. Không sửa lịch sử Git.
+- Đã xác nhận repository
+  [VuongQuocAn/vietnamese-financial-multi-agent](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent)
+  là **public** theo thay đổi của người dùng; remote `origin` giữ nguyên.
+- Repository remote đang rỗng. Nhánh local `main` phù hợp cho lần push đầu tiên.
+- Token GitHub CLI hiện có các scope `gist`, `read:org`, `repo`, chưa có
+  `workflow`; đây là nguyên nhân push M0-01 bị từ chối. Push chứa file CI vẫn
+  cần bổ sung quyền này. Chưa chạy CI trên GitHub.
+
+## Kiểm thử project
+
+Môi trường local: Python 3.12.0, Ruff 0.17.2, pytest 9.1.1.
+
+| Kiểm tra M0-02 | Kết quả |
 | --- | --- |
-| Cài editable `pip install -e ".[dev]"` trong `.venv` | Thành công |
-| Đọc `pyproject.toml`, xác minh thư mục/package | Hợp lệ; đủ 20 thư mục yêu cầu, 10 package chỉ có docstring |
 | `python -m ruff check .` | Đạt |
 | `python -m ruff format --check .` | Đạt |
 | `python -m pytest tests/unit` | 11 passed |
-| `python -m pip check` | Không có dependency lỗi |
-| Build wheel, cài vào thư mục kiểm tra riêng | Đạt; import đủ 10 package, wheel chỉ chứa code package và metadata |
-| Phân tích cấu trúc YAML của CI | Hợp lệ; đúng triggers, quyền đọc, matrix Python và các lệnh kiểm tra; chưa chạy trên GitHub |
-| `git diff --cached --check` và rà soát tập commit | Đạt; 34 file văn bản/chỗ giữ thư mục, không có dữ liệu gốc hoặc secrets được phát hiện |
-| Liên kết Markdown và bảo toàn báo cáo gốc | Liên kết nội bộ hợp lệ; SHA-256 báo cáo không đổi |
+| Bốn biến dataset | Đúng đường dẫn tương đối, thư mục đích tồn tại |
+| `.env.example` | Giá trị API key, model và database để trống |
+| Liên kết Markdown và anchor | Hợp lệ |
+| Metadata và mẫu JSON/PNG | Đạt, chi tiết ở phần dữ liệu local |
+| Tập file commit và phạm vi thay đổi | Chỉ bảy file được yêu cầu; các file còn lại khớp bản trước task |
 
-## Git và GitHub
+## Commit và push
 
-- Nhánh local: `main`.
-- Initial commit: `9eb4483f4be4029c014a3a9552dfb5a1a91c8fea`.
-- Đã tạo và xác nhận repository **private**:
-  [VuongQuocAn/vietnamese-financial-multi-agent](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent).
-- `origin`: `https://github.com/VuongQuocAn/vietnamese-financial-multi-agent.git`.
-- Repository cũ `Mutil_Agent_Financial_Report` public, có code C1–C5 được giữ nguyên.
-- GitHub từ chối push vì token OAuth của GitHub CLI thiếu scope `workflow` để
-  tạo/cập nhật `.github/workflows/ci.yml`. Repository GitHub vẫn rỗng; chưa có
-  nhánh remote hoặc CI run. Không bỏ file CI để vượt qua giới hạn quyền.
-- Kiểm tra SSH chưa kết nối được vì máy chưa có host key GitHub được tin cậy;
-  không tắt xác minh host key hoặc tự thay đổi quyền xác thực.
-- Git local đã cấu hình credential helper dùng GitHub CLI hiện có, chỉ trong
-  `.git/config` của repository; không lưu token vào file được theo dõi.
+Message commit M0-02:
 
-## Bước cần người dùng thực hiện để hoàn tất push
+```text
+chore(data): organize financial datasets and update path configuration
+```
 
-Trong PowerShell tại thư mục repository, cấp thêm scope `workflow` qua luồng
-đăng nhập chính thức, sau đó push (không cần tạo lại repository):
+Bảy file trong commit: `.gitignore`, `.env.example`, `AGENTS.md`, `README.md`,
+`docs/dataset.md`, `planning/tasks.md`, `planning/current-status.md`.
+Không có dataset được thêm vào index nên không cần `git rm --cached`.
+
+Push lên `origin/main` chưa hoàn tất. Repository public remote đang rỗng nên lần
+push đầu tiên bao gồm cả lịch sử M0-01 có `.github/workflows/ci.yml`; vì vậy dù
+M0-02 chỉ sửa tài liệu/cấu hình, token vẫn cần scope `workflow`. Việc đổi
+repository sang public không bổ sung scope này cho token.
+
+Để tiếp tục, người dùng cần bổ sung quyền qua luồng đăng nhập GitHub chính thức,
+rồi push bình thường tại thư mục repository:
 
 ```powershell
-& 'C:\Program Files\GitHub CLI\gh.exe' auth refresh --hostname github.com --scopes workflow
+& (Join-Path $env:ProgramFiles 'GitHub CLI\gh.exe') auth refresh --hostname github.com --scopes workflow
 git push -u origin main
 ```
 
-Sau khi push thành công, kiểm tra workflow bằng:
+Nếu `gh` đã có trong PATH, dùng `gh auth refresh --hostname github.com --scopes workflow`.
+Remote và visibility được giữ nguyên; không viết lại lịch sử Git hoặc force
+push. Cần cập nhật trạng thái task sau khi push thành công và kiểm tra CI.
 
-```powershell
-& 'C:\Program Files\GitHub CLI\gh.exe' run list --repo VuongQuocAn/vietnamese-financial-multi-agent
-```
+## Giới hạn và việc còn lại
 
-CI đã cấu hình lint/format và unit tests trên Python 3.11/3.12, nhưng hiện chỉ
-có kết quả chạy local Python 3.12.0. Cần cập nhật trạng thái GitHub/CI sau khi
-có kết quả thực tế. Không có task nghiệp vụ tiếp theo được tự triển khai.
-
-## Giới hạn
-
-Mới có skeleton; chưa triển khai nghiệp vụ, OCR, Gateway, EF-EG, Agent hoặc API.
-Chưa kiểm định dataset hoặc chạy benchmark. Chưa chốt schema/contracts chi tiết,
-backend lưu trữ, model và phạm vi tuân thủ quy định; xem `planning/decisions.md`.
+Chưa đánh dấu task hoàn thành vì push chưa thành công. Không chạy lại OCR,
+gọi Gemini, triển khai nghiệp vụ hoặc tạo resolver.
+Chưa đánh giá độ chính xác dữ liệu tài chính, OCR hoặc toàn bộ tham chiếu Colab.
+Chỉ tiếp tục trong phạm vi M0-02.

@@ -30,6 +30,18 @@ identifiers, tên file và tên code dùng tiếng Anh.
 12. Không tự push, merge hoặc xóa repository sau nhiệm vụ khởi tạo nếu chưa được
     yêu cầu. M0-01 cho phép initial commit, tạo GitHub repository private và push
     `main`; không force push, ghi đè lịch sử hoặc tạo trùng repository phù hợp.
+13. Không chỉnh sửa dữ liệu gốc trong `data/raw/` hoặc kết quả OCR hiện có trong
+    `data/processed/`: giữ nguyên JSON, JSONL, PNG và log. Di chuyển dữ liệu phải
+    bảo toàn cấu trúc và nội dung, không ghi đè đích; đối chiếu số file, dung lượng
+    và lấy mẫu trước/sau. Kết quả xử lý mới phải ở vị trí riêng được task xác định.
+14. Không commit dataset lớn, OCR JSON, ảnh báo cáo, PDF, dữ liệu normalized hoặc
+    canonical. Kiểm tra `.gitignore`, `git ls-files` và danh sách staged trước
+    commit. Nếu dữ liệu đã được theo dõi, chỉ bỏ khỏi index và giữ bản local;
+    nếu từng vào lịch sử Git, báo cáo, không tự rewrite history hay force push.
+15. Với repository public, rà soát file chuẩn bị commit để loại secrets, thông
+    tin nhạy cảm và đường dẫn tuyệt đối chứa thông tin cá nhân. Cấu hình dataset
+    dùng đường dẫn tương đối hoặc biến môi trường; giữ nguyên đường dẫn Colab
+    trong JSON gốc và chỉ mô tả ánh xạ môi trường bên ngoài dữ liệu đó.
 
 Sử dụng Python 3.11+. Không cài thư viện AI lớn khi chưa cần, không tạo implementation
 giả cho Agent, OCR hoặc EF-EG. Mọi LLM sẽ tích hợp qua Gateway dùng chung khi có task

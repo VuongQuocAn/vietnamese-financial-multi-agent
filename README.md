@@ -4,8 +4,9 @@ Khung đa tác nhân thích ứng cho kiểm tra báo cáo tài chính và tuân
 hỏi đáp và tạo báo cáo phân tích có dẫn nguồn bằng tiếng Việt.
 
 Repository nghiên cứu sử dụng Python 3.11+ và kiến trúc modular monolith. M0-01
-chỉ khởi tạo cấu trúc, cấu hình phát triển và tài liệu nền tảng. Các package hiện
-chỉ có docstring; chưa có chức năng nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
+khởi tạo cấu trúc, cấu hình phát triển và tài liệu nền tảng; M0-02 tổ chức lại
+dataset local vào `data/`. Các package hiện chỉ có docstring; chưa có chức năng
+nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
 
 ## Mục tiêu và kiến trúc
 
@@ -72,14 +73,47 @@ Phạm vi kiểm tra tuân thủ quy định cụ thể là **TBD**; xem
 │   ├── tasks.md
 │   ├── current-status.md
 │   └── decisions.md
-├── data/samples/.gitkeep
+├── data/
+│   ├── raw/Financial_Report/                 # dữ liệu local, Git bỏ qua
+│   ├── processed/Financial_Report_OCR/       # dữ liệu local, Git bỏ qua
+│   ├── normalized/                          # đang rỗng, Git bỏ qua
+│   ├── canonical/                           # đang rỗng, Git bỏ qua
+│   └── samples/.gitkeep
 ├── evaluation/.gitkeep
 └── prompts/.gitkeep
 ```
 
-Các file được theo dõi nằm trong cây trên. Workspace có thể chứa thêm môi trường
-`.venv/`, dữ liệu `Financial_Report/`, `Financial_Report_OCR/` và tài liệu tham chiếu
-`docs/report_midterm.docx`; chúng được bỏ qua bởi Git và không cần để chạy skeleton.
+Cây trên thể hiện cả cấu trúc Git và dataset local. Trong `data/`, Git chỉ theo
+dõi `samples/.gitkeep`; clone repository không tải dataset hoặc tạo các thư mục
+dữ liệu bị bỏ qua. `.venv/` và tài liệu tham chiếu `docs/report_midterm.docx` cũng
+được Git bỏ qua và không cần để chạy skeleton.
+
+## Dataset local
+
+Hai thư mục dữ liệu được bảo toàn và di chuyển trong M0-02:
+
+- `Financial_Report/` → `data/raw/Financial_Report/`.
+- `Financial_Report_OCR/` → `data/processed/Financial_Report_OCR/`.
+
+Dataset hiện có ba mã BBS, BCC, BED, mỗi mã năm kỳ 2021–2025. Thư mục raw hiện
+chứa ảnh PNG; thư mục processed giữ kết quả OCR đã có. Không chạy lại OCR, không
+sửa JSON/ảnh gốc. `normalized/` và `canonical/` đang rỗng, dành cho các task sau.
+
+Các biến sau đã có trong `.env.example`; khi cần cấu hình local, sao chép sang
+`.env` nếu file đó chưa tồn tại và dùng đường dẫn tương đối với gốc repository:
+
+```ini
+FINANCIAL_REPORT_DIR=data/raw/Financial_Report
+FINANCIAL_OCR_DIR=data/processed/Financial_Report_OCR
+NORMALIZED_DATA_DIR=data/normalized
+CANONICAL_DATA_DIR=data/canonical
+```
+
+Skeleton chưa có bộ nạp cấu hình trung tâm và chưa tự đọc `.env`. Không hardcode
+đường dẫn Windows/Colab trong code. JSON OCR có thể giữ đường dẫn `/content/drive/...`;
+giữ nguyên JSON và đối chiếu ánh xạ với thư mục local theo
+[hướng dẫn dataset](docs/dataset.md#ánh-xạ-đường-dẫn-colab-sang-local).
+Repository public chỉ chứa code, cấu hình và tài liệu; dataset không được commit.
 
 ## Thiết lập môi trường
 
@@ -133,4 +167,4 @@ Nguồn và cách quản lý dữ liệu ở [dataset.md](docs/dataset.md);
 Theo dõi [roadmap](planning/roadmap.md), [task](planning/tasks.md) và
 [trạng thái hiện tại](planning/current-status.md). Các nội dung chưa được quyết định
 được ghi `TBD`. Không đưa dữ liệu từ Google Drive, dữ liệu tài chính hoặc secrets
-vào Git. M0-01 kết thúc sau khi khởi tạo; chỉ thực hiện task tiếp theo khi được giao.
+vào Git. Chỉ thực hiện task được giao; M0-02 không mở rộng chức năng nghiệp vụ.
