@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | M0-01 | Skeleton modular monolith, cấu hình phát triển, tài liệu, Git và CI | Hoàn thành |
 | M0-02 | Dataset local trong `data/`, cấu hình đường dẫn, bảo toàn và loại dữ liệu khỏi Git | Hoàn thành; commit đã trên GitHub, CI đạt |
-| M0-03 | Đồng bộ trạng thái, quy tắc lâu dài và kế hoạch phát triển | Đang thực hiện |
+| M0-03 | Đồng bộ trạng thái, quy tắc lâu dài và kế hoạch phát triển | Hoàn thành; commit/push và CI đã xác minh |
 
 Bằng chứng commit/CI và acceptance criteria nằm trong
 [`current-status.md`](current-status.md) và [`tasks.md`](tasks.md).

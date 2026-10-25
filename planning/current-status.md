@@ -3,8 +3,8 @@
 Ngày cập nhật: **2026-10-25** (Asia/Bangkok).
 
 Task được giao: **M0-03 — Repository Housekeeping & Planning Synchronization**.
-M0-01 và M0-02 đã hoàn thành. M0-03 đang đồng bộ tài liệu; chưa bắt đầu M1-01
-hoặc bất kỳ task phát triển nghiệp vụ nào.
+**M0-01, M0-02 và M0-03 đã hoàn thành.** Chưa bắt đầu M1-01 hoặc bất kỳ task
+phát triển nghiệp vụ nào.
 
 ## Git và GitHub đã xác minh
 
@@ -17,6 +17,12 @@ hoặc bất kỳ task phát triển nghiệp vụ nào.
 - CI đã xác minh cho commit M0-02:
   [run 40207830248](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40207830248),
   trạng thái `completed`, kết luận `success`.
+- Commit đồng bộ nội dung M0-03: `99e1575167ec7fdf98132f8de49e4819348c7b16`,
+  message `chore(project): sync repository status and development roadmap`.
+  Đã push bình thường, đối chiếu local/origin cùng commit và working tree sạch.
+- [CI M0-03 run 40208727796](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40208727796)
+  đã `completed/success` cho commit `99e1575`, cả Python 3.11 và 3.12.
+  Bản ghi hoàn thành này được cập nhật sau khi xác minh kết quả đó.
 
 ## Trạng thái các mốc
 
@@ -24,7 +30,7 @@ hoặc bất kỳ task phát triển nghiệp vụ nào.
 | --- | --- | --- |
 | M0-01 | Hoàn thành | Skeleton, cấu hình phát triển, tài liệu, Git và CI; lịch sử đã có trên GitHub |
 | M0-02 | Hoàn thành | Di chuyển dataset, cấu hình đường dẫn và tài liệu; commit `279e65a` đã push, CI đạt |
-| M0-03 | Đang thực hiện | Đồng bộ planning và quy tắc lâu dài; chờ commit/push bản cập nhật và xác minh CI |
+| M0-03 | Hoàn thành | Planning đồng bộ với GitHub; quy tắc lâu dài được tách khỏi giới hạn task cũ; commit/push và CI đã xác minh |
 | M1-01 đến M1-04 | Dự kiến, chưa bắt đầu | Phạm vi đề xuất tại `planning/roadmap.md`; chưa có triển khai |
 
 ## Kiểm thử local và CI
@@ -35,10 +41,13 @@ hoặc bất kỳ task phát triển nghiệp vụ nào.
 | Local M0-03, pytest 9.1.1 | `python -m pytest tests/unit` | 11 passed |
 | Local M0-03 | Đọc TOML và YAML của CI, đối chiếu Python matrix và quyền workflow | Hợp lệ |
 | GitHub Actions, commit `279e65a` | Ubuntu / Python 3.11 và 3.12: cài package, lint, format, unit tests | Cả hai jobs và các bước kiểm tra đều `success` |
+| GitHub Actions, commit `99e1575` | Ubuntu / Python 3.11 và 3.12: cài package, lint, format, unit tests | Cả hai jobs và các bước kiểm tra đều `success` |
 
-Kết quả local không thay thế CI. Run nêu trên kiểm tra commit M0-02; chưa phải
-bằng chứng CI của bản cập nhật M0-03 chưa push. Các unit tests hiện kiểm tra
-đóng gói/import, không đánh giá chất lượng OCR, số liệu hoặc phân tích tài chính.
+Kết quả local không thay thế CI; mỗi run trên gắn với commit đã kiểm tra, không
+tự áp dụng cho commit khác. Các run mới hơn, kể cả bản cập nhật trạng thái này,
+xem tại [CI trên nhánh main](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/workflows/ci.yml?query=branch%3Amain).
+Unit tests hiện kiểm tra đóng gói/import, không đánh giá chất lượng OCR, số liệu
+hoặc phân tích tài chính.
 
 ## Dữ liệu và phạm vi bảo toàn
 
@@ -70,9 +79,9 @@ hoặc chức năng QA/report/API. Dữ liệu OCR có sẵn không chứng minh
 Contracts chi tiết, schema kế toán, công nghệ lưu trữ, model, benchmark và phạm
 vi tuân thủ quy định vẫn là `TBD` theo [`decisions.md`](decisions.md).
 
-## Việc còn lại của M0-03
+## Kết thúc M0-03
 
 Tập thay đổi chỉ gồm AGENTS và ba tài liệu planning; dữ liệu và các file source,
-cấu hình khác giữ nguyên. Còn commit đúng message được yêu cầu, push bình thường
-lên `origin/main` và kiểm tra CI cho commit mới. M1-01 đến M1-04
-chỉ là kế hoạch dự kiến; dừng sau M0-03.
+cấu hình khác giữ nguyên. Tập commit đã kiểm tra, không chứa dataset, secrets,
+tài liệu riêng tư hoặc đường dẫn cá nhân được phát hiện. Không có blocker đang
+mở của M0-03. M1-01 đến M1-04 chỉ là kế hoạch dự kiến; dừng sau M0-03.

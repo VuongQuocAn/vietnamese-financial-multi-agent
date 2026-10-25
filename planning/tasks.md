@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | M0-01 | Initialize Project Repository | Hoàn thành |
 | M0-02 | Reorganize Financial Dataset & Commit to GitHub | Hoàn thành |
-| M0-03 | Repository Housekeeping & Planning Synchronization | Đang thực hiện |
+| M0-03 | Repository Housekeeping & Planning Synchronization | Hoàn thành |
 | M1-01 | Dataset Inventory & Provenance Review | Dự kiến, chưa bắt đầu |
 | M1-02 | Data Contracts & Path Mapping Design | Dự kiến, chưa bắt đầu |
 | M1-03 | Configuration & Read-Only OCR Adapter | Dự kiến, chưa bắt đầu |
@@ -55,8 +55,13 @@ dữ liệu và bảo mật lâu dài tiếp tục nằm trong [`AGENTS.md`](../
 - [x] Rà soát `.gitignore`, Git index và kiểm tra cấu hình TOML/YAML.
 - [x] Lint, format và 11 unit tests local đạt.
 - [x] Xác minh cuối cùng dữ liệu, phạm vi thay đổi và các file chuẩn bị commit.
-- [ ] Commit `chore(project): sync repository status and development roadmap`.
-- [ ] Push bình thường lên `origin/main` và đối chiếu kết quả GitHub/CI.
+- [x] Commit `chore(project): sync repository status and development roadmap`.
+- [x] Push bình thường lên `origin/main` và đối chiếu kết quả GitHub/CI.
+
+Commit nội dung M0-03 `99e1575167ec7fdf98132f8de49e4819348c7b16` đã push;
+[CI run 40208727796](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40208727796)
+đạt trên Python 3.11 và 3.12. Trạng thái hoàn thành được ghi sau khi xác minh
+commit và run này; không suy diễn từ kết quả kiểm thử local.
 
 M0-03 chỉ housekeeping và đồng bộ tài liệu, không gọi Gemini, xử lý OCR hoặc
 viết code nghiệp vụ. Dừng sau khi hoàn tất M0-03.
