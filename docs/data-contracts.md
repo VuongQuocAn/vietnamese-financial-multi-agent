@@ -294,8 +294,8 @@ không mở URL và không tự tìm artifact từ source_ref.
    trả result với machine-readable issues. Không sửa request, không I/O.
 4. Runtime M1-03b sau này nhận candidate `(root_key, relative_suffix)`, bind
    root_key vào cấu hình đã duyệt của M1-03a, kiểm tra containment thực tế rồi
-   existence. Config keys như FINANCIAL_REPORT_DIR/FINANCIAL_OCR_DIR mới là định
-   hướng trong [dataset](dataset.md); chưa có config loader hoặc root binding.
+   existence. M1-03a cung cấp lookup FINANCIAL_REPORT_DIR/FINANCIAL_OCR_DIR
+   theo [cấu hình dataset](dataset.md); chưa có runtime resolver/target binding.
 5. Output từ runtime cần `parse_path_mapping_result` và
    `validate_path_mapping_result` trước khi downstream tin status. Structural
    parsing không thay thế quality validation. Validator không tự chứng minh lời
@@ -386,10 +386,21 @@ candidate, context/anchor/bbox và page image reference nếu caller biết. Kh�
 crop, không suy đoán recovery eligibility, không coi color views tái tạo được chính
 xác từ bbox. M1-03d vẫn chỉ là đề xuất, chưa đăng ký task hoặc tạo recovered_crops.
 
-TBD: approved source root/run identities, root-key binding/config policy M1-03a,
+TBD: approved source root/run identities và xác minh binding tới local root,
 runtime containment/file type/access/race policy M1-03b, migration/version compatibility,
 filesystem aliases và quy trình/eligibility recovery. Các path formats ngoài policy
 bị từ chối rõ ràng, không tự thêm decoder, URL download hoặc Drive API.
+
+## Central Data Configuration — M1-03a
+
+M1-03a cung cấp interface hạ tầng `core.data_config.DataConfig.get_root(root_key)`:
+nhận `PathTarget.root_key` và chỉ trả configured native absolute `Path`. Whitelist
+gồm FINANCIAL_REPORT_DIR, FINANCIAL_OCR_DIR, NORMALIZED_DATA_DIR, CANONICAL_DATA_DIR;
+hai input keys bắt buộc, hai output keys optional. Unknown/unconfigured trả
+`DataConfigError`; structural model errors dùng `pydantic.ValidationError` ẩn input
+trong thông báo. Loader nhận mapping inject hoặc process environment, không đọc .env.
+Core không import ngược document_processing. Không đổi Path Mapping v1; suffix,
+containment, availability và source identity chưa được lookup kiểm tra.
 
 ## Các giao tiếp nghiệp vụ chưa triển khai
 

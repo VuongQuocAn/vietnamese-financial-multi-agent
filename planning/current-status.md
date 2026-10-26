@@ -2,10 +2,13 @@
 
 Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [handoff](handoff.md).
 
-- M1-02c DONE theo Tech Lead APPROVED; M1-02 DONE sau đối chiếu ba contracts.
-- Baseline `3363a557f4d1d1b5507ac408425f3e568f528a1b` khớp origin/main,
-  CI 40303806780 success; working tree sạch trước triển khai.
-- Không active implementation task. M1-03a được giao nhưng phải qua CI Phase 1.
-- Local: 283 tests, Ruff lint/format 47 files, pip check đạt.
-- Không đọc/sửa dataset, không API/OCR; không bắt đầu M1-03b/c.
-- Next action: xác minh CI commit nghiệm thu Phase 1 trước M1-03a.
+- M1-02c/M1-02 DONE, Tech Lead APPROVED và criteria cha đã đối chiếu.
+- Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0` push/remote khớp;
+  CI 40304977048 success Python 3.11/3.12 và từng step đã kiểm tra.
+- M1-03a REVIEW: config/loading/lookup và PathTarget compatibility hoàn tất.
+- Local Python 3.12: 373 tests passed (90 mới), Ruff lint/format 50 files,
+  pip check đạt; planning 72 tasks đồng bộ.
+- Phase 2 còn publication/CI verification; không suy ra CI từ Phase 1.
+- Không đọc/sửa raw/processed, không API/OCR hoặc dependency mới.
+- Không active implementation task; không bắt đầu M1-03b/c.
+- Next action: xác minh commit/push/CI Phase 2 đúng SHA.

@@ -96,3 +96,19 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
   PathReference tái sử dụng SourceAnchor, không sửa Raw OCR/Understanding models.
 - Runtime policy, root/run identity, migration và recovery vẫn TBD. Không đăng ký
   M1-03d hoặc triển khai runtime ở task contracts.
+
+## 2026-10-26 — Central Data Configuration (M1-03a)
+
+- M1-02c Tech Lead APPROVED; task cha M1-02 DONE sau đối chiếu ba contracts,
+  không chỉ dựa vào dependencies. Phase 1 355bec4/CI 40304977048 đã xác minh.
+- Dùng bốn environment keys hiện hữu, không suy ra từ các biến thư mục cha.
+  FINANCIAL_REPORT_DIR/FINANCIAL_OCR_DIR bắt buộc; NORMALIZED_DATA_DIR và
+  CANONICAL_DATA_DIR optional vì chưa triển khai output stages. Key cung cấp rỗng
+  luôn lỗi; lookup unconfigured không fallback. Chưa cần samples key.
+- Source checkout default base từ module/markers; wheel cần base tuyệt đối
+  tường minh. Không lấy CWD, đọc .env hoặc expand environment/home trong path.
+- Chỉ native runtime paths, foreign styles bị từ chối; metadata vẫn ở Path Mapping.
+  Root lookup trả Path, không nối suffix hoặc filesystem I/O. Core không import contracts.
+- Frozen strict Pydantic, whitelist cố định; lexical overlap guard tách outputs
+  khỏi inputs/outputs khác. Không stat dataset, không mkdir hoặc giải quyết symlink.
+  Runtime containment/existence/access/race, source identity vẫn TBD cho M1-03b/c.

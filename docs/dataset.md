@@ -67,11 +67,43 @@ local hiện có là toàn bộ corpus nghiên cứu hoặc khẳng định có 
 | `NORMALIZED_DATA_DIR` | `data/normalized` |
 | `CANONICAL_DATA_DIR` | `data/canonical` |
 
-`.env.example` chỉ khai báo cấu hình dự kiến. Chưa có bộ nạp cấu hình trung tâm
-hoặc DataPathResolver; không thêm implementation trong M0-02. Các biến cũ như
-`RAW_DATA_DIR`, `PROCESSED_DATA_DIR` vẫn chỉ thư mục cha tương ứng.
+M1-03a bổ sung `core.data_config.load_data_config(environment=None, *, project_root=None)`
+trả typed `DataConfig` bất biến. `environment` có thể inject mapping riêng; nếu None,
+đọc process environment. Không tự đọc `.env`, không expand `~` hoặc biến trong giá trị.
+`.env.example` chỉ là mẫu, caller tự cung cấp environment; không có default dataset paths.
+`FINANCIAL_REPORT_DIR` và `FINANCIAL_OCR_DIR` bắt buộc. Hai output roots
+`NORMALIZED_DATA_DIR`/`CANONICAL_DATA_DIR` tùy chọn: bỏ key khi chưa cấu hình;
+key đã cung cấp nhưng rỗng, whitespace hoặc không phải string luôn lỗi.
+Các biến cũ như `DATA_DIR`, `RAW_DATA_DIR`, `PROCESSED_DATA_DIR` không được dùng
+để suy ra dataset roots hoặc làm fallback. Chưa có DataPathResolver.
 `EVIDENCE_DATA_DIR` là cấu hình dự kiến từ M0-01, chưa có logic sử dụng hoặc
 contract lưu trữ; không tự đồng nhất nó với dữ liệu canonical.
+
+Relative paths tính từ `project_root` tuyệt đối do caller cung cấp. Trong source
+checkout, default root lấy từ vị trí module và markers `pyproject.toml` cùng
+`src/core/data_config.py`, không lấy CWD. Với package wheel ngoài checkout, caller
+phải truyền base tuyệt đối tường minh; không fallback site-packages/CWD.
+Base không cần tồn tại khi truyền tường minh. Dot segments trong relative paths
+được chuẩn hóa lexical, không resolve symlink; cho phép roots bên ngoài repository.
+Absolute paths dùng native platform và không chuyển Windows sang POSIX hoặc ngược
+lại. Windows drive-relative/root-relative, foreign Windows paths trên POSIX, URL,
+home expansion và control characters bị từ chối. Paths dùng làm metadata nguồn
+cross-platform vẫn thuộc Path Mapping v1, không đưa vào runtime DataConfig.
+
+`DataConfig.get_root(root_key)` chỉ nhận whitelist bốn tên biến trên, trả native
+absolute `Path`; unknown key hoặc optional root chưa cấu hình trả `DataConfigError`.
+Không nhận basename/path làm key, không nối suffix và không thử root khác.
+`DataRootKey` là type alias cho bốn logical keys; whitelist runtime nằm ở DataConfig.
+Không có nhu cầu cấu hình samples hiện tại nên không thêm biến mới cho `data/samples`.
+
+Input roots raw/processed luôn read-only theo quy tắc repository. Output roots dành
+cho task chuẩn hóa/canonical sau này; chúng phải lexically disjoint với inputs và
+nhau. Validation này bắt xung đột hiển nhiên, không chứng minh bảo mật: symlinks,
+junctions và aliases có thể trỏ cùng nơi. Cấu hình không tạo directories, không
+stat/open dataset, không kiểm tra existence/readability hoặc source root identity.
+Các paths hợp lệ có thể chưa tồn tại. Runtime M1-03b/c phải kiểm tra containment,
+file type/access/existence và chính sách race trước dùng dữ liệu. Không dùng
+DataConfig thay cơ chế chống traversal của resolver.
 
 ## Ánh xạ đường dẫn Colab sang local
 

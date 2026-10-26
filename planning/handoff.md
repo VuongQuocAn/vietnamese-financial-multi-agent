@@ -2,46 +2,57 @@
 
 ## Active Task
 
-M1-02c — Path Mapping Contract (checkpoint nghiệm thu Phase 1).
+M1-03a — Central Data Configuration.
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-2026-10-26: baseline `3363a557f4d1d1b5507ac408425f3e568f528a1b` khớp origin/main,
-CI 40303806780 success. Working tree sạch trước thay đổi.
+2026-10-26: Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0` push/remote khớp,
+CI 40304977048 success Python 3.11/3.12 và từng step đã kiểm tra.
+Local Python 3.12: 373 tests passed (90 mới), Ruff lint/format 50 files,
+pip check đạt; planning validator 72 tasks kiểm tra lại sau đồng bộ cuối.
 
 ## Completed Work
 
-Tech Lead APPROVED M1-02c. M1-01/02a/02b DONE, M1-02c DONE.
-M1-02 cha đối chiếu roadmap: Raw OCR giữ nguồn/unknown, Understanding định nghĩa
-provenance/kết quả/lỗi, Path Mapping định nghĩa missing/ambiguous/traversal;
-ba contracts đã duyệt, raw JSON bất biến. Không sửa implementation contracts.
+M1-02c/M1-02 DONE theo nghiệm thu và đối chiếu criteria. A: DataConfig,
+DataRootKey, load_data_config, default_project_root, DataConfigError/get_root.
+A 77 tests, B 84 tests, C 90 tests mới; ba categories tương thích PathTarget,
+unknown/unconfigured báo lỗi, không basename/suffix/I/O fallback.
+Bốn tên biến hiện hữu; input bắt buộc, output optional; không đọc .env/dataset.
+Relative từ base tuyệt đối; checkout default, wheel cần explicit base. Native paths,
+lexical overlap guard; không thay runtime security. Public API, docs và planning đồng bộ.
 
 ## Remaining Work
 
-Commit/push/CI nghiệm thu Phase 1, sau đó triển khai M1-03a được giao.
+Commit/push/CI Phase 2 đúng SHA, sau đó chờ Tech Lead nghiệm thu M1-03a.
+Không mở M1-03b/c hoặc task recovery.
 
 ## Modified Files
 
-planning/{tasks.md,progress.md,current-status.md,handoff.md,tasks/M1/M1-02c.md}.
+src/core/{data_config.py,__init__.py}; tests/unit/test_data_config.py;
+.env.example; docs/{dataset.md,data-contracts.md};
+planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M1/M1-03a.md}.
 
 ## Tests
 
-Local Python 3.12: 283 tests, Ruff lint/format 47 files và pip check đạt.
-Planning validator chạy lại sau đồng bộ tài liệu; chưa claim CI commit nghiệm thu.
+Full 373 passed local; lint/format 50 files, pip check đạt. Synthetic fixtures,
+không phải benchmark tài chính. CI Linux dự kiến skip 5 native Windows cases,
+chưa có kết quả Phase 2; không claim trước chạy.
 
 ## Blockers
 
-Không blocker. Runtime containment/existence và source root/run identity còn TBD.
+Không blocker implementation. Chờ publication/CI và Tech Lead review.
+Source identity và runtime containment/existence/access/race còn TBD ở M1-03b/c.
+Config không chứng minh roots cùng identity hoặc filesystem availability.
 
 ## Git Checkpoint
 
-Stable baseline `3363a557f4d1d1b5507ac408425f3e568f528a1b`, remote khớp, CI success.
-Commit nghiệm thu chưa push/CI, không suy ra CI từ baseline.
+Stable Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0`, remote và CI success.
+Phase 2 đang working tree, chưa commit hoặc claim CI.
 
 ## Exact Next Action
 
-Xác minh CI commit nghiệm thu Phase 1 trước M1-03a.
+Xác minh commit/push/CI Phase 2 đúng SHA.

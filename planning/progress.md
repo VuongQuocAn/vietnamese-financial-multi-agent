@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 5 | 0 | 0 | 17 | 0 | 0 |
+| M1 | 22 | 5 | 0 | 0 | 16 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 9 | 0 | 0 | 63 | 0 | 0 |
+| TOTAL | 72 | 9 | 0 | 0 | 62 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | Chỉ package/docstring; chưa có config loader hoặc Gateway |
+| `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
 | `document_processing` | Raw OCR v1, Document Understanding v1 và Path Mapping v1; pure validation/lexical helper, chưa có loader/resolver |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -46,8 +46,11 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-M1-02c DONE theo Tech Lead APPROVED 2026-10-26; M1-02 cha DONE sau đối chiếu
-outputs/criteria roadmap: ba contracts nguồn, understanding/provenance và
-path mapping đã được duyệt. Baseline `3363a557f4d1d1b5507ac408425f3e568f528a1b`,
-CI 40303806780 success. Không active implementation task.
-Next action: xác minh CI commit nghiệm thu Phase 1 trước M1-03a.
+M1-02c/M1-02 DONE theo Tech Lead APPROVED và đối chiếu criteria cha.
+Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0` đã push, remote khớp,
+[CI 40304977048](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40304977048)
+success Python 3.11/3.12 và từng step đã kiểm tra.
+M1-03a REVIEW: A/B/C implementation hoàn tất, 90 tests mới/373 full passed,
+Ruff lint/format 50 files và pip check đạt local; planning 72 tasks đồng bộ.
+Chưa claim CI Phase 2; còn publication verification và Tech Lead review.
+Next action: xác minh commit/push/CI Phase 2 đúng SHA.
