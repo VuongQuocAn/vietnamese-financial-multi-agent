@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 7 | 1 | 0 | 14 | 0 | 0 |
+| M1 | 22 | 7 | 0 | 0 | 14 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 11 | 1 | 0 | 60 | 0 | 0 |
+| TOTAL | 72 | 11 | 0 | 0 | 60 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Ba contracts v1, read-only resolver và OCR loader A/B/C đã kiểm thử local; chờ CI/review |
+| `document_processing` | Ba contracts v1, read-only resolver và OCR loader A/B/C đã xác minh local/CI; loader chờ Tech Lead review |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -50,8 +50,10 @@ M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớ
 CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
 M1-03b DONE theo Tech Lead APPROVED 2026-10-26; acceptance `10eb4e9`
 khớp remote, CI 40310998984 success đúng SHA/từng step Python 3.11/3.12.
-M1-03c IN_PROGRESS: A/B/C local hoàn tất; loader 76 passed/1 skipped, native junction
+M1-03c REVIEW: A/B/C hoàn tất; loader 76 passed/1 skipped, native junction
 swap đạt. Full Windows Python 3.12 518 passed/12 skipped; Ruff lint/format 58 files,
 pip check và planning validator 72 tasks đạt. Đúng 3 mẫu manifest parse thành công,
 hash/metadata trước/sau khớp. Không benchmark, không scan hoặc ghi dataset.
-Next action: xác minh publication M1-03c đúng SHA.
+Stable `1342f044e1234eddc4180cd4940e59a09a855661`, push/remote khớp;
+CI 40312237896 success đúng SHA/từng step Python 3.11/3.12, mỗi job 521 passed/9 skipped.
+Next action: chờ Tech Lead review M1-03c.

@@ -6,13 +6,16 @@ M1-03c — Read-Only OCR Data Loader.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
 Acceptance M1-03b `10eb4e92c64fd241a2b740f7e38584abe1455032` push/remote khớp,
 CI 40310998984 success đúng SHA/từng step Python 3.11/3.12 đã kiểm tra.
 Local baseline 442 passed/11 skipped; Ruff 54 files, planning 72 tasks, pip check đạt.
+Stable loader `1342f044e1234eddc4180cd4940e59a09a855661` push/remote khớp;
+[CI 40312237896](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40312237896)
+success đúng SHA/từng step Python 3.11/3.12; mỗi job 521 passed/9 skipped.
 
 ## Completed Work
 
@@ -22,10 +25,11 @@ bounded read-only read, decode/parse/quality, anchor identity, provenance.
 C: đúng 3 mẫu manifest BCC/2022/9, BBS/2023/6, BCC/2023/1 parse thành công,
 content hashes và size/mtime/inode trước/sau khớp. Không scan corpus.
 Docs API/errors/security/provenance/quality/integration hoàn tất.
+Commit/push/remote và CI implementation đã xác minh; chuyển REVIEW.
 
 ## Remaining Work
 
-Commit/push/remote/CI đúng SHA, chuyển REVIEW và chờ Tech Lead nghiệm thu.
+Chờ Tech Lead nghiệm thu M1-03c. Task cha M1-03 TODO, không mở M1-04/recovery.
 
 ## Modified Files
 
@@ -56,12 +60,16 @@ CI đầu `f86a736`/40312058768: Python 3.12 fail do test giả định depth-li
 JSON decoder giống Windows. Sửa test chấp nhận decode-depth failure hoặc root-list
 rejection theo platform, thêm regression RecursionError độc lập; không sửa loader.
 Không gọi implementation commit này là checkpoint CI ổn định.
+Correction `1342f04`/CI 40312237896 đã success cả Python 3.11/3.12,
+mọi step đạt; Linux symlink thực tế đạt, Windows native junction swap đạt local.
 
 ## Git Checkpoint
 
 Stable acceptance `10eb4e92c64fd241a2b740f7e38584abe1455032`, remote/CI success.
-Loader A/B/C đã kiểm thử local, đang ở working tree; chưa claim CI implementation.
+Stable loader `1342f044e1234eddc4180cd4940e59a09a855661`, remote/CI success.
+Implementation gốc `f86a7363fb80acdb8b4925d2442314730384c8b2`, test correction ở
+stable SHA trên. Bản ghi REVIEW sau implementation cần CI riêng, không suy ra từ CI trước.
 
 ## Exact Next Action
 
-Xác minh publication M1-03c đúng SHA.
+Chờ Tech Lead review M1-03c.
