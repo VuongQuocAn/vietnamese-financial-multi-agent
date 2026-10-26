@@ -18,7 +18,7 @@ Local baseline 442 passed/11 skipped; Ruff 54 files, planning 72 tasks, pip chec
 
 A/B: public loader + typed result/error, resolver integration/revalidation,
 bounded read-only read, decode/parse/quality, anchor identity, provenance.
-75 passed/1 skipped synthetic loader cases, native junction swap đạt.
+76 passed/1 skipped synthetic loader cases, native junction swap đạt.
 C: đúng 3 mẫu manifest BCC/2022/9, BBS/2023/6, BCC/2023/1 parse thành công,
 content hashes và size/mtime/inode trước/sau khớp. Không scan corpus.
 Docs API/errors/security/provenance/quality/integration hoàn tất.
@@ -36,8 +36,8 @@ artifacts/ocr-loader/{verify_samples.py,sample-results.json} local bị Git igno
 
 ## Tests
 
-Loader 75 passed/1 skipped Windows Python 3.12; symlink thiếu privilege.
-Full 517 passed/12 skipped; Ruff lint/format 58 files, planning 72 tasks, pip check đạt.
+Loader 76 passed/1 skipped Windows Python 3.12; symlink thiếu privilege.
+Full 518 passed/12 skipped; Ruff lint/format 58 files, planning 72 tasks, pip check đạt.
 Integration manual đúng 3 mẫu, không có anchor image trong manifest nên chỉ đối
 chiếu symbol/year/page; không xác minh run identity. Chi tiết docs/ocr-loader.md.
 Synthetic tests không phải benchmark OCR/tài chính.
@@ -52,6 +52,10 @@ so chéo lstat/fstat do semantics khác nhau, POSIX thêm ctime.
 ## Blockers
 
 Không blocker. TOCTOU/aliases/hardlinks còn giới hạn; source/run identity do caller.
+CI đầu `f86a736`/40312058768: Python 3.12 fail do test giả định depth-limit của
+JSON decoder giống Windows. Sửa test chấp nhận decode-depth failure hoặc root-list
+rejection theo platform, thêm regression RecursionError độc lập; không sửa loader.
+Không gọi implementation commit này là checkpoint CI ổn định.
 
 ## Git Checkpoint
 

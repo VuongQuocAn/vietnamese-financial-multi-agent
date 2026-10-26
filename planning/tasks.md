@@ -41,7 +41,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M1-03 | Configuration & Read-Only OCR Adapter | M1 | TODO | P1 | M1-02, M1-03a, M1-03b, M1-03c | [M1-03](roadmap.md#m1-03) | - |
 | M1-03a | Central Data Configuration | M1 | DONE | P1 | M1-02 | [M1-03a](tasks/M1/M1-03a.md) | [5607cc0](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5607cc05035871455df3bf249ff95a44e87b5d66), CI success; Tech Lead APPROVED 2026-10-26 |
 | M1-03b | Read-Only Path Resolver | M1 | DONE | P1 | M1-03a | [M1-03b](tasks/M1/M1-03b.md) | [3cb32f8](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3cb32f8409a76d94747f0080186092a8f9ad1be6), CI success; Tech Lead APPROVED 2026-10-26 |
-| M1-03c | Read-Only OCR Data Loader | M1 | IN_PROGRESS | P1 | M1-03b | [M1-03c](tasks/M1/M1-03c.md) | A/B/C local: 517 passed/12 skipped; 3 mẫu read-only; chờ publication |
+| M1-03c | Read-Only OCR Data Loader | M1 | IN_PROGRESS | P1 | M1-03b | [M1-03c](tasks/M1/M1-03c.md) | A/B/C local: 518 passed/12 skipped; 3 mẫu read-only; chờ publication |
 | M1-04 | Extraction Quality Validation & Pilot | M1 | TODO | P1 | M1-03, M1-04a, M1-04b | [M1-04](roadmap.md#m1-04) | - |
 | M1-04a | Extraction Structure Validators | M1 | TODO | P1 | M1-03 | [M1-04a](roadmap.md#m1-04a) | - |
 | M1-04b | Bounded Extraction Pilot | M1 | TODO | P1 | M1-04a | [M1-04b](roadmap.md#m1-04b) | - |

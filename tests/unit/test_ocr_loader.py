@@ -150,7 +150,6 @@ def test_wrong_category_before_resolution(sample, monkeypatch, category):
         (b"1", "unsupported_json_root"),
         (b'"text"', "unsupported_json_root"),
         (b"true", "unsupported_json_root"),
-        (b"[" * 2000 + b"]" * 2000, "invalid_json"),
     ],
 )
 def test_decode_failures(sample, content, code):
@@ -164,6 +163,21 @@ def test_utf8_bom_and_exact_limit(sample):
     sample.target.write_bytes(content)
     assert load_ocr_page(sample.request, sample.config, max_bytes=len(content)).page
     failure(sample, "oversized_file", max_bytes=len(content) - 1)
+
+
+def test_deep_array_rejected_portably(sample):
+    sample.target.write_bytes(b"[" * 2000 + b"]" * 2000)
+    # Decoder depth limit khác giữa Python/platform; root list luôn bị từ chối.
+    error = failure_any(sample)
+    assert error.code in {"invalid_json", "unsupported_json_root"}
+
+
+def test_decoder_recursion_error_is_structured(sample, monkeypatch):
+    def exhausted(*args, **kwargs):
+        raise RecursionError
+
+    monkeypatch.setattr(ocr_loader.json, "loads", exhausted)
+    failure(sample, "invalid_json")
 
 
 @pytest.mark.parametrize("limit", [0, -1, True, False, 1.5, "10", None, sys.maxsize])

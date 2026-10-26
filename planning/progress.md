@@ -50,8 +50,8 @@ M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớ
 CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
 M1-03b DONE theo Tech Lead APPROVED 2026-10-26; acceptance `10eb4e9`
 khớp remote, CI 40310998984 success đúng SHA/từng step Python 3.11/3.12.
-M1-03c IN_PROGRESS: A/B/C local hoàn tất; loader 75 passed/1 skipped, native junction
-swap đạt. Full Windows Python 3.12 517 passed/12 skipped; Ruff lint/format 58 files,
+M1-03c IN_PROGRESS: A/B/C local hoàn tất; loader 76 passed/1 skipped, native junction
+swap đạt. Full Windows Python 3.12 518 passed/12 skipped; Ruff lint/format 58 files,
 pip check và planning validator 72 tasks đạt. Đúng 3 mẫu manifest parse thành công,
 hash/metadata trước/sau khớp. Không benchmark, không scan hoặc ghi dataset.
 Next action: xác minh publication M1-03c đúng SHA.
