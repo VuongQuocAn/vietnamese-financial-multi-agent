@@ -6,14 +6,15 @@ M1-03d — Missing Crop Audit & Bounded Recovery.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
 Stable Phase 1 `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, remote khớp;
 CI 40314189759 success đúng SHA/từng step Python 3.11/3.12. M1-03c/M1-03 DONE.
 Full local 575 passed/13 skipped; crop/security 57 passed/1 skipped Windows,
-native junction đạt. Ruff 64 files đạt, planning 73 tasks/pip check đạt.
+native junction đạt. Ruff 64 files, planning 73 tasks/pip check đạt. Stable implementation `6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6`,
+CI 40315855062 success Python 3.11/3.12, mỗi job 578 passed/10 skipped.
 
 ## Completed Work
 
@@ -30,8 +31,8 @@ Sửa encoding PowerShell trong các bản ghi planning Phase 1/2 trước publi
 
 ## Remaining Work
 
-Commit/push/remote/CI implementation rồi chuyển REVIEW.
-Tech Lead review limitation và quyết định source bindings/phạm vi pilot tiếp.
+Tech Lead nghiệm thu M1-03d và quyết định source bindings/phạm vi recovery tiếp.
+Không tự phê duyệt mappings, mở rộng pilot hoặc bắt đầu M1-04a/b.
 
 ## Modified Files
 
@@ -68,8 +69,13 @@ Không có ảnh thật nên output hash/dimensions/contact sheet và real rerun
 
 Stable acceptance `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, CI 40314189759 success.
 Acceptance đầu `a16b0aa` fail handoff section, correction stable trên đạt.
-Phase 2 chưa commit; không claim CI trước khi push và kiểm tra đúng SHA.
+Stable implementation `6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6`, push/remote khớp;
+[CI 40315855062](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40315855062)
+success đúng SHA/từng step Python 3.11/3.12, 578 passed/10 skipped mỗi job.
+Linux symlink đạt, native junction skip theo platform; Windows native junction đạt.
+Bản ghi REVIEW đi sau stable implementation; CI mỗi commit phải tra đúng SHA,
+không suy ra từ CI commit trước.
 
 ## Exact Next Action
 
-Xác minh CI implementation M1-03d trước khi chuyển REVIEW.
+Chờ Tech Lead review M1-03d và quyết định có cho phép mở rộng recovery hay không.
