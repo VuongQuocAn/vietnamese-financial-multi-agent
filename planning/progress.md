@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 24 | 11 | 0 | 0 | 13 | 0 | 0 |
+| M1 | 25 | 11 | 0 | 1 | 13 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 74 | 15 | 0 | 0 | 59 | 0 | 0 |
+| TOTAL | 75 | 15 | 0 | 1 | 59 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Ba contracts v1, read-only resolver và OCR loader A/B/C đã xác minh local/CI; loader chờ Tech Lead review |
+| `document_processing` | Contracts/resolver/loader DONE; pilot recovery M1-03e DONE; M1-03f chuẩn bị expansion có human gate |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -69,9 +69,12 @@ CI 40340730395 success Python 3.11/3.12.
 Stable implementation `6c2b8c7738631b578c97b9b0d930b51ff69c6162`, remote khớp;
 CI 40342491992 success mọi steps Python 3.11/3.12, mỗi job 617 passed/10 skipped.
 [Sanitized evidence](../docs/reviews/M1-03e-evidence.md) dành cho Tech Lead.
-Exact next action: Chờ Tech Lead review M1-03e qua GitHub.
+M1-03f BLOCKED chờ human visual approval: re-audit 193 trang, 199 eligible, reconstructed 12/pending 187,
+conflicts 0; đã tạo 12 review sheets local, chưa human approval, chưa expansion.
+Full local 655 passed/14 skipped; Ruff lint/format 79 files, planning 75 tasks/pip check đạt.
+Exact next action: Người dùng xem 12 local review sheets và ghi approval thật khớp template.
 
-Tech Lead APPROVED M1-03e ng?y 2026-10-26 theo task M1-03f: mapping,
-193-page audit, 12 real crops/pixels/hash/rerun v? source integrity ???c nghi?m thu.
-Original preprocessing equivalence v?n unverified; M1-03 gi? DONE.
+Tech Lead APPROVED M1-03e ngày 2026-10-26 theo task M1-03f: mapping,
+193-page audit, 12 real crops/pixels/hash/rerun và source integrity được nghiệm thu.
+Original preprocessing equivalence vẫn unverified; M1-03 giữ DONE.
 Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.

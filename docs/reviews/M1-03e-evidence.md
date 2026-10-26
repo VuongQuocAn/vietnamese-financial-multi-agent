@@ -1,6 +1,11 @@
 # M1-03e — Evidence nghiệm thu local mapping và real crop pilot
 
-Ngày **2026-10-26**, Asia/Bangkok. Trạng thái: **REVIEW**, chờ Tech Lead nghiệm thu.
+Ngày **2026-10-26**, Asia/Bangkok. Báo cáo gốc ở mốc REVIEW; Tech Lead đã
+**APPROVED**, M1-03e **DONE** theo task M1-03f. Acceptance checkpoint
+`ca607debe2148ab2a52c25c78f142f181cf35674`,
+[CI 40345846471](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40345846471)
+success đúng SHA/mọi steps Python 3.11/3.12. Các số liệu/lựa chọn review phía dưới
+giữ kết quả lịch sử của pilot; mở rộng thuộc scope độc lập M1-03f và cần human gate.
 Đây là báo cáo engineering trên dữ liệu local thật; không phải đánh giá độ chính
 xác OCR hoặc tài chính. Không có ảnh, OCR text, paths nguồn hay per-file hashes
 trong báo cáo này.

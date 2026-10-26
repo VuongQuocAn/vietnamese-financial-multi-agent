@@ -115,3 +115,32 @@ def public_statistics(summary):
             raise CropError("unsafe_public_statistics")
         result[key] = summary[key]
     return result
+
+
+def public_expansion_statistics(summary):
+    """Fixed numeric/boolean projection for M1-03f; no source strings or hashes."""
+    result = {
+        key: count(summary[key])
+        for key in (
+            "pages_audited",
+            "references_audited",
+            "original_missing",
+            "existing_original",
+            "existing_original_tables",
+            "original_table_missing",
+            "eligible",
+            "prior_reconstructed",
+            "reconstructed_available",
+            "missing_unrecovered",
+            "conflicts",
+            "unsupported_views",
+            "non_table_requires_review",
+            "new_outputs",
+        )
+    }
+    for key in ("human_approved", "source_unchanged"):
+        if type(summary[key]) is not bool:
+            raise CropError("unsafe_public_statistics")
+        result[key] = summary[key]
+    result["dry_run_status"] = counts(summary["dry_run_status"], RECOVERY)
+    return result

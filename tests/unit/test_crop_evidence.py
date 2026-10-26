@@ -7,6 +7,7 @@ from vietnamese_financial_multi_agent.document_processing.crop_audit import Crop
 from vietnamese_financial_multi_agent.document_processing.crop_evidence import (
     COUNT_FIELDS,
     MAPPING_FIELDS,
+    public_expansion_statistics,
     public_statistics,
 )
 
@@ -66,3 +67,52 @@ def test_boolean_is_strict(summary):
     summary["source_json_unchanged"] = "private-path"
     with pytest.raises(CropError):
         public_statistics(summary)
+
+
+@pytest.fixture
+def expansion_summary():
+    return dict(
+        pages_audited=193,
+        references_audited=1557,
+        original_missing=572,
+        existing_original=985,
+        existing_original_tables=180,
+        original_table_missing=199,
+        eligible=199,
+        prior_reconstructed=12,
+        reconstructed_available=12,
+        missing_unrecovered=187,
+        conflicts=0,
+        unsupported_views=288,
+        non_table_requires_review=85,
+        new_outputs=0,
+        human_approved=False,
+        source_unchanged=True,
+        dry_run_status={"already_recovered": 12, "dry_run": 187},
+    )
+
+
+def test_expansion_projection_cannot_publish_private_payload(expansion_summary):
+    expansion_summary.update(
+        bindings={"/content/drive/private": "secret"},
+        recovery_id="private-per-file-hash",
+        ocr_text="financial text",
+    )
+    public = json.dumps(public_expansion_statistics(expansion_summary))
+    assert all(s not in public for s in ("private", "financial text", "secret", "drive"))
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("eligible", "private-path"),
+        ("eligible", True),
+        ("eligible", -1),
+        ("human_approved", "secret"),
+        ("dry_run_status", {"/private-path": 1}),
+    ],
+)
+def test_expansion_projection_injection_fails_closed(expansion_summary, field, value):
+    expansion_summary[field] = value
+    with pytest.raises(CropError, match="unsafe_public_statistics"):
+        public_expansion_statistics(expansion_summary)

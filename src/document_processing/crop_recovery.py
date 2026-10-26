@@ -5,6 +5,8 @@ import io
 import json
 import os
 import stat
+from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 
 from PIL import Image
@@ -25,6 +27,44 @@ from .path_resolver import _is_link
 METHOD = "reconstructed_from_page_bbox"
 METHOD_VERSION = "1"
 PILOT_CAP = 12
+
+
+@dataclass(frozen=True)
+class _ExpansionPermit:
+    recovery_ids: frozenset[str]
+
+
+@contextmanager
+def single_writer(config):
+    """OS lock shared by pilot/expansion, released by the OS on process exit."""
+    root = validate_output_root(config.project_root / "data/recovered_crops", config)
+    root.parent.mkdir(parents=True, exist_ok=True)
+    lock = root.parent / ".crop-recovery.lock"
+    _check_components(lock)
+    with lock.open("a+b") as stream:
+        if stream.tell() == 0:
+            stream.write(b"0")
+            stream.flush()
+        stream.seek(0)
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            raise CropError("recovery_writer_locked") from None
+        try:
+            yield
+        finally:
+            stream.seek(0)
+            if os.name == "nt":
+                msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
 def _check_components(path: Path) -> None:
@@ -98,6 +138,31 @@ def recover_crop(
     dry_run: bool = True,
     cap: int = PILOT_CAP,
 ) -> dict:
+    options = dict(image_bindings=image_bindings, output_root=output_root, dry_run=dry_run, cap=cap)
+    if dry_run:
+        return _recover_crop(record, page_request, config, mappings, **options)
+    try:
+        with single_writer(config):
+            return _recover_crop(record, page_request, config, mappings, **options)
+    except (CropError, OSError) as error:
+        options["dry_run"] = True
+        result = _recover_crop(record, page_request, config, mappings, **options)
+        result["status"] = error.code if isinstance(error, CropError) else "io_error"
+        return result
+
+
+def _recover_crop(
+    record,
+    page_request,
+    config,
+    mappings,
+    *,
+    image_bindings=None,
+    output_root=None,
+    dry_run=True,
+    cap=PILOT_CAP,
+    _permit=None,
+) -> dict:
     """Re-audit nguồn, so hash, PNG exclusive + sidecar; không tin eligibility cũ.
 
     Trusted local filesystem, single writer. Checks không atomic với adversarial
@@ -124,7 +189,13 @@ def recover_crop(
         "equivalent_to_original_crop": "unverified",
     }
     try:
-        if type(cap) is not int or not 1 <= cap <= PILOT_CAP:
+        expanded = (
+            isinstance(_permit, _ExpansionPermit)
+            and recovery_id in _permit.recovery_ids
+            and len(_permit.recovery_ids) <= 199
+            and cap == 199
+        )
+        if type(cap) is not int or not (1 <= cap <= PILOT_CAP or expanded):
             raise CropError("invalid_pilot_cap")
         root = validate_output_root(
             output_root or config.project_root / "data/recovered_crops", config

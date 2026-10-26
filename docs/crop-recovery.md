@@ -4,6 +4,83 @@ M1-03d đã được Tech Lead APPROVED engineering/synthetic/zero-output ngày
 2026-10-26 và chuyển DONE. Các phần REVIEW/zero-output bên dưới giữ kết quả lịch
 sử M1-03d. M1-03e bổ sung local verification/pilot theo scope mới được giao.
 
+## Controlled expansion — M1-03f
+
+M1-03e đã được Tech Lead APPROVED/DONE theo task giao 2026-10-26.
+M1-03f chỉ mở rộng `table.crop`; không đổi Raw OCR/Path Mapping contracts.
+Checkpoint hiện tại và số liệu thật tại [evidence M1-03f](reviews/M1-03f-evidence.md).
+Human visual gate còn thiếu, chưa thực thi batch expansion.
+
+`recover_crop()` giữ cap mặc định 12 và từ chối cap tùy ý. Coordinator nội bộ
+`crop_expansion.execute_batch()` chỉ cấp permit cho full recovery IDs trong frozen
+candidate plan, tổng <=199 và từng batch <=24 PNG mới. Payload tạo IDs giữ nguyên
+method/version + `record.export()` như M1-03d/e. Không thêm fields expansion vào
+canonical metadata hoặc sidecars cũ. Private permit là boundary nội bộ Python,
+không phải cơ chế chống caller có quyền chạy code tùy ý.
+
+Các lệnh dùng environment roots theo DataConfig (không tự đọc `.env`):
+
+```powershell
+.venv/Scripts/python scripts/expand_table_crop_recovery.py --plan
+.venv/Scripts/python scripts/create_crop_review_sheet.py
+.venv/Scripts/python scripts/expand_table_crop_recovery.py --dry-run
+.venv/Scripts/python scripts/expand_table_crop_recovery.py --verify
+```
+
+Không có `--execute` thì không ghi recovery PNG; các lệnh vẫn có thể ghi local
+manifests/index. Contact-sheet script ghi riêng ảnh review local; không sửa PNG
+recovery hoặc source. Mỗi sheet có thumbnail source với bbox đỏ bên trái và crop
+giữ tỷ lệ bên phải. Scaling chỉ dùng cho trình bày sheet.
+
+Người dùng cần xem đủ 12 sheet trong `artifacts/crop-recovery/M1-03f/review/`.
+Template `visual-review-approval.template.json` cố ý có `approved=false`, reviewer
+và reviewed_at null. Sau khi thực sự review, người dùng tạo file local bị ignore
+`visual-review-approval.json` cùng thư mục task, giữ nguyên plan_id, reviewed list
+và từng recovery_id/png_sha256; ghi reviewer thật, reviewed_at ISO 8601 có timezone,
+top-level approved=true/verdict=approved và verdict=approved cho cả 12 items.
+Một rejection, mismatch, thiếu reviewer/time hoặc thiếu file đều chặn execution.
+Approval là bản ghi người dùng trên trusted filesystem, không phải chữ ký số.
+
+Sau approval và full checks đạt, mỗi lệnh chỉ chạy **một batch**:
+
+```powershell
+.venv/Scripts/python scripts/expand_table_crop_recovery.py --execute --batch-size 24
+.venv/Scripts/python scripts/expand_table_crop_recovery.py --verify
+```
+
+Re-audit đúng 193 inventory pages, verify lại mappings/bindings/source snapshots,
+mọi audit states và eligible list trước batch. `plan.json` ghi exclusive/idempotent;
+source/bbox/bindings/inventory thay đổi thì dừng, không tự refresh approved plan.
+Candidates dedup full recovery ID, từ chối reference trùng nhưng context khác;
+thứ tự round-robin theo mã/năm ổn định. Execution plan local chia pending IDs
+thành batch <=24; không bù bằng non-table hoặc views khác.
+
+Pilot và expansion dùng chung OS lock `data/.crop-recovery.lock`: nonblocking
+`msvcrt.locking` trên Windows, `fcntl.flock` trên POSIX. Giữ lock inode, không xóa
+file lock; OS giải phóng lock khi process chết. Các writers ngoài workflow không
+tuân thủ lock vẫn là giới hạn. Không chạy nhiều commands song song trên artifacts.
+
+Started/finished manifests ghi exclusive, failed batch chặn các batch tiếp theo.
+Sau interruption sạch, `--execute --resume` chỉ reconcile khi frozen plan/sources,
+approval và mọi PNG/sidecar đều hợp lệ; checkpoint cũ ghi `interrupted_validated`
+với completed/pending riêng, batch mới vẫn <=24 new PNG. Orphan PNG/sidecar, output
+conflict hoặc batch failed không được tự xóa/ghi đè/retry; cần review nguyên nhân.
+Chạy lại sau batch hoàn tất nhận diện already_recovered và chọn pending tiếp theo.
+
+Mỗi batch reopen PNG, đối chiếu toàn bộ pixels/dimensions/hash/sidecar bằng engine,
+kiểm tra source snapshots sau ghi và counts trước/sau. Local recovery-index.jsonl
+phân biệt `reconstructed_available`/`missing_unrecovered`; existing originals giữ
+trong audit với trạng thái riêng. Index gồm provenance, original reference,
+element/field/bbox/page/source/output hashes/method/version và validation status;
+equivalence luôn unverified. Immutable index checkpoints giữ lịch sử; projection
+JSONL cập nhật bằng replace atomic. Chưa tích hợp adapter M1-04a.
+
+Không commit sheets/PNG/index/bindings/full manifests/per-file hashes. Exporter
+`scripts/export_crop_evidence.py --expansion <summary.json>` chỉ xuất fixed numeric,
+boolean và enum allowlists qua `public_expansion_statistics()`, không redact bằng
+string replacement. Trusted local filesystem/TOCTOU/hardlinks/mount aliases và
+original preprocessing/Drive/run identity vẫn là giới hạn chưa giải quyết.
+
 ## Verified local mapping và real pilot — M1-03e
 
 Adapter `local_crop_mapping` chỉ xét hai root markers đúng tên, trích full exact

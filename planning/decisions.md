@@ -1,5 +1,19 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-26 — Controlled table recovery expansion (M1-03f)
+
+- M1-03e Tech Lead APPROVED/DONE, acceptance ca607debe2148ab2a52c25c78f142f181cf35674,
+  CI 40345846471 success đúng SHA. M1-03 và dependencies M1-04 giữ nguyên.
+- Expansion riêng table.crop, tổng <=199 và mỗi invocation <=24 PNG mới;
+  default recover_crop cap 12 không đổi. Canonical recovery ID/sidecars giữ nguyên.
+- Frozen plan bind inventory/mappings/snapshots/audit/candidates; human approval
+  bind đúng 12 pilot IDs/hashes + plan_id. Không suy human approval từ pixel tests.
+- Shared OS lock cho pilot/expansion; no-overwrite, failed batch stop và explicit
+  clean-interruption resume. Source/output conflicts cần review, không tự xóa/sửa.
+- Reconstructed index là alternative ngoài OCR JSON; chưa tích hợp M1-04a.
+  Chỉ publish aggregate allowlists. Human review chưa có: dừng checkpoint A/B/C,
+  không thực thi expansion và không chuyển REVIEW trước khi hoàn tất criteria.
+
 ## 2026-10-26 — Verified local pilot và public evidence (M1-03e)
 
 - Tech Lead APPROVED M1-03d engineering/synthetic/zero-output; chuyển DONE, giữ
