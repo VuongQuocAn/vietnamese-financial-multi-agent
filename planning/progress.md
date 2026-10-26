@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 3 | 1 | 0 | 18 | 0 | 0 |
+| M1 | 22 | 3 | 0 | 0 | 18 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 7 | 1 | 0 | 64 | 0 | 0 |
+| TOTAL | 72 | 7 | 0 | 0 | 64 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -49,5 +49,11 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 M1-02b DONE theo Tech Lead APPROVED. Phase 1 checkpoint
 `e28c5bcfdab83e1990166297a112bd9db1dacaa3`,
 [CI 40302237394](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40302237394) success.
-[M1-02c](tasks/M1/M1-02c.md) IN_PROGRESS: A/B/C hoàn tất, 283 tests (113 mới), Ruff lint/format, planning/pip check đạt local. Chưa commit/CI implementation.
-M1-02 vẫn TODO. Next action: tạo checkpoint implementation M1-02c và xác minh CI.
+[M1-02c](tasks/M1/M1-02c.md) REVIEW: A/B/C hoàn tất, 283 tests (113 mới),
+Ruff lint/format, planning/pip check đạt local. Implementation
+`527d928935bb5d570e0a987279326dce4228d795` đã push, remote SHA khớp;
+[CI 40303643188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40303643188)
+success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
+Không suy ra CI cho commit trạng thái sau checkpoint.
+M1-02 vẫn TODO; không active implementation task.
+Next action: chờ Tech Lead review M1-02c.

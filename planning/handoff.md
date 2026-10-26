@@ -6,7 +6,7 @@ M1-02c — Path Mapping Contract.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -16,6 +16,9 @@ Phase 1 M1-02b DONE theo Tech Lead APPROVED; checkpoint
 `e28c5bcfdab83e1990166297a112bd9db1dacaa3` đã push, remote khớp;
 [CI 40302237394](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40302237394)
 success Python 3.11/3.12, từng step đã xác minh.
+Implementation `527d928935bb5d570e0a987279326dce4228d795` đã push, remote SHA khớp;
+[CI 40303643188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40303643188)
+success đúng SHA Python 3.11/3.12; install/lint/format/planning/tests đều success.
 
 ## Completed Work
 
@@ -27,8 +30,9 @@ validation, schema sync, docs/decisions và planning. Source/context/Unicode/mis
 
 ## Remaining Work
 
-Commit/push implementation, xác minh CI đúng SHA rồi chuyển REVIEW.
-Sau đó chờ Tech Lead nghiệm thu M1-02c; không tự chuyển DONE hoặc mở task khác.
+Chờ Tech Lead nghiệm thu M1-02c models/status/root policy và giới hạn runtime.
+Không còn implementation/local/CI verification mở tại checkpoint nội dung.
+Không tự chuyển DONE hoặc mở M1-03; task cha M1-02 vẫn TODO.
 
 ## Modified Files
 
@@ -41,6 +45,7 @@ planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M
 
 A 22/B 94/C 113 tests mới passed; full suite 283 passed.
 Ruff lint/format 47 files, pip check, planning validator 72 tasks đạt local.
+CI checkpoint implementation success Python 3.11/3.12.
 Fixtures synthetic; không benchmark tài chính, không filesystem existence tests.
 
 ## Blockers
@@ -53,10 +58,12 @@ Không đăng ký M1-03d, không tạo crop hoặc tái tạo color views.
 
 ## Git Checkpoint
 
-Stable baseline `e28c5bcfdab83e1990166297a112bd9db1dacaa3`; A/B/C ở working tree,
-local checks đạt, chưa commit/push hoặc có CI cho implementation mới.
+Stable baseline Phase 1 `e28c5bcfdab83e1990166297a112bd9db1dacaa3` và CI success.
+Stable implementation `527d928935bb5d570e0a987279326dce4228d795` đã push origin/main,
+remote khớp và CI success. Bản ghi REVIEW ở commit sau checkpoint;
+khi resume kiểm tra HEAD/remote/working tree và CI đúng SHA thực tế.
 Raw/processed không đọc/sửa, không API/OCR/dataset scan, không thêm dependency.
 
 ## Exact Next Action
 
-Tạo checkpoint implementation M1-02c và xác minh CI.
+Chờ Tech Lead review M1-02c.

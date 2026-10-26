@@ -37,7 +37,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M1-02 | Data Contracts & Path Mapping Design | M1 | TODO | P1 | M1-01, M1-02a, M1-02b, M1-02c | [M1-02](roadmap.md#m1-02) | - |
 | M1-02a | Raw OCR Contracts | M1 | DONE | P1 | M1-01 | [M1-02a](tasks/M1/M1-02a.md) | [08f3289](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/08f3289a47f021a97608b7e8d2885bd3656bc9c5) |
 | M1-02b | Document Understanding Contracts | M1 | DONE | P1 | M1-02a | [M1-02b](tasks/M1/M1-02b.md) | [d4e6aca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d4e6aca312251055f452a009ef0d9072ad63d940), CI success; Tech Lead APPROVED 2026-10-26 |
-| M1-02c | Path Mapping Contract | M1 | IN_PROGRESS | P1 | M1-01 | [M1-02c](tasks/M1/M1-02c.md) | - |
+| M1-02c | Path Mapping Contract | M1 | REVIEW | P1 | M1-01 | [M1-02c](tasks/M1/M1-02c.md) | [527d928](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/527d928935bb5d570e0a987279326dce4228d795), CI success; chờ Tech Lead nghiệm thu |
 | M1-03 | Configuration & Read-Only OCR Adapter | M1 | TODO | P1 | M1-02, M1-03a, M1-03b, M1-03c | [M1-03](roadmap.md#m1-03) | - |
 | M1-03a | Central Data Configuration | M1 | TODO | P1 | M1-02 | [M1-03a](roadmap.md#m1-03a) | - |
 | M1-03b | Read-Only Path Resolver | M1 | TODO | P1 | M1-03a | [M1-03b](roadmap.md#m1-03b) | - |
