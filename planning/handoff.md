@@ -6,7 +6,7 @@ M1-02b — Document Understanding Contracts.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -61,3 +61,11 @@ Bản ghi trạng thái ở commit sau checkpoint; khi resume kiểm tra Git th�
 ## Exact Next Action
 
 Chờ Tech Lead review M1-02b.
+
+## Phase 1 Acceptance Evidence
+
+Tech Lead APPROVED 2026-10-26; baseline `a26ae85537cb0da70e28ec8425b1d22d42c977df`
+kh?p origin/main. [CI 40292147536](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292147536) success ??ng SHA tr?n Python 3.11/3.12.
+Modified files Phase 1: tasks.md, tasks/M1/M1-02b.md, progress.md, current-status.md, handoff.md.
+
+Local Phase 1: 170 tests passed, Ruff lint/format 42 files, pip check, planning 72 tasks ??t.

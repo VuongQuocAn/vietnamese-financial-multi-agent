@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 2 | 0 | 0 | 19 | 0 | 1 |
+| M1 | 22 | 3 | 0 | 0 | 19 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 6 | 0 | 0 | 65 | 0 | 1 |
+| TOTAL | 72 | 7 | 0 | 0 | 65 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,12 +46,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-[M1-02b](tasks/M1/M1-02b.md) REVIEW: A/B/C triển khai xong, 170 unit tests
-(79 tests mới), Ruff lint/format, pip check và planning validator 72 task đạt local.
-Checkpoint nội dung `d4e6aca312251055f452a009ef0d9072ad63d940` đã push origin/main;
-[CI 40292017456](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292017456)
-success Python 3.11/3.12, gồm install/lint/format/planning/tests.
-CI này gắn checkpoint nội dung, không phải bản ghi trạng thái sau đó.
-Chờ Tech Lead nghiệm thu contracts; không active implementation task.
-M1-02a giữ DONE; task cha M1-02 và M1-02c giữ TODO.
-Next action: chờ Tech Lead review M1-02b.
+[M1-02b](tasks/M1/M1-02b.md) DONE theo Tech Lead APPROVED 2026-10-26.
+Implementation `d4e6aca312251055f452a009ef0d9072ad63d940`; HEAD
+`a26ae85537cb0da70e28ec8425b1d22d42c977df` ?? x?c minh CI
+[40292147536](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292147536)
+success Python 3.11/3.12. Kh?ng active implementation task; M1-02/M1-02c TODO.
+Next action: tri?n khai M1-02c sau checkpoint Phase 1 v? CI ??t.
