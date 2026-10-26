@@ -8,7 +8,10 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [hand
 - M1-03a REVIEW: config/loading/lookup và PathTarget compatibility hoàn tất.
 - Local Python 3.12: 373 tests passed (90 mới), Ruff lint/format 50 files,
   pip check đạt; planning 72 tasks đồng bộ.
-- Phase 2 còn publication/CI verification; không suy ra CI từ Phase 1.
+- Implementation `5607cc05035871455df3bf249ff95a44e87b5d66` đã push origin/main, remote SHA khớp;
+  [CI 40305769422](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40305769422) success đúng SHA Python 3.11/3.12,
+  từng step install/lint/format/planning/tests đã xác minh.
+- Commit ghi evidence sau implementation cần CI riêng.
 - Không đọc/sửa raw/processed, không API/OCR hoặc dependency mới.
 - Không active implementation task; không bắt đầu M1-03b/c.
-- Next action: xác minh commit/push/CI Phase 2 đúng SHA.
+- Next action: chờ Tech Lead review M1-03a.
