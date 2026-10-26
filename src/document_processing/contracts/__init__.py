@@ -1,4 +1,4 @@
-"""Public API Raw OCR và Document Understanding; không đọc/ghi dataset hoặc resolve paths."""
+"""Public API contracts và lexical mapping; không đọc/ghi dataset hoặc resolve files."""
 
 from .document_understanding import (
     DOCUMENT_UNDERSTANDING_CONTRACT_VERSION,
@@ -18,6 +18,23 @@ from .document_understanding_validation import (
     parse_document_understanding,
     validate_understanding_quality,
 )
+from .path_mapping import (
+    PATH_MAPPING_CONTRACT_VERSION,
+    PathCategory,
+    PathMappingIssue,
+    PathMappingRequest,
+    PathMappingResult,
+    PathMappingStatus,
+    PathMappingStructuralError,
+    PathReference,
+    PathRootMapping,
+    PathStyle,
+    PathTarget,
+    parse_path_mapping_request,
+    parse_path_mapping_result,
+    path_mapping_json_schema,
+)
+from .path_mapping_validation import map_path_lexically, validate_path_mapping_result
 from .raw_ocr import (
     RAW_OCR_CONTRACT_VERSION,
     OCRBoundingBox,
@@ -45,6 +62,22 @@ from .validation import (
 )
 
 __all__ = [
+    "PATH_MAPPING_CONTRACT_VERSION",
+    "PathCategory",
+    "PathMappingIssue",
+    "PathMappingRequest",
+    "PathMappingResult",
+    "PathMappingStatus",
+    "PathMappingStructuralError",
+    "PathReference",
+    "PathRootMapping",
+    "PathStyle",
+    "PathTarget",
+    "parse_path_mapping_request",
+    "parse_path_mapping_result",
+    "path_mapping_json_schema",
+    "map_path_lexically",
+    "validate_path_mapping_result",
     "DOCUMENT_UNDERSTANDING_CONTRACT_VERSION",
     "DocumentClassification",
     "DocumentUnderstandingResult",

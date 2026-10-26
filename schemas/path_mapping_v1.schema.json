@@ -1,0 +1,460 @@
+{
+  "$defs": {
+    "PathMappingIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "message"
+      ],
+      "title": "PathMappingIssue",
+      "type": "object"
+    },
+    "PathMappingRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "path_mapping_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "reference": {
+          "$ref": "#/$defs/PathReference"
+        },
+        "mappings": {
+          "items": {
+            "$ref": "#/$defs/PathRootMapping"
+          },
+          "title": "Mappings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract_version",
+        "reference",
+        "mappings"
+      ],
+      "title": "PathMappingRequest",
+      "type": "object"
+    },
+    "PathMappingResult": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "path_mapping_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "reference": {
+          "$ref": "#/$defs/PathReference"
+        },
+        "status": {
+          "enum": [
+            "not_checked",
+            "resolved",
+            "missing",
+            "ambiguous",
+            "unsafe",
+            "unmapped"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "candidate_targets": {
+          "items": {
+            "$ref": "#/$defs/PathTarget"
+          },
+          "title": "Candidate Targets",
+          "type": "array"
+        },
+        "confirmed_target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PathTarget"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "existence_check": {
+          "enum": [
+            "not_checked",
+            "exists",
+            "missing"
+          ],
+          "title": "Existence Check",
+          "type": "string"
+        },
+        "containment_check": {
+          "enum": [
+            "not_checked",
+            "verified",
+            "rejected"
+          ],
+          "title": "Containment Check",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/PathMappingIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "contract_version",
+        "reference",
+        "status",
+        "candidate_targets",
+        "existence_check",
+        "containment_check",
+        "issues"
+      ],
+      "title": "PathMappingResult",
+      "type": "object"
+    },
+    "PathReference": {
+      "additionalProperties": false,
+      "properties": {
+        "original_path": {
+          "title": "Original Path",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "raw_page_image",
+            "ocr_page_json",
+            "ocr_crop"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "source_ref": {
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "source_location": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "title": "Source Location",
+          "type": "array"
+        },
+        "anchor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceAnchor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "crop_view": {
+          "anyOf": [
+            {
+              "enum": [
+                "original",
+                "ink",
+                "black",
+                "red",
+                "blue"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Crop View"
+        },
+        "candidate_page_image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Page Image"
+        }
+      },
+      "required": [
+        "original_path",
+        "category",
+        "source_ref",
+        "source_location"
+      ],
+      "title": "PathReference",
+      "type": "object"
+    },
+    "PathRootMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "mapping_id": {
+          "title": "Mapping Id",
+          "type": "string"
+        },
+        "source_root": {
+          "title": "Source Root",
+          "type": "string"
+        },
+        "path_style": {
+          "enum": [
+            "posix",
+            "windows"
+          ],
+          "title": "Path Style",
+          "type": "string"
+        },
+        "destination_root_key": {
+          "title": "Destination Root Key",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "raw_page_image",
+            "ocr_page_json",
+            "ocr_crop"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "containment_policy": {
+          "const": "lexical_then_runtime",
+          "title": "Containment Policy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mapping_id",
+        "source_root",
+        "path_style",
+        "destination_root_key",
+        "category",
+        "containment_policy"
+      ],
+      "title": "PathRootMapping",
+      "type": "object"
+    },
+    "PathTarget": {
+      "additionalProperties": false,
+      "description": "Đích logic; runtime bind root key vào cấu hình local đã phê duyệt.",
+      "properties": {
+        "mapping_id": {
+          "title": "Mapping Id",
+          "type": "string"
+        },
+        "root_key": {
+          "title": "Root Key",
+          "type": "string"
+        },
+        "relative_suffix": {
+          "title": "Relative Suffix",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mapping_id",
+        "root_key",
+        "relative_suffix"
+      ],
+      "title": "PathTarget",
+      "type": "object"
+    },
+    "RawPageIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "year": {
+          "title": "Year",
+          "type": "string"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "image": {
+          "title": "Image",
+          "type": "string"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        }
+      },
+      "required": [
+        "symbol",
+        "year",
+        "page",
+        "image"
+      ],
+      "title": "RawPageIdentity",
+      "type": "object"
+    },
+    "SourceAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/RawPageIdentity"
+        },
+        "element_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Element Id"
+        },
+        "table_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Table Id"
+        },
+        "cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cell Id"
+        },
+        "line_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Id"
+        },
+        "observed_bbox": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Bbox"
+        },
+        "proposed_bbox": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proposed Bbox"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "status"
+      ],
+      "title": "SourceAnchor",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/PathMappingRequest"
+    },
+    {
+      "$ref": "#/$defs/PathMappingResult"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "path_mapping_v1"
+}

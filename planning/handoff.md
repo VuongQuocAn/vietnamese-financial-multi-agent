@@ -2,50 +2,61 @@
 
 ## Active Task
 
-M1-02b — Document Understanding Contracts.
+M1-02c — Path Mapping Contract.
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Tech Lead APPROVED ngày 2026-10-26, không có blocker bắt buộc sửa.
-Baseline `a26ae85537cb0da70e28ec8425b1d22d42c977df` khớp origin/main;
-[CI 40292147536](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292147536)
-success đúng SHA, Python 3.11/3.12 và từng step đã xác minh.
+2026-10-26: local Python 3.12 full suite 283 tests passed (113 mới), Ruff lint/format
+47 files, pip check và planning validator 72 tasks đạt.
+Phase 1 M1-02b DONE theo Tech Lead APPROVED; checkpoint
+`e28c5bcfdab83e1990166297a112bd9db1dacaa3` đã push, remote khớp;
+[CI 40302237394](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40302237394)
+success Python 3.11/3.12, từng step đã xác minh.
 
 ## Completed Work
 
-M1-02b A/B/C đã nghiệm thu: strict models, scoped anchors, text/table/cell,
-structural/quality/reference validation, serialization và schema.
-Phase 1 cập nhật registry/spec/dashboard/status/handoff; không sửa implementation.
+A (22 tests): strict models reference/root/request/result/issue/target, parser/export,
+schema và export script. B (94 tests): pure lexical mapping/security rules.
+C (113 tests mới): public exports, raw/understanding integration, result quality/status
+validation, schema sync, docs/decisions và planning. Source/context/Unicode/missing/null
+được giữ nguyên; không sửa hai contracts cũ.
 
 ## Remaining Work
 
-Hoàn tất checkpoint Phase 1 và xác minh CI trước khi bắt đầu M1-02c được giao.
+Commit/push implementation, xác minh CI đúng SHA rồi chuyển REVIEW.
+Sau đó chờ Tech Lead nghiệm thu M1-02c; không tự chuyển DONE hoặc mở task khác.
 
 ## Modified Files
 
-Phase 1: planning/{tasks.md,progress.md,current-status.md,handoff.md,tasks/M1/M1-02b.md}.
+src/document_processing/contracts/{path_mapping.py,path_mapping_validation.py,__init__.py};
+tests/unit/test_path_mapping.py; scripts/export_path_mapping_schema.py;
+schemas/path_mapping_v1.schema.json; docs/data-contracts.md;
+planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M1/M1-02c.md}.
 
 ## Tests
 
-Local Phase 1 Python 3.12: 170 tests passed; Ruff lint/format 42 files,
-pip check, planning validator 72 tasks đạt. Không phải benchmark tài chính.
+A 22/B 94/C 113 tests mới passed; full suite 283 passed.
+Ruff lint/format 47 files, pip check, planning validator 72 tasks đạt local.
+Fixtures synthetic; không benchmark tài chính, không filesystem existence tests.
 
 ## Blockers
 
-Không có blocker M1-02b. Global OCR run identity, taxonomy/migration và header
-relationships vẫn TBD; không tự mở rộng implementation đã nghiệm thu.
+Không blocker implementation. Root-key binding M1-03a, runtime containment/existence/
+file type/access/race policy M1-03b, Drive/run identity, migration và recovery TBD.
+Lexical checks không chống symlink/junction traversal. Helper chỉ tạo candidates
+not_checked; resolved/missing cần runtime evidence và quality validation riêng.
+Không đăng ký M1-03d, không tạo crop hoặc tái tạo color views.
 
 ## Git Checkpoint
 
-Implementation `d4e6aca312251055f452a009ef0d9072ad63d940` đã push và CI success.
-Phase 1 `fd368481af4b2ed76e1655acc11f97033bc39c87` đã push, remote SHA khớp.
-Bản sửa dấu tiếng Việt và đồng bộ trạng thái nằm ở commit tiếp theo;
-chỉ bắt đầu Phase 2 sau CI của checkpoint Phase 1 cuối cùng thành công.
+Stable baseline `e28c5bcfdab83e1990166297a112bd9db1dacaa3`; A/B/C ở working tree,
+local checks đạt, chưa commit/push hoặc có CI cho implementation mới.
+Raw/processed không đọc/sửa, không API/OCR/dataset scan, không thêm dependency.
 
 ## Exact Next Action
 
-Triển khai M1-02c sau checkpoint Phase 1 và CI đạt.
+Tạo checkpoint implementation M1-02c và xác minh CI.

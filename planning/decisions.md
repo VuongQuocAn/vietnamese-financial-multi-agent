@@ -79,3 +79,20 @@ schema kế toán và phạm vi pháp lý vẫn TBD như phần trên.
 - Quality validation riêng, raw comparison tường minh trong bộ nhớ; không sửa dữ liệu.
 - Global run binding, taxonomy, migration và header relationships còn TBD.
 Chi tiết fields, status semantics và giới hạn ở [data contracts](../docs/data-contracts.md).
+
+## 2026-10-26 — Path Mapping v1 (M1-02c)
+
+- Root config là explicit approved source root + path style + category + logical
+  destination root key. Runtime M1-03a/b bind key, không hardcode local paths.
+- So root theo components, exact case, giữ source string nguyên văn. Suffix dùng
+  `/` để biểu diễn components độc lập host. Không marker search/basename fallback.
+- Nhiều rules cùng category khớp đều ambiguous, kể cả nested roots hoặc cùng đích;
+  không ưu tiên theo thứ tự. Config lỗi/duplicate IDs làm request unsafe.
+- Policy portable fail closed cho traversal, separator lẫn, encoding, stream/device
+  syntax. Lexical checks không chứng minh containment qua symlink/junction.
+- Helper chỉ sinh not_checked/unsafe/unmapped/ambiguous. Runtime resolved/missing
+  cần evidence tường minh và quality/status validation; không xác minh file content.
+- Strict structural parsing tách quality validation; giữ payload lỗi và missing/null.
+  PathReference tái sử dụng SourceAnchor, không sửa Raw OCR/Understanding models.
+- Runtime policy, root/run identity, migration và recovery vẫn TBD. Không đăng ký
+  M1-03d hoặc triển khai runtime ở task contracts.

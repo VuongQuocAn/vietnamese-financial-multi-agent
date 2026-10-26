@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 3 | 0 | 0 | 19 | 0 | 0 |
+| M1 | 22 | 3 | 1 | 0 | 18 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 7 | 0 | 0 | 65 | 0 | 0 |
+| TOTAL | 72 | 7 | 1 | 0 | 64 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | Chỉ package/docstring; chưa có config loader hoặc Gateway |
-| `document_processing` | Raw OCR v1 và Document Understanding v1, structural/quality/reference validation; chưa có loader/resolver |
+| `document_processing` | Raw OCR v1, Document Understanding v1 và Path Mapping v1; pure validation/lexical helper, chưa có loader/resolver |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,9 +46,8 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-[M1-02b](tasks/M1/M1-02b.md) DONE theo Tech Lead APPROVED 2026-10-26.
-Implementation `d4e6aca312251055f452a009ef0d9072ad63d940`; HEAD
-`a26ae85537cb0da70e28ec8425b1d22d42c977df` đã xác minh CI
-[40292147536](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292147536)
-success Python 3.11/3.12. Không active implementation task; M1-02/M1-02c TODO.
-Next action: triển khai M1-02c sau checkpoint Phase 1 và CI đạt.
+M1-02b DONE theo Tech Lead APPROVED. Phase 1 checkpoint
+`e28c5bcfdab83e1990166297a112bd9db1dacaa3`,
+[CI 40302237394](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40302237394) success.
+[M1-02c](tasks/M1/M1-02c.md) IN_PROGRESS: A/B/C hoàn tất, 283 tests (113 mới), Ruff lint/format, planning/pip check đạt local. Chưa commit/CI implementation.
+M1-02 vẫn TODO. Next action: tạo checkpoint implementation M1-02c và xác minh CI.

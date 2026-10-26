@@ -1,6 +1,7 @@
 # Data contracts
 
-M1-02a triển khai `raw_ocr_v1`; M1-02b bổ sung `document_understanding_v1` trong `document_processing`.
+M1-02a triển khai `raw_ocr_v1`; M1-02b bổ sung `document_understanding_v1`;
+M1-02c bổ sung `path_mapping_v1` trong `document_processing`.
 Các giao tiếp nghiệp vụ khác vẫn ở mức khái niệm theo báo cáo giữa kỳ, Chương 4–5;
 không suy ra schema kế toán hoặc Canonical Evidence từ OCR.
 
@@ -246,6 +247,149 @@ quality rules và strict Python type behavior được kiểm tra bằng code/te
 Fixtures hoàn toàn synthetic, không dùng như ground truth tài chính.
 Taxonomy được duyệt, global run identity, backward compatibility/migration,
 header relationships và đối chiếu đa trang còn TBD cho task được giao sau.
+
+## Path Mapping Contract — path_mapping_v1
+
+Implementation: `path_mapping.py`, `path_mapping_validation.py` trong contracts;
+public API qua `vietnamese_financial_multi_agent.document_processing.contracts`.
+Không thay đổi hai contracts cũ. Đây là models, lexical rules và quality validation
+trong bộ nhớ; chưa có runtime resolver/loader hoặc crop recovery.
+
+### Models và provenance
+
+| Model | Trường và trách nhiệm |
+| --- | --- |
+| `PathReference` | original_path, category, source_ref và source_location bắt buộc; anchor/crop_view/candidate_page_image tùy chọn nullable |
+| `PathRootMapping` | mapping_id, source_root đầy đủ, path_style posix/windows, destination_root_key, category, containment_policy=lexical_then_runtime |
+| `PathMappingRequest` | contract_version=path_mapping_v1, reference và mappings bắt buộc |
+| `PathTarget` | mapping_id, root_key và relative_suffix; đích logic, chưa phải absolute local path |
+| `PathMappingResult` | contract_version, reference, status, candidate_targets, existence_check, containment_check, issues bắt buộc; confirmed_target tùy chọn nullable |
+| `PathMappingIssue` | code, path (list key/index), message; không có severity thiếu căn cứ |
+
+Category phân biệt `raw_page_image`, `ocr_page_json`, `ocr_crop`; không đoán category
+từ basename/extension. `source_ref` xác định artifact/run do caller cung cấp;
+`source_location` là vị trí key/index trong artifact đó, ví dụ `["page","image"]`
+hoặc `["elements",0,"crop"]`. Caller giữ binding artifact/run, không coi string này
+là bằng chứng danh tính đã xác minh. Manifest cũng dùng context/location riêng,
+không bắt mọi reference là crop hoặc có page identity.
+
+`anchor` dùng lại `SourceAnchor` của Document Understanding v1, giữ page identity,
+element/table/cell/line context và observed_bbox khi nguồn cung cấp. Không tự suy ra
+bbox hay chuyển status của anchor. `crop_view` optional original/ink/black/red/blue
+chỉ dùng cho ocr_crop. `candidate_page_image` chỉ giữ reference ảnh trang caller đã
+biết, chưa được ánh xạ hoặc xác minh. Không chứng minh liên kết anchor với JSON chỉ
+bằng lexical validation; đối chiếu raw anchors vẫn theo contract M1-02b.
+
+`original_path` giữ nguyên Unicode, dấu, khoảng trắng, separators và cả input lỗi.
+Không sửa `crop` trong Raw OCR. Chỉ suffix của candidate Windows được biểu diễn
+thành components nối `/`; source string gốc không bị normalize. Không tải Drive,
+không mở URL và không tự tìm artifact từ source_ref.
+
+### Lifecycle và status semantics
+
+1. Caller lấy path/context từ OCR đã parse hoặc manifest; chọn approved mappings.
+2. `parse_path_mapping_request(payload)` kiểm tra cấu trúc, trả model hoặc
+   `PathMappingStructuralError` giữ bản sao payload và StructuralIssue code/path/message.
+3. `map_path_lexically(request)` chạy validation cấu hình/context và path policy,
+   trả result với machine-readable issues. Không sửa request, không I/O.
+4. Runtime M1-03b sau này nhận candidate `(root_key, relative_suffix)`, bind
+   root_key vào cấu hình đã duyệt của M1-03a, kiểm tra containment thực tế rồi
+   existence. Config keys như FINANCIAL_REPORT_DIR/FINANCIAL_OCR_DIR mới là định
+   hướng trong [dataset](dataset.md); chưa có config loader hoặc root binding.
+5. Output từ runtime cần `parse_path_mapping_result` và
+   `validate_path_mapping_result` trước khi downstream tin status. Structural
+   parsing không thay thế quality validation. Validator không tự chứng minh lời
+   khai runtime, caller phải thực sự kiểm tra theo policy trước khi ghi evidence.
+
+| Status | Ý nghĩa và điều kiện quality |
+| --- | --- |
+| not_checked | Đúng một candidate, chưa containment/existence, không confirmed_target; helper chỉ sinh trạng thái này khi mapping duy nhất |
+| resolved | Một candidate bằng confirmed_target, containment_check=verified và existence_check=exists do runtime khai báo; không xác minh nội dung file hoặc nguồn Drive |
+| missing | Một candidate, containment verified và existence missing; không confirmed_target, cần issue missing_target |
+| ambiguous | Ít nhất hai candidates từ các mapping IDs khác nhau, không chọn đích, chưa runtime checks |
+| unsafe | Vi phạm path/config/context policy hoặc runtime containment; có issue, không confirmed_target |
+| unmapped | Không approved root/category phù hợp, không candidates, chưa runtime checks |
+
+`missing` khác `unmapped`: missing đã có candidate hợp lệ và runtime kiểm tra;
+unmapped chưa có rule phù hợp. `ambiguous` giữ tất cả logical candidates phục vụ
+review, không thử basename hoặc chọn mapping đầu tiên. Helper tuyệt đối không sinh
+resolved/missing, vì chưa truy cập filesystem.
+
+### Lexical rules và containment
+
+Source root là toàn bộ root được caller phê duyệt, không phải marker được tìm tự
+động. [M1-01 discovery](ocr-data-discovery.md) chỉ quan sát Colab/Drive roots với
+marker `Financial_Report`/`Financial_Report_OCR` và full suffix mã/năm/cấu trúc con;
+không đủ để khẳng định identity của mọi Drive root/run. Không hardcode shortcut,
+Drive ID, prefix Colab cá nhân hoặc pattern filename trong helper.
+
+- Root matching theo anchor và từng component, phân biệt hoa/thường chính xác
+  trên mọi host. Financial_Report_OCR_Backup không thuộc Financial_Report_OCR.
+- POSIX dùng `/`, Windows dùng `\`; style được khai báo trong mapping. Hỗ trợ
+  source POSIX absolute/relative, Windows drive absolute, UNC server/share và
+  Windows relative. UNC/drive chỉ hợp lệ khi toàn source khớp approved root;
+  không cho chèn chúng vào suffix. Không phụ thuộc hệ điều hành đang chạy tests.
+- Từ chối `..` ở bất kỳ component nào, kể cả khi path sau normalize vẫn nằm trong
+  root; không xóa `..` để sửa input. Dot segments, repeated/mixed separators,
+  suffix rỗng, root-relative Windows và drive-relative Windows bị từ chối.
+- Policy portable từ chối control/format/surrogate chars, `%` (không decode), URL,
+  home expansion, colon/ADS, ký tự `< > : " | ? *`, Windows device names và segment
+  có dấu chấm/khoảng trắng cuối. Khoảng trắng bên trong và Unicode bình thường
+  được giữ nguyên; không normalize Unicode/case hoặc trim source strings.
+- Chỉ tạo suffix tương đối từ components bên dưới approved root; giữ toàn bộ
+  cấu trúc thư mục, không fallback basename, không glob hoặc search filesystem.
+- Nhiều rules cùng root/category hoặc roots lồng nhau cùng category đều ambiguous,
+  kể cả trỏ cùng đích. Khác category được lọc tường minh. Không tự ưu tiên root dài
+  hơn; candidates được sort theo mapping_id để output độc lập iteration order.
+- Duplicate mapping IDs, root/key sai và context thiếu làm toàn request unsafe;
+  không bỏ rule hỏng rồi chọn rule khác. Root key là logical identifier dạng
+  `[A-Za-z][A-Za-z0-9_]*`, không phải absolute path hoặc secret.
+
+Lexical containment chỉ chứng minh suffix theo components của input. Runtime cần
+kiểm tra root binding, symlinks/junctions/reparse points, containment thực tế,
+quyền truy cập, file type và race conditions theo policy được duyệt. Không coi
+lexical validation là bảo vệ đầy đủ trước symlink traversal. Case aliases, Unicode
+normalization aliases hoặc filesystem-specific aliases cũng cần runtime policy;
+helper fail closed khi root case khác, không tự tìm case-insensitive match.
+
+### Validation, serialization, schema và giới hạn
+
+Models strict/extra forbid, không coercion path/category/index. Structural errors
+giữ payload snapshot và field paths; error string chỉ chứa số issues. Empty paths
+vẫn parse để giữ nguồn rồi thành quality issue. Output quality validator kiểm tra
+suffix/root key, IDs trùng và status/evidence consistency; trả issues mới, không
+sửa status hoặc merge vào result.issues. Status cần quality validator đạt trước
+khi sử dụng; schema chỉ mô tả cấu trúc, không chứng minh quality hoặc runtime I/O.
+
+Các code chính: empty_path, path_traversal, absolute_path_injection,
+unsupported_path_format, invalid_separators, unsafe_segment, unknown_source_root,
+ambiguous_root_matching, duplicate_mapping_identifier, mismatched_source_category,
+missing_target, empty_relative_suffix, empty_source_context, invalid_source_location,
+empty_mapping_id, invalid_root_key, status_conflict. Issue path trỏ input hoặc
+output tương ứng. Source path/context luôn còn trong result kể cả unsafe/unmapped.
+
+`export_result()` dùng mode=json/exclude_unset=True, giữ missing/null, Unicode và
+source values. Khi dùng model_dump_json để round-trip, truyền exclude_unset=True.
+Không cam kết byte-for-byte JSON. Version path_mapping_v1 độc lập hai contracts cũ.
+Schema bao gồm request/result dưới anyOf và definitions chung, sinh bằng:
+
+```powershell
+python scripts/export_path_mapping_schema.py
+```
+
+Artifact `schemas/path_mapping_v1.schema.json` có test sync. Tests synthetic kiểm
+tra contracts/security, không kiểm tra file existence, không phải benchmark tài chính.
+
+Theo M1-01 có 2.980 lượt crop references có local suffix tồn tại và 572 lượt thiếu;
+không suy ra 572 ảnh duy nhất hoặc khả năng recovery. Missing results giữ source,
+candidate, context/anchor/bbox và page image reference nếu caller biết. Không tạo
+crop, không suy đoán recovery eligibility, không coi color views tái tạo được chính
+xác từ bbox. M1-03d vẫn chỉ là đề xuất, chưa đăng ký task hoặc tạo recovered_crops.
+
+TBD: approved source root/run identities, root-key binding/config policy M1-03a,
+runtime containment/file type/access/race policy M1-03b, migration/version compatibility,
+filesystem aliases và quy trình/eligibility recovery. Các path formats ngoài policy
+bị từ chối rõ ràng, không tự thêm decoder, URL download hoặc Drive API.
 
 ## Các giao tiếp nghiệp vụ chưa triển khai
 
