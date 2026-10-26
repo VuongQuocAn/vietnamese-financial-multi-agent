@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 5 | 0 | 0 | 16 | 0 | 1 |
+| M1 | 22 | 6 | 0 | 0 | 16 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 9 | 0 | 0 | 62 | 0 | 1 |
+| TOTAL | 72 | 10 | 0 | 0 | 62 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -50,7 +50,7 @@ M1-02c/M1-02 DONE theo Tech Lead APPROVED và đối chiếu criteria cha.
 Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0` đã push, remote khớp,
 [CI 40304977048](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40304977048)
 success Python 3.11/3.12 và từng step đã kiểm tra.
-M1-03a REVIEW: A/B/C implementation hoàn tất, 90 tests mới/373 full passed,
+M1-03a DONE (Tech Lead APPROVED 2026-10-26): A/B/C implementation hoàn tất, 90 tests mới/373 full passed,
 Ruff lint/format 50 files và pip check đạt local; planning 72 tasks đồng bộ.
 Implementation `5607cc05035871455df3bf249ff95a44e87b5d66` đã push origin/main, remote SHA khớp;
 [CI 40305769422](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40305769422) success đúng SHA Python 3.11/3.12,
