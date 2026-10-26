@@ -48,7 +48,7 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 [M1-02b](tasks/M1/M1-02b.md) DONE theo Tech Lead APPROVED 2026-10-26.
 Implementation `d4e6aca312251055f452a009ef0d9072ad63d940`; HEAD
-`a26ae85537cb0da70e28ec8425b1d22d42c977df` ?? x?c minh CI
+`a26ae85537cb0da70e28ec8425b1d22d42c977df` đã xác minh CI
 [40292147536](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292147536)
-success Python 3.11/3.12. Kh?ng active implementation task; M1-02/M1-02c TODO.
-Next action: tri?n khai M1-02c sau checkpoint Phase 1 v? CI ??t.
+success Python 3.11/3.12. Không active implementation task; M1-02/M1-02c TODO.
+Next action: triển khai M1-02c sau checkpoint Phase 1 và CI đạt.
