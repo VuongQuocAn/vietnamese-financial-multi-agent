@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 6 | 0 | 0 | 15 | 0 | 1 |
+| M1 | 22 | 7 | 0 | 0 | 15 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 10 | 0 | 0 | 61 | 0 | 1 |
+| TOTAL | 72 | 11 | 0 | 0 | 61 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -56,4 +56,6 @@ Implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6` push/remote khớp;
 success đúng SHA, từng step Python 3.11/3.12 xác minh. Mỗi job 445 passed/8 skipped;
 77 resolver cases đạt Linux (gồm symlink/FIFO/case-sensitive), 3 junction cases skip.
 Bản ghi evidence sau implementation cần CI riêng, không suy ra từ implementation.
-Next action: chờ Tech Lead review M1-03b.
+Tech Lead APPROVED M1-03b 2026-10-26: trạng thái hiện tại DONE.
+Acceptance baseline `13a39ea`, CI 40308268296 success đúng SHA và từng step.
+Next action: triển khai M1-03c sau khi checkpoint acceptance được xác minh.

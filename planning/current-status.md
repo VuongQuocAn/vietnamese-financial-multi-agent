@@ -4,7 +4,7 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [hand
 
 - M1-03a DONE, Tech Lead APPROVED; acceptance `3d700a5` push/remote khớp.
 - CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
-- M1-03b REVIEW, A/B/C hoàn tất; chưa mở M1-03c/recovery.
+- M1-03b DONE, Tech Lead APPROVED 2026-10-26 theo task giao.
 - Full Windows Python 3.12: 442 passed/11 skipped, gồm 80 resolver cases.
 - Ba native junction cases đạt. Chín symlink cases thiếu privilege; case-sensitive
   và FIFO không được filesystem/platform hỗ trợ. Metadata policy regressions đạt.
@@ -15,4 +15,8 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [hand
   Linux đạt symlink/FIFO/case-sensitive; junction được xác minh trên Windows local.
 - Commit evidence sau implementation cần CI riêng; không suy ra từ CI trước.
 - Không dataset/API/OCR/scan, không thay implementation core/contracts.
-- Next action: chờ Tech Lead review M1-03b.
+- Baseline `13a39ea` khớp origin/main; CI 40308268296 success đúng SHA,
+  từng step Python 3.11/3.12 đã kiểm tra; working tree sạch trước cập nhật.
+- Resolver là snapshot metadata; loader cần revalidate khi đọc, còn TOCTOU.
+  Extension .json không chứng minh nội dung; caller chịu trách nhiệm source/run.
+- Next action: triển khai M1-03c sau khi checkpoint acceptance được xác minh.

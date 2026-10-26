@@ -2,11 +2,11 @@
 
 ## Active Task
 
-M1-03b — Read-Only Path Resolver.
+M1-03b — Read-Only Path Resolver (acceptance checkpoint).
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -30,7 +30,7 @@ symlink/FIFO/case-sensitive mà Windows local skip. Native junction đạt Windo
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu M1-03b. Không mở M1-03c hoặc recovery.
+Xác minh checkpoint acceptance trước khi triển khai M1-03c được giao.
 
 ## Modified Files
 
@@ -57,4 +57,15 @@ Bản ghi evidence sau implementation cần CI riêng; không suy ra từ implem
 
 ## Exact Next Action
 
-Chờ Tech Lead review M1-03b.
+Triển khai M1-03c sau khi checkpoint acceptance được xác minh.
+
+## Acceptance 2026-10-26
+
+Tech Lead APPROVED theo task giao. Local Python 3.12: 442 passed/11 skipped;
+Ruff lint/format 54 files, pip check đạt; planning được xác minh trước commit.
+Baseline `13a39eae78e621be178c0eedce2b72cdf68d3b4a` khớp origin/main,
+CI 40308268296 success đúng SHA, từng step Python 3.11/3.12 đã kiểm tra.
+Modified trong phase này: tasks.md, tasks/M1/M1-03b.md, progress.md,
+current-status.md, handoff.md; không sửa implementation.
+Resolver chỉ là snapshot, loader phải revalidate khi đọc; TOCTOU chưa loại bỏ.
+Extension .json không chứng minh JSON hợp lệ; source/run identity do caller.
