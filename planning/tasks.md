@@ -33,7 +33,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M0-02 | Reorganize Financial Dataset & Commit to GitHub | M0 | DONE | P0 | M0-01 | [M0-02](tasks.md#m0-02-history) | [279e65a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/279e65a38c44feca385b305e32e34be2c30510db) |
 | M0-03 | Repository Housekeeping & Planning Synchronization | M0 | DONE | P0 | M0-02 | [M0-03](tasks.md#m0-03-history) | [c86b86e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/c86b86eb95ef91251a53b3768ae5c52c2ed73514) |
 | M0-04 | Project Task Tracking & Codex Handoff System | M0 | DONE | P0 | M0-03 | [M0-04](tasks/M0/M0-04.md) | [3c7d78c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3c7d78c6855467262beca6064d657bb23a7a2e3e) |
-| M1-01 | Dataset Inventory & Provenance Review | M1 | READY | P1 | M0-04 | [M1-01](tasks/M1/M1-01.md) | - |
+| M1-01 | Dataset Inventory & Provenance Review | M1 | IN_PROGRESS | P1 | M0-04 | [M1-01](tasks/M1/M1-01.md) | - |
 | M1-02 | Data Contracts & Path Mapping Design | M1 | TODO | P1 | M1-01, M1-02a, M1-02b, M1-02c | [M1-02](roadmap.md#m1-02) | - |
 | M1-02a | Raw OCR Contracts | M1 | TODO | P1 | M1-01 | [M1-02a](roadmap.md#m1-02a) | - |
 | M1-02b | Document Understanding Contracts | M1 | TODO | P1 | M1-02a | [M1-02b](roadmap.md#m1-02b) | - |
