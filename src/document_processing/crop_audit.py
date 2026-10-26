@@ -80,6 +80,7 @@ class CropAuditRecord:
     deduplication_key: str
     path_key: str
     source_image_hash: str | None
+    verified_local_mapping_id: str | None = None
 
     def export(self) -> dict:
         return asdict(self)
@@ -204,6 +205,9 @@ def audit_page(
                     digest([context, index, element.id, element.type, field]),
                     digest([run_identity, source_ref, original]),
                     image_hash,
+                    result.candidate_targets[0].mapping_id
+                    if len(result.candidate_targets) == 1
+                    else None,
                 )
             )
     return records

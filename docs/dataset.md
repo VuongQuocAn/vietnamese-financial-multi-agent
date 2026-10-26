@@ -1,5 +1,11 @@
 # Dữ liệu và nguồn gốc
 
+M1-03e kiểm chứng hai exact local mappings và 193 page bindings bằng inventory,
+full suffix và dimensions; [phương pháp](crop-recovery.md). Re-audit 193 trang:
+985 existing, 572 missing trong 1.557 references, baseline khớp. Pilot tạo 12
+reconstructed table PNG; rerun 12 already_recovered; nguồn hash/metadata giữ nguyên.
+Không khẳng định original Drive/run identity. Các số M1-03d dưới đây là lịch sử.
+
 M1-03d bổ sung [audit/recovery](crop-recovery.md): audit đúng 193 trang từ manifest,
 1.557 lượt references (1.553 paths). Chưa có approved source bindings nên tất cả
 unmapped, không suy ra missing count hiện tại; pilot 0 ảnh. Reconstructed outputs

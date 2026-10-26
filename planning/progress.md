@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 23 | 10 | 0 | 0 | 13 | 0 | 0 |
+| M1 | 24 | 10 | 1 | 0 | 13 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 73 | 14 | 0 | 0 | 59 | 0 | 0 |
+| TOTAL | 74 | 14 | 1 | 0 | 59 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -59,4 +59,11 @@ chưa có approved bindings. Full local 575 passed/13 skipped, crop 57 passed/1 
 native junction đạt; Ruff 64 files, planning 73 tasks/pip check đạt.
 Stable implementation `6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6`, remote khớp;
 CI 40315855062 success đúng SHA/mọi step Python 3.11/3.12, 578 passed/10 skipped mỗi job.
-Next action: Xác minh CI checkpoint acceptance rồi đăng ký M1-03e theo task được giao.
+M1-03e IN_PROGRESS, A/B/C hoàn tất: 2 mappings/193 page bindings verified,
+1.178 positive/4 negative controls. Audit đúng 193 trang/1.557 references;
+existing 985, missing 572 (unique/contextual 572), baseline khớp. Eligible 199;
+dry-run 12, recovered 12, rerun 12 already_recovered, conflicts/failures 0.
+193 JSON và 193 raw images hash/metadata không đổi. Full local 614 passed/13 skipped;
+Ruff 71 files/planning 74 tasks/pip check đạt. Checkpoint acceptance `1e7fe34`,
+CI 40340730395 success Python 3.11/3.12.
+Next action: Xuất sanitized evidence và xác minh commit/push/CI M1-03e.

@@ -1,5 +1,24 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-26 — Verified local pilot và public evidence (M1-03e)
+
+- Tech Lead APPROVED M1-03d engineering/synthetic/zero-output; chuyển DONE, giữ
+  M1-03 DONE, không thêm recovery tasks vào dependency task cha đã nghiệm thu.
+- Người dùng cho phép kiểm chứng mapping local từ bản sao dataset Drive; không
+  yêu cầu truy cập Drive hoặc tuyệt đối hóa OCR run identity. Exact source roots,
+  suffix mã/năm/page, inventory độc lập với page metadata, containment, dimensions
+  và positive/negative controls đủ cho bounded local pilot; fail closed từng trường
+  hợp chưa đủ evidence. Không khẳng định original Drive byte identity.
+- Reuse engine M1-03d, tối đa 12 table.crop, source roots read-only; mapping/image
+  evidence và per-file provenance chỉ local. Không sửa versioned contracts.
+- Từ M1-03e, task có kết quả local quan trọng cần báo cáo nghiệm thu đã loại bỏ
+  dữ liệu nhạy cảm được commit lên GitHub. Chỉ aggregate/method/issues/tests;
+  không source paths, Drive IDs, OCR/cell text, per-file hashes hoặc ảnh thật.
+  Public exporter dùng allowlist numeric/boolean/enum, unknown values fail closed.
+- Full real run xác minh 2 mappings/193 page bindings; 572 missing khớp baseline,
+  199 table candidates; dry-run/recovered/rerun 12/12/12, nguồn không đổi. Không
+  suy ra OCR/tài chính chính xác hoặc preprocessing equivalence; dừng REVIEW.
+
 ## 2026-10-26 — Missing Crop Audit & Bounded Recovery (M1-03d)
 
 - M1-03c Tech Lead APPROVED, task cha M1-03 DONE; M1-03d độc lập dependency M1-03.

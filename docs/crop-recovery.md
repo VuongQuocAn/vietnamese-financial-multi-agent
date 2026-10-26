@@ -1,5 +1,54 @@
 # Missing Crop Audit & Bounded Recovery — M1-03d
 
+M1-03d đã được Tech Lead APPROVED engineering/synthetic/zero-output ngày
+2026-10-26 và chuyển DONE. Các phần REVIEW/zero-output bên dưới giữ kết quả lịch
+sử M1-03d. M1-03e bổ sung local verification/pilot theo scope mới được giao.
+
+## Verified local mapping và real pilot — M1-03e
+
+Adapter `local_crop_mapping` chỉ xét hai root markers đúng tên, trích full exact
+prefix từ source thực tế, kiểm tra lexical bằng contract v1 và runtime resolver.
+Marker discovery chưa đủ approval: từng suffix phải khớp context mã/năm/page
+của inventory; mỗi prefix cần positive controls; collisions giữa prefixes bị
+từ chối. Negative controls đổi mã/năm, giữ basename và phần suffix còn lại,
+phải trả missing thay vì fallback. Không glob/search dataset hoặc basename-only.
+
+Page binding dùng source manifest độc lập với metadata trang, exact raw suffix,
+containment và dimensions đã decode khớp OCR. Đây là `verified_local_mapping` và
+`verified_local_page_identity`; `original_drive_identity_verified=false`,
+`run_identity=null`. Không xác minh ảnh byte-for-byte với Drive, nội dung tài
+chính hoặc preprocessing gốc. `CropAuditRecord.verified_local_mapping_id` nối
+audit với private bindings, không thay versioned contracts.
+
+Hai environment keys input theo DataConfig phải được caller cấu hình. Chạy:
+
+```powershell
+.venv/Scripts/python scripts/verify_local_crop_pilot.py
+.venv/Scripts/python scripts/verify_local_crop_pilot.py --execute
+.venv/Scripts/python scripts/export_crop_evidence.py artifacts/crop-recovery/M1-03e/execute-summary.json
+```
+
+CLI chọn đúng inventory pages có missing warning (tối đa 193), verify lại bindings
+và audit trước mọi lần execute. `--execute` chỉ chạy khi từng selected candidate
+qua dry-run; luôn dùng `recover_crop`, cap 12. Rerun trong cùng run xác minh
+already_recovered và giữ output snapshots. Full manifest/bindings local dưới
+artifacts/crop-recovery/M1-03e/, binding ghi exclusive/idempotent; thay evidence
+phải review conflict và chọn vị trí mới, không overwrite. Reproducibility cần
+inventory và bản dataset local riêng; public CI chỉ dùng synthetic fixtures.
+
+Dry-run thật không tạo recovery root; 2 mappings/193 bindings verified, audit
+193 trang/1.557 references: existing 985, missing 572, unique/contextual 572/572,
+unmapped/unsafe/ambiguous 0. 199 table candidates, 288 unsupported missing views,
+85 non-table missing crops cần review. Pilot đã tạo 12 PNG, rerun 12 already_recovered;
+pixels/dimensions/hash/provenance đạt. Nguồn 193 JSON + 193 ảnh hash/metadata không đổi.
+Không có contact sheet hoặc ảnh thật trong Git. Đây là engineering verification,
+không phải đánh giá chất lượng OCR/tài chính hoặc original crop equivalence.
+
+`crop_evidence.public_statistics` chỉ cho fixed keys, strict nonnegative integers,
+strict booleans và enum keys đã allowlist; không có kênh output cho paths, IDs,
+per-file hashes hoặc OCR text. Unknown issue keys/giá trị string fail closed.
+Full manifest không được publish trực tiếp; báo cáo chỉ lấy projection tổng hợp.
+
 Task bổ sung độc lập sau M1-03 DONE. Audit chỉ đọc qua OCR Loader và Path
 Resolver đã nghiệm thu. Không sửa Raw OCR/Path Mapping contracts, DataConfig,
 JSON nguồn hoặc downstream crop references. Không gọi API/OCR/model.
