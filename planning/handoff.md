@@ -6,7 +6,7 @@ M1-03e — Verified Local Mapping & Real Crop Recovery Pilot.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -28,15 +28,15 @@ Private bindings tái lập/idempotent, không tạo run_identity; artifacts b�
 
 ## Remaining Work
 
-D: commit implementation, CI đúng SHA, sanitized GitHub evidence report và REVIEW.
-Không mở M1-04a/b hoặc mở rộng recovery.
+Tech Lead review [sanitized GitHub evidence](../docs/reviews/M1-03e-evidence.md).
+Không mở M1-04a/b hoặc mở rộng recovery. Không còn implementation work trong scope.
 
 ## Modified Files
 
 src/document_processing/{local_crop_mapping.py,crop_evidence.py,crop_audit.py};
 scripts/{verify_local_crop_pilot.py,export_crop_evidence.py};
 tests/unit/{test_local_crop_mapping.py,test_crop_evidence.py};
-docs/crop-recovery.md; planning/{tasks.md,progress.md,current-status.md,handoff.md,
+docs/{crop-recovery.md,dataset.md,reviews/M1-03e-evidence.md}; planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,
 tasks/M1/M1-03e.md}. Full artifacts local artifacts/crop-recovery/M1-03e/;
 12 PNG + sidecars local data/recovered_crops/. Không tạo contact sheet.
 
@@ -45,7 +45,8 @@ tasks/M1/M1-03e.md}. Full artifacts local artifacts/crop-recovery/M1-03e/;
 Windows Python 3.12: 614 passed/13 skipped; mapping 26 tests, publication 13 tests.
 Ruff lint/format 71 files, planning 74 tasks/pip check đạt. Windows skips:
 11 symlink privilege, case-insensitive filesystem, FIFO unsupported. Native junction
-đạt. Linux CI chưa chạy cho implementation mới. Tests không đánh giá OCR/tài chính.
+đạt. CI Linux Python 3.11/3.12: 617 passed/10 skipped mỗi job, mọi steps success.
+Tests không đánh giá OCR/tài chính.
 
 ## Blockers
 
@@ -58,8 +59,13 @@ source paths/hashes, ảnh hoặc OCR content lên GitHub.
 
 Stable acceptance `1e7fe344c4991b99127448a5180bdcb4470c9a60`;
 [CI 40340730395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40340730395)
-success đúng SHA. Implementation M1-03e đang working tree, local checks đạt.
+success đúng SHA. Stable implementation M1-03e
+`6c2b8c7738631b578c97b9b0d930b51ff69c6162`, push/remote khớp;
+[CI 40342491992](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40342491992)
+success đúng SHA/mọi steps Python 3.11/3.12, 617 passed/10 skipped mỗi job.
+Evidence/REVIEW publication đi sau implementation; kiểm tra CI publication theo
+HEAD riêng, không suy từ CI trên. Không commit artifacts/data/paths thật.
 
 ## Exact Next Action
 
-Xuất sanitized evidence và xác minh commit/push/CI M1-03e.
+Chờ Tech Lead review M1-03e qua GitHub.
