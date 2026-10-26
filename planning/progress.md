@@ -48,6 +48,10 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 [M1-02b](tasks/M1/M1-02b.md) REVIEW: A/B/C triển khai xong, 170 unit tests
 (79 tests mới), Ruff lint/format, pip check và planning validator 72 task đạt local.
-Chờ commit/push/CI; Tech Lead nghiệm thu contracts. Không active implementation task.
+Checkpoint nội dung `d4e6aca312251055f452a009ef0d9072ad63d940` đã push origin/main;
+[CI 40292017456](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292017456)
+success Python 3.11/3.12, gồm install/lint/format/planning/tests.
+CI này gắn checkpoint nội dung, không phải bản ghi trạng thái sau đó.
+Chờ Tech Lead nghiệm thu contracts; không active implementation task.
 M1-02a giữ DONE; task cha M1-02 và M1-02c giữ TODO.
-Next action: commit/push checkpoint M1-02b và xác minh CI.
+Next action: chờ Tech Lead review M1-02b.

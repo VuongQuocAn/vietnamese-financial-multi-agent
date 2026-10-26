@@ -11,7 +11,10 @@ REVIEW
 ## Last Verified State
 
 2026-10-26: local Python 3.12 đạt 170 unit tests (79 mới), Ruff lint/format,
-pip check và planning validator 72 task. Chưa push/CI M1-02b.
+pip check và planning validator 72 task. Checkpoint `d4e6aca312251055f452a009ef0d9072ad63d940`
+đã push origin/main, local/remote đã đối chiếu khớp, working tree sạch sau push checkpoint.
+[CI 40292017456](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40292017456) success Python 3.11/3.12;
+đã kiểm tra steps install/lint/format/planning/tests. Không suy ra CI cho commit status sau đó.
 
 ## Completed Work
 
@@ -23,7 +26,8 @@ Giữ nguyên Raw OCR implementation/schema/tests, không đọc/sửa raw/proce
 
 ## Remaining Work
 
-Commit/push, kiểm tra CI đúng SHA; Tech Lead review schema/status/identity policy.
+Tech Lead review schema/status/identity policy. Không còn phần implementation hoặc
+local/CI verification mở tại checkpoint nội dung.
 Không triển khai task khác.
 
 ## Modified Files
@@ -38,7 +42,7 @@ planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M
 
 A 17/B 27/C 79 tests mới passed; full suite 170 passed.
 Ruff lint/format 42 files, pip check, planning validator 72 task đạt local.
-CI chưa chạy cho thay đổi mới. Synthetic tests không đánh giá chất lượng tài chính.
+CI checkpoint nội dung success Python 3.11/3.12. Synthetic tests không đánh giá tài chính.
 
 ## Blockers
 
@@ -50,9 +54,10 @@ migration và header relationships TBD. Không suy diễn tính duy nhất của
 
 ## Git Checkpoint
 
-Baseline ổn định `0c8533e6027652129ce5edb01ec1a4ebc7722f6f`; M1-02b chưa commit.
-main/origin baseline đã fetch khớp, initial working tree sạch.
+Checkpoint nội dung ổn định `d4e6aca312251055f452a009ef0d9072ad63d940`, push origin/main và CI success.
+Baseline `0c8533e6027652129ce5edb01ec1a4ebc7722f6f` đã fetch khớp trước triển khai.
+Bản ghi trạng thái ở commit sau checkpoint; khi resume kiểm tra Git thực tế.
 
 ## Exact Next Action
 
-Commit/push checkpoint M1-02b và xác minh CI.
+Chờ Tech Lead review M1-02b.
