@@ -20,6 +20,10 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Chưa có human approval; batch expansion 0, PNG mới 0. Không bắt đầu M1-04a/b.
 - Full local 655 passed/14 skipped; Ruff lint/format 79 files, planning 75 tasks
   và pip check đạt. [Evidence](../docs/reviews/M1-03f-evidence.md) ghi checkpoint.
+- Stable implementation `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`, remote khớp;
+  [CI 40349513656](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40349513656)
+  success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
+  Publication metadata đi sau; đối chiếu HEAD/CI riêng khi resume.
 - Original Drive/run identity và preprocessing equivalence unverified;
   trusted local filesystem, TOCTOU/aliases vẫn có giới hạn.
 - Exact next action: Người dùng xem 12 local review sheets và ghi approval thật khớp template.

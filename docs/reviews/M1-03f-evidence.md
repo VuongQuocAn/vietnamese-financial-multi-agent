@@ -14,7 +14,8 @@ Không publish ảnh, OCR text, source paths/bindings hoặc per-file hashes.
 | M1-03e | Tech Lead APPROVED/DONE theo task giao |
 | Acceptance SHA M1-03e | `ca607debe2148ab2a52c25c78f142f181cf35674` |
 | CI acceptance | [40345846471](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40345846471), success mọi steps Python 3.11/3.12 đúng SHA |
-| Implementation SHA M1-03f | Sẽ ghi sau commit và xác minh remote/CI |
+| Implementation SHA M1-03f | `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`, push/remote khớp |
+| CI implementation | [40349513656](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40349513656), success mọi steps Python 3.11/3.12 đúng SHA |
 | Python/Pillow local | 3.12.0 / 12.3.0, Windows |
 | Recovery method/version | reconstructed_from_page_bbox / 1 |
 | Equivalence to original | unverified |
@@ -110,7 +111,11 @@ làm cơ chế sanitize. Dataset/PNG/private manifests vẫn bị Git ignore.
 Full local Windows Python 3.12: **655 passed, 14 skipped**. Ruff lint và format
 check đạt (**79 files**); planning validator **75 tasks** đạt; pip check không có
 broken requirements. Expansion module: **35 passed, 1 skipped**; publication
-module: **19 passed**. Exact implementation CI sẽ được cập nhật sau commit.
+module: **19 passed**. Implementation CI Python 3.11 và 3.12: mỗi job
+**658 passed, 11 skipped**, Ruff/planning và mọi steps success; đã đọc job logs.
+Linux chạy symlink tests, skip các native Windows syntax/junction tests. CI không
+có pip check riêng; pip check ở đây là local. Publication tài liệu đi sau stable
+implementation; CI của publication HEAD được kiểm tra riêng, không suy từ CI code.
 Tests dùng synthetic PNG/tmp_path, không có real dataset trong CI và không phải
 bằng chứng chất lượng tài chính. Native Windows junction và process-lock tests
 đạt; skips gồm 12 symlink privilege, case-insensitive filesystem và FIFO Windows.

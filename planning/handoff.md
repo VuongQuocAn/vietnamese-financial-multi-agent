@@ -46,6 +46,8 @@ Baseline acceptance: 614 passed/13 skipped; Ruff/planning/pip đạt.
 M1-03f full local: 655 passed/14 skipped; Ruff lint/format 79 files,
 planning 75 tasks/pip check đạt. Expansion 35 passed/1 skipped, publication 19 passed.
 Native junction/process-lock/clean-resume đạt; synthetic tests không đánh giá tài chính.
+CI implementation Python 3.11/3.12: mỗi job 658 passed/11 skipped, mọi steps success;
+đã kiểm tra exact SHA, jobs/steps và test logs. Pip check là local.
 
 ## Blockers
 
@@ -58,7 +60,18 @@ Original Drive/run identity và preprocessing equivalence unverified.
 
 Stable acceptance ca607debe2148ab2a52c25c78f142f181cf35674, push/remote đã khớp;
 [CI 40345846471](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40345846471)
-success đúng SHA/mọi steps Python 3.11/3.12. M1-03f chưa publication.
+success đúng SHA/mọi steps Python 3.11/3.12.
+Stable implementation M1-03f `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`,
+push/remote khớp;
+[CI 40349513656](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40349513656)
+success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
+Metadata publication đi sau code; kiểm tra Git HEAD/remote/CI riêng khi resume.
+Checkpoint local: plan.json, execution-plan-*.json, final-integrity.json,
+recovery-index.jsonl và review/review-manifest.json trong thư mục artifacts task.
+Sau khi người dùng review thực sự, tạo visual-review-approval.json đúng template;
+giữ plan_id/reviewed/IDs/hashes, điền reviewer/time/verdict thật theo docs/crop-recovery.md.
+Tái kiểm tra approval/source plan/full checks rồi execute từng batch <=24,
+validate giữa các batch; không tự reset conflicts hoặc đổi approved plan.
 
 ## Exact Next Action
 
