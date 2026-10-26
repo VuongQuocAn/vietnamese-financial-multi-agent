@@ -1,20 +1,11 @@
-# Trạng thái hiện tại
+# Tr?ng th?i hi?n t?i
 
-Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [handoff](handoff.md).
+C?p nh?t **2026-10-26** (Asia/Bangkok). Ngu?n: [Registry](tasks.md).
 
-- M1-03b DONE, Tech Lead APPROVED theo task giao.
-- Acceptance `10eb4e92c64fd241a2b740f7e38584abe1455032` push/remote khớp;
-  CI 40310998984 success đúng SHA/từng step Python 3.11/3.12.
-- Phase 1 local Python 3.12: 442 passed/11 skipped; Ruff 54 files, planning 72 tasks,
-  pip check đạt. Không sửa implementation resolver/core/contracts.
-- M1-03c REVIEW: A/B/C hoàn tất; loader 76 passed/1 skipped,
-  native junction swap đạt; full 518 passed/12 skipped Windows Python 3.12.
-- Ruff lint/format 58 files, planning 72 tasks và pip check đạt.
-- Đúng 3 mẫu manifest parse thành công, hash/metadata trước/sau khớp; không scan.
-- Bounded read 32 MiB default, UTF-8/BOM, reject duplicate keys; giữ provenance,
-  anchor page identity và quality issues riêng; TOCTOU còn tồn tại.
-- Stable loader `1342f044e1234eddc4180cd4940e59a09a855661` push/remote khớp;
-  CI 40312237896 success đúng SHA/từng step Python 3.11/3.12, mỗi job 521 passed/9 skipped.
-- Bản ghi REVIEW sau implementation cần CI riêng; không suy ra CI từ commit trước.
-- Task cha M1-03 giữ TODO; không mở M1-04/recovery.
-- Next action: chờ Tech Lead review M1-03c.
+- M1-03a/b/c DONE, Tech Lead APPROVED; task cha M1-03 DONE sau ??i chi?u roadmap.
+- Stable loader `1342f044e1234eddc4180cd4940e59a09a855661`, CI 40312237896 success.
+- Review record `5c3f4d0e47127c37c90cf6a0b65cb65f4fcac3d2` kh?p origin/main;
+  CI 40312411308 success ??ng SHA v? m?i step Python 3.11/3.12.
+- Acceptance c?p nh?t t?i li?u; kh?ng s?a implementation ho?c d? li?u ngu?n.
+- M1-03d ???c giao ??c l?p; ch?a ??ng k?/tri?n khai tr??c gate CI Phase 1.
+- Next action: x?c minh CI checkpoint acceptance tr??c khi ??ng k? M1-03d.
