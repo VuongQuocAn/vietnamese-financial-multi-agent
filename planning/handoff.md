@@ -8,6 +8,15 @@ M1-03 ? Configuration & Read-Only OCR Adapter (nghi?m thu).
 
 DONE
 
+## Last Verified State
+
+Review record `5c3f4d0e47127c37c90cf6a0b65cb65f4fcac3d2`, CI 40312411308 success.
+Acceptance local Ruff/pytest/pip ??t; ?ang s?a c?u tr?c handoff theo validator.
+
+## Blockers
+
+Ch?a qua gate CI acceptance; ch?a b?t ??u Phase 2.
+
 ## Completed Work
 
 M1-03c Tech Lead APPROVED theo task b? sung, ghi DONE. ??i chi?u roadmap v?
