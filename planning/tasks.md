@@ -34,10 +34,10 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M0-03 | Repository Housekeeping & Planning Synchronization | M0 | DONE | P0 | M0-02 | [M0-03](tasks.md#m0-03-history) | [c86b86e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/c86b86eb95ef91251a53b3768ae5c52c2ed73514) |
 | M0-04 | Project Task Tracking & Codex Handoff System | M0 | DONE | P0 | M0-03 | [M0-04](tasks/M0/M0-04.md) | [3c7d78c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3c7d78c6855467262beca6064d657bb23a7a2e3e) |
 | M1-01 | Dataset Inventory & Provenance Review | M1 | DONE | P1 | M0-04 | [M1-01](tasks/M1/M1-01.md) | [dbfbb76](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/dbfbb760ec6c85391da47199edd52510fda216a8) |
-| M1-02 | Data Contracts & Path Mapping Design | M1 | TODO | P1 | M1-01, M1-02a, M1-02b, M1-02c | [M1-02](roadmap.md#m1-02) | - |
+| M1-02 | Data Contracts & Path Mapping Design | M1 | DONE | P1 | M1-01, M1-02a, M1-02b, M1-02c | [M1-02](roadmap.md#m1-02) | [3363a55](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3363a557f4d1d1b5507ac408425f3e568f528a1b); ba contracts được duyệt |
 | M1-02a | Raw OCR Contracts | M1 | DONE | P1 | M1-01 | [M1-02a](tasks/M1/M1-02a.md) | [08f3289](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/08f3289a47f021a97608b7e8d2885bd3656bc9c5) |
 | M1-02b | Document Understanding Contracts | M1 | DONE | P1 | M1-02a | [M1-02b](tasks/M1/M1-02b.md) | [d4e6aca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d4e6aca312251055f452a009ef0d9072ad63d940), CI success; Tech Lead APPROVED 2026-10-26 |
-| M1-02c | Path Mapping Contract | M1 | REVIEW | P1 | M1-01 | [M1-02c](tasks/M1/M1-02c.md) | [527d928](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/527d928935bb5d570e0a987279326dce4228d795), CI success; chờ Tech Lead nghiệm thu |
+| M1-02c | Path Mapping Contract | M1 | DONE | P1 | M1-01 | [M1-02c](tasks/M1/M1-02c.md) | [527d928](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/527d928935bb5d570e0a987279326dce4228d795), CI success; Tech Lead APPROVED 2026-10-26 |
 | M1-03 | Configuration & Read-Only OCR Adapter | M1 | TODO | P1 | M1-02, M1-03a, M1-03b, M1-03c | [M1-03](roadmap.md#m1-03) | - |
 | M1-03a | Central Data Configuration | M1 | TODO | P1 | M1-02 | [M1-03a](roadmap.md#m1-03a) | - |
 | M1-03b | Read-Only Path Resolver | M1 | TODO | P1 | M1-03a | [M1-03b](roadmap.md#m1-03b) | - |

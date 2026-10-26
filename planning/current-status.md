@@ -2,18 +2,10 @@
 
 Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [handoff](handoff.md).
 
-- Không active implementation task; M1-02c REVIEW chờ Tech Lead nghiệm thu.
-- M1-02a/M1-02b DONE; task cha M1-02 TODO, không mở M1-03.
-- Phase 1 checkpoint `e28c5bcfdab83e1990166297a112bd9db1dacaa3` đã push, remote khớp.
-- [CI 40302237394](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40302237394) success đúng SHA Python 3.11/3.12.
-- Path Mapping v1: strict models, parser/export/schema, pure lexical helper,
-  result quality/status validation; source/context được giữ nguyên.
-- Local Python 3.12: 283 unit tests passed (113 mới); Ruff lint/format 47 files,
-  planning validator 72 tasks và pip check đạt.
-- Checkpoint implementation `527d928935bb5d570e0a987279326dce4228d795` đã push,
-  remote SHA đối chiếu khớp; working tree sạch sau push checkpoint.
-- [CI 40303643188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40303643188)
-  success đúng SHA Python 3.11/3.12; từng step đã xác minh.
-- Commit trạng thái sau checkpoint cần kiểm tra CI riêng, không suy ra từ checkpoint.
-- Không đọc/sửa raw/processed, không API/OCR/dataset scan hoặc thêm dependency.
-- Next action: chờ Tech Lead review M1-02c.
+- M1-02c DONE theo Tech Lead APPROVED; M1-02 DONE sau đối chiếu ba contracts.
+- Baseline `3363a557f4d1d1b5507ac408425f3e568f528a1b` khớp origin/main,
+  CI 40303806780 success; working tree sạch trước triển khai.
+- Không active implementation task. M1-03a được giao nhưng phải qua CI Phase 1.
+- Local: 283 tests, Ruff lint/format 47 files, pip check đạt.
+- Không đọc/sửa dataset, không API/OCR; không bắt đầu M1-03b/c.
+- Next action: xác minh CI commit nghiệm thu Phase 1 trước M1-03a.
