@@ -43,7 +43,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M1-03b | Read-Only Path Resolver | M1 | DONE | P1 | M1-03a | [M1-03b](tasks/M1/M1-03b.md) | [3cb32f8](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3cb32f8409a76d94747f0080186092a8f9ad1be6), CI success; Tech Lead APPROVED 2026-10-26 |
 | M1-03c | Read-Only OCR Data Loader | M1 | DONE | P1 | M1-03b | [M1-03c](tasks/M1/M1-03c.md) | [1342f04](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/1342f044e1234eddc4180cd4940e59a09a855661), CI 40312237896 success; chờ Tech Lead |
 | M1-03d | Missing Crop Audit & Bounded Recovery | M1 | DONE | P1 | M1-03 | [M1-03d](tasks/M1/M1-03d.md) | [6e30ba6](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6), Tech Lead APPROVED engineering/synthetic/zero-output; acceptance 1e7fe34, CI 40340730395 success |
-| M1-03e | Verified Local Mapping & Real Crop Recovery Pilot | M1 | REVIEW | P1 | M1-03d | [M1-03e](tasks/M1/M1-03e.md) | [6c2b8c7](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6c2b8c7738631b578c97b9b0d930b51ff69c6162), CI 40342491992 success; [evidence](../docs/reviews/M1-03e-evidence.md) |
+| M1-03e | Verified Local Mapping & Real Crop Recovery Pilot | M1 | DONE | P1 | M1-03d | [M1-03e](tasks/M1/M1-03e.md) | [6c2b8c7](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6c2b8c7738631b578c97b9b0d930b51ff69c6162), CI 40342491992 success; [evidence](../docs/reviews/M1-03e-evidence.md) |
 | M1-04 | Extraction Quality Validation & Pilot | M1 | TODO | P1 | M1-03, M1-04a, M1-04b | [M1-04](roadmap.md#m1-04) | - |
 | M1-04a | Extraction Structure Validators | M1 | TODO | P1 | M1-03 | [M1-04a](roadmap.md#m1-04a) | - |
 | M1-04b | Bounded Extraction Pilot | M1 | TODO | P1 | M1-04a | [M1-04b](roadmap.md#m1-04b) | - |
@@ -168,3 +168,8 @@ commit và run này; không suy diễn từ kết quả kiểm thử local.
 
 M0-03 chỉ housekeeping và đồng bộ tài liệu, không gọi Gemini, xử lý OCR hoặc
 viết code nghiệp vụ. Dừng sau khi hoàn tất M0-03.
+
+Tech Lead APPROVED M1-03e ng?y 2026-10-26 theo task M1-03f: mapping,
+193-page audit, 12 real crops/pixels/hash/rerun v? source integrity ???c nghi?m thu.
+Original preprocessing equivalence v?n unverified; M1-03 gi? DONE.
+Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.

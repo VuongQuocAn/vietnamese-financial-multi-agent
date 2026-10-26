@@ -6,7 +6,7 @@ M1-03e — Verified Local Mapping & Real Crop Recovery Pilot.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -69,3 +69,8 @@ HEAD riêng, không suy từ CI trên. Không commit artifacts/data/paths thật
 ## Exact Next Action
 
 Chờ Tech Lead review M1-03e qua GitHub.
+
+Tech Lead APPROVED M1-03e ng?y 2026-10-26 theo task M1-03f: mapping,
+193-page audit, 12 real crops/pixels/hash/rerun v? source integrity ???c nghi?m thu.
+Original preprocessing equivalence v?n unverified; M1-03 gi? DONE.
+Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.

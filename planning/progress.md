@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 24 | 10 | 0 | 0 | 13 | 0 | 1 |
+| M1 | 24 | 11 | 0 | 0 | 13 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 74 | 14 | 0 | 0 | 59 | 0 | 1 |
+| TOTAL | 74 | 15 | 0 | 0 | 59 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -59,7 +59,7 @@ chưa có approved bindings. Full local 575 passed/13 skipped, crop 57 passed/1 
 native junction đạt; Ruff 64 files, planning 73 tasks/pip check đạt.
 Stable implementation `6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6`, remote khớp;
 CI 40315855062 success đúng SHA/mọi step Python 3.11/3.12, 578 passed/10 skipped mỗi job.
-M1-03e REVIEW, A/B/C/D hoàn tất: 2 mappings/193 page bindings verified,
+M1-03e DONE, A/B/C/D hoàn tất: 2 mappings/193 page bindings verified,
 1.178 positive/4 negative controls. Audit đúng 193 trang/1.557 references;
 existing 985, missing 572 (unique/contextual 572), baseline khớp. Eligible 199;
 dry-run 12, recovered 12, rerun 12 already_recovered, conflicts/failures 0.
@@ -70,3 +70,8 @@ Stable implementation `6c2b8c7738631b578c97b9b0d930b51ff69c6162`, remote khớp;
 CI 40342491992 success mọi steps Python 3.11/3.12, mỗi job 617 passed/10 skipped.
 [Sanitized evidence](../docs/reviews/M1-03e-evidence.md) dành cho Tech Lead.
 Exact next action: Chờ Tech Lead review M1-03e qua GitHub.
+
+Tech Lead APPROVED M1-03e ng?y 2026-10-26 theo task M1-03f: mapping,
+193-page audit, 12 real crops/pixels/hash/rerun v? source integrity ???c nghi?m thu.
+Original preprocessing equivalence v?n unverified; M1-03 gi? DONE.
+Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.

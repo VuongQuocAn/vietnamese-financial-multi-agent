@@ -5,7 +5,7 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - M1-03a/b/c, M1-03 và M1-03d DONE theo Tech Lead APPROVED.
 - Acceptance M1-03d `1e7fe344c4991b99127448a5180bdcb4470c9a60`, remote khớp;
   CI 40340730395 success đúng SHA/mọi steps Python 3.11/3.12.
-- M1-03e REVIEW: A/B/C/D hoàn tất, chờ Tech Lead nghiệm thu qua
+- M1-03e DONE: A/B/C/D hoàn tất, chờ Tech Lead nghiệm thu qua
   [sanitized evidence](../docs/reviews/M1-03e-evidence.md).
 - Hai exact local mappings verified; rejected/ambiguous 0; 1.178 positive controls
   trên 14 nhóm mã/năm mỗi prefix, 4 negative controls; 193 local page bindings.
@@ -25,3 +25,8 @@ Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Bản ghi evidence/REVIEW đi sau implementation; CI của HEAD publication được
   xác minh riêng, không suy từ implementation CI.
 - Exact next action: Chờ Tech Lead review M1-03e qua GitHub.
+
+Tech Lead APPROVED M1-03e ng?y 2026-10-26 theo task M1-03f: mapping,
+193-page audit, 12 real crops/pixels/hash/rerun v? source integrity ???c nghi?m thu.
+Original preprocessing equivalence v?n unverified; M1-03 gi? DONE.
+Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.
