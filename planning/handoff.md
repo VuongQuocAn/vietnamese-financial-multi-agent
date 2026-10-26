@@ -6,7 +6,7 @@ M1-03d — Missing Crop Audit & Bounded Recovery.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -31,8 +31,8 @@ Sửa encoding PowerShell trong các bản ghi planning Phase 1/2 trước publi
 
 ## Remaining Work
 
-Tech Lead nghiệm thu M1-03d và quyết định source bindings/phạm vi recovery tiếp.
-Không tự phê duyệt mappings, mở rộng pilot hoặc bắt đầu M1-04a/b.
+Tech Lead đã APPROVED M1-03d engineering/synthetic/zero-output. Chờ checkpoint CI
+rồi đăng ký M1-03e theo task được giao; không bắt đầu M1-04a/b.
 
 ## Modified Files
 
@@ -78,4 +78,4 @@ không suy ra từ CI commit trước.
 
 ## Exact Next Action
 
-Chờ Tech Lead review M1-03d và quyết định có cho phép mở rộng recovery hay không.
+Xác minh CI checkpoint acceptance rồi đăng ký M1-03e theo task được giao.

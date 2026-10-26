@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 23 | 9 | 0 | 0 | 13 | 0 | 1 |
+| M1 | 23 | 10 | 0 | 0 | 13 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 73 | 13 | 0 | 0 | 59 | 0 | 1 |
+| TOTAL | 73 | 14 | 0 | 0 | 59 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -53,10 +53,10 @@ khớp remote, CI 40310998984 success đúng SHA/từng step Python 3.11/3.12.
 M1-03c và task cha M1-03 DONE theo Tech Lead APPROVED.
 Ba task con đạt criteria roadmap, cùng contracts và bounded integration.
 Acceptance `5937b81`, CI 40314189759 success Python 3.11/3.12.
-M1-03d REVIEW độc lập: audit 193 trang/1.557 references/1.553 paths, all
+M1-03d DONE theo Tech Lead APPROVED engineering/synthetic/zero-output: audit 193 trang/1.557 references/1.553 paths, all
 unmapped, 773 requires_review/784 unsupported_view; zero eligible/recovered vì
 chưa có approved bindings. Full local 575 passed/13 skipped, crop 57 passed/1 skipped,
 native junction đạt; Ruff 64 files, planning 73 tasks/pip check đạt.
 Stable implementation `6e30ba67fa6b3cf7dd8f6e74021c0dbbad9343a6`, remote khớp;
 CI 40315855062 success đúng SHA/mọi step Python 3.11/3.12, 578 passed/10 skipped mỗi job.
-Next action: Chờ Tech Lead review M1-03d và quyết định có cho phép mở rộng recovery hay không.
+Next action: Xác minh CI checkpoint acceptance rồi đăng ký M1-03e theo task được giao.
