@@ -1,8 +1,8 @@
 # Data contracts
 
-M1-02a triển khai Raw OCR Contract `raw_ocr_v1` trong `document_processing`.
+M1-02a triển khai `raw_ocr_v1`; M1-02b bổ sung `document_understanding_v1` trong `document_processing`.
 Các giao tiếp nghiệp vụ khác vẫn ở mức khái niệm theo báo cáo giữa kỳ, Chương 4–5;
-không suy ra schema kế toán, Document Understanding hay Canonical Evidence từ OCR.
+không suy ra schema kế toán hoặc Canonical Evidence từ OCR.
 
 ## Raw OCR Contract — raw_ocr_v1
 
@@ -114,17 +114,145 @@ structural giữ payload, cần review khi có bằng chứng mới. Không bị
 OCR run identity hoặc môi trường. Non-integer bbox cần version review theo nguồn
 thực tế; nullable confidence hiện chỉ được duyệt cho signature.
 
-Document Understanding Contract (M1-02b) sẽ biểu diễn kết quả hiểu tài liệu có
-liên kết raw riêng. Canonical Financial Evidence thuộc lớp evidence sau chuẩn hóa
+Document Understanding Contract (M1-02b) biểu diễn kết quả hiểu tài liệu có
+liên kết raw riêng theo phần bên dưới. Canonical Financial Evidence thuộc lớp evidence sau chuẩn hóa
 kế toán; cả hai chưa triển khai ở M1-02a. Path Mapping Contract (M1-02c), nguồn
 Drive/run, missing crops, ownership nâng cao và ground truth vẫn ngoài phạm vi.
+
+## Document Understanding Contract — document_understanding_v1
+
+Luồng: Raw OCR → Document Understanding → Accounting Normalization.
+M1-02b chỉ định nghĩa data models/validation/serialization, không chạy classification,
+reconstruction, correction, Gemini hoặc normalization. Không import accounting/evidence/
+agents/verification/outputs. Raw OCR v1 và JSON nguồn không thay đổi.
+
+Implementation: `document_understanding.py`, `document_understanding_validation.py`
+trong `src/document_processing/contracts/`; public API qua namespace contracts như Raw OCR.
+
+| Model / type | Fields và ý nghĩa |
+| --- | --- |
+| `DocumentUnderstandingResult` | Bắt buộc contract_version, raw_page, classification, text_regions, tables, issues; page-level |
+| `RawPageIdentity` | symbol/year/image string, page int bắt buộc; source_ref string/null tùy chọn |
+| `SourceAnchor` | page và status bắt buộc; element_id/table_id/cell_id/line_id, observed_bbox/proposed_bbox tùy chọn nullable |
+| `DocumentClassification` | label string/null, status, anchors bắt buộc; confidence int/float/null tùy chọn |
+| `UnderstoodTextRegion` | id/text/anchors/status bắt buộc; reading_order int/null và issues list/null tùy chọn |
+| `UnderstoodTable` | id/origin/anchors/cells/status bắt buộc; issues list/null tùy chọn |
+| `UnderstoodCell` | id/row/col/text/anchors/status bắt buộc; rowspan/colspan int/null và issues list/null tùy chọn |
+| `ResolutionStatus` | Literal resolved / uncertain / unresolved |
+| `UnderstandingIssue` | code string, path list các string/int, message ngắn; không thêm severity thiếu căn cứ |
+
+Classification label là vocabulary mở, không có taxonomy bắt buộc. `label=null`
+biểu diễn chưa biết; string `unknown` hoặc rỗng bị quality validator báo issue,
+không được coi là loại báo cáo. Candidate có label cần anchors; không bắt confidence.
+Không nhận diện B01/B02/B03/B09 bằng logic tại đây.
+
+### Provenance và quy ước cấu trúc
+
+Identity gồm symbol/year/page/image; không cam kết tổ hợp này duy nhất giữa OCR runs.
+`source_ref` là locator hoặc run/artifact identity nguyên văn caller cung cấp khi có;
+không tự sinh, resolve, đọc file hay kiểm tra đường dẫn tồn tại. Chưa có source_ref
+thì global identity vẫn chưa xác minh; không diễn giải identity thành khóa toàn cục.
+Mọi anchor của result phải có cùng identity, kể cả source_ref nếu cung cấp.
+
+`element_id` trỏ tới page.elements. Nếu dùng `table_id`, đó là ID OCRTable ở page.elements;
+`element_id` nếu có phải bằng table_id. `cell_id` cần table_id; `line_id` cần table_id
+và cell_id, trỏ tới lines của cell. IDs chỉ duy nhất trong collection chứa nó:
+text_regions/tables riêng trong result, cells trong mỗi output table; raw elements
+trong page, raw cells trong table, raw lines trong cell. Không tìm cell/line toàn trang
+hoặc chọn match đầu khi nhiều match. Vị trí row/col không dùng làm identity.
+
+Bbox là list đúng bốn strict int [x1,y1,x2,y2], pixel ảnh trang gốc theo Raw OCR.
+`observed_bbox` là bbox nguồn; nếu anchor trỏ OCR element/cell/line thì phải bằng bbox
+của đối tượng cụ thể đó khi đối chiếu raw. Vùng ảnh không có OCR ID dùng image trong
+page và observed_bbox; status phải uncertain/unresolved. `proposed_bbox` là vùng do
+bước xử lý sau đề xuất/tổng hợp, không thay thế observed_bbox hoặc làm identity.
+Không chuyển tọa độ, không tự resolve crop path. Một object có nhiều anchors để lưu
+đủ các thành phần nguồn; contract không chứng minh danh sách đó đầy đủ so với thuật toán.
+
+`ocr_table` cần ít nhất một table anchor có table_id. `inferred_from_text` có thể chỉ
+trỏ nhiều OCRText hoặc vùng ảnh; không cần OCRTable. Row/col theo chỉ số zero-based;
+không đòi grid chữ nhật hoặc header, không điền ô thiếu, không coi sparse là lỗi.
+Spans chỉ nhận diện khi có bằng chứng: missing hoặc null đều chưa biết, explicit 1
+là đã xác định span một ô. Không có header inference hoặc header tree trong v1.
+Text, dấu tiếng Việt, whitespace và chuỗi `1.234.567` giữ nguyên, không parse kế toán.
+
+### Resolution và hai cấp validation
+
+- resolved: bước xử lý đã xác định kết quả với các anchors resolved hợp lệ theo
+  kiểm tra có sẵn. Không chứng minh đúng kế toán hoặc accuracy thực nghiệm.
+- uncertain: có candidate nhưng còn mơ hồ về cấu trúc/diễn giải/nguồn.
+- unresolved: chưa đủ cơ sở xác định, vẫn được lưu text/candidate và issues.
+
+`parse_document_understanding(payload)` nhận JSON object đã decode, trả toàn result
+hoặc `DocumentUnderstandingStructuralError`. Exception giữ bản sao payload và list
+`StructuralIssue` code/path/message; paths tuple theo JSON thật, không log nội dung.
+Models Pydantic v2 strict, extra=forbid ở tất cả object mới: output ứng dụng sở hữu
+schema nên unknown fields là lỗi hiển thị, không bỏ âm thầm. Khác với raw extra=allow
+để bảo toàn format bên ngoài. Required/type/version/literal/nested/bbox shape lỗi
+structural; không coercion bool/string thành int, không nhận NaN/Infinity.
+`model_validate_json` hỗ trợ parsing JSON, lỗi `ValidationError` có loc; JSON sai
+cú pháp có loc rỗng và code json_invalid.
+
+`validate_understanding_quality(result)` chạy độc lập, trả issues mới, không trộn vào
+result.issues hoặc sửa output. Caller có thể lưu issues sau review. Quy tắc gồm:
+
+| Code | Kiểm tra |
+| --- | --- |
+| duplicate_id / empty_id | ID trùng/rỗng trong collection output tương ứng |
+| missing_provenance | Object không có anchors, hoặc anchor thiếu OCR reference và vùng ảnh quan sát |
+| empty_source_identity / empty_source_reference | Fields identity hoặc source ID được cung cấp nhưng rỗng |
+| anchor_page_mismatch | Identity anchor khác result, kể cả source_ref |
+| ambiguous_cell_reference / ambiguous_line_reference | Thiếu container IDs cần thiết |
+| source_context_mismatch | element_id khác table_id được cung cấp |
+| invalid_bbox_geometry | observed/proposed có x1 >= x2 hoặc y1 >= y2 |
+| negative_cell_position / invalid_span | row/col âm; spans đã cung cấp <= 0 |
+| duplicate_cell_position | Nhiều output cells cùng row/col trong một bảng, chỉ báo rủi ro |
+| empty_text / negative_reading_order | Text rỗng/whitespace hoặc thứ tự đọc âm |
+| missing_ocr_table_reference | origin ocr_table thiếu table_id trong table anchors |
+| invalid_classification_label / confidence_out_of_range | Unknown label dùng string/rỗng hoặc confidence ngoài [0,1] |
+| status_conflict | resolved object không có đủ anchors resolved hợp lệ; resolved classification thiếu label; resolved image-only/invalid anchor |
+
+Đối chiếu nguồn chỉ chạy khi gọi tường minh
+`validate_understanding_quality(result, raw_page=page)` với `OCRPage` đã parse.
+Bổ sung raw_page_mismatch, unresolved_source_reference, ambiguous_source_reference,
+reference_type_mismatch và observed_bbox_mismatch. Không tự tìm trang hoặc fallback ID.
+Caller chịu trách nhiệm binding source_ref tới đúng raw_page: raw v1 chưa có run ID
+để validator tự chứng minh binding này. Khi không truyền raw_page, không được suy ra
+raw references tồn tại/duy nhất chỉ vì standalone validator không trả issues.
+
+Không ép raw bất thường thành bảng hoàn hảo. Geometry sai, empty cell, duplicate positions
+vẫn parse/export được; raw duplicate IDs chỉ làm liên kết mơ hồ, không loại bỏ dữ liệu.
+Quality validation không đánh giá semantics tài chính, bbox containment/image bounds,
+span overlap, completeness của anchors hay inference correctness. Không tự hạ status,
+clamp confidence, sửa text, vị trí hoặc spans. Status mô tả resolution theo linkage,
+không bảo đảm object không có quality issues khác (ví dụ empty text nguồn).
+
+### Serialization, schema và TBD
+
+Version bắt buộc trong output: `document_understanding_v1`; không chèn vào raw.
+`export_result()` dùng mode=json/exclude_unset=True, giữ missing khác explicit null,
+Unicode, text số và thứ tự arrays. Optional mặc định None trong Python, không có
+nghĩa đã quan sát null. Dùng export_result để round-trip payload; model_dump mặc định
+của Pydantic có thể materialize defaults. Không cam kết byte-for-byte JSON.
+
+Schema sinh từ code, test đồng bộ với artifact:
+
+```powershell
+python scripts/export_document_understanding_schema.py
+```
+
+Artifact: `schemas/document_understanding_v1.schema.json`. Schema mô tả cấu trúc;
+quality rules và strict Python type behavior được kiểm tra bằng code/tests.
+Fixtures hoàn toàn synthetic, không dùng như ground truth tài chính.
+Taxonomy được duyệt, global run identity, backward compatibility/migration,
+header relationships và đối chiếu đa trang còn TBD cho task được giao sau.
 
 ## Các giao tiếp nghiệp vụ chưa triển khai
 
 | Điểm bàn giao | Nội dung đã xác định ở mức khái niệm | Chi tiết còn thiếu |
 | --- | --- | --- |
 | PDF → xử lý tài liệu | Tài liệu gốc và metadata nguồn | Định danh, kiểu file hỗ trợ, manifest: `TBD` |
-| Xử lý tài liệu → chuẩn hóa | Văn bản, bảng, vị trí nguồn và trạng thái chất lượng | Schema trích xuất, tọa độ và mã chất lượng: `TBD` |
+| Xử lý tài liệu → chuẩn hóa | Document Understanding v1: text/table/cell, anchors và issues | Input kế toán và mapping nghiệp vụ vẫn `TBD` |
 | Chuẩn hóa → Canonical Evidence Layer | Structured Financial Facts, Text/Table Evidence, Source Provenance | Kiểu dữ liệu, trường bắt buộc, đơn vị chuẩn, mã chỉ tiêu: `TBD` |
 | Canonical Evidence Layer → EF-EG | Bằng chứng và liên kết phục vụ truy nguyên, tính toán | Schema nút/cạnh, định danh và lưu trữ: `TBD` |
 | Công cụ → tác nhân/kiểm chứng | Kết quả truy xuất hoặc phép tính kèm bằng chứng nguồn | Chữ ký công cụ, lỗi, serialization: `TBD` |

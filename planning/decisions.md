@@ -66,3 +66,16 @@ Không dùng danh sách công nghệ được đề xuất trong báo cáo như 
 Đây là quyết định quản lý công việc, không đổi Modular Monolith, pipeline,
 module boundaries, contracts hoặc đóng góp nghiên cứu. Framework/model/storage,
 schema kế toán và phạm vi pháp lý vẫn TBD như phần trên.
+
+## 2026-10-26 — Document Understanding v1 (M1-02b)
+
+- Output ứng dụng sở hữu dùng strict/extra forbid; unknown fields gây structural
+  error giữ payload, khác chính sách bảo toàn raw extra allow.
+- Page-level result; anchors mang identity và ngữ cảnh element/table/cell/line.
+  source_ref caller cung cấp nếu biết run/artifact; không giả định global uniqueness.
+- Bbox observed/proposed riêng, pixel ảnh gốc; image-only anchor còn chưa xác minh.
+- Optional spans không default 1; export exclude_unset phân biệt missing/null/value.
+- Classification vocabulary mở, null = chưa biết; không thêm taxonomy/logic kế toán.
+- Quality validation riêng, raw comparison tường minh trong bộ nhớ; không sửa dữ liệu.
+- Global run binding, taxonomy, migration và header relationships còn TBD.
+Chi tiết fields, status semantics và giới hạn ở [data contracts](../docs/data-contracts.md).

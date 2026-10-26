@@ -1,5 +1,23 @@
-"""Public API của raw OCR contract; không đọc/ghi dataset hoặc resolve paths."""
+"""Public API Raw OCR và Document Understanding; không đọc/ghi dataset hoặc resolve paths."""
 
+from .document_understanding import (
+    DOCUMENT_UNDERSTANDING_CONTRACT_VERSION,
+    DocumentClassification,
+    DocumentUnderstandingResult,
+    RawPageIdentity,
+    ResolutionStatus,
+    SourceAnchor,
+    UnderstandingIssue,
+    UnderstoodCell,
+    UnderstoodTable,
+    UnderstoodTextRegion,
+    document_understanding_json_schema,
+)
+from .document_understanding_validation import (
+    DocumentUnderstandingStructuralError,
+    parse_document_understanding,
+    validate_understanding_quality,
+)
 from .raw_ocr import (
     RAW_OCR_CONTRACT_VERSION,
     OCRBoundingBox,
@@ -27,6 +45,20 @@ from .validation import (
 )
 
 __all__ = [
+    "DOCUMENT_UNDERSTANDING_CONTRACT_VERSION",
+    "DocumentClassification",
+    "DocumentUnderstandingResult",
+    "DocumentUnderstandingStructuralError",
+    "RawPageIdentity",
+    "ResolutionStatus",
+    "SourceAnchor",
+    "UnderstoodCell",
+    "UnderstoodTable",
+    "UnderstoodTextRegion",
+    "UnderstandingIssue",
+    "document_understanding_json_schema",
+    "parse_document_understanding",
+    "validate_understanding_quality",
     "RAW_OCR_CONTRACT_VERSION",
     "OCRBoundingBox",
     "OCRCheckbox",

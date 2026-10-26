@@ -1,0 +1,498 @@
+{
+  "$defs": {
+    "DocumentClassification": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Label"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "anchors": {
+          "items": {
+            "$ref": "#/$defs/SourceAnchor"
+          },
+          "title": "Anchors",
+          "type": "array"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        }
+      },
+      "required": [
+        "label",
+        "status",
+        "anchors"
+      ],
+      "title": "DocumentClassification",
+      "type": "object"
+    },
+    "RawPageIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "year": {
+          "title": "Year",
+          "type": "string"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "image": {
+          "title": "Image",
+          "type": "string"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Ref"
+        }
+      },
+      "required": [
+        "symbol",
+        "year",
+        "page",
+        "image"
+      ],
+      "title": "RawPageIdentity",
+      "type": "object"
+    },
+    "SourceAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/RawPageIdentity"
+        },
+        "element_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Element Id"
+        },
+        "table_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Table Id"
+        },
+        "cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cell Id"
+        },
+        "line_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Id"
+        },
+        "observed_bbox": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Bbox"
+        },
+        "proposed_bbox": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 4,
+              "minItems": 4,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proposed Bbox"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "status"
+      ],
+      "title": "SourceAnchor",
+      "type": "object"
+    },
+    "UnderstandingIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "path": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "message"
+      ],
+      "title": "UnderstandingIssue",
+      "type": "object"
+    },
+    "UnderstoodCell": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "row": {
+          "title": "Row",
+          "type": "integer"
+        },
+        "col": {
+          "title": "Col",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "anchors": {
+          "items": {
+            "$ref": "#/$defs/SourceAnchor"
+          },
+          "title": "Anchors",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "rowspan": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rowspan"
+        },
+        "colspan": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Colspan"
+        },
+        "issues": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/UnderstandingIssue"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issues"
+        }
+      },
+      "required": [
+        "id",
+        "row",
+        "col",
+        "text",
+        "anchors",
+        "status"
+      ],
+      "title": "UnderstoodCell",
+      "type": "object"
+    },
+    "UnderstoodTable": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "ocr_table",
+            "inferred_from_text"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "anchors": {
+          "items": {
+            "$ref": "#/$defs/SourceAnchor"
+          },
+          "title": "Anchors",
+          "type": "array"
+        },
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/UnderstoodCell"
+          },
+          "title": "Cells",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "issues": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/UnderstandingIssue"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issues"
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "anchors",
+        "cells",
+        "status"
+      ],
+      "title": "UnderstoodTable",
+      "type": "object"
+    },
+    "UnderstoodTextRegion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "anchors": {
+          "items": {
+            "$ref": "#/$defs/SourceAnchor"
+          },
+          "title": "Anchors",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "uncertain",
+            "unresolved"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reading_order": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reading Order"
+        },
+        "issues": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/UnderstandingIssue"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issues"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "anchors",
+        "status"
+      ],
+      "title": "UnderstoodTextRegion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "document_understanding_v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "raw_page": {
+      "$ref": "#/$defs/RawPageIdentity"
+    },
+    "classification": {
+      "$ref": "#/$defs/DocumentClassification"
+    },
+    "text_regions": {
+      "items": {
+        "$ref": "#/$defs/UnderstoodTextRegion"
+      },
+      "title": "Text Regions",
+      "type": "array"
+    },
+    "tables": {
+      "items": {
+        "$ref": "#/$defs/UnderstoodTable"
+      },
+      "title": "Tables",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/UnderstandingIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract_version",
+    "raw_page",
+    "classification",
+    "text_regions",
+    "tables",
+    "issues"
+  ],
+  "title": "document_understanding_v1",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
