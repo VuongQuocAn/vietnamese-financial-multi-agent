@@ -1,11 +1,16 @@
-# Tr?ng th?i hi?n t?i
+# Trạng thái hiện tại
 
-C?p nh?t **2026-10-26** (Asia/Bangkok). Ngu?n: [Registry](tasks.md).
+Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- M1-03a/b/c DONE, Tech Lead APPROVED; task cha M1-03 DONE sau ??i chi?u roadmap.
-- Stable loader `1342f044e1234eddc4180cd4940e59a09a855661`, CI 40312237896 success.
-- Review record `5c3f4d0e47127c37c90cf6a0b65cb65f4fcac3d2` kh?p origin/main;
-  CI 40312411308 success ??ng SHA v? m?i step Python 3.11/3.12.
-- Acceptance c?p nh?t t?i li?u; kh?ng s?a implementation ho?c d? li?u ngu?n.
-- M1-03d ???c giao ??c l?p; ch?a ??ng k?/tri?n khai tr??c gate CI Phase 1.
-- Next action: x?c minh CI checkpoint acceptance tr??c khi ??ng k? M1-03d.
+- M1-03a/b/c và task cha M1-03 DONE theo Tech Lead APPROVED.
+- Stable acceptance `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, remote khớp;
+  CI 40314189759 success đúng SHA/mọi step Python 3.11/3.12.
+- M1-03d IN_PROGRESS độc lập; A/B hoàn tất, C zero-output với blocker được ghi rõ.
+- Audit đủ 193/193 JSON; 1.557 lượt references/1.553 paths, đều unmapped vì
+  chưa có approved Colab/Drive mappings. Missing count hiện tại chưa xác định.
+- 773 requires_review/784 unsupported_view; eligible 0, recovered 0, conflicts 0.
+- 193 source JSON hashes/metadata trước/sau khớp. Không đọc PNG hoặc tạo recovery root.
+- Crop/security 57 passed/1 skipped Windows (thiếu quyền symlink); native junction đạt.
+- Full local 575 passed/13 skipped; Ruff 64 files đạt; planning 73 tasks/pip check đạt.
+- Artifacts local bị ignore; không dataset/secrets trong Git. Chưa claim CI Phase 2.
+- Next action: xác minh CI implementation M1-03d trước khi chuyển REVIEW.

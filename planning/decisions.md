@@ -1,5 +1,20 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-26 — Missing Crop Audit & Bounded Recovery (M1-03d)
+
+- M1-03c Tech Lead APPROVED, task cha M1-03 DONE; M1-03d độc lập dependency M1-03.
+  Acceptance `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, CI 40314189759 success.
+- Audit manifest chọn đúng 193 trang; không full inventory. Source Colab roots/run
+  còn TBD theo contract: không tự duyệt mapping. Tất cả 1.557 references unmapped,
+  zero eligible/recovered; không biến unmapped thành missing hoặc ép bằng 572.
+- Chỉ table.crop với approved image identity binding, matching dimensions/bbox;
+  không suy đoán detection_view hoặc transformations. Color views unsupported.
+- Pillow >=11,<13 cho PNG lossless; không dependency AI. Runtime audit records
+  và manifests phụ trợ, không thêm public/versioned contract hoặc core whitelist.
+- Default dry-run, output chỉ data/recovered_crops, exclusive PNG + hash sidecar,
+  cap 12; trusted filesystem một writer, TOCTOU/aliases còn giới hạn. Chi tiết và
+  kết quả thực tế ở [crop recovery](../docs/crop-recovery.md).
+
 ## 2026-10-26 — Read-Only OCR Data Loader (M1-03c)
 
 - M1-03b Tech Lead APPROVED/DONE; acceptance `10eb4e9`, CI 40310998984 success.

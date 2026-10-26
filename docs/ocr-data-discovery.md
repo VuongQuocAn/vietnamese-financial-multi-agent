@@ -1,5 +1,9 @@
 # Khảo sát dữ liệu OCR và provenance — M1-01
 
+Kết quả bổ sung [M1-03d audit/recovery](crop-recovery.md) chỉ dùng tập 193 trang
+từ manifest, phân biệt approved resolver statuses với baseline discovery dưới đây.
+Không thay baseline 572 lượt thiếu bằng số unmapped của audit mới.
+
 Khảo sát local ngày **2026-10-26** (Asia/Bangkok), toàn bộ JSON trang hiện có.
 Đây là kết quả quan sát cấu trúc, không phải contract được duyệt, ground truth
 hoặc đánh giá độ chính xác tài chính. Không gọi API, tải model hay chạy OCR mới.

@@ -2,47 +2,74 @@
 
 ## Active Task
 
-M1-03 ? Configuration & Read-Only OCR Adapter (nghi?m thu).
+M1-03d — Missing Crop Audit & Bounded Recovery.
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Review record `5c3f4d0e47127c37c90cf6a0b65cb65f4fcac3d2`, CI 40312411308 success.
-Acceptance local Ruff/pytest/pip ??t; ?ang s?a c?u tr?c handoff theo validator.
-
-## Blockers
-
-Ch?a qua gate CI acceptance; ch?a b?t ??u Phase 2.
+Stable Phase 1 `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, remote khớp;
+CI 40314189759 success đúng SHA/từng step Python 3.11/3.12. M1-03c/M1-03 DONE.
+Full local 575 passed/13 skipped; crop/security 57 passed/1 skipped Windows,
+native junction đạt. Ruff 64 files đạt, planning 73 tasks/pip check đạt.
 
 ## Completed Work
 
-M1-03c Tech Lead APPROVED theo task b? sung, ghi DONE. ??i chi?u roadmap v?
-M1-03a/b/c: c?u h?nh/resolver/loader theo contracts, bounded integration,
-source read-only v? tests ??t; task cha M1-03 DONE. Kh?ng th?m dependency M1-03d.
+Đăng ký task độc lập, không sửa dependency task cha hoặc M1-04. A: manifest
+selection đúng 193 trang, read-only loader/resolver, provenance/dedup/status/
+eligibility; B: bounded read PNG, bbox/image identity binding, dry-run,
+exclusive PNG/hash-sidecar, cap/rerun/security tests. C zero-output pilot vì không
+có approved source mappings/image identity bindings: eligible/recovered/conflicts 0.
+Audit 1.557 references, 1.553 source strings; 773 review/784 unsupported views,
+all unmapped. Missing counts chưa xác định, không đổi baseline 572. Đúng 193 OCR
+JSON hash/metadata trước/sau khớp; không đọc ảnh nguồn hoặc quét crops.
+Selection rerun zero, audit hash khớp; real output hash/dimensions/rerun N/A.
+Sửa encoding PowerShell trong các bản ghi planning Phase 1/2 trước publication.
 
 ## Remaining Work
 
-Ch? CI checkpoint acceptance tr??c Phase 2 (M1-03d audit/recovery t?i ?a 12 ?nh).
+Commit/push/remote/CI implementation rồi chuyển REVIEW.
+Tech Lead review limitation và quyết định source bindings/phạm vi pilot tiếp.
 
 ## Modified Files
 
-planning/{tasks.md,progress.md,current-status.md,handoff.md,tasks/M1/M1-03c.md}.
+src/document_processing/{crop_audit.py,crop_recovery.py}; scripts/audit_missing_crops.py;
+tests/unit/test_crop_recovery.py; pyproject.toml (Pillow); docs/{crop-recovery.md,
+dataset.md,data-contracts.md,ocr-data-discovery.md}; planning/{tasks.md,progress.md,
+current-status.md,handoff.md,decisions.md,tasks/M1/M1-03c.md,tasks/M1/M1-03d.md}.
+Local ignored artifacts/crop-recovery/{audit.jsonl,audit-summary.json,recovery.jsonl,
+page-failures.jsonl,source-verification.json,pilot-summary.json}; không PNG mới.
 
 ## Tests
 
-Baseline local Windows Python 3.12: 518 passed/12 skipped; Ruff/planning/pip ??t.
-Acceptance local: 518 passed/12 skipped; Ruff 58 files, planning 72 tasks, pip check ??t. Kh?ng x? l? d? li?u Phase 1.
+Full Windows Python 3.12: 575 passed/13 skipped; crop 57 passed/1 skipped do thiếu
+quyền symlink; native junction đạt. Ruff lint/format 64 files đạt. Các skips khác
+của loader/resolver: 10 symlink, case-insensitive filesystem, FIFO không hỗ trợ.
+Planning 73 tasks/pip check đạt sau sửa encoding; không chạy lại suite đã đạt khi chỉ sửa docs.
+Synthetic pixels/hash/cap/rerun không phải bằng chứng chất lượng OCR/tài chính.
+
+## Technical Decisions
+
+Pillow >=11,<13, local 12.3.0; reuse bounded read nội bộ loader thay secure-open
+framework. Approved image_bindings caller xác nhận độc lập, không suy filename.
+Root chỉ project data/recovered_crops, không đổi whitelist. PNG exclusive + sidecar,
+reopen/dimensions/pixels/hash, không overwrite/xóa. Cap 12 với một writer.
+
+## Blockers
+
+Chưa có approved Colab/Drive source mappings/run/image bindings; zero-output
+pilot theo trường hợp task cho phép. Không tự suy mapping từ discovery markers.
+TOCTOU, aliases/hardlinks, concurrency/mounts còn giới hạn; trusted filesystem.
+Không có ảnh thật nên output hash/dimensions/contact sheet và real rerun N/A.
 
 ## Git Checkpoint
 
-Stable loader `1342f044e1234eddc4180cd4940e59a09a855661`, CI 40312237896 success.
-Review record `5c3f4d0e47127c37c90cf6a0b65cb65f4fcac3d2` kh?p origin/main;
-CI 40312411308 success ??ng SHA/m?i step Python 3.11/3.12 ?? x?c minh.
-Acceptance commit m?i c?n push/remote/CI ri?ng tr??c Phase 2.
+Stable acceptance `5937b815135478ace1d0958ff7c2f31f2ae4cc51`, CI 40314189759 success.
+Acceptance đầu `a16b0aa` fail handoff section, correction stable trên đạt.
+Phase 2 chưa commit; không claim CI trước khi push và kiểm tra đúng SHA.
 
 ## Exact Next Action
 
-X?c minh CI checkpoint acceptance tr??c khi ??ng k? M1-03d.
+Xác minh CI implementation M1-03d trước khi chuyển REVIEW.

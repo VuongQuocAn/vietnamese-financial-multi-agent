@@ -1,0 +1,150 @@
+# Missing Crop Audit & Bounded Recovery — M1-03d
+
+Task bổ sung độc lập sau M1-03 DONE. Audit chỉ đọc qua OCR Loader và Path
+Resolver đã nghiệm thu. Không sửa Raw OCR/Path Mapping contracts, DataConfig,
+JSON nguồn hoặc downstream crop references. Không gọi API/OCR/model.
+
+## Original và reconstructed crop
+
+Original crop là artifact OCR nguồn, có thể đã padding/resize/preprocess chưa
+biết. Missing crop reference là một lượt khai báo field, không nhất thiết một
+file duy nhất. Reconstructed crop là PNG cắt nguyên bbox từ ảnh trang, mang
+method `reconstructed_from_page_bbox`, version `1`, equivalence `unverified`.
+Không tuyên bố byte/pixel tương đương original đã mất hoặc OCR chính xác.
+
+Chỉ `table.crop` có thể eligible. Seal/signature/region/checkbox/red_mark crop
+cần review; black/red/blue/ink views là `unsupported_view`, không tạo heuristic
+color transforms. Chỉ audit fields thực sự có trong source JSON.
+
+## API và inputs được phê duyệt
+
+Modules `document_processing.crop_audit` và `crop_recovery` là công cụ nội bộ,
+không phải versioned public serialized contracts. `audit_page` nhận:
+
+- Request OCR JSON cho `load_ocr_page`, DataConfig và approved PathRootMapping list.
+- `expected_identity=(symbol, year, page)` từ manifest độc lập.
+- `image_bindings={original_image_reference: (symbol, year, page)}` do caller
+  phê duyệt từ bằng chứng nguồn độc lập; không suy ra filename/basename.
+- `run_identity` nếu biết; thiếu thì ghi issue, giữ artifact/page context trong key.
+
+Không có mapping được duyệt thì kết quả `unmapped`, không tự đoán Colab root từ
+marker M1-01. Không có image binding thì `source_identity_unverified`, không auto
+recovery. Caller declarations không phải bằng chứng xác thực nội dung ảnh/run.
+Mọi source paths thật và mappings chỉ lưu artifacts local bị ignore.
+
+`CropAuditRecord` giữ page/source/run, element index/ID/type/field, original path,
+source image, bbox/dimensions, mapping status, eligibility, issues, dedup key,
+path key và source image hash khi đã đọc. Mapping status và eligibility độc lập.
+Hash canonical context dùng artifact + run + page + original path + element/
+field/index, không gộp basename. Unique raw paths và contextual paths đếm riêng;
+chưa biết run thì không khẳng định hai references là cùng original artifact.
+
+`recover_crop(record, page_request, config, mappings, *, image_bindings,
+output_root=None, dry_run=True, cap=12)` trả runtime manifest dict. Re-audit
+nguồn, so record/hash trước crop; không dùng eligibility cũ như quyền ghi.
+`select_pilot` dedup context, ưu tiên representative/pilot pages, round-robin
+symbol theo thứ tự lexical deterministic; tối đa 12, không bù bằng loại crop khác.
+
+## Validation và filesystem
+
+Chỉ source ảnh PNG resolved qua approved roots; bytes tối đa 64 MiB và 40 triệu
+pixels trước decode. Reuse bounded read policy nội bộ loader (revalidation,
+lstat/fstat, O_RDONLY/O_NOFOLLOW khi có). Decode bằng Pillow, bomb warnings thành
+errors; không thay giới hạn global. RGB/RGBA/L/LA/1/P giữ mode và pixels. Source
+dimensions phải khớp OCR width/height. Bbox đúng bốn strict integers, không bool,
+geometry dương, hoàn toàn trong ảnh; không round/scale/clip/detection_view transform.
+Đọc/giải mã ảnh và `crop`/PNG theo [Pillow Image API](https://pillow.readthedocs.io/en/stable/reference/Image.html).
+Pillow `>=11,<13` là dependency nhỏ; local kiểm tra 12.3.0, CI Python 3.11/3.12
+cài từ package metadata, không thêm AI framework.
+
+Chỉ root `project_root/data/recovered_crops/` đã được task duyệt. Root khác bị
+từ chối; không thêm whitelist vào core. Kiểm tra absolute/no traversal, mọi
+ancestor không symlink/reparse/junction, disjoint hai chiều với configured inputs,
+data/raw, data/processed và hai vị trí dataset cũ. Không mkdir trong audit/dry-run.
+`.gitignore` hiện có `/data/*` và `artifacts/` bảo vệ outputs/manifests.
+
+Tên PNG SHA-256 đầy đủ từ method/version và canonical audit metadata, không đưa
+element ID/path vào filename. `xb` exclusive creation, không overwrite hoặc xóa.
+Sidecar JSON giữ recovery ID, source/output hash và method/version. Output đã có
+chỉ `already_recovered` khi bytes/hash + sidecar khớp, nếu không `output_conflict`.
+Reopen PNG, đối chiếu mode/pixels/dimensions/hash trước khi báo recovered; đọc lại
+source hash sau write. PNG/sidecar lỗi hoặc thiếu giữ lại để review, retry báo
+conflict thay vì xóa/sửa. Cap đếm PNG trong recovery root riêng (không scan dataset)
+để invocation sau không vượt 12, kể cả outputs lỗi chiếm slot.
+
+Policy là trusted local filesystem với **một writer**. Checks/open không atomic;
+TOCTOU qua parent/root còn tồn tại, Windows không có O_NOFOLLOW. Hardlinks,
+mount aliases, hostile metadata restoration và concurrent writers chưa được
+chống đầy đủ. Không trình bày cap/checks như transaction hoặc sandbox bảo mật.
+Pillow encode có thể thay đổi bytes giữa versions: rerun lúc đó báo conflict,
+không ghi đè. Hash là hash file PNG, không phải chứng minh đúng tài chính.
+
+## CLI và coverage thực tế
+
+Sau khi cung cấp hai environment keys theo [DataConfig](dataset.md):
+
+```powershell
+.venv/Scripts/python scripts/audit_missing_crops.py
+```
+
+Mặc định không supplied bindings, không đoán source roots. `--bindings` nhận
+JSON local với `mappings` (PathRootMapping list), `image_bindings` (JSON arrays
+ba phần tử), `run_identity` optional. Phải được caller phê duyệt trước dùng.
+`--execute` mới cho ghi PNG, tối đa 12 eligible table crops. Không dùng để tự mở
+rộng pilot; chỉ thực thi phạm vi mẫu đã được duyệt. CLI ghi manifests vào
+artifacts/crop-recovery; audit JSONL chứa paths thật không được commit.
+
+M1-01 page_manifest/inventory_warnings khớp danh sách **193** trang, tổng **572**
+lượt từng thiếu. Không chạy full inventory, không đọc JSONL/log thành OCR pages,
+không quét 8.063 crops. Audit qua loader đủ 193/193 JSON, không structural failures;
+hash SHA-256, size/mtime/inode trước/sau khớp trên đúng 193 JSON. Không đọc ảnh
+trang/crop vì chưa có approved mapping. Kết quả ngày 2026-10-26:
+
+| Chỉ số | Kết quả |
+| --- | ---: |
+| Crop reference occurrences audited | 1.557 |
+| Unique source path strings | 1.553 |
+| Unmapped | 1.557 |
+| Existing/missing/unsafe/ambiguous đã xác nhận qua resolver | 0 mỗi loại |
+| Requires review | 773 |
+| Unsupported processed/color views | 784 |
+| Eligible candidates sau dedup | 0 |
+| Pilot selected/recovered/conflicts | 0/0/0 |
+
+Missing references/unique missing paths **chưa xác định** do mappings chưa có;
+summary machine-readable đếm 0 *confirmed missing*, không phải kết luận dataset
+không thiếu crop. Không ép tổng audit bằng baseline 572: audit lấy mọi reference
+trên tập 193 trang, gồm cả references trước đây đã có file. Baseline giữ nguyên.
+
+| Type | crop | black | red | blue | ink |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| table | 379 | 0 | 0 | 0 | 0 |
+| signature | 94 | 94 | 94 | 94 | 94 |
+| seal | 86 | 86 | 86 | 86 | 0 |
+| seal_signature_region | 50 | 50 | 50 | 50 | 0 |
+| red_mark | 164 | 0 | 0 | 0 | 0 |
+| checkbox | 0 | 0 | 0 | 0 | 0 |
+
+Checkpoint C là **zero-output pilot**: không eligible vì chưa có approved source
+root/image identity bindings, không tạo recovery root. Selection rerun trên
+manifest đảo thứ tự vẫn zero, audit hash giữ nguyên. Real output hashes/dimensions,
+real image rerun và contact sheet: N/A vì không sinh ảnh. Không gọi synthetic
+recovery là pilot dữ liệu thật hoặc bằng chứng OCR accuracy.
+
+Artifacts local: `audit.jsonl`, `audit-summary.json`, `recovery.jsonl` (rỗng),
+`page-failures.jsonl` (rỗng), `source-verification.json`, `pilot-summary.json`
+trong `artifacts/crop-recovery/`. Không chép paths hoặc nội dung OCR vào docs.
+
+## Kiểm thử và phần còn lại
+
+Synthetic tests kiểm tra statuses, duplicates/runs/same basename, strict bbox,
+source missing/identity/dimensions/decode/size/change, RGB/grayscale/Unicode,
+expected pixels/hash, source integrity, traversal/root overlap, link/reparse/
+native junction, exclusive race/conflict, output validation failure, rerun và
+12-file cap thực sự. Windows symlink thiếu privilege skip rõ ràng; native junction
+đã chạy local, CI Linux chạy symlink và skip native junction theo platform.
+
+Missing mapping là giới hạn dữ liệu thực tế, không được tự phê duyệt trong task.
+M1-03d dừng REVIEW; Tech Lead review implementation/coverage và quyết định có
+duyệt source bindings, cho phép pilot có ảnh hoặc mở rộng recovery hay không.
+Không bắt đầu M1-04a/b, không tự recovery 572 lượt.

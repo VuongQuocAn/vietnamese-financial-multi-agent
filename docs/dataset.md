@@ -1,5 +1,11 @@
 # Dữ liệu và nguồn gốc
 
+M1-03d bổ sung [audit/recovery](crop-recovery.md): audit đúng 193 trang từ manifest,
+1.557 lượt references (1.553 paths). Chưa có approved source bindings nên tất cả
+unmapped, không suy ra missing count hiện tại; pilot 0 ảnh. Reconstructed outputs
+chỉ ở `data/recovered_crops/`, manifests `artifacts/crop-recovery/` bị ignore,
+không thay raw/processed hoặc original crop references.
+
 M1-03c cung cấp [OCR loader read-only](ocr-loader.md) qua DataConfig và resolver,
 bounded UTF-8/JSON parse, giữ nguồn và quality issues. Đã kiểm tra đúng 3 mẫu từ
 manifest có sẵn, hash/metadata trước/sau khớp; số liệu và giới hạn ở tài liệu loader.

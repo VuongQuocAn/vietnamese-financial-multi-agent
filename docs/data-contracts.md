@@ -1,5 +1,9 @@
 # Data contracts
 
+M1-03d [crop audit/recovery](crop-recovery.md) là consumer nội bộ của contracts,
+không đổi schema/version. Runtime records/manifests giữ original references và
+reconstructed outputs riêng; không đưa recovery path vào OCRPage/SourceAnchor.
+
 Runtime consumer M1-03c: [Read-Only OCR Loader](ocr-loader.md) kết hợp DataConfig,
 Path Mapping/Resolver và Raw OCR v1. LoadedOCRPage/OCRLoadError chỉ là runtime
 wrappers, không thay schema/contracts đã nghiệm thu; structural errors khác quality issues.
