@@ -292,10 +292,10 @@ không mở URL và không tự tìm artifact từ source_ref.
    `PathMappingStructuralError` giữ bản sao payload và StructuralIssue code/path/message.
 3. `map_path_lexically(request)` chạy validation cấu hình/context và path policy,
    trả result với machine-readable issues. Không sửa request, không I/O.
-4. Runtime M1-03b sau này nhận candidate `(root_key, relative_suffix)`, bind
+4. Runtime M1-03b nhận candidate `(root_key, relative_suffix)`, bind
    root_key vào cấu hình đã duyệt của M1-03a, kiểm tra containment thực tế rồi
    existence. M1-03a cung cấp lookup FINANCIAL_REPORT_DIR/FINANCIAL_OCR_DIR
-   theo [cấu hình dataset](dataset.md); chưa có runtime resolver/target binding.
+   theo [cấu hình dataset](dataset.md); [resolver](path-resolver.md) kiểm tra runtime metadata.
 5. Output từ runtime cần `parse_path_mapping_result` và
    `validate_path_mapping_result` trước khi downstream tin status. Structural
    parsing không thay thế quality validation. Validator không tự chứng minh lời
@@ -387,7 +387,7 @@ crop, không suy đoán recovery eligibility, không coi color views tái tạo 
 xác từ bbox. M1-03d vẫn chỉ là đề xuất, chưa đăng ký task hoặc tạo recovered_crops.
 
 TBD: approved source root/run identities và xác minh binding tới local root,
-runtime containment/file type/access/race policy M1-03b, migration/version compatibility,
+migration/version compatibility,
 filesystem aliases và quy trình/eligibility recovery. Các path formats ngoài policy
 bị từ chối rõ ràng, không tự thêm decoder, URL download hoặc Drive API.
 
@@ -401,6 +401,18 @@ hai input keys bắt buộc, hai output keys optional. Unknown/unconfigured tr�
 trong thông báo. Loader nhận mapping inject hoặc process environment, không đọc .env.
 Core không import ngược document_processing. Không đổi Path Mapping v1; suffix,
 containment, availability và source identity chưa được lookup kiểm tra.
+
+## Read-Only Path Resolver — M1-03b
+
+`document_processing.resolve_path(request: PathMappingRequest, config: DataConfig)`
+trả `PathMappingResult` v1, không đổi schema. Chỉ runtime unique not_checked candidate;
+get_root binding, lexical + filesystem containment, regular file/extension/access
+metadata checks. Mọi symlink/junction/reparse point bị từ chối, kể cả root ancestors.
+Filesystem errors thành unsafe có issue, không che thành missing. Source/provenance
+và missing/null giữ nguyên; không content open, scan, write hoặc recovery.
+Chi tiết lifecycle, issue codes, overlap/identity policy, TOCTOU và giao tiếp loader
+ở [path-resolver.md](path-resolver.md). Local path không được thêm vào contract;
+confirmed_target vẫn là logical target.
 
 ## Các giao tiếp nghiệp vụ chưa triển khai
 

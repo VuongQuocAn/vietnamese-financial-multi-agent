@@ -39,8 +39,8 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M1-02b | Document Understanding Contracts | M1 | DONE | P1 | M1-02a | [M1-02b](tasks/M1/M1-02b.md) | [d4e6aca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d4e6aca312251055f452a009ef0d9072ad63d940), CI success; Tech Lead APPROVED 2026-10-26 |
 | M1-02c | Path Mapping Contract | M1 | DONE | P1 | M1-01 | [M1-02c](tasks/M1/M1-02c.md) | [527d928](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/527d928935bb5d570e0a987279326dce4228d795), CI success; Tech Lead APPROVED 2026-10-26 |
 | M1-03 | Configuration & Read-Only OCR Adapter | M1 | TODO | P1 | M1-02, M1-03a, M1-03b, M1-03c | [M1-03](roadmap.md#m1-03) | - |
-| M1-03a | Central Data Configuration | M1 | DONE | P1 | M1-02 | [M1-03a](tasks/M1/M1-03a.md) | [5607cc0](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5607cc05035871455df3bf249ff95a44e87b5d66), CI success; chờ Tech Lead nghiệm thu |
-| M1-03b | Read-Only Path Resolver | M1 | TODO | P1 | M1-03a | [M1-03b](roadmap.md#m1-03b) | - |
+| M1-03a | Central Data Configuration | M1 | DONE | P1 | M1-02 | [M1-03a](tasks/M1/M1-03a.md) | [5607cc0](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5607cc05035871455df3bf249ff95a44e87b5d66), CI success; Tech Lead APPROVED 2026-10-26 |
+| M1-03b | Read-Only Path Resolver | M1 | IN_PROGRESS | P1 | M1-03a | [M1-03b](tasks/M1/M1-03b.md) | A/B/C local đạt; chờ publication/CI |
 | M1-03c | Read-Only OCR Data Loader | M1 | TODO | P1 | M1-03b | [M1-03c](roadmap.md#m1-03c) | - |
 | M1-04 | Extraction Quality Validation & Pilot | M1 | TODO | P1 | M1-03, M1-04a, M1-04b | [M1-04](roadmap.md#m1-04) | - |
 | M1-04a | Extraction Structure Validators | M1 | TODO | P1 | M1-03 | [M1-04a](roadmap.md#m1-04a) | - |

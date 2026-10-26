@@ -112,3 +112,19 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
 - Frozen strict Pydantic, whitelist cố định; lexical overlap guard tách outputs
   khỏi inputs/outputs khác. Không stat dataset, không mkdir hoặc giải quyết symlink.
   Runtime containment/existence/access/race, source identity vẫn TBD cho M1-03b/c.
+
+## 2026-10-26 — Read-Only Path Resolver (M1-03b)
+
+- M1-03a Tech Lead APPROVED/DONE; acceptance 3d700a5, CI 40306938717 success.
+- document_processing.resolve_path dùng lexical helper + get_root và result v1;
+  không đổi contracts/core, local path không thêm field vào output.
+- Chặn mọi symlink/reparse point qua lstat, kể cả root ancestors và link trong root;
+  resolve component containment vẫn thực hiện. Không secure-open API.
+- Roots overlap không làm đổi binding; shared_root_identity là issue thông tin
+  khi samefile trùng, không chứng minh source/run identity.
+- Missing chỉ khi selected root tồn tại, containment verified; filesystem errors
+  unsafe/permission_denied hoặc filesystem_error, không che thành missing.
+- Regular file + PNG/JSON structural extension + os.access metadata; không mở nội
+  dung. Loader sau xử lý lỗi đọc/content và kiểm tra lại tại thời điểm dùng.
+- TOCTOU, ACL/aliases/mounts/short names còn giới hạn; chi tiết ở
+  [runtime policy](../docs/path-resolver.md). Không recovery, API/OCR/dataset scan.

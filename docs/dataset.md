@@ -75,7 +75,8 @@ trả typed `DataConfig` bất biến. `environment` có thể inject mapping ri
 `NORMALIZED_DATA_DIR`/`CANONICAL_DATA_DIR` tùy chọn: bỏ key khi chưa cấu hình;
 key đã cung cấp nhưng rỗng, whitespace hoặc không phải string luôn lỗi.
 Các biến cũ như `DATA_DIR`, `RAW_DATA_DIR`, `PROCESSED_DATA_DIR` không được dùng
-để suy ra dataset roots hoặc làm fallback. Chưa có DataPathResolver.
+để suy ra dataset roots hoặc làm fallback. Runtime resolver ở
+`document_processing.resolve_path`, xem [policy](path-resolver.md).
 `EVIDENCE_DATA_DIR` là cấu hình dự kiến từ M0-01, chưa có logic sử dụng hoặc
 contract lưu trữ; không tự đồng nhất nó với dữ liệu canonical.
 
@@ -111,7 +112,7 @@ Một số JSON OCR giữ đường dẫn tuyệt đối bắt đầu bằng `/c
 Đây là tham chiếu tại môi trường tạo dữ liệu, không bảo đảm dùng trực tiếp được
 ở máy local. Không tìm/thay thế hoặc ghi lại JSON gốc.
 
-Khi đối chiếu thủ công hoặc thiết kế resolver ở task sau:
+Quy tắc đối chiếu thủ công và runtime resolver:
 
 1. Xác định thư mục gốc nguồn từ provenance hoặc cấu hình của lần chạy OCR;
    không đoán gốc dựa trên tên file.
@@ -125,8 +126,10 @@ Khi đối chiếu thủ công hoặc thiết kế resolver ở task sau:
 5. Giữ ánh xạ bên ngoài JSON gốc. Nếu gốc nguồn chưa xác định hoặc không có file
    tương ứng, ghi nhận chưa ánh xạ được; không sửa hoặc tạo dữ liệu để lấp chỗ thiếu.
 
-Các bước trên là hướng dẫn, chưa có resolver được triển khai hoặc xác nhận mọi
-tham chiếu Colab đều ánh xạ thành công.
+Các bước trên được runtime resolver M1-03b thực thi theo approved mappings và
+DataConfig; không khẳng định mọi tham chiếu Colab đều ánh xạ thành công. Không
+scan dataset trong M1-03b; symlink/junction/reparse point bị từ chối. Missing crops
+giữ metadata/provenance và không kích hoạt recovery. Xem [runtime policy](path-resolver.md).
 
 ## Quy tắc Git và bảo toàn
 

@@ -2,42 +2,52 @@
 
 ## Active Task
 
-M1-03a ? Central Data Configuration acceptance.
+M1-03b — Read-Only Path Resolver.
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-HEAD `62be8cdb095ac97f9105cef0259ae44f713e5638` kh?p origin/main, working tree ban ??u s?ch.
-Tech Lead APPROVED 2026-10-26; implementation `5607cc0`, CI 40305769422 success.
+M1-03a acceptance `3d700a59a8b18c8c2e77494183e6eb3e9102fbc0`, remote khớp,
+CI 40306938717 success Python 3.11/3.12 và từng step đã kiểm tra.
+M1-03b full local native Windows Python 3.12: 442 passed/11 skipped.
 
 ## Completed Work
 
-Ghi nh?n nghi?m thu M1-03a; gi? implementation v? hai review notes v? overlap/native Windows.
+A: 15 basic cases đạt. B: 80 resolver cases, 69 passed/11 skipped.
+Ba native junction cases đạt; chín symlink cases thiếu privilege, case-sensitive/FIFO
+unsupported. Metadata policy regressions độc lập privilege đạt.
+C: public API, runtime policy/docs, provenance và contracts giữ nguyên.
+Sửa Unicode bị mất dấu do PowerShell pipeline khi ghi planning; dùng UTF-8 trực tiếp.
 
 ## Remaining Work
 
-Checks v? publication checkpoint acceptance tr??c M1-03b; ch?a tri?n khai M1-03b/c.
+Commit/push implementation và xác minh CI đúng SHA; sau đó REVIEW chờ Tech Lead.
+Không mở M1-03c hoặc recovery.
 
 ## Modified Files
 
-planning/{tasks.md,progress.md,current-status.md,handoff.md,tasks/M1/M1-03a.md}.
+src/document_processing/{path_resolver.py,__init__.py}; tests/unit/test_path_resolver.py;
+docs/{path-resolver.md,data-contracts.md,dataset.md};
+planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M1/M1-03a.md,tasks/M1/M1-03b.md}.
 
 ## Tests
 
-Local native Windows Python 3.12: 373 passed; Ruff check/format 50 files, planning 72 tasks, pip check ??t.
+Windows Python 3.12 full 442 passed/11 skipped; Ruff lint/format 54 files và pip check đạt.
+Planning validator 72 tasks đạt. Chưa có CI resolver; không suy ra từ acceptance.
+Synthetic fixtures, không phải benchmark tài chính.
 
 ## Blockers
 
-Kh?ng blocker. Input roots overlap c?n resolver bind ??ng key; Windows c?n native tests.
+Không blocker. Chặn mọi symlink/reparse point, kể cả root ancestors.
+TOCTOU/ACL/aliases còn giới hạn; source/run identity do caller phê duyệt.
 
 ## Git Checkpoint
 
-Stable implementation `5607cc05035871455df3bf249ff95a44e87b5d66`; HEAD `62be8cd`.
-Commit acceptance v? CI ch?a ch?y, kh?ng suy ra t? CI tr??c.
+Stable committed SHA `3d700a5`, CI success. A/B/C code local chạy được, chưa commit.
 
 ## Exact Next Action
 
-Ho?n t?t checks, commit/push/CI checkpoint acceptance tr??c M1-03b.
+Commit/push implementation và xác minh CI đúng SHA.

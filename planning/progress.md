@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 6 | 0 | 0 | 16 | 0 | 0 |
+| M1 | 22 | 6 | 1 | 0 | 15 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 10 | 0 | 0 | 62 | 0 | 0 |
+| TOTAL | 72 | 10 | 1 | 0 | 61 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Raw OCR v1, Document Understanding v1 và Path Mapping v1; pure validation/lexical helper, chưa có loader/resolver |
+| `document_processing` | Raw OCR v1, Document Understanding v1 và Path Mapping v1; pure validation/lexical helper, read-only resolver runtime; chưa có loader |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,14 +46,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-M1-02c/M1-02 DONE theo Tech Lead APPROVED và đối chiếu criteria cha.
-Phase 1 `355bec4d58583fbb864652b41608324ac88a9db0` đã push, remote khớp,
-[CI 40304977048](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40304977048)
-success Python 3.11/3.12 và từng step đã kiểm tra.
-M1-03a DONE (Tech Lead APPROVED 2026-10-26): A/B/C implementation hoàn tất, 90 tests mới/373 full passed,
-Ruff lint/format 50 files và pip check đạt local; planning 72 tasks đồng bộ.
-Implementation `5607cc05035871455df3bf249ff95a44e87b5d66` đã push origin/main, remote SHA khớp;
-[CI 40305769422](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40305769422) success đúng SHA Python 3.11/3.12,
-từng step install/lint/format/planning/tests đã xác minh.
-Commit evidence sau implementation được kiểm tra CI riêng.
-Next action: chờ Tech Lead review M1-03a.
+M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
+CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
+M1-03b IN_PROGRESS: A/B/C local hoàn tất. Windows Python 3.12 full suite
+442 passed/11 skipped, gồm 80 resolver cases (69 passed/11 skipped).
+Ruff lint/format 54 files, pip check và planning validator 72 tasks đạt.
+Next action: commit/push implementation và xác minh CI đúng SHA.

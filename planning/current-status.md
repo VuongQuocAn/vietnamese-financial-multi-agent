@@ -1,10 +1,13 @@
-# Tr?ng th?i hi?n t?i
+# Trạng thái hiện tại
 
-C?p nh?t **2026-10-26** (Asia/Bangkok). Ngu?n: [Registry](tasks.md), [handoff](handoff.md).
+Cập nhật **2026-10-26** (Asia/Bangkok). Nguồn: [Registry](tasks.md), [handoff](handoff.md).
 
-- M1-03a DONE theo Tech Lead APPROVED, kh?ng s?a implementation.
-- HEAD ban ??u `62be8cdb095ac97f9105cef0259ae44f713e5638` kh?p origin/main.
-- Implementation ?n ??nh `5607cc05035871455df3bf249ff95a44e87b5d66`, CI 40305769422 success.
-- B?o l?u: input roots c? th? overlap; Linux CI kh?ng ch?ng minh native Windows.
-- Ch?a active implementation; M1-03b ch? b?t ??u sau acceptance commit/push/CI success.
-- Next action: ho?n t?t checks, commit/push/CI checkpoint acceptance.
+- M1-03a DONE, Tech Lead APPROVED; acceptance `3d700a5` push/remote khớp.
+- CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
+- M1-03b IN_PROGRESS, A/B/C local hoàn tất; chưa mở M1-03c/recovery.
+- Full Windows Python 3.12: 442 passed/11 skipped, gồm 80 resolver cases.
+- Ba native junction cases đạt. Chín symlink cases thiếu privilege; case-sensitive
+  và FIFO không được filesystem/platform hỗ trợ. Metadata policy regressions đạt.
+- Ruff lint/format 54 files, pip check và planning validator 72 tasks đạt.
+- Không dataset/API/OCR/scan, không thay implementation core/contracts.
+- Next action: commit/push implementation và xác minh CI đúng SHA.
