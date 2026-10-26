@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 6 | 1 | 0 | 15 | 0 | 0 |
+| M1 | 22 | 6 | 0 | 0 | 15 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 10 | 1 | 0 | 61 | 0 | 0 |
+| TOTAL | 72 | 10 | 0 | 0 | 61 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -48,7 +48,12 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
 CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
-M1-03b IN_PROGRESS: A/B/C local hoàn tất. Windows Python 3.12 full suite
+M1-03b REVIEW: A/B/C hoàn tất. Windows Python 3.12 full suite
 442 passed/11 skipped, gồm 80 resolver cases (69 passed/11 skipped).
 Ruff lint/format 54 files, pip check và planning validator 72 tasks đạt.
-Next action: commit/push implementation và xác minh CI đúng SHA.
+Implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6` push/remote khớp;
+[CI 40308129287](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40308129287)
+success đúng SHA, từng step Python 3.11/3.12 xác minh. Mỗi job 445 passed/8 skipped;
+77 resolver cases đạt Linux (gồm symlink/FIFO/case-sensitive), 3 junction cases skip.
+Bản ghi evidence sau implementation cần CI riêng, không suy ra từ implementation.
+Next action: chờ Tech Lead review M1-03b.

@@ -6,13 +6,17 @@ M1-03b — Read-Only Path Resolver.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
 M1-03a acceptance `3d700a59a8b18c8c2e77494183e6eb3e9102fbc0`, remote khớp,
 CI 40306938717 success Python 3.11/3.12 và từng step đã kiểm tra.
 M1-03b full local native Windows Python 3.12: 442 passed/11 skipped.
+Implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6` push/remote khớp,
+[CI 40308129287](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40308129287)
+success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
+Mỗi job Linux 445 passed/8 skipped; 77 resolver cases đạt, 3 junction cases skip.
 
 ## Completed Work
 
@@ -21,11 +25,12 @@ Ba native junction cases đạt; chín symlink cases thiếu privilege, case-sen
 unsupported. Metadata policy regressions độc lập privilege đạt.
 C: public API, runtime policy/docs, provenance và contracts giữ nguyên.
 Sửa Unicode bị mất dấu do PowerShell pipeline khi ghi planning; dùng UTF-8 trực tiếp.
+Commit/push/remote và CI implementation đã xác minh; Linux thực tế đạt các ca
+symlink/FIFO/case-sensitive mà Windows local skip. Native junction đạt Windows local.
 
 ## Remaining Work
 
-Commit/push implementation và xác minh CI đúng SHA; sau đó REVIEW chờ Tech Lead.
-Không mở M1-03c hoặc recovery.
+Chờ Tech Lead nghiệm thu M1-03b. Không mở M1-03c hoặc recovery.
 
 ## Modified Files
 
@@ -36,7 +41,7 @@ planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M
 ## Tests
 
 Windows Python 3.12 full 442 passed/11 skipped; Ruff lint/format 54 files và pip check đạt.
-Planning validator 72 tasks đạt. Chưa có CI resolver; không suy ra từ acceptance.
+Planning validator 72 tasks đạt. CI resolver đúng SHA: 445 passed/8 skipped mỗi job Linux.
 Synthetic fixtures, không phải benchmark tài chính.
 
 ## Blockers
@@ -46,8 +51,10 @@ TOCTOU/ACL/aliases còn giới hạn; source/run identity do caller phê duyệt
 
 ## Git Checkpoint
 
-Stable committed SHA `3d700a5`, CI success. A/B/C code local chạy được, chưa commit.
+Stable acceptance `3d700a5`, CI 40306938717 success.
+Stable implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6`, remote/CI success.
+Bản ghi evidence sau implementation cần CI riêng; không suy ra từ implementation.
 
 ## Exact Next Action
 
-Commit/push implementation và xác minh CI đúng SHA.
+Chờ Tech Lead review M1-03b.
