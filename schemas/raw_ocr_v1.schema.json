@@ -1,0 +1,845 @@
+{
+  "$defs": {
+    "OCRCheckbox": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "type": {
+          "const": "checkbox",
+          "title": "Type",
+          "type": "string"
+        },
+        "checked": {
+          "title": "Checked",
+          "type": "boolean"
+        },
+        "choice": {
+          "title": "Choice",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Confidence"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        },
+        "group_id": {
+          "title": "Group Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "label_text_ids": {
+          "items": {},
+          "title": "Label Text Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "type",
+        "checked",
+        "choice",
+        "confidence",
+        "crop",
+        "group_id",
+        "label",
+        "label_text_ids"
+      ],
+      "title": "OCRCheckbox",
+      "type": "object"
+    },
+    "OCRCheckboxDetection": {
+      "additionalProperties": true,
+      "properties": {
+        "native_proposals": {
+          "title": "Native Proposals",
+          "type": "integer"
+        },
+        "magnified_proposals": {
+          "title": "Magnified Proposals",
+          "type": "integer"
+        },
+        "accepted": {
+          "title": "Accepted",
+          "type": "integer"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Threshold"
+        },
+        "proposal_threshold": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Proposal Threshold"
+        },
+        "seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Seconds"
+        }
+      },
+      "required": [
+        "native_proposals",
+        "magnified_proposals",
+        "accepted",
+        "threshold",
+        "proposal_threshold",
+        "seconds"
+      ],
+      "title": "OCRCheckboxDetection",
+      "type": "object"
+    },
+    "OCRDetectionView": {
+      "additionalProperties": true,
+      "properties": {
+        "width": {
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "title": "Height",
+          "type": "integer"
+        },
+        "scale_x_to_original": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Scale X To Original"
+        },
+        "scale_y_to_original": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Scale Y To Original"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "scale_x_to_original",
+        "scale_y_to_original"
+      ],
+      "title": "OCRDetectionView",
+      "type": "object"
+    },
+    "OCRPageMetadata": {
+      "additionalProperties": true,
+      "properties": {
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "year": {
+          "title": "Year",
+          "type": "string"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "image": {
+          "title": "Image",
+          "type": "string"
+        },
+        "width": {
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "title": "Height",
+          "type": "integer"
+        },
+        "dpi": {
+          "title": "Dpi",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "symbol",
+        "year",
+        "page",
+        "image",
+        "width",
+        "height",
+        "dpi"
+      ],
+      "title": "OCRPageMetadata",
+      "type": "object"
+    },
+    "OCRProvenance": {
+      "additionalProperties": true,
+      "properties": {
+        "architecture": {
+          "title": "Architecture",
+          "type": "string"
+        },
+        "detection_view": {
+          "$ref": "#/$defs/OCRDetectionView"
+        },
+        "layout_engine": {
+          "title": "Layout Engine",
+          "type": "string"
+        },
+        "text_detector": {
+          "title": "Text Detector",
+          "type": "string"
+        },
+        "text_recognizer": {
+          "title": "Text Recognizer",
+          "type": "string"
+        },
+        "checkbox_detector": {
+          "title": "Checkbox Detector",
+          "type": "string"
+        },
+        "checkbox_detector_source": {
+          "title": "Checkbox Detector Source",
+          "type": "string"
+        },
+        "checkbox_detection": {
+          "$ref": "#/$defs/OCRCheckboxDetection"
+        },
+        "signature_detector": {
+          "title": "Signature Detector",
+          "type": "string"
+        },
+        "signature_full_page_threshold": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Signature Full Page Threshold"
+        },
+        "signature_context_roi_threshold": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Signature Context Roi Threshold"
+        },
+        "signature_fallback_detector": {
+          "title": "Signature Fallback Detector",
+          "type": "null"
+        },
+        "signature_full_page_proposal_count": {
+          "title": "Signature Full Page Proposal Count",
+          "type": "integer"
+        },
+        "signature_final_count": {
+          "title": "Signature Final Count",
+          "type": "integer"
+        },
+        "signature_policy": {
+          "title": "Signature Policy",
+          "type": "string"
+        },
+        "checkbox_policy": {
+          "title": "Checkbox Policy",
+          "type": "string"
+        },
+        "seal_policy": {
+          "title": "Seal Policy",
+          "type": "string"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "page_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Page Seconds"
+        }
+      },
+      "required": [
+        "architecture",
+        "detection_view",
+        "layout_engine",
+        "text_detector",
+        "text_recognizer",
+        "checkbox_detector",
+        "checkbox_detector_source",
+        "checkbox_detection",
+        "signature_detector",
+        "signature_full_page_threshold",
+        "signature_context_roi_threshold",
+        "signature_fallback_detector",
+        "signature_full_page_proposal_count",
+        "signature_final_count",
+        "signature_policy",
+        "checkbox_policy",
+        "seal_policy",
+        "notes",
+        "page_seconds"
+      ],
+      "title": "OCRProvenance",
+      "type": "object"
+    },
+    "OCRRedMark": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "type": {
+          "const": "red_mark",
+          "title": "Type",
+          "type": "string"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "type",
+        "crop"
+      ],
+      "title": "OCRRedMark",
+      "type": "object"
+    },
+    "OCRSeal": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        },
+        "black_view_crop": {
+          "title": "Black View Crop",
+          "type": "string"
+        },
+        "red_view_crop": {
+          "title": "Red View Crop",
+          "type": "string"
+        },
+        "blue_view_crop": {
+          "title": "Blue View Crop",
+          "type": "string"
+        },
+        "type": {
+          "const": "seal",
+          "title": "Type",
+          "type": "string"
+        },
+        "seal_name": {
+          "title": "Seal Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "crop",
+        "black_view_crop",
+        "red_view_crop",
+        "blue_view_crop",
+        "type",
+        "seal_name"
+      ],
+      "title": "OCRSeal",
+      "type": "object"
+    },
+    "OCRSealSignatureRegion": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        },
+        "black_view_crop": {
+          "title": "Black View Crop",
+          "type": "string"
+        },
+        "red_view_crop": {
+          "title": "Red View Crop",
+          "type": "string"
+        },
+        "blue_view_crop": {
+          "title": "Blue View Crop",
+          "type": "string"
+        },
+        "type": {
+          "const": "seal_signature_region",
+          "title": "Type",
+          "type": "string"
+        },
+        "seal_bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Seal Bbox",
+          "type": "array"
+        },
+        "signature_bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Signature Bbox",
+          "type": "array"
+        },
+        "signature_id": {
+          "title": "Signature Id",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "crop",
+        "black_view_crop",
+        "red_view_crop",
+        "blue_view_crop",
+        "type",
+        "seal_bbox",
+        "signature_bbox",
+        "signature_id",
+        "source"
+      ],
+      "title": "OCRSealSignatureRegion",
+      "type": "object"
+    },
+    "OCRSignature": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        },
+        "black_view_crop": {
+          "title": "Black View Crop",
+          "type": "string"
+        },
+        "red_view_crop": {
+          "title": "Red View Crop",
+          "type": "string"
+        },
+        "blue_view_crop": {
+          "title": "Blue View Crop",
+          "type": "string"
+        },
+        "type": {
+          "const": "signature",
+          "title": "Type",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "signer_name": {
+          "title": "Signer Name",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confidence"
+        },
+        "ink_view_crop": {
+          "title": "Ink View Crop",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "crop",
+        "black_view_crop",
+        "red_view_crop",
+        "blue_view_crop",
+        "type",
+        "role",
+        "signer_name",
+        "kind",
+        "confidence",
+        "ink_view_crop"
+      ],
+      "title": "OCRSignature",
+      "type": "object"
+    },
+    "OCRTable": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "type": {
+          "const": "table",
+          "title": "Type",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "crop": {
+          "title": "Crop",
+          "type": "string"
+        },
+        "cells": {
+          "items": {
+            "$ref": "#/$defs/OCRTableCell"
+          },
+          "title": "Cells",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "type",
+        "name",
+        "crop",
+        "cells"
+      ],
+      "title": "OCRTable",
+      "type": "object"
+    },
+    "OCRTableCell": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "row": {
+          "title": "Row",
+          "type": "integer"
+        },
+        "col": {
+          "title": "Col",
+          "type": "integer"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "line_count": {
+          "title": "Line Count",
+          "type": "integer"
+        },
+        "lines": {
+          "items": {
+            "$ref": "#/$defs/OCRTextLine"
+          },
+          "title": "Lines",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "row",
+        "col",
+        "bbox",
+        "text",
+        "line_count",
+        "lines"
+      ],
+      "title": "OCRTableCell",
+      "type": "object"
+    },
+    "OCRText": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "type": {
+          "const": "text",
+          "title": "Type",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "bbox",
+        "type",
+        "text"
+      ],
+      "title": "OCRText",
+      "type": "object"
+    },
+    "OCRTextLine": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "const": "text",
+          "title": "Type",
+          "type": "string"
+        },
+        "bbox": {
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Bbox",
+          "type": "array"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "cell_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cell Id"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "bbox",
+        "text"
+      ],
+      "title": "OCRTextLine",
+      "type": "object"
+    }
+  },
+  "additionalProperties": true,
+  "properties": {
+    "page": {
+      "$ref": "#/$defs/OCRPageMetadata"
+    },
+    "elements": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "checkbox": "#/$defs/OCRCheckbox",
+            "red_mark": "#/$defs/OCRRedMark",
+            "seal": "#/$defs/OCRSeal",
+            "seal_signature_region": "#/$defs/OCRSealSignatureRegion",
+            "signature": "#/$defs/OCRSignature",
+            "table": "#/$defs/OCRTable",
+            "text": "#/$defs/OCRText"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/OCRText"
+          },
+          {
+            "$ref": "#/$defs/OCRTable"
+          },
+          {
+            "$ref": "#/$defs/OCRCheckbox"
+          },
+          {
+            "$ref": "#/$defs/OCRSignature"
+          },
+          {
+            "$ref": "#/$defs/OCRSeal"
+          },
+          {
+            "$ref": "#/$defs/OCRSealSignatureRegion"
+          },
+          {
+            "$ref": "#/$defs/OCRRedMark"
+          }
+        ]
+      },
+      "title": "Elements",
+      "type": "array"
+    },
+    "provenance": {
+      "$ref": "#/$defs/OCRProvenance"
+    }
+  },
+  "required": [
+    "page",
+    "elements",
+    "provenance"
+  ],
+  "title": "raw_ocr_v1",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

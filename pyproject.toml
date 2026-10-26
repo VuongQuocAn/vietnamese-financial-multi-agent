@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Khung đa tác nhân thích ứng cho phân tích báo cáo tài chính tiếng Việt có dẫn nguồn."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["pydantic>=2,<3"]
 
 [project.optional-dependencies]
 dev = [
@@ -23,6 +23,7 @@ packages = [
     "vietnamese_financial_multi_agent",
     "vietnamese_financial_multi_agent.core",
     "vietnamese_financial_multi_agent.document_processing",
+    "vietnamese_financial_multi_agent.document_processing.contracts",
     "vietnamese_financial_multi_agent.accounting",
     "vietnamese_financial_multi_agent.evidence",
     "vietnamese_financial_multi_agent.tools",

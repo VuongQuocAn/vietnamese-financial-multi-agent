@@ -35,7 +35,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M0-04 | Project Task Tracking & Codex Handoff System | M0 | DONE | P0 | M0-03 | [M0-04](tasks/M0/M0-04.md) | [3c7d78c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3c7d78c6855467262beca6064d657bb23a7a2e3e) |
 | M1-01 | Dataset Inventory & Provenance Review | M1 | DONE | P1 | M0-04 | [M1-01](tasks/M1/M1-01.md) | [dbfbb76](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/dbfbb760ec6c85391da47199edd52510fda216a8) |
 | M1-02 | Data Contracts & Path Mapping Design | M1 | TODO | P1 | M1-01, M1-02a, M1-02b, M1-02c | [M1-02](roadmap.md#m1-02) | - |
-| M1-02a | Raw OCR Contracts | M1 | TODO | P1 | M1-01 | [M1-02a](roadmap.md#m1-02a) | - |
+| M1-02a | Raw OCR Contracts | M1 | REVIEW | P1 | M1-01 | [M1-02a](tasks/M1/M1-02a.md) | Local 91 tests; chờ push/CI |
 | M1-02b | Document Understanding Contracts | M1 | TODO | P1 | M1-02a | [M1-02b](roadmap.md#m1-02b) | - |
 | M1-02c | Path Mapping Contract | M1 | TODO | P1 | M1-01 | [M1-02c](roadmap.md#m1-02c) | - |
 | M1-03 | Configuration & Read-Only OCR Adapter | M1 | TODO | P1 | M1-02, M1-03a, M1-03b, M1-03c | [M1-03](roadmap.md#m1-03) | - |

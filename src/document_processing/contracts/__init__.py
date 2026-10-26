@@ -1,0 +1,51 @@
+"""Public API của raw OCR contract; không đọc/ghi dataset hoặc resolve paths."""
+
+from .raw_ocr import (
+    RAW_OCR_CONTRACT_VERSION,
+    OCRBoundingBox,
+    OCRCheckbox,
+    OCRElement,
+    OCRPage,
+    OCRPageMetadata,
+    OCRProvenance,
+    OCRRedMark,
+    OCRSeal,
+    OCRSealSignatureRegion,
+    OCRSignature,
+    OCRTable,
+    OCRTableCell,
+    OCRText,
+    OCRTextLine,
+    raw_ocr_json_schema,
+)
+from .validation import (
+    QualityIssue,
+    RawOCRStructuralError,
+    StructuralIssue,
+    parse_raw_ocr,
+    validate_quality,
+)
+
+__all__ = [
+    "RAW_OCR_CONTRACT_VERSION",
+    "OCRBoundingBox",
+    "OCRCheckbox",
+    "OCRElement",
+    "OCRPage",
+    "OCRPageMetadata",
+    "OCRProvenance",
+    "OCRRedMark",
+    "OCRSeal",
+    "OCRSealSignatureRegion",
+    "OCRSignature",
+    "OCRTable",
+    "OCRTableCell",
+    "OCRText",
+    "OCRTextLine",
+    "QualityIssue",
+    "RawOCRStructuralError",
+    "StructuralIssue",
+    "parse_raw_ocr",
+    "raw_ocr_json_schema",
+    "validate_quality",
+]

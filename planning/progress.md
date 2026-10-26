@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 1 | 0 | 0 | 21 | 0 | 0 |
+| M1 | 22 | 1 | 0 | 0 | 20 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 5 | 0 | 0 | 67 | 0 | 0 |
+| TOTAL | 72 | 5 | 0 | 0 | 66 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | Chỉ package/docstring; chưa có config loader hoặc Gateway |
-| `document_processing` | Chỉ package/docstring; chưa có loader, resolver hay xử lý OCR |
+| `document_processing` | Raw OCR contracts v1 và validation đã chạy local; chưa có loader/resolver |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,9 +46,7 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-Không có active implementation task. [M1-01](tasks/M1/M1-01.md) DONE tại
-`dbfbb760ec6c85391da47199edd52510fda216a8`, [CI 40272513247](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40272513247) success Python 3.11/3.12.
-Có script inventory standard library, discovery report và artifacts local
-24 representative + 6 pilot; 34 unit tests local đạt. Đây là công cụ khảo sát,
-không phải implementation loader/resolver, Gemini hay pipeline tài chính.
-Next action: chờ người dùng giao task tiếp theo.
+[M1-02a](tasks/M1/M1-02a.md) REVIEW, A/B/C local đạt 91 unit tests (57 contracts),
+Ruff lint/format, pip check và planning validator 72 task đạt; chờ push/CI.
+M1-01 vẫn DONE; artifacts khảo sát được sử dụng lại, không inventory toàn corpus.
+Next action: commit/push M1-02a và xác minh CI.
