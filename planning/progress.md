@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 22 | 0 | 1 | 0 | 21 | 0 | 0 |
+| M1 | 22 | 1 | 0 | 0 | 21 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 4 | 1 | 0 | 67 | 0 | 0 |
+| TOTAL | 72 | 5 | 0 | 0 | 67 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-Active task: [M1-01](tasks/M1/M1-01.md), IN_PROGRESS theo yêu cầu người dùng.
-Đã có inventory/discovery và 24 representative + 6 pilot; 34 unit tests local đạt.
-Next action: kiểm tra staged, commit/push và xác minh CI (checkpoint C).
+Không có active implementation task. [M1-01](tasks/M1/M1-01.md) DONE tại
+`dbfbb760ec6c85391da47199edd52510fda216a8`, [CI 40272513247](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40272513247) success Python 3.11/3.12.
+Có script inventory standard library, discovery report và artifacts local
+24 representative + 6 pilot; 34 unit tests local đạt. Đây là công cụ khảo sát,
+không phải implementation loader/resolver, Gemini hay pipeline tài chính.
+Next action: chờ người dùng giao task tiếp theo.
