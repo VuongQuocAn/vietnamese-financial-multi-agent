@@ -2,70 +2,62 @@
 
 ## Active Task
 
-M1-03b — Read-Only Path Resolver (acceptance checkpoint).
+M1-03c — Read-Only OCR Data Loader.
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-M1-03a acceptance `3d700a59a8b18c8c2e77494183e6eb3e9102fbc0`, remote khớp,
-CI 40306938717 success Python 3.11/3.12 và từng step đã kiểm tra.
-M1-03b full local native Windows Python 3.12: 442 passed/11 skipped.
-Implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6` push/remote khớp,
-[CI 40308129287](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40308129287)
-success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
-Mỗi job Linux 445 passed/8 skipped; 77 resolver cases đạt, 3 junction cases skip.
+Acceptance M1-03b `10eb4e92c64fd241a2b740f7e38584abe1455032` push/remote khớp,
+CI 40310998984 success đúng SHA/từng step Python 3.11/3.12 đã kiểm tra.
+Local baseline 442 passed/11 skipped; Ruff 54 files, planning 72 tasks, pip check đạt.
 
 ## Completed Work
 
-A: 15 basic cases đạt. B: 80 resolver cases, 69 passed/11 skipped.
-Ba native junction cases đạt; chín symlink cases thiếu privilege, case-sensitive/FIFO
-unsupported. Metadata policy regressions độc lập privilege đạt.
-C: public API, runtime policy/docs, provenance và contracts giữ nguyên.
-Sửa Unicode bị mất dấu do PowerShell pipeline khi ghi planning; dùng UTF-8 trực tiếp.
-Commit/push/remote và CI implementation đã xác minh; Linux thực tế đạt các ca
-symlink/FIFO/case-sensitive mà Windows local skip. Native junction đạt Windows local.
+A/B: public loader + typed result/error, resolver integration/revalidation,
+bounded read-only read, decode/parse/quality, anchor identity, provenance.
+75 passed/1 skipped synthetic loader cases, native junction swap đạt.
+C: đúng 3 mẫu manifest BCC/2022/9, BBS/2023/6, BCC/2023/1 parse thành công,
+content hashes và size/mtime/inode trước/sau khớp. Không scan corpus.
+Docs API/errors/security/provenance/quality/integration hoàn tất.
 
 ## Remaining Work
 
-Xác minh checkpoint acceptance trước khi triển khai M1-03c được giao.
+Commit/push/remote/CI đúng SHA, chuyển REVIEW và chờ Tech Lead nghiệm thu.
 
 ## Modified Files
 
-src/document_processing/{path_resolver.py,__init__.py}; tests/unit/test_path_resolver.py;
-docs/{path-resolver.md,data-contracts.md,dataset.md};
-planning/{tasks.md,progress.md,current-status.md,handoff.md,decisions.md,tasks/M1/M1-03a.md,tasks/M1/M1-03b.md}.
+src/document_processing/{ocr_loader.py,__init__.py}; tests/unit/test_ocr_loader.py;
+planning/{tasks.md,progress.md,current-status.md,handoff.md,tasks/M1/M1-03c.md}.
+docs/{ocr-loader.md,data-contracts.md,dataset.md}; planning/decisions.md.
+artifacts/ocr-loader/{verify_samples.py,sample-results.json} local bị Git ignore.
 
 ## Tests
 
-Windows Python 3.12 full 442 passed/11 skipped; Ruff lint/format 54 files và pip check đạt.
-Planning validator 72 tasks đạt. CI resolver đúng SHA: 445 passed/8 skipped mỗi job Linux.
-Synthetic fixtures, không phải benchmark tài chính.
+Loader 75 passed/1 skipped Windows Python 3.12; symlink thiếu privilege.
+Full 517 passed/12 skipped; Ruff lint/format 58 files, planning 72 tasks, pip check đạt.
+Integration manual đúng 3 mẫu, không có anchor image trong manifest nên chỉ đối
+chiếu symbol/year/page; không xác minh run identity. Chi tiết docs/ocr-loader.md.
+Synthetic tests không phải benchmark OCR/tài chính.
+
+## Technical Decisions
+
+Runtime wrapper không version/schema mới; UTF-8/BOM, reject duplicate keys;
+32 MiB default hữu hạn chưa đo phù hợp toàn corpus. Reuse resolver trước/sau
+read; fstat/lstat fingerprint; O_NOFOLLOW/O_NONBLOCK nếu có. Windows ctime không
+so chéo lstat/fstat do semantics khác nhau, POSIX thêm ctime.
 
 ## Blockers
 
-Không blocker. Chặn mọi symlink/reparse point, kể cả root ancestors.
-TOCTOU/ACL/aliases còn giới hạn; source/run identity do caller phê duyệt.
+Không blocker. TOCTOU/aliases/hardlinks còn giới hạn; source/run identity do caller.
 
 ## Git Checkpoint
 
-Stable acceptance `3d700a5`, CI 40306938717 success.
-Stable implementation `3cb32f8409a76d94747f0080186092a8f9ad1be6`, remote/CI success.
-Bản ghi evidence sau implementation cần CI riêng; không suy ra từ implementation.
+Stable acceptance `10eb4e92c64fd241a2b740f7e38584abe1455032`, remote/CI success.
+Loader A/B/C đã kiểm thử local, đang ở working tree; chưa claim CI implementation.
 
 ## Exact Next Action
 
-Triển khai M1-03c sau khi checkpoint acceptance được xác minh.
-
-## Acceptance 2026-10-26
-
-Tech Lead APPROVED theo task giao. Local Python 3.12: 442 passed/11 skipped;
-Ruff lint/format 54 files, pip check đạt; planning được xác minh trước commit.
-Baseline `13a39eae78e621be178c0eedce2b72cdf68d3b4a` khớp origin/main,
-CI 40308268296 success đúng SHA, từng step Python 3.11/3.12 đã kiểm tra.
-Modified trong phase này: tasks.md, tasks/M1/M1-03b.md, progress.md,
-current-status.md, handoff.md; không sửa implementation.
-Resolver chỉ là snapshot, loader phải revalidate khi đọc; TOCTOU chưa loại bỏ.
-Extension .json không chứng minh JSON hợp lệ; source/run identity do caller.
+Xác minh publication M1-03c đúng SHA.

@@ -1,5 +1,9 @@
 # Data contracts
 
+Runtime consumer M1-03c: [Read-Only OCR Loader](ocr-loader.md) kết hợp DataConfig,
+Path Mapping/Resolver và Raw OCR v1. LoadedOCRPage/OCRLoadError chỉ là runtime
+wrappers, không thay schema/contracts đã nghiệm thu; structural errors khác quality issues.
+
 M1-02a triển khai `raw_ocr_v1`; M1-02b bổ sung `document_understanding_v1`;
 M1-02c bổ sung `path_mapping_v1` trong `document_processing`.
 Các giao tiếp nghiệp vụ khác vẫn ở mức khái niệm theo báo cáo giữa kỳ, Chương 4–5;

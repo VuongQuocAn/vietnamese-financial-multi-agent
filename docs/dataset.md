@@ -1,5 +1,10 @@
 # Dữ liệu và nguồn gốc
 
+M1-03c cung cấp [OCR loader read-only](ocr-loader.md) qua DataConfig và resolver,
+bounded UTF-8/JSON parse, giữ nguồn và quality issues. Đã kiểm tra đúng 3 mẫu từ
+manifest có sẵn, hash/metadata trước/sau khớp; số liệu và giới hạn ở tài liệu loader.
+Không scan/ingest toàn corpus, sửa nguồn hoặc xác minh OCR run identity.
+
 Hệ thống hướng đến xử lý báo cáo tài chính với khả năng truy nguyên về tài liệu,
 trang, bảng, ô hoặc đoạn nguồn. M0-02 chỉ tổ chức lại dữ liệu local đã có; không
 chạy lại OCR, gọi Gemini hoặc thay đổi nội dung dữ liệu.

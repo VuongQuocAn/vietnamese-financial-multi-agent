@@ -1,5 +1,20 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-26 — Read-Only OCR Data Loader (M1-03c)
+
+- M1-03b Tech Lead APPROVED/DONE; acceptance `10eb4e9`, CI 40310998984 success.
+- LoadedOCRPage frozen dataclass và OCRLoadError/code là runtime wrappers nội bộ,
+  không đổi serialized contracts. Structural issues giữ paths/cause, quality riêng.
+- Reuse resolver mới trước/sau read; bind root key, bounded O_RDONLY, fstat/lstat,
+  O_NOFOLLOW/O_NONBLOCK khi có. Còn TOCTOU; không secure descriptor framework.
+- Fingerprint dev/inode/size/mtime, POSIX thêm ctime; Windows ctime có semantics
+  khác giữa lstat/fstat nên không dùng để so chéo.
+- 32 MiB default hữu hạn chưa đo phù hợp corpus; đọc tối đa limit + 1 sentinel.
+- UTF-8/BOM, reject duplicate JSON keys và NaN/Infinity constants; không sửa nguồn.
+- Anchor kiểm tra exact symbol/year/page/image; không suy ra run identity.
+- Đọc đúng 3 mẫu theo manifest, hash/metadata khớp; không scan hoặc benchmark.
+  Chi tiết API/security/errors/verification ở [ocr-loader](../docs/ocr-loader.md).
+
 ## Các lựa chọn cho M0-01
 
 | Nội dung | Quyết định | Cơ sở |
