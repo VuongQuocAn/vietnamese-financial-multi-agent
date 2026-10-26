@@ -2,66 +2,74 @@
 
 ## Active Task
 
-M0-04 — Project Task Tracking & Codex Handoff System.
+M0-04 — Project Task Tracking & Codex Handoff System (task vừa hoàn tất).
+Không có active implementation task mới.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-2026-10-26 (Asia/Bangkok): baseline trước task local/origin cùng
-`c86b86eb95ef91251a53b3768ae5c52c2ed73514`, working tree sạch;
-[CI 40208843162](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40208843162)
-đã success. M0-01/02/03 được đối chiếu Git/CI, không dựa riêng vào nhãn tài liệu.
+2026-10-26 (Asia/Bangkok): M0-04 checkpoint `3c7d78c6855467262beca6064d657bb23a7a2e3e`
+đã push lên `origin/main`; local/remote khớp, working tree sạch ở checkpoint.
+[CI 40269619726](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40269619726) success trên Python 3.11 và 3.12,
+gồm lint/format, tracking validation và unit tests. Bản ghi này được cập nhật
+sau khi xác minh kết quả đó; không tự coi run này là CI của commit tương lai.
+M0-01/02/03 và lịch sử/IDs đã đối chiếu, không có blocker cũ còn mở.
 
 ## Completed Work
 
-Soạn roadmap M0–M8, registry 72 task, dashboard, template, spec M0-04/M1-01;
-giữ lịch sử và ID cũ, chia M1-02/03/04 bằng hậu tố. Thêm validator standard
-library và bước CI. Cập nhật AGENTS/README/quyết định quản lý; chỉ thay đổi tài
-liệu và automation tracking. Chưa có implementation nghiệp vụ mới.
+Roadmap M0–M8, registry 72 task, dashboard, template, spec M0-04/M1-01 và thư mục
+M0–M8 đã tạo. AGENTS/README hướng dẫn checkpoint/resume; có validator standard
+library trong CI. Giữ lịch sử cũ, chia M1-02/03/04 bằng hậu tố, không đổi scope/ID.
+M0-04 DONE, M1-01 READY; chưa có implementation M1 hoặc nghiệp vụ mới.
 
 ## Remaining Work
 
-Local checks, phạm vi và metadata đã đạt. Còn commit/push, xác minh CI M0-04,
-ghi SHA/evidence và đồng bộ DONE. Sau M0-04 DONE, chuyển M1-01 sang READY và
-spec tương ứng, không triển khai M1-01.
+Không còn acceptance criteria mở của M0-04. Backlog tương lai ở registry,
+không tự chuyển sang triển khai. Chỉ khi được giao mới bắt đầu task READY.
 
 ## Modified Files
 
-- `AGENTS.md`, `README.md`, `.github/workflows/ci.yml`.
+- `.github/workflows/ci.yml`, `AGENTS.md`, `README.md`.
 - `planning/roadmap.md`, `tasks.md`, `current-status.md`, `decisions.md`.
 - `planning/progress.md`, `handoff.md`, `task-template.md`.
 - `planning/tasks/M0/M0-04.md`, `planning/tasks/M1/M1-01.md`.
-- `planning/tasks/M2/.gitkeep` đến `M8/.gitkeep` (chỗ giữ thư mục, không phải spec).
+- `planning/tasks/M2/.gitkeep` đến `M8/.gitkeep` (chỗ giữ thư mục).
 - `scripts/check_planning.py`.
 
-Đối chiếu `git status --short` khi resume, không giả định working tree giống bản ghi.
+Danh sách là phạm vi M0-04, không phải khẳng định working tree đang dirty.
+Luôn kiểm tra `git status --short` khi resume; không commit thay đổi ngoài task.
 
 ## Tests
 
-Local M0-04: `python scripts/check_planning.py` đạt cho 72 task; 10 bản sao tài
-liệu lỗi bị từ chối đúng nguyên nhân. Ruff lint/format đạt, 11 unit tests passed.
-So sánh metadata đủ 9.127 file raw/OCR không đổi, lịch sử M0 bảo toàn; chỉ sửa
-file được phép. CI baseline nêu trên chưa thay thế CI M0-04.
+Local Python 3.12.0: Ruff 0.17.2 lint/format đạt; pytest 9.1.1, **11 passed**.
+`python scripts/check_planning.py`: 72 task nhất quán. 10 bản sao tài liệu lỗi
+(duplicate ID, dependency thiếu/vòng, status sai, thiếu evidence, dashboard,
+link, READY chưa đủ gate, metadata spec, nhiều active task) bị từ chối đúng nguyên nhân.
+Metadata đủ 9.127 file raw/OCR và hash file Git ngoài phạm vi không đổi.
+CI checkpoint nêu trên kiểm tra độc lập Python 3.11/3.12. Không gọi Gemini,
+đánh giá tài chính hoặc xử lý OCR trong M0-04.
 
 ## Blockers
 
-Không có blocker đã xác nhận. Nếu Git/CI/validation lỗi, ghi nguyên nhân và
-remaining work, không DONE. TBD công nghệ/contracts của task tương lai xem
-[decisions](decisions.md); không tự giải quyết trong M0-04.
+Không có blocker M0-04. TBD về model, storage, contracts/ngưỡng và phạm vi pháp
+lý nằm trong [decisions](decisions.md); task sau phải làm rõ theo phạm vi, không
+được tự biến TBD thành quyết định đã duyệt.
 
 ## Git Checkpoint
 
-Checkpoint ổn định trước task: `c86b86eb95ef91251a53b3768ae5c52c2ed73514`.
-Chưa có checkpoint M0-04. File đang sửa/chưa commit phải được xác minh bằng
-`git status`, `git log -1`, `git diff`; không reset hoặc làm lại phần đã kiểm tra.
+Checkpoint đã push và có CI success: `3c7d78c6855467262beca6064d657bb23a7a2e3e`.
+Bản ghi DONE có thể nằm ở commit tiếp theo cùng message theo yêu cầu; khi resume,
+kiểm tra `git log -1`, `git status --short --branch`, `git fetch origin` và
+`git rev-list --left-right --count HEAD...origin/main`. Không reset về checkpoint
+hoặc làm lại phần đã kiểm tra chỉ vì SHA mới hơn bản ghi này.
 
 ## Exact Next Action
 
-Đọc AGENTS → [current-status](current-status.md) → handoff →
-[spec M0-04](tasks/M0/M0-04.md), kiểm tra Git rồi thực hiện publication M0-04:
-đầu tiên rà soát staged bằng `git diff --cached --check` trước commit đúng message.
-Sau mỗi phần độc lập đã kiểm thử, cập nhật handoff/checkpoint; không giả định có
-cơ hội ghi lại khi quota/IDE dừng đột ngột. Không tự chuyển sang task M1.
+Chờ người dùng giao [M1-01](tasks/M1/M1-01.md), không tự bắt đầu task.
+Khi được giao: đọc AGENTS → current-status → handoff → spec M1-01, kiểm tra Git
+thực tế rồi chỉ đọc tài liệu/module liên quan và chuyển task sang IN_PROGRESS.
+Ghi checkpoint sau phần độc lập đã kiểm thử; không giả định luôn kịp bàn giao
+khi quota/IDE dừng đột ngột.

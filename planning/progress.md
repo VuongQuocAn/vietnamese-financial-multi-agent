@@ -9,8 +9,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| M0 | 4 | 3 | 0 | 0 | 0 | 0 | 1 |
-| M1 | 22 | 0 | 0 | 0 | 22 | 0 | 0 |
+| M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
+| M1 | 22 | 0 | 0 | 0 | 21 | 1 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 72 | 3 | 0 | 0 | 68 | 0 | 1 |
+| TOTAL | 72 | 4 | 0 | 0 | 67 | 1 | 0 |
 
 ## Implementation thực tế
 
@@ -26,6 +26,8 @@ Bằng chứng baseline: commit `c86b86eb95ef91251a53b3768ae5c52c2ed73514`, CI
 [40208843162](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40208843162).
 Đã có packaging, cấu hình Ruff/pytest, CI và 11 smoke tests cài đặt/import.
 Dataset được tổ chức local; không đồng nghĩa OCR pipeline đã được triển khai.
+M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
+[CI 40269619726](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40269619726) cho commit `3c7d78c`.
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
@@ -44,6 +46,7 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-M0-04 ở `REVIEW`: checks local đã đạt, còn publication và ghi evidence. M1-01 còn `TODO` vì gate
-M0-04 chưa DONE; spec đã được chuẩn bị, sẽ READY sau nghiệm thu M0-04. Không có
-task M1 đang triển khai. Chi tiết tiếp tục tại [handoff](handoff.md).
+Không có active implementation task. M0-01 đến M0-04 đều DONE với bằng chứng
+trong registry. Task READY đầu tiên: [M1-01](tasks/M1/M1-01.md); dependency M0-04
+đã DONE, inputs/spec/criteria có sẵn. READY không có nghĩa đã triển khai;
+chờ người dùng giao M1-01. Xem [handoff](handoff.md) trước khi resume.
