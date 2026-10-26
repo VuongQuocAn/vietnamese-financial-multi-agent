@@ -1,84 +1,221 @@
-# Lộ trình phát triển
+# Roadmap M0–M8
 
-## Nền tảng M0
+Roadmap bám [kiến trúc](../docs/architecture.md),
+[ranh giới module](../docs/module-boundaries.md),
+[data contracts](../docs/data-contracts.md) và định hướng Chương 4–8 của báo cáo
+midterm đã đối chiếu trong M0. Danh sách sau là phân rã công việc, không phải
+quyết định chọn framework/model/storage hoặc thay đổi đóng góp nghiên cứu.
+Trạng thái task chỉ lấy từ [Master Task Registry](tasks.md).
 
-| Mốc | Kết quả | Trạng thái |
+## Thứ tự và điều kiện triển khai
+
+`M0 → M1 → M2 → M3 → M4 → M5 → M6 → M7 → M8` là thứ tự các gate hoàn thành.
+Dependencies task trong registry là ràng buộc cụ thể; không tự mở milestone mới
+hoặc chạy task chỉ vì đã xuất hiện trong kế hoạch. Quyền truy cập dữ liệu, schema,
+model, thresholds, budget, engine và lịch/người phụ trách còn thiếu đều là `TBD`.
+
+M1-01 đến M1-04 giữ nguyên phạm vi đã đăng ký ở M0-03. Ba task lớn M1-02/03/04
+được giữ làm task cha nghiệm thu; phần triển khai chia thành task con nhỏ, tránh
+đổi ID hoặc gộp thiết kế contracts với toàn bộ pipeline. Các mô tả xa dưới đây
+là spec ngắn dự kiến, phải được cụ thể hóa bằng [template](task-template.md)
+trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng ID mới/hậu tố.
+
+<a id="m0"></a>
+
+## M0 — Project Foundation
+
+Mục tiêu: Repository, CI, môi trường, tài liệu, task tracking và handoff.
+
+Phụ thuộc milestone: Không có milestone trước.
+
+Điều kiện hoàn thành: M0-01 đến M0-04 đạt criteria, có bằng chứng Git/CI hoặc blocker được task cho phép ghi rõ.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
 | --- | --- | --- |
-| M0-01 | Skeleton modular monolith, cấu hình phát triển, tài liệu, Git và CI | Hoàn thành |
-| M0-02 | Dataset local trong `data/`, cấu hình đường dẫn, bảo toàn và loại dữ liệu khỏi Git | Hoàn thành; commit đã trên GitHub, CI đạt |
-| M0-03 | Đồng bộ trạng thái, quy tắc lâu dài và kế hoạch phát triển | Hoàn thành; commit/push và CI đã xác minh |
+| <a id="m0-01"></a>M0-01 — Initialize Project Repository | Skeleton, cấu hình và tài liệu nền tảng | Cài môi trường, lint/test, Git/GitHub được xác minh |
+| <a id="m0-02"></a>M0-02 — Reorganize Financial Dataset & Commit to GitHub | Dataset local được tổ chức và cấu hình đường dẫn | Bảo toàn dữ liệu, kiểm tra ignore, commit/push thành công |
+| <a id="m0-03"></a>M0-03 — Repository Housekeeping & Planning Synchronization | Trạng thái, quy tắc và kế hoạch được đồng bộ | Đối chiếu GitHub/CI, giữ nguyên nghiệp vụ và dữ liệu |
+| <a id="m0-04"></a>M0-04 — Project Task Tracking & Codex Handoff System | Registry, dashboard, handoff và roadmap M0–M8 | IDs/dependencies/status/evidence/links nhất quán, kiểm tra và publication |
 
-Bằng chứng commit/CI và acceptance criteria nằm trong
-[`current-status.md`](current-status.md) và [`tasks.md`](tasks.md).
+<a id="m1"></a>
 
-## M1 — Các task dự kiến, chưa bắt đầu
+## M1 — Document Understanding
 
-Bốn task dưới đây là đề xuất lập kế hoạch trong M0-03 để chuẩn bị đầu vào cho
-Offline Pipeline. Chưa được coi là yêu cầu triển khai hoặc contracts đã duyệt.
-Phạm vi cuối cùng, người phụ trách, lịch thực hiện và acceptance criteria chính
-thức cần được xác định trong yêu cầu giao từng task; hiện là `TBD`.
+Mục tiêu: Khám phá OCR, contracts, loader/resolver, LLM Gateway, Gemini structured outputs, quota/cache/checkpoint, phân loại tài liệu, dựng bảng, hiệu chỉnh và đánh giá.
 
-### M1-01 — Dataset Inventory & Provenance Review
+Phụ thuộc milestone: M0; các nhánh nội bộ theo registry.
 
-- Mục tiêu: xác định dataset local thực có và khả năng truy nguyên nguồn trước
-  khi thiết kế adapter hoặc schema.
-- Phạm vi dự kiến: kiểm kê metadata theo mã/năm, loại file và liên kết nguồn
-  có sẵn; khảo sát một tập mẫu JSON/ảnh phù hợp, ghi rõ dữ liệu thiếu hoặc mơ hồ.
-- Đầu ra dự kiến: manifest local nằm ngoài Git, tài liệu tổng hợp corpus và
-  khoảng trống provenance; không sao chép nội dung tài chính vào tài liệu public.
-- Tiêu chí đề xuất: manifest đối chiếu được số file/dung lượng; phân biệt dữ
-  liệu quan sát được với thông tin chưa xác minh; raw/OCR không đổi.
-- Phụ thuộc: nền tảng M0 đã hoàn tất. Trạng thái: **Dự kiến, chưa bắt đầu**.
+Điều kiện hoàn thành: Input/output contracts được duyệt, provenance giữ nguyên, raw/OCR read-only; các task M1 và đánh giá có bằng chứng, không còn quality blocker chưa xử lý.
 
-### M1-02 — Data Contracts & Path Mapping Design
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m1-01"></a>M1-01 — Dataset Inventory & Provenance Review | Manifest local và báo cáo khám phá OCR/provenance | Metadata khớp, mẫu có giới hạn, chỉ công bố thống kê không nhạy cảm |
+| <a id="m1-02"></a>M1-02 — Data Contracts & Path Mapping Design | Tổng hợp thiết kế trong phạm vi M1-02 đã đăng ký | Task cha: ba thiết kế con được rà soát, contracts được duyệt trước implementation |
+| <a id="m1-02a"></a>M1-02a — Raw OCR Contracts | Contract raw OCR dựa trên cấu trúc quan sát được | Trường nguồn và trường chưa biết được phân biệt; không suy đoán dữ liệu |
+| <a id="m1-02b"></a>M1-02b — Document Understanding Contracts | Contract đầu ra hiểu tài liệu và liên kết raw OCR | Provenance, loại kết quả và lỗi được định nghĩa, không thêm schema kế toán |
+| <a id="m1-02c"></a>M1-02c — Path Mapping Contract | Quy tắc ánh xạ nguồn Colab/local | Định nghĩa lỗi thiếu, trùng tên, thoát gốc; raw JSON giữ nguyên |
+| <a id="m1-03"></a>M1-03 — Configuration & Read-Only OCR Adapter | Tích hợp cấu hình, resolver và adapter đúng phạm vi cũ | Task cha: ba task con đạt và giao tiếp theo contracts đã duyệt |
+| <a id="m1-03a"></a>M1-03a — Central Data Configuration | Bộ nạp cấu hình đường dẫn trong core | Kiểm thử biến môi trường, đường dẫn tương đối và cấu hình thiếu |
+| <a id="m1-03b"></a>M1-03b — Read-Only Path Resolver | Resolver theo contract, không sửa JSON nguồn | Kiểm thử file thiếu/trùng, đường dẫn ngoài gốc và ánh xạ provenance |
+| <a id="m1-03c"></a>M1-03c — Read-Only OCR Data Loader | Adapter đọc OCR trong document_processing | Đọc mẫu hợp lệ, lỗi rõ ràng, không ghi raw/processed |
+| <a id="m1-04"></a>M1-04 — Extraction Quality Validation & Pilot | Tổng hợp validation và pilot giữ phạm vi cũ | Task cha: validators và pilot con đạt, nêu rõ giới hạn chất lượng |
+| <a id="m1-04a"></a>M1-04a — Extraction Structure Validators | Kiểm tra cấu trúc và liên kết JSON–ảnh | Bắt lỗi theo contract, lưu issue có nguồn, không sửa dữ liệu để làm hết lỗi |
+| <a id="m1-04b"></a>M1-04b — Bounded Extraction Pilot | Báo cáo pilot trên tập con được giao | Có manifest mẫu, kết quả tái kiểm tra được, không xử lý toàn dataset |
+| <a id="m1-05"></a>M1-05 — LLM Gateway Contract | Contract chung cho model, structured output và usage/cost | Được rà soát trước chọn SDK/model; không gọi nhà cung cấp trực tiếp ngoài gateway |
+| <a id="m1-06"></a>M1-06 — Shared LLM Gateway | Implementation gateway theo contract | Test đổi cấu hình model, lỗi, structured result và ghi usage bằng transport giả lập |
+| <a id="m1-07"></a>M1-07 — Gemini Structured Output Adapter | Adapter Gemini đi qua gateway | Validate output theo schema đã duyệt; live API chỉ khi task cho phép |
+| <a id="m1-08"></a>M1-08 — Quota and Budget Management | Chính sách quota, retry và giới hạn chi phí | Test giới hạn/dừng, không vượt ngân sách đã cấu hình |
+| <a id="m1-09"></a>M1-09 — LLM Response Cache | Cache theo request/model/schema version | Kiểm thử hit/miss/invalidation và không lưu secrets |
+| <a id="m1-10"></a>M1-10 — Document Processing Checkpoints | Checkpoint/resume cho đơn vị xử lý tài liệu | Không làm lại kết quả đã xác minh; phiên bản input/config được đối chiếu |
+| <a id="m1-11"></a>M1-11 — Page and Document Classification | Kết quả phân loại có provenance | Taxonomy được duyệt, trả unresolved khi thiếu bằng chứng |
+| <a id="m1-12"></a>M1-12 — Table Structure Reconstruction | Cấu trúc bảng dẫn về vùng raw OCR | Kiểm thử hàng/cột và ô gộp trên mẫu đã chú giải, không tự thêm số liệu |
+| <a id="m1-13"></a>M1-13 — Evidence-Preserving OCR Correction | Bản hiệu chỉnh riêng kèm nguồn và lý do | Raw OCR bất biến; phân biệt đề xuất, xác nhận và unresolved |
+| <a id="m1-14"></a>M1-14 — Document Understanding Evaluation | Protocol và kết quả đánh giá hiểu tài liệu | Mẫu/nhãn/ngưỡng được chốt, phân biệt chất lượng thực tế với smoke tests |
 
-- Mục tiêu: làm rõ giao tiếp với dữ liệu OCR và cách giữ provenance trên local.
-- Phạm vi dự kiến: dự thảo contract đầu vào OCR, tham chiếu nguồn, quy tắc
-  ánh xạ đường dẫn Colab và lỗi thiếu/mơ hồ; đối chiếu ranh giới module hiện có.
-- Đầu ra dự kiến: cập nhật thiết kế contracts và các trường hợp cần kiểm chứng;
-  ghi `TBD` cho thông tin chưa xác định, chưa tự tạo schema kế toán chi tiết.
-- Tiêu chí đề xuất: mỗi khái niệm nguồn có cơ sở từ M1-01; quy tắc ánh xạ giữ
-  nguyên JSON gốc, xử lý đường dẫn không tồn tại/trùng tên và không thoát gốc.
-  Contract phải được duyệt trước khi task sau triển khai dựa vào nó.
-- Phụ thuộc: M1-01. Trạng thái: **Dự kiến, chưa bắt đầu**.
+<a id="m2"></a>
 
-### M1-03 — Configuration & Read-Only OCR Adapter
+## M2 — Accounting Normalization
 
-- Mục tiêu: cung cấp cấu hình dùng chung và đọc kết quả OCR có sẵn theo contract
-  đã được duyệt, không xử lý OCR lại.
-- Phạm vi dự kiến: cấu hình đường dẫn trong `core`, ánh xạ nguồn và adapter đọc
-  trong `document_processing`; vị trí interfaces cụ thể theo thiết kế M1-02.
-- Đầu ra dự kiến: bộ nạp cấu hình, adapter và xử lý lỗi với provenance được giữ
-  nguyên; không hardcode đường dẫn Windows/Colab hoặc thêm lời gọi LLM.
-- Tiêu chí đề xuất: kiểm thử đường dẫn tương đối/cấu hình môi trường, JSON lỗi,
-  file thiếu, tên trùng và nguồn nằm ngoài gốc; đọc dữ liệu không ghi lại raw/OCR.
-- Phụ thuộc: M1-02 và contracts đã được duyệt. Trạng thái: **Dự kiến, chưa bắt đầu**.
+Mục tiêu: Contracts tài chính, kỳ/đơn vị/phạm vi, nhận diện B01/B02/B03/B09, mapping chỉ tiêu, kiểm tra số học/quan hệ và quality gates.
 
-### M1-04 — Extraction Quality Validation & Pilot
+Phụ thuộc milestone: M1; dữ liệu hiểu tài liệu và contracts đã được nghiệm thu.
 
-- Mục tiêu: kiểm tra khả năng sử dụng dữ liệu trích xuất trước chuẩn hóa kế toán.
-- Phạm vi dự kiến: validation cấu trúc, liên kết JSON–ảnh và vị trí nguồn theo
-  contract; chạy pilot trên tập con được xác định khi giao task.
-- Đầu ra dự kiến: báo cáo chất lượng/issue có provenance, kết quả pilot local
-  ở vị trí bị Git bỏ qua; không sửa dữ liệu gốc để làm hết lỗi.
-- Tiêu chí đề xuất: phát hiện trường hợp thiếu file hoặc cấu trúc không hợp lệ
-  theo contract; báo cáo phân biệt lỗi dữ liệu và giới hạn kiểm tra; kiểm thử
-  tương ứng đạt. Bộ mẫu, ngưỡng đạt và quy tắc chi tiết hiện là `TBD`.
-- Phụ thuộc: M1-03. Trạng thái: **Dự kiến, chưa bắt đầu**.
+Điều kiện hoàn thành: Kết quả chuẩn hóa truy nguyên được, số học được kiểm tra bằng quy tắc đã duyệt, dữ liệu thiếu/mơ hồ được giữ là unresolved.
 
-## Định hướng sau M1
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m2-01"></a>M2-01 — Financial Normalization Contracts | Contracts chuẩn hóa tài chính được rà soát | Định nghĩa giá trị, kỳ, đơn vị, phạm vi và provenance; mapping chi tiết cần duyệt |
+| <a id="m2-02"></a>M2-02 — Period Unit and Reporting Scope | Chuẩn hóa kỳ, đơn vị và riêng/hợp nhất | Giữ nguồn, đánh dấu mơ hồ, kiểm thử nhiều định dạng đã xác định |
+| <a id="m2-03"></a>M2-03 — Statement Type Recognition | Nhận diện B01/B02/B03/B09 theo ngữ cảnh | Không dựa riêng tên file; báo unresolved khi không đủ căn cứ |
+| <a id="m2-04"></a>M2-04 — Financial Item Mapping | Mapping chỉ tiêu theo danh mục đã duyệt | Lưu mapping evidence, không tự tạo quy tắc kế toán |
+| <a id="m2-05"></a>M2-05 — Deterministic Arithmetic Checks | Kiểm tra số học theo công thức được duyệt | Test đơn vị/dung sai/làm tròn và lineage đầu vào |
+| <a id="m2-06"></a>M2-06 — Accounting Relationship Checks | Kiểm tra quan hệ giữa các báo cáo | Phân biệt lỗi, nghi vấn và dữ liệu thiếu; không tự kết luận vi phạm pháp lý |
+| <a id="m2-07"></a>M2-07 — Normalization Quality Gates | Quality gates và unresolved evidence | Chỉ dữ liệu đủ điều kiện đi tiếp; mọi loại trừ có nguồn/lý do |
 
-Thứ tự phụ thuộc theo kiến trúc và Chương 8.4 của báo cáo giữa kỳ:
+<a id="m3"></a>
 
-1. Hoàn thiện đầu vào tài liệu và chuẩn hóa kế toán, duy trì source provenance.
-2. Xây dựng Canonical Evidence Layer và EF-EG.
-3. Phát triển Shared Executable Tool Space và hỏi đáp cơ bản.
-4. Tích hợp Planner, Supervisor và các tác nhân chuyên môn.
-5. Kiểm chứng claim, Verified Claim Ledger và tạo báo cáo có dẫn nguồn.
-6. Tích hợp, benchmark và ablation trên QA/report.
+## M3 — Canonical Evidence & EF-EG
 
-Đây là định hướng, không phải chức năng đã triển khai. Không thay đổi pipeline,
-module boundaries hoặc contracts được duyệt. LLM Gateway dùng chung cần task
-riêng trước khi thêm Gemini hoặc nhà cung cấp khác; mọi tích hợp phải giữ cơ chế
-đổi model, structured outputs và quản lý chi phí. Không bắt đầu công việc M1
-hoặc các hướng tiếp theo trong M0-03.
+Mục tiêu: Canonical facts, text/table evidence, source anchors, EF-EG nodes/edges, derived metrics, calculation lineage và retrieval.
+
+Phụ thuộc milestone: M2; giữ provenance từ M1, không chờ đến M3 mới ghi nguồn.
+
+Điều kiện hoàn thành: Contracts canonical/graph được duyệt, facts/evidence/lineage truy nguyên được và retrieval có kiểm thử. Engine lưu trữ là TBD cho đến task quyết định.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m3-01"></a>M3-01 — Canonical and Provenance Contracts | Contracts canonical và evidence anchors | Định danh và truy nguyên được rà soát trước implementation |
+| <a id="m3-02"></a>M3-02 — Canonical Financial Facts | Lưu/truy xuất facts chuẩn hóa | Giữ kỳ/đơn vị/phạm vi và nguồn, không trộn facts chưa đạt gate |
+| <a id="m3-03"></a>M3-03 — Text and Table Evidence | Bằng chứng văn bản/bảng liên kết nguồn | Truy nguyên được đoạn/vùng/bảng theo contract |
+| <a id="m3-04"></a>M3-04 — EF-EG Nodes and Edges | EF-EG theo types/relations được duyệt | Kiểm tra tham chiếu và đồ thị mẫu; engine lưu trữ vẫn cần quyết định |
+| <a id="m3-05"></a>M3-05 — Derived Metric Records | Biểu diễn metric, công thức và inputs | Không dùng LLM làm máy tính; đây là model lưu trữ, executor thuộc M4 |
+| <a id="m3-06"></a>M3-06 — Calculation Lineage | Truy vết metric về công thức và bằng chứng | Lineage không đứt và có thể cung cấp input để thực thi lại |
+| <a id="m3-07"></a>M3-07 — Evidence Retrieval Interface | Giao tiếp truy xuất facts/text/table/graph | Kết quả có evidence IDs và nguồn; không tự chọn engine chưa duyệt |
+
+<a id="m4"></a>
+
+## M4 — Financial Tools & QA Baseline
+
+Mục tiêu: Shared Executable Tool Space, retrieval, calculator và baseline QA.
+
+Phụ thuộc milestone: M3 và Gateway của M1.
+
+Điều kiện hoàn thành: Tools có contracts, kết quả/lineage kiểm tra được; baseline có protocol, được phân biệt với verified output chính thức.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m4-01"></a>M4-01 — Executable Tool Contracts | Contracts Shared Executable Tool Space | Đầu vào/ra/lỗi/provenance có kiểu và được duyệt |
+| <a id="m4-02"></a>M4-02 — Typed Financial Retrieval Tools | Công cụ truy xuất facts/metrics | Đối chiếu kỳ, đơn vị, phạm vi và evidence IDs |
+| <a id="m4-03"></a>M4-03 — Calculator and Formula Executor | Thực thi công thức được duyệt bằng công cụ xác định | Kiểm thử input thiếu, số học, dung sai và khả năng tính lại qua lineage |
+| <a id="m4-04"></a>M4-04 — Evidence Retrieval Tools | Tool wrappers cho truy xuất bằng chứng | Dùng interface M3, trả nguồn và trạng thái; không thêm storage engine ngầm |
+| <a id="m4-05"></a>M4-05 — Question Answering Baseline | Baseline QA nghiên cứu có công cụ và bằng chứng | Kết quả baseline được nhận diện riêng, không được coi là verified output chính thức |
+
+<a id="m5"></a>
+
+## M5 — Adaptive Multi-Agent
+
+Mục tiêu: Evidence Plan, Query Planner, Supervisor, ba specialist roles đã nêu trong báo cáo, adaptive routing và orchestration.
+
+Phụ thuộc milestone: M4.
+
+Điều kiện hoàn thành: Điều phối theo evidence/risk có trace và điều kiện dừng; specialist outputs vẫn là candidate claims cần kiểm chứng. Không tự thêm agent.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m5-01"></a>M5-01 — Evidence Plan and Planner Contracts | Contracts query/evidence plan và trạng thái điều phối | Nhu cầu bằng chứng, lỗi và điều kiện dừng được rà soát |
+| <a id="m5-02"></a>M5-02 — Evidence-Aware Query Planner | Planner chọn bước truy xuất/tính toán | Kế hoạch bám nhu cầu bằng chứng và tập công cụ đã có |
+| <a id="m5-03"></a>M5-03 — Risk-Aware Supervisor | Supervisor quản lý trạng thái và giới hạn thực thi | Theo dõi thiếu/mâu thuẫn bằng chứng, kiểm thử điều kiện dừng |
+| <a id="m5-04"></a>M5-04 — Profitability Specialist | Tác nhân lợi nhuận theo vai trò đã nêu trong báo cáo | Chỉ tạo candidate claims có nguồn qua shared tools |
+| <a id="m5-05"></a>M5-05 — Liquidity and Leverage Specialist | Tác nhân thanh khoản/đòn bẩy theo thiết kế đã có | Không tự thêm chỉ số hoặc công thức chưa được duyệt |
+| <a id="m5-06"></a>M5-06 — Cash Flow and Earnings Quality Specialist | Tác nhân dòng tiền/chất lượng lợi nhuận theo thiết kế đã có | Giữ evidence lineage và giới hạn khi thiếu thuyết minh |
+| <a id="m5-07"></a>M5-07 — Adaptive Routing Rules | Routing theo evidence/risk signals đã được duyệt | Ngưỡng là cấu hình có căn cứ; không tự thêm agent mới |
+| <a id="m5-08"></a>M5-08 — Agent and Tool Orchestration | Phối hợp planner/supervisor/specialists/tools | Luồng có trace, giới hạn và xử lý bằng chứng mâu thuẫn |
+
+<a id="m6"></a>
+
+## M6 — Claim Verification
+
+Mục tiêu: Candidate Claim contracts, deterministic validators, Evidence Critic, Financial Logic Critic, Judge và Verified Claim Ledger.
+
+Phụ thuộc milestone: M5 và shared tools.
+
+Điều kiện hoàn thành: ACCEPT/REVISE/INVESTIGATE/ABSTAIN được kiểm thử; chỉ claim được chấp nhận vào ledger, có nguồn và lịch sử kiểm chứng.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m6-01"></a>M6-01 — Candidate Claim Contracts | Contract claim và bằng chứng kiểm chứng | Phân biệt fact, metric, diễn giải và trạng thái xác minh |
+| <a id="m6-02"></a>M6-02 — Deterministic Financial Validators | Kiểm tra số, công thức, kỳ, đơn vị, phạm vi | Test validators bằng quy tắc đã duyệt và giữ calculation lineage |
+| <a id="m6-03"></a>M6-03 — Evidence Critic | Kiểm tra bằng chứng và citation support | Không chấp nhận claim thiếu nguồn hoặc suy diễn ngoài bằng chứng |
+| <a id="m6-04"></a>M6-04 — Financial Logic Critic | Kiểm tra tính hợp lý của lập luận | Ghi rõ giới hạn và mâu thuẫn, không biến nghi vấn thành kết luận |
+| <a id="m6-05"></a>M6-05 — Verification Decisions | Judge với ACCEPT/REVISE/INVESTIGATE/ABSTAIN | Vòng kiểm chứng bị giới hạn; safe abstention khi thiếu bằng chứng |
+| <a id="m6-06"></a>M6-06 — Verified Claim Ledger | Ledger claim được chấp nhận và lịch sử xác minh | Claim chưa ACCEPT không vào verified ledger; truy vết được quyết định |
+
+<a id="m7"></a>
+
+## M7 — Grounded Output
+
+Mục tiêu: Vietnamese QA Composer, Report Outline Planner, Grounded Writer, citation rendering và Information Firewall.
+
+Phụ thuộc milestone: M6.
+
+Điều kiện hoàn thành: QA/report chỉ dùng ledger; citation có thể đối chiếu, không tự thêm dữ kiện/truy xuất/tính toán ở lớp output.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m7-01"></a>M7-01 — Vietnamese QA Composer | Câu trả lời tiếng Việt từ verified ledger | Không tạo số liệu hoặc truy xuất mới ngoài ledger |
+| <a id="m7-02"></a>M7-02 — Report Outline Planner | Dàn ý báo cáo dựa trên verified claims | Không bổ sung nhiệm vụ phân tích hoặc dữ kiện mới tại lớp output |
+| <a id="m7-03"></a>M7-03 — Grounded Report Writer | Báo cáo tiếng Việt có căn cứ | Mọi nhận định tài chính gắn với verified claim và nguồn |
+| <a id="m7-04"></a>M7-04 — Citation Rendering | Trình bày citation dùng chung | Citation đối chiếu được về nguồn/vị trí theo contract |
+| <a id="m7-05"></a>M7-05 — Information Firewall and Output Validation | Gate đầu ra và kiểm tra QA/report | Chặn claim chưa xác minh và nội dung không có trong ledger |
+
+<a id="m8"></a>
+
+## M8 — Evaluation & Integration
+
+Mục tiêu: Dataset đánh giá, baselines, QA/report metrics, ablation, usage/latency/cost, end-to-end integration và demo.
+
+Phụ thuộc milestone: M7; protocol/nhãn/ngân sách phải xác định trước thực nghiệm.
+
+Điều kiện hoàn thành: Protocol và cấu hình tái kiểm tra được, số đo thực tế có bằng chứng; công bố giới hạn, chi phí và kết quả hai luồng, không suy diễn từ smoke tests.
+
+| Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
+| --- | --- | --- |
+| <a id="m8-01"></a>M8-01 — Evaluation Dataset Protocol | Tập chia, chú giải và manifest đánh giá được duyệt | Không rò rỉ doanh nghiệp giữa tập; dữ liệu lớn không vào Git |
+| <a id="m8-02"></a>M8-02 — Controlled Baseline Experiments | Các baseline được chọn theo protocol | Cùng model/dữ liệu/ngân sách; phạm vi từng experiment được giao riêng |
+| <a id="m8-03"></a>M8-03 — Interactive QA Metrics | Đánh giá QA và hội thoại | Công thức, reference labels và dung sai được chốt, không bịa điểm |
+| <a id="m8-04"></a>M8-04 — Report Generation Metrics | Đánh giá support, citation và chất lượng báo cáo | Protocol tự động/thủ công được xác định, nêu rõ độ bao phủ |
+| <a id="m8-05"></a>M8-05 — Ablation Experiments | Thực nghiệm bỏ từng cơ chế theo thiết kế | Có cấu hình so sánh và ngân sách; không chạy hàng loạt ngoài task |
+| <a id="m8-06"></a>M8-06 — Usage Latency and Cost Evaluation | Đo tokens, calls, latency và cost | Đo từ usage thực tế, có model/config/budget của lần chạy |
+| <a id="m8-07"></a>M8-07 — End-to-End Integration | Kiểm thử hai luồng từ dữ liệu đến đầu ra | Provenance, verification, firewall và lỗi thiếu bằng chứng được kiểm tra |
+| <a id="m8-08"></a>M8-08 — Application Demo | Demo tối thiểu theo phạm vi được giao | QA/report hoạt động với dữ liệu được phép, công bố giới hạn và chi phí |
+
+## Các ràng buộc xuyên suốt
+
+Giữ Modular Monolith và ba lớp Offline → Online → Output. Mọi LLM đi qua
+Gateway; không triển khai Gateway cùng OCR trong một task. Không gộp EF-EG với
+Multi-Agent, QA với Report Generation, hoặc hệ thống với toàn bộ benchmark vào
+một task. Thực nghiệm/live API chỉ chạy khi task cho phép và có ngân sách.
+
+Contracts, công thức kế toán, ngưỡng rủi ro/đánh giá và model chưa chốt không
+được tự suy đoán. Công việc ngoài phạm vi phải ghi thành đề xuất task mới.
+M0-04 chỉ thiết lập tài liệu quản lý; dừng sau M0-04, không bắt đầu M1-01.

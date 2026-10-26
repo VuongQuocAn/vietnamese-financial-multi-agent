@@ -61,7 +61,9 @@ Phạm vi kiểm tra tuân thủ quy định cụ thể là **TBD**; xem
 │   ├── integration/.gitkeep
 │   └── evaluation/.gitkeep
 ├── configs/.gitkeep
-├── scripts/.gitkeep
+├── scripts/
+│   ├── .gitkeep
+│   └── check_planning.py
 ├── docs/
 │   ├── architecture.md
 │   ├── module-boundaries.md
@@ -72,7 +74,20 @@ Phạm vi kiểm tra tuân thủ quy định cụ thể là **TBD**; xem
 │   ├── roadmap.md
 │   ├── tasks.md
 │   ├── current-status.md
-│   └── decisions.md
+│   ├── decisions.md
+│   ├── progress.md
+│   ├── handoff.md
+│   ├── task-template.md
+│   └── tasks/
+│       ├── M0/M0-04.md
+│       ├── M1/M1-01.md
+│       ├── M2/.gitkeep
+│       ├── M3/.gitkeep
+│       ├── M4/.gitkeep
+│       ├── M5/.gitkeep
+│       ├── M6/.gitkeep
+│       ├── M7/.gitkeep
+│       └── M8/.gitkeep
 ├── data/
 │   ├── raw/Financial_Report/                 # dữ liệu local, Git bỏ qua
 │   ├── processed/Financial_Report_OCR/       # dữ liệu local, Git bỏ qua
@@ -153,7 +168,8 @@ namespace này vào `src/`. Khi thêm package, cần cập nhật danh sách đ�
 Các thư mục `tests/` không phải package ứng dụng nên không cần `__init__.py`.
 
 CI cài package thường (không editable), kiểm tra Ruff và unit tests trên Python
-3.11/3.12. Unit tests hiện chỉ kiểm tra khả năng cài và import các package;
+3.11/3.12, kèm kiểm tra tính nhất quán tracking qua `scripts/check_planning.py`.
+Unit tests hiện chỉ kiểm tra khả năng cài và import các package;
 không đại diện cho kiểm thử nghiệp vụ hoặc kết quả benchmark.
 
 ## Tài liệu và quy trình làm việc
@@ -164,7 +180,18 @@ không đại diện cho kiểm thử nghiệp vụ hoặc kết quả benchmark
 Nguồn và cách quản lý dữ liệu ở [dataset.md](docs/dataset.md);
 định hướng kiểm thử ở [evaluation.md](docs/evaluation.md).
 
-Theo dõi [roadmap](planning/roadmap.md), [task](planning/tasks.md) và
-[trạng thái hiện tại](planning/current-status.md). Các nội dung chưa được quyết định
-được ghi `TBD`. Không đưa dữ liệu từ Google Drive, dữ liệu tài chính hoặc secrets
-vào Git. Chỉ thực hiện task được giao; M0-02 không mở rộng chức năng nghiệp vụ.
+Theo dõi [roadmap M0–M8](planning/roadmap.md), [Master Task Registry](planning/tasks.md),
+[dashboard](planning/progress.md) và [trạng thái hiện tại](planning/current-status.md).
+Registry là nguồn trạng thái chính, Task ID bất biến. Các task M1–M8 là kế hoạch,
+chưa phải implementation hoặc quyền tự bắt đầu task.
+
+Khi tiếp tục phiên: đọc AGENTS → current-status → [handoff](planning/handoff.md)
+→ active task spec, kiểm tra Git/checkpoint thực tế rồi chỉ làm remaining work.
+Dùng [task template](planning/task-template.md) cho task mới; ưu tiên task nhỏ,
+ghi checkpoint sau phần độc lập đã kiểm thử. Không làm lại phần đã xác minh khi
+không có lý do, không chờ đến lúc hết quota mới cập nhật handoff.
+
+Chạy `python scripts/check_planning.py` để kiểm tra IDs, dependencies, states,
+evidence, dashboard, specs và links; script chỉ đọc tài liệu, không đọc dataset
+hoặc gọi API. Những quyết định thiếu thông tin ghi `TBD`; không đưa dữ liệu
+Google Drive, dataset, secrets hoặc tài liệu riêng tư vào Git.

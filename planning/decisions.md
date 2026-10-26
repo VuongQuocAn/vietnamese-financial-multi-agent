@@ -41,3 +41,28 @@ repository đó, tạo repository private theo đúng tên được yêu cầu.
 
 Không dùng danh sách công nghệ được đề xuất trong báo cáo như quyết định đã
 được duyệt. Không tự mở rộng phạm vi trong task khởi tạo.
+
+## 2026-10-26 — Tracking và handoff (M0-04)
+
+- Master Task Registry là nguồn trạng thái chính; chỉ dùng sáu states đã quy
+  định. Dashboard và metadata trong spec/handoff phải đồng bộ với registry.
+- Task IDs bất biến. Giữ scope/ID M1-01..04 từ M0-03; M1-02/03/04 làm task cha
+  nghiệm thu, chia phần nhỏ bằng hậu tố thay vì đánh số lại. Task mới khác dùng
+  số tiếp theo, không tái sử dụng IDs.
+- Có 72 task đã đăng ký, gồm ba task cha. Số đếm không phải ước lượng khối lượng
+  hoặc phần trăm nghiên cứu; implementation/benchmark chưa có số đo thì N/A.
+- Chỉ tạo spec đầy đủ cho M0-04 và task M1-01 có inputs/criteria rõ. Backlog xa
+  dùng mô tả ngắn trong roadmap; trước READY cần spec riêng và xem xét chia M/L.
+- Validator Python standard library kiểm tra IDs, dependency cycles, states,
+  DONE evidence, dashboard, spec metadata và links; CI chạy cùng lint/unit tests.
+  Script không đọc dataset, gọi API hoặc chọn công nghệ nghiệp vụ.
+- Resume đọc bốn tài liệu nhỏ (AGENTS/current-status/handoff/active spec), xác
+  minh Git rồi chỉ mở tài liệu liên quan. Ghi checkpoint sau phần độc lập đã
+  kiểm thử; không suy đoán luôn kịp bàn giao khi quota hết.
+- DONE/publication được ghi sau nghiệm thu với SHA đã biết; bản ghi status có
+  thể đi ở commit tiếp theo để tránh ghi SHA tự tham chiếu hoặc claim push trước
+  khi thực tế push. Run CI luôn gắn với commit cụ thể, không suy ra cho commit mới.
+
+Đây là quyết định quản lý công việc, không đổi Modular Monolith, pipeline,
+module boundaries, contracts hoặc đóng góp nghiên cứu. Framework/model/storage,
+schema kế toán và phạm vi pháp lý vẫn TBD như phần trên.
