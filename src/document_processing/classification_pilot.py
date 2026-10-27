@@ -1,4 +1,4 @@
-"""M1-11a: bounded sequential pilot, private inputs và aggregate-only diagnostics."""
+"""Bounded sequential pilot, private inputs và aggregate-only diagnostics."""
 
 import json
 import time
@@ -34,9 +34,14 @@ from .ocr_loader import LoadedOCRPage, load_ocr_page
 from .path_resolver import resolve_path
 
 MAX_REQUESTS = 20
-MAX_INPUT_TOKENS = 20_000
+REQUEST_INPUT_BOUND = 100_000
 OUTPUT_CAP = 512
-LOCAL_LIMITS = {"input_token_limit", "request_limit", "invalid_model_or_output_cap"}
+LOCAL_LIMITS = {
+    "input_token_limit",
+    "request_input_limit",
+    "request_limit",
+    "invalid_model_or_output_cap",
+}
 USAGE_FAILURES = {"unknown_usage", "input_bound_exceeded"}
 
 
@@ -117,7 +122,7 @@ def prepare_pilot(config, manifest_path: Path, *, limit=19) -> PreparedPilot:
             raise PilotStop("source_changed")
         pages.append(loaded)
         requests.append(request.export_result())
-    root = config.project_root / "artifacts/classification-pilot/M1-11a"
+    root = config.project_root / "artifacts/classification-pilot/M1-11b"
     # Reuse root containment/source protection, không ghi vào source data roots.
     CheckpointStore(root, data_config=config)
     body = dict(
@@ -142,8 +147,13 @@ class MeteredModels:
     Unknown usage giữ bound và dừng. Input counter includes smoke and failures.
     """
 
-    def __init__(self, models, *, clock=time.monotonic, sleep=time.sleep):
+    def __init__(self, models, *, clock=time.monotonic, sleep=time.sleep, input_token_budget=None):
+        if input_token_budget is not None and (
+            type(input_token_budget) is not int or input_token_budget <= 0
+        ):
+            raise PilotStop("invalid_input_token_budget")
         self._models, self._clock, self._sleep = models, clock, sleep
+        self.input_token_budget = input_token_budget
         self.requests = self.successes = self.failures = 0
         self.input_tokens = self.output_tokens = self.total_tokens = 0
         self.input_charged = 0
@@ -152,6 +162,14 @@ class MeteredModels:
         self.last_http_status = None
         self.allow_new_requests = True
         self._last_start = None
+
+    def pace(self):
+        # Pace before Guard admission too; the sixth call must not hit RPM before
+        # the SDK-boundary sleep gets a chance to run.
+        if self._last_start is not None:
+            delay = self._last_start + 12.1 - self._clock()
+            if delay > 0:
+                self._sleep(delay)
 
     def generate_content(self, *, model, contents, config):
         if not self.allow_new_requests:
@@ -165,14 +183,16 @@ class MeteredModels:
             self.stopped = "invalid_model_or_output_cap"
         elif self.requests >= MAX_REQUESTS:
             self.stopped = "request_limit"
-        elif self.input_charged + bound > MAX_INPUT_TOKENS:
+        elif bound > REQUEST_INPUT_BOUND:
+            self.stopped = "request_input_limit"
+        elif (
+            self.input_token_budget is not None
+            and self.input_charged + bound > self.input_token_budget
+        ):
             self.stopped = "input_token_limit"
         if self.stopped:
             raise PilotStop(self.stopped)
-        if self._last_start is not None:
-            delay = self._last_start + 12.1 - self._clock()
-            if delay > 0:
-                self._sleep(delay)
+        self.pace()
         self._last_start = self._clock()
         self.requests += 1
         self.input_charged += bound
@@ -205,12 +225,19 @@ class MeteredModels:
             if usage.prompt_token_count > bound:
                 self.stopped = "input_bound_exceeded"
             self.input_charged += usage.prompt_token_count - bound
-            if self.input_charged > MAX_INPUT_TOKENS:
+            if self.input_token_budget is not None and self.input_charged > self.input_token_budget:
                 self.stopped = "input_token_limit"
         return raw
 
 
-def compose_pilot(client, policy: ProjectPolicy, *, clock=time.monotonic, sleep=time.sleep):
+def compose_pilot(
+    client,
+    policy: ProjectPolicy,
+    *,
+    clock=time.monotonic,
+    sleep=time.sleep,
+    input_token_budget=None,
+):
     """User-confirmed one-project free-tier scope, fixed model, fresh pilot process.
 
     Giá free = 0 chỉ sau user/tariff attestation tại CLI. Guard money NOT_CONFIGURED;
@@ -227,7 +254,9 @@ def compose_pilot(client, policy: ProjectPolicy, *, clock=time.monotonic, sleep=
     ):
         raise PilotStop("invalid_pilot_policy")
     schemas = classification_schema_registry()
-    meter = MeteredModels(client.models, clock=clock, sleep=sleep)
+    meter = MeteredModels(
+        client.models, clock=clock, sleep=sleep, input_token_budget=input_token_budget
+    )
     adapter = GeminiAdapter(SimpleNamespace(models=meter), schema_registry=schemas)
     gateway = SharedLLMGateway({"gemini": adapter}, schema_registry=schemas)
     credential = policy.credential_refs[0]
@@ -283,15 +312,19 @@ def run_pilot(prepared, service, meter, *, credential_ref, smoke=True):
         "checkpoint_hits": 0,
         "cache_hits": 0,
         "anchors_checked": 0,
+        "source_validation_failures": 0,
+        "page_outcomes": [],
         "source_unchanged": False,
         "smoke_passed": False,
         "stop_reason": None,
     }
     reasons = Counter()
     reserve = Reservation(
-        token_upper_bound=MAX_INPUT_TOKENS + OUTPUT_CAP, token_basis="caller_attested_upper_bound"
+        token_upper_bound=REQUEST_INPUT_BOUND + OUTPUT_CAP,
+        token_basis="caller_attested_upper_bound",
     )
     if smoke:
+        meter.pace()
         response = service.generate(
             parse_llm_request(
                 dict(
@@ -357,10 +390,14 @@ def run_pilot(prepared, service, meter, *, credential_ref, smoke=True):
             cache_allowed=True,
             checkpoint_allowed=True,
         )
+        meter.pace()
         result = classifier.classify(loaded, **args)
-        if loaded.page.export_source() != before or validate_understanding_quality(
-            result.understanding, raw_page=loaded.page
+        if (
+            loaded.page.export_source() != before
+            or validate_understanding_quality(result.understanding, raw_page=loaded.page)
+            or any(i.code == "source_validation_failed" for i in result.understanding.issues)
         ):
+            stats["source_validation_failures"] += 1
             stats["stop_reason"] = "source_validation_failed"
             break
         if meter.stopped in LOCAL_LIMITS:
@@ -388,6 +425,13 @@ def run_pilot(prepared, service, meter, *, credential_ref, smoke=True):
         stats[result.understanding.classification.status] += 1
         stats["anchors_checked"] += len(result.understanding.classification.anchors)
         reasons.update(i.code for i in result.understanding.issues)
+        stats["page_outcomes"].append(
+            dict(
+                status=result.understanding.classification.status,
+                issues=[i.code for i in result.understanding.issues],
+                anchors_checked=len(result.understanding.classification.anchors),
+            )
+        )
         stats["checkpoint_hits"] += result.checkpoint_status == "HIT"
         if meter.stopped:
             stats["usage_errors"] += meter.stopped in USAGE_FAILURES
@@ -418,6 +462,7 @@ def run_pilot(prepared, service, meter, *, credential_ref, smoke=True):
         total_tokens=meter.total_tokens,
         unknown_usage=meter.unknown_usage,
         input_tokens_charged=meter.input_charged,
+        input_token_budget=meter.input_token_budget,
         estimated_cost_usd="0",
         actual_billing="unknown",
     )

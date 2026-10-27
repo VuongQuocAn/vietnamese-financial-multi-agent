@@ -31,7 +31,9 @@ title ở hai regions có bbox không chồng nhau, cả hai được model cite
 catalog để không che loại báo cáo khác. Nhiều cặp code/title khác nhau hoặc model báo
 conflicting → `unresolved/conflicting_evidence`; thiếu/single heading/appendix →
 `unresolved/insufficient_evidence`. Citation sai → invalid_evidence. OCR quality issue
-bất kỳ → ocr_quality_review; DU source-link issues → source_validation_failed.
+ảnh hưởng evidence hoặc chưa chứng minh được an toàn → ocr_quality_review;
+DU source-link issues → source_validation_failed. Các lỗi classification đã phát hiện
+(conflict/insufficient/schema/provider/disabled label) giữ nguyên lý do, không bị quality che.
 Không confidence threshold hoặc suy label từ symbol/year. Chuỗi code/title trùng
 trong hai vùng vẫn có thể là false positive; chưa có accuracy trên dữ liệu thật.
 
@@ -121,6 +123,36 @@ evidence/source gate trên OCR hiện tại. Semantically invalid HIT thành INV
 lại. HIT hợp lệ không gọi service/guard/LLM. Cache key cũng nhận input/config digest để
 không reuse text giống nhau với nguồn/config khác. Cache HIT revalidate evidence gate;
 usage mới là calculated zero, usage gốc nằm historical_usage theo M1-09.
+
+### Evidence-aware quality policy — M1-11b
+
+`QUALITY_POLICY_REVISION=evidence-aware-v1` nằm trong checkpoint config fingerprint,
+tách khỏi prediction fingerprint cũ. Đổi policy làm checkpoint STALE; compatible
+schema-valid prediction cache vẫn HIT, rồi chạy lại toàn bộ gate/source validator.
+Prompt/schema/model/config/input/source/version đổi vẫn invalidate prediction cache.
+Không sửa checkpoint cũ. `processing_version=classification-v1` giữ prediction protocol.
+
+Gate tái sử dụng `validate_quality(raw)`; không sửa source hoặc đoán lại OCR.
+Relevant sources gồm mọi citation được chọn **và** mọi vùng chứa mã Bxx/title candidate
+trên trang, vì chúng tham gia phát hiện conflicts ngay cả khi model không cite.
+
+| Issue codes | Phạm vi và quyết định |
+| --- | --- |
+| `invalid_page_dimension` | Blocking toàn trang; tọa độ không có nền tin cậy |
+| `duplicate_id` | Blocking toàn trang, cả element/cell/line; không nới ambiguity |
+| `unresolved_reference_type`, `unresolved_text_reference`, `unresolved_signature_reference`, `cell_reference_mismatch` | Blocking toàn trang; reference safety/TBD giữ bảo thủ |
+| `invalid_bbox_geometry`, `bbox_outside_page` | Blocking nếu thuộc relevant element, containing table, cell hoặc lines; ngoài scope này non-blocking |
+| `empty_cell_text`, `line_count_mismatch` | Blocking nếu thuộc relevant cell; cell/line text không tự sửa hoặc suy diễn |
+| `sparse_table`, `duplicate_cell_position`, `negative_cell_position` | Blocking nếu bất kỳ relevant cell thuộc table đó; không suy cell bị thiếu |
+| `confidence_out_of_range` | Scope element signature/checkbox; không dùng chúng làm classification evidence nên non-blocking khi disjoint |
+| Code lạ/path không xác định | Uncertain → blocking; cần review trước khi cho phép |
+
+Một bbox table bảo vệ toàn bộ relevant cells; line defect bảo vệ containing cell.
+Non-blocking có nghĩa source scope không tham gia gán nhãn/conflict check, không khẳng định
+OCR đúng hoặc financial data đủ chất lượng. Không loại source khỏi catalog/prompt hoặc
+giảm evidence. Vẫn yêu cầu code/title độc lập không chồng bbox và DU v1 linkage hợp lệ.
+Semantic OCR errors, cell text khác line text, title/code bị mất hoặc sai mà validator
+không phát hiện vẫn TBD; không có ground truth để suy accuracy từ resolved rate.
 
 ## Credentials và live verification
 

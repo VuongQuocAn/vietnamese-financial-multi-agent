@@ -1,7 +1,8 @@
-# Bounded classification pilot — M1-11a
+# Bounded classification pilot — M1-11b
 
-CLI nhỏ, text-only, tái sử dụng M1-11. Không sửa classifier/taxonomy/contracts hoặc
-OCR/crops/PDF; không scan dataset và không đánh giá accuracy tài chính.
+CLI nhỏ, text-only, tái sử dụng M1-11 với evidence-aware gate M1-11b.
+Không sửa taxonomy/contracts/OCR/crops/PDF; không scan dataset hoặc đánh giá accuracy.
+Kết quả lịch sử M1-11a giữ nguyên ở evidence và artifacts riêng.
 
 ## Dry-run và selection
 
@@ -29,7 +30,7 @@ document. Runner tạo external request copy dùng **exact original OCR artifact
 request qua parent. Không tạo OCR run ID, không gộp document từ symbol/year. Run identity
 gốc vẫn unverified. Không document aggregation trên subset thiếu completeness manifest.
 
-Frozen subset/dry-run report dưới `artifacts/classification-pilot/M1-11a/` (ignored),
+Frozen subset/dry-run report dưới `artifacts/classification-pilot/M1-11b/` (ignored),
 exclusive/idempotent writes; cùng inputs reuse, khác inputs conflict. Root tách source
 bằng CheckpointStore containment và existing local filesystem checks. Trusted filesystem,
 single writer, không phải security sandbox chống concurrent writers/TOCTOU.
@@ -40,7 +41,7 @@ Live explicit; không có fallback model hoặc tự chọn key khi lỗi:
 
 ```powershell
 python scripts/run_classification_pilot.py --live --key-index 0 `
-  --live-policy artifacts/classification-pilot/M1-11a/live-policy.json
+  --live-policy artifacts/classification-pilot/M1-11b/live-policy.json
 ```
 
 `--key-file` mặc định local ignored credentials file do task chỉ định. Runtime chỉ nhận
@@ -76,17 +77,21 @@ Guard scope mới chỉ cho pilot đã xác nhận exclusive; không chứng min
 remaining hoặc phục hồi lịch sử project. SDK/GeminiAdapter attempts=1.
 
 - Tối đa 20 actual `generate_content` attempts, gồm smoke và failures.
-- Ít nhất 12,1 giây giữa starts tại SDK boundary; guard thêm RPM <=5.
-- Tổng input charge <=20000: trước send reserve UTF-8 JSON bytes của actual SDK
-  contents/config +2048 envelope tokens; đây là conservative caller-attested upper
-  bound cho text-only, không provider tokenizer/`countTokens` request. Không truncate OCR.
+- Ít nhất 12,1 giây giữa starts tại SDK boundary và pace trước guard admission;
+  guard thêm RPM <=5, không từ chối call thứ sáu do đợi quá muộn sau admission.
+- Không giới hạn tổng input tokens mặc định. `--input-token-budget N` là tùy chọn explicit,
+  không bật chỉ vì pilot cũ dùng 20000. Mỗi request giữ upper bound input 100000 tokens
+  (local resource bound), output 512; guard reserve 100512 total, đối chiếu TPM thực tế
+  theo configured policy. SDK trước send kiểm UTF-8 JSON bytes contents/config +2048
+  envelope <=100000; conservative caller-attested upper bound, không tokenizer.
+  Không truncate OCR. Quota guard vẫn kiểm RPM/TPM/RPD và budget được cấu hình.
 - Usage prompt tokens provider-reported reconcile bound. Thiếu usage hoặc actual vượt
   bound thì giữ charge bảo thủ và dừng; không unknown→zero.
 - Output cap 512 (gồm giới hạn do provider áp dụng); không tools/grounding/image.
 - Smoke synthetic đúng schema local phải đạt trước real pages. Failure đầu tiên
   (auth/quota/schema/provider/guard), mất source binding, budget limit hoặc unknown
   usage đều dừng; không retry hoặc key fallback. Safe HTTP status/category được giữ,
-  không provider body. Policy bảo thủ có thể xử lý ít hơn 10 trang trong token cap.
+  không provider body. Policy bảo thủ có thể dừng trước 10 trang nếu source/quota/provider không an toàn.
 
 `live.started.json` được tạo exclusive trước client; tồn tại marker thì không cho
 live invocation mới để tránh reset counters sau crash/restart. Không xóa marker để retry.
@@ -112,3 +117,20 @@ provider failures không có usage không được diễn giải là tokens th�
 Checkpoint/cache probes nằm trong hit counts, không thêm page denominator.
 
 Evidence/limitations và readiness trước M1-12 ở [M1-11a evidence](reviews/M1-11a-evidence.md).
+
+## M1-11b policy và so sánh
+
+19 pages giữ đúng selection/order/snapshots của M1-11a, 3 mã/14 strata.
+Năm completed pages cũ là prefix 5 của selection; `page_outcomes` giữ status/issues/
+anchor counts theo thứ tự, không OCR text/identity, phục vụ so sánh cùng mẫu.
+`source_validation_failures` tách source lỗi đã fail closed trong classifier.
+Không coi tăng resolved rate là tăng accuracy.
+
+Gate/policy cache semantics ở [classification](page-document-classification.md).
+Không đổi prompt/schema/model/cấu hình prediction M1-11a để tránh mất cache tương thích;
+cache service revision giữ tên lịch sử theo binding không đổi. Policy revision riêng
+chỉ invalidate verified checkpoints. Cache M1-11a chỉ ở RAM, quá trình đã kết thúc,
+0 resolved checkpoint: không có prediction persisted đủ điều kiện reuse giữa hai phiên.
+Không chuyển aggregate report thành cache giả. Reuse hiện có được probe với network khóa.
+Quota/billing vẫn theo owner attestation; historical usage không đồng nghĩa quota remaining
+được provider xác minh, quota error dừng ngay.

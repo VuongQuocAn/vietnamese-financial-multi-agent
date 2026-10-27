@@ -23,7 +23,7 @@ from .contracts.document_understanding import (
 )
 from .contracts.document_understanding_validation import validate_understanding_quality
 from .contracts.raw_ocr import OCRPage, OCRTable, OCRText
-from .contracts.validation import validate_quality
+from .contracts.validation import QualityIssue, validate_quality
 from .ocr_loader import LoadedOCRPage
 
 Label = Literal["B01", "B02", "B03", "B09"]
@@ -47,6 +47,7 @@ SCHEMA_REF = SchemaReference(
     version="v1",
     dialect="https://json-schema.org/draft/2020-12/schema",
 )
+QUALITY_POLICY_REVISION = "evidence-aware-v1"
 
 
 class Prediction(BaseModel):
@@ -78,6 +79,7 @@ class ClassificationConfig(BaseModel):
 class _Evidence:
     text: str
     anchor: SourceAnchor
+    path: tuple[str | int, ...]
 
 
 @dataclass(frozen=True)
@@ -103,7 +105,7 @@ class DocumentClassificationResult:
 
 def _catalog(raw: OCRPage, identity: RawPageIdentity) -> list[_Evidence]:
     result = []
-    for element in raw.elements:
+    for i, element in enumerate(raw.elements):
         if isinstance(element, OCRText):
             result.append(
                 _Evidence(
@@ -114,11 +116,12 @@ def _catalog(raw: OCRPage, identity: RawPageIdentity) -> list[_Evidence]:
                         observed_bbox=element.bbox,
                         status="resolved",
                     ),
+                    ("elements", i),
                 )
             )
         elif isinstance(element, OCRTable):
             # Không dùng table.name (metadata) hoặc double-count text cell và lines.
-            for cell in element.cells:
+            for j, cell in enumerate(element.cells):
                 result.append(
                     _Evidence(
                         cell.text,
@@ -129,9 +132,60 @@ def _catalog(raw: OCRPage, identity: RawPageIdentity) -> list[_Evidence]:
                             observed_bbox=cell.bbox,
                             status="resolved",
                         ),
+                        ("elements", i, "cells", j),
                     )
                 )
     return result
+
+
+def blocking_quality_issues(
+    raw: OCRPage, selected: list[_Evidence], catalog: list[_Evidence]
+) -> list[QualityIssue]:
+    """Known local defects only: prove disjoint source scope, otherwise fail closed.
+
+    Include code/title candidates across the whole page, even when not cited, because
+    they participate in conflict detection. IDs/references and unknown codes are global.
+    A selected cell protects its lines and containing table geometry/structure too.
+    """
+    relevant = {e.path for e in selected}
+    relevant.update(
+        e.path
+        for e in catalog
+        if any(
+            re.search(rf"(?<!\w){label}(?!\w)", e.text, re.IGNORECASE) or title in e.text.casefold()
+            for label, title in TITLES.items()
+        )
+    )
+    local = {
+        "invalid_bbox_geometry",
+        "bbox_outside_page",
+        "confidence_out_of_range",
+        "empty_cell_text",
+        "line_count_mismatch",
+        "duplicate_cell_position",
+        "negative_cell_position",
+        "sparse_table",
+    }
+    blocking = []
+    for issue in validate_quality(raw):
+        path = issue.path
+        if (
+            issue.code not in local
+            or len(path) < 3
+            or path[0] != "elements"
+            or type(path[1]) is not int
+            or not 0 <= path[1] < len(raw.elements)
+        ):
+            blocking.append(issue)
+            continue
+        scope = path[:2]
+        # Cell/line defects share the cell text's scope. Table topology is table-wide.
+        if issue.code not in {"duplicate_cell_position", "negative_cell_position", "sparse_table"}:
+            if len(path) >= 4 and path[2] == "cells" and type(path[3]) is int:
+                scope = path[:4]
+        if any(p[: len(scope)] == scope or scope[: len(p)] == p for p in relevant):
+            blocking.append(issue)
+    return blocking
 
 
 def _supports(label: str, evidence: list[_Evidence]) -> bool:
@@ -179,8 +233,7 @@ def _understanding(
                 reason = "disabled_label"
             elif supported != [prediction.label] or not _supports(prediction.label, selected):
                 reason = "insufficient_evidence"
-    if validate_quality(raw):
-        # MVP bảo thủ: quality issue bất kỳ yêu cầu review trước resolved/checkpoint.
+    if reason is None and blocking_quality_issues(raw, selected, evidence):
         reason = "ocr_quality_review"
     anchors = [e.anchor.model_copy(deep=True) for e in selected]
     result = DocumentUnderstandingResult(
@@ -266,7 +319,7 @@ class PageClassifier:
                 "identity_checked": loaded.identity_checked,
             }
         )
-        config_digest = fingerprint_json(
+        prediction_digest = fingerprint_json(
             {
                 "config": config.model_dump(mode="json"),
                 "prompt": PROMPT,
@@ -274,6 +327,12 @@ class PageClassifier:
                 "titles": TITLES,
                 "schema_ref": SCHEMA_REF.export(),
             }
+        )
+        # Acceptance policy is independent of the schema-valid model prediction.
+        # Old verified checkpoints must be stale; compatible cache entries may be
+        # re-evaluated with the current gate without another provider request.
+        config_digest = fingerprint_json(
+            {"prediction_config": prediction_digest, "quality_policy": QUALITY_POLICY_REVISION}
         )
         request = CheckpointRequest(
             unit=ProcessingUnit(source_ref=source_ref, page=identity),
@@ -308,7 +367,7 @@ class PageClassifier:
                     "sources": [{"index": i, "text": e.text} for i, e in enumerate(evidence)],
                     # Cache tách input/provenance/config dù text giống nhau; chỉ gửi digest.
                     "input_revision": input_digest,
-                    "config_revision": config_digest,
+                    "config_revision": prediction_digest,
                 },
                 ensure_ascii=False,
             )

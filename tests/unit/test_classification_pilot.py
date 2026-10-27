@@ -152,7 +152,7 @@ def test_meter_paces_and_caps_failed_attempts_without_retry():
 
 def test_input_bound_denied_before_send_and_unknown_usage_stops():
     models = Mock()
-    meter = pilot.MeteredModels(models)
+    meter = pilot.MeteredModels(models, input_token_budget=20_000)
     with pytest.raises(pilot.PilotStop, match="input_token_limit"):
         meter.generate_content(**sdk_args("s" * 20_000))
     models.generate_content.assert_not_called()
@@ -227,6 +227,7 @@ def test_probe_miss_never_calls_provider():
 
 def test_local_token_denial_is_not_provider_error_or_completed_page(tmp_path):
     prepared, client, service, _, meter = setup(tmp_path)
+    meter.input_token_budget = 20_000
     meter.input_charged = 19_999
     result = pilot.run_pilot(
         prepared, service, meter, credential_ref="synthetic-credential", smoke=False
@@ -237,3 +238,30 @@ def test_local_token_denial_is_not_provider_error_or_completed_page(tmp_path):
     assert result["resolved"] == result["unresolved"] == 0
     assert result["api_requests"] == 0
     client.models.generate_content.assert_not_called()
+
+
+def test_no_default_total_input_cap_and_request_bound_still_applies():
+    models = Mock()
+    models.generate_content.return_value = sdk_response()
+    meter = pilot.MeteredModels(models, sleep=lambda _: None)
+    meter.input_charged = 30_000
+    meter.generate_content(**sdk_args("s" * 25_000))
+    assert meter.requests == 1 and meter.input_token_budget is None
+    with pytest.raises(pilot.PilotStop, match="request_input_limit"):
+        meter.generate_content(**sdk_args("s" * pilot.REQUEST_INPUT_BOUND))
+    assert models.generate_content.call_count == 1
+
+
+def test_pacing_happens_before_guard_admission(tmp_path):
+    prepared, _, service, guard, meter = setup(
+        tmp_path, pages=tuple(loaded(number=i) for i in range(1, 7))
+    )
+    from datetime import UTC, datetime, timedelta
+
+    started = datetime.now(UTC)
+    guard._clock = lambda: started + timedelta(seconds=meter._clock())
+    result = pilot.run_pilot(
+        prepared, service, meter, credential_ref="synthetic-credential", smoke=False
+    )
+    assert result["processed_pages"] == 6 and result["api_requests"] == 6
+    assert result["guard_denials"] == 0 and result["stop_reason"] is None

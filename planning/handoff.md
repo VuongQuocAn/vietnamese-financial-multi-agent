@@ -2,67 +2,55 @@
 
 ## Active Task
 
-M1-11a — Final Acceptance; không task triển khai active.
+M1-11b — Classification Quality Gate Refinement & Real Pilot.
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` /
-[CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
-success exact SHA 3.11/3.12, mỗi job 1130 passed/11 skipped.
-Review checkpoint `ad2a1664faa33f54ccc90e4a0cbace41ab48fbc7` khớp HEAD/origin sau fetch,
-working tree sạch trước acceptance.
-[CI 40506143468](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40506143468)
-success exact SHA 3.11/3.12 đã kiểm tra lại.
-Tech Lead APPROVED 27/10/2026, cho phép REVIEW → DONE.
+Baseline HEAD/origin e14be8b9fd7dbaf269e9d78cb5a80b697297f33f sạch sau fetch.
+M1-11/M1-11a DONE. Người dùng cho phép code/tests/bounded API/commit/push; dừng REVIEW.
 
 ## Completed Work
 
-Đã nghiệm thu bounded runner/CLI, dry-run, pilot và engineering evidence.
-Registry/spec/progress/current-status/decisions/handoff/evidence đồng bộ DONE.
-Giữ nguyên live 6 requests/5 real pages/0 resolved/5 unresolved/12307 input tokens;
-176 output/12483 total tokens, cache HIT 5/checkpoint HIT 0, 8 anchors checked.
-4 quality/1 insufficient; dry-run 19 pages/3 symbols/14 strata, live 1 symbol/5 years.
-Không sửa original report/interpretation, không gọi lại Gemini hoặc đổi implementation.
+Evidence-aware gate tái dùng raw/DU validators; relevant gồm selected và code/title
+candidates toàn trang. IDs/references/dimensions/unknown fail closed. Policy revision
+riêng làm checkpoint STALE; cache prediction tương thích vẫn revalidate.
+Bỏ total token cap mặc định; optional budget, per-request input bound 100000/output512.
+Giữ max20 requests, pace trước quota admission. Dry-run 19 trang/3 mã/14 strata/API0.
+Same selection/order/snapshots M1-11a verified.
 
 ## Remaining Work
 
-Không còn công việc nghiệm thu M1-11a. Hai follow-up chờ Tech Lead giao việc riêng:
-đánh giá lại OCR quality gate; loại bỏ giới hạn 20.000 input tokens tùy ý ở pilot tiếp theo.
-Chỉ ghi nhận, không triển khai hoặc tạo task mới. M1-12 TODO.
+Pilot thật đã bắt đầu một lượt duy nhất, không chạy lại CLI live (marker tồn tại).
+Đợi kết thúc, đối chiếu aggregate/same5/source preservation. Commit/push và
+exact-SHA CI 3.11/3.12; publish evidence/planning REVIEW, không tự DONE/M1-12.
 
 ## Modified Files
 
-Chỉ 7 files: planning/{tasks,progress,current-status,decisions,handoff}.md;
-planning/tasks/M1/M1-11a.md; docs/reviews/M1-11a-evidence.md.
-Production code/tests/contracts/API keys và runtime artifacts bất biến.
+classification.py, classification_pilot.py, CLI, 2 related tests; classification usage
+docs và planning registry/progress/current-status/spec/handoff. Private artifacts ignored.
 
 ## Tests
 
-Evidence giữ nguyên: 17 focused +146 related regression passed; CI implementation
-mỗi Python 3.11/3.12 1130 passed/11 skipped.
-Acceptance local chỉ Ruff lint/format, planning checker và diff check.
-Không full local unit suite hoặc API rerun; CI acceptance xác minh riêng sau push.
+68 focused +111 cache/checkpoint/quota regression; 140 DU/extraction regression =319.
+Policy cached revalidation test chạy lại sau unsafe-case assertion: passed.
+Ruff lint/format/planning 77 tasks/diff đạt. Không full local suite.
 
 ## Blockers
 
-Không còn phần chờ nghiệm thu. Limitations giữ nguyên: gate bảo thủ, taxonomy provisional,
-không independent ground truth/accuracy; live checkpoint HIT chưa verified (0 resolved).
-Pilot dừng sớm vì historical token cap; actual live coverage 1 symbol/5 years.
-Project/quota/tier user-attested, billing/quota remaining/project ID chưa independently
-verified; estimated USD 0 conditional free tariff, guard money NOT_CONFIGURED.
-OCR run identity gốc unverified; exact artifact locators page-only.
-Live trước metrics-only fix; không claim đã rerun trên corrected CI SHA.
+Pilot/CI chưa kết thúc. Taxonomy provisional, không ground truth/accuracy. Billing,
+quota remaining/project ID chưa independently verified; free-only owner-attested policy,
+guard money NOT_CONFIGURED. OCR run identity gốc unverified, binding page-only.
+Cache RAM cũ đã mất, M1-11a có 0 resolved checkpoints; không có prediction cũ để reuse.
 
 ## Git Checkpoint
 
-Stable implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` / CI 40505711042 success.
-Review checkpoint `ad2a1664faa33f54ccc90e4a0cbace41ab48fbc7` / CI 40506143468 success.
-Acceptance SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
+Baseline stable e14be8b9fd7dbaf269e9d78cb5a80b697297f33f; implementation đã test local,
+chưa commit. Raw/contracts/original report/credentials bất biến.
 
 ## Exact Next Action
 
-Chờ Tech Lead giao việc; không tự bắt đầu M1-12 hoặc task khác.
+Đợi pilot đang chạy kết thúc, đối chiếu evidence và publish M1-11b REVIEW sau CI.

@@ -281,6 +281,125 @@ def test_cells_anchors_and_quality_gate(tmp_path):
     assert h.classify(page).understanding.issues[0].code == "ocr_quality_review"
 
 
+def quality_page(*, selected_cell=False):
+    page = loaded(texts=["B01"] if selected_cell else None)
+    raw = page.page.export_source()
+    raw["elements"].append(
+        dict(
+            id="table",
+            type="table",
+            name="Synthetic",
+            crop="source/crop.png",
+            bbox=[1, 25, 190, 80],
+            cells=[
+                dict(
+                    id="c0",
+                    row=0,
+                    col=0,
+                    bbox=[1, 25, 190, 45],
+                    text=TITLES["B01"] if selected_cell else "Unrelated",
+                    line_count=0,
+                    lines=[],
+                ),
+                dict(id="c1", row=0, col=2, bbox=[1, 50, 190, 70], text="", line_count=0, lines=[]),
+            ],
+        )
+    )
+    return LoadedOCRPage(OCRPage.model_validate(raw), page.mapping_result, (), True)
+
+
+@pytest.mark.parametrize("selected_cell", [False, True])
+def test_sparse_and_empty_cells_only_block_relevant_table(tmp_path, selected_cell):
+    h = Harness(tmp_path)
+    page = quality_page(selected_cell=selected_cell)
+    before = page.page.export_source()
+    result = h.classify(page, checkpoint_allowed=True)
+    assert result.understanding.classification.status == (
+        "unresolved" if selected_cell else "resolved"
+    )
+    assert page.page.export_source() == before and result.provenance == before["provenance"]
+    assert not validate_understanding_quality(result.understanding, raw_page=page.page)
+
+
+@pytest.mark.parametrize("location", ["selected", "outside", "candidate"])
+@pytest.mark.parametrize("defect", ["inverted", "outside_page"])
+def test_bbox_issues_on_selected_or_uncited_candidates_block(tmp_path, location, defect):
+    h = Harness(tmp_path)
+    page = loaded(texts=["B01", TITLES["B01"], "B02" if location == "candidate" else "Footer"])
+    element = page.page.elements[0 if location == "selected" else 2]
+    element.bbox = [2, 1, 1, 5] if defect == "inverted" else [1, 1, 201, 5]
+    result = h.classify(page, checkpoint_allowed=True)
+    assert result.understanding.classification.status == (
+        "resolved" if location == "outside" else "unresolved"
+    )
+
+
+@pytest.mark.parametrize("defect", ["duplicate_id", "cell_reference", "page_dimension", "unknown"])
+def test_global_or_unknown_issues_fail_closed(tmp_path, monkeypatch, defect):
+    h = Harness(tmp_path)
+    page = quality_page()
+    if defect == "duplicate_id":
+        page.page.elements[2].id = "e0"
+    elif defect == "cell_reference":
+        from vietnamese_financial_multi_agent.document_processing.contracts.raw_ocr import (
+            OCRTextLine,
+        )
+
+        cell = page.page.elements[2].cells[0]
+        cell.lines = [
+            OCRTextLine(id="l", type="text", bbox=cell.bbox, text="Unrelated", cell_id="missing")
+        ]
+        cell.line_count = 1
+    elif defect == "page_dimension":
+        page.page.page.dpi = 0
+    else:
+        from vietnamese_financial_multi_agent.document_processing.contracts.validation import (
+            QualityIssue,
+        )
+
+        monkeypatch.setattr(
+            "vietnamese_financial_multi_agent.document_processing.classification.validate_quality",
+            lambda _: [
+                QualityIssue(code="future_issue", path=("elements", 2), message="Synthetic")
+            ],
+        )
+    result = h.classify(page, checkpoint_allowed=True)
+    assert result.understanding.classification.status == "unresolved"
+    assert not list(h.store.output_root.glob("*.json"))
+
+
+def test_conflicting_evidence_not_hidden_by_outside_quality_issue(tmp_path):
+    h = Harness(tmp_path)
+    page = loaded(texts=["B01", TITLES["B01"], "B02", TITLES["B02"], "Footer"])
+    page.page.elements[4].bbox = [1, 1, 201, 5]
+    assert h.classify(page).understanding.issues[0].code == "conflicting_evidence"
+
+
+def test_policy_revision_stales_checkpoint_but_reuses_compatible_prediction(tmp_path, monkeypatch):
+    h = Harness(tmp_path)
+    first = h.classify(cache_allowed=True, checkpoint_allowed=True)
+    monkeypatch.setattr(
+        "vietnamese_financial_multi_agent.document_processing.classification.QUALITY_POLICY_REVISION",
+        "synthetic-policy-v2",
+    )
+    second = h.classify(cache_allowed=True, checkpoint_allowed=True)
+    assert second.checkpoint_status == "STALE" and second.llm_result.cache_hit
+    assert second.config_fingerprint != first.config_fingerprint and h.calls == 1
+    assert second.understanding == first.understanding
+    assert h.classify(checkpoint_allowed=True).checkpoint_status == "HIT"
+    from vietnamese_financial_multi_agent.document_processing.contracts.validation import (
+        QualityIssue,
+    )
+
+    monkeypatch.setattr(
+        "vietnamese_financial_multi_agent.document_processing.classification.validate_quality",
+        lambda _: [QualityIssue(code="new_unsafe_issue", path=(), message="Synthetic")],
+    )
+    rejected = h.classify(cache_allowed=True, checkpoint_allowed=True)
+    assert rejected.checkpoint_status == "INVALID" and rejected.llm_result.cache_hit
+    assert rejected.understanding.classification.status == "unresolved" and h.calls == 1
+
+
 @pytest.mark.parametrize(
     "output",
     [

@@ -1,4 +1,4 @@
-"""M1-11a: dry-run mặc định; live cần explicit user-confirmed free-tier policy."""
+"""M1-11b: dry-run mặc định; live cần explicit user-confirmed free-tier policy."""
 
 import argparse
 import json
@@ -34,6 +34,7 @@ def main():
     parser.add_argument("--live-policy", type=Path)
     parser.add_argument("--key-file", type=Path, default=Path("src/api/api_key/api_gemini.txt"))
     parser.add_argument("--key-index", type=int)
+    parser.add_argument("--input-token-budget", type=int, default=None)
     args = parser.parse_args()
     client = None
     try:
@@ -72,7 +73,7 @@ def main():
             del keys
             # Exclusive marker giữ fail-closed qua restart; không reset live budget bằng rerun.
             with (prepared.root / "live.started.json").open("x", encoding="utf-8") as stream:
-                json.dump({"protocol": "M1-11a", "request_limit": 20}, stream)
+                json.dump({"protocol": "M1-11b", "request_limit": 20}, stream)
             client = genai.Client(
                 api_key=key,
                 vertexai=False,
@@ -82,7 +83,9 @@ def main():
                 ),
             )
             del key
-            service, guard, meter = compose_pilot(client, policy)
+            service, guard, meter = compose_pilot(
+                client, policy, input_token_budget=args.input_token_budget
+            )
             stats = {
                 "mode": "live",
                 **run_pilot(
