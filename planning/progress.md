@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 20 | 1 | 0 | 4 | 0 | 0 |
+| M1 | 25 | 20 | 0 | 0 | 4 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 24 | 1 | 0 | 50 | 0 | 0 |
+| TOTAL | 75 | 24 | 0 | 0 | 50 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 persistent checkpoints REVIEW, 38 focused tests; CI 3.11/3.12 mỗi job 1078 passed/11 skipped |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,10 +46,13 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-10 IN_PROGRESS**, user giao triển khai/commit/push ngày 27/10/2026; dừng REVIEW.
-Dependencies M1-03/M1-02b/M1-09 DONE. Baseline main/origin sạch a130e72.
-38 checkpoint + 246 regression tests passed; Ruff/planning/diff đạt.
-Next action: **Publish implementation M1-10 và xác minh exact-SHA CI.**
+**M1-10 REVIEW**, chưa Tech Lead nghiệm thu; M1-11 TODO.
+Implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e /
+[CI 40497588383](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497588383)
+success exact SHA, mọi steps Python 3.11/3.12; mỗi job 1078 passed/11 skipped.
+38 checkpoint + 246 regression passed; Ruff/planning/diff đạt, không API/dataset thật.
+[Evidence](../docs/reviews/M1-10-evidence.md). Review publication CI xác minh riêng sau push.
+Next action: **Chờ Tech Lead review M1-10.**
 Các đoạn M1-09 bên dưới là lịch sử trước giao việc M1-10.
 
 **M1-09 DONE**, Tech Lead APPROVED ngày 27/10/2026; dependencies M1-06/07/08 DONE.

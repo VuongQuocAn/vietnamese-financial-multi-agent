@@ -1,5 +1,20 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-10 checkpoint design
+
+- User giao M1-10, cho phép code/tests/docs/commit/push, dừng REVIEW; không DONE/M1-11.
+- Runtime API trong document_processing, tái sử dụng RawPageIdentity và DataConfig;
+  không đổi serialized contracts, pipeline hoặc Gateway/cache/quota.
+- Một JSON artifact/slot unit+stage, source_ref bind document/run do caller xác minh;
+  page-level giữ đầy đủ identity/source_ref. Không dùng symbol/year/page làm global ID.
+- Stable JSON SHA-256 cho input/config, processing version tường minh; checksum cả
+  payload và metadata. Chỉ caller-confirmed verified output được publish.
+- Temp cùng directory, flush/fsync/close rồi atomic replace; trusted filesystem,
+  single writer/process. Root tách khỏi configured data/raw/processed/recovered sources.
+- Không dataset thật/API/LLM; checksum/JSON structure không chứng nhận OCR/tài chính.
+  Caller chịu đầy đủ input content digests, source binding và semantic validation.
+  [Usage và giới hạn](../docs/document-processing-checkpoints.md).
+
 ## 2026-10-27 — Tech Lead Final Acceptance M1-05
 
 - **Tech Lead APPROVED ngày 27/10/2026**, M1-05 REVIEW → DONE theo giao việc
