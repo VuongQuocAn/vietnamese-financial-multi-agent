@@ -2,12 +2,13 @@
 
 Gateway thuộc `core`, dùng nguyên [llm_gateway_v1](llm-gateway-contract.md).
 Caller → SharedLLMGateway → transport inject theo provider → revalidate/bind response.
-Core không import nghiệp vụ. Không SDK, environment, network hoặc ghi log tự động.
+Core không import nghiệp vụ. Gateway không tự đọc environment/network/ghi log;
+[Gemini adapter M1-07](gemini-adapter.md) là transport live được inject tường minh.
 
 ## API và ví dụ chạy offline
 
 `LLMTransport` là callable Protocol: `(LLMRequest) -> LLMResponse`.
-`SharedLLMGateway(transports: Mapping[str, LLMTransport]).generate(request)` trả
+`SharedLLMGateway(transports, *, schema_registry=None).generate(request)` trả
 `LLMResponse`. Mapping được sao chép khi khởi tạo; chọn provider/model tường minh
 trong `request.model`, không phân tích tên model. Thay mapping bằng instance gateway
 mới khi đổi provider configuration. Không global state hoặc default model ẩn.
@@ -56,7 +57,9 @@ không có output, vẫn phải khớp identity/correlation. effective_model là
 riêng theo contract; không bị ghi đè thành requested_model.
 
 Contract-valid chỉ nói response hợp lệ độc lập; request-bound cần các kiểm tra
-trên. Schema-validated cần validator thực sự đáng tin cậy, chưa có trong M1-06.
+trên. M1-07 bổ sung optional LocalSchemaRegistry: Gateway tự chạy Draft202012Validator
+sau binding trên đúng payload/schema đã đăng ký; chỉ khi đó mới tạo schema attestation.
+Không registry thì giữ hành vi M1-06, schema output vẫn unverified.
 Vì vậy gateway reject cả schema_valid/schema_invalid do transport khai bằng safe
 schema_mismatch, kể cả attestation hợp lệ về cấu trúc. Không có allowlist validator
 ID hoặc cờ trust để biến lời khai thành bằng chứng. Không nâng unverified thành
@@ -65,8 +68,8 @@ chỉ là generation hoàn tất; caller không được coi đó là schema val
 
 JSON syntax được parser contract kiểm tra với raw_text/payload. Giữ json_valid,
 unverified, invalid_json; giữ malformed/partial và lỗi tương ứng. Response tự nhận
-success nhưng chứa JSON sai bị từ chối khi revalidate. Không repair JSON, fetch schema
-hoặc chạy general schema engine. Status/finish_reason/error dùng nguyên invariants v1.
+success nhưng chứa JSON sai bị từ chối khi revalidate. Không repair JSON hoặc fetch schema.
+Status/finish_reason/error dùng nguyên invariants v1.
 
 ## Usage, cost và errors
 
@@ -91,8 +94,6 @@ Safe responses bind với snapshot request, không output/raw exception, message
 `LLM operation failed`, retryability unknown. Gateway không log prompt/response hoặc
 exception. Request text/opaque IDs vẫn do caller kiểm soát, contract không phải DLP.
 
-M1-06 chỉ gateway và fake tests. M1-07 quyết định SDK/model/provider capabilities,
-schema validation thực tế và adapter mapping; adapter thực thi timeout từ constraints
-và xử lý unsupported/null generation values tường minh. Gateway hiện không ngắt một
-transport bị treo. M1-08 xử lý quota/budget/pricing/retry; M1-09 cache. Không task nào
-trong số này được triển khai ở đây; không live inference/đánh giá tài chính.
+M1-06 gateway/fake; M1-07 thêm Gemini SDK adapter và local schema validation như trên.
+Adapter xử lý timeout/capabilities/null tường minh; Gateway không tự ngắt transport treo.
+M1-08 xử lý quota/budget/pricing/retry; M1-09 cache. Không đánh giá tài chính ở đây.

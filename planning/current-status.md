@@ -2,16 +2,19 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-06 DONE** theo user nghiệm thu dựa trên CI ngày 27/10/2026.
-- Implementation **21d667c96fd8c9fe2ec593f0e486368df42018a5** /
-  [CI 40460425395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40460425395)
-  success exact SHA; mọi steps Python 3.11/3.12 verified, mỗi job **929 passed/11 skipped**.
-- Acceptance chỉ docs/planning; không review lại source hoặc lặp full local suite.
-  Local planning/diff và Ruff kiểm tra cho checkpoint acceptance.
-- [Evidence](../docs/reviews/M1-06-evidence.md). Giữ limitations: chưa Gemini/live
-  provider/trusted schema engine/timer/retry/quota/cache; contracts v1 không đổi.
-- [M1-07 spec](tasks/M1/M1-07.md) đã chuẩn bị, giữ **TODO**: SDK/model, schema
-  validation và live scope/ngân sách còn TBD. Không có implementation task đang chạy.
-- Stable implementation SHA/CI như trên; acceptance SHA/CI xác minh sau push,
-  ghi báo cáo cuối, không tự tham chiếu commit.
-- Next action: **Tech Lead chốt inputs và giao triển khai M1-07**.
+- **M1-07 REVIEW — candidate chờ CI exact SHA và Tech Lead**; M1-05/M1-06 DONE.
+- Baseline main/origin sạch **f29baea90baf1cc5d4ed61dceb4faad29876d250** /
+  [CI 40461193406](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40461193406) success.
+- Gemini SDK 2.33.0 adapter + trusted local jsonschema validation tại Gateway sau
+  binding. Không đổi llm_gateway_v1/schema; không tin transport attestations.
+- Targeted adapter/gateway **66 passed**, zero skips; Ruff/planning/diff kiểm tra
+  trước publication. Full unit suite chỉ CI 3.11/3.12; không live API trong CI.
+- Live smoke **PASS**: đúng 1 request/key thứ 1 được user cho phép, model
+  gemini-3.5-flash-lite, schema_valid; provider usage input=11/output=9/total=20.
+  Cost unknown, project identity unknown; không retry/key rotation/raw output.
+- Credentials ở thư mục secrets ngoài Git; môi trường process, không ghi key vào docs.
+- [Spec](tasks/M1/M1-07.md), [API](../docs/gemini-adapter.md),
+  [evidence](../docs/reviews/M1-07-evidence.md). Limitations: text-only/leading system,
+  schema local, no quota/budget/pricing/cache; xem API docs.
+- Exact implementation SHA/CI kiểm tra sau push và báo cuối, không tự tham chiếu.
+- Next action: **Tech Lead review M1-07 sau CI exact SHA thành công**.

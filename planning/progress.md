@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 17 | 0 | 0 | 8 | 0 | 0 |
+| M1 | 25 | 17 | 0 | 0 | 7 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 21 | 0 | 0 | 54 | 0 | 0 |
+| TOTAL | 75 | 21 | 0 | 0 | 53 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | DataConfig, M1-05 contracts và M1-06 runtime Gateway/fake DONE; gateway targeted 28 passed, CI full suite 929 passed/11 skipped mỗi Python 3.11/3.12 |
+| `core` | DataConfig/contracts/Gateway DONE; M1-07 Gemini adapter + local schema validator candidate REVIEW, targeted 66 passed, một live smoke PASS |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -46,14 +46,14 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-06 DONE**, user cho phép nghiệm thu theo CI ngày 27/10/2026.
-Implementation 21d667c96fd8c9fe2ec593f0e486368df42018a5 /
-[CI 40460425395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40460425395)
-success exact SHA, mọi steps Python 3.11/3.12 verified; mỗi job 929 passed/11 skipped.
-Không review lại source hoặc lặp full local suite. Chỉ cập nhật acceptance/planning.
-[M1-07 spec](tasks/M1/M1-07.md) đã chuẩn bị, giữ TODO vì SDK/model/schema validation/
-live scope TBD; chưa implementation. M1-08/09 TODO.
-Next action: **Tech Lead chốt inputs và giao triển khai M1-07**.
+**M1-07 REVIEW — candidate chờ CI exact SHA/Tech Lead**. M1-05/M1-06 DONE.
+Baseline f29baea90baf1cc5d4ed61dceb4faad29876d250 / CI 40461193406 success.
+Gemini SDK 2.33.0 + local Draft 2020-12 validation tại Gateway sau binding;
+targeted **66 passed**, zero skips. Live smoke **PASS**: 1 request/1 key được chọn,
+schema_valid, usage 11/9/20 tokens, cost/project unknown; không retry/rotation.
+Key ở secrets ngoài Git, không raw provider data/dataset trong commit.
+Implementation SHA/full CI 3.11/3.12 kiểm tra sau push và ghi báo cáo cuối.
+Next action: **Tech Lead review M1-07 sau CI exact SHA thành công**. M1-08/09 TODO.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,

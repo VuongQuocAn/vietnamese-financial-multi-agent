@@ -11,10 +11,12 @@ from .llm_contracts import (
     LLMRequest,
     LLMResponse,
     ResponseProvenance,
+    SchemaValidation,
     Usage,
     parse_llm_request,
     parse_llm_response,
 )
+from .llm_schema_validation import LocalSchemaRegistry
 
 
 class LLMTransport(Protocol):
@@ -66,8 +68,14 @@ def _binding_error(request: LLMRequest, response: LLMResponse) -> ErrorCategory 
 
 
 class SharedLLMGateway:
-    def __init__(self, transports: Mapping[str, LLMTransport]) -> None:
+    def __init__(
+        self,
+        transports: Mapping[str, LLMTransport],
+        *,
+        schema_registry: LocalSchemaRegistry | None = None,
+    ) -> None:
         self._transports = dict(transports)
+        self._schema_registry = schema_registry
 
     def generate(self, request: LLMRequest) -> LLMResponse:
         """Invalid request ném safe LLMContractError; lỗi runtime trả safe response."""
@@ -76,6 +84,12 @@ class SharedLLMGateway:
         transport = self._transports.get(bound.model.provider)
         if transport is None:
             return _failure(bound, "invalid_configuration")
+        spec = bound.output_spec
+        if self._schema_registry is not None and spec is not None and spec.schema_ref is not None:
+            try:
+                self._schema_registry.schema_for(spec.schema_ref)
+            except ValueError:
+                return _failure(bound, "invalid_configuration")
         try:
             candidate = transport(bound.model_copy(deep=True))
         except TimeoutError:
@@ -87,4 +101,33 @@ class SharedLLMGateway:
         except Exception:
             return _failure(bound, "internal")
         category = _binding_error(bound, response)
-        return _failure(bound, category) if category is not None else response
+        if category is not None:
+            return _failure(bound, category)
+        output = response.output
+        if (
+            self._schema_registry is not None
+            and isinstance(output, JSONOutput)
+            and output.schema_ref is not None
+            and output.validation_status == "unverified"
+        ):
+            try:
+                valid = self._schema_registry.is_valid(output.schema_ref, output.payload)
+                status = "schema_valid" if valid else "schema_invalid"
+                output.validation_status = status
+                output.validation = SchemaValidation(
+                    schema_ref=output.schema_ref,
+                    validator_id="local-jsonschema-draft202012",
+                    status=status,
+                )
+                if not valid:
+                    response.status = "partial" if response.status == "partial" else "malformed"
+                    response.error = GatewayError(
+                        category="schema_mismatch",
+                        code="schema_mismatch",
+                        origin="gateway",
+                        retryability="not_retryable",
+                    )
+                return parse_llm_response(response)
+            except Exception:
+                return _failure(bound, "schema_mismatch")
+        return response
