@@ -2,19 +2,17 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-07 REVIEW — candidate chờ CI exact SHA và Tech Lead**; M1-05/M1-06 DONE.
-- Baseline main/origin sạch **f29baea90baf1cc5d4ed61dceb4faad29876d250** /
-  [CI 40461193406](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40461193406) success.
-- Gemini SDK 2.33.0 adapter + trusted local jsonschema validation tại Gateway sau
-  binding. Không đổi llm_gateway_v1/schema; không tin transport attestations.
-- Targeted adapter/gateway **66 passed**, zero skips; Ruff/planning/diff kiểm tra
-  trước publication. Full unit suite chỉ CI 3.11/3.12; không live API trong CI.
-- Live smoke **PASS**: đúng 1 request/key thứ 1 được user cho phép, model
-  gemini-3.5-flash-lite, schema_valid; provider usage input=11/output=9/total=20.
-  Cost unknown, project identity unknown; không retry/key rotation/raw output.
-- Credentials ở thư mục secrets ngoài Git; môi trường process, không ghi key vào docs.
-- [Spec](tasks/M1/M1-07.md), [API](../docs/gemini-adapter.md),
-  [evidence](../docs/reviews/M1-07-evidence.md). Limitations: text-only/leading system,
-  schema local, no quota/budget/pricing/cache; xem API docs.
-- Exact implementation SHA/CI kiểm tra sau push và báo cuối, không tự tham chiếu.
-- Next action: **Tech Lead review M1-07 sau CI exact SHA thành công**.
+- **M1-07 DONE** theo user nghiệm thu dựa trên CI ngày 27/10/2026; M1-05/M1-06 DONE.
+- Implementation **e66fd7efa886b69d38f6fc10840173cdb13166c1** /
+  [CI 40462740086](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40462740086)
+  success exact SHA, mọi steps Python 3.11/3.12 verified; mỗi job **967 passed/11 skipped**.
+- Targeted 66 passed/zero skips và live smoke PASS (1 request/1 key, schema_valid,
+  usage 11/9/20 tokens) giữ nguyên. Cost/project unknown; không gọi lại live API.
+- Acceptance chỉ 6 docs/planning files, không thay code/tests/contracts/dependencies.
+  Local Ruff/planning/diff; không lặp unit suite. Acceptance SHA/CI kiểm tra riêng sau
+  push và báo cuối, không tự tham chiếu hoặc dùng CI implementation thay CI acceptance.
+- [Spec](tasks/M1/M1-07.md), [evidence](../docs/reviews/M1-07-evidence.md).
+  Limitations giữ nguyên: text-only/leading system, schema local, chưa quota/budget/
+  pricing/cache; credentials ngoài Git, không key/raw data trong docs.
+- M1-08/09 TODO; không có implementation task đang chạy.
+- Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-08**.

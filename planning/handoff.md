@@ -2,57 +2,52 @@
 
 ## Active Task
 
-M1-07 — Gemini Structured Output Adapter.
+M1-07 — Finalize Acceptance; không có implementation task đang chạy.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Baseline sạch main/origin f29baea90baf1cc5d4ed61dceb4faad29876d250 /
-CI 40461193406 success. M1-05/M1-06 DONE; user giao triển khai, commit/push, dừng REVIEW.
-Candidate REVIEW chờ exact-SHA implementation CI và Tech Lead.
+Ngày 27/10/2026: baseline main/origin sạch e66fd7efa886b69d38f6fc10840173cdb13166c1.
+CI 40462740086 success exact SHA, mọi steps Python 3.11/3.12 verified;
+mỗi job 967 passed/11 skipped. User cho phép nghiệm thu theo CI và commit/push acceptance.
 
 ## Completed Work
 
-Gemini google-genai 2.33.0 adapter, local schema registry/validator tại Gateway sau
-binding, mocked tests và opt-in bounded smoke runner. Trusted validator thực thi thật,
-không tin metadata/attestation transport. Usage/provenance giữ đúng, cost unknown.
-Key lưu ngoài repository, bản gốc giữ nguyên; user chọn key thứ 1 cho 1 live request.
-Live PASS: schema_valid, usage 11 input/9 output/20 total, project identity unknown.
+M1-07 REVIEW → DONE; registry/dashboard/spec/evidence/current-status đồng bộ.
+Giữ nguyên implementation, tests, contracts, dependencies và limitations đã kiểm tra.
 
 ## Remaining Work
 
-Commit/push và full CI exact SHA xác minh trước báo cáo cuối; Tech Lead review.
-Không tự DONE hoặc triển khai M1-08. SHA/CI cuối không tự tham chiếu commit.
+Acceptance publication/CI xác minh sau push và báo SHA/URL cuối; không tự tham chiếu.
+M1-07 không còn work cần nghiệm thu. Không bắt đầu M1-08 khi chưa có giao việc.
 
 ## Modified Files
 
-.env.example, pyproject.toml; src/core/{gemini_adapter,llm_schema_validation,llm_gateway}.py;
-tests/unit/test_gemini_adapter.py; scripts/smoke_gemini.py; docs/{gemini-adapter,shared-llm-gateway}.md;
-docs/reviews/M1-07-evidence.md; planning/{tasks,progress,current-status,handoff}.md;
-planning/tasks/M1/M1-07.md.
+Chỉ 6 files: planning/{tasks,progress,current-status,handoff}.md;
+planning/tasks/M1/M1-07.md; docs/reviews/M1-07-evidence.md.
 
 ## Tests
 
-Targeted tests adapter + gateway: 66 passed, zero skips. Ruff/planning/diff kiểm tra
-trước publication. Full unit suite trên CI Python 3.11/3.12, không lặp full local suite.
-Live smoke đúng 1 request/1 key, PASS; không retry/fallback/benchmark tài chính.
+CI implementation mỗi Python 3.11/3.12: 967 passed/11 skipped, mọi steps đạt.
+Targeted 66 passed, live PASS trước đây giữ nguyên. Local acceptance chỉ Ruff/planning/
+diff; không lặp unit suite, không API/dataset/credentials. CI acceptance kiểm tra riêng.
 
 ## Blockers
 
-Không blocker implementation. Known limitations: text-only/leading system, null và
-developer role reject; Gemini schema subset, local không external refs/$id/custom format.
-Quota/budget/pricing M1-08, cache M1-09; không rotation hoặc bypass quota.
+Không. Limitations giữ nguyên: text-only/leading system, null/developer reject,
+provider schema subset; local không external refs/$id/custom format. Cost/project unknown.
+Quota/budget/pricing M1-08, cache M1-09 vẫn chưa triển khai.
 
 ## Git Checkpoint
 
-Stable baseline f29baea90baf1cc5d4ed61dceb4faad29876d250 /
-[CI 40461193406](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40461193406).
-Implementation checkpoint là commit chứa handoff này; exact SHA/CI xác minh sau
-push và báo cuối; không dùng CI baseline làm bằng chứng implementation mới.
+Stable implementation e66fd7efa886b69d38f6fc10840173cdb13166c1 /
+[CI 40462740086](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40462740086)
+success exact SHA. Acceptance SHA/CI xác minh riêng sau push và ghi báo cáo cuối;
+không dùng CI implementation làm bằng chứng cho commit docs mới.
 
 ## Exact Next Action
 
-Tech Lead review M1-07 sau CI exact SHA thành công.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-08.
