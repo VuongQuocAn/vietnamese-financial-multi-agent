@@ -2,47 +2,46 @@
 
 ## Active Task
 
-M1-05 — LLM Gateway Contract
+M1-05 — Finalize Acceptance đã hoàn tất; không có implementation task đang chạy.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 đã push,
-local/origin/main khớp và sạch trước docs checkpoint. CI 40458339034 success exact SHA,
-từng step Python 3.11/3.12 verified, mỗi job 901 passed/11 platform skips.
-M1-02/M1-04 DONE. User giao M1-05 ngày 2026-10-27, cho phép commit/push, dừng REVIEW.
+Ngày 27/10/2026: review baseline 7a54715369016a29ac886cf16b7480fd57ebc2f9 sạch,
+fetch/local/origin/main khớp; CI 40458603189 success exact SHA, từng step Python
+3.11/3.12 verified. Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 /
+CI 40458339034 success. M1-02/M1-04 DONE. Tech Lead APPROVED ngày 27/10/2026,
+cho phép REVIEW → DONE và commit/push acceptance, chỉ docs/planning.
 
 ## Completed Work
 
-Đọc context, xác minh Git/dependencies; spec/design thuần core đã xác định.
-TODO → READY → IN_PROGRESS → REVIEW theo quyền user giao. Models/validation và synthetic
-tests ổn định; docs/schema/export đã tạo. Targeted 142 passed/zero skips với -W error.
-Export revalidate Python snapshot trước JSON serialization để không che binary money.
-Docs/schema/evidence/registry/dashboard/spec/status/decisions đồng bộ REVIEW.
+M1-05 chính thức DONE theo Tech Lead APPROVED ngày 27/10/2026.
+Registry/spec/decisions/current-status/progress/handoff/evidence đồng bộ acceptance.
+Giữ nguyên contract/validation, tests, schema, kết quả và limitations đã nghiệm thu.
+Không thay code/tests/schema/export hoặc docs kỹ thuật, không API/dataset/secrets.
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu M1-05; không tự DONE hoặc bắt đầu M1-06.
-Docs checkpoint sẽ commit/push/xác minh CI riêng trước báo cáo cuối, không tự tham chiếu.
+Không còn acceptance/implementation work của M1-05 cần quyết định.
+Acceptance commit/push/CI exact SHA xác minh trước báo cáo cuối; không tự tham chiếu.
+M1-06..09 TODO; không tự bắt đầu task mới.
 
 ## Modified Files
 
-src/core/llm_contracts.py; tests/unit/test_llm_contracts.py;
-scripts/export_llm_gateway_schema.py; schemas/llm_gateway_v1.schema.json;
-docs/llm-gateway-contract.md; docs/reviews/M1-05-evidence.md;
-planning spec/registry/dashboard/status/decisions/handoff.
+Chỉ 7 files: planning/tasks.md, tasks/M1/M1-05.md, decisions.md, current-status.md,
+progress.md, handoff.md; docs/reviews/M1-05-evidence.md. Không code/tests/schema.
 
 ## Tests
 
-Targeted 142 passed, zero skips/warnings. Ruff lint/format 99 files, planning 75 tasks,
-pip/diff/privacy đạt. Full local 910 passed/2 skipped: case-insensitive filesystem
-và FIFO không hỗ trợ Windows. Không coi skipped tests là passed.
-CI implementation mỗi job Python 3.11/3.12: 901 passed/11 native-Windows skips trên Linux.
-Checkpoint REVIEW chỉ docs; không lặp local unit suite khi source/tests không đổi.
-Không đọc dataset/secrets hoặc live inference; không benchmark chất lượng tài chính.
+Phiên acceptance kiểm tra Ruff lint/format, planning, pip, diff và staged privacy/
+allowlist trước commit. Không lặp local unit suite vì code/tests không đổi.
+Bằng chứng trước approval: targeted 142 passed/zero skips/warnings, full local
+910 passed/2 skipped (case-insensitive filesystem/FIFO Windows). CI review mỗi job
+Python 3.11/3.12: 901 passed/11 native-Windows skips trên Linux.
+CI acceptance xác minh riêng sau push; skipped không tính passed, không benchmark.
 
 ## Blockers
 
@@ -50,11 +49,11 @@ Không. SDK/model/live API/pricing/quota/budget/schema capabilities/cache backen
 
 ## Git Checkpoint
 
-Stable implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 /
-[CI 40458339034](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458339034)
-success exact SHA, mọi steps Python 3.11/3.12 verified.
-SHA/CI docs checkpoint ghi báo cáo cuối sau push, không tự tham chiếu.
+Stable review baseline 7a54715369016a29ac886cf16b7480fd57ebc2f9 /
+[CI 40458603189](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458603189)
+success exact SHA, mọi steps Python 3.11/3.12 verified trước finalization.
+SHA/CI acceptance ghi báo cáo cuối sau push, không tự tham chiếu.
 
 ## Exact Next Action
 
-Tech Lead nghiệm thu M1-05.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-06.

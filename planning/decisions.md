@@ -1,5 +1,23 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — Tech Lead Final Acceptance M1-05
+
+- **Tech Lead APPROVED ngày 27/10/2026**, M1-05 REVIEW → DONE theo giao việc
+  Finalize Acceptance; dependencies M1-02/M1-04 DONE.
+- Nghiệm thu provider-neutral contracts và pure validation trong core, structured
+  states/schema attestations, usage/cost, error taxonomy và serialization/schema v1.
+- Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 / CI 40458339034 success;
+  review checkpoint 7a54715369016a29ac886cf16b7480fd57ebc2f9 / CI 40458603189 success
+  exact SHA, từng step Python 3.11/3.12 verified trước finalization.
+- Giữ bằng chứng targeted 142 passed/zero skips, full local 910 passed/2 platform
+  skips; CI mỗi job 901 passed/11 platform skips. Không coi skips là passed.
+- Chỉ 7 docs/planning files trong phiên acceptance; không đổi code/tests/schema,
+  không rerun local unit suite, không API/dataset/secrets hoặc task mới.
+- Giữ limitations: attestation không chứng minh validator thực thi; secret safety
+  không phải DLP; SDK/model/live policy/pricing/quota/budget/capabilities/cache TBD.
+- Acceptance SHA/CI kiểm tra sau push, ghi báo cáo cuối để tránh tự tham chiếu.
+  M1-06..09 TODO; chờ Tech Lead giao task tiếp theo, không tự bắt đầu M1-06.
+
 ## 2026-10-27 — M1-05 contract design
 
 - Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 đã push, CI 40458339034

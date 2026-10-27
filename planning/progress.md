@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 15 | 0 | 0 | 9 | 0 | 1 |
+| M1 | 25 | 16 | 0 | 0 | 9 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 19 | 0 | 0 | 55 | 0 | 1 |
+| TOTAL | 75 | 20 | 0 | 0 | 55 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,13 +46,19 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-Hiện tại **M1-05 REVIEW**, dependencies M1-02/M1-04 DONE.
+Hiện tại **M1-05 DONE — Tech Lead APPROVED ngày 27/10/2026**;
+dependencies M1-02/M1-04 DONE. Không có implementation task đang chạy.
 Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 và
 [CI 40458339034](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458339034)
 success exact SHA, mọi steps Python 3.11/3.12; mỗi job 901 passed/11 platform skips.
 Targeted 142 passed/zero skips/warnings; full local 910 passed/2 platform skips.
-Ruff/planning/pip/diff/privacy gates đạt. Next action: **Tech Lead nghiệm thu M1-05**.
-M1-06..09 TODO. Chỉ contracts, chưa runtime Gateway; không tự DONE.
+Review checkpoint 7a54715369016a29ac886cf16b7480fd57ebc2f9 /
+[CI 40458603189](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458603189)
+success exact SHA/từng step Python 3.11/3.12 đã xác minh trước finalization.
+Acceptance chỉ docs/planning, giữ code/tests/schema và limitations; không lặp local
+unit suite. CI acceptance kiểm tra riêng sau push, không tự tham chiếu SHA/CI.
+Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-06**.
+M1-06..09 TODO. Chỉ contracts, chưa runtime Gateway.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,

@@ -1,5 +1,16 @@
 # M1-05 — Engineering evidence
 
+## Final Acceptance — 27/10/2026
+
+**Tech Lead APPROVED ngày 27/10/2026**, M1-05 REVIEW → DONE theo giao việc mới.
+Nghiệm thu contract/validation engineering, giữ nguyên bằng chứng và limitations.
+Baseline review 7a54715369016a29ac886cf16b7480fd57ebc2f9 /
+[CI 40458603189](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458603189)
+success exact SHA, từng step Python 3.11/3.12 verified trước finalization.
+Phiên acceptance chỉ docs/planning, không đổi code/tests/schema hoặc lặp local
+full suite. Acceptance commit/CI xác minh riêng sau push, ghi báo cáo cuối,
+không tự tham chiếu. Nội dung REVIEW bên dưới là evidence lịch sử trước approval.
+
 ## Phạm vi
 
 User giao M1-05 ngày 2026-10-27, cho phép commit/push, dừng REVIEW.
@@ -58,4 +69,5 @@ syntax-valid/unverified chưa schema-valid. Public parser mới là safe error b
 direct Pydantic error APIs không dùng để publish. Text/payload/opaque IDs vẫn cần caller
 kiểm soát secrets; contract không phải DLP. Currency kiểm tra format, chưa ISO membership.
 Provider SDK/model/live policy/pricing/quota/budget/capabilities/cache backend TBD.
-M1-06..09 vẫn TODO; Tech Lead nghiệm thu M1-05 trước quyết định task tiếp theo.
+M1-05 đã được Tech Lead nghiệm thu; M1-06..09 vẫn TODO.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-06.
