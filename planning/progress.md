@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 20 | 0 | 0 | 5 | 0 | 0 |
+| M1 | 25 | 20 | 1 | 0 | 4 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 24 | 0 | 0 | 51 | 0 | 0 |
+| TOTAL | 75 | 24 | 1 | 0 | 50 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,12 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M1-10 IN_PROGRESS**, user giao triển khai/commit/push ngày 27/10/2026; dừng REVIEW.
+Dependencies M1-03/M1-02b/M1-09 DONE. Baseline main/origin sạch a130e72.
+38 checkpoint + 246 regression tests passed; Ruff/planning/diff đạt.
+Next action: **Publish implementation M1-10 và xác minh exact-SHA CI.**
+Các đoạn M1-09 bên dưới là lịch sử trước giao việc M1-10.
 
 **M1-09 DONE**, Tech Lead APPROVED ngày 27/10/2026; dependencies M1-06/07/08 DONE.
 Implementation afb866f760fea63cb3a960d3056a6909139b6294 / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success exact SHA;

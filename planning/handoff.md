@@ -2,51 +2,46 @@
 
 ## Active Task
 
-M1-09 — Finalize Acceptance; không có implementation task đang chạy.
+M1-10 — Document Processing Checkpoints
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Main/origin sạch 389e4c86bef7cf176cc7a34fd3a425b5e82b4e77; [CI 40468492757](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468492757) success
-exact SHA, mọi steps Python 3.11/3.12 đạt. Tech Lead APPROVED ngày 27/10/2026,
-cho phép chuyển REVIEW → DONE và commit/push acceptance.
+Baseline main/origin/main sạch a130e72f5271c4c9b6f016e039d5e609ad1d7546 sau fetch.
+M1-03/M1-02b/M1-09 DONE; user cho phép triển khai/commit/push, dừng REVIEW.
 
 ## Completed Work
 
-M1-09 REVIEW → DONE; registry/dashboard/spec/evidence/current-status đồng bộ,
-quyết định nghiệm thu ghi decisions.md. Production code/tests/config/dependencies bất biến.
+Checkpoint JSON đơn artifact, source/page/stage identity, SHA-256 revisions/integrity,
+verified save/lookup, atomic publish, synthetic tests và usage docs.
 
 ## Remaining Work
 
-Acceptance publication/CI xác minh riêng exact SHA sau push và báo cuối; không tự tham chiếu.
-Không còn phần chờ nghiệm thu; không tự bắt đầu M1-10/M1-11.
+Hoàn tất checks/diff, commit/push, exact-SHA CI 3.11/3.12 rồi REVIEW chờ Tech Lead.
 
 ## Modified Files
 
-Chỉ 7 files: planning/{tasks,progress,current-status,handoff,decisions}.md;
-planning/tasks/M1/M1-09.md; docs/reviews/M1-09-evidence.md.
+src/document_processing/checkpoints.py, tests/unit/test_checkpoints.py,
+docs/document-processing-checkpoints.md, planning/tasks/M1/M1-10.md;
+planning/{tasks,progress,current-status,handoff}.md. Evidence sẽ cập nhật sau CI.
 
 ## Tests
 
-Targeted 34 cache + 105 regression passed giữ nguyên; implementation CI mỗi Python
-3.11/3.12: 1040 passed/11 skipped. Review checkpoint CI mọi steps đạt.
-Acceptance local chỉ Ruff/planning/diff; không lặp unit suite hoặc live Gemini API.
-CI acceptance xác minh riêng sau push.
+38 checkpoint + 246 regression passed; Ruff lint/format, planning/diff check đạt.
+Không full local suite, API hoặc dataset thật.
 
 ## Blockers
 
-Không. Limitations giữ nguyên: in-memory/process-local, finite TTL/LRU, không persistence/
-byte cap/single-flight/cross-process sharing; scope/eligibility/revision do application xác nhận.
+Không. Trusted local filesystem/single writer; caller chịu binding/semantic validation.
 
 ## Git Checkpoint
 
-Stable implementation afb866f760fea63cb3a960d3056a6909139b6294 / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success.
-Review checkpoint 389e4c86bef7cf176cc7a34fd3a425b5e82b4e77 / [CI 40468492757](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468492757) success exact SHA.
-Acceptance SHA/CI xác minh riêng sau push và báo cuối, không thay bằng CI cũ.
+Baseline a130e72f5271c4c9b6f016e039d5e609ad1d7546; implementation chưa commit.
+Không gọi draft chưa hoàn tất verification là checkpoint ổn định.
 
 ## Exact Next Action
 
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-10/M1-11.
+Hoàn tất checks và publish implementation M1-10 để xác minh CI.
