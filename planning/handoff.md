@@ -2,57 +2,51 @@
 
 ## Active Task
 
-M1-10 — Final Acceptance; không task triển khai active.
+M1-11 — Page and Document Classification
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e main/origin khớp sau push.
-[CI 40497588383](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497588383)
-success exact SHA, mọi steps Python 3.11/3.12; mỗi job 1078 passed/11 skipped.
-Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 main/origin sạch sau fetch;
-[CI 40497942861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497942861)
-success exact SHA, mọi steps Python 3.11/3.12 đã xác minh.
-Tech Lead APPROVED 27/10/2026, không blocking issues, cho phép final acceptance REVIEW → DONE.
+Baseline HEAD/origin `98abecb538a82fd6ffdf4db57b8dfff81899c278` đã fetch/đối chiếu.
+Dependencies M1-04/07/08/09/10 DONE; người dùng giao implementation và commit/push.
 
 ## Completed Work
 
-Checkpoint JSON đơn artifact, source/page/stage identity, SHA-256 revisions/integrity,
-verified save/lookup, atomic publish, synthetic tests/DU v1 integration và usage docs/evidence.
-Registry/dashboard/spec/status/handoff/evidence đồng bộ DONE; decisions ghi Tech Lead APPROVED.
-Acceptance chỉ docs/planning; production code/tests/contracts/dữ liệu bất biến.
+PageClassifier qua cache/guard/Gateway/Gemini, prediction schema và operational
+evidence gate; aggregation runtime theo manifest/source; checkpoint opt-in/revalidation.
+Taxonomy B01/B02/B03/B09 candidates, approval kế toán TBD. Source/provenance bất biến.
+Ignore secret directory, giữ local file; không đọc keys, không live API.
 
 ## Remaining Work
 
-Không còn phần chờ nghiệm thu M1-10. Acceptance publication SHA/CI kiểm tra riêng sau
-push và báo cuối; không suy CI implementation cho commit docs mới. Không tự bắt đầu M1-11.
+Commit/push, exact implementation SHA CI 3.11/3.12; cập nhật REVIEW.
+Tech Lead quyết định DONE; không bắt đầu M1-12.
 
 ## Modified Files
 
-Chỉ 7 files: planning/{tasks,progress,current-status,handoff,decisions}.md;
-planning/tasks/M1/M1-10.md; docs/reviews/M1-10-evidence.md.
+.gitignore; src/document_processing/classification.py; tests/unit/test_classification.py;
+docs/page-document-classification.md; docs/reviews/M1-11-evidence.md;
+planning/{tasks,progress,current-status,handoff}.md; planning/tasks/M1/M1-11.md.
 
 ## Tests
 
-38 checkpoint + 246 regression passed; Ruff lint/format, planning/diff check đạt.
-CI full unit suite 1078 passed/11 skipped mỗi Python 3.11/3.12.
-Acceptance local chỉ Ruff lint/format, planning/diff; không rerun unit suite/API/dataset.
-CI acceptance kiểm tra riêng sau push.
+35 focused + 333 related regression passed; Ruff lint/format (132 files),
+planning 75 tasks và diff check đạt. Full suite do CI đảm nhiệm.
 
 ## Blockers
 
-Không. Trusted local filesystem/single writer; caller chịu binding/content fingerprints/
-semantic validation. Không distributed locking/eviction/history/size cap hoặc secure FS.
+Live pilot chưa đủ selected credential/project mapping/active quota/budget xác nhận.
+0 real API requests, usage/cost unknown; không cản trở synthetic engineering integration.
+Taxonomy approval/accuracy vẫn TBD; không financial acceptance.
 
 ## Git Checkpoint
 
-Stable implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e / CI 40497588383 success.
-Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 / CI 40497942861 success exact SHA.
-Acceptance SHA/CI xác minh riêng sau push và báo cuối, không ghi commit tự tham chiếu.
+Baseline `98abecb538a82fd6ffdf4db57b8dfff81899c278`; changes chưa commit.
+Không tuyên bố checkpoint implementation ổn định khi chưa final verification.
 
 ## Exact Next Action
 
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-11.
+Commit/push M1-11 và xác minh exact-SHA CI trước REVIEW.

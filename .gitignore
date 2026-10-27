@@ -26,6 +26,7 @@ coverage.xml
 junit*.xml
 
 # Secrets và cấu hình cá nhân
+/src/api/api_key/
 .env
 .env.*
 !.env.example

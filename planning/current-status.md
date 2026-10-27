@@ -2,22 +2,15 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-10 DONE**, Tech Lead APPROVED 27/10/2026; không blocking issues. M1-11 TODO.
-- Dependencies M1-03/M1-02b và M1-09 DONE; không task triển khai khác active.
-- Implementation **796e4664e6faf1d32354f7db62770bb7e4e1304e**, main/origin khớp sau push.
-- [CI 40497588383](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497588383)
-  success exact SHA, mọi steps Python 3.11/3.12 đạt; mỗi job **1078 passed/11 skipped**.
-- [Spec](tasks/M1/M1-10.md), [API](../docs/document-processing-checkpoints.md),
-  [evidence](../docs/reviews/M1-10-evidence.md).
-- Persistent JSON store, source/page/stage identity, SHA-256 và atomic publish đã triển khai.
-- 38 checkpoint + 246 regression tests passed; Ruff lint/format, planning/diff check đạt.
-- Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 /
-  [CI 40497942861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497942861)
-  success exact SHA; mọi steps Python 3.11/3.12 đã xác minh trước acceptance.
-- Không API/dataset thật, sửa nguồn hoặc thay serialized contracts; M1-11 TODO.
-- Giới hạn: trusted filesystem/single writer; caller chịu content digests/source binding/
-  semantic validation. Checksum không chứng nhận OCR/tài chính đúng.
-- Acceptance chỉ 7 docs/planning files; production code/tests/contracts/dữ liệu bất biến.
-  Local chỉ Ruff/planning/diff, không rerun unit suite/Gemini API.
-- Acceptance SHA/CI xác minh riêng sau push và báo cuối, không suy từ CI cũ.
-- Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-11.**
+- **M1-11 IN_PROGRESS**, người dùng giao implementation/tests/commit/push.
+- Dependencies M1-04/07/08/09/10 DONE; M1-12 TODO.
+- Baseline HEAD/origin `98abecb538a82fd6ffdf4db57b8dfff81899c278` đã fetch/đối chiếu.
+- PageClassifier và aggregate_document triển khai text-only; taxonomy candidates opt-in,
+  accounting approval TBD. Không thay raw/contracts/shared infrastructure.
+- 35 focused + 333 related regression passed; Ruff/planning/diff đạt.
+- Secret directory ignored/untracked, không đọc nội dung keys; file local giữ nguyên.
+- Live pilot 0 requests: chưa selected credential/project quota/budget được xác nhận.
+- [Spec](tasks/M1/M1-11.md), [usage](../docs/page-document-classification.md),
+  [evidence](../docs/reviews/M1-11-evidence.md).
+- Working changes chưa commit; không gọi đây là implementation SHA ổn định.
+- Next action: **Commit/push M1-11 và xác minh exact-SHA CI trước REVIEW.**

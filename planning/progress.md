@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 21 | 0 | 0 | 4 | 0 | 0 |
+| M1 | 25 | 21 | 1 | 0 | 3 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 25 | 0 | 0 | 50 | 0 | 0 |
+| TOTAL | 75 | 25 | 1 | 0 | 49 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,12 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M1-11 IN_PROGRESS**, người dùng giao implementation và commit/push.
+Dependencies DONE; baseline `98abecb538a82fd6ffdf4db57b8dfff81899c278` khớp origin.
+35 focused + 333 related regression passed; Ruff/planning/diff đạt, không live API.
+Next action: Commit/push M1-11 và xác minh exact-SHA CI trước REVIEW.
+Các đoạn bên dưới là lịch sử trước M1-11.
 
 **M1-10 DONE**, Tech Lead APPROVED 27/10/2026; M1-11 TODO, không task triển khai active.
 Implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e /
