@@ -12,7 +12,7 @@ Không checkpoint/cache mới; unresolved không được đánh verified.
 
 Local môi trường .venv với dev tools: **14 focused +205 related regression =219 passed**
 (DU contracts, OCR loader, classification). Ruff lint/format toàn repo đạt;
-planning/diff cuối xác minh trước commit. Full local suite không chạy, CI phụ trách.
+planning/diff đạt trước commit. Full local suite không chạy, CI phụ trách.
 Thêm regression sau review code: duplicate tọa độ giữa các placeholders đã chú giải
 vẫn phải unresolved, không được che conflict bằng cách gộp anchors.
 
@@ -40,5 +40,10 @@ semantics. Không claim reconstruction accuracy/financial correctness hoặc OCR
 identity. Strict geometry có thể abstain nhiều; missing trailing rows/cols cần shape
 đã review; extras producer chưa chốt. Gemini-assisted và stage checkpoint deferred.
 
-Implementation SHA / CI exact 3.11/3.12: chờ push/check; ghi sau khi có bằng chứng.
-Exact next action tại bàn giao: Tech Lead review M1-12 sau publication CI.
+Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` đã push main;
+[CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586) **success exact SHA**: mọi steps ở Python 3.11/3.12,
+bao gồm full unit suite, đã xác minh bằng run/job summary. Không đọc lại logs PASS.
+Working tree sạch, HEAD/origin khớp trước checkpoint docs evidence cuối;
+checkpoint này chỉ docs/planning, không đổi implementation hoặc rerun API/tests.
+
+Exact next action: Tech Lead review M1-12; không DONE/M1-13.

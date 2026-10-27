@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; CI exact e3e86a3 success 3.11/3.12 |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction REVIEW, 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12 |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -52,8 +52,9 @@ unresolved gate. 14 focused +205 regression =219 passed; Ruff đạt.
 Real 4 frozen pages/8 tables/310 cells: 1 resolved/7 unresolved; không accuracy.
 0 Gemini requests/tokens; không source/contracts/classifier mutations.
 [Spec](tasks/M1/M1-12.md), [usage](../docs/table-reconstruction.md),
-[evidence](../docs/reviews/M1-12-evidence.md). Publication SHA/CI xác minh sau push.
-Next action: Tech Lead review M1-12 sau publication CI; không DONE/M1-13.
+[evidence](../docs/reviews/M1-12-evidence.md). Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` /
+[CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586) success exact SHA 3.11/3.12, mọi steps/full unit suite đạt.
+Next action: Tech Lead review M1-12; không DONE/M1-13.
 Các đoạn dưới là lịch sử.
 
 **M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,

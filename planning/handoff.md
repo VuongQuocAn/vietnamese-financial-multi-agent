@@ -12,7 +12,9 @@ REVIEW
 
 Baseline `0dd9bd1e7ee8aa9c8e458e49182e7d01624b2c46` = origin/main sau fetch,
 working tree sạch trước triển khai. M1-11/M1-11b DONE. User giao M1-12 và cho
-commit/push; không được tự DONE/M1-13. Implementation SHA/CI chờ publication.
+commit/push; không được tự DONE/M1-13. Implementation
+`01b235cc83f08e3df86ac8341370ee43ebc866e8` đã push; [CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586)
+success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đã xác minh.
 
 ## Completed Work
 
@@ -24,7 +26,7 @@ reviewed SpanEvidence, placeholder semantics, collisions/gaps/geometry gate.
 
 ## Remaining Work
 
-Publication CI exact implementation SHA và Tech Lead review. Không implementation
+Tech Lead review M1-12; publication CI exact implementation SHA đã đạt. Không implementation
 khác hoặc task M1-13. Chưa ground truth merges; không claim accuracy.
 
 ## Modified Files
@@ -36,7 +38,7 @@ planning/tasks/M1/M1-12.md. Không thay raw/contracts/classification/credentials
 
 ## Tests
 
-219 targeted passed; Ruff lint/format đạt; planning/diff cuối trước commit.
+219 targeted passed; Ruff lint/format, planning/diff đạt; full unit suite CI 3.11/3.12 đạt.
 Real report private ignored artifacts/table-reconstruction/M1-12/validation.json:
 5 gaps, 32 out-of-bounds, 2265 pairwise geometry conflicts, 47 observed empty cells.
 DU quality chỉ empty_text47; source/anchor/status issues0. Không full local suite.
@@ -51,9 +53,11 @@ Gemini-assisted và checkpoint orchestration deferred; không provider client gi
 ## Git Checkpoint
 
 Baseline stable `0dd9bd1e7ee8aa9c8e458e49182e7d01624b2c46`.
-Code local đã chạy targeted và real validation; implementation SHA/CI ghi sau push.
+Stable implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` / [CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586)
+success exact SHA. HEAD/origin sạch/khớp trước checkpoint evidence chỉ docs/planning;
+checkpoint SHA/CI mới kiểm tra riêng sau push, không tự tham chiếu.
 [Evidence](../docs/reviews/M1-12-evidence.md), [spec](tasks/M1/M1-12.md).
 
 ## Exact Next Action
 
-Tech Lead review M1-12 sau publication CI; không DONE/M1-13.
+Tech Lead review M1-12; không DONE/M1-13.
