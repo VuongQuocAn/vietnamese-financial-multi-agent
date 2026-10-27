@@ -2,58 +2,68 @@
 
 ## Active Task
 
-M1-11a — Bounded Real Classification Pilot
+M1-11a — Bounded Real Classification Pilot; không task triển khai active.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
-Baseline HEAD/origin `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5`, M1-11 DONE.
-Dry-run verified 19 pages/3 symbols/14 strata. Live 6 actual API requests (smoke +5 pages),
-12307 input/176 output/12483 total tokens, nguồn không đổi. Live subset 1 symbol/5 years.
+Implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` đã push origin/main.
+[CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
+success exact SHA; jobs/mọi steps 3.11/3.12, mỗi job 1130 passed/11 skipped.
+M1-11 DONE; baseline trước task `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5`.
 
 ## Completed Work
 
-Runner/CLI bounded dry-run và sequential Gateway/Gemini/guard/cache/checkpoint integration.
-Smoke đạt; 0 resolved/5 unresolved real pages (4 OCR quality/1 insufficient), 8 anchors checked.
-Cache HIT 5 probes không API thêm; checkpoint HIT live 0, synthetic có resolved resume.
-Dừng local pre-send token reservation, 1 budget denial, không actual provider/schema errors.
-Fix metrics runner và regression test; original live report giữ nguyên + private interpretation,
-không rerun live. User xác nhận export/free/quota/no other apps; duy nhất key index 0.
+Runner/CLI bounded dry-run + sequential Gateway/Gemini/guard/cache/checkpoints.
+Dry-run verified 19 pages/3 symbols/14 strata; live 6 requests gồm smoke +5 real pages,
+12307 input/176 output/12483 total tokens. 0 resolved/5 unresolved (4 quality/1 insufficient),
+8 anchors checked, cache HIT 5 probes không API thêm; checkpoint HIT live 0.
+Dừng local pre-send token bound; 0 actual provider/schema errors, 1 local budget denial.
+Fix stats + regression; original private report giữ nguyên + interpretation, không rerun live.
+Owner xác nhận data export/free tier/quota applies selected credential/model/no other apps.
+Duy nhất key index 0/client; không rotation/retry. Raw/contracts/classifier/keys không đổi.
+Usage/evidence/registry/spec/dashboard/status/decisions đồng bộ REVIEW.
 
 ## Remaining Work
 
-Commit/push, exact-SHA CI 3.11/3.12, chuyển REVIEW; Tech Lead nghiệm thu độc lập.
-Không bắt đầu M1-12.
+Tech Lead nghiệm thu độc lập, quyết định policy/pilot readiness trước M1-12.
+Publication SHA/CI kiểm tra riêng sau push và báo cuối; không suy CI implementation.
+Không tự DONE hoặc bắt đầu M1-12.
 
 ## Modified Files
 
-src/document_processing/classification_pilot.py; scripts/run_classification_pilot.py;
-tests/unit/test_classification_pilot.py; docs/classification-pilot.md;
-docs/reviews/M1-11a-evidence.md; planning/{tasks,progress,current-status,handoff,decisions}.md;
-planning/tasks/M1/M1-11a.md. Runtime artifacts ignored, không stage keys/dataset.
+Implementation 11 files: src/document_processing/classification_pilot.py;
+scripts/run_classification_pilot.py; tests/unit/test_classification_pilot.py;
+docs/classification-pilot.md; docs/reviews/M1-11a-evidence.md;
+planning/{tasks,progress,current-status,handoff,decisions}.md;
+planning/tasks/M1/M1-11a.md. Publication REVIEW chỉ 7 docs/planning files.
+Artifacts/credentials/dataset ignored và không commit.
 
 ## Tests
 
-17 focused +146 related regression passed; final Ruff/planning/diff trước publication.
-Full unit suite chỉ CI, không rerun API.
+17 focused +146 related regression passed; Ruff lint/format, planning 76 tasks và diff đạt.
+CI full unit suite mỗi Python 3.11/3.12 1130 passed/11 skipped. Không full local suite.
+Publication chỉ static/planning/diff checks; không API rerun.
 
 ## Blockers
 
-Pilot chỉ 5 real pages thay vì mục tiêu 10–20 do token upper-bound cap; không nới budget.
-Project aliases/quota/tier user-attested; actual project ID/quota remaining/billing
-không independently verified. USD 0 estimated conditional free tariff; guard money
-NOT_CONFIGURED. Taxonomy provisional, gate bảo thủ; không ground truth/accuracy.
-OCR run identity gốc chưa verified; dùng exact verified artifact locators page-only.
-Live checkpoint HIT chưa chứng minh (0 resolved); synthetic có HIT, không giả live results.
+Pilot dừng ở 5 real pages thay vì 10–20 mục tiêu vì token-bound reservation;
+actual live coverage 1 symbol/5 years, không representative. Local mapping verified,
+OCR run identity gốc unverified; exact artifact locators page-only.
+Project/quota/tier user-attested; Google quota remaining/project ID/billing không độc lập
+verified. USD 0 estimate conditional free tariff; guard money NOT_CONFIGURED công khai.
+Taxonomy provisional/text-only gate bảo thủ; không ground truth/financial accuracy.
+Live checkpoint HIT chưa verified (0 resolved); synthetic chứng minh HIT/resume.
+Live executed trước metrics-only correction; không claim rerun live trên corrected CI SHA.
 
 ## Git Checkpoint
 
-Baseline `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5`; implementation chưa commit.
-Live trước metrics-only fix; không claim rerun live trên corrected runner/CI SHA.
+Stable implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` / CI 40505711042 success.
+Publication SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
 
 ## Exact Next Action
 
-Commit/push M1-11a và xác minh exact-SHA CI trước REVIEW.
+Tech Lead review M1-11a và quyết định bước tiếp theo; không tự bắt đầu M1-12.

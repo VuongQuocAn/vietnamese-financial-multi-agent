@@ -1,7 +1,7 @@
 # M1-11a — Bounded Real Classification Pilot
 
-Cập nhật 2026-10-27 (Asia/Bangkok); đang hoàn tất engineering evidence, chưa nghiệm thu.
-M1-11 DONE; M1-11a dừng REVIEW sau publication, không tự bắt đầu M1-12.
+Cập nhật 2026-10-27 (Asia/Bangkok); **M1-11a REVIEW**, chờ Tech Lead nghiệm thu độc lập.
+M1-11 DONE; không tự bắt đầu M1-12.
 
 ## Phạm vi và nguồn
 
@@ -76,8 +76,8 @@ observed counters và phép đối chiếu này, **không phải kết quả ch�
 ## Validation và readiness trước M1-12
 
 - 17 focused synthetic tests passed; 146 related regression tests passed. Fake SDK only,
-  không keys/network trong unit tests. Ruff lint/format, planning/diff kiểm tra trước live;
-  final publication checks và exact-SHA CI sẽ ghi sau commit/push.
+  không keys/network trong unit tests. Ruff lint/format, planning/diff đạt; full local
+  suite không chạy lại, CI đảm nhiệm.
 - Synthetic kiểm tra resolved checkpoint HIT/resume không gọi LLM, unresolved cache HIT,
   failed smoke không gửi real data, schema/auth/quota failures, request/token/rate caps,
   source change và local denial không bị tính thành provider failure/completed page.
@@ -94,6 +94,11 @@ observed counters và phép đối chiếu này, **không phải kết quả ch�
   bổ sung với ngân sách phù hợp hay không. Không tự nới gate/truncate/budget/đổi taxonomy.
   Engineering access đã verified; financial/dataset readiness và taxonomy approval vẫn TBD.
 
-Implementation SHA/CI: chờ publication; không suy CI M1-11 cho code runner mới.
+Implementation **063bd2935a47832d928a6869ea35a2bd0cf6f9f2** đã push;
+[CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
+success exact SHA. Đã kiểm tra headSha, jobs và mọi steps Python 3.11/3.12 success;
+logs mỗi job **1130 passed/11 skipped**. CI chứng minh engineering checks, không rerun live.
+Publication REVIEW chỉ docs/planning; SHA/CI publication xác minh riêng sau push và báo cuối,
+không suy CI implementation cho commit mới hoặc ghi commit tự tham chiếu.
 
-Next action: Hoàn tất publication M1-11a và exact-SHA CI để Tech Lead review.
+Next action: Tech Lead review M1-11a và quyết định bước tiếp theo; không tự bắt đầu M1-12.
