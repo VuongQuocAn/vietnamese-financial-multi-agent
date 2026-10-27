@@ -2,7 +2,7 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-04a IN_PROGRESS** theo task user giao, có quyền commit/push và dừng REVIEW.
+- **M1-04a REVIEW — awaiting Tech Lead acceptance**; engineering gates đạt.
   Dependencies M1-03/M1-03f DONE; M1-04/M1-04b TODO, không triển khai task khác.
 - Baseline `895087deeb06801ff4c67f198f8b1392a7da59de`: working tree sạch,
   fetch/local/origin/main khớp; [CI 40430400703](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40430400703)
@@ -24,4 +24,9 @@ Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - M1-03f DONE theo Tech Lead APPROVED: 199 reconstructed PNG/sidecars. 5 bbox
   issues sheets 02/03/08/11/12 chưa được sửa; original equivalence/run identity và
   table completeness chưa xác minh. Không ngoại suy smoke thành chất lượng tài chính.
-- Exact next action: **Commit/push M1-04a, kiểm tra CI implementation exact SHA**.
+- Implementation `32a3d23362f494fe8a39fa8ed9b3983841e4f287` đã push `main`,
+  local/origin/main khớp; [CI 40432840930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40432840930)
+  success exact SHA, mọi steps Python 3.11/3.12; mỗi job **719 passed/11 skipped**.
+- Checkpoint REVIEW chỉ docs/planning sau CI implementation; CI exact SHA của
+  checkpoint này sẽ kiểm tra riêng sau push, ghi báo cáo cuối, không self-reference commit.
+- Exact next action: **Tech Lead review/accept M1-04a; không tự DONE hoặc M1-04b**.

@@ -1,6 +1,7 @@
 # M1-04a — Evidence kiểm định cấu trúc extraction
 
-Ngày 2026-10-27 (Asia/Bangkok). Engineering validation; local checks đạt, chờ publication/CI.
+Ngày 2026-10-27 (Asia/Bangkok). **REVIEW — awaiting Tech Lead acceptance**.
+Engineering/local checks và implementation publication/CI đạt; không tự DONE.
 
 ## Baseline và scope
 
@@ -72,7 +73,16 @@ correctness. Trusted FS/TOCTOU/aliases/hardlinks/concurrent writers giữ giới
 
 ## Publication
 
-Implementation/push/exact SHA CI: pending. Không dùng CI baseline thay CI implementation;
-không tạo commit tự tham chiếu để nhúng SHA của chính nó. Kết quả exact SHA/CI mới
-sẽ ghi trong báo cáo bàn giao sau push. Dừng ở REVIEW khi engineering gates đạt,
-chờ Tech Lead acceptance; không tự DONE.
+Implementation `32a3d23362f494fe8a39fa8ed9b3983841e4f287` đã push `main`,
+remote/local khớp. [CI 40432840930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40432840930)
+**success đúng SHA**, Python 3.11/3.12: install, lint, format, planning, unit tests
+và post steps đều success. Logs mỗi job **719 passed/11 skipped**; CI không có real
+dataset hoặc pip check riêng. Khác local Windows do platform skips, không regression.
+
+Đã stage đúng 11 task files; kiểm tra cached diff, ignore/index và private path/key
+patterns. Không có source datasets/artifacts/.env trong index (chỉ data/samples/.gitkeep
+là placeholder lịch sử). Không sửa M1-03f DONE hoặc M1-04b.
+
+Checkpoint chuyển REVIEW sau CI implementation chỉ sửa docs/planning để bàn giao
+Tech Lead; SHA/CI checkpoint mới xác minh riêng sau push và ghi báo cáo cuối,
+không thêm commit chỉ để nhúng metadata của chính nó. Dừng REVIEW chờ Tech Lead.

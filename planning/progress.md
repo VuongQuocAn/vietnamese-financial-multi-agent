@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 12 | 1 | 0 | 12 | 0 | 0 |
+| M1 | 25 | 12 | 0 | 0 | 12 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 16 | 1 | 0 | 58 | 0 | 0 |
+| TOTAL | 75 | 16 | 0 | 0 | 58 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; 199 reconstructed table crops được nghiệm thu engineering |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators REVIEW, 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -98,15 +98,20 @@ Checks nghiệm thu mới: 655 passed/14 skipped, Ruff lint/format 79 files,
 planning validator 75 tasks, pip check và git diff --check đạt.
 Tại checkpoint nghiệm thu M1-03f chưa có active implementation task; lịch sử
 M1-04a TODO ở thời điểm đó được thay bằng giao việc hiện tại bên dưới.
-Exact next action: Chờ Tech Lead giao M1-04a.
+Next action tại checkpoint M1-03f là chờ giao M1-04a; task đã được giao bên dưới.
 
 Tech Lead APPROVED M1-03e ngày 2026-10-26 theo task M1-03f: mapping,
 193-page audit, 12 real crops/pixels/hash/rerun và source integrity được nghiệm thu.
 Original preprocessing equivalence vẫn unverified; M1-03 giữ DONE.
 Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.
 
-Checkpoint M1-04a: IN_PROGRESS theo giao việc; A–G đã triển khai/test.
+Checkpoint M1-04a: REVIEW; A–G đã triển khai/test và push implementation.
 Full local 728 passed/2 skipped, targeted 61 passed; Ruff 85 files/planning 75 tasks,
 pip/diff check đạt. Bounded smoke 5 pages/50 refs, 43 original/7 reconstructed,
 giữ 5 human bbox issues; deterministic/read-only integrity đạt.
-Remaining: allowlisted commit/push và CI exact SHA trước REVIEW chờ Tech Lead.
+Implementation 32a3d23362f494fe8a39fa8ed9b3983841e4f287 local/origin/main khớp,
+[CI 40432840930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40432840930)
+success exact SHA, mọi steps Python 3.11/3.12; mỗi job 719 passed/11 skipped.
+Checkpoint REVIEW chỉ cập nhật docs/planning; SHA/CI checkpoint mới kiểm tra riêng
+sau push và ghi báo cáo cuối, không tạo commit tự tham chiếu.
+Exact next action: Tech Lead review/accept M1-04a; không tự DONE/M1-04b.

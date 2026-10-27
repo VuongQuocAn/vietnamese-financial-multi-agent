@@ -6,7 +6,7 @@ M1-04a — Extraction Structure Validators.
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -14,7 +14,10 @@ IN_PROGRESS
 local/origin/main khớp sau fetch. CI 40430400703 success exact SHA,
 Python 3.11/3.12 mọi steps đạt. M1-03/M1-03f DONE, M1-04/M1-04b TODO.
 User giao M1-04a và cho phép commit/push, dừng REVIEW; không tự DONE.
-Implementation và full local checks đã hoàn tất; chưa commit/push implementation.
+Implementation 32a3d23362f494fe8a39fa8ed9b3983841e4f287 đã push main,
+local/origin/main khớp, working tree sạch trước cập nhật checkpoint REVIEW.
+CI 40432840930 success exact SHA; mọi steps Python 3.11/3.12 đã kiểm tra,
+719 passed/11 skipped mỗi job. Full local checks/smoke đạt.
 
 ## Completed Work
 
@@ -27,8 +30,9 @@ hai lượt deterministic, integrity đạt. API docs/sanitized evidence/statist
 
 ## Remaining Work
 
-Allowlist stage/commit/push, kiểm tra CI implementation exact SHA; sau success cập nhật
-checkpoint REVIEW chờ Tech Lead, push/check CI checkpoint cuối. Không M1-04b/DONE.
+Chờ Tech Lead acceptance M1-04a. Checkpoint này chỉ cập nhật evidence/planning sang
+REVIEW sau CI implementation success; push/check exact SHA checkpoint cuối trong
+báo cáo kết thúc, không thêm self-reference commit. Không M1-04b/DONE.
 
 ## Modified Files
 
@@ -49,7 +53,7 @@ Không dùng synthetic/smoke làm bằng chứng OCR accuracy/completeness/tài 
 
 ## Blockers
 
-Không có blocker engineering. Chờ publication/CI trước REVIEW, rồi Tech Lead acceptance.
+Không có blocker engineering. REVIEW chờ Tech Lead acceptance.
 5 human bbox issues chưa sửa; original equivalence/OCR/Drive run identity unverified.
 Trusted FS/TOCTOU/hardlinks/aliases/concurrent writers còn giới hạn policy cũ.
 
@@ -57,10 +61,12 @@ Trusted FS/TOCTOU/hardlinks/aliases/concurrent writers còn giới hạn policy 
 
 Baseline ổn định 895087deeb06801ff4c67f198f8b1392a7da59de,
 [CI 40430400703](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40430400703)
-success. Implementation hiện ở working tree đã test, chưa commit/push;
-resume đối chiếu git status/HEAD/spec, không reset về checkpoint cũ.
+success. Stable implementation 32a3d23362f494fe8a39fa8ed9b3983841e4f287,
+[CI 40432840930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40432840930)
+success Python 3.11/3.12. Checkpoint REVIEW chỉ docs/planning; SHA/CI mới xác minh
+sau push trong báo cáo cuối. Resume đối chiếu git status/HEAD/spec, không reset.
 Chỉ stage allowlist; private artifacts/datasets/secrets giữ ngoài index.
 
 ## Exact Next Action
 
-Commit/push M1-04a, kiểm tra CI implementation exact SHA.
+Tech Lead review/accept M1-04a; không tự DONE hoặc bắt đầu M1-04b.
