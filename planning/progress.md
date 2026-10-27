@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 11 | 0 | 0 | 13 | 0 | 1 |
+| M1 | 25 | 12 | 0 | 0 | 13 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 15 | 0 | 0 | 59 | 0 | 1 |
+| TOTAL | 75 | 16 | 0 | 0 | 59 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Contracts/resolver/loader và M1-03d/e DONE; M1-03f 199 table crops validated, REVIEW |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; 199 reconstructed table crops được nghiệm thu engineering |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -74,7 +74,7 @@ conflicts 0; đã tạo 12 review sheets local, chưa human approval, chưa expa
 Full local 655 passed/14 skipped; Ruff lint/format 79 files, planning 75 tasks/pip check đạt.
 Stable implementation `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`, remote khớp;
 CI 40349513656 success mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
-M1-03f hiện REVIEW: user/Tech Lead conditional approval thực tế đã ghi local,
+Checkpoint REVIEW trước nghiệm thu: user/Tech Lead conditional approval thực tế đã ghi local,
 12 IDs/hashes giữ nguyên, chỉ bbox-faithful reconstruction. 8 batch 7 × 24 + 19
 = 187 PNG mới; tổng 199 PNG/sidecars, 0 pending eligible, conflicts/failures 0/0.
 Source hashes/metadata 193 JSON + 193 raw images khớp trước/sau từng batch;
@@ -87,8 +87,18 @@ coi crop là bảng hoàn chỉnh. Non-table 85/views 288 vẫn ngoài scope.
 [CI 40428368035](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428368035)
 success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
 Metadata CI đi sau checkpoint; không suy run cũ cho HEAD mới.
-Không có active implementation task. Exact next action: Tech Lead nghiệm thu M1-03f;
-không bắt đầu M1-04a/b.
+Acceptance checkpoint 2026-10-27: **M1-03f DONE, Tech Lead APPROVED** engineering
+cho 199 reconstructed table crops. Baseline nghiệm thu
+`4902b1e28b00bdfead1839a71be96e35c0ca2980` fetch/remote khớp;
+[CI 40428602056](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428602056)
+success đúng SHA đã xác minh lại. Commit/CI nghiệm thu mới được kiểm tra sau push,
+không suy run cũ cho commit mới. Synthetic/pixel tests không chứng nhận OCR accuracy,
+table completeness hoặc original crop equivalence; 5 bbox issues vẫn mở cho M1-04a.
+Checks nghiệm thu mới: 655 passed/14 skipped, Ruff lint/format 79 files,
+planning validator 75 tasks, pip check và git diff --check đạt.
+Không còn active crop recovery/implementation task. M1-04a/M1-04b giữ TODO;
+chuẩn bị đầu vào M1-04a khi được giao, không tự triển khai.
+Exact next action: Chờ Tech Lead giao M1-04a.
 
 Tech Lead APPROVED M1-03e ngày 2026-10-26 theo task M1-03f: mapping,
 193-page audit, 12 real crops/pixels/hash/rerun và source integrity được nghiệm thu.

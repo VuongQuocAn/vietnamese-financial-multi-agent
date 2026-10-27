@@ -1,6 +1,7 @@
 # M1-03f — Evidence mở rộng table crop theo approval có điều kiện
 
-Ngày **2026-10-27**, Asia/Bangkok. Trạng thái **REVIEW**, chờ Tech Lead nghiệm thu.
+Ngày **2026-10-27**, Asia/Bangkok. Trạng thái **DONE**, Tech Lead chính thức APPROVED.
+Lịch sử: BLOCKED trước human gate → REVIEW sau expansion → DONE khi nghiệm thu.
 Đã thực thi và đối soát thật, chỉ trên đúng 193 inventory-selected pages.
 Đây là bằng chứng engineering của bbox-faithful reconstruction, không phải
 đánh giá chất lượng OCR/tài chính hoặc xác nhận bảng hoàn chỉnh.
@@ -130,8 +131,29 @@ trusted local filesystem, TOCTOU/hardlinks/mount/case/Unicode aliases và writer
 không dùng OS lock chưa được chống đầy đủ. Encoder thay đổi có thể gây conflict;
 không overwrite. Năm bbox coverage issues không được giải quyết trong task này.
 
+## Tech Lead Final Acceptance — 2026-10-27
+
+- Decision: **APPROVED** — M1-03f chuyển REVIEW → DONE.
+- Scope: controlled bbox-faithful table crop reconstruction.
+- Accepted result: **199 reconstructed table crops**, 199 sidecars, 8/8 batches;
+  final verification 199 already_recovered, conflicts/failures 0, pending eligible 0.
+- Limitations remain open: 5 bbox issues sheets 02/03/08/11/12 cho M1-04a;
+  original preprocessing/equivalence và OCR/Drive run identity chưa xác minh;
+  85 non-table crops và 288 processed/color views chưa recovery.
+- Nghiệm thu này **không chứng nhận OCR accuracy, table completeness hoặc original
+  crop equivalence**. Original OCR JSON/crop references giữ nguyên.
+
+Tech Lead đã duyệt implementation/safety/tests, evidence/statistics, CI Python
+3.11/3.12 và review trực quan 12 pilot. Baseline nghiệm thu
+`4902b1e28b00bdfead1839a71be96e35c0ca2980` khớp local/origin/main;
+[CI 40428602056](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428602056)
+success đúng SHA đã kiểm tra lại. Phiên nghiệm thu chỉ sửa docs/planning và chạy
+checks theo yêu cầu, không thực thi thêm recovery hoặc sửa ảnh/code/artifacts.
+Checks local nghiệm thu mới đạt: **655 passed, 14 skipped**, Ruff lint/format
+**79 files**, planning validator **75 tasks**, pip check và git diff --check.
+CI của commit nghiệm thu mới được xác minh sau push, không suy từ CI checkpoint cũ.
+Kết quả SHA/CI mới ghi trong báo cáo kết thúc phiên; không tạo vòng lặp commit tự tham chiếu.
+
 ## Exact next action
 
-Tech Lead nghiệm thu M1-03f ở trạng thái REVIEW, xem sanitized evidence và local
-artifacts khi cần; không coi các crop có bbox thiếu là bảng hoàn chỉnh.
-Không bắt đầu M1-04a/b hoặc xử lý signature/seal/color views.
+Chờ Tech Lead giao M1-04a. Không tự bắt đầu M1-04a/b hoặc xử lý thêm crop/views.

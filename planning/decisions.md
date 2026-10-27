@@ -1,5 +1,19 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — Tech Lead Final Acceptance M1-03f
+
+- Tech Lead chính thức APPROVED: chuyển M1-03f REVIEW → DONE, nghiệm thu
+  engineering cho 199 reconstructed table crops (12 pilot + 187 mới, 8 batches).
+- Scope chỉ controlled bbox-faithful reconstruction; không chứng nhận OCR accuracy,
+  table completeness hoặc original crop preprocessing/equivalence/Drive-run identity.
+- 5 bbox issues sheets 02/03/08/11/12 vẫn unresolved, bàn giao M1-04a cùng index
+  reconstructed_available. 85 non-table crops/288 views ngoài recovery; original
+  OCR JSON và crop references giữ nguyên. Không sửa code/data/artifacts hoặc recovery thêm.
+- Baseline 4902b1e28b00bdfead1839a71be96e35c0ca2980 / CI 40428602056 success đã đối chiếu;
+  [evidence](../docs/reviews/M1-03f-evidence.md) giữ lịch sử và giới hạn. CI commit nghiệm thu
+  được kiểm tra riêng sau push, không thêm commit chỉ để nhúng SHA/CI tự tham chiếu.
+- Không đổi dependencies M1-03/M1-04. M1-04a/b vẫn TODO; chờ Tech Lead giao M1-04a.
+
 ## 2026-10-26 — Controlled table recovery expansion (M1-03f)
 
 - M1-03e Tech Lead APPROVED/DONE, acceptance ca607debe2148ab2a52c25c78f142f181cf35674,

@@ -60,7 +60,7 @@ Phụ thuộc milestone: M0; các nhánh nội bộ theo registry.
 | <a id="m1-03c"></a>M1-03c — Read-Only OCR Data Loader | Adapter đọc OCR trong document_processing | Đọc mẫu hợp lệ, lỗi rõ ràng, không ghi raw/processed |
 | <a id="m1-03d"></a>M1-03d — Missing Crop Audit & Bounded Recovery | Audit/tooling và pilot có giới hạn | DONE theo nghiệm thu engineering/synthetic/zero-output |
 | <a id="m1-03e"></a>M1-03e — Verified Local Mapping & Real Crop Recovery Pilot | Local mappings và 12 real reconstructed crops | DONE theo Tech Lead APPROVED; equivalence gốc unverified |
-| <a id="m1-03f"></a>M1-03f — Controlled Table Crop Recovery Expansion | Batch <=24, tổng <=199, index/provenance và evidence | Human visual approval trước expansion, nguồn bất biến, final REVIEW |
+| <a id="m1-03f"></a>M1-03f — Controlled Table Crop Recovery Expansion | Batch <=24, tổng <=199, index/provenance và evidence | Human visual approval trước expansion, nguồn bất biến; checkpoint REVIEW đã được Tech Lead APPROVED 2026-10-27, DONE |
 | <a id="m1-04"></a>M1-04 — Extraction Quality Validation & Pilot | Tổng hợp validation và pilot giữ phạm vi cũ | Task cha: validators và pilot con đạt, nêu rõ giới hạn chất lượng |
 | <a id="m1-04a"></a>M1-04a — Extraction Structure Validators | Kiểm tra cấu trúc và liên kết JSON–ảnh | Bắt lỗi theo contract, lưu issue có nguồn, không sửa dữ liệu để làm hết lỗi |
 | <a id="m1-04b"></a>M1-04b — Bounded Extraction Pilot | Báo cáo pilot trên tập con được giao | Có manifest mẫu, kết quả tái kiểm tra được, không xử lý toàn dataset |
