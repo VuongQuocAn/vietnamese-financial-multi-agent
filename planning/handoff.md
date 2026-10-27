@@ -2,57 +2,52 @@
 
 ## Active Task
 
-M1-08 — Quota and Budget Management.
+M1-08 — Finalize Acceptance; không có implementation task đang chạy.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Baseline main/origin sạch 07395250c118af4573efdcce1c34a56eda64f13f /
-CI 40463429448 success. M1-06/M1-07 DONE. User giao Research MVP, commit/push, dừng REVIEW.
-Candidate chỉ sẵn sàng nghiệm thu sau CI implementation exact SHA.
+Ngày 27/10/2026: main/origin sạch f895d74ca4267abc6b3c740419890d800437dd76.
+CI 40466483190 success exact SHA, mọi steps Python 3.11/3.12 verified;
+mỗi job 1006 passed/11 skipped. User cho phép nghiệm thu DONE và commit/push finalization.
 
 ## Completed Work
 
-Một core registry/guard + in-memory lock. Explicit project/credential selection,
-project/model quota bucket, atomic RPM/TPM/RPD/budget reservation, Pacific DST reset,
-conservative unknown usage/cost, zero retry/rotation. Config/example chỉ synthetic.
-Gateway/Gemini/contracts source giữ nguyên; không đọc key thật hoặc gọi live API.
+M1-08 REVIEW → DONE; registry/dashboard/spec/evidence/current-status đồng bộ,
+quyết định nghiệm thu ghi decisions.md. Production code/tests/config/dependencies bất biến.
 
 ## Remaining Work
 
-Publication/CI exact SHA kiểm tra trước báo cáo cuối; Tech Lead review M1-08.
-Không tự DONE hoặc bắt đầu M1-09. Không chạy live quota exhaustion benchmark.
+Acceptance publication/CI xác minh sau push trước báo cáo cuối; không tự tham chiếu.
+M1-08 không còn phần chờ nghiệm thu; không tự bắt đầu M1-09.
 
 ## Modified Files
 
-src/core/llm_quota_budget.py; tests/unit/test_llm_quota_budget.py; pyproject.toml (tzdata);
-configs/llm-projects.example.json; docs/llm-quota-budget.md; docs/reviews/M1-08-evidence.md;
-planning/{tasks,progress,current-status,handoff}.md; planning/tasks/M1/M1-08.md.
+Chỉ 7 files: planning/{tasks,progress,current-status,handoff,decisions}.md;
+planning/tasks/M1/M1-08.md; docs/reviews/M1-08-evidence.md.
 
 ## Tests
 
-Quota targeted 39 passed, Gateway/Gemini regression 66 passed, tổng 105 passed/zero skips.
-Ruff/planning/diff và ví dụ/config offline kiểm tra trước publication.
-Full suite chỉ CI Python 3.11/3.12; không lặp full local suite hoặc live API.
+CI implementation verified: 1006 passed/11 skipped mỗi Python 3.11/3.12, mọi steps đạt.
+Targeted 105 passed/zero skips giữ nguyên. Local finalization chỉ Ruff/planning/diff;
+không lặp local unit suite hoặc live Gemini tests. CI acceptance kiểm tra riêng sau push.
 
 ## Blockers
 
-Không blocker implementation. Chờ CI/Tech Lead. Limits task/user-reported, local counters
-không authoritative Google quota; bounds do caller xác nhận. Một shared guard/process,
-không persistence/global enforcement/restart recovery; chưa initialized thì block.
-Unknown cost giữ ceiling; money NOT_CONFIGURED nếu chưa bật. No pricing/FX/cache.
-Mapping thật và credential resolver do application xác nhận/cấu hình ngoài Git.
+Không. Limitations giữ nguyên: một shared guard/process, không persistence/global quota/
+restart recovery; explicit initialization/mapping/bounds. Unknown giữ reservation;
+money NOT_CONFIGURED nếu chưa bật budget. No pricing/FX/cache/rotation.
 
 ## Git Checkpoint
 
-Stable baseline 07395250c118af4573efdcce1c34a56eda64f13f /
-[CI 40463429448](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40463429448).
-Implementation checkpoint là commit chứa handoff này; exact SHA/CI xác minh sau push
-và báo cuối, không dùng CI baseline làm bằng chứng implementation.
+Stable implementation f895d74ca4267abc6b3c740419890d800437dd76 /
+[CI 40466483190](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40466483190)
+success exact SHA. Acceptance SHA/CI xác minh riêng sau push và ghi báo cáo cuối;
+không dùng CI implementation làm bằng chứng cho commit docs mới.
 
 ## Exact Next Action
 
-Tech Lead review M1-08 sau CI exact SHA thành công.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-09.

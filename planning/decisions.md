@@ -299,3 +299,13 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
   dung. Loader sau xử lý lỗi đọc/content và kiểm tra lại tại thời điểm dùng.
 - TOCTOU, ACL/aliases/mounts/short names còn giới hạn; chi tiết ở
   [runtime policy](../docs/path-resolver.md). Không recovery, API/OCR/dataset scan.
+
+## 2026-10-27 — M1-08 Acceptance
+
+- User nghiệm thu M1-08 REVIEW → DONE, cho phép commit/push finalization.
+- Implementation f895d74ca4267abc6b3c740419890d800437dd76 /
+  [CI 40466483190](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40466483190)
+  success exact SHA, mọi steps Python 3.11/3.12 verified; mỗi job 1006 passed/11 skipped.
+- Giữ limitations của guard đã nghiệm thu; chỉ docs/planning, không production code
+  hoặc live Gemini tests. CI acceptance xác minh riêng sau push và báo cuối.
+- M1-09 vẫn TODO, chờ giao việc; không tự triển khai.

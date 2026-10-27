@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 18 | 0 | 0 | 6 | 0 | 1 |
+| M1 | 25 | 19 | 0 | 0 | 6 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 22 | 0 | 0 | 52 | 0 | 1 |
+| TOTAL | 75 | 23 | 0 | 0 | 52 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | DataConfig/contracts/Gateway/Gemini DONE; M1-08 quota/budget guard candidate REVIEW, quota 39 + Gateway/Gemini regression 66 passed; synthetic-only |
+| `core` | DataConfig/contracts/Gateway/Gemini và M1-08 quota/budget guard DONE; targeted 105 passed; CI mỗi Python 3.11/3.12: 1006 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -46,13 +46,14 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-08 REVIEW — candidate chờ CI exact SHA và Tech Lead**. M1-06/M1-07 DONE.
-Baseline 07395250c118af4573efdcce1c34a56eda64f13f / CI 40463429448 success.
-Guard một process/shared lock, explicit project/credential mapping; atomic RPM/TPM/RPD
-và Decimal budget, unknown giữ reservation. Quota 39 + regression 66 = **105 passed**,
-zero skips. Không live API/keys/dataset/rotation. Full CI 3.11/3.12 xác minh sau push,
-SHA/URL/kết quả ghi báo cáo cuối. In-memory/restart/caller bounds limitations ghi API.
-Next action: **Tech Lead review M1-08 sau CI exact SHA thành công**. M1-09 TODO.
+**M1-08 DONE**, user nghiệm thu ngày 27/10/2026. M1-06/M1-07 DONE.
+Implementation f895d74ca4267abc6b3c740419890d800437dd76 /
+[CI 40466483190](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40466483190)
+success exact SHA, mọi steps Python 3.11/3.12 verified; mỗi job 1006 passed/11 skipped.
+Targeted 105 passed/zero skips giữ nguyên; finalization chỉ docs/planning,
+không production code/live Gemini tests. Acceptance SHA/CI xác minh sau push và báo cuối.
+Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-09**.
+Không có implementation task đang chạy; M1-09 TODO.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
