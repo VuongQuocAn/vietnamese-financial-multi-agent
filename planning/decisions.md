@@ -1,5 +1,21 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — Tech Lead Final Acceptance M1-04
+
+- **M1-04 chính thức APPROVED**, REVIEW → DONE; M1-04a/M1-04b và M1-03 đã DONE.
+- Validators đáp ứng contracts và giữ provenance; bounded pilot có frozen manifest
+  và hai lượt deterministic, 472 selected snapshots unchanged theo local evidence.
+- Final approval chỉ engineering scope; không chứng nhận OCR accuracy, financial
+  correctness, table completeness hoặc dataset-wide readiness.
+- Giữ 23 pages/398 refs (coverage 14/risk 9), 316 original/14 reconstructed/
+  68 unrecovered. Năm human bbox issues vẫn requires_review, thiếu BCC/2025,
+  original equivalence/run identity chưa xác minh; không ground truth/quality thresholds.
+- Baseline ad39a946546b4ffc6bc73c7044caa55f6a357d7d / CI 40439654103 success
+  exact SHA, mọi steps Python 3.11/3.12 verified. CI acceptance commit mới kiểm tra
+  sau push, không tự tham chiếu SHA/CI hoặc suy run cũ cho commit mới.
+- Finalization chỉ 7 docs/planning files, không code/tests/manifest/statistics/data,
+  không rerun pilot/hash dataset/LLM/recovery. Không còn work của M1-04; chờ giao task.
+
 ## 2026-10-27 — M1-04 Aggregate Review, chờ Tech Lead xác nhận cuối
 
 - Sau M1-04b DONE tại a0ffaaff317c046bebd023c9305b1303ddcf8451 / CI 40439127716

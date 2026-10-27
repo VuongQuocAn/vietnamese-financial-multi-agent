@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 14 | 0 | 0 | 10 | 0 | 1 |
+| M1 | 25 | 15 | 0 | 0 | 10 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 18 | 0 | 0 | 56 | 0 | 1 |
+| TOTAL | 75 | 19 | 0 | 0 | 56 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -161,3 +161,15 @@ Chỉ docs/planning; không rerun pilot/đổi statistics/manifest hoặc sửa 
 Engineering criteria đủ bằng chứng, Tech Lead final confirmation còn chờ. CI checkpoint
 parent kiểm tra sau push riêng; không self-reference hoặc suy CI cũ cho commit mới.
 Exact next action: Tech Lead review M1-04 aggregate acceptance; do not start another task.
+
+Final acceptance hiện tại **2026-10-27: M1-04 DONE, Tech Lead APPROVED** engineering
+scope. M1-03/M1-04a/M1-04b DONE; các đoạn REVIEW bên trên là lịch sử trước approval.
+Baseline ad39a946546b4ffc6bc73c7044caa55f6a357d7d /
+[CI 40439654103](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40439654103)
+success exact SHA, mọi steps Python 3.11/3.12 đã kiểm tra lại.
+Registry/spec/evidence/handoff đồng bộ; không còn acceptance/implementation work M1-04
+và không có implementation task đang chạy. Giữ nguyên số liệu/limitations/human issues;
+không chứng nhận OCR accuracy/financial correctness/table completeness/dataset readiness.
+Chỉ docs/planning finalization, checks mới phù hợp; không lặp unit suite/real pilot.
+Commit/CI acceptance mới kiểm tra sau push riêng, không self-reference.
+Exact next action: Chờ Tech Lead rà soát roadmap và giao task tiếp theo. Không tự bắt đầu implementation.

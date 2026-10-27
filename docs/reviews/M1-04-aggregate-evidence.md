@@ -1,8 +1,9 @@
 # M1-04 — Aggregate acceptance evidence
 
-Ngày 2026-10-27 (Asia/Bangkok). **REVIEW — chờ Tech Lead xác nhận cuối cùng**.
-Đây là đối chiếu tổng hợp của Software Engineer theo giao việc mới, không phải
-quyết định APPROVED/DONE cho parent. [Spec parent](../../planning/tasks/M1/M1-04.md).
+Ngày 2026-10-27 (Asia/Bangkok). **M1-04 DONE — Tech Lead chính thức APPROVED**.
+Nghiệm thu engineering scope; không chứng nhận OCR accuracy, financial correctness,
+table completeness hoặc dataset-wide readiness. Phần đối chiếu REVIEW bên dưới giữ
+lịch sử trước quyết định final acceptance. [Spec parent](../../planning/tasks/M1/M1-04.md).
 
 ## Phạm vi và điều kiện bắt đầu
 
@@ -89,7 +90,7 @@ Private manifest/reports/fingerprints không đưa vào aggregate report hoặc 
 | 9 | CI/registry nhất quán | Dependencies DONE; CI checkpoint 1 success exact SHA, registry/spec/dashboard/planning checks đồng bộ; CI checkpoint parent kiểm tra riêng sau push | Đạt tại baseline; publication parent cần CI mới |
 | 10 | Không blocker engineering bị bỏ sót | Không blocker mới qua code/evidence/diff/tests; các giới hạn bên dưới được giữ rõ | Đạt, chờ Tech Lead quyết định cuối |
 
-Kết luận đối chiếu: đủ bằng chứng kỹ thuật cho **M1-04 REVIEW** theo scope roadmap.
+Kết luận tại checkpoint đối chiếu trước approval: đủ bằng chứng kỹ thuật cho **M1-04 REVIEW** theo scope roadmap.
 Việc Tech Lead xác nhận aggregate cuối cùng **chưa đạt/chưa được cung cấp**;
 parent không DONE. Hai task con đã APPROVED không thay thế quyết định này.
 
@@ -123,6 +124,26 @@ Stage chỉ allowlisted docs/planning, kiểm tra private paths/keys/full finger
 ignore/index. Commit/CI checkpoint parent mới ghi ở báo cáo cuối sau xác minh,
 không thêm commit tự tham chiếu SHA/CI của chính nó.
 
+## Final Acceptance — 2026-10-27
+
+Tech Lead chính thức **APPROVED M1-04 — Extraction Quality Validation & Pilot** sau
+review M1-04a implementation/contracts, M1-04b sampling/runner/evidence, aggregate
+report, Git commits, registry và CI. Registry/spec chuyển REVIEW → DONE;
+M1-03/M1-04a/M1-04b giữ DONE. Quyết định này là final approval riêng của parent,
+không suy từ trạng thái hai task con.
+
+Baseline được duyệt **ad39a946546b4ffc6bc73c7044caa55f6a357d7d** /
+[CI 40439654103](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40439654103)
+success exact SHA, mọi steps Python 3.11/3.12 được xác minh lại trước finalization.
+Acceptance commit/CI mới kiểm tra sau push, ghi báo cáo kết thúc; không self-reference.
+
+Giữ nguyên toàn bộ methodology/results/limitations phía trên. Engineering approval
+không chứng nhận OCR/financial accuracy, table completeness hoặc dataset-wide readiness;
+không đóng năm human bbox issues hoặc xác minh original equivalence/OCR-Drive identity.
+Không ground truth/approved quality thresholds, coverage BCC/2025 vẫn thiếu.
+Phiên finalization chỉ docs/planning; không rerun pilot/hash dataset hoặc sửa
+manifest/statistics/source artifacts. Không còn acceptance/implementation work M1-04.
+
 ## Exact Next Action
 
-Tech Lead review M1-04 aggregate acceptance; do not start another task.
+Chờ Tech Lead rà soát roadmap và giao task tiếp theo. Không tự bắt đầu implementation.
