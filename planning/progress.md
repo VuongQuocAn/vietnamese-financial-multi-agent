@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 27 | 24 | 0 | 0 | 3 | 0 | 0 |
+| M1 | 27 | 24 | 0 | 0 | 2 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 77 | 28 | 0 | 0 | 49 | 0 | 0 |
+| TOTAL | 77 | 28 | 0 | 0 | 48 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,21 +46,14 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-11b DONE — Tech Lead APPROVED** 27/10/2026; M1-12 TODO.
-Không task triển khai active; đã cho phép REVIEW → DONE.
-Implementation `e3e86a3a879f7865868191e28f09c6e5ecd31fbd` / [CI 40509984641](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40509984641)
-success exact SHA Python 3.11/3.12, mọi steps đạt. 319 targeted/regression passed.
-Pilot 19/19 pages, 3 mã/14 strata; 20 requests, 48847 input/676 output tokens.
-9 resolved/10 unresolved (10 insufficient), 0 quality/source/quota/provider failures.
-Cùng5 trang cũ: 0/5 →4/1 resolved/unresolved; không accuracy. Cache HIT10/checkpoint HIT9;
-offline process resume9 HIT, 0 service/API calls. Nguồn và original artifacts bất biến.
-[Evidence](../docs/reviews/M1-11b-evidence.md).
-Review checkpoint `07b6a311b7d2183794a7ec0dbbd9c645b665a325` / [CI 40510853544](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40510853544)
-success exact SHA đã xác minh sau fetch; working tree sạch trước acceptance.
-Acceptance chỉ 7 docs/planning files, local Ruff/planning/diff; không API/full local suite.
-Limitations giữ nguyên: 10 insufficient, taxonomy provisional, chưa ground truth/accuracy.
-Acceptance SHA/CI xác minh riêng sau push và báo cuối.
-Next action: Chờ Tech Lead giao task; không tự bắt đầu M1-12.
+**M1-12 REVIEW**, chờ Tech Lead; M1-11/M1-11b DONE, M1-13 TODO.
+Deterministic reconstruction API/DU v1, annotated spans/placeholders, source-safe
+unresolved gate. 14 focused +205 regression =219 passed; Ruff đạt.
+Real 4 frozen pages/8 tables/310 cells: 1 resolved/7 unresolved; không accuracy.
+0 Gemini requests/tokens; không source/contracts/classifier mutations.
+[Spec](tasks/M1/M1-12.md), [usage](../docs/table-reconstruction.md),
+[evidence](../docs/reviews/M1-12-evidence.md). Publication SHA/CI xác minh sau push.
+Next action: Tech Lead review M1-12 sau publication CI; không DONE/M1-13.
 Các đoạn dưới là lịch sử.
 
 **M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,
