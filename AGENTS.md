@@ -44,3 +44,15 @@ bằng tiếng Anh. Python 3.11+, ưu tiên Modular Monolith.
     quan trọng và trước kết thúc phiên. Ghi completed/remaining work, modified
     files, tests, SHA ổn định và đúng một next action; không đợi quota hết.
     Không gọi code không chạy được là checkpoint ổn định; không tự sang task mới.
+
+## Research MVP — mặc định từ M1-06
+
+- Implementation nhỏ, dễ hiểu; tái sử dụng contracts, tránh abstractions và validation
+  trùng lặp. Tests tập trung đường xử lý chính và regression thực tế.
+- Local chạy targeted unit tests, Ruff lint/format, planning checker và diff check.
+  CI giữ full unit suite Python 3.11/3.12; một run thành công trên exact implementation
+  SHA đủ cho engineering review. Không lặp full local suite khi không có lý do mới.
+- Giữ một spec, API/usage và evidence/handoff ngắn; registry/dashboard vẫn đồng bộ.
+  Gộp checkpoint/commit khi hợp lý; không tạo task phụ nếu giải quyết gọn trong module.
+- Không thay chính sách secrets, dữ liệu nguồn, Git hoặc quyền nghiệm thu: Tech Lead
+  review trước DONE. Không tự tắt CI/checks để tinh giản quy trình.

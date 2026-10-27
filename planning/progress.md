@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 16 | 0 | 0 | 9 | 0 | 0 |
+| M1 | 25 | 16 | 0 | 0 | 8 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 20 | 0 | 0 | 55 | 0 | 0 |
+| TOTAL | 75 | 20 | 0 | 0 | 54 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | DataConfig và M1-05 LLM contracts/validation đã triển khai, targeted 142 passed; chưa có runtime Gateway |
+| `core` | DataConfig, M1-05 contracts và M1-06 runtime Gateway/fake; gateway targeted 28 passed, candidate REVIEW chờ CI/Tech Lead |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -46,19 +46,16 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-Hiện tại **M1-05 DONE — Tech Lead APPROVED ngày 27/10/2026**;
-dependencies M1-02/M1-04 DONE. Không có implementation task đang chạy.
-Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 và
-[CI 40458339034](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458339034)
-success exact SHA, mọi steps Python 3.11/3.12; mỗi job 901 passed/11 platform skips.
-Targeted 142 passed/zero skips/warnings; full local 910 passed/2 platform skips.
-Review checkpoint 7a54715369016a29ac886cf16b7480fd57ebc2f9 /
-[CI 40458603189](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458603189)
-success exact SHA/từng step Python 3.11/3.12 đã xác minh trước finalization.
-Acceptance chỉ docs/planning, giữ code/tests/schema và limitations; không lặp local
-unit suite. CI acceptance kiểm tra riêng sau push, không tự tham chiếu SHA/CI.
-Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-06**.
-M1-06..09 TODO. Chỉ contracts, chưa runtime Gateway.
+Hiện tại **M1-06 REVIEW — candidate chờ CI exact SHA và Tech Lead review**.
+User giao Research MVP; dependencies M1-05/M1-03a DONE. Baseline
+b689cf47f67c7bc763e3dd566c08f1699bb01463 /
+[CI 40459277293](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40459277293)
+success exact SHA/từng step 3.11/3.12 verified trước triển khai.
+Gateway/fake targeted **28 passed**, zero skips; contract/schema v1 bất biến.
+Ruff/planning/diff kiểm tra trước publication, CI full suite xác minh sau push;
+implementation SHA/URL/kết quả ghi báo cáo cuối, không tự tham chiếu.
+Next action: **Tech Lead review M1-06 sau khi CI exact SHA thành công**.
+M1-07..09 TODO; không SDK/live provider/retry/quota/cache/trusted schema engine.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,

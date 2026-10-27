@@ -2,58 +2,56 @@
 
 ## Active Task
 
-M1-05 — Finalize Acceptance đã hoàn tất; không có implementation task đang chạy.
+M1-06 — Shared LLM Gateway (Research MVP).
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Ngày 27/10/2026: review baseline 7a54715369016a29ac886cf16b7480fd57ebc2f9 sạch,
-fetch/local/origin/main khớp; CI 40458603189 success exact SHA, từng step Python
-3.11/3.12 verified. Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 /
-CI 40458339034 success. M1-02/M1-04 DONE. Tech Lead APPROVED ngày 27/10/2026,
-cho phép REVIEW → DONE và commit/push acceptance, chỉ docs/planning.
+Baseline main/origin sạch b689cf47f67c7bc763e3dd566c08f1699bb01463;
+CI 40459277293 success exact acceptance SHA M1-05, mọi steps 3.11/3.12 verified.
+Dependencies M1-05/M1-03a DONE; user giao M1-06, cho phép commit/push và dừng REVIEW.
+Candidate REVIEW chỉ sẵn sàng nghiệm thu sau full CI exact implementation SHA.
 
 ## Completed Work
 
-M1-05 chính thức DONE theo Tech Lead APPROVED ngày 27/10/2026.
-Registry/spec/decisions/current-status/progress/handoff/evidence đồng bộ acceptance.
-Giữ nguyên contract/validation, tests, schema, kết quả và limitations đã nghiệm thu.
-Không thay code/tests/schema/export hoặc docs kỹ thuật, không API/dataset/secrets.
+Gateway callable transport mapping, fake synthetic, focused tests, API docs và
+Research MVP workflow. Binding request snapshots và response copies; structured
+semantics, usage/cost giữ nguyên. Contract/schema không đổi, không source data/keys.
 
 ## Remaining Work
 
-Không còn acceptance/implementation work của M1-05 cần quyết định.
-Acceptance commit/push/CI exact SHA xác minh trước báo cáo cuối; không tự tham chiếu.
-M1-06..09 TODO; không tự bắt đầu task mới.
+Publication/CI exact SHA được xác minh sau push trước bàn giao cuối; Tech Lead review.
+SHA/CI ghi báo cáo cuối để tránh commit tự tham chiếu. Không tự DONE.
 
 ## Modified Files
 
-Chỉ 7 files: planning/tasks.md, tasks/M1/M1-05.md, decisions.md, current-status.md,
-progress.md, handoff.md; docs/reviews/M1-05-evidence.md. Không code/tests/schema.
+AGENTS.md; src/core/{llm_gateway,fake_llm_transport}.py;
+tests/unit/test_llm_gateway.py; docs/shared-llm-gateway.md;
+docs/reviews/M1-06-evidence.md; planning/{tasks,progress,current-status,handoff}.md;
+planning/tasks/M1/M1-06.md.
 
 ## Tests
 
-Phiên acceptance kiểm tra Ruff lint/format, planning, pip, diff và staged privacy/
-allowlist trước commit. Không lặp local unit suite vì code/tests không đổi.
-Bằng chứng trước approval: targeted 142 passed/zero skips/warnings, full local
-910 passed/2 skipped (case-insensitive filesystem/FIFO Windows). CI review mỗi job
-Python 3.11/3.12: 901 passed/11 native-Windows skips trên Linux.
-CI acceptance xác minh riêng sau push; skipped không tính passed, không benchmark.
+Targeted **28 passed**, zero skips; Ruff lint/format, planning và diff gates
+kiểm tra trước publication. Full suite dành cho CI Python 3.11/3.12;
+không chạy full local lặp lại, không live provider hoặc benchmark tài chính.
 
 ## Blockers
 
-Không. SDK/model/live API/pricing/quota/budget/schema capabilities/cache backend TBD.
+Không blocker implementation. Chờ CI và Tech Lead review; chưa có trusted validator:
+reject schema attestations, unverified giữ nguyên. No SDK/live provider/timer/retry/
+quota/cache. Timeout do transport thực thi/báo; fake chỉ phục vụ tests/examples.
 
 ## Git Checkpoint
 
-Stable review baseline 7a54715369016a29ac886cf16b7480fd57ebc2f9 /
-[CI 40458603189](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458603189)
-success exact SHA, mọi steps Python 3.11/3.12 verified trước finalization.
-SHA/CI acceptance ghi báo cáo cuối sau push, không tự tham chiếu.
+Stable baseline b689cf47f67c7bc763e3dd566c08f1699bb01463 /
+[CI 40459277293](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40459277293).
+Implementation checkpoint là commit chứa handoff này; exact SHA/CI được xác minh
+sau push và ghi báo cáo cuối. CI baseline không phải bằng chứng implementation.
 
 ## Exact Next Action
 
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-06.
+Tech Lead review M1-06 sau khi CI exact SHA thành công.
