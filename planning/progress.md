@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 13 | 0 | 0 | 11 | 0 | 1 |
+| M1 | 25 | 14 | 0 | 0 | 11 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 17 | 0 | 0 | 57 | 0 | 1 |
+| TOTAL | 75 | 18 | 0 | 0 | 57 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators DONE, 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -140,3 +140,12 @@ Local final 768 passed/2 skipped, targeted 40; hai real runs deterministic, ngu�
 selected bất biến, evidence/statistics sanitized đã xuất bản. M1-04 cha TODO.
 Checkpoint REVIEW chỉ docs/planning, CI mới kiểm tra riêng sau push, không self-reference.
 Exact next action: Tech Lead review/accept M1-04b; không tự DONE hoặc task mới.
+
+Checkpoint finalization 2026-10-27: **M1-04b DONE**, Tech Lead APPROVED engineering
+protocol/provenance/implementation/repeatability. Các đoạn REVIEW trên là lịch sử.
+Baseline 7b0bc52dd44cded9bfb5cc0a668433c4ff9b9576 / CI 40437415893 success exact SHA;
+implementation 4a2a4ed / CI 40437144971 success, Python 3.11/3.12 mọi steps verified.
+Giữ nguyên pilot 23/398, năm human issues và các giới hạn; không rerun real data.
+Local finalization mới 768 passed/2 skipped; Ruff/planning/pip/diff đạt.
+M1-04 cha TODO tại checkpoint 1; next action: finalization commit/push/exact-SHA CI
+trước aggregate review parent, không M1-05.

@@ -1,7 +1,9 @@
 # M1-04b — Evidence bounded extraction pilot
 
-Ngày 2026-10-27 (Asia/Bangkok). **M1-04b — REVIEW, awaiting Tech Lead acceptance.**
-Engineering pilot/local checks/implementation publication/CI đạt; không tự APPROVED/DONE.
+Ngày 2026-10-27 (Asia/Bangkok). **M1-04b DONE — Tech Lead APPROVED**.
+Nghiệm thu engineering protocol/provenance/implementation/repeatability; không
+chứng nhận OCR accuracy, financial correctness hoặc table completeness.
+Các ghi chú REVIEW và khuyến nghị nghiệm thu bên dưới giữ lịch sử trước approval.
 
 ## Objective, baseline và scope
 
@@ -194,3 +196,16 @@ dataset, không chứng minh financial quality hoặc thay selected integrity ch
 ignore/index: không datasets/private artifacts/.env. Không sửa production validators,
 contracts/recovery hoặc human ledger. Checkpoint REVIEW tiếp theo chỉ docs/planning;
 exact SHA/CI checkpoint đó kiểm tra sau push, ghi báo cáo cuối, không self-reference.
+
+## Final Acceptance — 2026-10-27
+
+Tech Lead APPROVED theo giao việc Finalize M1-04b & Close Parent Task M1-04.
+Implementation 4a2a4ed4ae09924e073448029e884b030f61bc27 / CI 40437144971 và
+review 7b0bc52dd44cded9bfb5cc0a668433c4ff9b9576 /
+[CI 40437415893](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40437415893)
+success exact SHA; Python 3.11/3.12 mọi steps verified. Registry/spec chuyển DONE.
+Giữ nguyên toàn bộ số liệu và limitations phía trên: năm human issues chưa sửa,
+coverage BCC/2025 thiếu, original equivalence/run identity unverified; không có
+ground truth hoặc OCR/financial accuracy evaluation. Không rerun real pilot,
+không sửa manifest/statistics/validators/data/contracts trong finalization.
+M1-04 cha giữ TODO ở checkpoint này; aggregate review chỉ sau CI finalization đạt.

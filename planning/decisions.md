@@ -1,5 +1,21 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — Tech Lead Final Acceptance M1-04b
+
+- **M1-04b APPROVED**, REVIEW → DONE theo giao việc finalization mới.
+- Nghiệm thu engineering protocol, provenance, implementation và repeatability;
+  không chứng nhận OCR accuracy, financial correctness hoặc table completeness.
+- Implementation 4a2a4ed4ae09924e073448029e884b030f61bc27 / CI 40437144971;
+  checkpoint 7b0bc52dd44cded9bfb5cc0a668433c4ff9b9576 / CI 40437415893 success
+  exact SHA; từng step Python 3.11/3.12 verified, mỗi job 759 passed/11 skipped.
+- Giữ 23 pages/398 refs, 316 original/14 alternatives/68 unrecovered, hai lượt
+  deterministic và 472 selected snapshots unchanged theo evidence đã được duyệt.
+  Không rerun pilot hoặc sửa manifest/statistics/data/validators/contracts.
+- Năm human bbox issues vẫn requires_review; thiếu BCC/2025, original equivalence/
+  run identity chưa xác minh, không ground truth hoặc đánh giá accuracy tài chính/OCR.
+- M1-04 giữ TODO ở checkpoint 1. Sau CI finalization success mới aggregate review;
+  nếu đạt chỉ chuyển parent REVIEW, chờ Tech Lead xác nhận cuối; không M1-05.
+
 ## 2026-10-27 — Tech Lead Final Acceptance M1-04a
 
 - **APPROVED — engineering scope, 2026-10-27** theo task M1-04b do user giao.
