@@ -13,6 +13,7 @@ dependencies = [
     "Pillow>=11,<13",
     "google-genai==2.33.0",
     "jsonschema>=4.26,<5",
+    "tzdata>=2025.2",
 ]
 
 [project.optional-dependencies]

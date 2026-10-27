@@ -1,0 +1,26 @@
+{
+  "projects": [
+    {
+      "account_ref": "sample_account_01",
+      "project_ref": "sample_project_01",
+      "credential_refs": ["sample_credential_01", "sample_credential_02"],
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "tier": "free",
+      "quota_limits": {"rpm": 15, "tpm": 250000, "rpd": 500},
+      "verification_source": "synthetic_example",
+      "mapping_confirmed": false
+    },
+    {
+      "account_ref": "sample_account_02",
+      "project_ref": "sample_project_02",
+      "credential_refs": ["sample_credential_03"],
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "tier": "free",
+      "quota_limits": {"rpm": 15, "tpm": 250000, "rpd": 500},
+      "verification_source": "user_reported",
+      "mapping_confirmed": false
+    }
+  ]
+}
