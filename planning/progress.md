@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 13 | 1 | 0 | 11 | 0 | 0 |
+| M1 | 25 | 13 | 0 | 0 | 11 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 17 | 1 | 0 | 57 | 0 | 0 |
+| TOTAL | 75 | 17 | 0 | 0 | 57 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -130,3 +130,13 @@ Checkpoint F/H draft M1-04b: first/second reports/digests khớp, 472 selected s
 bất biến, 316 original/14 reconstructed/68 unrecovered, 5 human issues giữ requires_review.
 Targeted cuối 40 passed; full cuối 768 passed/2 skipped. Evidence/statistics đã có.
 Next action hiện tại: diff review rồi allowlist implementation commit/push/exact-SHA CI.
+
+Checkpoint bàn giao hiện tại: **M1-04b REVIEW, awaiting Tech Lead acceptance**.
+Các đoạn IN_PROGRESS bên trên là lịch sử. Implementation
+4a2a4ed4ae09924e073448029e884b030f61bc27 đã push/main khớp origin;
+[CI 40437144971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40437144971)
+success exact SHA, từng step Python 3.11/3.12, mỗi job 759 passed/11 skipped.
+Local final 768 passed/2 skipped, targeted 40; hai real runs deterministic, nguồn
+selected bất biến, evidence/statistics sanitized đã xuất bản. M1-04 cha TODO.
+Checkpoint REVIEW chỉ docs/planning, CI mới kiểm tra riêng sau push, không self-reference.
+Exact next action: Tech Lead review/accept M1-04b; không tự DONE hoặc task mới.

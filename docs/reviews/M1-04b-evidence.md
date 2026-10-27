@@ -1,7 +1,7 @@
 # M1-04b — Evidence bounded extraction pilot
 
-Ngày 2026-10-27 (Asia/Bangkok). Engineering pilot đã chạy; publication/CI đang hoàn tất,
-task IN_PROGRESS trước checkpoint REVIEW. Không tự APPROVED/DONE.
+Ngày 2026-10-27 (Asia/Bangkok). **M1-04b — REVIEW, awaiting Tech Lead acceptance.**
+Engineering pilot/local checks/implementation publication/CI đạt; không tự APPROVED/DONE.
 
 ## Objective, baseline và scope
 
@@ -158,7 +158,7 @@ Lượt trước regression page-union: 767 passed/2 skipped; targeted cuối đ
 Windows skips chỉ case-insensitive filesystem và FIFO không được os.mkfifo hỗ trợ;
 symlink/junction test pilot đã chạy đạt, không tính skipped như passed.
 Ruff lint/format, planning **75 tasks**, pip check/diff check đạt;
-kiểm tra lại sau cập nhật docs. CI synthetic sẽ ghi riêng sau push, không phải real pilot.
+đã kiểm tra lại sau cập nhật docs. CI synthetic bên dưới không phải real pilot.
 
 ## Giới hạn và downstream recommendation
 
@@ -182,5 +182,15 @@ không original/source paths, OCR text, financial values, IDs hoặc hashes từ
 Private manifest.json, first.json, second.json, canonical-report.json, verification.json
 ở ignored artifact directory của task; Tech Lead có thể yêu cầu local review riêng
 để đối chiếu membership/bindings/full digests và runtime provenance.
-Implementation SHA/remote sync/exact-SHA CI sẽ ghi sau push; không tự tham chiếu SHA
-của chính commit publication. Task chỉ REVIEW sau các engineering/publication gates.
+Implementation **4a2a4ed4ae09924e073448029e884b030f61bc27** đã push main, fetch/local/
+origin/main khớp, working tree sạch trước checkpoint REVIEW.
+[CI 40437144971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40437144971)
+**success exact SHA**; Python 3.11/3.12 install/lint/format/planning/unit/post steps
+đều success. Logs mỗi job **759 passed/11 skipped**. CI Linux skips: Windows runtime
+syntax (5) và native junction (6); local Windows kiểm tra độc lập. CI không có real
+dataset, không chứng minh financial quality hoặc thay selected integrity checks local.
+
+Đã stage đúng 11 allowlisted files; rà cached diff và source paths/keys/full digests,
+ignore/index: không datasets/private artifacts/.env. Không sửa production validators,
+contracts/recovery hoặc human ledger. Checkpoint REVIEW tiếp theo chỉ docs/planning;
+exact SHA/CI checkpoint đó kiểm tra sau push, ghi báo cáo cuối, không self-reference.
