@@ -1,0 +1,22 @@
+{
+  "scope": "bounded_engineering_smoke",
+  "sample_page_limit": 5,
+  "crop_reference_limit": 100,
+  "pages": 5,
+  "crop_references": 50,
+  "structural_valid_pages": 5,
+  "image_checked_pages": 5,
+  "existing_original": 43,
+  "reconstructed_available": 7,
+  "missing_unrecovered": 0,
+  "human_bbox_issues_requires_review": 5,
+  "original_missing_target_issues": 7,
+  "sparse_table_issues": 10,
+  "empty_cell_text_issues": 47,
+  "run_identity_not_verified_pages": 5,
+  "deterministic": true,
+  "selected_hashes_metadata_unchanged": true,
+  "recovered_outputs_metadata_unchanged": 398,
+  "recovery_execution": false,
+  "financial_quality_evaluated": false
+}

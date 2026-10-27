@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 12 | 0 | 0 | 13 | 0 | 0 |
+| M1 | 25 | 12 | 1 | 0 | 12 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 16 | 0 | 0 | 59 | 0 | 0 |
+| TOTAL | 75 | 16 | 1 | 0 | 58 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -96,11 +96,17 @@ không suy run cũ cho commit mới. Synthetic/pixel tests không chứng nhận
 table completeness hoặc original crop equivalence; 5 bbox issues vẫn mở cho M1-04a.
 Checks nghiệm thu mới: 655 passed/14 skipped, Ruff lint/format 79 files,
 planning validator 75 tasks, pip check và git diff --check đạt.
-Không còn active crop recovery/implementation task. M1-04a/M1-04b giữ TODO;
-chuẩn bị đầu vào M1-04a khi được giao, không tự triển khai.
+Tại checkpoint nghiệm thu M1-03f chưa có active implementation task; lịch sử
+M1-04a TODO ở thời điểm đó được thay bằng giao việc hiện tại bên dưới.
 Exact next action: Chờ Tech Lead giao M1-04a.
 
 Tech Lead APPROVED M1-03e ngày 2026-10-26 theo task M1-03f: mapping,
 193-page audit, 12 real crops/pixels/hash/rerun và source integrity được nghiệm thu.
 Original preprocessing equivalence vẫn unverified; M1-03 giữ DONE.
 Publication checkpoint b0168a0c37f5a0c29b53693833d8c300e338ff74.
+
+Checkpoint M1-04a: IN_PROGRESS theo giao việc; A–G đã triển khai/test.
+Full local 728 passed/2 skipped, targeted 61 passed; Ruff 85 files/planning 75 tasks,
+pip/diff check đạt. Bounded smoke 5 pages/50 refs, 43 original/7 reconstructed,
+giữ 5 human bbox issues; deterministic/read-only integrity đạt.
+Remaining: allowlisted commit/push và CI exact SHA trước REVIEW chờ Tech Lead.
