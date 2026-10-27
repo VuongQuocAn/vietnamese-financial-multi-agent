@@ -6,37 +6,46 @@ M1-09 — LLM Response Cache
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
-Baseline main/origin sạch 12f424d; M1-06/07/08 DONE.
+Implementation afb866f760fea63cb3a960d3056a6909139b6294, [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success exact SHA;
+mọi steps Python 3.11/3.12 đạt, mỗi job 1040 passed/11 skipped. Dependencies DONE.
 
 ## Completed Work
 
-Đọc task/context, xác minh quyền commit/push và dependencies; cache wrapper và 34 focused tests đạt.
+Wrapper opt-in/scope isolation, canonical versioned key + local schema fingerprint, TTL/LRU/invalidation
+thread-safe; hit deep copy/rebind + historical usage/cost riêng, miss qua Guard.
+Docs/ví dụ offline/targeted regression và CI đạt; implementation đã push main.
 
 ## Remaining Work
 
-Regression/docs, quality gates, commit/push, CI exact SHA trước REVIEW.
+Tech Lead review để nghiệm thu; không tự DONE hoặc bắt đầu M1-10/11.
+Checkpoint REVIEW docs/planning SHA/CI xác minh riêng sau push và báo cuối.
 
 ## Modified Files
 
-src/core/llm_cache.py, tests/unit/test_llm_cache.py, docs/llm-response-cache.md,
+Implementation: src/core/llm_cache.py, tests/unit/test_llm_cache.py, docs/llm-response-cache.md,
 docs/reviews/M1-09-evidence.md, planning/{tasks,progress,current-status,handoff}.md, planning/tasks/M1/M1-09.md.
+Checkpoint REVIEW chỉ 6 docs/planning files, không sửa production code/tests.
 
 ## Tests
 
-34 focused passed; synthetic/offline. Không live API/dataset. Dùng .venv đã có .[dev].
+34 cache + 105 M1-08/Gateway/Gemini regression passed, zero skips; Ruff lint/format,
+planning checker/diff và ví dụ offline đạt trong .venv .[dev]. CI 1040 passed/11 skipped
+mỗi Python 3.11/3.12. Không full local suite/live API/credentials file/dataset.
 
 ## Blockers
 
-Không. Application phải xác nhận scope/eligibility/config revision.
+Không. Limitations: in-memory/process-local, finite TTL/LRU, không persistence/byte cap/single-flight.
+Concurrent misses mỗi call qua Guard. Application xác nhận scope/eligibility/revision; không DLP.
 
 ## Git Checkpoint
 
-Baseline ổn định 12f424d; implementation chưa commit.
+Stable implementation afb866f760fea63cb3a960d3056a6909139b6294 đã push / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success.
+Review publication SHA/CI xác minh riêng sau push; không tự tham chiếu commit tương lai.
 
 ## Exact Next Action
 
-Hoàn tất kiểm thử và publication M1-09.
+Tech Lead review M1-09.
