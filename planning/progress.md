@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 19 | 0 | 0 | 6 | 0 | 0 |
+| M1 | 25 | 19 | 1 | 0 | 5 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 23 | 0 | 0 | 52 | 0 | 0 |
+| TOTAL | 75 | 23 | 1 | 0 | 51 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,14 +46,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-08 DONE**, user nghiệm thu ngày 27/10/2026. M1-06/M1-07 DONE.
-Implementation f895d74ca4267abc6b3c740419890d800437dd76 /
-[CI 40466483190](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40466483190)
-success exact SHA, mọi steps Python 3.11/3.12 verified; mỗi job 1006 passed/11 skipped.
-Targeted 105 passed/zero skips giữ nguyên; finalization chỉ docs/planning,
-không production code/live Gemini tests. Acceptance SHA/CI xác minh sau push và báo cuối.
-Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-09**.
-Không có implementation task đang chạy; M1-09 TODO.
+**M1-09 IN_PROGRESS**, user giao triển khai/commit/push ngày 27/10/2026.
+Dependencies M1-06/07/08 DONE; baseline main/origin sạch 12f424d.
+Next action: Hoàn tất kiểm thử và publication M1-09.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
