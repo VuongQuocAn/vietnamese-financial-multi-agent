@@ -2,41 +2,45 @@
 
 ## Active Task
 
-M1-10 — Document Processing Checkpoints
+M1-10 — Final Acceptance; không task triển khai active.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e main/origin khớp sau push.
 [CI 40497588383](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497588383)
 success exact SHA, mọi steps Python 3.11/3.12; mỗi job 1078 passed/11 skipped.
-M1-03/M1-02b/M1-09 DONE. User giao dừng REVIEW; không DONE/M1-11.
+Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 main/origin sạch sau fetch;
+[CI 40497942861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497942861)
+success exact SHA, mọi steps Python 3.11/3.12 đã xác minh.
+Tech Lead APPROVED 27/10/2026, không blocking issues, cho phép final acceptance REVIEW → DONE.
 
 ## Completed Work
 
 Checkpoint JSON đơn artifact, source/page/stage identity, SHA-256 revisions/integrity,
 verified save/lookup, atomic publish, synthetic tests/DU v1 integration và usage docs/evidence.
-Registry/dashboard/spec/status/handoff đồng bộ REVIEW; không thay contracts hoặc nguồn.
+Registry/dashboard/spec/status/handoff/evidence đồng bộ DONE; decisions ghi Tech Lead APPROVED.
+Acceptance chỉ docs/planning; production code/tests/contracts/dữ liệu bất biến.
 
 ## Remaining Work
 
-Chờ Tech Lead review/accept M1-10. Review publication SHA/CI xác minh riêng sau push và
-báo cuối; không suy CI implementation cho commit docs mới.
+Không còn phần chờ nghiệm thu M1-10. Acceptance publication SHA/CI kiểm tra riêng sau
+push và báo cuối; không suy CI implementation cho commit docs mới. Không tự bắt đầu M1-11.
 
 ## Modified Files
 
-src/document_processing/checkpoints.py, tests/unit/test_checkpoints.py,
-docs/document-processing-checkpoints.md, planning/tasks/M1/M1-10.md;
-docs/reviews/M1-10-evidence.md; planning/{tasks,progress,current-status,handoff,decisions}.md.
+Chỉ 7 files: planning/{tasks,progress,current-status,handoff,decisions}.md;
+planning/tasks/M1/M1-10.md; docs/reviews/M1-10-evidence.md.
 
 ## Tests
 
 38 checkpoint + 246 regression passed; Ruff lint/format, planning/diff check đạt.
 CI full unit suite 1078 passed/11 skipped mỗi Python 3.11/3.12.
-Không full local suite, API hoặc dataset thật. Publication chỉ docs/planning: checks cơ bản.
+Acceptance local chỉ Ruff lint/format, planning/diff; không rerun unit suite/API/dataset.
+CI acceptance kiểm tra riêng sau push.
 
 ## Blockers
 
@@ -46,9 +50,9 @@ semantic validation. Không distributed locking/eviction/history/size cap hoặc
 ## Git Checkpoint
 
 Stable implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e / CI 40497588383 success.
-Baseline a130e72f5271c4c9b6f016e039d5e609ad1d7546. Review publication SHA/CI xác minh
-riêng sau push và báo cuối, không ghi commit tự tham chiếu.
+Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 / CI 40497942861 success exact SHA.
+Acceptance SHA/CI xác minh riêng sau push và báo cuối, không ghi commit tự tham chiếu.
 
 ## Exact Next Action
 
-Chờ Tech Lead review M1-10.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-11.

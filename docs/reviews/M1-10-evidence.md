@@ -1,6 +1,7 @@
 # M1-10 — Engineering evidence
 
-Ngày 2026-10-27 (Asia/Bangkok). **REVIEW**, chưa Tech Lead nghiệm thu; không DONE/M1-11.
+Ngày 2026-10-27 (Asia/Bangkok). **DONE — Tech Lead APPROVED**, không blocking issues.
+Tech Lead đã review source/tests/evidence và CI 40497588383 trên implementation 796e4664.
 
 ## Implementation
 
@@ -42,8 +43,18 @@ completed/success, headSha **796e4664e6faf1d32354f7db62770bb7e4e1304e**.
 
 Đã xem jobs/steps thực tế và unit log summary bằng gh run view/watch; không suy từ
 commit status. Checkout/setup/install/lint/format/planning/tests/post steps đều success.
-Review publication chỉ docs/planning; exact SHA/CI mới kiểm tra sau push và báo cuối,
-không dùng CI cũ để chứng nhận HEAD mới hoặc tạo commit tự tham chiếu.
+Review checkpoint **21f1834a4d765da7fab2293f42abba8b4d0ca7c3** /
+[CI 40497942861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497942861)
+success exact SHA, mọi steps Python 3.11/3.12 đã xác minh trước acceptance.
+
+## Final acceptance
+
+Tech Lead cho phép REVIEW → DONE ngày 27/10/2026; registry/spec/progress/status/
+decisions/handoff đồng bộ. Chỉ 7 docs/planning files, giữ nguyên code/tests/contracts/
+dữ liệu và toàn bộ limitations. Local acceptance chỉ Ruff lint/format, planning checker
+và diff check; không rerun unit suite hoặc Gemini API.
+Acceptance SHA/CI kiểm tra riêng sau push và báo cuối; không dùng CI cũ để chứng nhận
+HEAD mới hoặc tạo commit tự tham chiếu.
 
 ## Limitations và handoff
 
@@ -53,4 +64,4 @@ hash đủ input/image/crop contents, effective config và implementation versio
 semantic validation trước `verified=True`. JSON/checksum không chứng minh OCR/financial
 correctness và không thay Verified Claim Ledger. [Usage](../document-processing-checkpoints.md).
 
-Không blocker engineering. Next action: **Chờ Tech Lead review M1-10.**
+Không blocker. Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-11.**

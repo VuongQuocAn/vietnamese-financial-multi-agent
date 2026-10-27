@@ -1,5 +1,22 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-10 Final Acceptance
+
+- Tech Lead APPROVED ngày 27/10/2026 sau review source/tests/evidence và CI 40497588383
+  trên implementation 796e4664e6faf1d32354f7db62770bb7e4e1304e; không blocking issues.
+- Cho phép REVIEW → DONE và commit/push acceptance; chỉ 7 docs/planning files,
+  không thay production code/tests/contracts/dữ liệu, không rerun full local suite/API.
+- Review checkpoint 21f1834a4d765da7fab2293f42abba8b4d0ca7c3 /
+  [CI 40497942861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40497942861)
+  success exact SHA; mọi steps Python 3.11/3.12 verified. Giữ bằng chứng 38 checkpoint
+  + 246 regression passed; implementation CI mỗi job 1078 passed/11 skipped.
+- Giữ nguyên limitations trusted filesystem/single writer, một revision/slot, không
+  distributed locking/eviction/history/size cap/absolute crash durability. Caller chịu
+  source binding/content fingerprints/semantic validation; checksum không chứng nhận
+  OCR/financial correctness. [Evidence](../docs/reviews/M1-10-evidence.md).
+- Acceptance SHA/CI xác minh riêng sau push và báo cuối, không tự tham chiếu hoặc suy CI cũ.
+  M1-11 TODO; chờ Tech Lead giao task tiếp theo, không tự bắt đầu implementation.
+
 ## 2026-10-27 — M1-10 checkpoint design
 
 - User giao M1-10, cho phép code/tests/docs/commit/push, dừng REVIEW; không DONE/M1-11.
