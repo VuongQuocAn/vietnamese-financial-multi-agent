@@ -415,3 +415,15 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
   không chạy lại live Gemini API. Giữ nguyên limitations cache đã nghiệm thu.
 - CI acceptance xác minh riêng exact SHA sau push và báo cuối.
 - M1-10/M1-11 vẫn TODO; chờ Tech Lead giao task tiếp theo.
+
+## 2026-10-27 — M1-11b Quality Gate và Pilot REVIEW
+
+- Evidence-aware quality scope gồm selected và code/title candidates toàn trang;
+  identity/reference/unknown giữ fail closed. Không sửa raw/provenance/contracts.
+- Policy fingerprint riêng làm verified checkpoints STALE; compatible prediction cache
+  revalidate current gate. Không giả persisted cache từ báo cáo M1-11a.
+- Total token budget optional/off mặc định; giữ per-request100000+output512,
+  quota guard và max20 requests/RPM5, không retry/rotation/truncate.
+- 19 pages/20 requests, 9 resolved/10 insufficient; cùng5 trang cũ 0/5 →4/1.
+  Chỉ operational improvement, không financial accuracy; [evidence](../docs/reviews/M1-11b-evidence.md).
+- Dừng REVIEW chờ Tech Lead; không tự DONE hoặc bắt đầu M1-12.

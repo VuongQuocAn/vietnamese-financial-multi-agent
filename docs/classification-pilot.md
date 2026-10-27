@@ -116,7 +116,8 @@ Usage counters là **known provider-reported sums**, phải đọc cùng `unknow
 provider failures không có usage không được diễn giải là tokens thực tế bằng 0.
 Checkpoint/cache probes nằm trong hit counts, không thêm page denominator.
 
-Evidence/limitations và readiness trước M1-12 ở [M1-11a evidence](reviews/M1-11a-evidence.md).
+Evidence/limitations ở [M1-11b evidence](reviews/M1-11b-evidence.md);
+lịch sử giữ nguyên tại [M1-11a evidence](reviews/M1-11a-evidence.md).
 
 ## M1-11b policy và so sánh
 
