@@ -31,7 +31,8 @@ conflicts/failures 0/0. Fresh CLI verify trả 199 already_recovered, không t�
 
 ## Remaining Work
 
-Commit/push publication và xác minh exact-SHA CI, ghi lại bằng chứng sau push.
+Publication `b3f278b3cc66d67fecc50299d0afadabfcc585b2` đã commit/push, remote khớp.
+Exact-SHA CI 40428368035 đã success, jobs/steps/logs được xác minh cả Python 3.11/3.12.
 Tech Lead nghiệm thu M1-03f. M1-04a/b chưa bắt đầu; 5 quality issues là input tương lai,
 không phải bbox corrections đã thực hiện hoặc blocker engineering bị bỏ qua.
 
@@ -53,7 +54,8 @@ Mỗi batch: source snapshots/callbacks + frozen-plan re-audit, full output engi
 inspection, independent rerun và prior-output snapshot comparison đều đạt.
 Fresh final CLI verify đạt; private proof đối chiếu 199 index entries/PNG-sidecar
 pairs, 8 checkpoint chains, 12 pilot IDs/hashes và 5 quality issues.
-Synthetic tests không đánh giá chất lượng tài chính. Publication CI chờ push.
+Synthetic tests không đánh giá chất lượng tài chính. Publication CI 40428368035
+success mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped; đã đọc test logs.
 
 ## Blockers
 
@@ -70,6 +72,11 @@ Stable implementation `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`,
 success đúng SHA Python 3.11/3.12 ở checkpoint trước approval.
 Baseline publication `e6403a0a4601470f5f46c6d74eb3c9323e4eba62` fetch/remote khớp
 trước commit continuation; không suy CI cũ cho publication mới.
+Publication `b3f278b3cc66d67fecc50299d0afadabfcc585b2` đã push/remote khớp,
+working tree sạch ngay sau push;
+[CI 40428368035](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428368035)
+success đúng SHA/mọi steps Python 3.11/3.12. Metadata nghiệm thu đi sau checkpoint;
+khi resume kiểm tra HEAD/status/remote/CI riêng, không suy run cũ cho commit mới.
 Checkpoint local ổn định: approved-expansion-final-integrity.json; đủ 8 completed
 batch/continuation receipts, không còn pending eligible. Không rerun execute;
 nếu cần kiểm tra dùng --verify, không reset plan/conflicts hoặc overwrite nguồn.

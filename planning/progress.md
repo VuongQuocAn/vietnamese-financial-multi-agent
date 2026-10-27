@@ -82,7 +82,11 @@ mọi output cũ bất biến. Fresh final CLI verify 199 already_recovered/new_
 Sheets 02/03/08/11/12 có 5 bbox coverage issues cho M1-04a, chưa sửa bbox hoặc
 coi crop là bảng hoàn chỉnh. Non-table 85/views 288 vẫn ngoài scope.
 [Sanitized evidence](../docs/reviews/M1-03f-evidence.md) và fixed-allowlist statistics
-đã cập nhật; production code không đổi. Publication commit/CI chờ xác minh sau push.
+đã cập nhật; production code không đổi. Publication
+`b3f278b3cc66d67fecc50299d0afadabfcc585b2` đã push/remote khớp;
+[CI 40428368035](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428368035)
+success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
+Metadata CI đi sau checkpoint; không suy run cũ cho HEAD mới.
 Không có active implementation task. Exact next action: Tech Lead nghiệm thu M1-03f;
 không bắt đầu M1-04a/b.
 

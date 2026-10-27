@@ -49,6 +49,8 @@ chưa được trình bày là human-approved về nội dung hoặc độ đầ
 | M1-03f implementation | `a91492e17a0644c8f9d7e4e655ba73dda26c79f0` |
 | CI implementation | [40349513656](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40349513656), success Python 3.11/3.12 |
 | Baseline publication trước continuation | `e6403a0a4601470f5f46c6d74eb3c9323e4eba62`, fetch/local/remote khớp |
+| Publication continuation | `b3f278b3cc66d67fecc50299d0afadabfcc585b2`, đã push/remote khớp |
+| CI continuation | [40428368035](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428368035), success đúng SHA Python 3.11/3.12, từng step đã xác minh |
 | Python / Pillow local | 3.12.0 / 12.3.0, Windows |
 | Recovery method/version | reconstructed_from_page_bbox / 1 |
 | Original crop equivalence / Drive/run identity | unverified |
@@ -113,7 +115,11 @@ Full local checks chạy sau khi ghi/validate approval và trước batch đầu
 pip check đạt. Skips gồm quyền symlink, case-insensitive filesystem và FIFO Windows;
 native junction/process-lock tests đạt. Synthetic tests không đo chất lượng tài chính.
 Không thay production code sau full checks; kiểm tra tài liệu/staging lại trước push.
-Publication CI cho continuation sẽ được ghi sau khi push và xác minh exact SHA.
+Publication CI **40428368035** success đúng SHA
+`b3f278b3cc66d67fecc50299d0afadabfcc585b2`; đã kiểm tra jobs/steps/logs:
+Python 3.11 và 3.12 mỗi job **658 passed, 11 skipped**, install/lint/format/planning
+và unit tests đều success. CI không có real dataset hoặc pip check riêng.
+Commit ghi nhận metadata CI đi sau publication; không suy run cũ cho HEAD mới.
 
 Không commit PNG, review sheets, approval, per-file IDs/hashes, bindings,
 full manifests/index hoặc OCR text/source paths. Tất cả giữ local bị Git ignore.

@@ -21,7 +21,10 @@ Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
   statistics đã có; ảnh/approval/hashes/private manifests giữ local, Git ignore.
 - Implementation ổn định `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`;
   baseline publication `e6403a0a4601470f5f46c6d74eb3c9323e4eba62` fetch/remote khớp.
-  Publication continuation đang chờ commit/push và exact-SHA CI.
+  Publication continuation `b3f278b3cc66d67fecc50299d0afadabfcc585b2` đã push,
+  local/remote khớp; [CI 40428368035](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40428368035)
+  success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
+  Metadata nghiệm thu đi sau publication; không suy CI run này cho commit mới.
 - Original Drive/run identity, preprocessing equivalence và trusted filesystem
   limitations giữ nguyên; không gọi OCR/LLM/API dữ liệu hoặc benchmark tài chính.
 - Exact next action: Tech Lead nghiệm thu M1-03f; không bắt đầu M1-04a/b.
