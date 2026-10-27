@@ -2,60 +2,58 @@
 
 ## Active Task
 
-M1-11 — Final Acceptance; không task triển khai active.
+M1-11a — Bounded Real Classification Pilot
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Implementation `e8e757fe7b9f2d1cd1af75f3eb4c026e8fca86c5` /
-[CI 40500929151](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40500929151)
-success exact SHA, Python 3.11/3.12 mỗi job 1113 passed/11 skipped.
-Review checkpoint `7a3614559e2542414166d78e300507d533b84217` khớp HEAD/origin
-sau fetch, working tree sạch trước acceptance.
-[CI 40501298126](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40501298126)
-success exact SHA; jobs và mọi steps 3.11/3.12 đã kiểm tra lại.
-Tech Lead APPROVED engineering scope 27/10/2026, không blocking issues.
+Baseline HEAD/origin `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5`, M1-11 DONE.
+Dry-run verified 19 pages/3 symbols/14 strata. Live 6 actual API requests (smoke +5 pages),
+12307 input/176 output/12483 total tokens, nguồn không đổi. Live subset 1 symbol/5 years.
 
 ## Completed Work
 
-PageClassifier, aggregation theo manifest/source, provenance và checkpoint/cache/quota
-đã được Tech Lead nghiệm thu. Đồng bộ registry/spec/progress/status/decisions/handoff/
-evidence REVIEW → DONE. Không sửa implementation, tests, contracts hoặc API keys.
+Runner/CLI bounded dry-run và sequential Gateway/Gemini/guard/cache/checkpoint integration.
+Smoke đạt; 0 resolved/5 unresolved real pages (4 OCR quality/1 insufficient), 8 anchors checked.
+Cache HIT 5 probes không API thêm; checkpoint HIT live 0, synthetic có resolved resume.
+Dừng local pre-send token reservation, 1 budget denial, không actual provider/schema errors.
+Fix metrics runner và regression test; original live report giữ nguyên + private interpretation,
+không rerun live. User xác nhận export/free/quota/no other apps; duy nhất key index 0.
 
 ## Remaining Work
 
-Không còn công việc nghiệm thu M1-11. Acceptance SHA/CI kiểm tra riêng sau push
-và báo cuối; không suy từ implementation CI. M1-12 TODO, chưa được giao triển khai.
+Commit/push, exact-SHA CI 3.11/3.12, chuyển REVIEW; Tech Lead nghiệm thu độc lập.
+Không bắt đầu M1-12.
 
 ## Modified Files
 
-Chỉ 7 files: planning/{tasks,progress,current-status,decisions,handoff}.md;
-planning/tasks/M1/M1-11.md; docs/reviews/M1-11-evidence.md.
+src/document_processing/classification_pilot.py; scripts/run_classification_pilot.py;
+tests/unit/test_classification_pilot.py; docs/classification-pilot.md;
+docs/reviews/M1-11a-evidence.md; planning/{tasks,progress,current-status,handoff,decisions}.md;
+planning/tasks/M1/M1-11a.md. Runtime artifacts ignored, không stage keys/dataset.
 
 ## Tests
 
-Giữ evidence implementation: 35 focused + 333 related regression passed;
-CI Python 3.11/3.12 mỗi job 1113 passed/11 skipped.
-Acceptance local chỉ Ruff lint/format, planning checker và diff check.
-Không chạy lại full local unit suite hoặc live API; CI acceptance xác minh riêng.
+17 focused +146 related regression passed; final Ruff/planning/diff trước publication.
+Full unit suite chỉ CI, không rerun API.
 
 ## Blockers
 
-Không blocking issues trong engineering scope.
-Limitations giữ nguyên: taxonomy chưa duyệt chính thức, text-only evidence gate bảo thủ;
-live Gemini chưa verified (0 requests), selected credential/project mapping/active
-quota/budget chưa xác nhận. Không financial accuracy/acceptance trên dữ liệu thật.
-Caller vẫn chịu source binding/completeness/storage permissions/operational acceptance.
+Pilot chỉ 5 real pages thay vì mục tiêu 10–20 do token upper-bound cap; không nới budget.
+Project aliases/quota/tier user-attested; actual project ID/quota remaining/billing
+không independently verified. USD 0 estimated conditional free tariff; guard money
+NOT_CONFIGURED. Taxonomy provisional, gate bảo thủ; không ground truth/accuracy.
+OCR run identity gốc chưa verified; dùng exact verified artifact locators page-only.
+Live checkpoint HIT chưa chứng minh (0 resolved); synthetic có HIT, không giả live results.
 
 ## Git Checkpoint
 
-Stable implementation `e8e757fe7b9f2d1cd1af75f3eb4c026e8fca86c5` / CI 40500929151 success.
-Review checkpoint `7a3614559e2542414166d78e300507d533b84217` / CI 40501298126 success.
-Acceptance SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
+Baseline `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5`; implementation chưa commit.
+Live trước metrics-only fix; không claim rerun live trên corrected runner/CI SHA.
 
 ## Exact Next Action
 
-Chờ Tech Lead giao việc; không tự bắt đầu M1-12.
+Commit/push M1-11a và xác minh exact-SHA CI trước REVIEW.

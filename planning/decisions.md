@@ -1,5 +1,24 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-11a bounded classification pilot
+
+- User giao M1-11a, cho phép code/tests/live/commit/push, dừng REVIEW; M1-11 DONE,
+  không bắt đầu M1-12. User xác nhận data export/free tier/quota applicability/no other apps.
+- Chọn duy nhất first key; một client và opaque project/account aliases bind selected
+  credential theo owner attestation, không suy Google project ID hoặc quota remaining.
+  Không rotation/retry; Google Standard free tariff đối chiếu, cap USD 0 conditional
+  user-confirmed free tier; actual billing unknown, guard money NOT_CONFIGURED công khai.
+- Freeze 19 pages từ verified M1-04b pool, exact artifact locators + source snapshots;
+  không tạo OCR run identity, không sửa raw/contracts/classifier M1-11.
+- Live 6 requests (smoke +5 real pages), 12307 input/176 output/12483 total tokens;
+  0 resolved/5 unresolved, 5 cache probes HIT, 0 checkpoint HIT. Dừng pre-send local token
+  reservation, không dùng hết cap bằng cách truncate hoặc nới policy. No provider/schema errors.
+- Sửa riêng runner metrics: local token denial tách provider failure/completed pages;
+  original private live report giữ nguyên + interpretation riêng, regression test,
+  không gọi lại API. [Evidence](../docs/reviews/M1-11a-evidence.md).
+- Taxonomy provisional, text-only gate bảo thủ; live actual subset 1 symbol/5 years,
+  không ground truth/accuracy/financial readiness; Tech Lead quyết định trước M1-12.
+
 ## 2026-10-27 — M1-11 Final Acceptance
 
 - Tech Lead APPROVED ngày 27/10/2026 sau review implementation

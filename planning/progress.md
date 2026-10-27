@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 22 | 0 | 0 | 3 | 0 | 0 |
+| M1 | 26 | 22 | 1 | 0 | 3 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 26 | 0 | 0 | 49 | 0 | 0 |
+| TOTAL | 76 | 26 | 1 | 0 | 49 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,14 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M1-11a IN_PROGRESS**, được giao bounded pilot; M1-11 DONE, M1-12 TODO.
+Baseline HEAD/origin `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5` sạch/khớp sau fetch.
+Dry-run 19 pages/3 symbols/14 strata; live 6 requests gồm smoke +5 pages,
+12307 input/12483 total tokens; 0 resolved/5 unresolved, cache HIT 5/checkpoint HIT 0.
+Dừng trước send kế tiếp vì input-token reservation; 17 focused +146 regression passed.
+Next action: Commit/push M1-11a và xác minh exact-SHA CI trước REVIEW.
+Các đoạn sau là lịch sử trước M1-11a.
 
 **M1-11 DONE**, Tech Lead APPROVED engineering scope 27/10/2026, không blocking issues;
 dependencies DONE, không implementation task active; M1-12 TODO.
