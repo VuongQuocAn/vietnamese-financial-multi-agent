@@ -2,16 +2,20 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-04a DONE**, Tech Lead APPROVED — engineering scope, 2026-10-27.
-- Baseline sạch/local/origin khớp: d78232028f619cb6416a89b2bbe5735f4d09d023.
-- Implementation 32a3d23362f494fe8a39fa8ed9b3983841e4f287 /
-  [CI 40432840930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40432840930)
-  và checkpoint d782320 /
-  [CI 40433101346](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40433101346)
-  success exact SHA; mọi steps Python 3.11/3.12 đã đối chiếu lại.
-- Finalization chỉ planning, không đổi code/tests/real artifacts.
-- Local M1-04a: 728 passed/2 skipped; targeted 61 passed; Ruff/planning/pip/diff đạt.
-  [Evidence](../docs/reviews/M1-04a-evidence.md) giữ nguyên lịch sử REVIEW.
-- Năm bbox issues vẫn requires_review; original equivalence/run identity chưa xác minh.
-- M1-04/M1-04b TODO. M1-04b đã được user giao nhưng phải qua finalization gate trước.
-- Exact next action: **push/check exact-SHA CI finalization trước spec M1-04b**.
+- M1-04a **DONE**, Tech Lead APPROVED engineering; finalization
+  6bfd43209d47ada1f236f8619ebc876c47c60f28 đã push/main khớp origin.
+  [CI 40435213198](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40435213198)
+  success exact SHA, mọi steps Python 3.11/3.12 verified.
+- M1-04b **IN_PROGRESS**, user giao implementation/pilot/commit/push, dừng REVIEW.
+  [Spec/protocol](tasks/M1/M1-04b.md) Checkpoint A chốt trước đọc thêm dữ liệu thật;
+  TODO → READY → IN_PROGRESS, duy nhất một active task.
+- Hai nhóm coverage/risk không trùng, deterministic approved pool, <=30 pages/500 refs.
+  Default preflight, immutable freeze trước execute; không sửa validators/data/ledger.
+- M1-04 cha TODO, M1-05 ngoài scope; 5 bbox issues không đóng.
+- Checkpoint C: frozen manifest 23 pages/398 crop references, không vượt trần;
+  targeted cuối 40 passed, full cuối 768 passed/2 skipped; Ruff/planning/pip/diff đạt.
+- Checkpoint F: hai reports/digests/membership khớp; 472 selected input snapshots
+  không đổi (390 files/82 absence), chỉ 28 selected recovered files hash.
+  316 original/14 reconstructed/68 unrecovered; 5 human issues giữ requires_review.
+- [Evidence draft](../docs/reviews/M1-04b-evidence.md) và sanitized statistics đã có.
+- Exact next action: **allowlist commit/push implementation và kiểm tra exact-SHA CI**.

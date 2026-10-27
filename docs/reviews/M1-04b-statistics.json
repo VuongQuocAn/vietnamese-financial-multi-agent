@@ -1,0 +1,176 @@
+{
+  "coverage": {
+    "approved_candidate_pages": 193,
+    "budget_omissions": 0,
+    "covered_strata": 14,
+    "expected_strata": 15,
+    "missing_strata": 1
+  },
+  "groups": {
+    "coverage": {
+      "availability": {
+        "existing_original": 261,
+        "missing_unrecovered": 68,
+        "reconstructed_available": 2
+      },
+      "expected_references": 331,
+      "failed_pages": 0,
+      "human_issue_occurrences": 0,
+      "human_not_verified": 0,
+      "human_requires_review": 0,
+      "issue_categories": {
+        "artifact": 152,
+        "quality": 47,
+        "structural": 0
+      },
+      "issue_codes": {
+        "bbox_outside_image": 0,
+        "duplicate_cell_position": 0,
+        "empty_cell_text": 34,
+        "invalid_bbox_geometry": 0,
+        "line_count_mismatch": 0,
+        "other": 152,
+        "source_bbox_incomplete_table": 0,
+        "sparse_table": 13
+      },
+      "issue_occurrences": 199,
+      "mapping_status": {
+        "ambiguous": 0,
+        "missing": 70,
+        "not_checked": 0,
+        "resolved": 261,
+        "unmapped": 0,
+        "unsafe": 0
+      },
+      "not_verified_issue_occurrences": 82,
+      "observed_references": 331,
+      "pages_with_issue_code": {
+        "bbox_outside_image": 0,
+        "duplicate_cell_position": 0,
+        "empty_cell_text": 2,
+        "invalid_bbox_geometry": 0,
+        "line_count_mismatch": 0,
+        "other": 14,
+        "source_bbox_incomplete_table": 0,
+        "sparse_table": 11
+      },
+      "processed_pages": 14,
+      "selected_pages": 14,
+      "statuses": {
+        "image_status": {
+          "checked": 14,
+          "invalid": 0,
+          "not_verified": 0
+        },
+        "ledger_status": {
+          "consistent": 14,
+          "not_verified": 0
+        },
+        "source_binding_status": {
+          "caller_bound": 0,
+          "caller_bound_run_unverified": 14,
+          "not_verified": 0
+        },
+        "structural_status": {
+          "invalid": 0,
+          "not_verified": 0,
+          "valid": 14
+        }
+      },
+      "unverified_references": 0
+    },
+    "risk-focused": {
+      "availability": {
+        "existing_original": 55,
+        "missing_unrecovered": 0,
+        "reconstructed_available": 12
+      },
+      "expected_references": 67,
+      "failed_pages": 0,
+      "human_issue_occurrences": 5,
+      "human_not_verified": 0,
+      "human_requires_review": 5,
+      "issue_categories": {
+        "artifact": 21,
+        "quality": 83,
+        "structural": 0
+      },
+      "issue_codes": {
+        "bbox_outside_image": 0,
+        "duplicate_cell_position": 0,
+        "empty_cell_text": 61,
+        "invalid_bbox_geometry": 2,
+        "line_count_mismatch": 0,
+        "other": 21,
+        "source_bbox_incomplete_table": 5,
+        "sparse_table": 15
+      },
+      "issue_occurrences": 104,
+      "mapping_status": {
+        "ambiguous": 0,
+        "missing": 12,
+        "not_checked": 0,
+        "resolved": 55,
+        "unmapped": 0,
+        "unsafe": 0
+      },
+      "not_verified_issue_occurrences": 9,
+      "observed_references": 67,
+      "pages_with_issue_code": {
+        "bbox_outside_image": 0,
+        "duplicate_cell_position": 0,
+        "empty_cell_text": 3,
+        "invalid_bbox_geometry": 1,
+        "line_count_mismatch": 0,
+        "other": 9,
+        "source_bbox_incomplete_table": 5,
+        "sparse_table": 6
+      },
+      "processed_pages": 9,
+      "selected_pages": 9,
+      "statuses": {
+        "image_status": {
+          "checked": 9,
+          "invalid": 0,
+          "not_verified": 0
+        },
+        "ledger_status": {
+          "consistent": 9,
+          "not_verified": 0
+        },
+        "source_binding_status": {
+          "caller_bound": 0,
+          "caller_bound_run_unverified": 9,
+          "not_verified": 0
+        },
+        "structural_status": {
+          "invalid": 0,
+          "not_verified": 0,
+          "valid": 9
+        }
+      },
+      "unverified_references": 0
+    }
+  },
+  "integrity": {
+    "absent_file_snapshots": 82,
+    "canonical_reports_equal": true,
+    "conflicts": 0,
+    "existing_file_snapshots": 390,
+    "failures": 0,
+    "manifest_unchanged": true,
+    "repeat_runs": 2,
+    "result_digests_equal": true,
+    "selected_inputs_unchanged": true,
+    "selected_recovered_files": 28,
+    "snapshot_count": 472
+  },
+  "limitations": {
+    "financial_correctness_measured": false,
+    "ocr_accuracy_measured": false,
+    "original_crop_equivalence_verified": false,
+    "original_drive_run_identity_verified": false,
+    "understanding_supplied": false
+  },
+  "protocol": "bounded_extraction_pilot_v1"
+}

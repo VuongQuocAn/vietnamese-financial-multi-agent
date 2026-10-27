@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 13 | 0 | 0 | 12 | 0 | 0 |
+| M1 | 25 | 13 | 1 | 0 | 11 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 17 | 0 | 0 | 58 | 0 | 0 |
+| TOTAL | 75 | 17 | 1 | 0 | 57 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -120,3 +120,13 @@ Acceptance 2026-10-27: **M1-04a DONE**, Tech Lead APPROVED engineering scope.
 Implementation 32a3d23 / CI 40432840930 và checkpoint d782320 / CI 40433101346
 success exact SHA, từng step Python 3.11/3.12 đã đối chiếu. Các đoạn REVIEW trên
 là lịch sử. M1-04/M1-04b TODO; next action: push/check finalization CI trước spec M1-04b.
+
+Checkpoint hiện tại M1-04b IN_PROGRESS: M1-04a DONE tại 6bfd43209d47ada1f236f8619ebc876c47c60f28,
+CI 40435213198 success exact SHA Python 3.11/3.12. Spec/protocol A chốt trước real reads;
+C frozen 23 pages/398 references; targeted 39 passed, Ruff/planning/pip/diff đạt.
+M1-04 cha TODO. Next action: hai lượt pilot trên cùng manifest, integrity/digest comparison.
+
+Checkpoint F/H draft M1-04b: first/second reports/digests khớp, 472 selected snapshots
+bất biến, 316 original/14 reconstructed/68 unrecovered, 5 human issues giữ requires_review.
+Targeted cuối 40 passed; full cuối 768 passed/2 skipped. Evidence/statistics đã có.
+Next action hiện tại: diff review rồi allowlist implementation commit/push/exact-SHA CI.
