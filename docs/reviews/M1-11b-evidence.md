@@ -1,7 +1,7 @@
 # M1-11b — Quality Gate Refinement & Real Pilot
 
-Cập nhật 2026-10-27 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu độc lập.
-M1-11/M1-11a DONE; không tự DONE hoặc bắt đầu M1-12.
+Cập nhật 2026-10-27 (Asia/Bangkok). **DONE — Tech Lead APPROVED**.
+Tech Lead cho phép M1-11b REVIEW → DONE; M1-11/M1-11a DONE, M1-12 TODO.
 
 ## Implementation và validation
 
@@ -126,7 +126,18 @@ Source validation chứng minh linkage và operational code/title rule, chưa ch
 semantic OCR/financial correctness. Unknown/reference issues tiếp tục fail closed;
 semantic text/line discrepancies không được validator hiện tại phát hiện vẫn TBD.
 Taxonomy provisional và OCR run identity gốc unverified (exact artifact page-only binding).
-Một bounded sample không đại diện dataset. Không còn blocker implementation/pilot/CI;
-Tech Lead còn phải review gate/scope/evidence và quyết định nghiệm thu độc lập.
+Một bounded sample không đại diện dataset. Tech Lead APPROVED 27/10/2026;
+không còn phần chờ nghiệm thu M1-11b. 10 insufficient, taxonomy provisional và thiếu
+ground truth/accuracy tiếp tục là limitations, không đổi thành financial acceptance.
 
-Next action: **Tech Lead review M1-11b; giữ REVIEW, không tự DONE/M1-12.**
+## Final acceptance
+
+Review checkpoint `07b6a311b7d2183794a7ec0dbbd9c645b665a325` khớp HEAD/origin sau fetch, working tree sạch.
+[CI 40510853544](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40510853544) success exact SHA đã xác minh.
+Chỉ cập nhật 7 docs/planning files sang DONE; code/tests/contracts, raw OCR, API keys
+và runtime artifacts bất biến. Giữ nguyên 19 trang/20 requests/9 resolved/10 unresolved,
+48847 input/676 output tokens. Không gọi lại Gemini hoặc full local tests.
+Local acceptance: Ruff lint/format, planning checker và diff check; acceptance SHA/CI
+xác minh riêng sau push và báo cuối, không self-reference.
+
+Next action: **Chờ Tech Lead giao task; không tự bắt đầu M1-12.**

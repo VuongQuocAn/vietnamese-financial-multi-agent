@@ -2,7 +2,8 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-11b REVIEW**, chờ Tech Lead nghiệm thu độc lập. M1-11/M1-11a DONE, M1-12 TODO.
+- **M1-11b DONE — Tech Lead APPROVED** 27/10/2026, cho phép REVIEW → DONE.
+  M1-11/M1-11a DONE, M1-12 TODO; không task triển khai active.
 - Implementation `e3e86a3a879f7865868191e28f09c6e5ecd31fbd` đã push main;
   [CI 40509984641](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40509984641) success exact SHA,
   tất cả steps Python 3.11/3.12 gồm full unit suite đạt.
@@ -22,5 +23,9 @@ Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
   Billing/quota remaining/project ID chưa independently verified; free-only owner attestation,
   guard monetary status NOT_CONFIGURED, không claim actual cost0.
 - [Spec](tasks/M1/M1-11b.md), [usage](../docs/classification-pilot.md),
-  [evidence](../docs/reviews/M1-11b-evidence.md). Publication SHA/CI xác minh sau push.
-- Next action: **Tech Lead review M1-11b; giữ REVIEW, không tự DONE/M1-12.**
+  [evidence](../docs/reviews/M1-11b-evidence.md).
+- Review checkpoint `07b6a311b7d2183794a7ec0dbbd9c645b665a325` khớp HEAD/origin sau fetch, working tree sạch;
+  [CI 40510853544](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40510853544) success exact SHA đã xác minh.
+- Acceptance chỉ 7 docs/planning files; local Ruff/planning/diff, không API hoặc full local
+  tests. Acceptance SHA/CI xác minh riêng sau push và báo cuối.
+- Next action: **Chờ Tech Lead giao task; không tự bắt đầu M1-12.**

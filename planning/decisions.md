@@ -427,3 +427,15 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
 - 19 pages/20 requests, 9 resolved/10 insufficient; cùng5 trang cũ 0/5 →4/1.
   Chỉ operational improvement, không financial accuracy; [evidence](../docs/reviews/M1-11b-evidence.md).
 - Dừng REVIEW chờ Tech Lead; không tự DONE hoặc bắt đầu M1-12.
+
+## 2026-10-27 — M1-11b Final Acceptance
+
+- Tech Lead APPROVED M1-11b, cho phép REVIEW → DONE; đồng bộ 7 docs/planning files.
+- Review checkpoint `07b6a311b7d2183794a7ec0dbbd9c645b665a325` sạch/khớp origin sau fetch;
+  [CI 40510853544](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40510853544) success exact SHA đã xác minh.
+- Giữ nguyên pilot 19 trang/20 requests/9 resolved/10 unresolved/48847 input tokens.
+  10 insufficient, taxonomy provisional, chưa ground truth/accuracy vẫn là limitations.
+- Không đổi code/tests/contracts, credentials hoặc runtime artifacts; không Gemini API
+  hoặc full local test rerun. Local acceptance: Ruff lint/format/planning/diff.
+- Acceptance SHA/CI xác minh riêng sau push và báo cuối.
+- Next action: Chờ Tech Lead giao task; không tự bắt đầu M1-12.
