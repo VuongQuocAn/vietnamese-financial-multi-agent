@@ -33,7 +33,14 @@ Chỉ provider-neutral contracts/validation, không live provider hoặc dữ li
   bằng chứng cho final source. Không warnings trong kết quả cuối.
 - Git diff/staged allowlist/privacy: đạt, đúng 12 files, không credential patterns,
   private paths hoặc data artifacts; ignore rules cho data/raw, data/processed, .env đạt.
-- Exact-SHA publication/CI: chờ push implementation; chưa chuyển REVIEW.
+- Implementation **f6de33cb5855847985069ab78e2ada8596cc8cd2** đã commit/push,
+  local/origin/main khớp/sạch trước docs checkpoint.
+- [CI 40458339034](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458339034)
+  success đúng implementation SHA; mọi steps Python 3.11 và 3.12 verified. Mỗi job
+  **901 passed, 11 skipped**: native-Windows runtime syntax/junction tests trên Linux.
+- Chuyển REVIEW sau CI implementation success, không tự DONE. Checkpoint này chỉ
+  docs/planning, không sửa source/tests/schema hoặc lặp local full suite; CI checkpoint
+  xác minh riêng sau push và ghi báo cáo cuối, không tạo commit tự tham chiếu.
 
 ## Evidence artifacts
 

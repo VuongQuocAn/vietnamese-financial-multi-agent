@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 15 | 1 | 0 | 9 | 0 | 0 |
+| M1 | 25 | 15 | 0 | 0 | 9 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 19 | 1 | 0 | 55 | 0 | 0 |
+| TOTAL | 75 | 19 | 0 | 0 | 55 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,10 +46,13 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-Hiện tại M1-05 IN_PROGRESS theo giao việc 2026-10-27, dependencies M1-02/M1-04 DONE.
-Models/validation/schema/tests và docs đã có, targeted 142 passed; full local
-910 passed/2 platform skips. Ruff/planning/pip/diff/privacy gates đạt. Next action:
-commit/push implementation và xác minh CI exact SHA. M1-06..09 TODO.
+Hiện tại **M1-05 REVIEW**, dependencies M1-02/M1-04 DONE.
+Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 và
+[CI 40458339034](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40458339034)
+success exact SHA, mọi steps Python 3.11/3.12; mỗi job 901 passed/11 platform skips.
+Targeted 142 passed/zero skips/warnings; full local 910 passed/2 platform skips.
+Ruff/planning/pip/diff/privacy gates đạt. Next action: **Tech Lead nghiệm thu M1-05**.
+M1-06..09 TODO. Chỉ contracts, chưa runtime Gateway; không tự DONE.
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,

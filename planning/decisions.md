@@ -2,6 +2,11 @@
 
 ## 2026-10-27 — M1-05 contract design
 
+- Implementation f6de33cb5855847985069ab78e2ada8596cc8cd2 đã push, CI 40458339034
+  success exact SHA/mọi steps Python 3.11/3.12; 901 passed/11 skipped mỗi job.
+  Local 910 passed/2 skipped, targeted 142 passed/zero skips/warnings. Chuyển REVIEW,
+  chờ Tech Lead nghiệm thu; final docs checkpoint chỉ tham chiếu implementation đã biết.
+
 - User giao M1-05, cho phép commit/push và dừng REVIEW, không tự DONE.
 - Core sở hữu module llm_contracts độc lập; giữ pipeline và contracts cũ.
 - Provider/model IDs riêng; text-only messages, strict types/extra forbid; metadata
