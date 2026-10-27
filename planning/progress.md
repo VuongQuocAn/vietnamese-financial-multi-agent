@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 15 | 0 | 0 | 10 | 0 | 0 |
+| M1 | 25 | 15 | 1 | 0 | 9 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 19 | 0 | 0 | 56 | 0 | 0 |
+| TOTAL | 75 | 19 | 1 | 0 | 55 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
+| `core` | DataConfig và M1-05 LLM contracts/validation đã triển khai, targeted 142 passed; chưa có runtime Gateway |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -45,6 +45,12 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+Hiện tại M1-05 IN_PROGRESS theo giao việc 2026-10-27, dependencies M1-02/M1-04 DONE.
+Models/validation/schema/tests và docs đã có, targeted 142 passed; full local
+910 passed/2 platform skips. Ruff/planning/pip/diff/privacy gates đạt. Next action:
+commit/push implementation và xác minh CI exact SHA. M1-06..09 TODO.
+Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
 CI 40306938717 success đúng SHA Python 3.11/3.12 và từng step đã xác minh.
@@ -162,7 +168,7 @@ Engineering criteria đủ bằng chứng, Tech Lead final confirmation còn ch�
 parent kiểm tra sau push riêng; không self-reference hoặc suy CI cũ cho commit mới.
 Exact next action: Tech Lead review M1-04 aggregate acceptance; do not start another task.
 
-Final acceptance hiện tại **2026-10-27: M1-04 DONE, Tech Lead APPROVED** engineering
+Final acceptance M1-04 **2026-10-27: M1-04 DONE, Tech Lead APPROVED** engineering
 scope. M1-03/M1-04a/M1-04b DONE; các đoạn REVIEW bên trên là lịch sử trước approval.
 Baseline ad39a946546b4ffc6bc73c7044caa55f6a357d7d /
 [CI 40439654103](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40439654103)

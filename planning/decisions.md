@@ -1,5 +1,22 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-05 contract design
+
+- User giao M1-05, cho phép commit/push và dừng REVIEW, không tự DONE.
+- Core sở hữu module llm_contracts độc lập; giữ pipeline và contracts cũ.
+- Provider/model IDs riêng; text-only messages, strict types/extra forbid; metadata
+  có fields cố định. Không kwargs/SDK/credentials/account identities.
+- Chỉ schema reference Draft 2020-12; parser JSON không nâng schema status.
+  SchemaValidation là attestation có validator identity, không runtime validator.
+- Unknown usage/cost khác zero; không suy total, money Decimal serialized string.
+- Errors code/category cố định, provider error code allowlist; public parser
+  bỏ raw input/context và che dynamic paths. Không tự redact secrets trong text.
+- Version llm_gateway_v1, deterministic JSON/exclude_unset, schema drift test.
+- Temperature upper bound và null/capabilities do adapter kiểm tra sau; không
+  âm thầm bỏ parameter. SDK/model/live API/pricing/quota/budget/cache vẫn TBD.
+- [Thiết kế và giới hạn](../docs/llm-gateway-contract.md),
+  [task spec](tasks/M1/M1-05.md). M1-06..09 giữ TODO.
+
 ## 2026-10-27 — Tech Lead Final Acceptance M1-04
 
 - **M1-04 chính thức APPROVED**, REVIEW → DONE; M1-04a/M1-04b và M1-03 đã DONE.

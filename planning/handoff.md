@@ -2,66 +2,52 @@
 
 ## Active Task
 
-Không có implementation task đang chạy. M1-04 đã hoàn tất theo Tech Lead APPROVED.
+M1-05 — LLM Gateway Contract
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-2026-10-27: baseline ad39a946546b4ffc6bc73c7044caa55f6a357d7d sạch,
-fetch/local/origin/main khớp. CI 40439654103 success exact SHA,
-mọi steps Python 3.11/3.12 verified. M1-03/M1-04a/M1-04b DONE.
-M1-04 được Tech Lead final APPROVED engineering scope ngày 2026-10-27.
+Baseline e75413cf63302cbeaf8a4407e811f55f16e4d8b2 sạch, local/origin/main khớp;
+CI 40440918230 success exact SHA, từng step Python 3.11/3.12 verified.
+M1-02/M1-04 DONE. User giao M1-05 ngày 2026-10-27, cho phép commit/push, dừng REVIEW.
 
 ## Completed Work
 
-M1-04a DONE, M1-04b DONE, M1-04 aggregate acceptance APPROVED.
-Registry/spec/dashboard/current-status/decisions/evidence đồng bộ DONE.
-Giữ nguyên phương pháp, kết quả và limitations. Evidence được duyệt:
-23 pages/398 refs, coverage 14/risk 9, 316 original/14 reconstructed/68 unrecovered,
-hai lượt deterministic và 472 selected snapshots unchanged.
-Không sửa code/tests/contracts/validators/recovery hoặc source/private artifacts.
+Đọc context, xác minh Git/dependencies; spec/design thuần core đã xác định.
+TODO → READY → IN_PROGRESS theo quyền user giao. Models/validation và synthetic
+tests ổn định; docs/schema/export đã tạo. Targeted 142 passed/zero skips với -W error.
+Export revalidate Python snapshot trước JSON serialization để không che binary money.
 
 ## Remaining Work
 
-Không còn acceptance/implementation work của M1-04.
-Finalization commit/push/CI exact SHA được xác minh trước báo cáo kết thúc;
-không tạo commit tự tham chiếu SHA/CI. Không bắt đầu task mới.
+Commit/push/CI exact SHA rồi cập nhật REVIEW; không tự DONE.
 
 ## Modified Files
 
-planning/tasks.md, tasks/M1/M1-04.md, current-status.md, progress.md,
-decisions.md, handoff.md; docs/reviews/M1-04-aggregate-evidence.md.
-Chỉ 7 docs/planning files; statistics và dữ liệu giữ nguyên, không private paths/
-OCR content/crop IDs/fingerprints/secrets trong tập commit.
+src/core/llm_contracts.py; tests/unit/test_llm_contracts.py;
+scripts/export_llm_gateway_schema.py; schemas/llm_gateway_v1.schema.json;
+docs/llm-gateway-contract.md; docs/reviews/M1-05-evidence.md;
+planning spec/registry/dashboard/status/decisions/handoff.
 
 ## Tests
 
-Checks finalization trong .venv [dev]: planning checker **75 tasks**, Ruff lint/format,
-git diff --check và pip check đạt. Staged diff/privacy/index kiểm tra trước commit.
-Không lặp full unit suite hoặc real pilot vì source code không đổi.
-Kết quả lịch sử: local 768 passed/2 skipped (case-insensitive FS/FIFO Windows);
-CI aggregate 759 passed/11 skipped mỗi job Python 3.11/3.12 trên Linux.
-CI acceptance commit mới xác minh riêng sau push, không suy từ baseline CI.
+Targeted 142 passed, zero skips/warnings. Ruff lint/format 99 files, planning 75 tasks,
+pip/diff/privacy đạt. Full local 910 passed/2 skipped: case-insensitive filesystem
+và FIFO không hỗ trợ Windows. Không coi skipped tests là passed.
+Không đọc dataset/secrets hoặc live inference; không benchmark chất lượng tài chính.
 
 ## Blockers
 
-Không có blocker của task đã nghiệm thu. Unresolved data quality issues/research
-limitations vẫn còn: 5 human bbox issues requires_review, 68 missing unrecovered,
-thiếu BCC/2025 và purposive sampling; original equivalence/OCR-Drive identity unverified.
-Chưa có ground truth/approved quality thresholds; không chứng nhận OCR accuracy,
-table completeness, financial correctness hoặc dataset-wide readiness.
-Phiên này không rerun pilot/đọc/hash dataset hoặc sửa manifest/PNG/sidecars/index/ledger.
+Không. SDK/model/live API/pricing/quota/budget/schema capabilities/cache backend TBD.
 
 ## Git Checkpoint
 
-Stable baseline ad39a946546b4ffc6bc73c7044caa55f6a357d7d,
-[CI 40439654103](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40439654103)
-success exact SHA. Final acceptance SHA/CI ghi báo cáo kết thúc sau push,
-không thêm commit tự tham chiếu. Private evidence/datasets giữ ignored/untracked.
+Stable baseline e75413cf63302cbeaf8a4407e811f55f16e4d8b2 / CI 40440918230 success.
+Working tree final source đạt full unit suite; chưa publication/CI implementation.
 
 ## Exact Next Action
 
-Chờ Tech Lead rà soát roadmap và giao task tiếp theo. Không tự bắt đầu implementation.
+Commit/push implementation và xác minh CI exact SHA.

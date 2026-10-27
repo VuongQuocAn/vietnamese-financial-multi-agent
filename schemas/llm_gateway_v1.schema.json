@@ -1,0 +1,954 @@
+{
+  "$defs": {
+    "Correlation": {
+      "additionalProperties": false,
+      "properties": {
+        "trace_id": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace Id"
+        },
+        "parent_request_id": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Request Id"
+        },
+        "caller": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caller"
+        }
+      },
+      "title": "Correlation",
+      "type": "object"
+    },
+    "Cost": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "unknown",
+            "not_available",
+            "available"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "unknown",
+            "estimated",
+            "provider_reported",
+            "calculated"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "price_source": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price Source"
+        },
+        "pricing_version": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Version"
+        },
+        "pricing_timestamp": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pricing Timestamp"
+        }
+      },
+      "required": [
+        "status",
+        "source"
+      ],
+      "title": "Cost",
+      "type": "object"
+    },
+    "GatewayError": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": [
+            "invalid_request",
+            "invalid_configuration",
+            "authentication",
+            "authorization",
+            "rate_limit",
+            "quota_exceeded",
+            "provider_unavailable",
+            "timeout",
+            "network",
+            "structured_output_invalid",
+            "schema_mismatch",
+            "safety",
+            "internal",
+            "unknown_provider"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "code": {
+          "enum": [
+            "invalid_request",
+            "invalid_configuration",
+            "authentication",
+            "authorization",
+            "rate_limit",
+            "quota_exceeded",
+            "provider_unavailable",
+            "timeout",
+            "network",
+            "structured_output_invalid",
+            "schema_mismatch",
+            "safety",
+            "internal",
+            "unknown_provider"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "retryability": {
+          "enum": [
+            "unknown",
+            "retryable",
+            "not_retryable"
+          ],
+          "title": "Retryability",
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "caller",
+            "gateway",
+            "adapter",
+            "provider"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "safe_message": {
+          "const": "LLM operation failed",
+          "default": "LLM operation failed",
+          "title": "Safe Message",
+          "type": "string"
+        },
+        "provider_error_code": {
+          "anyOf": [
+            {
+              "enum": [
+                "http_400",
+                "http_401",
+                "http_403",
+                "http_408",
+                "http_429",
+                "http_500",
+                "http_502",
+                "http_503",
+                "http_504",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Error Code"
+        },
+        "retry_after_seconds": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retry After Seconds"
+        }
+      },
+      "required": [
+        "category",
+        "code",
+        "retryability",
+        "origin"
+      ],
+      "title": "GatewayError",
+      "type": "object"
+    },
+    "GenerationParameters": {
+      "additionalProperties": false,
+      "properties": {
+        "temperature": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Temperature"
+        },
+        "top_p": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top P"
+        },
+        "max_output_tokens": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Output Tokens"
+        },
+        "stop_sequences": {
+          "anyOf": [
+            {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stop Sequences"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        }
+      },
+      "title": "GenerationParameters",
+      "type": "object"
+    },
+    "JSONOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "const": "json",
+          "title": "Format",
+          "type": "string"
+        },
+        "raw_text": {
+          "title": "Raw Text",
+          "type": "string"
+        },
+        "payload": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "validation_status": {
+          "enum": [
+            "json_valid",
+            "invalid_json",
+            "unverified",
+            "schema_valid",
+            "schema_invalid"
+          ],
+          "title": "Validation Status",
+          "type": "string"
+        },
+        "schema_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SchemaReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "validation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SchemaValidation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "format",
+        "raw_text",
+        "payload",
+        "validation_status"
+      ],
+      "title": "JSONOutput",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "LLMRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "llm_gateway_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "model": {
+          "$ref": "#/$defs/ModelIdentity"
+        },
+        "messages": {
+          "items": {
+            "$ref": "#/$defs/Message"
+          },
+          "minItems": 1,
+          "title": "Messages",
+          "type": "array"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationParameters"
+        },
+        "output_spec": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OutputSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "constraints": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RequestConstraints"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "correlation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Correlation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "model",
+        "messages",
+        "generation"
+      ],
+      "title": "LLMRequest",
+      "type": "object"
+    },
+    "LLMResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "llm_gateway_v1",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "request_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "success",
+            "error",
+            "partial",
+            "refused",
+            "malformed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ResponseProvenance"
+        },
+        "usage": {
+          "$ref": "#/$defs/Usage"
+        },
+        "cost": {
+          "$ref": "#/$defs/Cost"
+        },
+        "output": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "json": "#/$defs/JSONOutput",
+                  "text": "#/$defs/TextOutput"
+                },
+                "propertyName": "format"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TextOutput"
+                },
+                {
+                  "$ref": "#/$defs/JSONOutput"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GatewayError"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "finish_reason": {
+          "enum": [
+            "stop",
+            "length",
+            "safety",
+            "error",
+            "unknown"
+          ],
+          "title": "Finish Reason",
+          "type": "string"
+        },
+        "provider_response_id": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Response Id"
+        },
+        "correlation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Correlation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "status",
+        "provenance",
+        "usage",
+        "cost",
+        "finish_reason"
+      ],
+      "title": "LLMResponse",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "system",
+            "developer",
+            "user",
+            "assistant"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "content"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "ModelIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "model"
+      ],
+      "title": "ModelIdentity",
+      "type": "object"
+    },
+    "OutputSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "enum": [
+            "text",
+            "json"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "schema_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SchemaReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "strict": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Strict"
+        }
+      },
+      "required": [
+        "format"
+      ],
+      "title": "OutputSpec",
+      "type": "object"
+    },
+    "RequestConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "timeout_seconds": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timeout Seconds"
+        }
+      },
+      "title": "RequestConstraints",
+      "type": "object"
+    },
+    "ResponseProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "requested_model": {
+          "$ref": "#/$defs/ModelIdentity"
+        },
+        "effective_model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelIdentity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "provider_reported_model": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Reported Model"
+        },
+        "metadata_source": {
+          "enum": [
+            "unknown",
+            "adapter_confirmed",
+            "provider_reported"
+          ],
+          "title": "Metadata Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requested_model",
+        "metadata_source"
+      ],
+      "title": "ResponseProvenance",
+      "type": "object"
+    },
+    "SchemaReference": {
+      "additionalProperties": false,
+      "description": "Opaque identity, không tải URL/file hoặc khẳng định dialect được provider hỗ trợ.",
+      "properties": {
+        "schema_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Version",
+          "type": "string"
+        },
+        "dialect": {
+          "const": "https://json-schema.org/draft/2020-12/schema",
+          "title": "Dialect",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_id",
+        "name",
+        "version",
+        "dialect"
+      ],
+      "title": "SchemaReference",
+      "type": "object"
+    },
+    "SchemaValidation": {
+      "additionalProperties": false,
+      "description": "Attestation externe; không phải bằng chứng validator đã chạy trong M1-05.",
+      "properties": {
+        "schema_ref": {
+          "$ref": "#/$defs/SchemaReference"
+        },
+        "validator_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+          "title": "Validator Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "schema_valid",
+            "schema_invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_ref",
+        "validator_id",
+        "status"
+      ],
+      "title": "SchemaValidation",
+      "type": "object"
+    },
+    "TextOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "const": "text",
+          "title": "Format",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "format",
+        "text"
+      ],
+      "title": "TextOutput",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "unknown",
+            "not_available",
+            "available"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "unknown",
+            "provider_reported",
+            "calculated",
+            "estimated"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Input Tokens"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Tokens"
+        },
+        "total_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total Tokens"
+        },
+        "cached_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cached Tokens"
+        },
+        "reasoning_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reasoning Tokens"
+        }
+      },
+      "required": [
+        "status",
+        "source"
+      ],
+      "title": "Usage",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/LLMRequest"
+    },
+    {
+      "$ref": "#/$defs/LLMResponse"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vietnamese-financial-multi-agent:llm_gateway_v1"
+}
