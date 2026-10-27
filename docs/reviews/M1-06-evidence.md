@@ -9,11 +9,12 @@
 - Local: targeted `tests/unit/test_llm_gateway.py`: **28 passed**, zero skips;
   Ruff lint/format, planning và diff check xác minh trước publication.
   Không chạy full local suite hoặc benchmark. CI giữ full tests/unit 3.11/3.12.
-- Git/CI implementation: exact SHA, URL và kết quả được kiểm tra sau push và ghi
-  báo cáo bàn giao cuối; không dùng CI baseline thay bằng chứng implementation,
-  không tạo commit để nhúng SHA của chính nó. Checkpoint chứa file này là candidate
-  REVIEW, chỉ sẵn sàng nghiệm thu khi CI exact SHA thành công.
+- Git/CI implementation: **21d667c96fd8c9fe2ec593f0e486368df42018a5** /
+  [CI 40460425395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40460425395)
+  success exact SHA; mọi steps Python 3.11/3.12 verified, mỗi job **929 passed,
+  11 skipped**. User cho phép nghiệm thu theo CI ngày 27/10/2026: REVIEW → DONE,
+  không cần review lại source hoặc lặp full local suite. Acceptance chỉ docs/planning.
 - Limitations: no trusted schema engine (reject schema attestations), no Gemini/live
   provider, timer/retry/quota/budget/cache. Timeout do transport báo; fake chỉ synthetic.
   Contract-valid/request-bound khác schema-validated. Không đo chất lượng tài chính.
-- Next action: Tech Lead review M1-06 sau CI; không tự DONE hoặc bắt đầu M1-07.
+- Next action: Tech Lead chốt inputs và giao triển khai M1-07 (spec đã chuẩn bị, TODO).

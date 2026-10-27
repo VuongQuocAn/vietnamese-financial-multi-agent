@@ -2,56 +2,50 @@
 
 ## Active Task
 
-M1-06 — Shared LLM Gateway (Research MVP).
+M1-06 — Finalize Acceptance; M1-07 mới chuẩn bị spec, chưa implementation.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Baseline main/origin sạch b689cf47f67c7bc763e3dd566c08f1699bb01463;
-CI 40459277293 success exact acceptance SHA M1-05, mọi steps 3.11/3.12 verified.
-Dependencies M1-05/M1-03a DONE; user giao M1-06, cho phép commit/push và dừng REVIEW.
-Candidate REVIEW chỉ sẵn sàng nghiệm thu sau full CI exact implementation SHA.
+Ngày 27/10/2026: main/origin sạch, implementation 21d667c96fd8c9fe2ec593f0e486368df42018a5.
+CI 40460425395 success đúng SHA, mọi steps Python 3.11/3.12 verified;
+mỗi job 929 passed/11 skipped. User cho phép nghiệm thu theo CI, không review lại source.
 
 ## Completed Work
 
-Gateway callable transport mapping, fake synthetic, focused tests, API docs và
-Research MVP workflow. Binding request snapshots và response copies; structured
-semantics, usage/cost giữ nguyên. Contract/schema không đổi, không source data/keys.
+M1-06 REVIEW → DONE; registry/dashboard/spec/evidence đồng bộ nghiệm thu.
+M1-07 có spec chuẩn bị, giữ TODO với SDK/model/schema validation/live scope TBD.
 
 ## Remaining Work
 
-Publication/CI exact SHA được xác minh sau push trước bàn giao cuối; Tech Lead review.
-SHA/CI ghi báo cáo cuối để tránh commit tự tham chiếu. Không tự DONE.
+Acceptance publication/CI xác minh sau push, báo SHA/URL ở báo cáo cuối.
+M1-06 không còn work cần nghiệm thu; M1-07 chưa được giao implementation.
 
 ## Modified Files
 
-AGENTS.md; src/core/{llm_gateway,fake_llm_transport}.py;
-tests/unit/test_llm_gateway.py; docs/shared-llm-gateway.md;
-docs/reviews/M1-06-evidence.md; planning/{tasks,progress,current-status,handoff}.md;
-planning/tasks/M1/M1-06.md.
+planning/{tasks,progress,current-status,handoff}.md; planning/tasks/M1/M1-06.md;
+planning/tasks/M1/M1-07.md; docs/reviews/M1-06-evidence.md. Chỉ 7 files docs/planning.
 
 ## Tests
 
-Targeted **28 passed**, zero skips; Ruff lint/format, planning và diff gates
-kiểm tra trước publication. Full suite dành cho CI Python 3.11/3.12;
-không chạy full local lặp lại, không live provider hoặc benchmark tài chính.
+Dùng CI implementation đã verified: 929 passed/11 skipped mỗi Python 3.11/3.12.
+Local chỉ Ruff/planning/diff cho acceptance; không lặp unit suite hoặc review source.
 
 ## Blockers
 
-Không blocker implementation. Chờ CI và Tech Lead review; chưa có trusted validator:
-reject schema attestations, unverified giữ nguyên. No SDK/live provider/timer/retry/
-quota/cache. Timeout do transport thực thi/báo; fake chỉ phục vụ tests/examples.
+Không blocker M1-06. M1-07 còn inputs TBD, chưa READY; xem spec chuẩn bị.
+Limitations M1-06 giữ nguyên, không SDK/live provider hoặc thay contracts.
 
 ## Git Checkpoint
 
-Stable baseline b689cf47f67c7bc763e3dd566c08f1699bb01463 /
-[CI 40459277293](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40459277293).
-Implementation checkpoint là commit chứa handoff này; exact SHA/CI được xác minh
-sau push và ghi báo cáo cuối. CI baseline không phải bằng chứng implementation.
+Stable implementation 21d667c96fd8c9fe2ec593f0e486368df42018a5 /
+[CI 40460425395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40460425395)
+success exact SHA. Acceptance SHA/CI xác minh riêng sau push và báo cuối,
+không tự tham chiếu hoặc gán CI implementation cho commit docs mới.
 
 ## Exact Next Action
 
-Tech Lead review M1-06 sau khi CI exact SHA thành công.
+Tech Lead chốt inputs và giao triển khai M1-07.

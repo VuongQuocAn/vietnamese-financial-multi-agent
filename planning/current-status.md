@@ -2,20 +2,16 @@
 
 Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-06 REVIEW — candidate chờ CI exact SHA và Tech Lead nghiệm thu**.
-- Dependencies M1-05/M1-03a DONE. Baseline main/origin sạch
-  b689cf47f67c7bc763e3dd566c08f1699bb01463;
-  [CI acceptance M1-05](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40459277293)
-  success exact SHA và từng step Python 3.11/3.12 verified trước triển khai.
-- Gateway/fake và **28 focused tests passed**, zero skips; binding snapshots,
-  correlation/format/schema checks, safe errors và usage/cost preservation.
-  Contracts/schema v1 bất biến; không SDK/network/secrets/dataset.
-- [Spec](tasks/M1/M1-06.md), [API](../docs/shared-llm-gateway.md),
-  [evidence](../docs/reviews/M1-06-evidence.md). Research MVP ghi AGENTS, CI giữ nguyên.
-- Local Ruff lint/format, planning/diff gates kiểm tra trước publication. Full suite
-  chạy trên CI 3.11/3.12; exact implementation SHA/URL/kết quả xác minh sau push,
-  ghi báo cáo cuối, không suy từ CI baseline và không tự tham chiếu commit.
-- Limitations: no Gemini/live provider/timer/retry/quota/cache/trusted schema engine.
-  Timeout do transport báo; reject schema attestations, giữ unverified.
-- Next action: **Tech Lead review M1-06 sau khi CI exact SHA thành công**.
-  Không tự DONE hoặc bắt đầu M1-07.
+- **M1-06 DONE** theo user nghiệm thu dựa trên CI ngày 27/10/2026.
+- Implementation **21d667c96fd8c9fe2ec593f0e486368df42018a5** /
+  [CI 40460425395](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40460425395)
+  success exact SHA; mọi steps Python 3.11/3.12 verified, mỗi job **929 passed/11 skipped**.
+- Acceptance chỉ docs/planning; không review lại source hoặc lặp full local suite.
+  Local planning/diff và Ruff kiểm tra cho checkpoint acceptance.
+- [Evidence](../docs/reviews/M1-06-evidence.md). Giữ limitations: chưa Gemini/live
+  provider/trusted schema engine/timer/retry/quota/cache; contracts v1 không đổi.
+- [M1-07 spec](tasks/M1/M1-07.md) đã chuẩn bị, giữ **TODO**: SDK/model, schema
+  validation và live scope/ngân sách còn TBD. Không có implementation task đang chạy.
+- Stable implementation SHA/CI như trên; acceptance SHA/CI xác minh sau push,
+  ghi báo cáo cuối, không tự tham chiếu commit.
+- Next action: **Tech Lead chốt inputs và giao triển khai M1-07**.
