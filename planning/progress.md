@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 26 | 22 | 0 | 0 | 3 | 0 | 1 |
+| M1 | 26 | 23 | 0 | 0 | 3 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 76 | 26 | 0 | 0 | 49 | 0 | 1 |
+| TOTAL | 76 | 27 | 0 | 0 | 49 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot REVIEW, 17 focused +146 related regression passed, live 6 requests/5 real pages; CI 3.11/3.12 mỗi job 1130 passed/11 skipped |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE (Tech Lead APPROVED), 17 focused +146 related regression passed, live 6 requests/5 real pages; CI 3.11/3.12 mỗi job 1130 passed/11 skipped |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,7 +46,8 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-11a REVIEW**, chờ Tech Lead; M1-11 DONE, M1-12 TODO, không task triển khai active.
+**M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,
+không task triển khai active.
 Baseline HEAD/origin `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5` sạch/khớp sau fetch.
 Dry-run 19 pages/3 symbols/14 strata; live 6 requests gồm smoke +5 pages,
 12307 input/12483 total tokens; 0 resolved/5 unresolved, cache HIT 5/checkpoint HIT 0.
@@ -54,7 +55,13 @@ Dừng trước send kế tiếp vì input-token reservation; 17 focused +146 re
 Implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` /
 [CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
 success exact SHA, jobs/mọi steps 3.11/3.12; mỗi job 1130 passed/11 skipped.
-Next action: Tech Lead review M1-11a và quyết định bước tiếp theo; không tự bắt đầu M1-12.
+Review checkpoint `ad2a1664faa33f54ccc90e4a0cbace41ab48fbc7` /
+[CI 40506143468](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40506143468)
+success exact SHA 3.11/3.12 đã kiểm tra lại. Acceptance chỉ 7 docs/planning files;
+Ruff/planning/diff, không unit/API rerun; acceptance SHA/CI kiểm tra riêng sau push.
+Hai follow-up chưa triển khai: đánh giá lại OCR quality gate; loại bỏ giới hạn
+20.000 input tokens tùy ý ở pilot tiếp theo. Giữ nguyên kết quả và implementation hiện tại.
+Next action: Chờ Tech Lead giao việc; không tự bắt đầu M1-12 hoặc task khác.
 Các đoạn sau là lịch sử trước M1-11a.
 
 **M1-11 DONE**, Tech Lead APPROVED engineering scope 27/10/2026, không blocking issues;

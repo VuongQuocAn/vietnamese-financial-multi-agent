@@ -1,5 +1,24 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-11a Final Acceptance
+
+- Tech Lead APPROVED sau review implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2`,
+  source/tests/evidence và [CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042);
+  cho phép REVIEW → DONE. Python 3.11/3.12 mỗi job 1130 passed/11 skipped.
+- Trước acceptance, HEAD/origin khớp `ad2a1664faa33f54ccc90e4a0cbace41ab48fbc7`,
+  working tree sạch; [CI 40506143468](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40506143468)
+  success exact SHA 3.11/3.12 được đối chiếu lại.
+- Giữ nguyên live: 6 requests, 5 real pages, 0 resolved/5 unresolved,
+  12307 input/176 output/12483 total tokens, cache HIT 5/checkpoint HIT 0.
+  Không chạy lại Gemini; không biến nghiệm thu engineering thành financial accuracy.
+- Hai follow-up chỉ ghi nhận, chờ Tech Lead giao việc riêng:
+  đánh giá lại OCR quality gate; loại bỏ giới hạn 20.000 input tokens tùy ý ở pilot tiếp theo.
+  Không sửa gate/token cap hiện tại trong acceptance hoặc tự tạo/bắt đầu task mới.
+- Chỉ 7 docs/planning files; code/tests/contracts/API keys/runtime artifacts bất biến.
+  Local Ruff/planning/diff; không full local unit suite/API. Acceptance SHA/CI kiểm tra
+  riêng sau push và báo cuối. [Evidence](../docs/reviews/M1-11a-evidence.md).
+- M1-12 TODO; chờ Tech Lead giao việc, không tự bắt đầu M1-12 hoặc task khác.
+
 ## 2026-10-27 — M1-11a bounded classification pilot
 
 - User giao M1-11a, cho phép code/tests/live/commit/push, dừng REVIEW; M1-11 DONE,

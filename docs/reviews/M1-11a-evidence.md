@@ -1,7 +1,8 @@
 # M1-11a — Bounded Real Classification Pilot
 
-Cập nhật 2026-10-27 (Asia/Bangkok); **M1-11a REVIEW**, chờ Tech Lead nghiệm thu độc lập.
-M1-11 DONE; không tự bắt đầu M1-12.
+Cập nhật 2026-10-27 (Asia/Bangkok); **M1-11a DONE — Tech Lead APPROVED**.
+Tech Lead đã review implementation/source/tests/evidence/CI, cho phép REVIEW → DONE.
+M1-11 DONE; không tự bắt đầu M1-12 hoặc task khác.
 
 ## Phạm vi và nguồn
 
@@ -89,16 +90,21 @@ observed counters và phép đối chiếu này, **không phải kết quả ch�
 - Một trang insufficient_evidence; continuation/appendix/mất title/code vẫn cần human review.
   Taxonomy B01/B02/B03/B09 provisional; không nhãn tham chiếu độc lập, không confusion matrix
   hoặc accuracy. Anchors đã kiểm tra linkage/bbox, không chứng nhận đọc hiểu tài chính đúng.
-- Trước M1-12: Tech Lead nên review nguyên nhân gate chặn, token-bound calibration và
-  sampling order (live dừng sớm nên chỉ phủ 1 symbol), rồi quyết định có task policy/pilot
-  bổ sung với ngân sách phù hợp hay không. Không tự nới gate/truncate/budget/đổi taxonomy.
+- Tech Lead yêu cầu hai follow-up: **đánh giá lại OCR quality gate** và **loại bỏ giới hạn
+  20.000 input tokens tùy ý ở pilot tiếp theo**. Chỉ ghi nhận trong acceptance; không sửa
+  gate/cap trong code hiện tại, không thay kết quả lịch sử hoặc tự chạy pilot mới.
+  Sampling order vẫn là limitation (live dừng sớm nên chỉ phủ 1 symbol).
   Engineering access đã verified; financial/dataset readiness và taxonomy approval vẫn TBD.
 
 Implementation **063bd2935a47832d928a6869ea35a2bd0cf6f9f2** đã push;
 [CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
 success exact SHA. Đã kiểm tra headSha, jobs và mọi steps Python 3.11/3.12 success;
 logs mỗi job **1130 passed/11 skipped**. CI chứng minh engineering checks, không rerun live.
-Publication REVIEW chỉ docs/planning; SHA/CI publication xác minh riêng sau push và báo cuối,
-không suy CI implementation cho commit mới hoặc ghi commit tự tham chiếu.
+Review checkpoint **ad2a1664faa33f54ccc90e4a0cbace41ab48fbc7** /
+[CI 40506143468](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40506143468)
+success exact SHA Python 3.11/3.12 đã kiểm tra lại trước acceptance.
+Acceptance chỉ 7 docs/planning files; local Ruff/planning/diff, không unit/Gemini rerun,
+không sửa production code/tests/contracts/API keys hoặc runtime artifacts.
+Acceptance SHA/CI xác minh riêng sau push và báo cuối, không suy từ CI cũ hoặc tự tham chiếu.
 
-Next action: Tech Lead review M1-11a và quyết định bước tiếp theo; không tự bắt đầu M1-12.
+Next action: Chờ Tech Lead giao việc; không tự bắt đầu M1-12 hoặc task khác.
