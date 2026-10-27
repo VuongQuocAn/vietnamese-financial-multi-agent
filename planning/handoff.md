@@ -2,62 +2,60 @@
 
 ## Active Task
 
-M1-11 — Page and Document Classification; không task triển khai active.
+M1-11 — Final Acceptance; không task triển khai active.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Implementation `e8e757fe7b9f2d1cd1af75f3eb4c026e8fca86c5` đã push origin/main.
+Implementation `e8e757fe7b9f2d1cd1af75f3eb4c026e8fca86c5` /
 [CI 40500929151](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40500929151)
-success exact implementation SHA: Python 3.11/3.12, cả jobs và mọi steps success;
-mỗi job 1113 passed/11 skipped. Baseline trước task `98abecb538a82fd6ffdf4db57b8dfff81899c278`.
-Dependencies M1-04/07/08/09/10 DONE.
+success exact SHA, Python 3.11/3.12 mỗi job 1113 passed/11 skipped.
+Review checkpoint `7a3614559e2542414166d78e300507d533b84217` khớp HEAD/origin
+sau fetch, working tree sạch trước acceptance.
+[CI 40501298126](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40501298126)
+success exact SHA; jobs và mọi steps 3.11/3.12 đã kiểm tra lại.
+Tech Lead APPROVED engineering scope 27/10/2026, không blocking issues.
 
 ## Completed Work
 
-PageClassifier qua cache/guard/Gateway/Gemini, prediction schema/local evidence gate;
-aggregate_document runtime theo complete manifest và explicit document/run source_ref.
-Checkpoint opt-in, verified save chỉ resolved qua gate; HIT revalidation không gọi LLM,
-invalidation raw/provenance/config/model/prompt/schema/taxonomy/processing version.
-B01/B02/B03/B09 candidates opt-in; taxonomy approval kế toán TBD.
-Raw/contracts/shared infrastructure bất biến, không scan dataset/ảnh/crops.
-Secrets ignored/untracked, giữ local file, không đọc keys. Usage/evidence/planning đồng bộ.
+PageClassifier, aggregation theo manifest/source, provenance và checkpoint/cache/quota
+đã được Tech Lead nghiệm thu. Đồng bộ registry/spec/progress/status/decisions/handoff/
+evidence REVIEW → DONE. Không sửa implementation, tests, contracts hoặc API keys.
 
 ## Remaining Work
 
-Tech Lead review độc lập trước DONE. Taxonomy approval và live API access chưa verified.
-Không tự bắt đầu M1-12.
+Không còn công việc nghiệm thu M1-11. Acceptance SHA/CI kiểm tra riêng sau push
+và báo cuối; không suy từ implementation CI. M1-12 TODO, chưa được giao triển khai.
 
 ## Modified Files
 
-Implementation 10 files: .gitignore; src/document_processing/classification.py;
-tests/unit/test_classification.py; docs/page-document-classification.md;
-docs/reviews/M1-11-evidence.md; planning/{tasks,progress,current-status,handoff}.md;
-planning/tasks/M1/M1-11.md. Publication REVIEW chỉ 6 docs/planning files.
+Chỉ 7 files: planning/{tasks,progress,current-status,decisions,handoff}.md;
+planning/tasks/M1/M1-11.md; docs/reviews/M1-11-evidence.md.
 
 ## Tests
 
-35 focused + 333 related regression passed; Ruff lint/format (132 files),
-planning 75 tasks và diff check đạt. CI full unit suite 1113 passed/11 skipped
-trên mỗi Python 3.11/3.12, exact implementation SHA. Không lặp full local suite.
-Publication docs chỉ static/planning/diff checks; CI publication kiểm tra riêng sau push.
+Giữ evidence implementation: 35 focused + 333 related regression passed;
+CI Python 3.11/3.12 mỗi job 1113 passed/11 skipped.
+Acceptance local chỉ Ruff lint/format, planning checker và diff check.
+Không chạy lại full local unit suite hoặc live API; CI acceptance xác minh riêng.
 
 ## Blockers
 
-Live pilot chưa đủ selected credential/project mapping/active quota/budget xác nhận.
-0 real API requests, actual usage/cost/quota unknown. Model code đối chiếu Google docs,
-không chứng minh live access. Không financial acceptance/accuracy trên dữ liệu thật.
-Trusted filesystem/single-writer checkpoints; caller xác nhận source binding/completeness,
-storage permissions, configuration revision và operational acceptance của gate.
+Không blocking issues trong engineering scope.
+Limitations giữ nguyên: taxonomy chưa duyệt chính thức, text-only evidence gate bảo thủ;
+live Gemini chưa verified (0 requests), selected credential/project mapping/active
+quota/budget chưa xác nhận. Không financial accuracy/acceptance trên dữ liệu thật.
+Caller vẫn chịu source binding/completeness/storage permissions/operational acceptance.
 
 ## Git Checkpoint
 
 Stable implementation `e8e757fe7b9f2d1cd1af75f3eb4c026e8fca86c5` / CI 40500929151 success.
-Publication SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
+Review checkpoint `7a3614559e2542414166d78e300507d533b84217` / CI 40501298126 success.
+Acceptance SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
 
 ## Exact Next Action
 
-Tech Lead review M1-11; không tự DONE hoặc bắt đầu M1-12.
+Chờ Tech Lead giao việc; không tự bắt đầu M1-12.

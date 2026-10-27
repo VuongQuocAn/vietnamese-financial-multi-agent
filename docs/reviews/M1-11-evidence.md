@@ -1,12 +1,14 @@
 # M1-11 — Engineering Evidence
 
-Cập nhật 2026-10-27 (Asia/Bangkok); **REVIEW**, chưa Tech Lead nghiệm thu.
+Cập nhật 2026-10-27 (Asia/Bangkok); **DONE — Tech Lead APPROVED** engineering scope.
+Tech Lead review implementation/tests/CI, không blocking issues; cho phép REVIEW → DONE.
 
 - Baseline HEAD/origin: `98abecb538a82fd6ffdf4db57b8dfff81899c278` đã fetch/đối chiếu.
-- M1-04/07/08/09/10 DONE trong registry; M1-11 là implementation task duy nhất.
+- M1-04/07/08/09/10 DONE; M1-11 đã nghiệm thu, không implementation task active.
 - PageClassifier, Prediction/local schema registry, aggregate_document; usage ở
   [page/document classification](../page-document-classification.md).
-- Candidate labels B01/B02/B03/B09 opt-in; accounting taxonomy approval TBD.
+- Candidate labels B01/B02/B03/B09 opt-in; taxonomy chưa được duyệt chính thức.
+  Text-only evidence gate bảo thủ; engineering approval không financial acceptance.
 - Gateway/Gemini Adapter/guard/cache/CheckpointStore tái sử dụng, không sửa shared code.
 - Source text/cell anchors + separate provenance; raw/contracts bất biến.
 - Checkpoint verified chỉ sau explicit opt-in và evidence gate; HIT revalidation,
@@ -25,7 +27,12 @@ Cập nhật 2026-10-27 (Asia/Bangkok); **REVIEW**, chưa Tech Lead nghiệm thu
 - [CI 40500929151](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40500929151)
   success exact implementation SHA; đã kiểm tra headSha, cả hai jobs và **mọi steps**
   Python 3.11/3.12 success. Logs mỗi job **1113 passed/11 skipped**.
-- Publication REVIEW chỉ docs/planning; SHA/CI publication kiểm tra riêng sau push,
-  không suy CI implementation sang commit mới hoặc ghi commit tự tham chiếu.
+- Review checkpoint **7a3614559e2542414166d78e300507d533b84217** /
+  [CI 40501298126](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40501298126)
+  success exact SHA; jobs và mọi steps Python 3.11/3.12 kiểm tra lại trước acceptance.
+- Acceptance chỉ 7 docs/planning files; local Ruff lint/format, planning/diff check;
+  không rerun unit suite/live API, không thay code/tests/contracts/API keys.
+- Acceptance SHA/CI kiểm tra riêng sau push và báo cuối; không suy CI cũ hoặc
+  ghi commit tự tham chiếu. Các số liệu tests bên trên là evidence implementation.
 
-Next action: Tech Lead review M1-11; không tự DONE hoặc bắt đầu M1-12.
+Next action: Chờ Tech Lead giao việc; không tự bắt đầu M1-12.
