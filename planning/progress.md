@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 12 | 0 | 0 | 12 | 0 | 1 |
+| M1 | 25 | 13 | 0 | 0 | 12 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 16 | 0 | 0 | 58 | 0 | 1 |
+| TOTAL | 75 | 17 | 0 | 0 | 58 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/loading/whitelist lookup đã triển khai; chưa có Gateway |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators REVIEW, 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators DONE, 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -114,4 +114,9 @@ Implementation 32a3d23362f494fe8a39fa8ed9b3983841e4f287 local/origin/main khớp
 success exact SHA, mọi steps Python 3.11/3.12; mỗi job 719 passed/11 skipped.
 Checkpoint REVIEW chỉ cập nhật docs/planning; SHA/CI checkpoint mới kiểm tra riêng
 sau push và ghi báo cáo cuối, không tạo commit tự tham chiếu.
-Exact next action: Tech Lead review/accept M1-04a; không tự DONE/M1-04b.
+Next action tại checkpoint REVIEW: Tech Lead review/accept M1-04a.
+
+Acceptance 2026-10-27: **M1-04a DONE**, Tech Lead APPROVED engineering scope.
+Implementation 32a3d23 / CI 40432840930 và checkpoint d782320 / CI 40433101346
+success exact SHA, từng step Python 3.11/3.12 đã đối chiếu. Các đoạn REVIEW trên
+là lịch sử. M1-04/M1-04b TODO; next action: push/check finalization CI trước spec M1-04b.

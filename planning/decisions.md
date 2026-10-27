@@ -1,5 +1,14 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — Tech Lead Final Acceptance M1-04a
+
+- **APPROVED — engineering scope, 2026-10-27** theo task M1-04b do user giao.
+- REVIEW → DONE; implementation 32a3d23 / CI 40432840930 và checkpoint
+  d782320 / CI 40433101346 success exact SHA, mọi steps Python 3.11/3.12 verified.
+- Finalization riêng chỉ planning, không đổi code/tests/artifacts hoặc đóng 5 bbox issues.
+- M1-04b đã được giao; chỉ bắt đầu sau finalization commit/push/exact-SHA CI.
+  M1-04 cha vẫn TODO; M1-05 ngoài scope.
+
 ## 2026-10-27 — Tech Lead Final Acceptance M1-03f
 
 - Tech Lead chính thức APPROVED: chuyển M1-03f REVIEW → DONE, nghiệm thu
