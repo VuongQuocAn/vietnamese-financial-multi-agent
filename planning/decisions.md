@@ -309,3 +309,16 @@ Chi tiết fields, status semantics và giới hạn ở [data contracts](../doc
 - Giữ limitations của guard đã nghiệm thu; chỉ docs/planning, không production code
   hoặc live Gemini tests. CI acceptance xác minh riêng sau push và báo cuối.
 - M1-09 vẫn TODO, chờ giao việc; không tự triển khai.
+
+## 2026-10-27 — M1-09 Acceptance
+
+- Tech Lead APPROVED M1-09, cho phép chuyển REVIEW → DONE và commit/push acceptance.
+- Implementation afb866f760fea63cb3a960d3056a6909139b6294 /
+  [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success exact SHA;
+  mọi steps Python 3.11/3.12 đạt, mỗi job 1040 passed/11 skipped.
+- Review checkpoint 389e4c86bef7cf176cc7a34fd3a425b5e82b4e77 /
+  [CI 40468492757](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468492757) success exact SHA, mọi steps 3.11/3.12 đạt.
+- Chỉ cập nhật 7 docs/planning files; không sửa production code hoặc bổ sung tests,
+  không chạy lại live Gemini API. Giữ nguyên limitations cache đã nghiệm thu.
+- CI acceptance xác minh riêng exact SHA sau push và báo cuối.
+- M1-10/M1-11 vẫn TODO; chờ Tech Lead giao task tiếp theo.

@@ -2,50 +2,51 @@
 
 ## Active Task
 
-M1-09 — LLM Response Cache
+M1-09 — Finalize Acceptance; không có implementation task đang chạy.
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Implementation afb866f760fea63cb3a960d3056a6909139b6294, [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success exact SHA;
-mọi steps Python 3.11/3.12 đạt, mỗi job 1040 passed/11 skipped. Dependencies DONE.
+Main/origin sạch 389e4c86bef7cf176cc7a34fd3a425b5e82b4e77; [CI 40468492757](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468492757) success
+exact SHA, mọi steps Python 3.11/3.12 đạt. Tech Lead APPROVED ngày 27/10/2026,
+cho phép chuyển REVIEW → DONE và commit/push acceptance.
 
 ## Completed Work
 
-Wrapper opt-in/scope isolation, canonical versioned key + local schema fingerprint, TTL/LRU/invalidation
-thread-safe; hit deep copy/rebind + historical usage/cost riêng, miss qua Guard.
-Docs/ví dụ offline/targeted regression và CI đạt; implementation đã push main.
+M1-09 REVIEW → DONE; registry/dashboard/spec/evidence/current-status đồng bộ,
+quyết định nghiệm thu ghi decisions.md. Production code/tests/config/dependencies bất biến.
 
 ## Remaining Work
 
-Tech Lead review để nghiệm thu; không tự DONE hoặc bắt đầu M1-10/11.
-Checkpoint REVIEW docs/planning SHA/CI xác minh riêng sau push và báo cuối.
+Acceptance publication/CI xác minh riêng exact SHA sau push và báo cuối; không tự tham chiếu.
+Không còn phần chờ nghiệm thu; không tự bắt đầu M1-10/M1-11.
 
 ## Modified Files
 
-Implementation: src/core/llm_cache.py, tests/unit/test_llm_cache.py, docs/llm-response-cache.md,
-docs/reviews/M1-09-evidence.md, planning/{tasks,progress,current-status,handoff}.md, planning/tasks/M1/M1-09.md.
-Checkpoint REVIEW chỉ 6 docs/planning files, không sửa production code/tests.
+Chỉ 7 files: planning/{tasks,progress,current-status,handoff,decisions}.md;
+planning/tasks/M1/M1-09.md; docs/reviews/M1-09-evidence.md.
 
 ## Tests
 
-34 cache + 105 M1-08/Gateway/Gemini regression passed, zero skips; Ruff lint/format,
-planning checker/diff và ví dụ offline đạt trong .venv .[dev]. CI 1040 passed/11 skipped
-mỗi Python 3.11/3.12. Không full local suite/live API/credentials file/dataset.
+Targeted 34 cache + 105 regression passed giữ nguyên; implementation CI mỗi Python
+3.11/3.12: 1040 passed/11 skipped. Review checkpoint CI mọi steps đạt.
+Acceptance local chỉ Ruff/planning/diff; không lặp unit suite hoặc live Gemini API.
+CI acceptance xác minh riêng sau push.
 
 ## Blockers
 
-Không. Limitations: in-memory/process-local, finite TTL/LRU, không persistence/byte cap/single-flight.
-Concurrent misses mỗi call qua Guard. Application xác nhận scope/eligibility/revision; không DLP.
+Không. Limitations giữ nguyên: in-memory/process-local, finite TTL/LRU, không persistence/
+byte cap/single-flight/cross-process sharing; scope/eligibility/revision do application xác nhận.
 
 ## Git Checkpoint
 
-Stable implementation afb866f760fea63cb3a960d3056a6909139b6294 đã push / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success.
-Review publication SHA/CI xác minh riêng sau push; không tự tham chiếu commit tương lai.
+Stable implementation afb866f760fea63cb3a960d3056a6909139b6294 / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success.
+Review checkpoint 389e4c86bef7cf176cc7a34fd3a425b5e82b4e77 / [CI 40468492757](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468492757) success exact SHA.
+Acceptance SHA/CI xác minh riêng sau push và báo cuối, không thay bằng CI cũ.
 
 ## Exact Next Action
 
-Tech Lead review M1-09.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-10/M1-11.

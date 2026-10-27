@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 19 | 0 | 0 | 5 | 0 | 1 |
+| M1 | 25 | 20 | 0 | 0 | 5 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 23 | 0 | 0 | 51 | 0 | 1 |
+| TOTAL | 75 | 24 | 0 | 0 | 51 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -31,7 +31,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
-| `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache REVIEW; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
+| `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a validators và M1-04b bounded pilot DONE; 199 reconstructed table crops được nghiệm thu engineering từ M1-03f |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
@@ -46,12 +46,14 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-09 REVIEW**, chờ Tech Lead nghiệm thu; dependencies M1-06/07/08 DONE.
+**M1-09 DONE**, Tech Lead APPROVED ngày 27/10/2026; dependencies M1-06/07/08 DONE.
 Implementation afb866f760fea63cb3a960d3056a6909139b6294 / [CI 40468254692](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40468254692) success exact SHA;
 mọi steps Python 3.11/3.12 đạt, mỗi job 1040 passed/11 skipped.
 Local 34 cache + 105 regression passed; Ruff/planning/diff và ví dụ offline đạt.
 Không live API/dataset/keys hoặc thay contracts; cache opt-in, TTL/LRU, process-local.
-Next action: **Tech Lead review M1-09.**
+Acceptance chỉ docs/planning, không production code/tests hoặc live Gemini API.
+CI acceptance xác minh riêng exact SHA sau push và báo cuối.
+Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-10/M1-11.**
 Các đoạn bên dưới là lịch sử trước giao việc này.
 
 M1-03a DONE theo Tech Lead APPROVED; acceptance `3d700a5` đã push/remote khớp,
