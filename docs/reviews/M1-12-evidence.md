@@ -1,6 +1,7 @@
 # M1-12 — Evidence
 
-2026-10-27 (Asia/Bangkok). **REVIEW**, chờ Tech Lead; không M1-13.
+2026-10-27 (Asia/Bangkok). **M1-12 DONE — Tech Lead APPROVED**.
+Cho phép REVIEW → DONE sau review implementation/source/tests/evidence và CI.
 Baseline `0dd9bd1` main/origin sạch sau fetch; M1-11/M1-11b DONE.
 User cho phép implement/test/commit/push; không đổi contracts/classifier/nguồn.
 
@@ -37,7 +38,8 @@ Không mở rộng đọc pages để tìm B01/B02/B03; không coi token mã là
 
 Không ground truth real rowspan/colspan; chỉ fixture synthetic có nhãn chứng minh
 semantics. Không claim reconstruction accuracy/financial correctness hoặc OCR run
-identity. Strict geometry có thể abstain nhiều; missing trailing rows/cols cần shape
+identity. Deterministic reconstruction bảo thủ, 2265 pairwise geometry conflicts;
+strict geometry có thể abstain nhiều; missing trailing rows/cols cần shape
 đã review; extras producer chưa chốt. Gemini-assisted và stage checkpoint deferred.
 
 Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` đã push main;
@@ -46,4 +48,14 @@ bao gồm full unit suite, đã xác minh bằng run/job summary. Không đọc 
 Working tree sạch, HEAD/origin khớp trước checkpoint docs evidence cuối;
 checkpoint này chỉ docs/planning, không đổi implementation hoặc rerun API/tests.
 
-Exact next action: Tech Lead review M1-12; không DONE/M1-13.
+Nghiệm thu 27/10/2026: review checkpoint `c38df351a6f4d86393b69e57fe2e3b3a15a4da6b` /
+[CI 40515264179](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40515264179) success exact SHA đã xác minh; HEAD/origin sau fetch khớp,
+working tree sạch trước acceptance. Chỉ sửa bảy docs/planning files để ghi nhận DONE;
+không thay source/tests/contracts/raw/artifacts/credentials hoặc rerun API/full local
+suite. Checks acceptance đạt: Ruff lint/format, planning checker, git diff --check;
+acceptance SHA/CI xác minh sau push và báo cuối, không tự tham chiếu commit.
+
+**M1-12a — Gemini-Assisted Table Reconstruction** là follow-up đề xuất, TODO trong
+[roadmap](../../planning/roadmap.md#m1-12a); chưa giao triển khai, scope/budget TBD.
+
+Exact next action: Chờ Tech Lead giao task; không tự bắt đầu M1-12a hoặc M1-13.

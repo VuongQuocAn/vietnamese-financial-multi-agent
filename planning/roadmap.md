@@ -72,6 +72,7 @@ Phụ thuộc milestone: M0; các nhánh nội bộ theo registry.
 | <a id="m1-10"></a>M1-10 — Document Processing Checkpoints | Checkpoint/resume cho đơn vị xử lý tài liệu | Không làm lại kết quả đã xác minh; phiên bản input/config được đối chiếu |
 | <a id="m1-11"></a>M1-11 — Page and Document Classification | Kết quả phân loại có provenance | Taxonomy được duyệt, trả unresolved khi thiếu bằng chứng |
 | <a id="m1-12"></a>M1-12 — Table Structure Reconstruction | Cấu trúc bảng dẫn về vùng raw OCR | Kiểm thử hàng/cột và ô gộp trên mẫu đã chú giải, không tự thêm số liệu |
+| <a id="m1-12a"></a>M1-12a — Gemini-Assisted Table Reconstruction (đề xuất, TODO) | Đề xuất cấu trúc cho bảng deterministic unresolved qua Gateway/Gemini Adapter hiện có | Structured output + local schema/source/evidence validation; không sinh nội dung, giữ provenance; scope, budget và pilot criteria TBD trước giao task |
 | <a id="m1-13"></a>M1-13 — Evidence-Preserving OCR Correction | Bản hiệu chỉnh riêng kèm nguồn và lý do | Raw OCR bất biến; phân biệt đề xuất, xác nhận và unresolved |
 | <a id="m1-14"></a>M1-14 — Document Understanding Evaluation | Protocol và kết quả đánh giá hiểu tài liệu | Mẫu/nhãn/ngưỡng được chốt, phân biệt chất lượng thực tế với smoke tests |
 
