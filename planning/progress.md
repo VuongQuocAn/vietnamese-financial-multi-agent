@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 25 | 14 | 0 | 0 | 11 | 0 | 0 |
+| M1 | 25 | 14 | 0 | 0 | 10 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 75 | 18 | 0 | 0 | 57 | 0 | 0 |
+| TOTAL | 75 | 18 | 0 | 0 | 56 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -149,3 +149,15 @@ Giữ nguyên pilot 23/398, năm human issues và các giới hạn; không reru
 Local finalization mới 768 passed/2 skipped; Ruff/planning/pip/diff đạt.
 M1-04 cha TODO tại checkpoint 1; next action: finalization commit/push/exact-SHA CI
 trước aggregate review parent, không M1-05.
+
+Checkpoint aggregate hiện tại: **M1-04 REVIEW**, chưa DONE; M1-03/M1-04a/M1-04b DONE.
+M1-04b acceptance a0ffaaff317c046bebd023c9305b1303ddcf8451 /
+[CI 40439127716](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40439127716)
+success exact SHA, mọi steps Python 3.11/3.12, mỗi job 759 passed/11 skipped.
+Sau gate này mới aggregate: matrix 10 checks đối chiếu scope roadmap, production
+validators/contracts/schema/recovery diff rỗng; local mới 768 passed/2 skipped.
+[Spec parent](tasks/M1/M1-04.md), [aggregate evidence](../docs/reviews/M1-04-aggregate-evidence.md).
+Chỉ docs/planning; không rerun pilot/đổi statistics/manifest hoặc sửa 5 human issues.
+Engineering criteria đủ bằng chứng, Tech Lead final confirmation còn chờ. CI checkpoint
+parent kiểm tra sau push riêng; không self-reference hoặc suy CI cũ cho commit mới.
+Exact next action: Tech Lead review M1-04 aggregate acceptance; do not start another task.

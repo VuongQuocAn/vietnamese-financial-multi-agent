@@ -1,5 +1,18 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-27 — M1-04 Aggregate Review, chờ Tech Lead xác nhận cuối
+
+- Sau M1-04b DONE tại a0ffaaff317c046bebd023c9305b1303ddcf8451 / CI 40439127716
+  success exact SHA, Software Engineer đối chiếu riêng 10 aggregate checks theo roadmap.
+- M1-03/M1-04a/M1-04b DONE; source/tests/evidence/Git diff/CI cho thấy đủ bằng chứng
+  engineering của parent trong phạm vi đã duyệt. [Aggregate report](../docs/reviews/M1-04-aggregate-evidence.md).
+- Parent TODO → READY → IN_PROGRESS → REVIEW theo giao việc aggregate; không DONE,
+  không tự suy approval của parent từ approvals hai task con. Tech Lead phải xác nhận cuối.
+- Giữ mọi giới hạn: 5 bbox issues mở, thiếu BCC/2025, original equivalence/run identity
+  unverified, không ground truth/OCR accuracy/financial correctness/table completeness.
+- Chỉ docs/planning, không rerun/đọc/hash dataset hoặc đổi manifest/statistics/code;
+  không M1-05/task khác. CI parent commit xác minh riêng sau push, không self-reference.
+
 ## 2026-10-27 — Tech Lead Final Acceptance M1-04b
 
 - **M1-04b APPROVED**, REVIEW → DONE theo giao việc finalization mới.
