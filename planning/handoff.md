@@ -2,77 +2,78 @@
 
 ## Active Task
 
-M1-03f — Controlled Table Crop Recovery Expansion.
+M1-03f — Controlled Table Crop Recovery Expansion (chờ nghiệm thu).
 
 ## Status
 
-BLOCKED
+REVIEW
 
 ## Last Verified State
 
-M1-03e Tech Lead APPROVED/DONE; acceptance ca607debe2148ab2a52c25c78f142f181cf35674,
-remote khớp, CI 40345846471 success mọi steps Python 3.11/3.12.
-M1-03 giữ DONE; dependencies M1-03/M1-04 không đổi.
+2026-10-27: user/Tech Lead conditional approval đã ghi thật từ chat, validate gate
+khớp template/plan/12 IDs-hashes. Full checks đạt trước expansion.
+8 batches đã verify và final reconciliation đạt: 187 PNG mới, tổng 199 PNG/sidecars,
+conflicts/failures 0/0. Fresh CLI verify trả 199 already_recovered, không tạo PNG mới.
 
 ## Completed Work
 
-Coordinator/CLI/review sheets. Default dry-run/cap 12; expansion cap 199,
-batch tối đa 24; frozen plan/approval exact IDs/hashes, OS single-writer lock,
-exclusive outputs, conflict/failed-batch stop và clean resume.
-Re-audit 193 trang: 1.557 references, existing original 985/missing original 572,
-eligible 199; reconstructed_available 12/missing_unrecovered 187; conflicts 0.
-12 pilot PNG/sidecars/pixels/dimensions/hash/IDs đã kiểm tra. Source snapshots
-193 JSON + 193 raw images giữ nguyên. Không thực thi expansion.
-12 contact sheets, review manifest, pending approval template và recovery index local.
+- Giữ nguyên template/reviewed IDs/hashes; approval chỉ bbox-faithful reconstruction.
+- Ghi 5 source_bbox_incomplete_table issues cho sheets 02/03/08/11/12,
+  requires_review tại M1-04a; không sửa bbox hoặc coi crop là bảng hoàn chỉnh.
+- 7 × 24 + 19 ảnh mới, mỗi batch được kiểm tra source integrity và outputs;
+  nguồn 193 JSON + 193 raw images hash/size/mtime/inode khớp frozen plan.
+- Mọi output trước từng batch bất biến; 12 pilot PNG/sidecars/IDs/hashes giữ nguyên.
+- 8 engine + 8 continuation receipts khớp, 187 IDs mới distinct đúng approved set.
+- Final index 199 validated reconstructed_available, 0 pending eligible;
+  original references vẫn existing 985/missing 572; non-table 85/views 288 ngoài scope.
+- Sanitized evidence và allowlisted numeric/boolean statistics, không publish dữ liệu riêng.
+- Dùng engine/coordinator đã có; không đổi production code, contracts hoặc task cha.
 
 ## Remaining Work
 
-Human review 12 sheets và approval local còn thiếu.
-Chỉ sau approval hợp lệ mới execute từng batch <=24, validate/reconcile,
-cập nhật evidence và chuyển REVIEW. Không bắt đầu M1-04a/b.
+Commit/push publication và xác minh exact-SHA CI, ghi lại bằng chứng sau push.
+Tech Lead nghiệm thu M1-03f. M1-04a/b chưa bắt đầu; 5 quality issues là input tương lai,
+không phải bbox corrections đã thực hiện hoặc blocker engineering bị bỏ qua.
 
 ## Modified Files
 
-crop_recovery.py, crop_expansion.py, crop_review.py, crop_evidence.py;
-scripts expand_table_crop_recovery/create_crop_review_sheet/export_crop_evidence;
-unit tests, crop-recovery docs, evidence M1-03f và planning.
-Local sheets: artifacts/crop-recovery/M1-03f/review/;
-approval template: visual-review-approval.template.json trong thư mục task.
-Toàn bộ artifacts/data bị ignore; không commit PNG/private manifests.
+docs/crop-recovery.md, docs/reviews/M1-03f-evidence.md, M1-03f-statistics.json;
+planning/tasks/M1/M1-03f.md; planning/tasks.md, progress.md, current-status.md, handoff.md.
+Artifacts/data đều ignore: visual-review-approval.json, visual-review-quality-issues.json,
+approved-preflight-verification.json, continuation-*.started/finished.json,
+engine batch checkpoints, recovery-index.jsonl, approved-expansion-final-integrity.json,
+approved-final-summary.json và local helper scripts. Không stage chúng hoặc PNG/sidecars.
+Không overwrite final-integrity.json checkpoint trước approval.
 
 ## Tests
 
-Baseline acceptance: 614 passed/13 skipped; Ruff/planning/pip đạt.
-M1-03f full local: 655 passed/14 skipped; Ruff lint/format 79 files,
-planning 75 tasks/pip check đạt. Expansion 35 passed/1 skipped, publication 19 passed.
-Native junction/process-lock/clean-resume đạt; synthetic tests không đánh giá tài chính.
-CI implementation Python 3.11/3.12: mỗi job 658 passed/11 skipped, mọi steps success;
-đã kiểm tra exact SHA, jobs/steps và test logs. Pip check là local.
+Full local trước batch đầu: 655 passed/14 skipped, Ruff lint/format 79 files,
+planning 75 tasks và pip check đạt. Native junction/process-lock tests đạt.
+Mỗi batch: source snapshots/callbacks + frozen-plan re-audit, full output engine
+inspection, independent rerun và prior-output snapshot comparison đều đạt.
+Fresh final CLI verify đạt; private proof đối chiếu 199 index entries/PNG-sidecar
+pairs, 8 checkpoint chains, 12 pilot IDs/hashes và 5 quality issues.
+Synthetic tests không đánh giá chất lượng tài chính. Publication CI chờ push.
 
 ## Blockers
 
-Chưa có human visual approval. Không tự điền approved/reviewer.
-TOCTOU/aliases/hardlinks/trusted filesystem còn giới hạn; OS lock chỉ phối hợp
-các CLI dùng chung lock. Failed batch/incomplete PNG-sidecar cần review, không xóa.
-Original Drive/run identity và preprocessing equivalence unverified.
+Không có execution conflict/failure. REVIEW chờ Tech Lead nghiệm thu cuối,
+không phải human approval trước expansion còn thiếu.
+Bbox coverage issues sheets 02/03/08/11/12 còn mở cho M1-04a.
+Original Drive/run/preprocessing equivalence unverified. Trusted local FS,
+TOCTOU/aliases/hardlinks và writers không dùng lock vẫn là giới hạn.
 
 ## Git Checkpoint
 
-Stable acceptance ca607debe2148ab2a52c25c78f142f181cf35674, push/remote đã khớp;
-[CI 40345846471](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40345846471)
-success đúng SHA/mọi steps Python 3.11/3.12.
-Stable implementation M1-03f `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`,
-push/remote khớp;
+Stable implementation `a91492e17a0644c8f9d7e4e655ba73dda26c79f0`,
 [CI 40349513656](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40349513656)
-success đúng SHA/mọi steps Python 3.11/3.12, mỗi job 658 passed/11 skipped.
-Metadata publication đi sau code; kiểm tra Git HEAD/remote/CI riêng khi resume.
-Checkpoint local: plan.json, execution-plan-*.json, final-integrity.json,
-recovery-index.jsonl và review/review-manifest.json trong thư mục artifacts task.
-Sau khi người dùng review thực sự, tạo visual-review-approval.json đúng template;
-giữ plan_id/reviewed/IDs/hashes, điền reviewer/time/verdict thật theo docs/crop-recovery.md.
-Tái kiểm tra approval/source plan/full checks rồi execute từng batch <=24,
-validate giữa các batch; không tự reset conflicts hoặc đổi approved plan.
+success đúng SHA Python 3.11/3.12 ở checkpoint trước approval.
+Baseline publication `e6403a0a4601470f5f46c6d74eb3c9323e4eba62` fetch/remote khớp
+trước commit continuation; không suy CI cũ cho publication mới.
+Checkpoint local ổn định: approved-expansion-final-integrity.json; đủ 8 completed
+batch/continuation receipts, không còn pending eligible. Không rerun execute;
+nếu cần kiểm tra dùng --verify, không reset plan/conflicts hoặc overwrite nguồn.
 
 ## Exact Next Action
 
-Người dùng xem 12 local review sheets và ghi approval thật khớp template.
+Tech Lead nghiệm thu M1-03f; không bắt đầu M1-04a/b.

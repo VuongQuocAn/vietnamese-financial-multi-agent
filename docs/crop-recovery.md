@@ -9,7 +9,12 @@ sử M1-03d. M1-03e bổ sung local verification/pilot theo scope mới được
 M1-03e đã được Tech Lead APPROVED/DONE theo task giao 2026-10-26.
 M1-03f chỉ mở rộng `table.crop`; không đổi Raw OCR/Path Mapping contracts.
 Checkpoint hiện tại và số liệu thật tại [evidence M1-03f](reviews/M1-03f-evidence.md).
-Human visual gate còn thiếu, chưa thực thi batch expansion.
+Ngày 2026-10-27, người dùng/Tech Lead xác nhận đã xem đủ 12 review sheets và
+APPROVED có điều kiện cho **bbox-faithful reconstruction**. Approval chỉ cho phép
+tái tạo chính xác vùng bbox OCR gốc, không xác nhận bảng hoàn chỉnh hoặc original
+crop equivalence. Sheets 02, 03, 08, 11, 12 có bbox chưa bao trọn bảng: giữ nguyên
+bbox và ghi `source_bbox_incomplete_table` trong local quality issues ledger cho
+M1-04a; không sửa OCR/bbox hoặc suy diễn nội dung ngoài vùng nguồn.
 
 `recover_crop()` giữ cap mặc định 12 và từ chối cap tùy ý. Coordinator nội bộ
 `crop_expansion.execute_batch()` chỉ cấp permit cho full recovery IDs trong frozen
@@ -40,6 +45,13 @@ và từng recovery_id/png_sha256; ghi reviewer thật, reviewed_at ISO 8601 có
 top-level approved=true/verdict=approved và verdict=approved cho cả 12 items.
 Một rejection, mismatch, thiếu reviewer/time hoặc thiếu file đều chặn execution.
 Approval là bản ghi người dùng trên trusted filesystem, không phải chữ ký số.
+User đã yêu cầu Codex ghi lại approval thực tế từ chat: file local giữ nguyên
+12 IDs/hashes và plan_id; top-level scope/conditions ghi giới hạn bbox-faithful,
+batch <=24, stop-on-conflict và source read-only. `reviewed_at` ghi lúc tiếp nhận
+attestation, không bịa thời điểm xem ảnh chính xác hoặc danh tính chưa cung cấp.
+`visual-review-quality-issues.json` bind năm issues với recovery ID/hash/bbox gốc,
+đánh số sheets theo thứ tự một-based của review-manifest/template. Ledger này
+được lưu riêng, không sửa sidecars/recovery IDs hoặc versioned contracts.
 
 Sau approval và full checks đạt, mỗi lệnh chỉ chạy **một batch**:
 

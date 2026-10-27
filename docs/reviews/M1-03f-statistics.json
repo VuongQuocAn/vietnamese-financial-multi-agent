@@ -1,0 +1,21 @@
+{
+  "conflicts": 0,
+  "dry_run_status": {
+    "already_recovered": 199
+  },
+  "eligible": 199,
+  "existing_original": 985,
+  "existing_original_tables": 180,
+  "human_approved": true,
+  "missing_unrecovered": 0,
+  "new_outputs": 0,
+  "non_table_requires_review": 85,
+  "original_missing": 572,
+  "original_table_missing": 199,
+  "pages_audited": 193,
+  "prior_reconstructed": 12,
+  "reconstructed_available": 199,
+  "references_audited": 1557,
+  "source_unchanged": true,
+  "unsupported_views": 288
+}
