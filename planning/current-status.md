@@ -2,13 +2,9 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-- **M2-04 DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3. M2-03 DONE.
-- [Spec](tasks/M2/M2-04.md), [API/evidence](../docs/financial-item-mapping.md).
-- 14 internal IDs B01/B02/B03; B09 abstain; giữ raw/provenance/M1 quality.
-- Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c`; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS đúng implementation SHA, mọi steps Python3.11/3.12 đã xác minh lại.
-- Baseline nghiệm thu sạch local/origin `59a70dc0d1a8ef9ca6cad63de72723a4a168e52a`; diff từ implementation chỉ docs/planning.
-- Pilot3/20: **14/20 nhãn đúng, 0 sai, 0 uncertain, 6 unresolved**.
-- Numeric links: **0 accepted/28 rejected/12 chưa xét**; hash5 nguồn không đổi theo evidence trước nghiệm thu.
-- Chưa có positive numeric linking trên dữ liệu thực; M2-05/M2-06 chưa được coi là validated end-to-end. Không financial fact verified hoặc accuracy toàn dataset.
-- Bằng chứng trước nghiệm thu: 12 focused +29 regression =41 PASS. Phiên này chỉ 5 planning files, planning checker82/diff check PASS; không chạy lại pytest/Gemini, không sửa code/tests/schema/dữ liệu nguồn. Không gán CI implementation cho SHA planning mới.
-- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+- **M2-04 DONE; M2-04a IN_PROGRESS** chờ commit/push và CI exact implementation SHA.
+- Gemini model gemini-3.5-flash-lite: 3 calls thành công, 0 retry. Pilot 40 ô: 6 accepted đúng, 0 sai, 12 rejected ngoài catalog, 22 unresolved. [Issue](tasks/M2/issues/M2-04-numeric-linking.md), [API/evidence](../docs/table-recovery.md).
+- Một reviewer đối chiếu ảnh; binding, cấu trúc, geometry và OCR witness được kiểm tra. Geometry Gemini/OCR chưa tin cậy; không verified financial facts hoặc accuracy toàn dataset.
+- 14 focused + 12 M2-04 regression PASS; Ruff, planning checker 83 và diff check PASS; hash 8 nguồn không đổi.
+- Baseline HEAD/origin `c26e3bf3f84cd88d429be5275469c64ddc096c7b`; implementation chưa commit.
+- Next action: Commit/push implementation và kiểm tra CI exact SHA, sau đó chuyển REVIEW.

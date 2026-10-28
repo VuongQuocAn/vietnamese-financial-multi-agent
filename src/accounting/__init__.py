@@ -30,9 +30,21 @@ from .statement_resolution import (
     recognize_document_statements,
     resolve_statement_type,
 )
+from .table_recovery import (
+    LinkDecision,
+    ManualReview,
+    ReviewedCell,
+    link_reviewed_candidate,
+    recover_table_structure,
+)
 from .validation import validate_financial_quality
 
 __all__ = [
+    "LinkDecision",
+    "ManualReview",
+    "ReviewedCell",
+    "link_reviewed_candidate",
+    "recover_table_structure",
     "ITEM_CATALOG",
     "ItemCandidate",
     "ItemMapping",

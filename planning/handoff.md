@@ -1,31 +1,31 @@
 # Codex Handoff
 
 ## Active Task
-M2-04 — Financial Item Mapping
+M2-04a — Gemini-Assisted Table Recovery & Numeric Linking
 
 ## Status
-DONE
+IN_PROGRESS
 
 ## Last Verified State
-Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3. Baseline sạch local/origin `59a70dc0d1a8ef9ca6cad63de72723a4a168e52a`. Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c`; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS đúng implementation SHA, mọi steps Python3.11/3.12 đã xác minh lại. Diff từ implementation chỉ docs/planning.
+M2-04 DONE; baseline HEAD/origin c26e3bf3f84cd88d429be5275469c64ddc096c7b. Gemini qua Gateway gemini-3.5-flash-lite: 3 calls thành công, 0 retry. 8 nguồn không đổi hash trong pilot.
 
 ## Completed Work
-14 internal IDs, API/candidates/abstention, focused tests và pilot đã có. Phiên nghiệm thu chuyển REVIEW → DONE theo Tech Lead APPROVED; đồng bộ 5 planning files, giữ code/tests/schema/dữ liệu nguồn.
+Recovery structured và adapter theo link với schema, binding ảnh, geometry review, OCR witness, kỳ/unit và code. Pilot 40 ô: 6 accepted đúng, 0 sai, 12 rejected ngoài catalog, 22 unresolved. OCR và Gemini bbox có lỗi; giữ manual review riêng và provenance. Hai links cũ bị thu hồi và xác minh lại với identity ảnh chính xác. [API/evidence](../docs/table-recovery.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
 
 ## Remaining Work
-Không còn implementation hoặc nghiệm thu M2-04.
+Rà diff/staged, commit/push implementation, kiểm tra CI exact SHA Python 3.11/3.12; cập nhật REVIEW và chờ Tech Lead. Không bắt đầu M2-05.
 
 ## Modified Files
-Chỉ planning/tasks/M2/M2-04.md, planning/tasks.md, planning/progress.md, planning/current-status.md và planning/handoff.md.
+planning/tasks.md, progress.md, roadmap.md, current-status.md, handoff.md, tasks/M2/M2-04a.md, tasks/M2/issues/M2-04-numeric-linking.md; docs/table-recovery.md; src/accounting/__init__.py, table_recovery.py; tests/unit/test_table_recovery.py. Pilot artifacts ignored.
 
 ## Tests
-Bằng chứng trước nghiệm thu: 12 focused +29 regression =41 PASS; pilot3/20:14/20 nhãn đúng,0 sai,0 uncertain,6 unresolved; numeric links0 accepted/28 rejected/12 chưa xét; hash5 nguồn không đổi. Phiên này chỉ planning checker82 và diff check PASS; không chạy lại pytest/Gemini hoặc pilot.
+14 focused + 12 regression PASS; Ruff lint/format, planning checker 83 và diff check PASS. Không full suite.
 
 ## Blockers
-Không còn blocker nghiệm thu trong phạm vi Research MVP Lean v3. Chưa có positive numeric linking trên dữ liệu thực; M2-05/M2-06 chưa được coi là validated end-to-end. B09 chưa có danh mục xác nhận; không accuracy toàn dataset.
+Chưa có CI exact SHA; một reviewer, không xác minh glyphs tự động, 22 links chưa đủ evidence, không accuracy toàn dataset.
 
 ## Git Checkpoint
-Implementation ổn định `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; CI40641035898 SUCCESS exact SHA. Baseline nghiệm thu `59a70dc0d1a8ef9ca6cad63de72723a4a168e52a` sạch và khớp origin. Commit nghiệm thu chỉ 5 planning files; không gán CI implementation cho SHA mới.
+Baseline c26e3bf3f84cd88d429be5275469c64ddc096c7b; implementation hiện tại chưa commit, chưa xác nhận CI.
 
 ## Exact Next Action
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+Commit/push implementation và kiểm tra CI exact SHA, sau đó chuyển REVIEW.
