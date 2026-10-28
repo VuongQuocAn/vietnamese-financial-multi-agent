@@ -15,19 +15,9 @@ nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
 - Điều phối tác nhân theo nhu cầu bằng chứng và tín hiệu rủi ro.
 - Kiểm chứng từng nhận định trước khi tạo kết quả bằng tiếng Việt có dẫn nguồn.
 
-```mermaid
-flowchart TD
-    PDF[Financial PDF] --> DP[Document Processing & Accounting Normalization]
-    DP --> CEL[Canonical Evidence Layer]
-    CEL --> EFEG[Executable Financial Evidence Graph]
-    EFEG --> TOOLS[Shared Executable Tool Space]
-    TOOLS --> PLAN[Evidence/Risk-Aware Planner & Supervisor]
-    PLAN --> AGENT[Specialist Agents]
-    AGENT --> VERIFY[Claim-Level Verification]
-    VERIFY --> LEDGER[Verified Claim Ledger]
-    LEDGER --> QA[Interactive Financial QA]
-    LEDGER --> REPORT[Grounded Financial Report Generation]
+ --> REPORT[Grounded Financial Report Generation]
 ```
+<img width="797" height="844" alt="image" src="https://github.com/user-attachments/assets/a005b329-7e28-499d-ac4e-516910481eeb" />
 
 Gemini và các LLM khác sẽ đi qua LLM Gateway dùng chung để đổi model, hỗ trợ
 structured outputs và quản lý chi phí. Chưa chọn SDK, model hoặc triển khai Gateway.
