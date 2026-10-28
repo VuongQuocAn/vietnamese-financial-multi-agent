@@ -60,9 +60,15 @@ tokens locators/checkpoints chỉ tại ignored artifacts/table-reconstruction/M
 
 Local: **28 focused +233 related regression =261 passed** (M1-12, DU, classification/
 pilot, cache/checkpoints). Ruff lint/format, planning checker và diff check đạt trước
-commit. Không full local suite; không rerun pilot/API/tests chỉ vì docs.
-Implementation `dbc1b0941cff2c863066eafffff6233912049017` đã push main;
-[CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) **success exact SHA**, mọi steps/full unit suite Python 3.11/3.12
+commit. Sau regression source-rejection, focused28 được chạy lại: đạt; không lặp
+233 regression không liên quan hoặc full local suite. Nhánh source rejection hạ đồng
+bộ table/cells/anchors về unresolved, spans unknown, kể cả base deterministic resolved.
+Pilot live tại `dbc1b0941cff2c863066eafffff6233912049017`; final code chỉ sửa trạng thái nhánh lỗi nguồn.
+Đánh giá lại local cả8 persisted predictions trên final code: **8/8 DU outputs khớp,
+API0**, 9 snapshots giữ nguyên (offline-revalidation.json). Không rerun live pilot/API
+hoặc tests chỉ vì docs.
+Implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` đã push main;
+[CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) **success exact SHA**, mọi steps/full unit suite Python 3.11/3.12
 đã xác minh qua summary, không đọc logs PASS. Checkpoint REVIEW cuối chỉ docs/planning;
 SHA/CI của checkpoint này kiểm tra riêng sau push, không tự tham chiếu commit.
 

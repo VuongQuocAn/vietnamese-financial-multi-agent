@@ -46,7 +46,8 @@ Geometry policy `layout-evidence-v1`:
 
 DU source validation chạy sau evidence gate; chỉ `empty_text` là quality warning
 được phép. Fail thì giữ deterministic candidate unresolved và issue code, prediction
-riêng để audit; không đánh verified. `resolved` là acceptance cấu trúc theo policy,
+riêng để audit; không đánh verified. Source rejection hạ đồng bộ table/cells/anchors
+về unresolved và spans unknown, kể cả khi deterministic structure vốn resolved. `resolved` là acceptance cấu trúc theo policy,
 không chứng nhận semantics tài chính/accuracy hoặc độc lập xác minh OCR run identity.
 
 Input fingerprint phủ toàn page/provenance/mapping/identity_checked; config fingerprint

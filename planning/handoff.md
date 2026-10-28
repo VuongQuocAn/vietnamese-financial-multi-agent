@@ -12,8 +12,8 @@ REVIEW
 
 Baseline 54d198e886fd41dcc8f9f84a26a40ed77b7a4088 khớp HEAD/origin sau fetch, tree sạch.
 M1-12 DONE. User giao M1-12a 28/10/2026, cho implement/API max15/test/commit/push;
-dừng REVIEW. Implementation `dbc1b0941cff2c863066eafffff6233912049017` đã push;
-[CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đạt.
+dừng REVIEW. Implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` đã push;
+[CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đạt.
 
 ## Completed Work
 
@@ -38,6 +38,8 @@ planning/{tasks,roadmap,progress,current-status,handoff}.md; planning/tasks/M1/M
 ## Tests
 
 28 focused +233 related regression =261 passed; Ruff/planning/diff đạt trước commit.
+Focused28 rerun sau source-rejection regression đạt; final code replay8/8 DU outputs
+khớp offline/API0. Không live pilot rerun; lỗi source binding hạ đồng bộ mọi statuses.
 Không full local suite; CI full unit 3.11/3.12 đạt exact implementation SHA. Không rerun pilot/API/tests
 chỉ vì docs. Private records tại ignored artifacts/table-reconstruction/M1-12a.
 
@@ -51,7 +53,7 @@ verified. Không provider/quota blocker; chờ Tech Lead review engineering/poli
 
 ## Git Checkpoint
 
-Stable implementation `dbc1b0941cff2c863066eafffff6233912049017` / CI 40607344930 success exact SHA.
+Stable implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` / CI 40607679558 success exact SHA.
 HEAD/origin khớp sau implementation push; remaining diff chỉ docs/planning REVIEW.
 Checkpoint docs SHA/CI kiểm tra riêng sau push, không tự tham chiếu commit.
 [Spec](tasks/M1/M1-12a.md), [evidence](../docs/reviews/M1-12a-evidence.md).

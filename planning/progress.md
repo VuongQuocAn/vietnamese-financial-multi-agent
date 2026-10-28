@@ -55,8 +55,8 @@ Cache7/checkpoint1 probes; offline checkpoint1/service0/API0; 9 snapshots bất 
 28 focused +233 regression =261 passed; không full local suite, không API rerun.
 Model fixed gemini-3.5-flash-lite, text/layout mode; không ground truth/accuracy.
 [Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
-[evidence](../docs/reviews/M1-12a-evidence.md). Implementation `dbc1b0941cff2c863066eafffff6233912049017` /
-[CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, full unit suite Python 3.11/3.12 đạt.
+[evidence](../docs/reviews/M1-12a-evidence.md). Implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` /
+[CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, full unit suite Python 3.11/3.12 đạt.
 Next action: Tech Lead review M1-12a; không DONE/M1-13.
 Các đoạn dưới là lịch sử.
 

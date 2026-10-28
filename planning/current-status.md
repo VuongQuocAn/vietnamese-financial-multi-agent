@@ -15,12 +15,14 @@ Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Cache7/checkpoint1 probes; **offline checkpoint1/service0/API0**. 9 snapshots và
   manifest/raw provenance bất biến; không sửa M1-12 report hoặc mở rộng mẫu.
 - **28 focused +233 regression =261 passed**; Ruff/planning/diff đạt.
+  Focused28 rerun sau source-rejection regression đạt; final code replay8/8 persisted
+  DU outputs khớp, API0. Source rejection hạ đồng bộ table/cells/anchors unresolved.
   Không full local suite; full unit suite CI 3.11/3.12 đạt exact implementation SHA.
 - Limitations: không ground truth/accuracy, source run caller-bound, text/layout only.
   Guard money NOT_CONFIGURED; billing/project ID/quota remaining chưa independently verified.
 - Baseline HEAD/origin sạch `54d198e886fd41dcc8f9f84a26a40ed77b7a4088` trước triển khai;
-  implementation `dbc1b0941cff2c863066eafffff6233912049017` đã push main;
-  [CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, mọi steps 3.11/3.12 đạt.
+  implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` đã push main;
+  [CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, mọi steps 3.11/3.12 đạt.
   Checkpoint REVIEW chỉ docs/planning, SHA/CI kiểm tra riêng sau push.
 - [Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
   [evidence](../docs/reviews/M1-12a-evidence.md).
