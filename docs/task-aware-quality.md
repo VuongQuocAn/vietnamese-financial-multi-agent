@@ -54,8 +54,8 @@ Analytical/accounting gặp conflict trong operands trả conflicted. Bốn deci
 `usable`, `usable_with_caveat`, `insufficient`, `conflicted`.
 
 Caller chịu trách nhiệm chọn đúng item identity và operands cho tác vụ. Conflict tự động
-chỉ so các normalized values khác nhau trong cùng document, statement, canonical ID
-hoặc source code/label, kỳ/type, scope, currency/unit/scale. Missing value không là zero
+chỉ so các normalized values khác nhau trong cùng document, statement, source code nếu có (fallback canonical ID rồi label),
+kỳ/type, scope, currency/unit/scale. Missing value không là zero
 hoặc conflict. Không fuzzy matching, không tự hợp nhất các identity khác nhau.
 
 Check mismatch liên quan có caveat, cho phép truy xuất raw values hoặc báo kết quả

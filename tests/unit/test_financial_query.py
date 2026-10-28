@@ -80,6 +80,17 @@ def test_conflicting_recovery_does_not_overwrite(sample):
     assert "conflicting_values" in answer["reasons"]
 
 
+def test_conflict_detection_survives_different_canonical_mapping(sample):
+    _, _, evidence, selector = sample
+    evidence[0].canonical_item_id = "b02.cost_of_sales"
+    recovered = evidence[0].model_copy(deep=True)
+    recovered.evidence_id += "/recovered-unmapped"
+    recovered.canonical_item_id = None
+    recovered.extraction.value.normalized_value += Decimal("1")
+    result = answer_query(FinancialQuery("test", (selector,)), [*evidence, recovered])
+    assert result["quality"] == "conflicted" and result["value"] is None
+
+
 def test_readable_recovery_can_replace_missing_observation_for_query(sample):
     _, _, evidence, s = sample
     old = evidence[0].model_copy(deep=True)

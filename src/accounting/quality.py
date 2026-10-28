@@ -72,7 +72,7 @@ def _identity(item):
     return (
         documents,
         c.statement_type,
-        item.canonical_item_id or item.source_item_code or c.raw_item_label,
+        item.source_item_code or item.canonical_item_id or c.raw_item_label,
         c.period,
         c.period_type,
         c.reporting_scope,

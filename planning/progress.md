@@ -53,7 +53,7 @@ incorrect/unsupported 0; partial 1→0; abstained 2→1; grounding 23/23→25/25
 Gain từ targeted recovery mã300 trang6, không từ nới quality gate trên ba trang cũ.
 136→138 slots,121→123 numeric usable,28 canonical,93→95 ngoài catalog;
 28 accepted extraction không đổi. Một Gemini call/2.037 tokens; không đo monetary cost/live latency.
-17 focused +134 regression =151 targeted PASS; Ruff local PASS.
+18 focused +134 regression =152 targeted PASS; Ruff local PASS.
 PDF/cache/reference hash trước/sau khớp; không commit artifacts/dataset/secrets.
 Giới hạn: một PDF, intent khai báo trước; không là free-form chatbot accuracy.
 [Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
@@ -146,7 +146,7 @@ Các đoạn sau là lịch sử.
 
 **M1-13b DONE** — Tech Lead APPROVED có điều kiện; component validation, v2 OCR prompt và verified BED crop.
 Replay baseline45/2/32 → new55/0/41 text/tables/cell texts; geometry unresolved.
-17 focused passed;3 attempts/2 successes/1 crop timeout,10059 known tokens +unknown usage1.
+18 focused passed;3 attempts/2 successes/1 crop timeout,10059 known tokens +unknown usage1.
 [Spec](tasks/M1/M1-13b.md), [evidence](../docs/reviews/M1-13b-evidence.md).
 [CI 40614067957](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40614067957) PASS đúng `d5b12de433b561d8d330b5b0024095d11a62b279`, Python3.11/3.12.
 Giữ OCR mới0 tables accepted, geometry0 accepted, crop timeout, chưa accuracy toàn dataset.
@@ -177,7 +177,7 @@ không task triển khai active.
 Baseline HEAD/origin `e5ae508c69bbbe7e2543e8c9b5973cbaa5fa51b5` sạch/khớp sau fetch.
 Dry-run 19 pages/3 symbols/14 strata; live 6 requests gồm smoke +5 pages,
 12307 input/12483 total tokens; 0 resolved/5 unresolved, cache HIT 5/checkpoint HIT 0.
-Dừng trước send kế tiếp vì input-token reservation; 17 focused +146 regression passed.
+Dừng trước send kế tiếp vì input-token reservation; 18 focused +146 regression passed.
 Implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2` /
 [CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042)
 success exact SHA, jobs/mọi steps 3.11/3.12; mỗi job 1130 passed/11 skipped.
