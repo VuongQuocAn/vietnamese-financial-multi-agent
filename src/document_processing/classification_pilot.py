@@ -147,12 +147,29 @@ class MeteredModels:
     Unknown usage giữ bound và dừng. Input counter includes smoke and failures.
     """
 
-    def __init__(self, models, *, clock=time.monotonic, sleep=time.sleep, input_token_budget=None):
+    def __init__(
+        self,
+        models,
+        *,
+        clock=time.monotonic,
+        sleep=time.sleep,
+        input_token_budget=None,
+        request_limit=MAX_REQUESTS,
+        output_cap=OUTPUT_CAP,
+        request_input_bound=REQUEST_INPUT_BOUND,
+    ):
         if input_token_budget is not None and (
             type(input_token_budget) is not int or input_token_budget <= 0
         ):
             raise PilotStop("invalid_input_token_budget")
         self._models, self._clock, self._sleep = models, clock, sleep
+        if any(
+            type(v) is not int or v <= 0 for v in (request_limit, output_cap, request_input_bound)
+        ):
+            raise PilotStop("invalid_request_caps")
+        self.request_limit = request_limit
+        self.output_cap = output_cap
+        self.request_input_bound = request_input_bound
         self.input_token_budget = input_token_budget
         self.requests = self.successes = self.failures = 0
         self.input_tokens = self.output_tokens = self.total_tokens = 0
@@ -179,11 +196,11 @@ class MeteredModels:
         content = [c.model_dump(mode="json", exclude_none=True) for c in contents]
         cfg = config.model_dump(mode="json", exclude_none=True)
         bound = len(json.dumps([content, cfg], ensure_ascii=False).encode("utf-8")) + 2048
-        if model != DEFAULT_GEMINI_MODEL or config.max_output_tokens > OUTPUT_CAP:
+        if model != DEFAULT_GEMINI_MODEL or config.max_output_tokens > self.output_cap:
             self.stopped = "invalid_model_or_output_cap"
-        elif self.requests >= MAX_REQUESTS:
+        elif self.requests >= self.request_limit:
             self.stopped = "request_limit"
-        elif bound > REQUEST_INPUT_BOUND:
+        elif bound > self.request_input_bound:
             self.stopped = "request_input_limit"
         elif (
             self.input_token_budget is not None
