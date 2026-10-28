@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 30 | 28 | 0 | 0 | 1 | 0 | 1 |
+| M1 | 30 | 29 | 0 | 0 | 1 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 80 | 32 | 0 | 0 | 47 | 0 | 1 |
+| TOTAL | 80 | 33 | 0 | 0 | 47 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,11 +46,13 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-13b REVIEW** — component validation, v2 OCR prompt và verified BED crop.
+**M1-13b DONE** — Tech Lead APPROVED có điều kiện; component validation, v2 OCR prompt và verified BED crop.
 Replay baseline45/2/32 → new55/0/41 text/tables/cell texts; geometry unresolved.
 17 focused passed;3 attempts/2 successes/1 crop timeout,10059 known tokens +unknown usage1.
-[Spec](tasks/M1/M1-13b.md), [evidence](../docs/reviews/M1-13b-evidence.md); CI sau push.
-Next action: Tech Lead review implementation và limitations pilot; không tự DONE/M1-14.
+[Spec](tasks/M1/M1-13b.md), [evidence](../docs/reviews/M1-13b-evidence.md).
+[CI 40614067957](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40614067957) PASS đúng `d5b12de433b561d8d330b5b0024095d11a62b279`, Python3.11/3.12.
+Giữ OCR mới0 tables accepted, geometry0 accepted, crop timeout, chưa accuracy toàn dataset.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
 Các đoạn sau là lịch sử.
 
 **M1-13a DONE** — Tech Lead APPROVED có điều kiện; Gateway nhận PNG bytes, verified image binding, corrected view riêng;

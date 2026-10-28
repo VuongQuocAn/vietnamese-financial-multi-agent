@@ -4,11 +4,12 @@
 M1-13b — Structured OCR Quality Improvement
 
 ## Status
-REVIEW
+DONE
 
 ## Last Verified State
-Baseline main `97d8d7104074fa37121895dc53767320e3ea76cf` sạch; M1-13a DONE.
-User cho implement/test/API/commit/push; dừng REVIEW, không M1-14.
+Implementation main `d5b12de433b561d8d330b5b0024095d11a62b279`, working tree sạch trước nghiệm thu.
+Tech Lead APPROVED có điều kiện; [CI 40614067957](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40614067957)
+completed/success đúng SHA, Python3.11/3.12 success; cho phép REVIEW → DONE.
 
 ## Completed Work
 Text/cell/layout/geometry validation độc lập; provenance fail closed; v2 prompt/schema;
@@ -19,16 +20,16 @@ BED10/10 số sample đúng ảnh (baseline6 ở cells,4 text); BCC header đún
 Source/raw/images/baseline/manifest bất biến. Artifacts ignored M1-13b.
 
 ## Remaining Work
-CI exact implementation SHA sau push; Tech Lead review limitations/implementation.
-Không retry crop hoặc chạy thêm corpus/API để cải thiện kết quả.
+Không còn công việc nghiệm thu M1-13b; giữ limitations, không bắt đầu M1-14.
 
 ## Modified Files
-vision_ocr.py; runner hiện có; test_structured_components.py; registry/spec/dashboard/
-current-status/handoff và evidence M1-13b. Không sửa shared Gateway/data contracts.
+Phiên nghiệm thu chỉ năm planning files: tasks.md; tasks/M1/M1-13b.md;
+handoff.md; current-status.md; progress.md.
 
 ## Tests
 8 focused mới +9 image integration cũ passed; Ruff changed files/planning/diff đạt.
-Không hàng trăm regression local; CI sẵn có 3.11/3.12 kiểm tra sau push, không workflow mới.
+Phiên nghiệm thu không chạy lại tests/Gemini/pilot; chỉ planning checker/diff check.
+Không tạo validation/báo cáo mới. CI implementation3.11/3.12 đã PASS, không yêu cầu CI mới.
 
 ## Blockers
 3 attempts,2 successes +1 crop timeout; known2999 input/7060 output/10059 tokens;
@@ -37,11 +38,14 @@ Crops: BED bbox verified [345,547,2297,874] giữ pixels, nhưng không có mode
 BCC bbox cắt thiếu bảng nên skip. Layout tables mới0/4 valid, declared counts vẫn sai;
 geometry model chưa đáng tin. accepted chỉ là cấu trúc, không visual/financial truth.
 Không ground truth/accuracy toàn dataset. Quota owner-attested, money NOT_CONFIGURED.
+OCR mới0 tables accepted, geometry0 accepted, crop timeout, chưa có accuracy toàn dataset.
+Các limitations đã được Tech Lead chấp nhận trong phạm vi pilot, không còn blocker nghiệm thu.
 
 ## Git Checkpoint
-Baseline `97d8d7104074fa37121895dc53767320e3ea76cf`; một implementation commit/push;
-exact SHA/CI ghi trong bàn giao cuối, không publication commit.
+Implementation `d5b12de433b561d8d330b5b0024095d11a62b279`;
+[CI 40614067957](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40614067957) PASS exact SHA Python3.11/3.12.
+Nghiệm thu chỉ planning, một commit/push; không chờ CI mới.
 [Spec](tasks/M1/M1-13b.md), [evidence](../docs/reviews/M1-13b-evidence.md).
 
 ## Exact Next Action
-Tech Lead review implementation và limitations pilot; không tự DONE/M1-14.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
