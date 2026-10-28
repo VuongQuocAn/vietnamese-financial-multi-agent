@@ -1,5 +1,10 @@
 # Data contracts
 
+M2-01 thêm `financial_normalization_v1` trong `src/accounting`:
+[public API, provenance, Decimal và evidence](financial-normalization-contract.md).
+Structural validation riêng với quality signals; schema hợp lệ không phải financial fact
+đã xác minh. M1 contracts giữ nguyên, không extraction hoặc quy tắc chuẩn hóa mới.
+
 M1-16 thêm export trung gian `unified_document_v1` trong
 `contracts/unified_document.py`: [API/quality/provenance](unified-document-understanding.md).
 Hai nhánh Existing OCR và Gemini-native giữ text/cells unresolved, component quality

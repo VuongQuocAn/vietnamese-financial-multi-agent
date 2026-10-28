@@ -1,47 +1,46 @@
 # Codex Handoff
 
 ## Active Task
-M1-16 — Unified Document Understanding Pipeline
+M2-01 — Financial Normalization Contracts
 
 ## Status
-DONE
+REVIEW
 
 ## Last Verified State
-Baseline `e80319975b1eeef79efc68fac5007980cb20a2a7`, main/tree sạch trước sửa.
-Implementation `7486a6140ac075b90d2c2454f6703b6a56186b1a`, local checks/replay đạt.
-Tech Lead APPROVED có điều kiện; [CI40620923159](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40620923159)
-completed/SUCCESS đúng HEAD `d2df004e3cf347713028ba958abbbb56aec7cb20`.
-Mọi bước Python3.11/3.12 success; REVIEW → DONE, không sửa code/tests/replay.
+M1-16 DONE. Baseline sạch `8c351bee80b81f609074c94c502299ff94b83315` sau fetch/fast-forward
+hai README-only commits. Contracts chạy được; 8 focused tests PASS.
+CI exact implementation SHA sẽ được kiểm tra sau commit/push.
 
 ## Completed Work
-Entrypoint chung, adapter existing/native/manifest replay, unified_document_v1,
-quality router chỉ đề xuất và consumer test. Existing6 text/1 table/97 cells;
-native33 text/3 tables/335 cells, trong đó289 cell texts accepted/46 unresolved.
-3 native tables unresolved; geometry0 verified, hash nguồn không đổi,0 API mới.
+FinancialValue/Context/SourceReference/NormalizationResult; strict models và version,
+Decimal JSON strings, SourceAnchor M1 giữ nguyên, quality checks riêng, schema/export,
+focused tests synthetic và [API/evidence](../docs/financial-normalization-contract.md).
+Registry dependency M2-01 đổi M1-14 → M1-16; spec IN_PROGRESS trước implementation.
 
 ## Remaining Work
-Không còn công việc nghiệm thu M1-16; giữ nguyên giới hạn đã duyệt.
+Xác minh CI exact SHA sau publication; Tech Lead review trước DONE.
 
 ## Modified Files
-Phiên nghiệm thu chỉ 5 planning files: tasks.md, progress.md, current-status.md,
-handoff.md, tasks/M1/M1-16.md. Code/tests/evidence/artifacts giữ nguyên.
+src/accounting/{__init__,contracts,validation}.py;
+tests/unit/test_financial_normalization_contracts.py;
+scripts/export_financial_normalization_schema.py;
+schemas/financial_normalization_v1.schema.json;
+docs/financial-normalization-contract.md, docs/data-contracts.md;
+planning/tasks.md, progress.md, current-status.md, handoff.md, tasks/M2/M2-01.md.
 
 ## Tests
-10 focused +77 loader regression passed; Ruff changed files, planning/diff checks đạt.
-CI full unit3.11/3.12 trên exact HEAD d2df004 đã SUCCESS, mọi bước liên quan đạt.
-Phiên nghiệm thu chỉ planning checker/diff check; không chạy lại tests/replay/Gemini,
-không yêu cầu CI mới cho planning-only DONE commit.
+8 focused tests PASS; Ruff lint/format 5 Python files, planning checker 82 tasks và diff check PASS.
+Không full local regression, benchmark, dataset evaluation hoặc API.
 
 ## Blockers
-Không blocker implementation. Native page-level provenance; geometry chưa verified;
-raw layout unresolved khi chưa có evidence. Manifest/PNG replay không rehash PDF gốc.
-Output chỉ đủ text_evidence, chưa chứng minh financial accuracy; recovery chưa có executor.
+Không blocker implementation. Metadata/vocabulary kỳ/đơn vị/scale còn mở cho M2-02;
+provenance caller cung cấp chưa được đối chiếu nguồn. Page-level không thành cell-level.
+Không financial accuracy hoặc verified fact, kể cả khi không còn quality issues.
 
 ## Git Checkpoint
-Stable baseline `e80319975b1eeef79efc68fac5007980cb20a2a7`.
-Implementation SHA `7486a6140ac075b90d2c2454f6703b6a56186b1a`.
-Stable checkpoint `d2df004e3cf347713028ba958abbbb56aec7cb20`, CI40620923159 SUCCESS exact SHA.
-Phiên nghiệm thu một planning-only commit/push; không yêu cầu CI mới.
+Stable baseline `8c351bee80b81f609074c94c502299ff94b83315`.
+Implementation SHA xác định bằng `git log -1 --format=%H -- src/accounting/contracts.py`.
+Chưa có CI trên implementation tại thời điểm chuẩn bị commit; không suy CI baseline cho code mới.
 
 ## Exact Next Action
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2 hoặc web demo.
+Chờ Tech Lead review.
