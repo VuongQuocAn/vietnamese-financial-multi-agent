@@ -1,58 +1,50 @@
 # Codex Handoff
 
 ## Active Task
-M2-05 — Deterministic Arithmetic Checks
+M2-06 — Accounting Relationship Checks
 
 ## Status
-DONE
+REVIEW
 
 ## Last Verified State
-M2-05 DONE — Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only. M2-04b giữ DONE, M2-06 TODO.
-Checker Decimal riêng với extraction; một rule active B02 gross_profit và bốn ứng viên unavailable.
-Pilot PDF-bound cache BBS2025 trang5/7/8: B01 P/F/I/N=0/0/4/0,
-B02=2/0/2/0, B03=0/0/2/0; hai check thực, difference0/tolerance0, không gọi Gemini.
-Tổng 2 PASS B02 cho lợi nhuận gộp2025/2024, 0 FAILED, 8 INSUFFICIENT;
-chưa có kiểm tra arithmetic thực B01/B03, không phải verified financial facts.
-28 accepted extraction giữ nguyên; financial_fact_verified=false, scope null không bị suy đoán.
+M2-06 REVIEW — implementation và pilot local hoàn tất, chờ CI exact SHA và Tech Lead.
+M2-05 giữ DONE; không bắt đầu M2-07.
+Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, difference0,
+trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
+Registry1 active/3 unavailable; pilot1 consistent/0 inconsistent/9 insufficient/0 not_applicable.
+28 accepted extraction giữ nguyên;0 trang bổ sung/0 Gemini calls; không verified facts.
+38 focused/72 regression PASS; không full suite local hoặc benchmark.
+[API/pilot](../docs/accounting-relationships.md), [spec](tasks/M2/M2-06.md),
+[issue](tasks/M2/issues/M2-06-relationships.md).
 
 ## Completed Work
-Phiên nghiệm thu: xác minh SHA/CI hiện có, đồng bộ năm file planning REVIEW → DONE
-theo Tech Lead approval; giữ nguyên code/tests/schema/PDF và output nguồn.
-Implementation đã nghiệm thu trước đó:
-API evaluate_arithmetic_rules/evaluate_automated_records, registry, exact Decimal,
-grouping cùng trang/kỳ/loại kỳ/scope, unit/scale/conflict/missing và lineage snapshots.
-Replay PDF-bound cache, đọc ảnh nguồn5/7/8, đối chiếu hai đẳng thức B02.
-Tài liệu API/pilot/issue/spec và planning đồng bộ; không sửa M2-04b hoặc catalog.
+Module deterministic/public APIs, registry1 active/3 unavailable, PDF/date/scope/unit grouping,
+canonical/exact code-label matching, Decimal và snapshots lineage từng trang.
+Replay cache bind PDF, đối chiếu ảnh5/8 sau runtime. Không sửa pipeline/extraction/catalog.
 
 ## Remaining Work
-Không còn công việc nghiệm thu M2-05; không tự bắt đầu M2-06.
+Commit/push implementation, xác minh CI exact SHA Python3.11/3.12, Tech Lead review.
 
 ## Modified Files
-planning/tasks.md, planning/progress.md, planning/current-status.md,
-planning/handoff.md, planning/tasks/M2/M2-05.md.
+src/accounting/relationships.py, src/accounting/__init__.py,
+tests/unit/test_relationships.py, scripts/run_relationship_pilot.py,
+docs/accounting-relationships.md, planning/tasks/M2/issues/M2-06-relationships.md,
+planning/tasks/M2/M2-06.md, planning/tasks.md, planning/progress.md,
+planning/current-status.md, planning/handoff.md.
 
 ## Tests
-Phiên nghiệm thu: planning checker84 tasks và git diff --check PASS.
-Evidence implementation trước nghiệm thu:28 focused/84 targeted PASS, Ruff/planning/diff PASS;
-CI40649070030 SUCCESS đúng implementation SHA và mọi steps Python3.11/3.12 đã xác minh lại.
-Không chạy lại Gemini, pytest, pilot hoặc CI.
+38 focused/72 regression PASS. Ruff/planning/diff kiểm tra trước commit.
+Không full local suite, benchmark hoặc API thật. CI chờ implementation SHA.
 
 ## Blockers
-Không có blocker nghiệm thu trong phạm vi Research MVP Lean v3.
-Bốn ứng viên unavailable vì thiếu catalog/nguồn; chưa kiểm tra arithmetic thực B01/B03;
-scope null chỉ tính cùng trang, chưa hỗ trợ multi-page arithmetic hoặc financial verification.
+Không blocker engineering. Candidates thiếu nguồn vốn/retained adjustments/FX và mapping50/60;
+2024 thiếu endpoint evidence; scope null có caveat. Không kết luận lỗi tài chính.
 
 ## Git Checkpoint
-Baseline nghiệm thu sạch local/origin `82aedb66480cc62cedfbfd38d2cce2502b9ff27e`.
-Implementation đã push `4472916ed19320d13b0a4d0f830d0a7a836fec90`;
-diff từ implementation đến baseline chỉ docs/planning, không đổi code/tests/schema.
-[CI40649070030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40649070030)
-completed/SUCCESS đúng SHA, Python3.11/3.12 và mọi steps đã xác minh lại từ run hiện có.
-Commit nghiệm thu chỉ năm file planning; không gán CI implementation cho SHA nghiệm thu.
-Dùng [skip ci] theo yêu cầu không chạy CI cho nghiệm thu planning-only.
-Artifact local ignored: artifacts/arithmetic/M2-05/final/arithmetic.json;
-SHA256 6784479f9a03a0c16802fe18a0a33adea0e8665917c28706ec4639e8e8c82ce9.
+Baseline thực tế sạch local/origin `10d8740d5290a5eea53d8e830458348779d9504c`.
+Working tree chứa implementation chưa commit.
+Artifact ignored artifacts/relationships/M2-06/final/relationships.json SHA256
+`d1e4f6bbd82ee5106eb8bcbe017170f441615a93e37479e36bb048ea31224d00`.
 
 ## Exact Next Action
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-06.
+Hoàn tất commit/push và xác minh CI đúng implementation SHA.

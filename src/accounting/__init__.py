@@ -37,6 +37,15 @@ from .item_mapping import (
     map_financial_items,
     map_item_label,
 )
+from .relationships import (
+    RELATIONSHIP_RULES,
+    RelationshipCheck,
+    RelationshipItem,
+    RelationshipRule,
+    RelationshipValue,
+    evaluate_accounting_relationships,
+    evaluate_automated_relationships,
+)
 from .statement_resolution import (
     DocumentStatementTypes,
     StatementCandidate,
@@ -54,6 +63,13 @@ from .table_recovery import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "RELATIONSHIP_RULES",
+    "RelationshipCheck",
+    "RelationshipItem",
+    "RelationshipRule",
+    "RelationshipValue",
+    "evaluate_accounting_relationships",
+    "evaluate_automated_relationships",
     "ARITHMETIC_RULES",
     "ArithmeticCheck",
     "ArithmeticRule",
