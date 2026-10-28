@@ -56,7 +56,9 @@ Local: planning 87 tasks PASS, checker regressions 3 PASS, Ruff PASS;
 diff phần W-01 tự viết PASS; toàn staged báo bốn trailing spaces trong Stitch
 DESIGN.md gốc, giữ nguyên theo yêu cầu không sửa reference.
 11 JSON examples parse PASS. Chưa chạy web/financial evaluation/Gemini.
-Commit/push và remote/CI ghi ở handoff sau publication, không gán CI cũ cho W-01.
+Design/checker/assets đã push [7a158f3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/7a158f31e2feab0895d4ca5054bdbb56e78526be),
+remote SHA khớp. CI không có run (workflow chỉ push main hoặc PR; nhánh chưa mở PR),
+không gán CI cũ cho W-01. [Handoff](handoff.md) ghi checkpoint.
 Next action: Tech Lead nghiệm thu độc lập W-01.
 
 Checkpoint M2-09 dưới đây là lịch sử trước W-01, đã nghiệm thu DONE.

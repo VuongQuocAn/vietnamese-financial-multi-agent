@@ -19,7 +19,10 @@ không callback được nêu rõ; checkpoint chưa tự nối financial runtime
 Local planning 87 tasks PASS, checker regressions 3 PASS, Ruff PASS;
 diff phần W-01 tự viết PASS; staged toàn bộ báo bốn trailing spaces có sẵn
 trong Stitch DESIGN.md (giữ nguyên assets theo yêu cầu).
-11 JSON examples parse PASS. Publication/remote SHA/CI ở [handoff](handoff.md).
+11 JSON examples parse PASS, evidence value/context khớp models M2.
+Design/checker/assets `7a158f31e2feab0895d4ca5054bdbb56e78526be` đã push,
+remote SHA khớp. Không có CI run: workflow chỉ push main hoặc pull_request,
+nhánh chưa mở PR. Chi tiết ở [handoff](handoff.md).
 Không sửa M1–M2/dataset/PDF/cache/reference; không Gemini live/evaluation/web tests.
 M2-09 DONE theo Tech Lead 2026-10-28 trên một PDF, chưa suy chất lượng tổng quát.
 W-01 chờ Tech Lead review, không tự DONE hoặc bắt đầu W-02/M3.

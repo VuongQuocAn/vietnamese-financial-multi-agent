@@ -35,7 +35,8 @@ git diff --check PASS; staged check phần W-01 tự viết PASS. Staged toàn b
 báo bốn trailing spaces tại dòng 121/138 của hai DESIGN.md gốc; giữ nguyên theo
 yêu cầu bảo toàn Stitch, không tắt checks. Sáu staged blobs khớp bytes gốc.
 Không live Gemini/financial benchmark/full unit local/web E2E; M1–M2 không sửa.
-CI nhánh chưa có run tại checkpoint trước publication; không dùng CI M2-09 thay W-01.
+Sau push, gh run list trên nhánh trả []; workflow chỉ push main hoặc pull_request,
+chưa mở PR nên không kích hoạt CI. Không báo CI SUCCESS hoặc dùng CI M2-09 thay W-01.
 
 ## Blockers
 Không blocker thiết kế. Metadata extractor mới; extraction không callback nên
@@ -44,7 +45,11 @@ restart policy. Cần Tech Lead review internal symbol namespace và status poli
 
 ## Git Checkpoint
 Baseline ổn định `5c8a80e4ceedb735dcbad12e267620b0b8046adb`.
-Publication W-01 sẽ ghi SHA/remote/CI sau commit, chưa gán SHA tương lai.
+Design/checker/assets commit
+`7a158f31e2feab0895d4ca5054bdbb56e78526be` đã push;
+git ls-remote xác nhận nhánh docs/w-01-web-demo-design khớp exact SHA, tree sạch
+sau push. Commit tiếp theo chỉ cập nhật planning evidence của checkpoint này,
+không thay design/code/assets. Không tự merge main. CI không có run như Tests.
 Không stage credentials/.env/raw/cache/PDF/reference hoặc dữ liệu private.
 Stitch bytes đã hash đối chiếu, chỉ tài liệu thiết kế reference được commit.
 
