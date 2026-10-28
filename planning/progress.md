@@ -49,8 +49,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 **M2-02 REVIEW** — resolver period/unit/scope deterministic và adapter M1.
 [Spec](tasks/M2/M2-02.md), [API/evidence](../docs/financial-context-resolution.md).
 18 targeted PASS; pilot5 trang: 5 resolved đúng/0 sai/3 uncertain/7 unresolved.
-Không API, hash nguồn giữ nguyên; chờ CI exact SHA và Tech Lead.
-Next action: Xác minh CI exact implementation SHA sau commit/push.
+Không API, hash nguồn giữ nguyên. [CI 40638428927](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40638428927) SUCCESS đúng checkpoint `0637b13f7dc469d97c9827f73f9549d7ec90996c`; Python3.11/3.12 và mọi steps success.
+Chờ Tech Lead review; evidence commit sau checkpoint chỉ docs/planning.
+Next action: Chờ Tech Lead review.
 Các đoạn sau là lịch sử.
 
 **M2-01 DONE** — Tech Lead APPROVED ngày 2026-10-28; Financial Normalization v1.

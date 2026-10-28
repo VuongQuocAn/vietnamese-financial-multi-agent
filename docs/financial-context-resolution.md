@@ -101,4 +101,8 @@ Receipt giữ full raw text/candidates/anchors, selector, expected/actual và SH
 `data/processed/Financial_Report_OCR/{BCC,BED}/2025/ocr_json/page_1.json`.
 Chỉ tài liệu aggregate này vào Git; không dataset, OCR export hoặc locator cá nhân.
 
-CI exact implementation SHA: đang chờ commit/push và xác minh; dừng REVIEW.
+Implementation code `acf684ec8deb51f2be477eb16d37393f61040422`;
+CI40638326302 dừng ở format snippet Markdown, đã sửa tại `0637b13f7dc469d97c9827f73f9549d7ec90996c`
+(không đổi code/tests). [CI 40638428927](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40638428927) SUCCESS đúng checkpoint `0637b13f7dc469d97c9827f73f9549d7ec90996c`; Python3.11/3.12 và mọi steps success.
+Dừng REVIEW; chờ Tech Lead. Commit evidence tiếp theo chỉ docs/planning;
+không gán kết quả CI này cho SHA mới.

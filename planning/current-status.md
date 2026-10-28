@@ -10,5 +10,7 @@ Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Pilot5 trang/15 trường: 5 resolved đúng,0 resolved sai,3 uncertain,7 unresolved;
   hash4 source files không đổi. Không suy độ chính xác dataset; không API/Gemini.
 - [Spec](tasks/M2/M2-02.md), [API/evidence](../docs/financial-context-resolution.md).
-- Implementation đã kiểm tra local, chờ commit/push, CI exact SHA và Tech Lead.
-- Next action: Xác minh CI exact implementation SHA sau commit/push.
+- [CI 40638428927](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40638428927) SUCCESS đúng checkpoint `0637b13f7dc469d97c9827f73f9549d7ec90996c`; Python3.11/3.12 và mọi steps success.
+- Code commit `acf684ec8deb51f2be477eb16d37393f61040422`; checkpoint trên sửa format
+  snippet docs. Evidence commit tiếp theo chỉ docs/planning; chờ Tech Lead.
+- Next action: Chờ Tech Lead review.
