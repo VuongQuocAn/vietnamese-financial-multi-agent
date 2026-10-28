@@ -50,8 +50,10 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 14 mapped đúng/0 sai;28 accepted đúng/0 sai;28 Decimal;108 unresolved,0 uncertain.
 Baseline40:28 accepted/12 unresolved. 5 Gemini calls gồm 2 recovery, không gọi lại B03 có cache tốt.
 70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md), [spec](tasks/M2/M2-04b.md).
-Chờ CI đúng implementation SHA và Tech Lead review; không verified facts, không toàn bộ PDF.
-Next action: Xác minh CI đúng implementation SHA sau push.
+[Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/912916ed1318628750e160e28338a211e5fc2819),
+[CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
+PASS exact SHA, mọi bước Python3.11/3.12. Không verified facts, không toàn bộ PDF.
+Next action: Chờ Tech Lead review M2-04b.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

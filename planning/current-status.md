@@ -9,5 +9,8 @@ Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
   provenance PDF/ảnh/model/request/selectors, financial_fact_verified=false.
 - 70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md),
   [spec](tasks/M2/M2-04b.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
-- Baseline ổn định `8a3b5ce`; chờ implementation commit/push và CI exact SHA 3.11/3.12.
-- Next action: Xác minh CI đúng implementation SHA sau push.
+- [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/912916ed1318628750e160e28338a211e5fc2819);
+  [CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
+  PASS đúng SHA, mọi bước Python3.11/3.12 đã xác minh. Checkpoint tiếp theo chỉ tài liệu;
+  không gán CI implementation cho SHA tài liệu mới.
+- Next action: Chờ Tech Lead review M2-04b.

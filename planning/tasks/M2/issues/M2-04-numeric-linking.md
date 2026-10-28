@@ -33,7 +33,9 @@ B03 tốt giữ cache, không gọi lại. Header mô tả không phải numeric
 `page-7.png`, `page-8.png`; không commit nguồn. Kết quả PDF entrypoint replay và
 post-run evaluation trong `artifacts/item-mapping/M2-04b/pdf-replay.json`.
 [API và evidence chi tiết](../../../../docs/automated-financial-extraction.md).
-Chỉ chạy trang5/7/8 trong24 trang. M2-04b REVIEW, chờ CI exact SHA và Tech Lead review.
+Chỉ chạy trang5/7/8 trong24 trang. M2-04b REVIEW; [CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
+PASS đúng implementation SHA `912916ed1318628750e160e28338a211e5fc2819`,
+Python3.11/3.12. Chờ Tech Lead review.
 
 ## Hiện tượng
 Pilot M2-04 xác nhận đúng 14 trong 20 nhãn nhưng không nối được số: 28 ô thuộc nhãn đã map bị từ chối, 12 ô thuộc 6 nhãn ngoài catalog chưa xét. Nhận diện tên không chứng minh hàng, cột kỳ và ô số tương ứng.

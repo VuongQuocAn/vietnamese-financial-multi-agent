@@ -111,6 +111,9 @@ Artifacts local ignored: `artifacts/item-mapping/M2-04b/live/` và `retry/`
 ## Engineering evidence
 
 70 targeted tests PASS: 36 automated mới, 14 manual recovery, 12 item mapping,
-8 Gemini ingestion. Ruff changed files, planning checker và diff check cần PASS
-trước commit. Không chạy full local suite hoặc API trong CI. CI Python 3.11/3.12
-đúng implementation SHA được ghi trong spec/handoff sau push. Chờ Tech Lead review.
+8 Gemini ingestion. Ruff changed files (kể cả code block Markdown), planning checker
+và diff check PASS. Không chạy full local suite hoặc API trong CI.
+[CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
+PASS mọi bước Python3.11/3.12 đúng [implementation checkpoint912916e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/912916ed1318628750e160e28338a211e5fc2819).
+Lượt130019e dừng ở format ví dụ Markdown; 912916e sửa format và CI PASS.
+Chờ Tech Lead review; checkpoint evidence sau chỉ tài liệu.
