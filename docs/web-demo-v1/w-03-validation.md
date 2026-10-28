@@ -8,9 +8,13 @@ validation; chưa đánh giá độ chính xác metadata/financial trên dataset
 Baseline W-02 sau fetch: `78a50c6285a37063463b30ec2e6c991ce23bf0b5`.
 Nhánh `feat/w-03-pdf-upload-metadata`, stacked base `feat/w-02-web-skeleton`.
 W-01/W-02 DONE. PR #1 OPEN base main, PR #2 OPEN base W-01; không tự merge.
-Implementation/publication SHA, remote và CI ghi sau khi xác minh publication;
-không gán CI W-02 cho W-03 hoặc ghi SHA tương lai. Thay đổi local có sẵn
-web/next-env.d.ts khôi phục sau build, không stage.
+Implementation SHA `b494788ec2a6938bc7e50d15ad347eadccf2aaa5` đã commit/push,
+ls-remote khớp. [Draft PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
+OPEN, base W-02. Connector GitHub tạo PR trả 403; đã dùng CLI đang đăng nhập.
+[CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
+SUCCESS đúng implementation SHA; đã kiểm steps Python 3.11/3.12 và Web.
+Commit evidence tiếp theo chỉ docs/planning, không gán CI implementation cho SHA
+documentation mới. web/next-env.d.ts khôi phục thay đổi có sẵn sau build, không stage.
 
 ## B. PDF upload
 
@@ -78,7 +82,10 @@ PASS local:
 - Screenshots metadata 1440/390 và shell 1440/1280/390 đã xem/kiểm overflow;
   screenshots/trace/runtime PDF đều local ignored, không commit.
 
-Planning checker/diff/staged review trước commit; kết quả publication bổ sung sau.
+Planning checker/diff/staged review PASS trước commit; 35 task files, không key
+pattern/dataset/private/generated files. CI exact SHA SUCCESS: Python 3.11/3.12
+mỗi job 1494 PASS/11 SKIP; mọi lint/format/planning/unit steps PASS. Web typecheck/
+lint/build và 11 browser/proxy tests PASS. CI không có live credentials/requests.
 Không chạy full local unit suite lặp lại; CI giữ Python 3.11/3.12 full unit suite.
 Không thay/tắt CI. Có warning Starlette TestClient/httpx deprecation, không test failure.
 

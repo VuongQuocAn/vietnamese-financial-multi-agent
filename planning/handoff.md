@@ -40,7 +40,9 @@ web/next-env.d.ts là thay đổi có sẵn, được khôi phục sau build và
 
 36 focused unit/integration PASS; 139 Gateway/Gemini/quota/cache regression PASS.
 Ruff lint/format; TypeScript/lint/build; 11 browser/proxy tests PASS.
-Planning/diff/index kiểm tra trước publication; CI xác minh sau PR.
+Planning/diff/index PASS. [CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
+SUCCESS exact implementation SHA: Python 3.11/3.12 mỗi job 1494 PASS/11 SKIP;
+Web 11 PASS, mọi required steps PASS. Không chạy lại full local suite/CI.
 PDF scan synthetic tạo local, không text layer; mock SDK/Gateway không có network.
 Live smoke NOT RUN, không đánh giá chất lượng metadata/financial trên dataset thật.
 
@@ -52,9 +54,13 @@ Một API process/worker, quota/cache in-memory; scope marker không là durable
 
 ## Git Checkpoint
 
-Baseline ổn định 78a50c6 trên W-02, chưa gán SHA tương lai cho implementation.
-Publication SHA/remote/PR/CI ghi sau khi xác minh trong evidence/checkpoint tiếp.
-Không stage next-env, PDF, private data, key, snapshots hoặc artifacts.
+Baseline W-02 78a50c6285a37063463b30ec2e6c991ce23bf0b5.
+Implementation ổn định đã push/remote khớp: b494788ec2a6938bc7e50d15ad347eadccf2aaa5.
+[Draft PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
+OPEN base W-02, PR #1/#2 vẫn OPEN/chưa merge. CI exact implementation SHA SUCCESS.
+Commit evidence tiếp theo chỉ docs/planning [skip ci], không gán CI cho SHA mới.
+Không stage next-env, PDF, private data, key, snapshots hoặc artifacts. Đã dừng
+hai server chạy riêng cho browser tests, không dừng process có sẵn của người dùng.
 
 ## Exact Next Action
 

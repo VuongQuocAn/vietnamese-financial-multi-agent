@@ -26,6 +26,9 @@ W-03 REVIEW — người dùng đã giao 28/10/2026; [spec](tasks/W/W-03.md).
 Upload PDF thật/local storage, metadata-only worker và Vision Gateway preflight,
 review/confirm/revision đã có; [evidence](../docs/web-demo-v1/w-03-validation.md).
 W-04 orchestration/extraction và W-05 viewer chưa bắt đầu.
+Implementation b494788 đã push/remote khớp, draft PR #3 base W-02;
+[CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
+SUCCESS exact implementation SHA, không đồng nghĩa Tech Lead đã nghiệm thu.
 Next action: Tech Lead nghiệm thu độc lập W-03.
 Các đoạn W-01/W-02 bên dưới là lịch sử checkpoint đã nghiệm thu.
 

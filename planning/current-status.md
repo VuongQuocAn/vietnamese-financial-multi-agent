@@ -16,6 +16,11 @@ Local: 36 focused unit/integration PASS; 139 Gateway/quota/cache regression PASS
 TypeScript/lint/build và 11 browser/proxy tests PASS, gồm PDF >10 MiB và mobile.
 Live Gemini NOT RUN: chưa có scope ngân sách/project policy W-03 được xác nhận;
 key có sẵn không tự chứng minh quota. Không dùng policy pilot cũ để reset guard.
-CI và SHA publication cập nhật trong evidence/handoff sau push; chưa tuyên bố CI PASS.
+Implementation `b494788ec2a6938bc7e50d15ad347eadccf2aaa5` đã push/remote khớp.
+[PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
+draft OPEN, base W-02. [CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
+SUCCESS exact implementation SHA: Python 3.11/3.12 mỗi job 1494 PASS/11 SKIP,
+Web 11 PASS; đã kiểm steps. Commit evidence tiếp theo chỉ docs/planning,
+không gán CI này cho SHA documentation mới.
 
 Next action: Tech Lead nghiệm thu độc lập W-03.
