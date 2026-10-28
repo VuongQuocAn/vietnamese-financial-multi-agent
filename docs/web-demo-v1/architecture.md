@@ -81,10 +81,15 @@ Chữ ký trên không tự dựng service. Cách gọi batch hiện có:
 
 ```python
 result = process_financial_pdf(
-    pdf_path, symbol=runtime_symbol, year=runtime_year,
-    service=extraction_service, discovery_service=discovery_service,
-    credential_ref=credential_ref, cached_records=bound_extraction_records,
-    discovery_cache=bound_discovery_records, on_discovery_page=persist_discovery,
+    pdf_path,
+    symbol=runtime_symbol,
+    year=runtime_year,
+    service=extraction_service,
+    discovery_service=discovery_service,
+    credential_ref=credential_ref,
+    cached_records=bound_extraction_records,
+    discovery_cache=bound_discovery_records,
+    on_discovery_page=persist_discovery,
 )
 ```
 
