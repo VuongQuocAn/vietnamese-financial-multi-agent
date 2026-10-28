@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 30 | 29 | 0 | 0 | 1 | 0 | 0 |
+| M1 | 30 | 29 | 0 | 0 | 0 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 80 | 33 | 0 | 0 | 47 | 0 | 0 |
+| TOTAL | 80 | 33 | 0 | 0 | 46 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,12 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M1-14 REVIEW** — offline4 pages/46 labels/18 values,8 focused passed.
+Common26: A/B24/26, C26/26; số6/6 cả ba; C tables0/4 accepted.
+[Report](../docs/reviews/M1-14-evaluation.md); CI exact SHA kiểm sau một push.
+Next action: Tech Lead review nhãn, metrics và đề xuất Hybrid; không M2.
+Các đoạn sau là lịch sử.
 
 **M1-13b DONE** — Tech Lead APPROVED có điều kiện; component validation, v2 OCR prompt và verified BED crop.
 Replay baseline45/2/32 → new55/0/41 text/tables/cell texts; geometry unresolved.
