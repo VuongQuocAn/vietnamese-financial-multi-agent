@@ -8,6 +8,7 @@ from uuid import uuid4
 from ..document_processing.metadata_preflight import (
     DEFAULT_METADATA_MODEL,
     analyze_batch,
+    core_metadata_resolved,
     empty_suggestions,
     merge_suggestions,
 )
@@ -121,6 +122,9 @@ class PreflightJobs:
             doc = self.store.load(identifier)
             self._state(doc, "processing")
             metadata = doc["metadata"]
+            if metadata.get("acceptance_origin") == "auto":
+                metadata["accepted"] = False
+                doc["runtime_identity"]["year"] = None
             if metadata["preflight"] is not None:
                 doc.setdefault("_preflight_history", []).append(
                     deepcopy(
@@ -136,7 +140,7 @@ class PreflightJobs:
                 analyzed_pages=[],
                 stop_reason=None,
                 issues=[],
-                schema_revision="metadata_v1",
+                schema_revision="metadata_v2",
                 prompt_revision="v1",
                 attempt_id=doc["job"]["id"],
                 batches=[],
@@ -149,7 +153,7 @@ class PreflightJobs:
             with self.store.lock:
                 self._state(
                     doc,
-                    "ready" if metadata["confirmed"] else "needs_metadata",
+                    "ready" if metadata["accepted"] else "failed",
                     "gemini_not_configured",
                 )
             return
@@ -181,9 +185,11 @@ class PreflightJobs:
             preflight["pending_pages"] = []
             preflight["batches"].append(dict(pages=pages, error=error, **telemetry))
             if stop:
-                preflight["stop_reason"] = stop
                 preflight["issues"].append(error)
-                break
+                if error not in ("structured_output_invalid", "schema_mismatch"):
+                    preflight["stop_reason"] = stop
+                    break
+                continue  # Inspect next batch under the same page/request caps.
             merge_suggestions(metadata["suggestions"], prediction, doc["content_id"])
             preflight["analyzed_pages"].extend(pages)
             doc["job"]["progress"]["preflight"]["completed_pages"] = len(
@@ -191,19 +197,27 @@ class PreflightJobs:
             )
             with self.store.lock:
                 self._state(doc, "processing")
-            if all(f["status"] == "resolved" for f in metadata["suggestions"].values()):
+            if core_metadata_resolved(metadata["suggestions"], doc["content_id"]):
                 preflight["stop_reason"] = "sufficient_evidence"
                 break
         if preflight["stop_reason"] is None:
             preflight["stop_reason"] = (
                 "pages_exhausted" if cap == doc["page_count"] else "page_limit"
             )
-        if any(f["status"] != "resolved" for f in metadata["suggestions"].values()):
+        if not core_metadata_resolved(metadata["suggestions"], doc["content_id"]):
             preflight["issues"].append("manual_metadata_needed")
         with self.store.lock:
+            if self.store.auto_accept(doc):
+                doc["job"]["accepted_metadata_revision"] = doc["metadata_revision"]
+            state = "ready" if metadata["accepted"] else "needs_metadata"
+            if not metadata["accepted"] and preflight["stop_reason"] in (
+                "provider_error",
+                "budget_limit",
+            ):
+                state = "failed"
             self._state(
                 doc,
-                "ready" if metadata["confirmed"] else "needs_metadata",
+                state,
                 preflight["issues"][0]
                 if preflight["stop_reason"] in ("provider_error", "budget_limit")
                 and preflight["issues"]

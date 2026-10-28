@@ -1,126 +1,108 @@
-# W-03 — Evidence và bàn giao REVIEW
+# W-03 — Final refinement evidence
 
-Ngày 28/10/2026 (Asia/Bangkok), Research MVP Lean v3. Chỉ engineering/synthetic
-validation; chưa đánh giá độ chính xác metadata/financial trên dataset thật.
+Ngày 28/10/2026 (Asia/Bangkok), Research MVP Lean v3.
+W-03 REVIEW, refinement auto-first/key rotation, không task mới.
 
-## A. Git
+## 1. Git / PR / CI
 
-Baseline W-02 sau fetch: `78a50c6285a37063463b30ec2e6c991ce23bf0b5`.
-Nhánh `feat/w-03-pdf-upload-metadata`, stacked base `feat/w-02-web-skeleton`.
-W-01/W-02 DONE. PR #1 OPEN base main, PR #2 OPEN base W-01; không tự merge.
-Implementation SHA `b494788ec2a6938bc7e50d15ad347eadccf2aaa5` đã commit/push,
-ls-remote khớp. [Draft PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
-OPEN, base W-02. Connector GitHub tạo PR trả 403; đã dùng CLI đang đăng nhập.
-[CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
-SUCCESS đúng implementation SHA; đã kiểm steps Python 3.11/3.12 và Web.
-Commit evidence tiếp theo chỉ docs/planning, không gán CI implementation cho SHA
-documentation mới. web/next-env.d.ts khôi phục thay đổi có sẵn sau build, không stage.
+Baseline refinement f617e68295f79de1c5702fe8c27f7b0fcfcea0b1.
+Nhánh feat/w-03-pdf-upload-metadata, [PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
+draft OPEN base W-02; PR #1/#2 OPEN. Không merge. Giữ next-env local ngoài stage.
+Implementation/refinement SHA, remote và CI ghi sau publication.
+CI40710376652/b494788 là lịch sử baseline, không gán cho code refinement.
 
-## B. PDF upload
+## 2. Key rotation
 
-POST/GET documents, GET detail/file/status, PATCH metadata và POST process đã có.
-PDF-only, magic/PDFium/encryption/size/page validation; default 50 MiB/200 pages.
-Actual body bytes có bound kể cả chunked; UUID directories, SHA-256 identity,
-filename chỉ display, atomic JSON cùng attempts/job. HTTP Range/416/no-store.
-Origin allowlist, symlink/junction/containment và OS single writer lock.
-Frontend chọn tệp/drag-drop, tên/dung lượng, XHR bytes progress, lỗi, navigate
-detail; Dashboard/Documents đọc list thật. Kiểm tra proxy bằng PDF synthetic >11 MiB.
+Chỉ GEMINI_API_KEY_FILE; regex hợp lệ/dedupe, dùng key thành công hiện tại.
+429→cooldown max(default60,retry-after), auth/disabled key→tạm loại trong phiên,
+thử key khác tối đa min(3,n). SDK 400 API_KEY_INVALID/EXPIRED/SERVICE_BLOCKED được
+normalize thành authentication; RetryInfo được giữ thành retry-after an toàn.
+Timeout/server error không tự retry speculative ở key khác.
 
-## C. Gemini metadata
+Một pool dùng chung cap attempts RPM/RPD và token reservation TPM, kể cả rotated
+attempts, không nhân quota theo số keys. Atomic counters chung trước call, giữ
+qua restart, không key values. Không giả confirmed Google project mapping;
+composition admission dùng core GuardResult/QuotaLimits/Reservation và existing
+SharedLLMGateway/GeminiAdapter/CachedLLMService, core/M1–M2 không sửa.
 
-Schema metadata_v1 riêng gồm năm fields, strict candidates/raw text/page và
-resolved/uncertain/unresolved. Backend gắn content_id, reject nguồn không thuộc
-batch; giữ candidates mâu thuẫn. Không suy ticker từ filename/năm hiện tại.
-PDFium render độc lập trước khi biết năm, default 150 DPI, batch đầu 4 trang,
-mở rộng các batch đến đủ nhất quán hoặc cap/budget; analyzed_pages/stop_reason.
+User xác nhận Free Tier; theo [Google pricing](https://ai.google.dev/gemini-api/docs/pricing)
+model hiện hành có Free Tier. Không tự đổi model/tier/bật billing. Key file/usage
+không chứng minh billing từng project; cost unknown giữ nguyên, không ghi cost=0.
 
-Tái sử dụng GeminiAdapter + SharedLLMGateway + QuotaBudgetGuard +
-CachedLLMService + LocalSchemaRegistry, model từ policy server. Mỗi ảnh một
-user message theo Gateway v1, cùng request có nhiều ảnh. Schema thật đi qua
-response_json_schema của adapter trong SDK stub test; runtime kiểm provenance.
-Semantic-invalid response invalidate cache, không cache vĩnh viễn lỗi.
+## 3. Auto-accept
 
-## D. Metadata review
+Tên/năm hợp lệ, resolved, một giá trị nhất quán, raw text + source PDF page →
+accepted=true/origin=auto, ready; không cần ticker/period/scope hoặc confirm.
+accepted khác confirmed (chỉ user). Auto tăng revision và ghi acceptance_history.
+User PATCH giữ suggestions, revision conflict, edits origin=user; retry không
+ghi đè user values. Auto metadata được đánh giá lại khi retry, không giữ accepted
+nếu nguồn mới chưa đủ. Legacy user-confirmed snapshots vẫn đọc tương thích.
+Không ghi đè FinancialContext M1–M2; không financial extraction trong W-03.
 
-Gợi ý AI riêng với nháp/confirmed values và audit edits origin=user. UI có
-candidates/raw text/trang nguồn/status, form chỉnh/sửa. Ready chỉ khi confirmed
-với company_name không rỗng và year integer 1..9999, ticker nullable. PATCH tăng
-revision, stale revision hoặc job active trả 409. Namespace document:<UUID>,
-runtime year chỉ sau confirm; không ghi đè FinancialContext của evidence M1–M2.
+Response invalid/thiếu core tiếp tục trang sau trong caps; nguồn resolved sau
+có thể làm rõ cùng candidate uncertain. Nhiều giá trị mâu thuẫn giữ uncertain,
+không chọn tùy tiện. Schema metadata_v2 flat cho serving, runtime strict validation
+giữ nguyên; metadata adapter gộp batch thành một user turn có nhiều parts.
 
-## E. Preflight jobs
+## 4. UI và đơn giản hóa
 
-Một worker, capacity mặc định 4 gồm running; queue đầy upload giữ PDF uploaded.
-uploaded → queued → processing → needs_metadata → ready; lỗi runtime failed,
-restart queued/processing interrupted. Polling detail mỗi 2 giây lúc active,
-backoff lỗi; status endpoint riêng sẵn có. Không %/ETA giả. Retry thủ công, durable
-Idempotency-Key/attempts trong snapshot; không job trùng hoặc auto call qua polling.
-Giữ user-confirmed values và history khi retry. Chờ request hiện tại khi shutdown.
+UI “Hệ thống đề xuất”, không provider/model; thông tin accepted hiển thị ngay,
+origin auto/user rõ. Nút Chỉnh sửa thông tin mở form tùy chọn, thiếu core ưu tiên
+Thử nhận diện lại. Desktop 1440/1366; mobile tối thiểu, không pixel-perfect.
+Bỏ manual project/policy/fingerprint/accounting scope và consumed-scope marker
+trong composition Web; xóa config example obsolete. Giữ PDF/secrets/size/path/
+writer protections hiện có, không thêm security/auth framework. Tests cũ giữ,
+chỉnh expectations và thêm ít regression cho rotation/auto core; CI không đổi.
 
-Guard/cache in-memory; consumed scope marker chống reset accounting qua restart.
-Pending pages được persist trước call; known usage/unknown cost giữ theo batches.
-Scope mới phải được operator budget bảo thủ tính prior/unknown usage; không tự
-cho rằng marker/snapshot là durable quota guard. Chưa durable per-page replay.
+## 5. Live Gemini smoke
 
-## F. Validation
+PDF 2 trang được tạo bằng Pillow, không text layer (PDFium kiểm), không tài liệu
+tài chính thật. Trang 1 cover; trang 2 in metadata của công ty tổng hợp. Không
+có financial values. Qua HTTP upload/background worker/shared Gateway/provider thật.
 
-PASS local:
+Successful run: model requested/provider-reported gemini-3.5-flash-lite.
+1 call thành công, analyzed_pages=[1,2], stop_reason=sufficient_evidence:
+company_name=SYNTHETIC LOTUS RESEARCH COMPANY; reporting_year=2025;
+stock_ticker=null; reporting_scope=separate; reporting_period=2025-12-31,
+type=fiscal_year_end. Tên/năm/scope có raw text và nguồn PDF trang 2.
+Document tự ready/origin auto/revision1, không user confirm. PATCH chỉnh tên
+sau đó ready/origin user/revision2, giữ AI suggestions; PASS.
 
-- 36 focused unit/integration: `tests/unit/test_web_documents.py tests/unit/test_api.py`.
-  PDF raster-only từ Pillow, PDFium chứng minh không text layer. Flow upload →
-  Vision suggestions (fake responses qua Gateway/guard/cache) → user edit → ready.
-  Type/magic/corrupt/size/page, encryption gate (stub security revision), hash/UUID,
-  traversal/symlink, validation/revision, candidates/provenance, state/concurrency/
-  idempotency/restart, timeout/provider/quota, request/page caps và single writer.
-  Adapter SDK shape test dùng GeminiAdapter thật + SDK stub, không gọi network.
-- 139 regression Gateway/GeminiAdapter/quota/cache PASS; core không sửa.
-- Ruff check toàn tree PASS; format check toàn tree PASS.
-- TypeScript, ESLint, production build PASS.
-- 11 Playwright Chromium tests PASS: chọn/drop, errors, upload/list/confirm/retry
-  thật qua Next.js proxy/FastAPI, PDF >10 MiB, AI fixture/polling/revision conflict,
-  desktop/mobile, shell/evidence/health. Synthetic API fixtures chỉ ở test.
-- Screenshots metadata 1440/390 và shell 1440/1280/390 đã xem/kiểm overflow;
-  screenshots/trace/runtime PDF đều local ignored, không commit.
+Usage provider: input2411/output394/total2805 tokens. Cost unknown.
+Tổng phiên có 3 gateway/provider attempts: 2 request HTTP400 invalid_request
+ban đầu (usage unknown), sau serving-schema flatten + coalesce user turn thì
+1 successful run nêu trên. Không chứng minh riêng thay đổi nào là nguyên nhân
+duy nhất của HTTP400. Không cố đốt quota để thử rotation; 429/auth được test fake.
+Không gọi thêm live sau PASS và không benchmark M2-09.
 
-Planning checker/diff/staged review PASS trước commit; 35 task files, không key
-pattern/dataset/private/generated files. CI exact SHA SUCCESS: Python 3.11/3.12
-mỗi job 1494 PASS/11 SKIP; mọi lint/format/planning/unit steps PASS. Web typecheck/
-lint/build và 11 browser/proxy tests PASS. CI không có live credentials/requests.
-Không chạy full local unit suite lặp lại; CI giữ Python 3.11/3.12 full unit suite.
-Không thay/tắt CI. Có warning Starlette TestClient/httpx deprecation, không test failure.
+Local ignored evidence: artifacts/w-03-refinement-live/6390bd8f-6d70-4aca-9440-0ea9321117b9/report.json.
+Hai report lỗi cũng giữ local. Không commit PDF/rendered images/key/cache.
+Đây là engineering/synthetic live integration, không metadata/financial accuracy
+trên báo cáo thực hoặc dataset, không tuyệt đối verified financial facts.
 
-Live Gemini smoke: **NOT RUN**. Key file do người dùng chỉ định đã được ignore,
-nhưng chưa có project-policy/budget/exclusive accounting scope W-03 mới được
-xác nhận. Policy local tìm được thuộc pilot cũ, không tự tái cấp fresh budget.
-Không gửi live requests; actual model/pages/usage/metadata live: N/A, calls=0.
-Configured model mặc định hiện hành gemini-3.5-flash-lite không phải live evidence.
+## 6. Validation
 
-## G. Local demo
+Targeted Python upload/metadata/pool/API: 44 PASS, không full local regression.
+Ruff check/format, TypeScript/ESLint/build, 8 targeted Playwright documents PASS
+(ready không form bắt buộc 1440/1366, upload/drop/list/edit/retry/errors, mobile
+layout giữ từ trước). Planning checker/diff/staged audit trước commit.
+CI sau push giữ full Python3.11/3.12 và full browser suite; cập nhật kết quả khi có.
+Không sửa/tắt CI, không gọi mock SDK là live pass.
 
-[Usage/config chi tiết](w-03-usage.md), [local development](local-development.md).
+## 7. Local demo
 
-```powershell
-.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-.\.venv\Scripts\python.exe -m uvicorn vietnamese_financial_multi_agent.api.main:app --host 127.0.0.1 --port 8000
-```
+[Usage và lệnh chạy](w-03-usage.md). Backend đặt duy nhất key file rồi uvicorn;
+frontend npm.cmd run dev. Không policy JSON/project ID/fingerprint/scope thủ công.
+Live smoke opt-in: python scripts/smoke_web_metadata.py --live, có cap attempts.
 
-Terminal khác tại web: `npm.cmd ci`, `npm.cmd run dev`; mở 127.0.0.1:3000,
-upload PDF scan → review gợi ý (hoặc điền tay khi Gemini chưa cấu hình) → confirm.
-Live cần WEB_GEMINI_CONFIG và GEMINI_API_KEY_FILE với binding/budget đã xác minh;
-[example an toàn](../../configs/web-metadata.example.json) mặc định confirmations=false.
+## 8. Hạn chế
 
-## H. Risks / W-04
+Project/billing không suy từ key; cap local không thấy usage ứng dụng khác,
+provider vẫn enforce quota. Key cooldown/state in-memory, global counts durable;
+cache TTL không là durable page replay. Một API process/worker, local single-user.
+Partial/conflict cần retry hoặc user edit khi không đủ nguồn. Live chỉ synthetic
+2 trang; chưa chứng minh accuracy báo cáo thật. W-04/W-05/M3 chưa triển khai.
 
-Một local process/worker, không public/multiuser auth. Quota/cache không durable,
-scope marker cần operator recovery; retry phân tích lại từ đầu, cache-only durable
-replay chưa có. Corrupt snapshot fail closed, cần operator khôi phục. PDFium page
-render capped, malformed runtime có thể failed dù file mở được lúc upload.
-Provenance là page-level, không bbox hoặc tự chứng minh raw_text đúng pixels.
-Live recognition chưa được đánh giá. W-04 mới discovery/extraction/session
-orchestration, W-05 mới PDF.js viewer; không financial evidence giả hoặc mở
-Evidence Explorer như đã extraction. Không M3 và không đổi pipeline M1–M2.
+## 9. Final status
 
-## I. Final status
-
-**W-03 — REVIEW**. Chờ Tech Lead nghiệm thu độc lập trước DONE.
-Next action: Tech Lead nghiệm thu độc lập W-03.
+**W-03 REVIEW**. Next action: Tech Lead nghiệm thu độc lập W-03.

@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, unlinkSync, rmdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import type { Suggestion } from "../lib/documents";
 
 let folder: string;
 let pdf: string;
@@ -64,7 +65,7 @@ for (const width of [1440, 390]) {
     await page.getByRole("button", { name: "Tải lên và nhận diện" }).click();
     await expect(page).toHaveURL(/\/documents\/[0-9a-f-]{36}$/);
     await expect(
-      page.getByRole("heading", { name: "Kiểm tra metadata" }),
+      page.getByRole("heading", { name: "Thông tin tài liệu", level: 1 }),
     ).toBeVisible();
     await expect(
       page
@@ -72,24 +73,25 @@ for (const width of [1440, 390]) {
         .getByRole("link", { name: "Tài liệu", exact: true }),
     ).toHaveAttribute("aria-current", "page");
     await expect(
-      page.getByText("Chờ xác nhận thông tin", { exact: true }),
+      page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
     ).toBeVisible();
     await expect(
-      page.getByText("Gemini chưa sẵn sàng.", { exact: false }),
+      page.getByText("Hệ thống chưa sẵn sàng nhận diện.", { exact: false }),
     ).toBeVisible();
+    await page.getByRole("button", { name: "Chỉnh sửa thông tin" }).click();
     await page
       .getByLabel("Tên công ty", { exact: true })
       .fill("Synthetic Browser Company");
     await page.getByLabel("Năm báo cáo", { exact: true }).fill("2025");
     await page
-      .getByRole("button", { name: "Xác nhận metadata", exact: true })
+      .getByRole("button", { name: "Lưu thông tin", exact: true })
       .click();
     await expect(
-      page.getByText("Đã xác nhận metadata", { exact: true }),
+      page.getByRole("status").filter({ hasText: "Sẵn sàng" }),
     ).toBeVisible();
     await expect(
-      page.getByLabel("Mã chứng khoán (không bắt buộc)", { exact: true }),
-    ).toHaveValue("");
+      page.getByText("Thông tin do người dùng cập nhật", { exact: false }),
+    ).toBeVisible();
     await expect(
       page.getByText("chưa có kết quả trích xuất.", { exact: false }),
     ).toBeVisible();
@@ -152,15 +154,15 @@ test("drag/drop upload and client/server validation errors", async ({
   await page.getByRole("button", { name: "Tải lên và nhận diện" }).click();
   await expect(page).toHaveURL(/\/documents\/[0-9a-f-]{36}$/);
   await expect(
-    page.getByText("Chờ xác nhận thông tin", { exact: true }),
+    page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
   ).toBeVisible();
   const request = page.waitForResponse(
     (r) => r.url().endsWith("/process") && r.request().method() === "POST",
   );
-  await page.getByRole("button", { name: "Nhận diện lại metadata" }).click();
+  await page.getByRole("button", { name: "Thử nhận diện lại" }).click();
   expect((await request).status()).toBe(202);
   await expect(
-    page.getByText("Chờ xác nhận thông tin", { exact: true }),
+    page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
   ).toBeVisible();
 });
 
@@ -244,6 +246,10 @@ test("AI candidates, page sources, polling and revision conflict (synthetic resp
   await expect(
     page.getByText("Đã phân tích 4/6 trang.", { exact: false }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Cần bổ sung thông tin" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Chỉnh sửa thông tin" }).click();
   await expect(page.getByLabel("Tên công ty", { exact: true })).toHaveValue(
     "Synthetic AI Company",
   );
@@ -256,7 +262,7 @@ test("AI candidates, page sources, polling and revision conflict (synthetic resp
   await expect(page.getByText("Year 2025", { exact: true })).toBeVisible();
   await page.getByLabel("Năm báo cáo", { exact: true }).fill("2025");
   await page
-    .getByRole("button", { name: "Xác nhận metadata", exact: true })
+    .getByRole("button", { name: "Lưu thông tin", exact: true })
     .click();
   await expect(
     page.getByRole("alert").filter({ hasText: "Thông tin đã thay đổi" }),
@@ -280,3 +286,99 @@ test("document list shows connection error without claiming an empty library", a
     page.getByText("Chưa có tài liệu nào.", { exact: true }),
   ).toHaveCount(0);
 });
+
+for (const width of [1440, 1366]) {
+  test(`auto-accepted metadata is ready without a mandatory form at ${width}px`, async ({
+    page,
+  }) => {
+    const id = "22222222-2222-4222-8222-222222222222";
+    const fields = [
+      "company_name",
+      "stock_ticker",
+      "reporting_year",
+      "reporting_period",
+      "reporting_scope",
+    ];
+    const suggestions: Record<string, Suggestion> = Object.fromEntries(
+      fields.map((field) => [
+        field,
+        { status: "unresolved", candidates: [], issues: [] },
+      ]),
+    );
+    for (const [field, value] of [
+      ["company_name", "Synthetic Auto Company"],
+      ["reporting_year", 2025],
+    ] as const) {
+      suggestions[field] = {
+        status: "resolved",
+        candidates: [
+          {
+            value,
+            raw_text: String(value),
+            sources: [{ pdf_page: 2, content_id: "sha256:synthetic" }],
+          },
+        ],
+        issues: [],
+      };
+    }
+    await page.route(`**/api/documents/${id}`, (route) =>
+      route.fulfill({
+        json: {
+          id,
+          filename: "synthetic-auto.pdf",
+          page_count: 2,
+          size_bytes: 1234,
+          state: "ready",
+          metadata_revision: 1,
+          metadata: {
+            values: {
+              company_name: "Synthetic Auto Company",
+              reporting_year: 2025,
+              stock_ticker: null,
+              reporting_period: null,
+              reporting_scope: null,
+            },
+            suggestions,
+            accepted: true,
+            confirmed: false,
+            acceptance_origin: "auto",
+            edits: [],
+            preflight: {
+              analyzed_pages: [1, 2],
+              stop_reason: "sufficient_evidence",
+              issues: [],
+            },
+          },
+          job: null,
+        },
+      }),
+    );
+    await page.setViewportSize({ width, height: 950 });
+    await page.goto(`/documents/${id}`);
+    await expect(
+      page.getByRole("status").filter({ hasText: "Sẵn sàng" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Hệ thống đề xuất" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Hệ thống tự chấp nhận theo nguồn PDF", { exact: false }),
+    ).toBeVisible();
+    await expect(page.getByRole("textbox")).toHaveCount(0);
+    await expect(page.getByText(/Gemini|gemini-/)).toHaveCount(0);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    if (width === 1440)
+      await page.screenshot({
+        path: "test-results/auto-first-1440.png",
+        fullPage: true,
+      });
+    await page.getByRole("button", { name: "Chỉnh sửa thông tin" }).click();
+    await expect(page.getByLabel("Tên công ty", { exact: true })).toHaveValue(
+      "Synthetic Auto Company",
+    );
+  });
+}

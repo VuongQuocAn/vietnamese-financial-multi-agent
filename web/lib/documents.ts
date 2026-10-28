@@ -49,6 +49,8 @@ export type Document = DocumentSummary & {
     values: MetadataValues;
     suggestions: Record<keyof MetadataValues, Suggestion>;
     confirmed: boolean;
+    accepted: boolean;
+    acceptance_origin: "auto" | "user" | null;
     edits: { field: string; origin: string }[];
     preflight: {
       analyzed_pages: number[];
@@ -61,9 +63,9 @@ export type Document = DocumentSummary & {
 export const stateLabels: Record<string, string> = {
   uploaded: "Đã tải lên",
   queued: "Đang chờ nhận diện",
-  processing: "Đang nhận diện metadata",
-  needs_metadata: "Chờ xác nhận thông tin",
-  ready: "Đã xác nhận metadata",
+  processing: "Đang phân tích tài liệu",
+  needs_metadata: "Cần bổ sung thông tin",
+  ready: "Sẵn sàng",
   failed: "Nhận diện thất bại",
   interrupted: "Đã gián đoạn",
 };

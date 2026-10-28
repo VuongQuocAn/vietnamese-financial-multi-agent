@@ -22,6 +22,13 @@ trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng I
 
 ## W — Web Demo V1 giữa M2 và M3
 
+W-03 final refinement REVIEW: auto-accept core có nguồn, key-file-only Free Tier
+rotation với cap chung, UI neutral/human-on-exception. Live scan synthetic2 trang
+PASS, auto-ready/user edit, không xác minh dataset thật. [Evidence](../docs/web-demo-v1/w-03-validation.md).
+PR #3 giữ draft base W-02; không merge/W-04/M3. Publication/CI refinement chờ xác minh.
+Next action: Commit/push refinement và xác minh CI.
+Các checkpoint W-03/W-02/W-01 bên dưới là lịch sử trước final refinement.
+
 W-03 REVIEW — người dùng đã giao 28/10/2026; [spec](tasks/W/W-03.md).
 Upload PDF thật/local storage, metadata-only worker và Vision Gateway preflight,
 review/confirm/revision đã có; [evidence](../docs/web-demo-v1/w-03-validation.md).

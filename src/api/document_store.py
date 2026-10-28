@@ -12,7 +12,12 @@ from uuid import UUID, uuid4
 
 import pypdfium2 as pdfium
 
-from ..document_processing.metadata_preflight import PDF_LOCK, MetadataValues, empty_suggestions
+from ..document_processing.metadata_preflight import (
+    PDF_LOCK,
+    MetadataValues,
+    core_metadata_resolved,
+    empty_suggestions,
+)
 
 
 def now():
@@ -78,7 +83,14 @@ class DocumentStore:
             path = safe_path(self.root, "documents", directory.name, "document.json")
             if not path.is_file():
                 fail(404, "document_not_found", "Không tìm thấy tài liệu.")
-            return json.loads(path.read_text(encoding="utf-8"))
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            metadata = doc["metadata"]
+            metadata.setdefault("accepted", metadata["confirmed"])
+            metadata.setdefault(
+                "acceptance_origin", "user" if metadata["confirmed"] or metadata["edits"] else None
+            )
+            metadata.setdefault("acceptance_history", [])
+            return doc
 
     def save(self, document):
         with self.lock:
@@ -147,6 +159,9 @@ class DocumentStore:
                 suggestions=empty_suggestions(),
                 values={key: None for key in MetadataValues.model_fields},
                 confirmed=False,
+                accepted=False,
+                acceptance_origin=None,
+                acceptance_history=[],
                 edits=[],
                 preflight=None,
             ),
@@ -186,10 +201,44 @@ class DocumentStore:
                             updated_at=now(),
                         )
                     )
-            metadata.update(values=updated, confirmed=confirmed)
+            metadata.update(
+                values=updated, confirmed=confirmed, accepted=confirmed, acceptance_origin="user"
+            )
             doc["metadata_revision"] += 1
             doc["state"] = "ready" if confirmed else "needs_metadata"
             doc["runtime_identity"]["year"] = str(values.reporting_year) if confirmed else None
             doc["latest_result"] = None
             self.save(doc)
             return doc
+
+    def auto_accept(self, doc):
+        """Worker holds writer lock; never replace user-entered values."""
+        metadata = doc["metadata"]
+        if (
+            metadata["confirmed"]
+            or metadata["edits"]
+            or metadata.get("acceptance_origin") == "user"
+            or not core_metadata_resolved(metadata["suggestions"], doc["content_id"])
+        ):
+            return False
+        values = {
+            key: field["candidates"][0]["value"] if field["status"] == "resolved" else None
+            for key, field in metadata["suggestions"].items()
+        }
+        validated = MetadataValues.model_validate(values).model_dump(mode="json")
+        previous = metadata["values"]
+        doc["metadata_revision"] += 1
+        metadata.update(values=validated, accepted=True, confirmed=False, acceptance_origin="auto")
+        metadata["acceptance_history"].append(
+            dict(
+                origin="auto",
+                previous=previous,
+                values=validated,
+                metadata_revision=doc["metadata_revision"],
+                attempt_id=doc["job"]["id"],
+                updated_at=now(),
+            )
+        )
+        doc["runtime_identity"]["year"] = str(validated["reporting_year"])
+        doc["latest_result"] = None
+        return True

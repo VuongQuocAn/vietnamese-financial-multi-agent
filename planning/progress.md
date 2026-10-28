@@ -47,6 +47,17 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
+**W-03 REVIEW — final refinement**: auto-first core có nguồn → ready; key-file
+rotation/cooldown/cap chung, bỏ policy/scope thủ công, UI neutral/form tùy chọn.
+8 browser targeted PASS (1440/1366 và mobile tối thiểu), 44 Python focused cases.
+Live scan synthetic2 trang PASS, model gemini-3.5-flash-lite, provenance trang2,
+auto-ready/edit PASS;3 attempts tổng gồm2 HTTP400 ban đầu và1 success/2805tokens.
+Baseline f617e68, PR#3 draft base W-02; publication/CI refinement đang xác minh.
+[Evidence](../docs/web-demo-v1/w-03-validation.md).
+Next action: Commit/push refinement và xác minh CI.
+
+Các checkpoint W-03 bên dưới là lịch sử trước final refinement.
+
 **W-03 REVIEW** — upload/storage/Vision preflight và metadata review đã có.
 36 focused unit/integration, 139 Gateway/quota/cache regression và 11 browser/proxy
 PASS; Ruff/TypeScript/lint/build PASS. Live Gemini NOT RUN vì thiếu policy/budget

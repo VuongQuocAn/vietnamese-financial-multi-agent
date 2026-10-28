@@ -24,7 +24,7 @@ FIELDS = ("company_name", "stock_ticker", "reporting_year", "reporting_period", 
 METADATA_REF = SchemaReference(
     schema_id="urn:document-metadata",
     name="document-metadata",
-    version="v1",
+    version="v2",
     dialect="https://json-schema.org/draft/2020-12/schema",
 )
 PROMPT = """Read document metadata from these Vietnamese report page images.
@@ -86,7 +86,68 @@ class MetadataPrediction(MetadataModel):
 
 
 def metadata_schema_registry():
-    return LocalSchemaRegistry([(METADATA_REF, MetadataPrediction.model_json_schema())])
+    # Flat serving schema avoids deeply nested generic $defs and large bounded
+    # array grammars. Pydantic still enforces lengths/counts locally afterwards.
+    values = dict(
+        company_name={"type": "string"},
+        stock_ticker={"type": "string"},
+        reporting_year={"type": "integer"},
+        reporting_period={
+            "type": "object",
+            "properties": {
+                "value": {"type": "string"},
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "as_of",
+                        "fiscal_year",
+                        "fiscal_year_end",
+                        "date_range",
+                        "quarter",
+                        "year_to_month",
+                    ],
+                },
+            },
+            "required": ["value", "type"],
+            "additionalProperties": False,
+        },
+        reporting_scope={"type": "string", "enum": ["separate", "consolidated"]},
+    )
+    properties = {}
+    for key, value in values.items():
+        candidate = {
+            "type": "object",
+            "properties": {
+                "value": value,
+                "raw_text": {"type": "string"},
+                "pdf_page": {"type": "integer"},
+            },
+            "required": ["value", "raw_text", "pdf_page"],
+            "additionalProperties": False,
+        }
+        properties[key] = {
+            "type": "object",
+            "properties": {
+                "status": {"type": "string", "enum": ["resolved", "uncertain", "unresolved"]},
+                "candidates": {"type": "array", "items": candidate},
+                "issues": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["status", "candidates", "issues"],
+            "additionalProperties": False,
+        }
+    return LocalSchemaRegistry(
+        [
+            (
+                METADATA_REF,
+                {
+                    "type": "object",
+                    "properties": properties,
+                    "required": list(FIELDS),
+                    "additionalProperties": False,
+                },
+            )
+        ]
+    )
 
 
 def empty_suggestions():
@@ -160,6 +221,7 @@ def analyze_batch(service, path, pages, *, credential_ref, model, reservation_mo
         cost=None,
         images=hashes,
         dpi=dpi,
+        attempts=getattr(service, "last_attempts", []),
     )
     if response is not None:
         telemetry.update(
@@ -170,6 +232,13 @@ def analyze_batch(service, path, pages, *, credential_ref, model, reservation_mo
     if response is None:
         reason = outcome.guard_result.reason if outcome.guard_result else "service_unavailable"
         return None, "budget_limit", reason, telemetry
+    if outcome.guard_result is not None and outcome.guard_result.reason in (
+        "application_daily_limit",
+        "application_rate_limit",
+        "key_pool_unavailable",
+        "clock_invalid",
+    ):
+        return None, "budget_limit", outcome.guard_result.reason, telemetry
     if (
         response.status != "success"
         or response.finish_reason != "stop"
@@ -230,7 +299,9 @@ def merge_suggestions(current, prediction, content_id):
                 field["candidates"].append(item)
         field["issues"] = list(dict.fromkeys(field["issues"] + new["issues"]))
         distinct = {json.dumps(c["value"], sort_keys=True) for c in field["candidates"]}
-        ambiguous = field["status"] == "uncertain" or new["status"] == "uncertain"
+        ambiguous = new["status"] == "uncertain" or (
+            field["status"] == "uncertain" and new["status"] != "resolved"
+        )
         field["status"] = (
             "unresolved"
             if not distinct
@@ -244,3 +315,28 @@ def merge_suggestions(current, prediction, content_id):
 
 
 DEFAULT_METADATA_MODEL = DEFAULT_GEMINI_MODEL
+
+
+def core_metadata_resolved(suggestions, content_id):
+    """Two core fields, one distinct readable value each, bound PDF page sources."""
+    for key in ("company_name", "reporting_year"):
+        field = suggestions[key]
+        if field["status"] != "resolved" or not field["candidates"]:
+            return False
+        if len({json.dumps(c["value"], sort_keys=True) for c in field["candidates"]}) != 1:
+            return False
+        if not any(
+            c["raw_text"].strip()
+            and any(s["content_id"] == content_id and s["pdf_page"] >= 1 for s in c["sources"])
+            for c in field["candidates"]
+        ):
+            return False
+    values = {
+        k: suggestions[k]["candidates"][0]["value"] for k in ("company_name", "reporting_year")
+    }
+    return (
+        isinstance(values["company_name"], str)
+        and bool(values["company_name"].strip())
+        and type(values["reporting_year"]) is int
+        and 1 <= values["reporting_year"] <= 9999
+    )

@@ -252,7 +252,7 @@ def create_app(
             }
             item.update(
                 {
-                    key: doc["metadata"]["values"][key] if doc["metadata"]["confirmed"] else None
+                    key: doc["metadata"]["values"][key] if doc["metadata"]["accepted"] else None
                     for key in ("company_name", "stock_ticker", "reporting_year")
                 }
             )

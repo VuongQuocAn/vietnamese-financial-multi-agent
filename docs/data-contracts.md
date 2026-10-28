@@ -1,8 +1,10 @@
 # Data contracts
 
-W-03 thêm metadata_v1 riêng cho PDF preflight trong
+W-03 refinement dùng metadata_v2 riêng cho PDF preflight trong
 `document_processing.metadata_preflight`: năm fields có status/candidates/raw_text,
-nguồn PDF page/content_id; confirmed user values/revision tách riêng suggestions.
+nguồn PDF page/content_id; accepted/acceptance_origin/acceptance_history phân biệt
+metadata tự chấp nhận với user values/edits, giữ suggestions/revisions. confirmed
+chỉ biểu thị người dùng, không giả auto-accepted là user-confirmed.
 [HTTP contract](web-demo-v1/api-contracts.md), [usage](web-demo-v1/w-03-usage.md).
 Không thay FinancialContext, Document Understanding hoặc financial evidence M1–M2.
 

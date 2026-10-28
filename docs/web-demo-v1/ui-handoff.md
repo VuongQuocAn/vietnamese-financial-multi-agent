@@ -1,11 +1,12 @@
 # Financial AI Workspace — UI handoff
 
-W-03: Dashboard/Documents đã bật upload chọn/kéo thả PDF và list từ API thật.
-Route `/documents/[id]` có filename/pages, progress theo trang, candidates/raw
-text/status/page links, form sửa/xác nhận tên/năm không cần ticker, retry và lỗi
-revision. Phân biệt AI suggestions/user values; ready chỉ là metadata confirmed.
-PDF nguồn mở bằng browser tab; chưa PDF.js viewer/evidence extraction W-04/W-05.
-Desktop/mobile theo shell W-02. [Usage W-03](w-03-usage.md).
+W-03 refinement: upload thật, hệ thống tự ready khi tên/năm có nguồn rõ.
+UI trung lập “Hệ thống đề xuất”, không hiển thị provider/model ở luồng thường.
+Thông tin accepted hiện ngay với origin auto/user; form chỉ mở qua Chỉnh sửa
+thông tin. Khi thiếu core, ưu tiên Thử nhận diện lại và bổ sung tùy chọn. Không
+bắt ticker/confirmation, không gọi metadata auto là xác minh tuyệt đối.
+Desktop-first 1440/1366; mobile tối thiểu không vỡ layout. PDF.js/extraction chưa
+triển khai. [Usage W-03](w-03-usage.md). Thiết kế W-01 lịch sử bên dưới.
 
 W-01 REVIEW; tham chiếu [kiến trúc](architecture.md), [API](api-contracts.md).
 Đã đọc trực tiếp cả DESIGN.md và HTML/CSS/scripts, xem hai PNG gốc:

@@ -2,25 +2,22 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-W-03 REVIEW — PDF Upload & Gemini Vision Metadata Preflight.
-[Spec](tasks/W/W-03.md), [usage](../docs/web-demo-v1/w-03-usage.md).
-Đã triển khai upload PDF thật, local storage/atomic snapshots, metadata-only
-bounded worker, Gemini qua Gateway/quota/cache, metadata review/confirm và ready.
-Không nối financial extraction W-04, không thay M1–M2 hoặc bắt đầu M3.
+W-03 REVIEW — final refinement auto-first metadata và key rotation.
+Tên/năm có nguồn rõ tự ready, ticker tùy chọn; accepted/auto khác confirmed/user.
+UI Hệ thống đề xuất, form tùy chọn, retry khi thiếu. Chỉ key file, bỏ manual
+project/policy/fingerprint/scope; một cap ứng dụng chung cho keys, counters durable.
+Core/M1–M2/Stitch/CI giữ nguyên; không W-04/M3/merge.
 
-Baseline W-02 HEAD 78a50c6 sau fetch; W-01/W-02 DONE. Nhánh
-feat/w-03-pdf-upload-metadata stacked trên feat/w-02-web-skeleton.
-PR #1/#2 OPEN, chưa merge. Giữ thay đổi có sẵn web/next-env.d.ts ngoài commit.
+Nhánh feat/w-03-pdf-upload-metadata, baseline refinement f617e68.
+PR #1/#2 OPEN, #3 draft OPEN base W-02. Bảo toàn next-env local ngoài stage.
+[Spec](tasks/W/W-03.md), [usage](../docs/web-demo-v1/w-03-usage.md),
+[evidence](../docs/web-demo-v1/w-03-validation.md).
 
-Local: 36 focused unit/integration PASS; 139 Gateway/quota/cache regression PASS.
-TypeScript/lint/build và 11 browser/proxy tests PASS, gồm PDF >10 MiB và mobile.
-Live Gemini NOT RUN: chưa có scope ngân sách/project policy W-03 được xác nhận;
-key có sẵn không tự chứng minh quota. Không dùng policy pilot cũ để reset guard.
-Implementation `b494788ec2a6938bc7e50d15ad347eadccf2aaa5` đã push/remote khớp.
-[PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
-draft OPEN, base W-02. [CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
-SUCCESS exact implementation SHA: Python 3.11/3.12 mỗi job 1494 PASS/11 SKIP,
-Web 11 PASS; đã kiểm steps. Commit evidence tiếp theo chỉ docs/planning,
-không gán CI này cho SHA documentation mới.
+Live synthetic scan 2 trang PASS: model gemini-3.5-flash-lite, nguồn trang2,
+tên/năm2025/scope separate, không ticker vẫn ready/auto; user edit/revision PASS.
+Tổng 3 attempts: 2 HTTP400 ban đầu + 1 success (2805 tokens), không thêm live calls.
+Không đánh giá accuracy dataset thật. 8 browser documents PASS; Python focused
+44 cases, lint/format/TypeScript/ESLint/build/planning/diff kiểm trước publication.
+CI baseline b494788 SUCCESS là lịch sử, không gán cho refinement chưa push.
 
-Next action: Tech Lead nghiệm thu độc lập W-03.
+Next action: Commit/push refinement và xác minh CI.

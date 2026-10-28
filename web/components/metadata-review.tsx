@@ -19,13 +19,13 @@ const suggestionLabels = {
   unresolved: "Chưa xác định",
 };
 const stopLabels: Record<string, string> = {
-  sufficient_evidence: "Đủ căn cứ để gợi ý",
+  sufficient_evidence: "Đã nhận diện thông tin cốt lõi theo nguồn PDF.",
   pages_exhausted: "Đã xem hết PDF",
   page_limit: "Đạt giới hạn trang",
-  budget_limit: "Đã dừng theo quota/ngân sách",
-  provider_error: "Nhà cung cấp hoặc kết quả nhận diện có lỗi",
+  budget_limit: "Tạm dừng nhận diện. Vui lòng thử lại sau.",
+  provider_error: "Chưa hoàn tất được nhận diện. Vui lòng thử lại.",
   configuration_required:
-    "Gemini chưa sẵn sàng. Cần cấu hình server và ngân sách hợp lệ.",
+    "Hệ thống chưa sẵn sàng nhận diện. Vui lòng kiểm tra cấu hình server.",
   interrupted: "Đã gián đoạn",
 };
 
@@ -34,6 +34,7 @@ export function MetadataReview({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
   const [retrying, setRetrying] = useState(false);
+  const [editing, setEditing] = useState(false);
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout>;
@@ -94,7 +95,7 @@ export function MetadataReview({ id }: { id: string }) {
       </Link>
       <div className="page-heading">
         <p className="eyebrow">Thông tin tài liệu</p>
-        <h1>Kiểm tra metadata</h1>
+        <h1>Thông tin tài liệu</h1>
         {doc && (
           <p className="page-description document-filename">
             {doc.filename} · {doc.page_count} trang ·{" "}
@@ -122,7 +123,7 @@ export function MetadataReview({ id }: { id: string }) {
             {active(doc) && (
               <p>
                 Đã phân tích {doc.job?.progress.preflight.completed_pages ?? 0}/
-                {doc.page_count} trang. Kết quả là gợi ý để bạn kiểm tra.
+                {doc.page_count} trang.
               </p>
             )}
             {doc.metadata.preflight?.stop_reason && (
@@ -135,6 +136,12 @@ export function MetadataReview({ id }: { id: string }) {
               <p>
                 Phiên trước đã gián đoạn. Nhận diện chỉ chạy lại khi bạn yêu cầu
                 và ngân sách server cho phép.
+              </p>
+            )}
+            {doc.state === "needs_metadata" && (
+              <p>
+                Chưa thể xác định đầy đủ thông tin tài liệu. Bạn có thể thử nhận
+                diện lại hoặc bổ sung thông tin.
               </p>
             )}
             {doc.state === "failed" && (
@@ -153,8 +160,12 @@ export function MetadataReview({ id }: { id: string }) {
                 Mở PDF gốc
               </a>
               {!active(doc) && (
-                <button className="button" disabled={retrying} onClick={retry}>
-                  {retrying ? "Đang gửi yêu cầu…" : "Nhận diện lại metadata"}
+                <button
+                  className={`button ${doc.state !== "ready" ? "primary" : ""}`}
+                  disabled={retrying}
+                  onClick={retry}
+                >
+                  {retrying ? "Đang gửi yêu cầu…" : "Thử nhận diện lại"}
                 </button>
               )}
             </div>
@@ -164,10 +175,10 @@ export function MetadataReview({ id }: { id: string }) {
               className="panel metadata-section"
               aria-labelledby="suggestions-title"
             >
-              <h2 id="suggestions-title">Gemini gợi ý</h2>
+              <h2 id="suggestions-title">Hệ thống đề xuất</h2>
               <p className="muted">
-                Gợi ý AI chưa được người dùng xác nhận. Mở trang nguồn để đối
-                chiếu.
+                Kết quả nhận diện có nguồn trang để đối chiếu; không phải xác
+                minh tuyệt đối.
               </p>
               {(Object.keys(fieldLabels) as (keyof MetadataValues)[]).map(
                 (key) => {
@@ -219,25 +230,56 @@ export function MetadataReview({ id }: { id: string }) {
               className="panel metadata-section"
               aria-labelledby="confirmation-title"
             >
-              <h2 id="confirmation-title">Thông tin bạn xác nhận</h2>
+              <h2 id="confirmation-title">Thông tin tài liệu</h2>
+              <dl className="metadata-values">
+                {(Object.keys(fieldLabels) as (keyof MetadataValues)[]).map(
+                  (key) => (
+                    <div key={key}>
+                      <dt>{fieldLabels[key]}</dt>
+                      <dd>
+                        {doc.metadata.values[key] === null
+                          ? "Chưa xác định"
+                          : displayValue(doc.metadata.values[key]!)}
+                      </dd>
+                    </div>
+                  ),
+                )}
+              </dl>
               <p className="muted">
-                Kiểm tra hoặc sửa gợi ý trước khi xác nhận. Mã chứng khoán có
-                thể để trống.
+                {doc.metadata.acceptance_origin === "auto" &&
+                !doc.metadata.accepted
+                  ? "Thông tin phiên trước, chưa được chấp nhận lại"
+                  : doc.metadata.acceptance_origin === "auto"
+                    ? "Hệ thống tự chấp nhận theo nguồn PDF"
+                    : doc.metadata.acceptance_origin === "user"
+                      ? "Thông tin do người dùng cập nhật"
+                      : "Chưa đủ thông tin cốt lõi"}{" "}
+                · Revision {doc.metadata_revision}
               </p>
-              {active(doc) ? (
-                <p>Đợi nhận diện hoàn tất để chỉnh sửa thông tin.</p>
-              ) : (
+              {doc.state === "ready" && (
+                <p className="notice">
+                  Tài liệu sẵn sàng cho bước xử lý tài chính; chưa có kết quả
+                  trích xuất.
+                </p>
+              )}
+              {!active(doc) && (
+                <button
+                  className="button"
+                  aria-expanded={editing}
+                  onClick={() => setEditing(!editing)}
+                >
+                  {editing ? "Đóng chỉnh sửa" : "Chỉnh sửa thông tin"}
+                </button>
+              )}
+              {editing && !active(doc) && (
                 <MetadataForm
                   key={`${doc.id}:${doc.metadata_revision}:${doc.job?.id}`}
                   doc={doc}
-                  onSaved={(value) => setDoc(value)}
+                  onSaved={(value) => {
+                    setDoc(value);
+                    setEditing(false);
+                  }}
                 />
-              )}
-              {doc.metadata.confirmed && (
-                <p className="notice">
-                  Metadata đã được bạn xác nhận. Tài liệu sẵn sàng cho bước xử
-                  lý tài chính; chưa có kết quả trích xuất.
-                </p>
               )}
             </section>
           </div>
@@ -406,7 +448,7 @@ function MetadataForm({
             Lưu nháp
           </button>
           <button className="button primary" type="submit">
-            {saving ? "Đang lưu…" : "Xác nhận metadata"}
+            {saving ? "Đang lưu…" : "Lưu thông tin"}
           </button>
         </div>
       </fieldset>

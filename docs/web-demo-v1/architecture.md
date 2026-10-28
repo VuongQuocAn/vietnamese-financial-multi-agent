@@ -9,8 +9,9 @@ Checkpoint W-03: W-01/W-02 đã DONE; upload/local storage, metadata-only worker
 Gateway/Gemini Vision preflight và review/confirmation đã triển khai, chờ REVIEW.
 [Usage/giới hạn](w-03-usage.md), [API hiện hành](api-contracts.md). Các đoạn W-01
 dưới đây giữ làm thiết kế nền; extraction/viewer vẫn thuộc W-04/W-05. W-03 dùng
-một document.json atomic chứa cả attempts/job/history, OS writer lock và scope
-marker chống tự reset quota sau restart. Renderer metadata riêng không đòi
+một document.json atomic chứa attempts/job/history và OS writer lock. Refinement
+W-03 dùng key-file-only rotation với cap chung, counters persist qua restart;
+không project ID/policy/fingerprint/scope thủ công, không giả mapping Google project. Renderer metadata riêng không đòi
 symbol/year; mỗi ảnh một user message theo Gateway v1, cùng request có nhiều ảnh.
 Không thay contracts hoặc pipeline tài chính M1–M2.
 Giữ Offline → Online → Output; V1 chỉ mở bề mặt đọc evidence M1–M2,
@@ -75,7 +76,7 @@ checkpoint lịch sử REVIEW, trạng thái nghiệm thu hiện tại lấy t�
 
 ## Khởi tạo service và cách gọi thực tế
 
-Composition root W-02/W-03 đăng ký `EXTRACTION_REF` → `ExtractedPage`,
+Thiết kế W-01 cho composition extraction tương lai đăng ký `EXTRACTION_REF` → `ExtractedPage`,
 `DISCOVERY_REF` → `PagePrediction` và schema metadata mới trong cùng
 `LocalSchemaRegistry`; truyền registry cho GeminiAdapter, SharedLLMGateway,
 CachedLLMService. Khởi tạo adapter từ environment; cấu hình explicit
@@ -129,9 +130,10 @@ Schema mới tối thiểu gồm company_name, stock_ticker nullable, reporting_
 reporting_period {value, type}, reporting_scope nullable; mỗi field có
 status resolved/uncertain/unresolved, candidates [{value, raw_text, pdf_page}].
 Không suy ticker từ tên file; null không có nghĩa công ty không niêm yết.
-Gợi ý chưa tự xác nhận. UI cho xác nhận/sửa, giữ suggestions và user edits riêng.
-Không bắt nhập ticker. Điều kiện ready: có company_name không rỗng,
-reporting_year hợp lệ do user xác nhận, confirmed=true. Period/scope/ticker có thể
+Refinement W-03 tự chấp nhận khi tên/năm resolved, không conflict và có nguồn PDF.
+ready dùng accepted=true; acceptance_origin phân biệt auto/user. confirmed chỉ
+cho user edits. UI hiển thị thông tin, retry khi thiếu và edit tùy chọn; không
+bắt ticker hoặc xác nhận mỗi tài liệu. Period/scope/ticker có thể
 null với caveat; document year là nhãn tài liệu, không thay các kỳ trên financial cells.
 Nếu không xác định được năm/tên, giữ needs_metadata; người dùng có thể bổ sung.
 
@@ -156,7 +158,8 @@ stateDiagram-v2
     uploaded --> queued: preflight
     queued --> processing
     processing --> needs_metadata: preflight có/thiếu gợi ý
-    needs_metadata --> ready: user confirm tên/năm
+    processing --> ready: core metadata có nguồn đủ rõ
+    needs_metadata --> ready: user bổ sung khi cần
     ready --> queued: process
     processing --> completed: coverage hoàn tất
     processing --> partial: còn thiếu nhưng giữ kết quả
@@ -168,8 +171,8 @@ stateDiagram-v2
     failed --> queued: explicit retry
 ```
 
-`phase` phân biệt preflight/discovery/extraction/finalizing; preflight lỗi provider
-vẫn có thể về needs_metadata cùng error và candidates đã giữ. failed là không
+`phase` phân biệt preflight/discovery/extraction/finalizing; W-03 preflight ambiguity
+về needs_metadata; lỗi kỹ thuật về failed khi chưa có metadata accepted. failed là không
 tiếp tục được (file/storage/runtime) hoặc processing không có numeric usable;
 notes-only có inventory thì partial, không gọi là completed B01–B03.
 completed yêu cầu mọi trang được discovery quyết định, mọi selected extraction
@@ -197,11 +200,12 @@ Không dùng failed response làm permanent cache; mismatch/corruption báo lỗ
 không âm thầm bỏ binding check. Atomic result cuối không bảo đảm giữ trang đang
 gọi provider lúc crash; request đó có thể phải gọi lại và tính phí lại.
 
-Quota/budget guard mất state khi restart. Session ledger chỉ ghi known usage và
-unknown reservations, không được coi là guard durable đã có. Khi restart với job
-đang dở/usage unknown, chặn live retry cho tới khi operator cấu hình lại budget
-conservatively tính phần đã dùng/đang unknown; cache-only replay vẫn được phép.
-W-04 phải kiểm tra trường hợp này, không reset budget rồi tự gọi lại.
+Refinement W-03 dùng cap ứng dụng chung cho pool, không giả mỗi key có quota
+độc lập. Counters atomic trước từng attempt và giữ qua restart; provider quota
+thực vẫn được tôn trọng. Không scope marker/manual budget-reset procedure. Core
+QuotaBudgetGuard của flows M1–M2 có confirmed project binding giữ nguyên; pool
+admission composition dùng lại contracts/cache/Gateway/adapter, không tạo mapping
+confirmed cho project chưa biết. [Cấu hình và limits](w-03-usage.md).
 
 Giới hạn đề xuất cấu hình W-02: upload 50 MiB, 200 pages, một worker,
 queue tối đa 4 jobs gồm preflight; cùng document không queue trùng. Khi queue đầy,

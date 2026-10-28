@@ -45,6 +45,19 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.metadata-values {
+  display: grid;
+  gap: 14px;
+}
+.metadata-values dt {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.metadata-values dd {
+  margin: 0;
+  font-weight: 500;
+}
 .metadata-suggestion {
   border-top: 1px solid var(--border);
   padding-top: 16px;

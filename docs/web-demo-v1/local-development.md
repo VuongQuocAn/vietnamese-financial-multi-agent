@@ -1,7 +1,8 @@
 # Chạy Web Demo V1 trên Windows
 
 W-03 bổ sung upload PDF/storage/preflight/review trên skeleton Next.js + FastAPI.
-Không cần Docker/database; upload và manual confirmation chạy không cần key.
+Không cần Docker/database; upload và sửa thủ công chạy không cần key.
+Chỉ đặt GEMINI_API_KEY_FILE để bật nhận diện auto-first và key rotation.
 Cấu hình Gemini server-side, limits, retry/restart và luồng scan PDF tại
 [W-03 usage](w-03-usage.md). Financial extraction M1–M2 chưa nối vào HTTP layer.
 Thiết kế theo [UI handoff](ui-handoff.md), [kiến trúc](architecture.md).

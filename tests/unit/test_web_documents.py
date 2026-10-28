@@ -5,7 +5,6 @@ import io
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
-from copy import deepcopy
 from threading import Event
 from types import SimpleNamespace
 from uuid import UUID, uuid4
@@ -17,9 +16,11 @@ from google.genai import types
 from PIL import Image, ImageDraw
 from vietnamese_financial_multi_agent.api.document_store import DocumentError, DocumentStore
 from vietnamese_financial_multi_agent.api.main import create_app
-from vietnamese_financial_multi_agent.api.metadata_service import compose_metadata_service
+from vietnamese_financial_multi_agent.api.metadata_service import (
+    MetadataGeminiAdapter,
+    compose_metadata_service,
+)
 from vietnamese_financial_multi_agent.core.fake_llm_transport import FakeLLMTransport
-from vietnamese_financial_multi_agent.core.gemini_adapter import GeminiAdapter
 from vietnamese_financial_multi_agent.core.llm_cache import CachedLLMService
 from vietnamese_financial_multi_agent.core.llm_contracts import Usage
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
@@ -188,11 +189,13 @@ def test_scan_upload_vision_review_confirm_ready(tmp_path):
         response = upload(client, content, filename="../../outside.pdf")
         assert response.status_code == 201
         doc = settled(client, response.json()["id"])
-        assert doc["state"] == "needs_metadata"
+        assert doc["state"] == "ready"
+        assert doc["metadata"]["accepted"] and not doc["metadata"]["confirmed"]
+        assert doc["metadata"]["acceptance_origin"] == "auto"
         assert UUID(doc["id"]).version == 4
         assert doc["content_id"] == "sha256:" + hashlib.sha256(content).hexdigest()
         assert doc["filename"] == "outside.pdf"
-        assert doc["metadata"]["values"]["company_name"] is None
+        assert doc["metadata"]["values"]["company_name"] == "Synthetic Test Company"
         suggestion = doc["metadata"]["suggestions"]["company_name"]
         assert suggestion["candidates"][0]["sources"] == [
             dict(pdf_page=1, content_id=doc["content_id"])
@@ -204,7 +207,7 @@ def test_scan_upload_vision_review_confirm_ready(tmp_path):
         response = client.patch(f"/api/documents/{doc['id']}/metadata", json=patch_body(doc))
         assert response.status_code == 200
         updated = response.json()
-        assert updated["state"] == "ready" and updated["metadata_revision"] == 1
+        assert updated["state"] == "ready" and updated["metadata_revision"] == 2
         assert updated["metadata"]["suggestions"] == doc["metadata"]["suggestions"]
         assert updated["metadata"]["values"]["stock_ticker"] is None
         assert updated["runtime_identity"] == dict(symbol=f"document:{doc['id']}", year="2024")
@@ -301,9 +304,12 @@ def test_metadata_validation(tmp_path, bad):
 
 def test_expand_pages_keep_conflicting_candidates(tmp_path):
     def handler(request, index):
-        return prediction(
+        output = prediction(
             page=1 if index == 1 else 5, complete=False, year=2025 if index == 1 else 2024
         )
+        if index == 1:
+            output["reporting_year"]["status"] = "uncertain"
+        return output
 
     app, calls = make_app(tmp_path, handler)
     with TestClient(app) as client:
@@ -340,8 +346,10 @@ def test_invalid_provider_results_never_publish_suggestions(tmp_path, kind):
     app, calls = make_app(tmp_path, handler)
     with TestClient(app) as client:
         doc = settled(client, upload(client).json()["id"])
-        assert doc["state"] == "needs_metadata"
-        assert doc["metadata"]["preflight"]["stop_reason"] == "provider_error"
+        assert doc["state"] == ("failed" if kind in ("timeout", "provider") else "needs_metadata")
+        assert doc["metadata"]["preflight"]["stop_reason"] == (
+            "provider_error" if kind in ("timeout", "provider") else "pages_exhausted"
+        )
         assert doc["metadata"]["suggestions"] == empty_suggestions()
         assert "secret" not in json.dumps(doc) and "sensitive" not in json.dumps(doc)
         assert len(calls) == 1
@@ -368,7 +376,7 @@ def test_semantically_invalid_response_not_replayed_on_retry(tmp_path):
     app, calls = make_app(tmp_path, handler)
     with TestClient(app) as client:
         doc = settled(client, upload(client).json()["id"])
-        assert doc["metadata"]["preflight"]["stop_reason"] == "provider_error"
+        assert doc["metadata"]["preflight"]["stop_reason"] == "pages_exhausted"
         client.post(
             f"/api/documents/{doc['id']}/process",
             json=dict(operation="preflight", metadata_revision=0),
@@ -435,7 +443,7 @@ def test_job_bound_and_active_idempotency(tmp_path):
             ).status_code
             == 409
         )
-        assert terminal["state"] == "needs_metadata"
+        assert terminal["state"] == "ready"
         assert len(calls) <= 2  # Same bytes can safely hit scoped response cache.
 
 
@@ -445,7 +453,12 @@ def test_simultaneous_submissions_only_one_attempt(tmp_path):
         doc = settled(client, upload(client).json()["id"])
         key = str(uuid4())
         with ThreadPoolExecutor(max_workers=4) as pool:
-            responses = list(pool.map(lambda _: app.state.jobs.submit(doc["id"], 0, key), range(4)))
+            responses = list(
+                pool.map(
+                    lambda _: app.state.jobs.submit(doc["id"], doc["metadata_revision"], key),
+                    range(4),
+                )
+            )
         assert len({r[0]["id"] for r in responses}) == 1
 
 
@@ -464,7 +477,7 @@ def test_restart_interrupts_without_auto_calls_and_preserves_confirmed(tmp_path,
     with TestClient(app) as client:
         restarted = client.get(f"/api/documents/{doc['id']}").json()
         assert restarted["state"] == "interrupted" and restarted["job"]["state"] == "interrupted"
-        assert restarted["metadata"]["confirmed"] and restarted["metadata_revision"] == 1
+        assert restarted["metadata"]["confirmed"] and restarted["metadata_revision"] == 2
         assert restarted["metadata"]["suggestions"] == doc["metadata"]["suggestions"]
         assert calls == []
 
@@ -478,7 +491,7 @@ def test_manual_retry_preserves_user_values_and_ai_history(tmp_path):
         ).json()
         response = client.post(
             f"/api/documents/{doc['id']}/process",
-            json=dict(operation="preflight", metadata_revision=1),
+            json=dict(operation="preflight", metadata_revision=confirmed["metadata_revision"]),
             headers={"Idempotency-Key": str(uuid4())},
         )
         assert response.status_code == 202
@@ -520,62 +533,19 @@ def test_process_excludes_financial_extraction_and_invalid_ids(tmp_path):
         assert client.get("/api/documents?limit=101").status_code == 422
 
 
-def test_live_composition_binding_and_restart_scope(tmp_path, monkeypatch):
-    key = "AIza" + "x" * 35  # Synthetic credential, no network.
-    policy = dict(
-        account_ref="test-account",
-        project_ref="test-project",
-        credential_refs=["test-key"],
-        provider="gemini",
-        model=DEFAULT_METADATA_MODEL,
-        tier="free",
-        mapping_confirmed=True,
-        verification_source="synthetic",
-        quota_limits=dict(rpm=15, tpm=250000, rpd=20),
-        budget=dict(amount="0", currency="USD"),
-    )
-    settings = dict(
-        project_policy=policy,
-        accounting_scope="synthetic-scope",
-        fresh_exclusive_scope_confirmed=True,
-        data_export_approved=True,
-        pricing_confirmed=True,
-        key_index=0,
-        credential_sha256=hashlib.sha256(key.encode()).hexdigest(),
-        request_spending_upper_bound="0",
-    )
-    config = tmp_path / "policy.json"
-    config.write_text(json.dumps(settings), encoding="utf-8")
-    monkeypatch.setenv("WEB_GEMINI_CONFIG", str(config))
-    monkeypatch.setenv("GEMINI_API_KEY", key)
+def test_unapproved_model_is_not_used(tmp_path, monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "AIza" + "x" * 35)
     monkeypatch.delenv("GEMINI_API_KEY_FILE", raising=False)
-    monkeypatch.delenv("GEMINI_MODEL", raising=False)
-    clients = []
-
-    def client(**kwargs):
-        clients.append(kwargs)
-        return SimpleNamespace(close=lambda: None)
-
-    monkeypatch.setattr(
-        "vietnamese_financial_multi_agent.api.metadata_service.genai.Client", client
-    )
-    store = DocumentStore(tmp_path / "store")
-    assert compose_metadata_service(store)[0] is not None
-    assert compose_metadata_service(store)[0] is None  # Same consumed scope cannot reset guard.
-    assert "AIza" not in next((store.root / "accounting-scopes").glob("*.json")).read_text()
-    changed = deepcopy(settings)
-    changed["accounting_scope"] = "another-scope"
-    changed["credential_sha256"] = "0" * 64
-    config.write_text(json.dumps(changed), encoding="utf-8")
-    assert compose_metadata_service(store)[0] is None
-    assert len(clients) == 2
+    monkeypatch.setenv("GEMINI_MODEL", "unapproved-paid-model")
+    assert compose_metadata_service(DocumentStore(tmp_path))[0] is None
 
 
 def test_unconfigured_gemini_manual_confirmation_still_works(tmp_path, monkeypatch):
-    monkeypatch.delenv("WEB_GEMINI_CONFIG", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY_FILE", raising=False)
     with TestClient(create_app(storage_root=tmp_path)) as client:
         doc = settled(client, upload(client).json()["id"])
-        assert doc["state"] == "needs_metadata"
+        assert doc["state"] == "failed"
         assert doc["metadata"]["suggestions"] == empty_suggestions()
         assert doc["metadata"]["preflight"]["stop_reason"] == "configuration_required"
         assert (
@@ -594,9 +564,12 @@ def test_unconfigured_gemini_manual_confirmation_still_works(tmp_path, monkeypat
     ],
 )
 def test_preflight_request_and_page_caps(tmp_path, options, reason, expected_pages):
-    app, calls = make_app(
-        tmp_path, lambda request, index: prediction(complete=False), job_options=options
-    )
+    def incomplete(request, index):
+        output = prediction(complete=False)
+        output["company_name"] = empty_suggestions()["company_name"]
+        return output
+
+    app, calls = make_app(tmp_path, incomplete, job_options=options)
     with TestClient(app) as client:
         doc = settled(client, upload(client).json()["id"])
         assert doc["metadata"]["preflight"]["analyzed_pages"] == expected_pages
@@ -640,7 +613,7 @@ def test_metadata_schema_through_real_adapter_with_stub_sdk(tmp_path):
         )
 
     schemas = metadata_schema_registry()
-    adapter = GeminiAdapter(
+    adapter = MetadataGeminiAdapter(
         SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)),
         schema_registry=schemas,
     )
@@ -654,6 +627,7 @@ def test_metadata_schema_through_real_adapter_with_stub_sdk(tmp_path):
     assert telemetry["usage"]["total_tokens"] == 80
     assert captured[0]["config"].response_mime_type == "application/json"
     assert captured[0]["config"].response_json_schema == schemas.schema_for(METADATA_REF)
+    assert len(captured[0]["contents"]) == 1 and captured[0]["contents"][0].role == "user"
     assert (
         sum(
             part.inline_data is not None
@@ -662,3 +636,27 @@ def test_metadata_schema_through_real_adapter_with_stub_sdk(tmp_path):
         )
         == 2
     )
+
+
+@pytest.mark.parametrize("initial", ["missing", "invalid", "uncertain"])
+def test_additional_pages_auto_accept_core_without_ticker(tmp_path, initial):
+    def handler(request, index):
+        output = prediction(page=1 if index == 1 else 5, complete=False)
+        if index == 1:
+            if initial == "missing":
+                output["reporting_year"] = empty_suggestions()["reporting_year"]
+            elif initial == "invalid":
+                output.pop("company_name")
+            else:
+                output["reporting_year"]["status"] = "uncertain"
+        return output
+
+    app, calls = make_app(tmp_path, handler)
+    with TestClient(app) as client:
+        doc = settled(client, upload(client, scan_pdf(6)).json()["id"])
+        assert doc["state"] == "ready"
+        assert doc["metadata"]["acceptance_origin"] == "auto"
+        assert not doc["metadata"]["confirmed"]
+        assert doc["metadata"]["values"]["stock_ticker"] is None
+        assert doc["metadata_revision"] == 1 and len(calls) == 2
+        assert doc["metadata"]["acceptance_history"][0]["origin"] == "auto"
