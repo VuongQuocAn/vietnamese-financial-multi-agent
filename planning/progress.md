@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 87 | 47 | 0 | 0 | 39 | 0 | 1 |
+| W | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 87 | 48 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,19 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-01 DONE** — Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
+Architecture/Design/Contracts; evaluation scope Architecture/Design/API Contracts.
+Dependency M2-09 DONE; chỉ nghiệm thu thiết kế, chưa có website hoạt động.
+Phiên nghiệm thu chỉ sửa sáu tài liệu planning, chạy planning checker/diff check;
+giữ nguyên design/API/Stitch/M1–M2/checker/tests và dữ liệu nguồn.
+Design `7a158f31e2feab0895d4ca5054bdbb56e78526be`, review/planning evidence
+`ac52100a68863d13bffed96d4218977a8f445779` đã xác minh không thay design/assets.
+CI chưa chạy trên nhánh tại checkpoint nghiệm thu; không tuyên bố CI SUCCESS.
+PR/CI sẽ được kiểm tra sau push nghiệm thu; không tự merge. W-02 chưa bắt đầu.
+Next action: Chờ giao W-02.
+
+Checkpoint W-01 REVIEW dưới đây là lịch sử trước approval.
 
 **W-01 REVIEW** — thiết kế Web Demo V1, dependency M2-09 DONE.
 [Spec](tasks/W/W-01.md), [architecture](../docs/web-demo-v1/architecture.md),

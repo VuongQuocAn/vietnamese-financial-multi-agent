@@ -4,54 +4,52 @@
 W-01 — Web Demo V1 Architecture, API Contracts & UI Design
 
 ## Status
-REVIEW
+DONE
 
 ## Last Verified State
-Baseline sau fetch `5c8a80e4ceedb735dcbad12e267620b0b8046adb` trùng origin/main;
-main chỉ docs/UI untracked, M2-09 DONE. Nhánh docs/w-01-web-demo-design.
-Task đính kèm cho phép W-01 design và commit/push; không W-02/M3.
+Tech Lead APPROVED ngày 28/10/2026; Research MVP Lean v3 —
+Architecture/Design/Contracts, evaluation scope Architecture/Design/API Contracts.
+Dependency M2-09 DONE. Chỉ nghiệm thu thiết kế, chưa có website hoạt động.
+Baseline sau fetch trên docs/w-01-web-demo-design: HEAD/origin cùng
+`ac52100a68863d13bffed96d4218977a8f445779`, working tree sạch.
+Design/API và sáu Stitch assets không đổi so với design commit.
 
 ## Completed Work
-Đã đọc required planning/architecture/contracts/M2-09 và backend M1–M2/tests;
-đọc cả hai Stitch DESIGN/HTML, quan sát PNG. Ba tài liệu web-demo-v1 gồm
-architecture/integration/session/security, REST/metadata/JSON, UI tokens/routes.
-Checker mở rộng W IDs/spec/counts và links docs mới; ba regression tests PASS.
-Sáu Stitch files nguyên bản, tổng 266161 bytes; không dataset hoặc secrets.
+Đồng bộ W-01 REVIEW → DONE theo approval trong spec/registry/dashboard/status/
+handoff/roadmap. Giữ nguyên architecture/API/UI handoff và các assets Stitch.
+Không yêu cầu sửa kiến trúc lớn hoặc thêm verification layers.
 
 ## Remaining Work
-Tech Lead nghiệm thu độc lập W-01: kiến trúc, API/metadata, UI và giới hạn runtime.
-Chưa xây app/metadata extractor; không tự DONE hoặc bắt đầu W-02/M3.
+Không còn việc nghiệm thu W-01. W-02 chưa bắt đầu; không tự mở W-02 hoặc M3.
+PR/CI kiểm tra sau publication là xác nhận trước merge, không nghiệm thu website.
 
 ## Modified Files
-Ba docs/web-demo-v1/*.md; planning/tasks/W/W-01.md; tasks/progress/current-status/
-handoff/roadmap; scripts/check_planning.py; tests/unit/test_check_planning.py;
-sáu docs/UI assets nguyên bản được thêm để bàn giao reference.
+Chỉ planning/tasks/W/W-01.md, planning/tasks.md, planning/progress.md,
+planning/current-status.md, planning/handoff.md và planning/roadmap.md.
+Không sửa implementation/tests/checker/docs/web-demo-v1/Stitch/data/cache/reference.
 
 ## Tests
-Local checker regressions 3 PASS; Ruff lint/format hai file PASS;
-planning checker 87 tasks PASS; 11 JSON examples parse PASS và value/context
-example validate trực tiếp bằng models M2, Decimal zero/scale giữ wire strings.
-git diff --check PASS; staged check phần W-01 tự viết PASS. Staged toàn bộ
-báo bốn trailing spaces tại dòng 121/138 của hai DESIGN.md gốc; giữ nguyên theo
-yêu cầu bảo toàn Stitch, không tắt checks. Sáu staged blobs khớp bytes gốc.
-Không live Gemini/financial benchmark/full unit local/web E2E; M1–M2 không sửa.
-Sau push, gh run list trên nhánh trả []; workflow chỉ push main hoặc pull_request,
-chưa mở PR nên không kích hoạt CI. Không báo CI SUCCESS hoặc dùng CI M2-09 thay W-01.
+Phiên nghiệm thu: python từ .venv chạy scripts/check_planning.py và
+git diff --check đều PASS (planning 87 tasks), đã xác minh trước commit/push.
+Evidence trước nghiệm thu: checker regressions 3 PASS, Ruff PASS, 11 JSON examples
+parse/Decimal context validation PASS; không chạy lại trong phiên planning-only.
+CI chưa chạy trên nhánh W-01 tại checkpoint nghiệm thu; không báo CI SUCCESS.
+Commit nghiệm thu [skip ci] theo yêu cầu. PR/CI kiểm tra sau push; không tự merge,
+không sửa code nếu CI lỗi ngoài phạm vi. Không Gemini/live evaluation/web E2E.
 
 ## Blockers
-Không blocker thiết kế. Metadata extractor mới; extraction không callback nên
-adapter per-page và aggregate quality; cache/quota in-memory cần conservative
-restart policy. Cần Tech Lead review internal symbol namespace và status policy.
+Không blocker nghiệm thu thiết kế; Tech Lead đã APPROVED.
+Giới hạn chưa triển khai: website/FastAPI endpoints, metadata extractor,
+worker/session adapters, viewer/source linking; cache/quota hiện in-memory.
 
 ## Git Checkpoint
-Baseline ổn định `5c8a80e4ceedb735dcbad12e267620b0b8046adb`.
-Design/checker/assets commit
-`7a158f31e2feab0895d4ca5054bdbb56e78526be` đã push;
-git ls-remote xác nhận nhánh docs/w-01-web-demo-design khớp exact SHA, tree sạch
-sau push. Commit tiếp theo chỉ cập nhật planning evidence của checkpoint này,
-không thay design/code/assets. Không tự merge main. CI không có run như Tests.
-Không stage credentials/.env/raw/cache/PDF/reference hoặc dữ liệu private.
-Stitch bytes đã hash đối chiếu, chỉ tài liệu thiết kế reference được commit.
+Design/implementation ổn định đã push:
+`7a158f31e2feab0895d4ca5054bdbb56e78526be`.
+Review/planning evidence đã push và trùng baseline remote sau fetch:
+`ac52100a68863d13bffed96d4218977a8f445779`.
+Commit nghiệm thu tiếp theo chỉ sửa sáu planning files, dùng message được giao;
+SHA mới/remote/PR/CI được xác minh và báo cáo sau publication, không ghi SHA tương lai.
+Sáu Stitch assets giữ nguyên; không stage datasets/secrets/unrelated files.
 
 ## Exact Next Action
-Tech Lead nghiệm thu độc lập W-01.
+Chờ giao W-02.

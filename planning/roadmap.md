@@ -22,7 +22,10 @@ trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng I
 
 ## W — Web Demo V1 giữa M2 và M3
 
-W-01 được giao ngày 2026-10-28, phụ thuộc M2-09 DONE; hiện REVIEW chờ Tech Lead.
+W-01 DONE — Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
+Architecture/Design/Contracts; evaluation scope Architecture/Design/API Contracts.
+Phụ thuộc M2-09 DONE; chỉ nghiệm thu thiết kế, chưa có website hoạt động.
+W-02 chưa bắt đầu. Next action: Chờ giao W-02.
 Nhánh ứng dụng này không thay M3–M8, không đưa M3 vào IN_PROGRESS.
 [Spec W-01](tasks/W/W-01.md), [thiết kế](../docs/web-demo-v1/architecture.md),
 [API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
