@@ -1,5 +1,10 @@
 # Data contracts
 
+M1-16 thêm export trung gian `unified_document_v1` trong
+`contracts/unified_document.py`: [API/quality/provenance](unified-document-understanding.md).
+Hai nhánh Existing OCR và Gemini-native giữ text/cells unresolved, component quality
+riêng và provenance theo mức độ; không thay raw OCR/DU v1, không định nghĩa kế toán M2.
+
 M1-03d [crop audit/recovery](crop-recovery.md) là consumer nội bộ của contracts,
 không đổi schema/version. Runtime records/manifests giữ original references và
 reconstructed outputs riêng; không đưa recovery path vào OCRPage/SourceAnchor.

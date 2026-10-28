@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 31 | 31 | 0 | 0 | 0 | 0 | 0 |
+| M1 | 32 | 31 | 0 | 0 | 0 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 81 | 35 | 0 | 0 | 46 | 0 | 0 |
+| TOTAL | 82 | 35 | 0 | 0 | 46 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,15 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M1-16 REVIEW** — Entrypoint chung OCR JSON/PDF/PNG, unified_document_v1 và quality router.
+Existing BBS2025/page5:6 text/1 table/97 cells; native pages5/7/8:33 text/3 tables/335 cells.
+Giữ native46 cell texts unresolved, tables3 unresolved, geometry0 verified;0 API mới.
+10 focused +77 loader regression passed; checks local đạt; CI exact SHA sau push.
+[Evidence](../docs/reviews/M1-16-evidence.md), [API/contract](../docs/unified-document-understanding.md).
+Manifest/PNG replay không rehash PDF gốc; text acceptance không phải accuracy tài chính.
+Next action: Tech Lead review implementation, CI exact SHA và giới hạn quality.
+Các đoạn sau là lịch sử.
 
 **M1-15 DONE** — Tech Lead APPROVED có điều kiện; PDF BBS2025 có24 trang, pilot5/5 thành công.
 Text58/cell texts505 accepted, tables0/10 accepted; partial DU schema5/5,

@@ -1,6 +1,7 @@
 """Adapter OCR JSON read-only; runtime wrappers, không tạo contract mới."""
 
 import errno
+import hashlib
 import json
 import os
 import stat
@@ -49,6 +50,7 @@ class LoadedOCRPage:
     quality_issues: tuple[QualityIssue, ...]
     # Không có anchor: không xác minh page identity, source_ref vẫn do caller khai báo.
     identity_checked: bool
+    source_sha256: str | None = None
 
 
 class OCRLoadError(ValueError):
@@ -228,4 +230,10 @@ def load_ocr_page(
         )
         if mismatches:
             raise OCRLoadError("identity_mismatch", request, result, issues=mismatches)
-    return LoadedOCRPage(page, result, tuple(validate_quality(page)), anchor is not None)
+    return LoadedOCRPage(
+        page,
+        result,
+        tuple(validate_quality(page)),
+        anchor is not None,
+        hashlib.sha256(content).hexdigest(),
+    )
