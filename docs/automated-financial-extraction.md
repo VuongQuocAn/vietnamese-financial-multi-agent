@@ -14,8 +14,11 @@ from vietnamese_financial_multi_agent.accounting import run_automated_pdf
 
 records = run_automated_pdf(
     Path("data/raw/Financial_Report_pdf/BBS/2025/BBS_2025.pdf"),
-    symbol="BBS", year="2025", pages=[5, 7, 8],
-    service=service, credential_ref=credential_ref,
+    symbol="BBS",
+    year="2025",
+    pages=[5, 7, 8],
+    service=service,
+    credential_ref=credential_ref,
 )
 ```
 
