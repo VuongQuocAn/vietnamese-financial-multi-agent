@@ -4,29 +4,28 @@
 M2-03 — Statement Type Recognition
 
 ## Status
-REVIEW
+DONE
 
 ## Last Verified State
-M2-02 DONE; baseline sạch e1c84783fea5487c1f2b1e8ae77c1ccbfcaf65e1 đã push. M2-03 targeted tests/pilot PASS. Implementation `972d124ccd03d840375e37a3bbbcc62ed2eacb01` đã push; [CI 40639663139](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40639663139) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh.
+Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP; M2-02 DONE. Baseline sạch local/origin `063eca618f0ad3ab3d3539282c95d0e8e3e67c84`. Implementation `972d124ccd03d840375e37a3bbbcc62ed2eacb01`; [CI 40639663139](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40639663139) SUCCESS đúng SHA, mọi steps Python3.11/3.12 đã xác minh lại. Diff từ implementation chỉ docs/planning; code/tests/schema không đổi.
 
 ## Completed Work
-Page resolver, document inventory không kế thừa nhãn; 11 focused tests, pilot8, API/evidence và planning. Không đổi contracts/schema M1/v1.
+Page resolver, document inventory không kế thừa nhãn; focused tests, pilot8, API/evidence đã có. Phiên nghiệm thu chuyển REVIEW → DONE theo Tech Lead APPROVED, đồng bộ 5 planning files.
 
 ## Remaining Work
-Chờ Tech Lead review/accept; không tự DONE hoặc bắt đầu M2-04.
+Không còn implementation hoặc nghiệm thu M2-03; không bắt đầu M2-04.
 
 ## Modified Files
-src/accounting/{__init__,statement_resolution}.py; tests/unit/test_statement_resolution.py; docs/statement-type-recognition.md; planning/{tasks,progress,current-status,handoff}.md và tasks/M2/M2-03.md.
+Phiên nghiệm thu chỉ planning/tasks.md, planning/progress.md, planning/current-status.md, planning/handoff.md và planning/tasks/M2/M2-03.md.
 
 ## Tests
-29 targeted PASS (11 focused +18 regression), Ruff3 files, planning82/diff PASS. Pilot8:6 resolved đúng/0 sai/1 uncertain/1 unresolved; đủ bốn loại, hash7 nguồn không đổi. Không full local suite/API.
+Bằng chứng trước nghiệm thu: 29 targeted PASS (11 focused +18 regression), Ruff/planning/diff PASS. Pilot 8 trang: 6 resolved đúng, 0 sai, 1 uncertain, 1 unresolved; đủ bốn loại, hash7 nguồn không đổi. Phiên nghiệm thu chỉ planning checker82 và diff check PASS; không chạy lại pytest, Gemini hoặc yêu cầu full CI mới.
 
 ## Blockers
-Chờ Tech Lead. Pilot chỉ OCR text, chưa PDF/ảnh/second reviewer. Regex không hiểu mọi title trích dẫn hoặc chia nhiều regions.
+Không còn blocker nghiệm thu. Giới hạn Research MVP giữ nguyên: pilot theo OCR text, chưa đối chiếu PDF/ảnh hoặc second reviewer, chưa chứng minh accuracy toàn dataset. Regex chưa hiểu mọi title trích dẫn hoặc chia nhiều regions.
 
 ## Git Checkpoint
-Baseline ổn định e1c84783fea5487c1f2b1e8ae77c1ccbfcaf65e1; implementation ổn định `972d124ccd03d840375e37a3bbbcc62ed2eacb01` đã push, CI40639663139 SUCCESS exact SHA.
-Checkpoint evidence tiếp theo chỉ docs/planning, không đổi code/tests, không tự tham chiếu hoặc gán CI cũ cho SHA mới.
+Implementation ổn định `972d124ccd03d840375e37a3bbbcc62ed2eacb01` đã push, CI40639663139 SUCCESS exact SHA. Evidence baseline `063eca618f0ad3ab3d3539282c95d0e8e3e67c84` sạch và khớp origin trước nghiệm thu. Commit nghiệm thu chỉ planning; không gán CI implementation cho SHA mới hoặc yêu cầu full CI mới.
 
 ## Exact Next Action
-Chờ Tech Lead review.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-04.
