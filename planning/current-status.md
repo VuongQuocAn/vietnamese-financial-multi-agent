@@ -2,21 +2,17 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-- **M2-04b DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3;
-  nghiệm thu planning-only. M2-04a và các task trước giữ DONE, M2-05 giữ TODO.
-- PDF BBS2025 chỉ trang5/7/8: B01/B02/B03 mapped đúng5/5/4, accepted đúng10/10/8,
-  0 sai;28 Decimal,0 uncertain,108 unresolved. Baseline40:28 accepted/12 unresolved.
-- Runtime không ManualReview; Gemini5 calls gồm2 recovery,0 transport retry;
-  provenance PDF/ảnh/model/request/selectors, financial_fact_verified=false.
-- Chỉ nghiệm thu3/24 trang của một PDF,một reviewer đánh giá sau chạy;
-  chưa chứng minh accuracy toàn dataset hoặc verified financial facts.
-- 70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md),
-  [spec](tasks/M2/M2-04b.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
-- [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/912916ed1318628750e160e28338a211e5fc2819);
-  [CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
-  SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh lại.
-- Baseline nghiệm thu local/origin sạch `d8f92373c1bc32bcee5f22c3ff051e21cb022355`.
-  Phiên này chỉ năm file planning, planning checker và diff check;
-  không chạy lại Gemini/pytest/CI, không đổi implementation/tests/schema/nguồn.
-  Không gán CI implementation cho SHA nghiệm thu planning-only.
-- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+M2-05 REVIEW — chờ Tech Lead nghiệm thu. M2-04b giữ DONE, M2-06 TODO.
+Checker Decimal riêng với extraction; một rule active B02 gross_profit và bốn ứng viên unavailable.
+Pilot PDF-bound cache BBS2025 trang5/7/8: B01 P/F/I/N=0/0/4/0,
+B02=2/0/2/0, B03=0/0/2/0; hai check thực, difference0/tolerance0, không gọi Gemini.
+28 accepted extraction giữ nguyên; financial_fact_verified=false, scope null không bị suy đoán.
+
+- Baseline local/origin sạch `99f2a91e3d2642268cc6bb0cd769de94cb6d5e37`; người dùng giao cả commit/push/CI.
+- [API/pilot](../docs/arithmetic-checks.md), [spec](tasks/M2/M2-05.md),
+  [issue](tasks/M2/issues/M2-05-arithmetic-checks.md).
+- 28 focused/84 targeted PASS; Ruff/planning/diff PASS local; CI chưa xác minh.
+- Mặc định exact Decimal, không đổi unit/scale; nhóm cùng page/period/type/scope.
+- Arithmetic failure/thiếu dữ liệu kiểm tra không chặn dùng extraction cho QA;
+  chưa verified financial facts.
+- Next action: commit/push và xác minh CI đúng implementation SHA trước bàn giao Tech Lead.

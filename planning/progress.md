@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 9 | 6 | 0 | 0 | 3 | 0 | 0 |
+| M2 | 9 | 6 | 0 | 0 | 2 | 0 | 1 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 84 | 42 | 0 | 0 | 42 | 0 | 0 |
+| TOTAL | 84 | 42 | 0 | 0 | 41 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,21 +46,17 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M2-04b DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3;
-nghiệm thu planning-only. Pipeline PDF BBS2025 trang 5/7/8, runtime không ManualReview.
-14 mapped đúng/0 sai;B01/B02/B03 accepted đúng10/10/8;28 đúng,0 sai,28 Decimal;108 unresolved,0 uncertain.
-Baseline40:28 accepted/12 unresolved. 5 Gemini calls gồm 2 recovery, không gọi lại B03 có cache tốt.
-70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md), [spec](tasks/M2/M2-04b.md).
-[Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/912916ed1318628750e160e28338a211e5fc2819),
-[CI40646568615](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40646568615)
-SUCCESS exact SHA, mọi bước Python3.11/3.12 đã xác minh lại.
-Chỉ nghiệm thu3/24 trang của một PDF,một reviewer đánh giá sau chạy;
-chưa chứng minh accuracy toàn dataset hoặc verified financial facts.
-Phiên nghiệm thu chỉ sửa năm file planning, chạy planning checker và diff check;
-giữ implementation/tests/schema/nguồn, không chạy lại Gemini/pytest/CI.
-Baseline nghiệm thu local/origin sạch `d8f92373c1bc32bcee5f22c3ff051e21cb022355`;
-không gán CI implementation cho SHA nghiệm thu planning-only.
-Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+M2-05 REVIEW — chờ Tech Lead nghiệm thu. M2-04b giữ DONE, M2-06 TODO.
+Checker Decimal riêng với extraction; một rule active B02 gross_profit và bốn ứng viên unavailable.
+Pilot PDF-bound cache BBS2025 trang5/7/8: B01 P/F/I/N=0/0/4/0,
+B02=2/0/2/0, B03=0/0/2/0; hai check thực, difference0/tolerance0, không gọi Gemini.
+28 accepted extraction giữ nguyên; financial_fact_verified=false, scope null không bị suy đoán.
+
+[Spec](tasks/M2/M2-05.md), [API/pilot](../docs/arithmetic-checks.md).
+28 focused/84 targeted PASS; Ruff/planning/diff checks PASS local.
+Chờ commit/push và CI exact implementation SHA; chưa có bằng chứng CI mới.
+Giới hạn: cùng source page; chưa xác minh financial facts/accuracy toàn dataset.
+Next action: commit/push và xác minh CI đúng implementation SHA trước bàn giao Tech Lead.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

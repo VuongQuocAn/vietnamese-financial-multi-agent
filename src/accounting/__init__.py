@@ -1,5 +1,13 @@
 """Contracts và resolver context tài chính có provenance."""
 
+from .arithmetic import (
+    ARITHMETIC_RULES,
+    ArithmeticCheck,
+    ArithmeticRule,
+    TolerancePolicy,
+    evaluate_arithmetic_rules,
+    evaluate_automated_records,
+)
 from .automated_extraction import (
     extract_financial_page,
     parse_vietnamese_number,
@@ -46,6 +54,12 @@ from .table_recovery import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "ARITHMETIC_RULES",
+    "ArithmeticCheck",
+    "ArithmeticRule",
+    "TolerancePolicy",
+    "evaluate_arithmetic_rules",
+    "evaluate_automated_records",
     "extract_financial_page",
     "parse_vietnamese_number",
     "run_automated_pdf",
