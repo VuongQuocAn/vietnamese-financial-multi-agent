@@ -15,8 +15,7 @@ nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
 - Điều phối tác nhân theo nhu cầu bằng chứng và tín hiệu rủi ro.
 - Kiểm chứng từng nhận định trước khi tạo kết quả bằng tiếng Việt có dẫn nguồn.
 
- --> REPORT[Grounded Financial Report Generation]
-```
+
 <img width="797" height="844" alt="image" src="https://github.com/user-attachments/assets/a005b329-7e28-499d-ac4e-516910481eeb" />
 
 Gemini và các LLM khác sẽ đi qua LLM Gateway dùng chung để đổi model, hỗ trợ
