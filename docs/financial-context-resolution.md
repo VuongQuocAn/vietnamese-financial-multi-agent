@@ -6,7 +6,8 @@ Không thay schema `financial_normalization_v1` hoặc contracts M1.
 
 ```python
 from vietnamese_financial_multi_agent.accounting import (
-    evidence_from_unified_page, resolve_financial_context,
+    evidence_from_unified_page,
+    resolve_financial_context,
 )
 
 # page: UnifiedPage M1; caller chọn phạm vi trang/region cần giải quyết.
