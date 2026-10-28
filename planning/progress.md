@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 8 | 5 | 0 | 0 | 3 | 0 | 0 |
+| M2 | 9 | 5 | 0 | 0 | 3 | 0 | 1 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 83 | 41 | 0 | 0 | 42 | 0 | 0 |
+| TOTAL | 84 | 41 | 0 | 0 | 42 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -45,6 +45,15 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M2-04b REVIEW** — pipeline tự động PDF BBS2025 trang 5/7/8, runtime không ManualReview.
+14 mapped đúng/0 sai;28 accepted đúng/0 sai;28 Decimal;108 unresolved,0 uncertain.
+Baseline40:28 accepted/12 unresolved. 5 Gemini calls gồm 2 recovery, không gọi lại B03 có cache tốt.
+70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md), [spec](tasks/M2/M2-04b.md).
+Chờ CI đúng implementation SHA và Tech Lead review; không verified facts, không toàn bộ PDF.
+Next action: Xác minh CI đúng implementation SHA sau push.
+
+Các checkpoint M2-04a bên dưới là lịch sử.
 
 **M2-04a DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP.
 Pilot 40 slots: 6 accepted đúng, 0 sai, 12 rejected, 22 unresolved. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts.

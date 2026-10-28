@@ -1,5 +1,40 @@
 # M2-04 — Vì sao chưa nối được số liệu
 
+## M2-04b — Automated Extraction
+
+M2-04a cần ManualReview để có bản đọc vùng ảnh độc lập và OCR witness; vì vậy chỉ
+6 links B02 accepted, B01/B03 vẫn thiếu bằng chứng theo policy manual. Runtime mới
+dùng Gemini làm nguồn trích xuất chính, kiểm tra cấu trúc/ngữ nghĩa nhẹ và gắn trạng
+thái `accepted_extraction`; giữ nguyên ý nghĩa và implementation manual path.
+
+Ví dụ từ PDF thật BBS2025 trang7: “4. Giá vốn hàng bán”, mã11, header “Năm 2025”,
+raw `417.992.011.559` → Decimal `417992011559`, VND/scale1. PDF/rendered-image hashes,
+page, Gateway model/request ID và payload selectors được giữ. Không ManualReview
+input, không OCR witness bắt buộc, financial_fact_verified=false. B01 mã110 tại
+31/12/2025 `3.711.595.064` và B03 mã30 năm2025 `(7.672.311.772)` cũng accepted.
+
+| Tập đánh giá | Manual-reviewed M2-04a | Automated M2-04b |
+| --- | --- | --- |
+| Baseline40 — B01 | 0 accepted | 10 đúng / 0 sai / 4 unresolved |
+| Baseline40 — B02 | 6 accepted đúng | 10 đúng / 0 sai / 4 unresolved |
+| Baseline40 — B03 | 0 accepted | 8 đúng / 0 sai / 4 unresolved |
+| Baseline40 — tổng | 6 đúng,0 sai,12 rejected,22 unresolved | 28 đúng,0 sai,12 unresolved |
+| Toàn output ba trang mới | Không cùng tập, không so trực tiếp | 28 đúng,0 sai,108 unresolved,0 uncertain |
+
+Đối chiếu thủ công **sau** pipeline trên ba ảnh render PDF, một reviewer; đánh giá
+toàn bộ28 accepted, không dùng expected40 làm runtime input. Mapping14 đúng/0 sai,
+Decimal28; chưa đo accuracy toàn PDF. B03 “Lưu chuyển tiền thuần trong năm”, mã50,
+`1.208.501.810`, unresolved do ngoài catalog. Lượt đầu Gemini sai table row-count
+ở B01/B02; validator chặn, làm rõ prompt và recovery hai trang. Không sửa payload
+hoặc nới bounds để tăng acceptance. 5 calls gồm2 recovery,0 transport retry;
+B03 tốt giữ cache, không gọi lại. Header mô tả không phải numeric slot.
+
+Ảnh thực local ignored `artifacts/item-mapping/M2-04b/live/page-5.png`,
+`page-7.png`, `page-8.png`; không commit nguồn. Kết quả PDF entrypoint replay và
+post-run evaluation trong `artifacts/item-mapping/M2-04b/pdf-replay.json`.
+[API và evidence chi tiết](../../../../docs/automated-financial-extraction.md).
+Chỉ chạy trang5/7/8 trong24 trang. M2-04b REVIEW, chờ CI exact SHA và Tech Lead review.
+
 ## Hiện tượng
 Pilot M2-04 xác nhận đúng 14 trong 20 nhãn nhưng không nối được số: 28 ô thuộc nhãn đã map bị từ chối, 12 ô thuộc 6 nhãn ngoài catalog chưa xét. Nhận diện tên không chứng minh hàng, cột kỳ và ô số tương ứng.
 

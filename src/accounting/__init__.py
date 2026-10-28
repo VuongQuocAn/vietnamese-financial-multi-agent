@@ -1,5 +1,11 @@
 """Contracts và resolver context tài chính có provenance."""
 
+from .automated_extraction import (
+    extract_financial_page,
+    parse_vietnamese_number,
+    run_automated_pdf,
+    validate_automated_extraction,
+)
 from .context_resolution import (
     ContextCandidate,
     ContextEvidence,
@@ -40,6 +46,10 @@ from .table_recovery import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "extract_financial_page",
+    "parse_vietnamese_number",
+    "run_automated_pdf",
+    "validate_automated_extraction",
     "LinkDecision",
     "ManualReview",
     "ReviewedCell",

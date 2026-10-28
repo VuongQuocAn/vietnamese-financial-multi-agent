@@ -9,6 +9,10 @@ from types import SimpleNamespace
 
 from google import genai
 from google.genai import types
+from vietnamese_financial_multi_agent.accounting.automated_extraction import (
+    extract_financial_page,
+    extraction_schema_registry,
+)
 from vietnamese_financial_multi_agent.core.gemini_adapter import GeminiAdapter
 from vietnamese_financial_multi_agent.core.llm_cache import CachedLLMService
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
@@ -72,6 +76,7 @@ def main():
         "--output", type=Path, required=True, help="New ignored artifacts directory"
     )
     parser.add_argument("--live", action="store_true")
+    parser.add_argument("--financial", action="store_true", help="M2-04b automated numeric links")
     parser.add_argument("--policy", type=Path)
     parser.add_argument("--key-file", type=Path)
     parser.add_argument("--key-index", type=int)
@@ -113,7 +118,11 @@ def main():
         raise ValueError("live_policy_not_confirmed")
     payload = settings["project_policy"]
     payload["quota_limits"] = dict(rpm=15, tpm=250_000, rpd=500)
-    payload["verification_source"] = "user-authorized-M1-15-2026-10-28"
+    payload["verification_source"] = (
+        "user-authorized-M2-04b-2026-10-28"
+        if args.financial
+        else "user-authorized-M1-15-2026-10-28"
+    )
     policy = ProjectPolicy.model_validate_json(json.dumps(payload))
     if (
         policy.model != MODEL
@@ -149,7 +158,7 @@ def main():
             request_input_bound=250_000,
             rpm=15,
         )
-        schemas = vision_schema_registry()
+        schemas = extraction_schema_registry() if args.financial else vision_schema_registry()
         gateway = SharedLLMGateway(
             {
                 "gemini": GeminiAdapter(
@@ -176,10 +185,10 @@ def main():
         guard.initialize(confirmed_fresh_scope=True)
         service = CachedLLMService(
             guard,
-            tenant_ref="gemini-ingestion",
+            tenant_ref="financial-extraction" if args.financial else "gemini-ingestion",
             project_ref=policy.project_ref,
             credential_refs=frozenset({credential}),
-            configuration_revision="M1-15-v1",
+            configuration_revision="M2-04b-v1" if args.financial else "M1-15-v1",
             scope_confirmed=True,
             schema_registry=schemas,
             ttl_seconds=3600,
@@ -187,11 +196,24 @@ def main():
         records = []
         for page in pages:
             meter.pace()
-            record = ingest_page(service, page, credential_ref=credential)
+            record = (
+                extract_financial_page(service, page, credential_ref=credential)
+                if args.financial
+                else ingest_page(service, page, credential_ref=credential)
+            )
             write_once(root / f"page-{page.source['page_number']}.json", record)
             records.append(record)
             print(
-                json.dumps(dict(page=page.source["page_number"], assessment=record["assessment"])),
+                json.dumps(
+                    dict(
+                        page=page.source["page_number"],
+                        assessment=record.get("assessment")
+                        or {
+                            "issues": record["extraction"]["issues"],
+                            "links": len(record["extraction"]["links"]),
+                        },
+                    )
+                ),
                 flush=True,
             )
             if meter.stopped:
@@ -201,8 +223,8 @@ def main():
         )
         stats = dict(
             pages_attempted=len(records),
-            pages_with_components=sum(r["output"] is not None for r in records),
-            M1_partial_pages=sum(r["m1"]["M1_compatible"] for r in records),
+            pages_with_components=sum(r.get("output") is not None for r in records),
+            M1_partial_pages=sum(r.get("m1", {}).get("M1_compatible", False) for r in records),
             requests=meter.requests,
             input_tokens=meter.input_tokens,
             output_tokens=meter.output_tokens,
@@ -213,6 +235,14 @@ def main():
             source_unchanged=unchanged,
             image_requests=transport.records,
         )
+        if args.financial:
+            stats["financial_links"] = {
+                str(r["source"]["page"]["page"]): {
+                    status: sum(link["status"] == status for link in r["extraction"]["links"])
+                    for status in ("accepted_extraction", "uncertain", "unresolved")
+                }
+                for r in records
+            }
         write_once(root / "summary.json", stats)
         print(json.dumps(stats))
         if not unchanged:

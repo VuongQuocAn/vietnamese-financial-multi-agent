@@ -2,8 +2,12 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-- **M2-04a DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP; M2-04 vẫn DONE.
-- Pilot 40 slots: **6 accepted đúng, 0 sai, 12 rejected, 22 unresolved**. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts.
-- [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd); [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS đúng implementation SHA, mọi bước Python 3.11/3.12 đã xác minh. [Spec](tasks/M2/M2-04a.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
-- Nghiệm thu planning-only; baseline sạch local/origin `d436b755839aedd9ac56dcb76bf0579f1990b0b1`, diff từ implementation chỉ planning. Không chạy lại pytest, Gemini hoặc CI; không gán CI implementation cho SHA nghiệm thu.
-- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+- **M2-04b REVIEW**; M2-04a và các task trước giữ DONE, M2-05 TODO phụ thuộc M2-04b.
+- PDF BBS2025 chỉ trang5/7/8: B01/B02/B03 mapped đúng5/5/4, accepted đúng10/10/8,
+  0 sai;28 Decimal,0 uncertain,108 unresolved. Baseline40:28 accepted/12 unresolved.
+- Runtime không ManualReview; Gemini5 calls gồm2 recovery,0 transport retry;
+  provenance PDF/ảnh/model/request/selectors, financial_fact_verified=false.
+- 70 targeted PASS; [API/evidence](../docs/automated-financial-extraction.md),
+  [spec](tasks/M2/M2-04b.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
+- Baseline ổn định `8a3b5ce`; chờ implementation commit/push và CI exact SHA 3.11/3.12.
+- Next action: Xác minh CI đúng implementation SHA sau push.

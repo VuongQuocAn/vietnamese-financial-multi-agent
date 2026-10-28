@@ -93,6 +93,7 @@ Phụ thuộc milestone: M1; dữ liệu hiểu tài liệu và contracts đã �
 | <a id="m2-03"></a>M2-03 — Statement Type Recognition | Nhận diện B01/B02/B03/B09 theo ngữ cảnh | Không dựa riêng tên file; báo unresolved khi không đủ căn cứ |
 | <a id="m2-04"></a>M2-04 — Financial Item Mapping | Mapping chỉ tiêu theo danh mục đã duyệt | Lưu mapping evidence, không tự tạo quy tắc kế toán |
 | <a id="m2-04a"></a>M2-04a — Gemini-Assisted Table Recovery & Numeric Linking | Khôi phục bảng và liên kết số có bằng chứng | Pilot ảnh thực và validation độc lập; [spec](tasks/M2/M2-04a.md) |
+| <a id="m2-04b"></a>M2-04b — Gemini-First Automated Financial Extraction & Numeric Linking | PDF → Gemini → mapping → numeric links tự động và Decimal | Không ManualReview runtime; pilot B01/B02/B03, giữ provenance; [spec](tasks/M2/M2-04b.md); dependency của M2-05 |
 | <a id="m2-05"></a>M2-05 — Deterministic Arithmetic Checks | Kiểm tra số học theo công thức được duyệt | Test đơn vị/dung sai/làm tròn và lineage đầu vào |
 | <a id="m2-06"></a>M2-06 — Accounting Relationship Checks | Kiểm tra quan hệ giữa các báo cáo | Phân biệt lỗi, nghi vấn và dữ liệu thiếu; không tự kết luận vi phạm pháp lý |
 | <a id="m2-07"></a>M2-07 — Normalization Quality Gates | Quality gates và unresolved evidence | Chỉ dữ liệu đủ điều kiện đi tiếp; mọi loại trừ có nguồn/lý do |

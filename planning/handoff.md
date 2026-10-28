@@ -1,31 +1,45 @@
 # Codex Handoff
 
 ## Active Task
-M2-04a — Gemini-Assisted Table Recovery & Numeric Linking
+M2-04b — Gemini-First Automated Financial Extraction & Numeric Linking
 
 ## Status
-DONE
+REVIEW
 
 ## Last Verified State
-Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP. [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd); [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS đúng implementation SHA, mọi bước Python 3.11/3.12 được xác minh. Baseline nghiệm thu sạch local/origin `d436b755839aedd9ac56dcb76bf0579f1990b0b1`; diff từ implementation chỉ planning.
+PDF BBS2025 trang5/7/8 → render200DPI → Gemini → validation → mapping → numeric links.
+28 accepted đúng/0 sai sau đọc ảnh, không ManualReview runtime;28 Decimal,
+0 uncertain,108 unresolved. Baseline40:28 accepted/12 unresolved.
+70 targeted PASS; chờ Ruff/planning/diff cuối và CI exact implementation SHA.
 
 ## Completed Work
-Nghiệm thu planning-only, chuyển M2-04a REVIEW → DONE. Pilot 40 slots: 6 accepted đúng, 0 sai, 12 rejected, 22 unresolved. [Spec](tasks/M2/M2-04a.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
+Automated schema/API, Decimal parser, Gateway/rendering reuse, giữ manual path.
+Pilot B01/B02/B03:14 mapped đúng/0 sai,accepted10/10/8 đúng; PDF hash giữ nguyên,
+image hashes khớp SDK. 5 calls gồm2 recovery row-count B01/B02,0 transport retry;
+không gọi lại B03 cache tốt. [API/evidence](../docs/automated-financial-extraction.md),
+[spec](tasks/M2/M2-04b.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
 
 ## Remaining Work
-Không còn công việc nghiệm thu M2-04a; không tự bắt đầu M2-05.
+Commit/push implementation, xác minh CI Python3.11/3.12 đúng SHA và ghi evidence;
+chờ Tech Lead review. Không tự DONE hoặc bắt đầu M2-05.
 
 ## Modified Files
-planning/tasks.md, progress.md, current-status.md, handoff.md, tasks/M2/M2-04a.md, tasks/M2/issues/M2-04-numeric-linking.md.
+src/accounting/automated_extraction.py, __init__.py; scripts/run_gemini_ingestion.py;
+tests/unit/test_automated_extraction.py; docs/automated-financial-extraction.md;
+planning/tasks.md, progress.md, current-status.md, handoff.md, tasks/M2/M2-04b.md,
+tasks/M2/issues/M2-04-numeric-linking.md.
 
 ## Tests
-Nghiệm thu chỉ planning checker và diff check; không chạy lại pytest, Gemini hoặc CI. Evidence trước nghiệm thu: 14 focused + 12 regression PASS; CI exact implementation SHA PASS.
+70 targeted PASS:36 automated,14 manual recovery,12 item mapping,8 Gemini ingestion.
+Không full local suite; mock Gemini trong tests. Pilot thật không phải benchmark.
 
 ## Blockers
-Không có blocker nghiệm thu trong phạm vi Research MVP. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts. Không accuracy toàn dataset.
+Không có blocker pilot. Chỉ ba trang mục tiêu, catalog14 items, không verified facts,
+không đánh giá accuracy toàn PDF. 108 unresolved ngoài phạm vi catalog/ô thiếu.
 
 ## Git Checkpoint
-Implementation `4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd` / CI40644142273; baseline nghiệm thu `d436b755839aedd9ac56dcb76bf0579f1990b0b1`. Commit nghiệm thu chỉ planning; không gán CI implementation cho SHA mới.
+Baseline ổn định `8a3b5ce`; implementation local đã targeted PASS, chờ commit/push
+và xác minh CI đúng implementation SHA. Không gán CI task trước cho thay đổi mới.
 
 ## Exact Next Action
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+Xác minh CI đúng implementation SHA sau push.
