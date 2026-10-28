@@ -145,3 +145,7 @@ CI giữ nguyên full unit suite Python3.11/3.12, không dùng PDF riêng hoặc
 SHA/CI exact và artifact hash ghi trong [spec](../planning/tasks/M2/M2-07.md) và
 [handoff](../planning/handoff.md). Không tạo issue mới vì catalog restriction đã xử lý
 trong phạm vi task, không còn blocker engineering. Dừng REVIEW chờ Tech Lead.
+
+Implementation checkpoint `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
+CI40653704501 trên d4a5481 FAILED vì format ví dụ Python trong tài liệu; đã sửa ở
+4e02ae1, không đổi code/tests/pilot. Checkpoint evidence sau CI chỉ docs/planning.

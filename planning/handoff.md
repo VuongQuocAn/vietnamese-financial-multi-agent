@@ -23,7 +23,7 @@ Contracts/APIs/raw adapter, contextual annotations, partial/conflict handling, f
 replay PDF-bound cache và API/pilot metrics. Đồng bộ registry/dashboard/roadmap/spec.
 
 ## Remaining Work
-Commit/push implementation, xác minh CI đúng SHA Python3.11/3.12; chờ Tech Lead nghiệm thu.
+Chờ Tech Lead nghiệm thu M2-07; không tự DONE hoặc bắt đầu task tiếp theo.
 
 ## Modified Files
 src/accounting/quality.py, src/accounting/__init__.py, tests/unit/test_quality.py,
@@ -33,14 +33,19 @@ planning/roadmap.md, planning/handoff.md.
 
 ## Tests
 20 focused +114 regression =134 targeted PASS; Ruff/planning/diff local.
-CI exact SHA đang chờ; không full local suite hoặc benchmark.
+Implementation checkpoint `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
+Không full local suite hoặc benchmark.
 
 ## Blockers
 Không blocker engineering; các raw slots không đọc được vẫn insufficient.
 Pilot chỉ một PDF/ba trang, không accuracy độc lập hoặc verified financial facts.
 
 ## Git Checkpoint
-Baseline sạch `0474617b4b3a07c0fa29ed713fea09aa00817246` trên main; implementation chưa commit.
+Baseline sạch `0474617b4b3a07c0fa29ed713fea09aa00817246` trên main.
+Implementation checkpoint `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
+Commit triển khai d4a5481; checkpoint4e02ae1 chỉ sửa format ví dụ Python trong docs.
+CI40653704501 trước đó FAILED ở format docs, đã sửa; không gán success cho SHA cũ.
+Checkpoint sau CI chỉ cập nhật evidence docs/planning; không gán CI implementation cho SHA docs mới.
 Artifact ignored artifacts/quality/M2-07/review/quality.json SHA256
 `44105628e56b75c3f3e8d03295db28feb3b8c57c8393a15c542b49a5be4802c2`.
 Không stage dữ liệu nguồn/cache/normalized/secrets.

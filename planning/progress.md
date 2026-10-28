@@ -57,7 +57,7 @@ synthetic conflict giới hạn hai items, không coi là mâu thuẫn tài chí
 Không verified financial facts, không accuracy toàn dataset; không bắt đầu M2-08/M3.
 [API/pilot](../docs/task-aware-quality.md), [spec](tasks/M2/M2-07.md).
 
-Baseline `0474617b4b3a07c0fa29ed713fea09aa00817246`; CI implementation exact SHA đang chờ.
+Baseline `0474617b4b3a07c0fa29ed713fea09aa00817246`; Implementation checkpoint `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
 Next action: Chờ Tech Lead review M2-07.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
