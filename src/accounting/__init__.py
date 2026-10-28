@@ -16,6 +16,13 @@ from .contracts import (
     FinancialValue,
     financial_normalization_json_schema,
 )
+from .item_mapping import (
+    ITEM_CATALOG,
+    ItemCandidate,
+    ItemMapping,
+    map_financial_items,
+    map_item_label,
+)
 from .statement_resolution import (
     DocumentStatementTypes,
     StatementCandidate,
@@ -26,6 +33,11 @@ from .statement_resolution import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "ITEM_CATALOG",
+    "ItemCandidate",
+    "ItemMapping",
+    "map_financial_items",
+    "map_item_label",
     "ContextCandidate",
     "ContextEvidence",
     "ContextFieldResolution",
