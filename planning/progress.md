@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 87 | 48 | 0 | 0 | 39 | 0 | 0 |
+| W | 2 | 1 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 88 | 48 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -40,12 +40,24 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
-| `api` | Chỉ package/docstring; chưa có endpoints |
+| `api` | W-02 REVIEW: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-02 REVIEW** — Next.js 16.4.3/React 19.3.1 + FastAPI local, bốn routes,
+app shell và empty/Coming Soon states theo W-01. Typecheck/lint/build, 16 targeted
+Python và 5 browser/proxy tests PASS; screenshots desktop/laptop/mobile đã xem.
+Ruff Python/planning PASS; full-tree format FAIL baseline architecture W-01 với
+Ruff 0.17.2, không sửa ngoài scope. CI/remote xác minh sau publication.
+Stacked từ `31ca5704c388b31ac102b19577b030fcb1026628`; PR #1 OPEN/chưa merge,
+CI skipped. [Spec W-02](tasks/W/W-02.md),
+[local run](../docs/web-demo-v1/local-development.md).
+Next action: Tech Lead nghiệm thu độc lập W-02 và quyết định xử lý lỗi format baseline.
+
+Các checkpoint bên dưới là lịch sử trước W-02.
 
 **W-01 DONE** — Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
 Architecture/Design/Contracts; evaluation scope Architecture/Design/API Contracts.

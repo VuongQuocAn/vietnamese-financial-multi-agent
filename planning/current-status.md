@@ -2,25 +2,27 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-W-01 DONE — Web Demo V1 Architecture, API Contracts & UI Design.
-Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
-Architecture/Design/Contracts. Evaluation scope: Architecture/Design/API Contracts.
-Dependency M2-09 DONE. Chỉ nghiệm thu thiết kế, chưa có website hoạt động.
-[Spec](tasks/W/W-01.md), [architecture](../docs/web-demo-v1/architecture.md),
-[API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
+W-02 REVIEW — Frontend/Backend Skeleton & Local Development.
+[Spec](tasks/W/W-02.md), [chạy local](../docs/web-demo-v1/local-development.md).
+Next.js 16.4.3 / React 19.3.1, bốn routes, app shell, empty states, AI Coming
+Soon; FastAPI 0.162.0 health + Next.js proxy. Không key/PDF/database, chưa upload
+hoặc nối nghiệp vụ M1–M2. Không bắt đầu W-03/M3.
 
-Baseline nghiệm thu sau fetch: local/origin docs/w-01-web-demo-design cùng
-`ac52100a68863d13bffed96d4218977a8f445779`, working tree sạch.
-Design/implementation commit `7a158f31e2feab0895d4ca5054bdbb56e78526be`;
-review/planning evidence `ac52100a68863d13bffed96d4218977a8f445779`.
-Đã xác minh design/API và sáu Stitch assets không đổi từ design commit.
+Dependency W-01 DONE theo Tech Lead APPROVED 28/10/2026. Baseline W-02 đã fetch,
+working tree sạch, exact acceptance `31ca5704c388b31ac102b19577b030fcb1026628`.
+PR #1 OPEN/chưa merge; không CI runs vì [skip ci], workflow không dispatch.
+Stacked branch feat/w-02-web-skeleton; PR base docs/w-01-web-demo-design để
+không lặp commits W-01. Không tự merge/force-push hoặc thay required checks.
 
-Phiên nghiệm thu chỉ sửa sáu tài liệu planning, chạy planning checker và
-git diff --check đều PASS (planning 87 tasks). Giữ nguyên M1–M2/design/API/assets/checker/tests/dataset/cache/
-reference; không gọi Gemini hoặc chạy financial evaluation/web tests.
-CI chưa chạy trên nhánh W-01 tại checkpoint nghiệm thu, không báo CI SUCCESS.
-Commit nghiệm thu dùng [skip ci] theo chỉ đạo; kiểm tra/tạo PR vào main và kiểm
-CI sau push, không tự merge. CI PR chỉ xác nhận trước merge, không chứng minh web chạy.
+Local typecheck/ESLint/build PASS, 16 targeted Python tests PASS, Ruff lint và
+format Python PASS, planning 88 tasks PASS, browser/proxy smoke 5 PASS.
+Đã xem screenshots dashboard/Explorer 1440, laptop 1280 và mobile 390; sửa
+mobile AI preview sau quan sát. Giữ light/navy/sidebar và split 45/55 theo Stitch,
+dùng font sans tiếng Việt local; không tuyên bố pixel-perfect hoặc financial accuracy.
 
-W-02 chưa bắt đầu; không tự bắt đầu W-02 hoặc M3.
-Next action: Chờ giao W-02.
+Ruff 0.17.2 full-tree format FAIL có sẵn ở architecture W-01 (đã tái hiện trên
+Git baseline); bốn tài liệu cũ khác báo do CRLF local. Không sửa tài liệu nghiệm
+thu ngoài scope để che CI. Full unit suite bổ sung đang chạy; CI/remote cập nhật
+trong checkpoint sau publication, chưa tuyên bố SUCCESS.
+
+Next action: Tech Lead nghiệm thu độc lập W-02 và quyết định xử lý lỗi format baseline.

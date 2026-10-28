@@ -8,6 +8,12 @@ khởi tạo cấu trúc, cấu hình phát triển và tài liệu nền tảng
 dataset local vào `data/`. Các package hiện chỉ có docstring; chưa có chức năng
 nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
 
+Web Demo V1 W-02: đã có nền Next.js + FastAPI local, bốn trang và health proxy;
+xem [hướng dẫn Windows](docs/web-demo-v1/local-development.md).
+Đoạn mô tả M0-01 ở trên là lịch sử khởi tạo; trạng thái M1–M2 hiện hành xem
+[planning/current-status.md](planning/current-status.md). UI skeleton chưa kết nối
+upload, financial evidence hoặc AI analysis.
+
 ## Mục tiêu và kiến trúc
 
 - Chuẩn hóa báo cáo tài chính và duy trì nguồn gốc của từng bằng chứng.

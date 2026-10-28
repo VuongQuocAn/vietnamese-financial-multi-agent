@@ -1,55 +1,62 @@
 # Codex Handoff
 
 ## Active Task
-W-01 — Web Demo V1 Architecture, API Contracts & UI Design
+
+W-02 — Frontend/Backend Skeleton & Local Development
 
 ## Status
-DONE
+
+REVIEW
 
 ## Last Verified State
-Tech Lead APPROVED ngày 28/10/2026; Research MVP Lean v3 —
-Architecture/Design/Contracts, evaluation scope Architecture/Design/API Contracts.
-Dependency M2-09 DONE. Chỉ nghiệm thu thiết kế, chưa có website hoạt động.
-Baseline sau fetch trên docs/w-01-web-demo-design: HEAD/origin cùng
-`ac52100a68863d13bffed96d4218977a8f445779`, working tree sạch.
-Design/API và sáu Stitch assets không đổi so với design commit.
+
+Ngày 28/10/2026, W-01 DONE, PR #1 OPEN/chưa merge. Baseline local/origin
+docs/w-01-web-demo-design `31ca5704c388b31ac102b19577b030fcb1026628`, đã fetch,
+working tree sạch. Không CI runs trên acceptance vì [skip ci]; không có run để
+rerun và không workflow_dispatch. Không merge hoặc sửa dependency.
 
 ## Completed Work
-Đồng bộ W-01 REVIEW → DONE theo approval trong spec/registry/dashboard/status/
-handoff/roadmap. Giữ nguyên architecture/API/UI handoff và các assets Stitch.
-Không yêu cầu sửa kiến trúc lớn hoặc thêm verification layers.
+
+Next.js 16.4.3/React 19.3.1/TS strict/Tailwind 4/Lucide, font Be Vietnam Pro
+local, bốn routes, sidebar navigation/collapse, dashboard/empty documents,
+Explorer split slider keyboard/mobile pane toggle, statement tabs, source details,
+FinancialTable raw strings/dynamic periods/selection/status và AI Coming Soon.
+FastAPI health, proxy environment, Windows docs; CI thêm web job, giữ Python gates.
+Không upload/provider/API tài chính, không sửa M1–M2 hoặc sáu Stitch assets.
 
 ## Remaining Work
-Không còn việc nghiệm thu W-01. W-02 chưa bắt đầu; không tự mở W-02 hoặc M3.
-PR/CI kiểm tra sau publication là xác nhận trước merge, không nghiệm thu website.
+
+Chờ Tech Lead nghiệm thu W-02. Full unit suite bổ sung đang chạy; publication/
+CI evidence được bổ sung sau xác minh. Không tự triển khai W-03 hoặc M3.
 
 ## Modified Files
-Chỉ planning/tasks/W/W-01.md, planning/tasks.md, planning/progress.md,
-planning/current-status.md, planning/handoff.md và planning/roadmap.md.
-Không sửa implementation/tests/checker/docs/web-demo-v1/Stitch/data/cache/reference.
+
+web/, src/api/, tests/unit/test_api.py, pyproject.toml, .gitignore,
+.github/workflows/ci.yml, README.md, docs/web-demo-v1/local-development.md,
+planning/tasks/W/W-02.md và registry/dashboard/status/handoff/roadmap.
 
 ## Tests
-Phiên nghiệm thu: python từ .venv chạy scripts/check_planning.py và
-git diff --check đều PASS (planning 87 tasks), đã xác minh trước commit/push.
-Evidence trước nghiệm thu: checker regressions 3 PASS, Ruff PASS, 11 JSON examples
-parse/Decimal context validation PASS; không chạy lại trong phiên planning-only.
-CI chưa chạy trên nhánh W-01 tại checkpoint nghiệm thu; không báo CI SUCCESS.
-Commit nghiệm thu [skip ci] theo yêu cầu. PR/CI kiểm tra sau push; không tự merge,
-không sửa code nếu CI lỗi ngoài phạm vi. Không Gemini/live evaluation/web E2E.
+
+Local typecheck/ESLint/build PASS; targeted API/package/planning 16 PASS;
+Ruff check . PASS, format src/tests/scripts 130 files PASS; planning 88 tasks
+PASS. Chromium routes/navigation/font/keyboard/responsive 1440/1280/390,
+synthetic table và FastAPI proxy: 5 PASS. Screenshots đã xem, không pixel-perfect.
+Full-tree Ruff 0.17.2 format FAIL: architecture W-01 tồn tại ngay trên baseline;
+bốn docs cũ khác có CRLF local. Không sửa assets/docs để che checks.
 
 ## Blockers
-Không blocker nghiệm thu thiết kế; Tech Lead đã APPROVED.
-Giới hạn chưa triển khai: website/FastAPI endpoints, metadata extractor,
-worker/session adapters, viewer/source linking; cache/quota hiện in-memory.
+
+Global formatting gate có lỗi baseline ngoài W-02; chưa có CI SUCCESS.
+PR #1 chưa merge; dùng stacked development, chưa thể coi W-02 sẵn merge main.
+Upload/PDF viewer/evidence API/AI chưa triển khai đúng scope skeleton.
 
 ## Git Checkpoint
-Design/implementation ổn định đã push:
-`7a158f31e2feab0895d4ca5054bdbb56e78526be`.
-Review/planning evidence đã push và trùng baseline remote sau fetch:
-`ac52100a68863d13bffed96d4218977a8f445779`.
-Commit nghiệm thu tiếp theo chỉ sửa sáu planning files, dùng message được giao;
-SHA mới/remote/PR/CI được xác minh và báo cáo sau publication, không ghi SHA tương lai.
-Sáu Stitch assets giữ nguyên; không stage datasets/secrets/unrelated files.
+
+Baseline ổn định đã push W-01: `31ca5704c388b31ac102b19577b030fcb1026628`.
+Nhánh W-02 feat/w-02-web-skeleton, base PR docs/w-01-web-demo-design.
+Implementation đã chạy/kiểm chứng local; commit/remote/CI ghi sau publication,
+không ghi SHA tương lai. Không stage datasets/secrets/node_modules/.next/screenshots.
 
 ## Exact Next Action
-Chờ giao W-02.
+
+Tech Lead nghiệm thu độc lập W-02 và quyết định xử lý lỗi format baseline.
