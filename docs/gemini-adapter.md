@@ -69,3 +69,7 @@ Sau khi user xác nhận môi trường và chọn key, cấu hình process envi
 synthetic, default model trên, timeout 30s, tối đa 256 output tokens. Runner gọi qua
 Gateway, chỉ in status/category/validation/usage/cost; không raw text/key/project secret.
 Không chạy runner trong CI hoặc tự retry. Đây không phải đánh giá chất lượng tài chính.
+
+M1-13a: optional user `images` chuyển bằng `Part.from_bytes` thành inline_data PNG,
+không gửi đường dẫn thay nội dung. Gateway/cache vẫn nhận toàn request gồm base64,
+vì vậy đổi bytes ảnh làm đổi cache identity. Không tải ảnh qua URL từ adapter.

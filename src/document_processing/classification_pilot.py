@@ -195,9 +195,13 @@ class MeteredModels:
             raise PilotStop("reuse_probe_miss")
         if self.stopped:
             raise PilotStop("pilot_stopped")
-        content = [c.model_dump(mode="json", exclude_none=True) for c in contents]
+        from .vision_ocr import sdk_image_bound
+
+        content, image_bound = sdk_image_bound(contents)
         cfg = config.model_dump(mode="json", exclude_none=True)
-        bound = len(json.dumps([content, cfg], ensure_ascii=False).encode("utf-8")) + 2048
+        bound = (
+            len(json.dumps([content, cfg], ensure_ascii=False).encode("utf-8")) + 2048 + image_bound
+        )
         if model != DEFAULT_GEMINI_MODEL or config.max_output_tokens > self.output_cap:
             self.stopped = "invalid_model_or_output_cap"
         elif self.requests >= self.request_limit:

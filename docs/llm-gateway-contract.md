@@ -21,7 +21,11 @@ Messages giữ thứ tự, roles system/developer/user/assistant. Content chỉ 
 rỗng/whitespace-only. Giữ nguyên Unicode tiếng Việt, whitespace và text dài, không
 truncate/tokenize. Không giới hạn độ dài prompt tại contract; runtime phải quản lý
 kích thước/depth đầu vào theo policy sau này. Empty conversation bị từ chối.
-Không có metadata tùy ý, file/image/audio/video hoặc tool/function messages.
+M1-13a mở rộng tương thích: user message có optional `images` (tối đa một PNG),
+`InlineImage(mime_type="image/png", data=<base64 bytes>)`. Không nhận path/URL;
+base64 và PNG signature được kiểm tra; consumer xác minh mapping/decode/hash.
+System/developer/assistant không nhận ảnh. Omitted images giữ export text-only cũ.
+Không có metadata tùy ý, audio/video hoặc tool/function messages.
 
 `GenerationParameters` không đặt generation defaults: temperature >= 0 hữu hạn,
 top_p trong [0,1], max_output_tokens int dương, stop_sequences list string không rỗng,

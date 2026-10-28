@@ -1,5 +1,6 @@
 """Gemini Developer API transport; không retry/key rotation hoặc tin schema attestations."""
 
+import base64
 import math
 import os
 from typing import Any
@@ -99,7 +100,14 @@ class GeminiAdapter:
                 contents.append(
                     types.Content(
                         role="model" if message.role == "assistant" else "user",
-                        parts=[types.Part(text=message.content)],
+                        parts=[types.Part(text=message.content)]
+                        + [
+                            types.Part.from_bytes(
+                                data=base64.b64decode(img.data, validate=True),
+                                mime_type=img.mime_type,
+                            )
+                            for img in message.images
+                        ],
                     )
                 )
         if not contents:

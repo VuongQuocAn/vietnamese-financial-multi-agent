@@ -1,22 +1,18 @@
-﻿# Trạng thái hiện tại
+# Trạng thái hiện tại
 
 Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-13 DONE — Tech Lead APPROVED có điều kiện**; đã xác minh CI exact SHA PASS,
-  cho phép REVIEW → DONE. M1-12a DONE; không task triển khai active, M1-14 TODO.
-- Full-page Gemini structured proposal, exact source-ID/original gate, DU v1 anchors,
-  corrected view riêng. Raw/bbox/IDs/provenance bất biến. Không independent verifier,
-  vì vậy không phát sinh confirmed; effective_text giữ raw, proposed tách riêng.
-- 11 focused +47 related regression passed; final focused11 passed sau source refinement.
-  Ruff/planning/diff implementation đạt; acceptance không chạy lại Gemini/tests.
-- Live2 pages/2 requests: 0 corrections/proposed/confirmed/unresolved, page failures0;
-  17450 input/40 output/17490 total tokens, unknown0, raw snapshots/manifest bất biến.
-- Model bỏ sót lỗi chữ thấy trên ảnh; không ground truth/accuracy hoặc số được xác nhận.
-  Quota owner-attested15 RPM/250000 TPM/500 RPD; billing/remaining chưa independently
-  verified; guard money NOT_CONFIGURED. Không retry/rotation/tổng input cap.
-- Implementation `5bfff54365a78b0658eab1a64cc2c108d066037d`;
-  [CI 40609685619](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40609685619)
-  success đúng SHA; jobs và Unit tests Python3.11/3.12 success. Acceptance chỉ planning,
-  một commit/push, không chờ CI mới theo user.
-- [Spec](tasks/M1/M1-13.md), [usage/evidence](../docs/reviews/M1-13-evidence.md).
-- Next action: **Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.**
+- **M1-13a REVIEW** theo user; M1-13 DONE, M1-14 TODO.
+- Verified original PNG bytes qua Gateway/Gemini, fail closed; corrected view giữ raw,
+  không confirmed; image-only Structured OCR có output riêng, không ingestion mới.
+- 219 focused/related tests passed; final focused9 sau cleanup; Ruff/planning/diff đạt.
+- Live đúng hai trang M1-13/BCC14/BED39:4 requests,22531 input/5975 output/28506 total;
+  unknown0/provider failures0; correction0, **structured unresolved2** (columns/index).
+- Vision vẫn bỏ sót hai lỗi chữ biết trước; structured sửa đúng header nhưng vẫn thêm
+  từ sai; bbox/axes không tin cậy. Không accuracy, không tự xác nhận số tài chính.
+- Raw/image snapshots/manifest bất biến. Private artifacts ignored
+  `artifacts/ocr-correction/M1-13a/`; không repeat API để cải thiện kết quả.
+- Baseline `10b626f`; một implementation commit/push, CI exact SHA kiểm tra sau push;
+  không publication commit. Exact SHA/CI ghi trong bàn giao cuối.
+- [Spec](tasks/M1/M1-13a.md), [evidence](../docs/reviews/M1-13a-evidence.md).
+- Next action: **Tech Lead nghiệm thu implementation và limitations pilot; không tự DONE/M1-14.**

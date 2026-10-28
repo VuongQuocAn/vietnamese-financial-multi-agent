@@ -75,6 +75,8 @@ class ViewText(_Model):
 
 
 class CorrectedView(_Model):
+    image_sha256: str | None = None
+    grounding: Literal["text_only", "vision"] = "text_only"
     source_digest: str
     raw_page: RawPageIdentity
     status: Literal["assessed", "unresolved"]
@@ -101,7 +103,14 @@ class OCRCorrector:
         self._schemas = correction_schema_registry()
 
     def correct(
-        self, loaded: LoadedOCRPage, *, source_ref: str, credential_ref: str, cache_allowed=False
+        self,
+        loaded: LoadedOCRPage,
+        *,
+        source_ref: str,
+        credential_ref: str,
+        cache_allowed=False,
+        image=None,
+        require_vision=False,
     ) -> CorrectionResult:
         raw = loaded.page.model_copy(deep=True)
         identity = RawPageIdentity(
@@ -177,14 +186,38 @@ class OCRCorrector:
             return failed("source_binding_failed")
         if ambiguous:
             return failed("ambiguous_source_ids")
+        if require_vision and image is None:
+            return failed("verified_image_required")
+        if image is not None:
+            try:
+                image.inline()
+            except ValueError:
+                return failed("invalid_image_content")
+            if image.identity != identity:
+                return failed("image_identity_mismatch")
+            view.image_sha256 = image.sha256
+            view.grounding = "vision"
         request = parse_llm_request(
             dict(
                 contract_version="llm_gateway_v1",
                 request_id=str(uuid4()),
                 model=dict(provider="gemini", model=self._model),
                 messages=[
-                    dict(role="system", content=PROMPT),
                     dict(
+                        role="system",
+                        content=PROMPT
+                        + (
+                            "\nThe attached original page image is required evidence. Compare OCR "
+                            "against visible glyphs, including diacritics and extra words. Propose "
+                            "only errors visibly supported by the image; cite the visible region "
+                            "in reason. If unreadable, return insufficient. Image evidence does "
+                            "not independently confirm any correction."
+                            if image is not None
+                            else ""
+                        ),
+                    ),
+                    dict(
+                        images=[image.inline().export()] if image is not None else [],
                         role="user",
                         content=json.dumps(
                             dict(raw=raw.export_source(), source_digest=view.source_digest),
@@ -193,19 +226,23 @@ class OCRCorrector:
                     ),
                 ],
                 generation=dict(temperature=0.0, max_output_tokens=OUTPUT_CAP),
-                constraints=dict(timeout_seconds=60.0),
+                constraints=dict(timeout_seconds=120.0 if image is not None else 60.0),
                 output_spec=dict(format="json", schema_ref=SCHEMA_REF.export(), strict=True),
             )
         )
         # Conservative UTF-8 envelope bound from FULL content/schema, no aggregate cap
         # or truncation. The existing guard enforces selected provider TPM.
-        envelope = [request.model_dump(mode="json"), self._schemas.schema_for(SCHEMA_REF)]
+        serialized = request.export()
+        for message in serialized["messages"]:
+            message.pop("images", None)
+        envelope = [serialized, self._schemas.schema_for(SCHEMA_REF)]
         bound = len(json.dumps(envelope, ensure_ascii=False).encode("utf-8")) * 2 + 8192
         llm = self._service.generate(
             request,
             credential_ref=credential_ref,
             reservation=Reservation(
-                token_upper_bound=bound + OUTPUT_CAP, token_basis="caller_attested_upper_bound"
+                token_upper_bound=bound + OUTPUT_CAP + (image.token_bound if image else 0),
+                token_basis="caller_attested_upper_bound",
             ),
             cache_allowed=cache_allowed,
         )

@@ -1,5 +1,7 @@
 """Contracts LLM thuần bộ nhớ; không SDK, I/O, credentials hoặc schema resolver."""
 
+import base64
+import binascii
 import json
 import math
 from datetime import datetime
@@ -108,9 +110,34 @@ class Correlation(ContractModel):
     caller: Identifier | None = None
 
 
+class InlineImage(ContractModel):
+    """PNG bytes encoded as base64; never a path or remote URL."""
+
+    mime_type: Literal["image/png"]
+    data: str = Field(min_length=1, repr=False)
+
+    @field_validator("data")
+    @classmethod
+    def valid_base64(cls, value: str) -> str:
+        try:
+            decoded = base64.b64decode(value, validate=True)
+        except (ValueError, binascii.Error):
+            raise ValueError("Invalid image encoding") from None
+        if not decoded.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError("Expected PNG content")
+        return value
+
+
 class Message(ContractModel):
     role: Literal["system", "developer", "user", "assistant"]
     content: str = Field(min_length=1)
+    images: list[InlineImage] = Field(default_factory=list, max_length=1)
+
+    @model_validator(mode="after")
+    def image_role(self) -> "Message":
+        if self.images and self.role != "user":
+            raise ValueError("Images require user role")
+        return self
 
     @field_validator("content")
     @classmethod
@@ -518,6 +545,7 @@ __all__ = [
     "ModelIdentity",
     "Correlation",
     "Message",
+    "InlineImage",
     "GenerationParameters",
     "RequestConstraints",
     "SchemaReference",

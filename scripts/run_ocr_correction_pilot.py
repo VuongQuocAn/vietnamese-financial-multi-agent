@@ -1,6 +1,7 @@
-"""M1-13: hai trang frozen manifest, full OCR context; không retry hoặc quota probes."""
+"""M1-13/M1-13a: hai trang frozen manifest, optional verified vision; không retry hoặc quota probes."""
 
 import argparse
+import hashlib
 import json
 import re
 from collections import Counter
@@ -31,7 +32,10 @@ from vietnamese_financial_multi_agent.document_processing.contracts.document_und
     RawPageIdentity,
     SourceAnchor,
 )
-from vietnamese_financial_multi_agent.document_processing.crop_audit import CropError
+from vietnamese_financial_multi_agent.document_processing.crop_audit import (
+    CropError,
+    reference_request,
+)
 from vietnamese_financial_multi_agent.document_processing.crop_expansion import write_once
 from vietnamese_financial_multi_agent.document_processing.extraction_artifacts import (
     read_local_evidence,
@@ -47,11 +51,39 @@ from vietnamese_financial_multi_agent.document_processing.ocr_correction import 
 )
 from vietnamese_financial_multi_agent.document_processing.ocr_loader import load_ocr_page
 from vietnamese_financial_multi_agent.document_processing.path_resolver import resolve_path
+from vietnamese_financial_multi_agent.document_processing.vision_ocr import (
+    extract_structured,
+    load_verified_image,
+    vision_schema_registry,
+)
+
+
+class ImageRecordingModels:
+    """Evidence at actual SDK call boundary, no image bytes in diagnostics."""
+
+    def __init__(self, models):
+        self.models, self.records = models, []
+
+    def generate_content(self, *, model, contents, config):
+        images = [p.inline_data for c in contents for p in c.parts if p.inline_data is not None]
+        if len(images) != 1 or images[0].mime_type != "image/png" or not images[0].data:
+            raise ValueError("one_inline_image_required")
+        self.records.append(
+            dict(
+                mime_type=images[0].mime_type,
+                byte_count=len(images[0].data),
+                sha256=hashlib.sha256(images[0].data).hexdigest(),
+            )
+        )
+        return self.models.generate_content(model=model, contents=contents, config=config)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true")
+    parser.add_argument(
+        "--vision", action="store_true", help="M1-13a: verified PNG + image-only OCR"
+    )
     parser.add_argument("--key-index", type=int)
     parser.add_argument("--key-file", type=Path, default=Path("src/api/api_key/api_gemini.txt"))
     parser.add_argument(
@@ -63,7 +95,8 @@ def main():
     client = None
     try:
         config = load_data_config()
-        root = config.project_root / "artifacts/ocr-correction/M1-13"
+        task_id = "M1-13a" if args.vision else "M1-13"
+        root = config.project_root / "artifacts/ocr-correction" / task_id
         CheckpointStore(root, data_config=config)  # Existing output/source-root guard only.
         manifest_path = config.project_root / "artifacts/extraction-validation/M1-04b/manifest.json"
         manifest_payload = read_local_evidence(manifest_path, config)
@@ -71,7 +104,7 @@ def main():
         manifest_digest = fingerprint_json(manifest_payload)
         captured = []
         expected = {s.path: s.model_dump(mode="json") for s in manifest.snapshots}
-        pages = []
+        pages, images = [], []
         # Existing small sample: BCC has visually apparent recognition errors; BED
         # includes financial cells. Selection fixed before any live request.
         for index in (2, 4):
@@ -96,9 +129,39 @@ def main():
                 ),
                 status="unresolved",
             )
-            pages.append(load_ocr_page(request, config))
+            loaded = load_ocr_page(request, config)
+            pages.append(loaded)
+            if args.vision:
+                image_request = reference_request(
+                    selected.image_reference,
+                    "raw_page_image",
+                    request.reference.source_ref,
+                    ["page", "image"],
+                    manifest.mappings,
+                )
+                image_target = resolve_path(image_request, config).confirmed_target
+                if image_target is None:
+                    raise PilotStop("original_image_unavailable")
+                image_path = config.get_root(image_target.root_key) / image_target.relative_suffix
+                image_snapshot = snapshot(image_path, config)
+                if image_snapshot != expected.get(str(image_path)):
+                    raise PilotStop("image_snapshot_mismatch")
+                captured.append(image_snapshot)
+                images.append(
+                    load_verified_image(
+                        loaded,
+                        image_request,
+                        config,
+                        image_bindings=manifest.image_bindings,
+                        expected_sha256=image_snapshot["sha256"],
+                    )
+                )
         if not args.live:
-            print(json.dumps(dict(mode="dry_run", pages=len(pages), requests=0)))
+            print(
+                json.dumps(
+                    dict(mode="dry_run", pages=len(pages), verified_images=len(images), requests=0)
+                )
+            )
             return
         if args.key_index is None or args.key_index < 0:
             raise PilotStop("explicit_key_index_required")
@@ -120,7 +183,7 @@ def main():
         # M1-13 owner authorization supersedes artificial M1-11/12a pilot caps.
         # Owner-attested limits; not an independent query of provider quota remaining.
         payload["quota_limits"] = dict(rpm=15, tpm=250_000, rpd=500)
-        payload["verification_source"] = "user-authorized-M1-13-2026-10-28"
+        payload["verification_source"] = f"user-authorized-{task_id}-2026-10-28"
         policy = ProjectPolicy.model_validate_json(json.dumps(payload))
         if (
             policy.model != "gemini-3.5-flash-lite"
@@ -140,18 +203,19 @@ def main():
             api_key=keys[args.key_index],
             vertexai=False,
             http_options=types.HttpOptions(
-                retry_options=types.HttpRetryOptions(attempts=1), timeout=60_000
+                retry_options=types.HttpRetryOptions(attempts=1), timeout=120_000
             ),
         )
         del keys
+        transport = ImageRecordingModels(client.models) if args.vision else client.models
         meter = MeteredModels(
-            client.models,
-            request_limit=len(pages),
+            transport,
+            request_limit=(2 if args.vision else 1) * len(pages),
             output_cap=OUTPUT_CAP,
             request_input_bound=policy.quota_limits.tpm,
             rpm=policy.quota_limits.rpm,
         )
-        schemas = correction_schema_registry()
+        schemas = vision_schema_registry() if args.vision else correction_schema_registry()
         adapter = GeminiAdapter(SimpleNamespace(models=meter), schema_registry=schemas)
         gateway = SharedLLMGateway({"gemini": adapter}, schema_registry=schemas)
         credential = policy.credential_refs[0]
@@ -174,7 +238,7 @@ def main():
             tenant_ref="ocr-correction-pilot",
             project_ref=policy.project_ref,
             credential_refs=frozenset({credential}),
-            configuration_revision="M1-13-v1",
+            configuration_revision=f"{task_id}-v1",
             scope_confirmed=True,
             schema_registry=schemas,
             ttl_seconds=3600,
@@ -182,7 +246,10 @@ def main():
         root.mkdir(parents=True, exist_ok=True)
         # Exclusive marker prevents resetting the small live scope after restart.
         with (root / "live.started.json").open("x", encoding="utf-8") as stream:
-            json.dump(dict(pages=2, request_limit=2, key_index=args.key_index), stream)
+            json.dump(
+                dict(pages=2, request_limit=(4 if args.vision else 2), key_index=args.key_index),
+                stream,
+            )
         write_once(
             root / "manifest.json",
             dict(indices=[2, 4], snapshots=captured, source_manifest_digest=manifest_digest),
@@ -190,7 +257,8 @@ def main():
         write_once(root / "live-policy.json", policy.model_dump(mode="json"))
         records, counts = [], Counter()
         stop_reason = None
-        for index, loaded in zip((2, 4), pages, strict=True):
+        for position, (index, loaded) in enumerate(zip((2, 4), pages, strict=True)):
+            image = images[position] if args.vision else None
             before = loaded.page.export_source()
             meter.pace()
             result = OCRCorrector(service).correct(
@@ -198,10 +266,22 @@ def main():
                 source_ref=loaded.mapping_result.reference.source_ref,
                 credential_ref=credential,
                 cache_allowed=True,
+                image=image,
+                require_vision=args.vision,
             )
             if loaded.page.export_source() != before:
                 raise PilotStop("raw_mutated")
             record = dict(manifest_index=index, view=result.view.model_dump(mode="json"))
+            if result.llm_result is not None and result.llm_result.response is not None:
+                record["correction_response"] = result.llm_result.response.export()
+            if args.vision and not meter.stopped:
+                record["structured"] = extract_structured(
+                    service,
+                    image,
+                    credential_ref=credential,
+                    model=policy.model,
+                )
+            record["image_sha256"] = image.sha256 if image else None
             write_once(root / f"page-{index}.json", record)
             records.append(record)
             counts.update(c.status for c in result.view.corrections)
@@ -220,6 +300,10 @@ def main():
             confirmed=counts["confirmed"],
             unresolved=counts["unresolved"],
             unresolved_pages=sum(r["view"]["status"] == "unresolved" for r in records),
+            structured_pages=sum("structured" in r for r in records),
+            structured_unresolved_pages=sum(
+                r.get("structured", {}).get("status") == "unresolved" for r in records
+            ),
             requests=meter.requests,
             input_tokens=meter.input_tokens,
             output_tokens=meter.output_tokens,
@@ -228,6 +312,7 @@ def main():
             unknown_usage=meter.unknown_usage,
             source_unchanged=True,
             stop_reason=stop_reason,
+            image_requests=transport.records if args.vision else [],
             guard_money_status=guard.snapshot(policy.project_ref, "gemini", policy.model)[
                 "project_budget"
             ]["status"],

@@ -339,6 +339,28 @@
       "title": "GenerationParameters",
       "type": "object"
     },
+    "InlineImage": {
+      "additionalProperties": false,
+      "description": "PNG bytes encoded as base64; never a path or remote URL.",
+      "properties": {
+        "mime_type": {
+          "const": "image/png",
+          "title": "Mime Type",
+          "type": "string"
+        },
+        "data": {
+          "minLength": 1,
+          "title": "Data",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mime_type",
+        "data"
+      ],
+      "title": "InlineImage",
+      "type": "object"
+    },
     "JSONOutput": {
       "additionalProperties": false,
       "properties": {
@@ -610,6 +632,14 @@
           "minLength": 1,
           "title": "Content",
           "type": "string"
+        },
+        "images": {
+          "items": {
+            "$ref": "#/$defs/InlineImage"
+          },
+          "maxItems": 1,
+          "title": "Images",
+          "type": "array"
         }
       },
       "required": [

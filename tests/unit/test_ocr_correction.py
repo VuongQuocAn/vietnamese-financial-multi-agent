@@ -63,10 +63,15 @@ def harness():
         schema_registry=schemas,
     )
 
-    def run():
+    def run(**kwargs):
         return (
             OCRCorrector(service)
-            .correct(page, source_ref="synthetic-doc/run-A", credential_ref="synthetic-credential")
+            .correct(
+                page,
+                source_ref="synthetic-doc/run-A",
+                credential_ref="synthetic-credential",
+                **kwargs,
+            )
             .view
         )
 
