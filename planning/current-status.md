@@ -2,33 +2,26 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-M2-09 DONE — Full-PDF Real-World Evaluation & Targeted Hardening.
-Tech Lead APPROVED Research MVP Lean v3, Evaluation Level 1 ngày 2026-10-28;
-nghiệm thu planning-only, dependency M2-08 DONE.
+W-01 REVIEW — Web Demo V1 Architecture, API Contracts & UI Design.
+Được người dùng giao bắt đầu và commit/push, phụ thuộc M2-09 DONE.
+[Spec](tasks/W/W-01.md), [architecture](../docs/web-demo-v1/architecture.md),
+[API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
 
-PDF BBS2025 24 trang, không có text layer, hash nguồn giữ nguyên.
-Automatic discovery đúng 24/24: B01 5–6, B02 7, B03 8, B09 9–24, other 1–4.
-Runtime bỏ pages vẫn xử lý đủ bốn trang chính. Reference trực tiếp PDF: 163 numeric
-+7 dash; precision/recall/kỳ/unit/grounding/usability đều 163/163. Notes sample riêng 6/6.
-7 dash sai raw glyph nhưng giữ ngữ nghĩa missing, không suy zero.
-Reference do một agent đối chiếu trực tiếp PDF, không có reviewer độc lập thứ hai;
-chỉ một PDF, chưa đánh giá tổng quát, notes QA hoặc chatbot.
-25/26 structured queries đúng và grounded như M2-08; không runtime regression.
-24 discovery calls +1 extraction mới trang 6 =25 calls mới/37.382 tokens, recovery 0;
-discovery 116,11 giây. Kiến trúc: Gemini-first, tự chọn trang, optional accounting
-checks, không ManualReview gate. Tech Lead đồng ý CONDITIONAL GO cho Financial
-Document Explorer Web Demo V1 B01/B02/B03; B09 chỉ inventory/viewer.
+Baseline đã fetch `5c8a80e4ceedb735dcbad12e267620b0b8046adb`, main trùng origin/main;
+chỉ docs/UI untracked. Nhánh docs/w-01-web-demo-design.
+Đã đọc backend thực tế, cả hai bộ Stitch HTML/MD/PNG; giữ nguyên sáu assets.
+Đề xuất Next.js + FastAPI, local PDF/JSON, bounded worker/polling;
+PDF-only Vision metadata preflight mới, tái sử dụng discovery/extraction M1–M2.
+API giữ Decimal string, raw/unmapped/context và page provenance; B09 inventory,
+AI Workspace/Evidence Graph Coming Soon. Cache/quota in-memory và extraction
+không callback được nêu rõ; checkpoint chưa tự nối financial runtime.
 
-[Báo cáo/API](../docs/m2-09-full-pdf-evaluation.md), [spec](tasks/M2/M2-09.md).
-Baseline thực tế `d0a82ea` trên main sạch/trùng origin/main khi bắt đầu;
-khác SHA ghi trong handoff cũ. 140 targeted tests PASS; Ruff/planning/diff PASS.
-Implementation `bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
-[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
-SUCCESS đúng SHA; mọi bước Python 3.11/3.12 đã xác minh lại trong phiên nghiệm thu.
-Baseline nghiệm thu sạch local/origin `c774b1dd7cc81195aee460708a272e3bf328dfc8`.
-Phiên này chỉ sửa sáu tài liệu planning, chạy planning checker và git diff --check.
-Không sửa implementation/tests/PDF/cache/reference/artifacts; không gọi Gemini,
-không chạy lại pytest/CI. Commit nghiệm thu [skip ci]; không gán CI implementation
-cho SHA nghiệm thu. Checkpoint REVIEW trong báo cáo giữ làm lịch sử trước approval.
+Local planning 87 tasks PASS, checker regressions 3 PASS, Ruff PASS;
+diff phần W-01 tự viết PASS; staged toàn bộ báo bốn trailing spaces có sẵn
+trong Stitch DESIGN.md (giữ nguyên assets theo yêu cầu).
+11 JSON examples parse PASS. Publication/remote SHA/CI ở [handoff](handoff.md).
+Không sửa M1–M2/dataset/PDF/cache/reference; không Gemini live/evaluation/web tests.
+M2-09 DONE theo Tech Lead 2026-10-28 trên một PDF, chưa suy chất lượng tổng quát.
+W-01 chờ Tech Lead review, không tự DONE hoặc bắt đầu W-02/M3.
 
-Next action: Chờ Tech Lead giao Web Demo V1; không tự bắt đầu Web Demo V1 hoặc M3.
+Next action: Tech Lead nghiệm thu độc lập W-01.

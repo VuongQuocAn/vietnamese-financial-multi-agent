@@ -18,7 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 86 | 47 | 0 | 0 | 39 | 0 | 0 |
+| W | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 87 | 47 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -45,6 +46,20 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-01 REVIEW** — thiết kế Web Demo V1, dependency M2-09 DONE.
+[Spec](tasks/W/W-01.md), [architecture](../docs/web-demo-v1/architecture.md),
+[API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
+Baseline đã fetch local/origin `5c8a80e4ceedb735dcbad12e267620b0b8046adb`.
+Đã đối chiếu backend M1–M2 và sáu Stitch assets, giữ nguyên bytes nguồn.
+Local: planning 87 tasks PASS, checker regressions 3 PASS, Ruff PASS;
+diff phần W-01 tự viết PASS; toàn staged báo bốn trailing spaces trong Stitch
+DESIGN.md gốc, giữ nguyên theo yêu cầu không sửa reference.
+11 JSON examples parse PASS. Chưa chạy web/financial evaluation/Gemini.
+Commit/push và remote/CI ghi ở handoff sau publication, không gán CI cũ cho W-01.
+Next action: Tech Lead nghiệm thu độc lập W-01.
+
+Checkpoint M2-09 dưới đây là lịch sử trước W-01, đã nghiệm thu DONE.
 
 M2-09 DONE — Tech Lead APPROVED Research MVP Lean v3, Evaluation Level 1 ngày
 2026-10-28; nghiệm thu planning-only, dependency M2-08 DONE. Một PDF BBS2025/24 trang,

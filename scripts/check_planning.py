@@ -8,7 +8,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
-TASK_ID = re.compile(r"M[0-8]-\d{2}[a-z]?")
+TASK_ID = re.compile(r"(?:M[0-8]|W)-\d{2}[a-z]?")
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
 
@@ -59,7 +59,8 @@ def check(root: Path) -> int:
             )
         if status == "READY":
             require(
-                "tasks/M" in spec and "#" not in spec, f"READY needs full specification: {task_id}"
+                f"tasks/{milestone}/" in spec and "#" not in spec,
+                f"READY needs full specification: {task_id}",
             )
         tasks[task_id] = row
 
@@ -88,8 +89,11 @@ def check(root: Path) -> int:
 
     dashboard = (planning / "progress.md").read_text(encoding="utf-8")
     counts = table_rows(section(dashboard, "Số task theo milestone và trạng thái"))[1:]
-    require(len(counts) == 10, "Dashboard must contain M0-M8 and TOTAL")
-    for row, milestone in zip(counts, [f"M{i}" for i in range(9)] + ["TOTAL"], strict=True):
+    milestones = [f"M{i}" for i in range(9)]
+    if any(task[2] == "W" for task in tasks.values()):
+        milestones.append("W")
+    require(len(counts) == len(milestones) + 1, "Dashboard must contain milestones and TOTAL")
+    for row, milestone in zip(counts, [*milestones, "TOTAL"], strict=True):
         subset = [task for task in tasks.values() if milestone == "TOTAL" or task[2] == milestone]
         counter = Counter(task[3] for task in subset)
         expected = [milestone, str(len(subset)), *(str(counter[status]) for status in COUNT_ORDER)]
@@ -110,9 +114,11 @@ def check(root: Path) -> int:
         "Implementation Evidence",
         "Handoff Notes",
     )
-    for path in (planning / "tasks").glob("M*/*.md"):
+    for path in sorted((planning / "tasks").glob("*/*.md")):
+        if path.parent.name not in milestones:
+            continue
         text = path.read_text(encoding="utf-8")
-        match = re.match(r"# TASK (M[0-8]-\d{2}[a-z]?) — (.+)\n", text)
+        match = re.match(rf"# TASK ({TASK_ID.pattern}) — (.+)\n", text)
         require(match is not None, f"Invalid specification title: {path.name}")
         assert match is not None
         task_id, name = match.groups()
@@ -169,6 +175,7 @@ def check(root: Path) -> int:
         root / "README.md",
         root / "AGENTS.md",
         *sorted((root / "docs").glob("*.md")),
+        *sorted((root / "docs" / "web-demo-v1").glob("*.md")),
         *sorted(planning.rglob("*.md")),
     ]
     for path in documents:
