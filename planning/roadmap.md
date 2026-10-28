@@ -238,12 +238,20 @@ chưa tự bắt đầu Web Demo hoặc M3.
 
 ## M2-09 — Full-PDF evaluation bổ sung được giao
 
-[M2-09](tasks/M2/M2-09.md) REVIEW, dependency M2-08 DONE.
-Một PDF BBS2025/24 trang; discovery B01 5–6, B02 7, B03 8, B09 9–24;
-primary statement coverage 4/4, numeric precision/recall 163/163 trên reference
-đối chiếu ảnh nguồn. Notes sample 6/6 riêng; giữ giới hạn 7 dash sai glyph và chưa notes QA.
-Khuyến nghị CONDITIONAL GO, không suy generalization. Implementation
+[M2-09](tasks/M2/M2-09.md) DONE, dependency M2-08 DONE. Tech Lead APPROVED
+Research MVP Lean v3, Evaluation Level 1 ngày 2026-10-28; nghiệm thu planning-only.
+Một PDF BBS2025/24 trang, discovery đúng 24/24: B01 5–6, B02 7, B03 8, B09 9–24.
+Reference 163 numeric cells +7 dash; precision/recall/kỳ/đơn vị/grounding 163/163
+trong reference. 7 dash sai raw glyph vẫn missing, không suy zero.
+25 calls mới/37.382 tokens, discovery 116,11 giây. Một agent đối chiếu trực tiếp PDF,
+không reviewer độc lập thứ hai; chưa đánh giá tổng quát, notes QA hoặc chatbot.
+Gemini-first, tự chọn trang, optional accounting checks, không ManualReview gate.
+Tech Lead đồng ý CONDITIONAL GO Document Explorer B01/B02/B03, B09 chỉ inventory/viewer.
+Implementation
 `bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
 [CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
-SUCCESS đúng SHA, Python 3.11/3.12 mọi bước PASS; chờ Tech Lead review M2-09.
-[Báo cáo](../docs/m2-09-full-pdf-evaluation.md). Không tự DONE hoặc mở task demo.
+SUCCESS đúng SHA, Python 3.11/3.12 mọi bước đã xác minh lại.
+Chỉ planning checker/diff; không sửa implementation/tests/dữ liệu/artifacts,
+không gọi Gemini/chạy lại pytest/CI. [Báo cáo](../docs/m2-09-full-pdf-evaluation.md)
+giữ checkpoint REVIEW lịch sử. Next action: Chờ Tech Lead giao Web Demo V1;
+không tự bắt đầu Web Demo V1 hoặc M3.
