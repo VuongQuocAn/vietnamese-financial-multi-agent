@@ -1,52 +1,47 @@
 # Codex Handoff
 
 ## Active Task
-M1-13a — Vision-Grounded OCR Correction & Structured OCR Pilot
+M1-13b — Structured OCR Quality Improvement
 
 ## Status
-DONE
+REVIEW
 
 ## Last Verified State
-Implementation main `d8c2e6df215f234cd17e7ae8d03bb63c1ffc04a1`, working tree sạch trước nghiệm thu.
-Tech Lead APPROVED có điều kiện; [CI 40611646012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40611646012)
-completed/success đúng SHA, cho phép REVIEW → DONE.
+Baseline main `97d8d7104074fa37121895dc53767320e3ea76cf` sạch; M1-13a DONE.
+User cho implement/test/API/commit/push; dừng REVIEW, không M1-14.
 
 ## Completed Work
-Optional inline PNG Gateway/adapter; verified image mapping/hash/dimensions;
-vision correction dùng source gates cũ, effective_text giữ raw, không confirmed.
-Structured OCR schema nhỏ, image-only prompt, nullable geometry/readings phân biệt;
-full responses giữ riêng. Runner cũ thêm --vision, reuse guard/cache/meter.
-Live2 pages/4 requests,22531 input/5975 output/28506 total tokens; failures0/unknown0.
-Correction0; structured unresolved2 do columns/index mismatch. SDK nhận đúng PNG
-bytes/hash; frozen raw/image/manifest bất biến. Không API rerun/retry/rotation.
+Text/cell/layout/geometry validation độc lập; provenance fail closed; v2 prompt/schema;
+runner --structured-quality dùng lại Gateway/cache/quota và BED source-table crop.
+Baseline replay API0 giữ45 texts/2 tables/32 cell texts; new55/0/41, cell layouts31.
+Geometry unresolved96; không infer dimensions/rescale/đảo axes hoặc sửa tài chính.
+BED10/10 số sample đúng ảnh (baseline6 ở cells,4 text); BCC header đúng, bỏ từ thừa.
+Source/raw/images/baseline/manifest bất biến. Artifacts ignored M1-13b.
 
 ## Remaining Work
-Không còn công việc nghiệm thu M1-13a; giữ limitations, không bắt đầu M1-14.
+CI exact implementation SHA sau push; Tech Lead review limitations/implementation.
+Không retry crop hoặc chạy thêm corpus/API để cải thiện kết quả.
 
 ## Modified Files
-Phiên nghiệm thu chỉ năm planning files: tasks.md; tasks/M1/M1-13a.md;
-handoff.md; current-status.md; progress.md.
+vision_ocr.py; runner hiện có; test_structured_components.py; registry/spec/dashboard/
+current-status/handoff và evidence M1-13b. Không sửa shared Gateway/data contracts.
 
 ## Tests
-219 focused/related tests passed, gồm9 mới +11 correction cũ; final focused9 sau cleanup.
-Ruff lint/format, planning checker, diff check; runner dry-run cả hai modes đạt.
-Không chạy lại tests/Gemini/pilot ở phiên nghiệm thu. Chỉ planning checker/diff check;
-CI implementation exact SHA đã PASS, không yêu cầu CI mới cho planning-only commit.
+8 focused mới +9 image integration cũ passed; Ruff changed files/planning/diff đạt.
+Không hàng trăm regression local; CI sẵn có 3.11/3.12 kiểm tra sau push, không workflow mới.
 
 ## Blockers
-Không independent verifier/ground truth; vision bỏ sót hai lỗi chữ đã biết.
-Structured có text/tables/cells nhưng invalid indices cả hai trang, bbox sai scale/axes;
-không coi output là raw OCR hợp lệ hoặc số tài chính được xác nhận.
-Quota owner-attested15/250000/500, money NOT_CONFIGURED, không chứng nhận billing.
-Giữ correction0, structured OCR0/2 valid, bbox chưa đáng tin; limitations đã được
-Tech Lead chấp nhận trong phạm vi pilot, không còn blocker nghiệm thu.
+3 attempts,2 successes +1 crop timeout; known2999 input/7060 output/10059 tokens;
+usage timeout unknown1, actual aggregate chưa xác định, không retry/rotation.
+Crops: BED bbox verified [345,547,2297,874] giữ pixels, nhưng không có model output;
+BCC bbox cắt thiếu bảng nên skip. Layout tables mới0/4 valid, declared counts vẫn sai;
+geometry model chưa đáng tin. accepted chỉ là cấu trúc, không visual/financial truth.
+Không ground truth/accuracy toàn dataset. Quota owner-attested, money NOT_CONFIGURED.
 
 ## Git Checkpoint
-Implementation `d8c2e6df215f234cd17e7ae8d03bb63c1ffc04a1`;
-[CI 40611646012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40611646012) PASS đúng SHA.
-Nghiệm thu chỉ planning, một commit/push; không chờ CI mới.
-Artifacts ignored `artifacts/ocr-correction/M1-13a/`.
-[Spec](tasks/M1/M1-13a.md), [evidence](../docs/reviews/M1-13a-evidence.md).
+Baseline `97d8d7104074fa37121895dc53767320e3ea76cf`; một implementation commit/push;
+exact SHA/CI ghi trong bàn giao cuối, không publication commit.
+[Spec](tasks/M1/M1-13b.md), [evidence](../docs/reviews/M1-13b-evidence.md).
 
 ## Exact Next Action
-Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
+Tech Lead review implementation và limitations pilot; không tự DONE/M1-14.

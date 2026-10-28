@@ -52,8 +52,10 @@ from vietnamese_financial_multi_agent.document_processing.ocr_correction import 
 from vietnamese_financial_multi_agent.document_processing.ocr_loader import load_ocr_page
 from vietnamese_financial_multi_agent.document_processing.path_resolver import resolve_path
 from vietnamese_financial_multi_agent.document_processing.vision_ocr import (
+    crop_verified_table,
     extract_structured,
     load_verified_image,
+    validate_components,
     vision_schema_registry,
 )
 
@@ -84,6 +86,9 @@ def main():
     parser.add_argument(
         "--vision", action="store_true", help="M1-13a: verified PNG + image-only OCR"
     )
+    parser.add_argument(
+        "--structured-quality", action="store_true", help="M1-13b: component OCR + BED table crop"
+    )
     parser.add_argument("--key-index", type=int)
     parser.add_argument("--key-file", type=Path, default=Path("src/api/api_key/api_gemini.txt"))
     parser.add_argument(
@@ -92,10 +97,12 @@ def main():
         default=Path("artifacts/classification-pilot/M1-11b/live-policy.json"),
     )
     args = parser.parse_args()
+    if args.structured_quality:
+        args.vision = True
     client = None
     try:
         config = load_data_config()
-        task_id = "M1-13a" if args.vision else "M1-13"
+        task_id = "M1-13b" if args.structured_quality else "M1-13a" if args.vision else "M1-13"
         root = config.project_root / "artifacts/ocr-correction" / task_id
         CheckpointStore(root, data_config=config)  # Existing output/source-root guard only.
         manifest_path = config.project_root / "artifacts/extraction-validation/M1-04b/manifest.json"
@@ -156,10 +163,33 @@ def main():
                         expected_sha256=image_snapshot["sha256"],
                     )
                 )
+        baselines, crops = {}, {}
+        if args.structured_quality:
+            for index, image in zip((2, 4), images, strict=True):
+                baseline_path = (
+                    config.project_root / f"artifacts/ocr-correction/M1-13a/page-{index}.json"
+                )
+                captured.append(snapshot(baseline_path, config))
+                prior = read_local_evidence(baseline_path, config)["structured"]
+                baselines[index] = validate_components(
+                    prior["response"]["output"]["payload"], image, source=prior["source"]
+                )
+                if baselines[index]["status"] == "rejected":
+                    raise PilotStop("baseline_provenance_invalid")
+            # Fixed source selection reviewed visually before live: BED salary table.
+            # BCC raw bbox truncates the table; no crop for that page, no recovery.
+            crops[4] = crop_verified_table(images[1], pages[1], "table_001")
         if not args.live:
             print(
                 json.dumps(
-                    dict(mode="dry_run", pages=len(pages), verified_images=len(images), requests=0)
+                    dict(
+                        mode="dry_run",
+                        pages=len(pages),
+                        verified_images=len(images),
+                        requests=0,
+                        quality_baselines={k: v["summary"] for k, v in baselines.items()},
+                        crops=len(crops),
+                    )
                 )
             )
             return
@@ -210,7 +240,7 @@ def main():
         transport = ImageRecordingModels(client.models) if args.vision else client.models
         meter = MeteredModels(
             transport,
-            request_limit=(2 if args.vision else 1) * len(pages),
+            request_limit=3 if args.structured_quality else (2 if args.vision else 1) * len(pages),
             output_cap=OUTPUT_CAP,
             request_input_bound=policy.quota_limits.tpm,
             rpm=policy.quota_limits.rpm,
@@ -247,7 +277,11 @@ def main():
         # Exclusive marker prevents resetting the small live scope after restart.
         with (root / "live.started.json").open("x", encoding="utf-8") as stream:
             json.dump(
-                dict(pages=2, request_limit=(4 if args.vision else 2), key_index=args.key_index),
+                dict(
+                    pages=2,
+                    request_limit=(3 if args.structured_quality else 4 if args.vision else 2),
+                    key_index=args.key_index,
+                ),
                 stream,
             )
         write_once(
@@ -255,12 +289,44 @@ def main():
             dict(indices=[2, 4], snapshots=captured, source_manifest_digest=manifest_digest),
         )
         write_once(root / "live-policy.json", policy.model_dump(mode="json"))
+        if args.structured_quality:
+            for index, crop in crops.items():
+                with (root / f"crop-{index}.png").open("xb") as stream:
+                    stream.write(crop.content)
         records, counts = [], Counter()
         stop_reason = None
         for position, (index, loaded) in enumerate(zip((2, 4), pages, strict=True)):
             image = images[position] if args.vision else None
             before = loaded.page.export_source()
             meter.pace()
+            if args.structured_quality:
+                record = dict(
+                    manifest_index=index,
+                    baseline=baselines[index],
+                    structured=extract_structured(
+                        service,
+                        image,
+                        credential_ref=credential,
+                        model=policy.model,
+                        component_mode=True,
+                    ),
+                )
+                if index in crops and not meter.stopped:
+                    record["crop"] = extract_structured(
+                        service,
+                        crops[index],
+                        credential_ref=credential,
+                        model=policy.model,
+                        component_mode=True,
+                    )
+                if loaded.page.export_source() != before:
+                    raise PilotStop("raw_mutated")
+                write_once(root / f"page-{index}.json", record)
+                records.append(record)
+                if meter.stopped:
+                    stop_reason = meter.stopped
+                    break
+                continue
             result = OCRCorrector(service).correct(
                 loaded,
                 source_ref=loaded.mapping_result.reference.source_ref,
@@ -294,12 +360,14 @@ def main():
         if fingerprint_json(read_local_evidence(manifest_path, config)) != manifest_digest:
             raise PilotStop("manifest_changed")
         stats = dict(
+            mode=task_id,
+            crop_pages=sum("crop" in r for r in records),
             pages=len(records),
             corrections=sum(counts.values()),
             proposed=counts["proposed"],
             confirmed=counts["confirmed"],
             unresolved=counts["unresolved"],
-            unresolved_pages=sum(r["view"]["status"] == "unresolved" for r in records),
+            unresolved_pages=sum(r.get("view", {}).get("status") == "unresolved" for r in records),
             structured_pages=sum("structured" in r for r in records),
             structured_unresolved_pages=sum(
                 r.get("structured", {}).get("status") == "unresolved" for r in records
