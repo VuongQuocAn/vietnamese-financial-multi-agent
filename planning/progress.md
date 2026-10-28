@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 30 | 29 | 0 | 0 | 0 | 0 | 1 |
+| M1 | 30 | 30 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 80 | 33 | 0 | 0 | 46 | 0 | 1 |
+| TOTAL | 80 | 34 | 0 | 0 | 46 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,10 +46,12 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-14 REVIEW** — offline4 pages/46 labels/18 values,8 focused passed.
+**M1-14 DONE** — Tech Lead APPROVED có điều kiện; offline4 pages/46 labels/18 values.
 Common26: A/B24/26, C26/26; số6/6 cả ba; C tables0/4 accepted.
-[Report](../docs/reviews/M1-14-evaluation.md); CI exact SHA kiểm sau một push.
-Next action: Tech Lead review nhãn, metrics và đề xuất Hybrid; không M2.
+[Report](../docs/reviews/M1-14-evaluation.md); [CI 40615555237](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40615555237) PASS đúng `176844cec032c792152c82326a7935a8c31045f8`, Python3.11/3.12.
+Hybrid là provisional architecture recommendation, không chứng minh accuracy vượt trội.
+Giữ4 trang, nhãn chưa human second review, C chỉ2 trang, chưa full table/bbox ground truth.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2 hoặc web demo.
 Các đoạn sau là lịch sử.
 
 **M1-13b DONE** — Tech Lead APPROVED có điều kiện; component validation, v2 OCR prompt và verified BED crop.
