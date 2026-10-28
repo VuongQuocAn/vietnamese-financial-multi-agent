@@ -37,6 +37,15 @@ from .item_mapping import (
     map_financial_items,
     map_item_label,
 )
+from .quality import (
+    AssessableEvidence,
+    EvidenceAssessment,
+    QualityAssessment,
+    QualityIssue,
+    assess_automated_records,
+    assess_evidence_for_task,
+    evidence_from_automated_records,
+)
 from .relationships import (
     RELATIONSHIP_RULES,
     RelationshipCheck,
@@ -63,6 +72,13 @@ from .table_recovery import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "AssessableEvidence",
+    "EvidenceAssessment",
+    "QualityAssessment",
+    "QualityIssue",
+    "assess_automated_records",
+    "assess_evidence_for_task",
+    "evidence_from_automated_records",
     "RELATIONSHIP_RULES",
     "RelationshipCheck",
     "RelationshipItem",

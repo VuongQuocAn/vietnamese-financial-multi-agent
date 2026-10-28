@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 9 | 8 | 0 | 0 | 1 | 0 | 0 |
+| M2 | 9 | 8 | 0 | 0 | 0 | 0 | 1 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 84 | 44 | 0 | 0 | 40 | 0 | 0 |
+| TOTAL | 84 | 44 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,26 +46,19 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-M2-06 DONE — Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-M2-05 giữ DONE; không bắt đầu M2-07.
-Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, difference0,
-trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
-Tiền cuối kỳ2025 trên cả B01 trang5 và B03 trang8 bằng 3.711.595.064 VND.
-Registry1 active/3 unavailable; pilot1 consistent/0 inconsistent/9 insufficient/0 not_applicable.
-Giới hạn: chỉ một PDF, một reviewer đánh giá sau runtime; không phải verified financial facts.
-28 accepted extraction giữ nguyên;0 trang bổ sung/0 Gemini calls; không verified facts.
-Evidence implementation trước nghiệm thu:42 focused/72 regression PASS.
-Phiên nghiệm thu chỉ năm file planning; planning checker/diff check PASS;
-không chạy lại Gemini, pytest hoặc CI; giữ nguyên implementation/tests/contracts/PDF/nguồn.
-[API/pilot](../docs/accounting-relationships.md), [spec](tasks/M2/M2-06.md),
-[issue](tasks/M2/issues/M2-06-relationships.md).
+M2-07 REVIEW — đã triển khai task-aware quality annotations theo yêu cầu 2026-10-28.
+APIs assess_evidence_for_task/assess_automated_records và raw adapter; bốn task types.
+Pilot BBS2025 trang5/7/8:136 slots,121 numeric (28 canonical/93 ngoài catalog).
+Direct QA20 usable/101 usable_with_caveat/15 insufficient/0 conflicted thực.
+Ba analytical/accounting scenarios đầy đủ usable_with_caveat; partial giữ item usable;
+synthetic conflict giới hạn hai items, không coi là mâu thuẫn tài chính thực.
+28 accepted extraction giữ nguyên;0 Gemini calls; PDF/cache/records không đổi.
+20 focused +114 regression =134 targeted PASS; Ruff/planning/diff local.
+Không verified financial facts, không accuracy toàn dataset; không bắt đầu M2-08/M3.
+[API/pilot](../docs/task-aware-quality.md), [spec](tasks/M2/M2-07.md).
 
-Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-07.
-
-Implementation `368d462e67d93877ac9656ee0d3dbef58e443aaa` đã push; [CI40651555421](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40651555421) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
-Baseline nghiệm thu sạch local/origin `8c031761f27333932788742c85b57b3bd1224e38`.
-Không gán CI implementation cho SHA nghiệm thu; dùng [skip ci] theo yêu cầu planning-only.
+Baseline `0474617b4b3a07c0fa29ed713fea09aa00817246`; CI implementation exact SHA đang chờ.
+Next action: Chờ Tech Lead review M2-07.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

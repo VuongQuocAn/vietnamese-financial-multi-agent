@@ -2,23 +2,16 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-M2-06 DONE — Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-M2-05 giữ DONE; không bắt đầu M2-07.
-Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, difference0,
-trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
-Tiền cuối kỳ 2025 trên cả B01 trang5 và B03 trang8 bằng 3.711.595.064 VND.
-Registry1 active/3 unavailable; pilot1 consistent/0 inconsistent/9 insufficient/0 not_applicable.
-Giới hạn: chỉ một PDF, một reviewer đánh giá sau runtime; không phải verified financial facts.
-28 accepted extraction giữ nguyên;0 trang bổ sung/0 Gemini calls; không verified facts.
-Evidence implementation trước nghiệm thu:42 focused/72 regression PASS.
-Phiên nghiệm thu chỉ năm file planning, planning checker và git diff --check;
-không chạy lại Gemini, pytest hoặc CI; giữ nguyên implementation/tests/contracts/PDF/nguồn.
-[API/pilot](../docs/accounting-relationships.md), [spec](tasks/M2/M2-06.md),
-[issue](tasks/M2/issues/M2-06-relationships.md).
+M2-07 REVIEW — đã triển khai task-aware quality annotations theo yêu cầu 2026-10-28.
+APIs assess_evidence_for_task/assess_automated_records và raw adapter; bốn task types.
+Pilot BBS2025 trang5/7/8:136 slots,121 numeric (28 canonical/93 ngoài catalog).
+Direct QA20 usable/101 usable_with_caveat/15 insufficient/0 conflicted thực.
+Ba analytical/accounting scenarios đầy đủ usable_with_caveat; partial giữ item usable;
+synthetic conflict giới hạn hai items, không coi là mâu thuẫn tài chính thực.
+28 accepted extraction giữ nguyên;0 Gemini calls; PDF/cache/records không đổi.
+20 focused +114 regression =134 targeted PASS; Ruff/planning/diff local.
+Không verified financial facts, không accuracy toàn dataset; không bắt đầu M2-08/M3.
+[API/pilot](../docs/task-aware-quality.md), [spec](tasks/M2/M2-07.md).
 
-Baseline nghiệm thu sạch local/origin `8c031761f27333932788742c85b57b3bd1224e38`.
-Implementation `368d462e67d93877ac9656ee0d3dbef58e443aaa` đã push; [CI40651555421](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40651555421) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
-CI trên là evidence implementation, không gán cho SHA nghiệm thu planning-only.
-Commit nghiệm thu dùng [skip ci] theo yêu cầu không chạy CI cho planning-only.
-Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-07.
+Baseline sạch `0474617b4b3a07c0fa29ed713fea09aa00817246`. Implementation chưa commit; CI exact SHA đang chờ.
+Next action: Chờ Tech Lead review M2-07.
