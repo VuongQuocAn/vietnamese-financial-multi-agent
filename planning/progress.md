@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 28 | 26 | 0 | 0 | 1 | 0 | 1 |
+| M1 | 28 | 27 | 0 | 0 | 1 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 78 | 30 | 0 | 0 | 47 | 0 | 1 |
+| TOTAL | 78 | 31 | 0 | 0 | 47 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,13 +46,14 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-13 REVIEW** theo user authorization 28/10/2026, Research MVP Lean v3.
+**M1-13 DONE** — Tech Lead APPROVED có điều kiện; CI exact SHA đã xác minh PASS.
 M1-12a DONE; không implementation task khác active. 11 focused +47 regression passed.
 Pilot2 pages/2 requests, 0 corrections, 17450 input/40 output/17490 total tokens;
 raw bất biến, model bỏ sót lỗi chữ trực quan; không ground truth/accuracy.
 [Spec](tasks/M1/M1-13.md), [usage/evidence](../docs/reviews/M1-13-evidence.md).
-CI exact implementation SHA kiểm tra sau push trong bàn giao, không publication commit.
-Next action: Tech Lead review M1-13; không tự DONE hoặc bắt đầu M1-14.
+[CI 40609685619](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40609685619)
+PASS đúng implementation `5bfff54365a78b0658eab1a64cc2c108d066037d`, Python3.11/3.12.
+Next action: chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
 Các đoạn dưới là lịch sử.
 
 **M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,

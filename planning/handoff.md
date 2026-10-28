@@ -1,14 +1,17 @@
 ﻿# Codex Handoff
 
 ## Active Task
-M1-13 — Evidence-Preserving OCR Correction; Research MVP Lean v3.
+M1-13 — Final Acceptance; không task triển khai active.
 
 ## Status
-REVIEW
+DONE
 
 ## Last Verified State
 Baseline main `9e93606`, working tree sạch trước triển khai; M1-12a DONE.
 User giao 28/10/2026, cho code/tests/Gemini/commit/push; dừng REVIEW, không M1-14.
+Tech Lead sau đó APPROVED có điều kiện; CI success trên đúng implementation
+`5bfff54365a78b0658eab1a64cc2c108d066037d` đã xác minh, cho phép REVIEW → DONE.
+Jobs và Unit tests Python3.11/3.12 đều success; tree sạch trước acceptance.
 
 ## Completed Work
 Full-page structured Gemini proposals, exact scoped source-ID/original validation,
@@ -20,32 +23,31 @@ Live2 pages/2 requests, 0 corrections/confirmed/unresolved; 17450 input/40 outpu
 17490 total tokens; failures0/unknown0, OCR snapshots và manifest bất biến.
 
 ## Remaining Work
-Tech Lead nghiệm thu engineering scope và giới hạn hiệu quả pilot; không tự DONE.
+Không còn công việc nghiệm thu M1-13; giữ limitation pilot, không bắt đầu M1-14.
 
 ## Modified Files
-src/document_processing/ocr_correction.py; classification_pilot.py (RPM only);
-scripts/run_ocr_correction_pilot.py; tests/unit/test_ocr_correction.py;
-docs/reviews/M1-13-evidence.md; planning/tasks.md; tasks/M1/M1-13.md; handoff.md.
-current-status.md/progress.md chỉ đồng bộ trạng thái/counts để planning checker đạt.
+Phiên acceptance chỉ năm planning files: tasks.md; tasks/M1/M1-13.md;
+handoff.md; current-status.md; progress.md (đồng bộ counts/status).
 
 ## Tests
 11 focused +47 related regression passed; final focused11 passed sau source gate refinement.
-Ruff changed files, planning checker, diff check trước commit. Không full local suite,
-không cache/checkpoint/quota probes, không API rerun. CI pipeline hiện có chạy một lần
-full unit Python3.11/3.12 trên exact implementation SHA sau push; conclusion/test summary
-được báo trong bàn giao cuối, không full logs/publication commit cập nhật SHA.
+Implementation Ruff/planning/diff đã đạt. Acceptance chỉ planning checker/diff check;
+không Gemini/tests rerun. CI exact SHA đã xác minh conclusion và Unit tests steps
+Python3.11/3.12 success, không tải full logs; không chờ CI mới cho planning commit.
 
 ## Blockers
 Không independent verifier/ground truth; live model bỏ sót lỗi chữ BCC đã nhìn trên ảnh.
 Không xác nhận correction nào hoặc accuracy. Owner-attested quota15/250000/500;
 provider remaining/billing chưa independently verified, guard money NOT_CONFIGURED.
-Đây là limitations để review, không tự mở rộng sang image verifier hoặc evaluation.
+Gemini text-only bỏ sót lỗi OCR thấy trên ảnh. Đây là limitations được giữ khi nghiệm thu,
+không còn blocking issue; không mở rộng sang image verifier hoặc evaluation.
 
 ## Git Checkpoint
-Implementation là commit chứa handoff/spec/evidence này; baseline `9e93606`.
-Đọc `git log -1` và bàn giao cuối để lấy exact SHA/CI sau một commit/push.
+Stable implementation `5bfff54365a78b0658eab1a64cc2c108d066037d`;
+[CI 40609685619](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40609685619)
+success exact SHA. Acceptance chỉ planning; một commit/push, không chờ CI mới.
 Private artifacts ignored `artifacts/ocr-correction/M1-13/`; không commit dataset/keys.
 [Spec](tasks/M1/M1-13.md), [evidence](../docs/reviews/M1-13-evidence.md).
 
 ## Exact Next Action
-Tech Lead review M1-13 và CI exact implementation SHA trong bàn giao; không M1-14.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
