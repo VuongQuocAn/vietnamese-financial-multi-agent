@@ -22,7 +22,12 @@ dùng font sans tiếng Việt local; không tuyên bố pixel-perfect hoặc fi
 
 Ruff 0.17.2 full-tree format FAIL có sẵn ở architecture W-01 (đã tái hiện trên
 Git baseline); bốn tài liệu cũ khác báo do CRLF local. Không sửa tài liệu nghiệm
-thu ngoài scope để che CI. Full unit suite bổ sung đang chạy; CI/remote cập nhật
-trong checkpoint sau publication, chưa tuyên bố SUCCESS.
+thu ngoài scope để che CI. Full unit suite local: 1469 PASS/2 SKIP (Windows).
+Implementation `22c48a5897350673d6082d6d9868f24df520c1a9` đã push, remote khớp.
+[PR #2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/2)
+OPEN, base W-01; [evidence](../docs/web-demo-v1/w-02-validation.md).
+CI 40701696004 tổng thể FAILURE: Python 3.11/3.12 FAIL đúng lỗi format baseline,
+unit/planning SKIPPED; Web skeleton SUCCESS gồm typecheck/lint/build và 5 browser/
+proxy smoke tests trên exact implementation SHA. Không có full CI SUCCESS.
 
 Next action: Tech Lead nghiệm thu độc lập W-02 và quyết định xử lý lỗi format baseline.

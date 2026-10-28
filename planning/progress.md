@@ -50,8 +50,13 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 **W-02 REVIEW** — Next.js 16.4.3/React 19.3.1 + FastAPI local, bốn routes,
 app shell và empty/Coming Soon states theo W-01. Typecheck/lint/build, 16 targeted
 Python và 5 browser/proxy tests PASS; screenshots desktop/laptop/mobile đã xem.
-Ruff Python/planning PASS; full-tree format FAIL baseline architecture W-01 với
-Ruff 0.17.2, không sửa ngoài scope. CI/remote xác minh sau publication.
+Ruff Python/planning PASS; full local suite 1469 PASS/2 SKIP (Windows).
+Full-tree format FAIL baseline architecture W-01 với Ruff 0.17.2, không sửa ngoài
+scope. CI 40701696004 Python 3.11/3.12 FAIL formatting baseline, unit/planning
+SKIPPED; Web skeleton SUCCESS (typecheck/lint/build + 5 browser/proxy tests).
+Implementation `22c48a5897350673d6082d6d9868f24df520c1a9` đã push/remote khớp;
+[PR #2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/2)
+OPEN base W-01. [Evidence](../docs/web-demo-v1/w-02-validation.md).
 Stacked từ `31ca5704c388b31ac102b19577b030fcb1026628`; PR #1 OPEN/chưa merge,
 CI skipped. [Spec W-02](tasks/W/W-02.md),
 [local run](../docs/web-demo-v1/local-development.md).
