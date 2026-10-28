@@ -13,7 +13,7 @@ Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, differenc
 trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
 Registry1 active/3 unavailable; pilot1 consistent/0 inconsistent/9 insufficient/0 not_applicable.
 28 accepted extraction giữ nguyên;0 trang bổ sung/0 Gemini calls; không verified facts.
-38 focused/72 regression PASS; không full suite local hoặc benchmark.
+42 focused/72 regression PASS; không full suite local hoặc benchmark.
 [API/pilot](../docs/accounting-relationships.md), [spec](tasks/M2/M2-06.md),
 [issue](tasks/M2/issues/M2-06-relationships.md).
 
@@ -33,7 +33,7 @@ planning/tasks/M2/M2-06.md, planning/tasks.md, planning/progress.md,
 planning/current-status.md, planning/handoff.md.
 
 ## Tests
-38 focused/72 regression PASS. Ruff/planning/diff kiểm tra trước commit.
+42 focused/72 regression PASS. Ruff/planning/diff kiểm tra trước commit.
 Không full local suite, benchmark hoặc API thật. CI chờ implementation SHA.
 
 ## Blockers
@@ -43,8 +43,8 @@ Không blocker engineering. Candidates thiếu nguồn vốn/retained adjustment
 ## Git Checkpoint
 Baseline thực tế sạch local/origin `10d8740d5290a5eea53d8e830458348779d9504c`.
 Working tree chứa implementation chưa commit.
-Artifact ignored artifacts/relationships/M2-06/final/relationships.json SHA256
-`d1e4f6bbd82ee5106eb8bcbe017170f441615a93e37479e36bb048ea31224d00`.
+Artifact ignored artifacts/relationships/M2-06/scope-final/relationships.json SHA256
+`740d1dd9ac69962e18220be4cce7b61bde802642af1a58279348ad3257949f50`.
 
 ## Exact Next Action
 Hoàn tất commit/push và xác minh CI đúng implementation SHA.

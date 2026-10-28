@@ -43,7 +43,7 @@ def sample(statement="B01", number="100"):
     return RelationshipValue(
         pdf_sha256=DIGEST,
         extraction=result,
-        period_end_evidence=ContextEvidence(
+        context_evidence=ContextEvidence(
             raw_text="Cho năm tài chính kết thúc ngày 31/12/2025",
             provenance=deepcopy(result.provenance),
         ),
@@ -127,11 +127,11 @@ def test_contexts_never_cross_join(mutation):
     elif mutation == "scale":
         c.scale = Decimal(1000)
     elif mutation == "missing_date_evidence":
-        v.period_end_evidence = None
+        v.context_evidence = None
     elif mutation == "wrong_date_evidence":
-        v.period_end_evidence.raw_text = "Cho năm tài chính kết thúc ngày 31/12/2024"
+        v.context_evidence.raw_text = "Cho năm tài chính kết thúc ngày 31/12/2024"
     elif mutation == "wrong_doc_evidence":
-        v.period_end_evidence.provenance[0].anchor.page.source_ref = "other"
+        v.context_evidence.provenance[0].anchor.page.source_ref = "other"
     elif mutation == "quarter":
         c.period_type = "quarter"
     elif mutation == "wrong_anchor":
@@ -164,6 +164,30 @@ def test_same_confirmed_scope():
     (check,) = evaluate(rows)
     assert check.status == "consistent"
     assert check.caveats == []
+
+
+@pytest.mark.parametrize("mode", ["same", "different", "conflict", "ambiguous"])
+def test_visible_scope_evidence_without_mutating_extraction(mode):
+    rows = [sample(), sample("B03")]
+    for row in rows:
+        row.context_evidence.raw_text += "\nBáo cáo tài chính hợp nhất"
+    if mode == "different":
+        rows[1].context_evidence.raw_text = rows[1].context_evidence.raw_text.replace(
+            "hợp nhất", "riêng"
+        )
+    elif mode == "conflict":
+        rows[1].extraction.context.reporting_scope = "separate"
+    elif mode == "ambiguous":
+        rows[1].context_evidence.raw_text += "\nBáo cáo tài chính riêng"
+    before = deepcopy(rows)
+    checks = evaluate(rows)
+    if mode == "same":
+        assert checks[0].status == "consistent"
+        assert checks[0].reporting_scope == "consolidated"
+        assert checks[0].caveats == []
+    else:
+        assert all(check.status == "insufficient_data" for check in checks)
+    assert rows == before
 
 
 def test_missing_is_not_zero_and_not_applicable():
@@ -244,7 +268,7 @@ def record(value):
             model={"model": "mock"},
             request_id="synthetic-request",
         ),
-        response=dict(output=dict(payload=dict(context=[value.period_end_evidence.raw_text]))),
+        response=dict(output=dict(payload=dict(context=[value.context_evidence.raw_text]))),
     )
 
 

@@ -52,7 +52,7 @@ Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, differenc
 trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
 Registry1 active/3 unavailable; pilot1 consistent/0 inconsistent/9 insufficient/0 not_applicable.
 28 accepted extraction giữ nguyên;0 trang bổ sung/0 Gemini calls; không verified facts.
-38 focused/72 regression PASS; không full suite local hoặc benchmark.
+42 focused/72 regression PASS; không full suite local hoặc benchmark.
 [API/pilot](../docs/accounting-relationships.md), [spec](tasks/M2/M2-06.md),
 [issue](tasks/M2/issues/M2-06-relationships.md).
 

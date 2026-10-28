@@ -17,7 +17,7 @@ checks = evaluate_automated_relationships(records)
 ```
 
 `RelationshipValue` bọc FinancialNormalizationResult, PDF SHA-256 có bằng chứng,
-optional AutomatedLink, period_end_evidence (ContextEvidence) và source_metadata.
+optional AutomatedLink, context_evidence (ContextEvidence) và source_metadata.
 Provenance extraction phải trỏ `source_ref=sha256:<PDF hash>`; adapter đối chiếu thêm
 trang và image hash với metadata do run_automated_pdf cung cấp. Adapter không tự
 xác minh PDF trên đĩa; caller phải dùng run_automated_pdf trước, không truyền cache
@@ -44,6 +44,8 @@ B01 chỉ dùng `as_of`; B03 dùng `fiscal_year_end` hoặc `fiscal_year` có ev
 ngày kết thúc tài chính rõ ràng và năm khớp. Bare year không được tự đổi thành 31/12.
 Scope cả hai null được so sánh cùng PDF, giữ null và caveat `scope_unconfirmed`;
 scope đã biết khác nhau hoặc một bên null được giữ thành các nhóm riêng.
+Context có provenance ghi rõ scope được dùng để xác định scope của phép kiểm tra,
+giữ nguyên scope extraction. Evidence scope xung đột/uncertain không được tính khớp.
 Không chuyển 01/01 sang 31/12 năm trước; không đổi đơn vị/scale/currency.
 
 Các trạng thái: `consistent`, `inconsistent`, `insufficient_data`, `not_applicable`.
@@ -75,7 +77,7 @@ python scripts/run_relationship_pilot.py data/raw/Financial_Report_pdf/BBS/2025/
 ```
 
 Đích phải chưa tồn tại. Artifact local ignored:
-`artifacts/relationships/M2-06/final/relationships.json`; hash ghi trong spec/handoff.
+`artifacts/relationships/M2-06/scope-final/relationships.json`; hash ghi trong spec/handoff.
 Expected values/manual review không tham gia runtime. Sau runtime đã xem ảnh nguồn
 trang5/8, đối chiếu mã110/70, kỳ, VND và số tiền:
 3.711.595.064 − 3.711.595.064 =0. Một reviewer kỹ thuật, chưa là financial verification.
@@ -106,7 +108,7 @@ Không chạy thêm PDF, toàn bộ24 trang, benchmark hoặc API thật.
 
 ## Engineering evidence
 
-38 focused tests PASS; 72 regression trực tiếp arithmetic/automated extraction/contracts
+42 focused tests PASS; 72 regression trực tiếp arithmetic/automated extraction/contracts
 PASS. Có integration từ mocked run_automated_pdf → revalidation → relationship và
 kiểm tra nhãn ngoài catalog vẫn còn cho QA. Fixtures synthetic không là đo quality.
 Ruff/planning/diff và exact SHA CI ghi tại [spec](../planning/tasks/M2/M2-06.md).

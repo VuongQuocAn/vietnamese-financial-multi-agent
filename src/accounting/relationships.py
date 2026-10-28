@@ -26,7 +26,7 @@ class RelationshipValue(FinancialModel):
     pdf_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     extraction: FinancialNormalizationResult
     automated_link: AutomatedLink | None = None
-    period_end_evidence: ContextEvidence | None = None
+    context_evidence: ContextEvidence | None = None
     source_metadata: dict = Field(default_factory=dict)
 
 
@@ -140,7 +140,7 @@ def _endpoint(value: RelationshipValue) -> tuple[str, list[str]]:
             return date.fromisoformat(context.period).isoformat(), []
         except ValueError:
             pass
-    evidence = value.period_end_evidence
+    evidence = value.context_evidence
     if context.period_type == "fiscal_year" and evidence and evidence.provenance:
         resolution = resolve_financial_context(
             [
@@ -183,6 +183,24 @@ def _matching(value: RelationshipValue, item: RelationshipItem) -> str | None:
     return None
 
 
+def _scope(value: RelationshipValue) -> tuple[str | None, list[str]]:
+    scope = value.extraction.context.reporting_scope
+    evidence = value.context_evidence
+    if evidence is None:
+        return scope, []
+    resolution = resolve_financial_context([evidence])
+    if not resolution.reporting_scope.candidates:
+        return scope, []
+    if resolution.reporting_scope.status != "resolved" or any(
+        ref.anchor.page.source_ref != f"sha256:{value.pdf_sha256}" for ref in evidence.provenance
+    ):
+        return scope, ["scope_evidence_unresolved_or_conflict"]
+    observed = resolution.context.reporting_scope
+    if scope is not None and scope != observed:
+        return scope, ["scope_evidence_conflict"]
+    return observed, []
+
+
 def evaluate_accounting_relationships(
     values: Iterable[RelationshipValue],
     rules: Iterable[RelationshipRule] = RELATIONSHIP_RULES,
@@ -200,10 +218,12 @@ def evaluate_accounting_relationships(
         result = value.extraction
         context = result.context
         endpoint, issues = _endpoint(value)
+        scope, scope_issues = _scope(value)
+        issues.extend(scope_issues)
         key = (
             value.pdf_sha256,
             endpoint,
-            context.reporting_scope,
+            scope,
             context.currency,
             result.value.unit,
             context.scale,
@@ -370,7 +390,7 @@ def evaluate_automated_relationships(
                     pdf_sha256=digest,
                     extraction=link.result,
                     automated_link=link,
-                    period_end_evidence=evidence,
+                    context_evidence=evidence,
                     source_metadata={
                         "source": record["source"],
                         "provenance": metadata,
