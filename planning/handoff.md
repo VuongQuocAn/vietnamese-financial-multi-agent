@@ -7,7 +7,7 @@ M2-06 — Accounting Relationship Checks
 REVIEW
 
 ## Last Verified State
-M2-06 REVIEW — implementation và pilot local hoàn tất, chờ CI exact SHA và Tech Lead.
+M2-06 REVIEW — implementation/pilot và CI exact SHA PASS, chờ Tech Lead review.
 M2-05 giữ DONE; không bắt đầu M2-07.
 Active rule B01 ↔ B03 tiền cuối kỳ ngày31/12/2025 consistent, difference0,
 trang5/8 cùng PDF; scope null giữ nguyên với caveat scope_unconfirmed.
@@ -23,7 +23,7 @@ canonical/exact code-label matching, Decimal và snapshots lineage từng trang.
 Replay cache bind PDF, đối chiếu ảnh5/8 sau runtime. Không sửa pipeline/extraction/catalog.
 
 ## Remaining Work
-Commit/push implementation, xác minh CI exact SHA Python3.11/3.12, Tech Lead review.
+Tech Lead review; không tự DONE hoặc bắt đầu M2-07.
 
 ## Modified Files
 src/accounting/relationships.py, src/accounting/__init__.py,
@@ -33,8 +33,8 @@ planning/tasks/M2/M2-06.md, planning/tasks.md, planning/progress.md,
 planning/current-status.md, planning/handoff.md.
 
 ## Tests
-42 focused/72 regression PASS. Ruff/planning/diff kiểm tra trước commit.
-Không full local suite, benchmark hoặc API thật. CI chờ implementation SHA.
+42 focused/72 regression PASS. Ruff/planning/diff PASS.
+Không full local suite, benchmark hoặc API thật. CI40651555421 exact implementation SHA SUCCESS.
 
 ## Blockers
 Không blocker engineering. Candidates thiếu nguồn vốn/retained adjustments/FX và mapping50/60;
@@ -42,9 +42,10 @@ Không blocker engineering. Candidates thiếu nguồn vốn/retained adjustment
 
 ## Git Checkpoint
 Baseline thực tế sạch local/origin `10d8740d5290a5eea53d8e830458348779d9504c`.
-Working tree chứa implementation chưa commit.
+Implementation `368d462e67d93877ac9656ee0d3dbef58e443aaa` đã push; [CI40651555421](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40651555421) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
+Checkpoint evidence sau implementation chỉ docs/planning, không đổi code/tests/schema.
 Artifact ignored artifacts/relationships/M2-06/scope-final/relationships.json SHA256
 `740d1dd9ac69962e18220be4cce7b61bde802642af1a58279348ad3257949f50`.
 
 ## Exact Next Action
-Hoàn tất commit/push và xác minh CI đúng implementation SHA.
+Chờ Tech Lead review M2-06.

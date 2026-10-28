@@ -112,3 +112,7 @@ Không chạy thêm PDF, toàn bộ24 trang, benchmark hoặc API thật.
 PASS. Có integration từ mocked run_automated_pdf → revalidation → relationship và
 kiểm tra nhãn ngoài catalog vẫn còn cho QA. Fixtures synthetic không là đo quality.
 Ruff/planning/diff và exact SHA CI ghi tại [spec](../planning/tasks/M2/M2-06.md).
+
+Implementation `368d462e67d93877ac9656ee0d3dbef58e443aaa` đã push; [CI40651555421](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40651555421) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh.
+Checkpoint evidence sau CI chỉ docs/planning; không gán CI implementation cho SHA docs mới.
+Task REVIEW; next action: Chờ Tech Lead review M2-06.
