@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 7 | 3 | 0 | 0 | 3 | 0 | 1 |
+| M2 | 7 | 4 | 0 | 0 | 3 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 82 | 39 | 0 | 0 | 42 | 0 | 1 |
+| TOTAL | 82 | 40 | 0 | 0 | 42 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -33,7 +33,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
-| `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 REVIEW:14 internal IDs,41 targeted PASS,pilot20/14 mapped,0 real numeric links accepted |
+| `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
@@ -46,11 +46,15 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M2-04 REVIEW** — [spec](tasks/M2/M2-04.md), [API/evidence](../docs/financial-item-mapping.md).
-14 internal IDs; 41 targeted PASS; pilot3/20:14 đúng/0 sai/0 uncertain/6 unresolved.
+**M2-04 DONE** — [spec](tasks/M2/M2-04.md), [API/evidence](../docs/financial-item-mapping.md).
+Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3.
+14 internal IDs; 41 targeted PASS trước nghiệm thu; pilot3/20:14 đúng/0 sai/0 uncertain/6 unresolved.
 Numeric slots0 accepted/28 rejected/12 chưa xét; hash5 nguồn không đổi.
-Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh. Checkpoint tiếp theo chỉ docs/planning; không gán CI này cho SHA mới.
-Next action: Chờ Tech Lead review; không M2-05.
+Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh. Nghiệm thu chỉ planning; không gán CI này cho SHA mới.
+Chưa có positive numeric linking trên dữ liệu thực; M2-05/M2-06 chưa được coi là validated end-to-end.
+Baseline nghiệm thu sạch local/origin `59a70dc0d1a8ef9ca6cad63de72723a4a168e52a`; diff từ implementation chỉ docs/planning.
+Phiên này chỉ 5 planning files, planning checker82/diff PASS; không chạy lại pytest/Gemini.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
 Các mục trước M2-04 bên dưới là lịch sử.
 
 **M2-03 DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP.
