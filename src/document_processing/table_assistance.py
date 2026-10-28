@@ -91,6 +91,13 @@ def _issue(code, message="Table structure requires review"):
 def _failed(base, code):
     result = base.model_copy(deep=True)
     result.status = "unresolved"
+    for cell in result.cells:
+        cell.status = "unresolved"
+        cell.rowspan = cell.colspan = None
+        for anchor in cell.anchors:
+            anchor.status = "unresolved"
+    for anchor in result.anchors:
+        anchor.status = "unresolved"
     result.issues = [*(result.issues or []), _issue(code)]
     return result
 

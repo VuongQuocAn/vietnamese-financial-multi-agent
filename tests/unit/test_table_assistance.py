@@ -219,6 +219,13 @@ def test_metadata_containment_warning_does_not_remove_page_geometry_guard(harnes
 def test_source_binding_and_duplicate_ids_stop_before_sdk(harness):
     assert "source_binding_failed" in codes(harness.run(source_ref="other-run"))
     raw = harness.loaded.page.elements[0]
+    raw.cells[0].bbox[2] = 20  # Deterministic structure itself is resolved.
+    failed = harness.run(source_ref="other-run")
+    assert failed.deterministic.status == "resolved"
+    assert failed.table.status == "unresolved"
+    assert all(c.status == "unresolved" and c.rowspan is None for c in failed.table.cells)
+    assert all(a.status == "unresolved" for c in failed.table.cells for a in c.anchors)
+    assert all(a.status == "unresolved" for a in failed.table.anchors)
     raw.cells[1].id = raw.cells[0].id
     assert "source_preflight_failed" in codes(harness.run())
     assert harness.meter.requests == 0
