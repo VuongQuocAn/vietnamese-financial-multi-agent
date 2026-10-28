@@ -49,7 +49,8 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 **M2-04 REVIEW** — [spec](tasks/M2/M2-04.md), [API/evidence](../docs/financial-item-mapping.md).
 14 internal IDs; 41 targeted PASS; pilot3/20:14 đúng/0 sai/0 uncertain/6 unresolved.
 Numeric slots0 accepted/28 rejected/12 chưa xét; hash5 nguồn không đổi.
-CI implementation chờ sau push. Next action: Chờ Tech Lead review sau CI exact SHA; không M2-05.
+Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh. Checkpoint tiếp theo chỉ docs/planning; không gán CI này cho SHA mới.
+Next action: Chờ Tech Lead review; không M2-05.
 Các mục trước M2-04 bên dưới là lịch sử.
 
 **M2-03 DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP.

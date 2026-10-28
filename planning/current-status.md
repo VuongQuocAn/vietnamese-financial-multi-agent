@@ -9,5 +9,5 @@ Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 - Pilot3/20 labels:14 đúng/0 sai/0 uncertain/6 unresolved.
 - Numeric slots:0 accepted/28 rejected vì M1 unresolved/12 chưa xét; hash5 nguồn không đổi.
 - Positive numeric linking mới synthetic; không financial fact verified hoặc accuracy toàn dataset.
-- Baseline ổn định 34829b60daaa3b004e838e8568f25d54c2392ed5; CI implementation chờ sau push.
-- Next action: Chờ Tech Lead review sau khi CI exact SHA đạt; không bắt đầu M2-05.
+- Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh. Checkpoint tiếp theo chỉ docs/planning; không gán CI này cho SHA mới.
+- Next action: Chờ Tech Lead review; không bắt đầu M2-05.

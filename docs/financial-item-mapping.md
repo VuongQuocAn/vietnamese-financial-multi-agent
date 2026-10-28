@@ -92,4 +92,5 @@ Receipt giữ expected IDs/printed codes, output đầy đủ/provenance, SHA256
 hash **5 nguồn không đổi** (2 unified exports và 3 PNG). Chỉ aggregate docs vào Git,
 không OCR/dataset/ảnh hoặc đường dẫn cá nhân. Không sửa dữ liệu nguồn.
 
-CI exact implementation SHA sẽ được ghi sau commit/push. Task REVIEW chờ Tech Lead.
+Implementation `8b1c020d743934e1e6bcf0216de57c3935ddcf7c` đã push; [CI40641035898](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40641035898) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh. Checkpoint tiếp theo chỉ docs/planning; không gán CI này cho SHA mới.
+Task REVIEW; next action: Chờ Tech Lead review.
