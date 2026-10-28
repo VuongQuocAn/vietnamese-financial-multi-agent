@@ -28,7 +28,9 @@ Replay không cần PDF gốc có thể dùng manifest và các rendered PNG đ�
 import json
 from pathlib import Path
 from vietnamese_financial_multi_agent.document_processing.understanding_pipeline import (
-    PersistedOCRInput, UnderstandingOptions, run_document_understanding,
+    PersistedOCRInput,
+    UnderstandingOptions,
+    run_document_understanding,
 )
 
 base = Path("artifacts/gemini-ingestion/M1-15/pdf")
@@ -36,7 +38,9 @@ pages = (5, 7, 8)
 result = run_document_understanding(
     PersistedOCRInput(json.loads((base / "manifest.json").read_text("utf-8")), base),
     UnderstandingOptions(
-        symbol="BBS", year="2025", pages=pages,
+        symbol="BBS",
+        year="2025",
+        pages=pages,
         persisted_results={
             n: json.loads((base / f"page-{n}.json").read_text("utf-8")) for n in pages
         },

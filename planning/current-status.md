@@ -11,5 +11,7 @@ Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Hash nguồn đọc trước/sau khớp; manifest replay không rehash PDF gốc.
 - 10 focused +77 loader regression passed; Ruff/planning/diff checks local đạt.
 - [Evidence](../docs/reviews/M1-16-evidence.md), [API](../docs/unified-document-understanding.md).
-- Một implementation commit/push; CI exact SHA xác minh sau push, báo cuối phiên.
+- Implementation `7486a6140ac075b90d2c2454f6703b6a56186b1a`; thêm commit sửa format
+  code fence Markdown do CI40620767512 phát hiện; code/tests/replay không đổi.
+- CI exact implementation và checkpoint sửa format xác minh cuối phiên.
 - Next action: Tech Lead review implementation, CI exact SHA và giới hạn quality.

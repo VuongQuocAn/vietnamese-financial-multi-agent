@@ -6,6 +6,9 @@ Một implementation commit gồm report này; SHA lấy bằng
 `git log -1 --format=%H -- src/document_processing/understanding_pipeline.py`.
 CI hiện có chạy sau push; kiểm tra exact SHA/jobs/steps và báo cuối phiên,
 private receipt lưu local; không publication commit chỉ để ghi CI.
+Implementation `7486a6140ac075b90d2c2454f6703b6a56186b1a` đã push;
+CI40620767512 dừng format Python code fence trong Markdown. Có thêm đúng một
+commit sửa định dạng tài liệu; code/tests/replay không đổi, không rewrite lịch sử.
 
 Entrypoint `run_document_understanding(source, UnderstandingOptions(...))` dùng
 read-only loader cho Existing OCR, M1-15 cho PDF/PNG. Export `unified_document_v1`
