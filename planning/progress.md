@@ -49,8 +49,8 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 **M2-03 REVIEW** — page resolver và document inventory không kế thừa nhãn.
 [Spec](tasks/M2/M2-03.md), [API/evidence](../docs/statement-type-recognition.md).
 29 targeted PASS; pilot8:6 resolved đúng/0 sai/1 uncertain/1 unresolved, đủ bốn loại;
-hash7 nguồn không đổi. Chờ CI exact SHA và Tech Lead.
-Next action: Commit/push implementation và xác minh CI đúng SHA.
+hash7 nguồn không đổi. Implementation `972d124ccd03d840375e37a3bbbcc62ed2eacb01` đã push; [CI 40639663139](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40639663139) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh.
+Next action: Chờ Tech Lead review.
 Các đoạn dưới là lịch sử.
 
 **M2-02 DONE** — Tech Lead APPROVED 2026-10-28; resolver period/unit/scope và adapter M1.

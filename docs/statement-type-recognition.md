@@ -101,4 +101,5 @@ và inputs.json cùng thư mục giữ allowlist hữu hạn để reproduce. Ha
 page6/9/10, BCC2025/page1 và BED2025/page1 dưới data/processed/Financial_Report_OCR.
 Không commit artifacts/dataset, không sửa nguồn.
 
-CI exact implementation SHA: chờ xác minh sau commit/push. Task REVIEW chờ Tech Lead.
+Implementation `972d124ccd03d840375e37a3bbbcc62ed2eacb01` đã push; [CI 40639663139](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40639663139) SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh.
+Task REVIEW chờ Tech Lead. Commit evidence tiếp theo chỉ docs/planning; không gán CI này cho SHA mới.
