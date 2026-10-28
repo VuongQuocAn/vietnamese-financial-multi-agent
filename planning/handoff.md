@@ -4,7 +4,7 @@
 M2-09 — Full-PDF Real-World Evaluation & Targeted Hardening
 
 ## Status
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 M2-08 DONE; M2-09 được user giao và cho phép live Gateway/commit/push/CI.
@@ -20,8 +20,8 @@ evaluation CLI, source-image reference/corrections và re-evaluation. 25 calls m
 Source/cache lịch sử hash khớp; report CONDITIONAL GO. 140 targeted PASS.
 
 ## Remaining Work
-Checks cuối, commit/push implementation và xác minh CI full unit 3.11/3.12 đúng SHA;
-sau đó chuyển REVIEW chờ Tech Lead, không tự DONE/demo/M3.
+Chờ Tech Lead review reference/corrections/limits và quyết định Web Demo V1.
+Không tự DONE/demo/M3.
 
 ## Modified Files
 src/document_processing/financial_discovery.py; src/accounting/financial_runtime.py;
@@ -32,17 +32,25 @@ Artifacts private ignored: artifacts/evaluation/M2-09/.
 
 ## Tests
 32 focused mới/query +108 extraction/quality/relationship/context =140 targeted PASS.
-Ruff/planning/diff và CI exact SHA đang hoàn tất; không chạy full local suite.
+Ruff lint/format, planning/diff PASS; không chạy full local suite.
+[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
+SUCCESS đúng implementation SHA bd5a3c525f4cfe1d3f5204983e86746e748b1c93;
+đã xác minh mọi bước Python 3.11/3.12.
 
 ## Blockers
 Chưa có blocker runtime trong bốn bảng chính. Giới hạn: một PDF, chủ yếu replay,
 reference do cùng agent đối chiếu chưa reviewer người thứ hai; 7 dash glyph sai;
-notes chỉ inventory/M1 sample, chưa notes QA. Chưa có CI cho M2-09 trước push.
+notes chỉ inventory/M1 sample, chưa notes QA. Không blocker engineering còn mở.
 
 ## Git Checkpoint
 Baseline thực tế d0a82ea trên main sạch/trùng origin/main; không dùng SHA baseline
-cũ trong handoff M2-08. Chưa commit implementation; working tree đang có thay đổi
-M2-09. Source data/credentials/cache nguyên trạng, không stage raw/normalized/secrets.
+cũ trong handoff M2-08. Implementation ổn định
+bd5a3c525f4cfe1d3f5204983e86746e748b1c93 đã push; CI40661431781 SUCCESS
+đúng SHA, Python 3.11/3.12. Checkpoint cuối chỉ docs/planning [skip ci], không
+gán CI implementation cho SHA tài liệu. Source data/credentials/cache nguyên trạng,
+không stage raw/normalized/secrets. Reference SHA256
+8e5257a7710d38d43e3f2d17a38e4fa7631ef1655b464a78cd9a74100fbe2ebe;
+evaluation-after SHA256 4674d86c4b338a66362637f14ca8b5342830582a7b929a075beee9ab705583b9.
 
 ## Exact Next Action
-Hoàn tất checks, commit/push và xác minh CI đúng implementation SHA.
+Chờ Tech Lead review M2-09.

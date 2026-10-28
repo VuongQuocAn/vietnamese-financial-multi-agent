@@ -238,9 +238,12 @@ chưa tự bắt đầu Web Demo hoặc M3.
 
 ## M2-09 — Full-PDF evaluation bổ sung được giao
 
-[M2-09](tasks/M2/M2-09.md) IN_PROGRESS, dependency M2-08 DONE.
+[M2-09](tasks/M2/M2-09.md) REVIEW, dependency M2-08 DONE.
 Một PDF BBS2025/24 trang; discovery B01 5–6, B02 7, B03 8, B09 9–24;
 primary statement coverage 4/4, numeric precision/recall 163/163 trên reference
 đối chiếu ảnh nguồn. Notes sample 6/6 riêng; giữ giới hạn 7 dash sai glyph và chưa notes QA.
-Khuyến nghị CONDITIONAL GO, không suy generalization; chờ CI exact implementation SHA.
+Khuyến nghị CONDITIONAL GO, không suy generalization. Implementation
+`bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
+[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
+SUCCESS đúng SHA, Python 3.11/3.12 mọi bước PASS; chờ Tech Lead review M2-09.
 [Báo cáo](../docs/m2-09-full-pdf-evaluation.md). Không tự DONE hoặc mở task demo.

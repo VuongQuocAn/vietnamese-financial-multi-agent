@@ -2,7 +2,7 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-M2-09 IN_PROGRESS — Full-PDF Real-World Evaluation & Targeted Hardening,
+M2-09 REVIEW — Full-PDF Real-World Evaluation & Targeted Hardening,
 dependency M2-08 DONE. User đã giao implementation, live Gateway và commit/push/CI.
 
 PDF BBS2025 24 trang, không có text layer, hash nguồn giữ nguyên.
@@ -16,7 +16,11 @@ Runtime bỏ pages vẫn xử lý đủ bốn trang chính. Reference trực ti�
 
 [Báo cáo/API](../docs/m2-09-full-pdf-evaluation.md), [spec](tasks/M2/M2-09.md).
 Baseline thực tế `d0a82ea` trên main sạch/trùng origin/main khi bắt đầu;
-khác SHA ghi trong handoff cũ. 140 targeted tests PASS, đang hoàn tất checks/CI.
+khác SHA ghi trong handoff cũ. 140 targeted tests PASS; Ruff/planning/diff PASS.
+Implementation `bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
+[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
+SUCCESS đúng SHA; mọi bước Python 3.11/3.12 đã xác minh.
+Checkpoint kết thúc chỉ docs/planning [skip ci]; không gán CI implementation cho SHA tài liệu.
 Không dùng CI M2-08 cho implementation M2-09; chưa tự DONE hoặc mở demo/M3.
 
-Next action: Hoàn tất checks, commit/push và xác minh CI đúng implementation SHA.
+Next action: Chờ Tech Lead review M2-09.

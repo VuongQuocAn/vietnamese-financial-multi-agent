@@ -1,6 +1,6 @@
 # M2-09 — Đánh giá full PDF BBS2025
 
-Ngày 2026-10-28 (Asia/Bangkok). **Khuyến nghị: CONDITIONAL GO cho Web Demo V1**
+Ngày 2026-10-28 (Asia/Bangkok), task **REVIEW**. **Khuyến nghị: CONDITIONAL GO cho Web Demo V1**
 trong phạm vi các bảng B01/B02/B03 của pilot. Chưa nghiệm thu Tech Lead; chưa xây web.
 Đây là Evaluation Level 1 trên một PDF, không phải đánh giá chatbot hoặc production readiness.
 
@@ -250,4 +250,10 @@ query parsing, QA chatbot, multi-company/cross-year, tải lớn hay production 
 Các phép kiểm tra schema/arithmetic/relationship không thay đối chiếu source.
 Số 100% chỉ áp dụng 163 numeric cells đã nêu, không phải accuracy toàn 24 trang.
 
-Next action: Chờ Tech Lead review sau khi checkpoint CI exact SHA được xác minh.
+Implementation `bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
+[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
+SUCCESS đúng SHA. Đã kiểm tra từng bước Python 3.11/3.12, gồm full unit,
+lint/format/planning. Checkpoint REVIEW sau đó chỉ docs/planning [skip ci], không
+gán kết quả CI implementation cho SHA tài liệu. Không tự DONE.
+
+Next action: Chờ Tech Lead review M2-09.

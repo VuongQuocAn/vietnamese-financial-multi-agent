@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 11 | 10 | 1 | 0 | 0 | 0 | 0 |
+| M2 | 11 | 10 | 0 | 0 | 0 | 0 | 1 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 86 | 46 | 1 | 0 | 39 | 0 | 0 |
+| TOTAL | 86 | 46 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,17 +46,21 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M2-09 IN_PROGRESS, dependency M2-08 DONE. Một PDF BBS2025/24 trang,
+M2-09 REVIEW, dependency M2-08 DONE. Một PDF BBS2025/24 trang,
 discovery đúng 24/24; B01 5–6, B02 7, B03 8, B09 9–24, other 1–4.
 Primary coverage 4/4; numeric precision/recall/kỳ/unit/grounding/usability 163/163;
 reference toàn bộ coded rows, 7 dash sai glyph giữ missing. Notes sample 6/6 riêng.
 Queries M2-08 giữ 25/26 answered đúng/grounded; không runtime regression.
 25 live calls/37.382 tokens, recovery 0 vì không lỗi numeric trọng yếu cần phục hồi.
-140 targeted PASS; đang hoàn tất checks/commit/CI exact SHA.
+140 targeted PASS; Ruff lint/format, planning/diff PASS.
+Implementation `bd5a3c525f4cfe1d3f5204983e86746e748b1c93` đã push;
+[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
+SUCCESS đúng SHA, mọi bước Python 3.11/3.12 đã xác minh.
 [Báo cáo/API](../docs/m2-09-full-pdf-evaluation.md), [spec](tasks/M2/M2-09.md).
 CONDITIONAL GO, chưa notes QA, chưa chứng minh generalization hoặc fresh-run stability.
 
-Next action: Hoàn tất checks, commit/push và xác minh CI đúng implementation SHA.
+Checkpoint kết thúc chỉ docs/planning [skip ci]; không gán CI implementation cho SHA tài liệu.
+Next action: Chờ Tech Lead review M2-09.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 
