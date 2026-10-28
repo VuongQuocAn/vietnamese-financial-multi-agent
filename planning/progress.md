@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 7 | 0 | 0 | 0 | 6 | 0 | 1 |
+| M2 | 7 | 1 | 0 | 0 | 6 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 82 | 36 | 0 | 0 | 45 | 0 | 1 |
+| TOTAL | 82 | 37 | 0 | 0 | 45 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -33,7 +33,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
-| `accounting` | M2-01 REVIEW: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; chưa normalization engine |
+| `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; chưa normalization engine |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
@@ -46,13 +46,15 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M2-01 REVIEW** — Financial Normalization v1, 8 focused tests PASS.
+**M2-01 DONE** — Tech Lead APPROVED ngày 2026-10-28; Financial Normalization v1.
 Dependency M1-16 DONE; raw/Decimal/context nullable, provenance M1 giữ giới hạn.
 [Spec](tasks/M2/M2-01.md), [API/evidence](../docs/financial-normalization-contract.md).
-[CI40636728310](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636728310)
-SUCCESS đúng implementation `471ea80a35f9968ba43b712d4806b54353136373`, mọi steps Python3.11/3.12.
-Không dữ liệu thật/API hoặc M2-02.
-Next action: Chờ Tech Lead review.
+SHA được nghiệm thu `96e51c4736c67ef4f665ea21a16ba190bb89a798` khớp local/origin;
+[CI40636889415](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636889415)
+completed/SUCCESS đúng SHA, mọi steps Python3.11/3.12 đã đối chiếu.
+Implementation `471ea80a35f9968ba43b712d4806b54353136373`, 8 focused PASS giữ nguyên.
+Phiên nghiệm thu chỉ 5 planning files; không chạy lại tests/Gemini hoặc yêu cầu CI mới.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-02.
 Các đoạn sau là lịch sử.
 
 **M1-16 DONE** — Tech Lead APPROVED có điều kiện trong phạm vi Research MVP.
