@@ -3,6 +3,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { FinancialTable } from "../components/evidence/financial-table";
 
 test("dashboard, navigation and truthful empty states", async ({ page }) => {
+  // Empty-state presentation remains deterministic when upload tests run alongside.
+  await page.route("**/api/documents?*", (route) =>
+    route.fulfill({ json: { items: [], total: 0, offset: 0, limit: 20 } }),
+  );
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const failed: string[] = [];
@@ -15,7 +19,7 @@ test("dashboard, navigation and truthful empty states", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Chọn tệp PDF" }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await expect(
     page.getByText("Chưa có tài liệu nào.", { exact: true }),
   ).toBeVisible();
@@ -45,8 +49,8 @@ test("dashboard, navigation and truthful empty states", async ({ page }) => {
     page.getByRole("link", { name: "Tài liệu", exact: true }),
   ).toHaveAttribute("aria-current", "page");
   await expect(
-    page.getByRole("button", { name: "Thêm tài liệu" }),
-  ).toBeDisabled();
+    page.getByRole("button", { name: "Chọn tệp PDF" }),
+  ).toBeEnabled();
   await expect(
     page.getByText("Chưa có tài liệu nào.", { exact: true }),
   ).toBeVisible();

@@ -24,7 +24,9 @@ const navigation = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const current = navigation.find((item) => item.href === pathname);
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+  const current = navigation.find((item) => isActive(item.href));
   return (
     <div className={`app-shell ${collapsed ? "is-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">
@@ -65,8 +67,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={href}
               href={href}
-              className={`nav-link ${pathname === href ? "active" : ""}`}
-              aria-current={pathname === href ? "page" : undefined}
+              className={`nav-link ${isActive(href) ? "active" : ""}`}
+              aria-current={isActive(href) ? "page" : undefined}
               title={label}
             >
               <Icon size={19} />

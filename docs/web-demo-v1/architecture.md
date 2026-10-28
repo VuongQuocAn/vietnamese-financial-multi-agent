@@ -4,6 +4,15 @@ W-01, 2026-10-28, thiết kế chờ Tech Lead review. Chưa cài framework/ch�
 Baseline đã fetch: `5c8a80e4ceedb735dcbad12e267620b0b8046adb`, M2-09 DONE.
 [API](api-contracts.md), [UI](ui-handoff.md), [spec](../../planning/tasks/W/W-01.md).
 Các quyết định dưới đây là đề xuất triển khai W-02–W-07, không phải khả năng đã có.
+
+Checkpoint W-03: W-01/W-02 đã DONE; upload/local storage, metadata-only worker,
+Gateway/Gemini Vision preflight và review/confirmation đã triển khai, chờ REVIEW.
+[Usage/giới hạn](w-03-usage.md), [API hiện hành](api-contracts.md). Các đoạn W-01
+dưới đây giữ làm thiết kế nền; extraction/viewer vẫn thuộc W-04/W-05. W-03 dùng
+một document.json atomic chứa cả attempts/job/history, OS writer lock và scope
+marker chống tự reset quota sau restart. Renderer metadata riêng không đòi
+symbol/year; mỗi ảnh một user message theo Gateway v1, cùng request có nhiều ảnh.
+Không thay contracts hoặc pipeline tài chính M1–M2.
 Giữ Offline → Online → Output; V1 chỉ mở bề mặt đọc evidence M1–M2,
 không đi qua agents/ledger và không gọi extracted facts là verified claims.
 

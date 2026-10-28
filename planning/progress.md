@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 88 | 49 | 0 | 0 | 39 | 0 | 0 |
+| W | 3 | 2 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 89 | 49 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,16 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-03 REVIEW** — upload/storage/Vision preflight và metadata review đã có.
+36 focused unit/integration, 139 Gateway/quota/cache regression và 11 browser/proxy
+PASS; Ruff/TypeScript/lint/build PASS. Live Gemini NOT RUN vì thiếu policy/budget
+scope W-03 mới được xác nhận. [Spec](tasks/W/W-03.md),
+[evidence](../docs/web-demo-v1/w-03-validation.md), [usage](../docs/web-demo-v1/w-03-usage.md).
+Stacked W-02 HEAD 78a50c6, PR #1/#2 OPEN; không merge/W-04/M3.
+Next action: Tech Lead nghiệm thu độc lập W-03.
+
+Các checkpoint W-02 bên dưới là lịch sử.
 
 **W-02 DONE** — Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3.
 Commit đã nghiệm thu `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`, local/origin

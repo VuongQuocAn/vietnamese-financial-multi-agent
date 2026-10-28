@@ -1,12 +1,39 @@
-# Web Demo V1 — API contracts đề xuất
+# Web Demo V1 — API contracts
 
-W-01 REVIEW, `web_demo_v1`; chưa có endpoints chạy thật.
+W-01 đã nghiệm thu; W-03 triển khai documents/metadata/preflight/file/status.
+Inventory/evidence/extract bên dưới còn là thiết kế dự kiến cho W-04 trở đi.
+[Implementation/usage W-03](w-03-usage.md).
 [Kiến trúc/lifecycle](architecture.md), [UI mapping](ui-handoff.md).
 Tất cả JSON ví dụ dưới đây là **synthetic minh họa contract**, không là dữ liệu
 tài chính, output Gemini hoặc kết quả chạy web thật. UUID dùng dạng chuẩn;
 hash trong ví dụ là placeholder 64 ký tự, không gán cho PDF pilot.
 
 ## Quy tắc chung và endpoints
+
+W-03: POST process chỉ nhận operation=preflight, extract trả 422. Document thêm
+size_bytes/updated_at/runtime_identity (symbol=document:<UUID>, year=null trước
+confirm). Persisted metadata.values chỉ là nháp/user values, không tự điền AI;
+UI prefill resolved suggestions khi revision=0 để người dùng kiểm tra/xác nhận.
+Summary chỉ trả tên/ticker/năm khi confirmed. PDF response filename=document.pdf.
+
+Job có progress.preflight={completed_pages,total_pages}; count chỉ tăng sau batch
+hợp lệ đã persist, không có counters discovery/extraction. Terminal preflight
+state=needs_metadata/ready, không completed financial. Provider/timeout/quota lỗi
+vẫn cho manual confirmation, lỗi storage/render/runtime → failed. Restart active
+jobs → interrupted, không tự gửi lại. Retry giữ confirmed values và lịch sử gợi ý.
+
+Preflight thêm attempt_id/model/batches/pending_pages; batches chỉ chứa pages,
+image hashes/DPI, requested/provider-reported model, cache_status, gateway_admitted,
+usage/cost và safe error, không raw response. gateway_admitted không chứng minh
+provider đã nhận call; cache hit không là live call. analyzed_pages là trang thuộc
+batch output hợp lệ đã lưu. Stop reasons thêm configuration_required/page_limit/
+interrupted/internal_error. Multipart quá số parts trả 400, sai field trả 422.
+
+Một document.json atomic chứa cả attempts/idempotency. `_original_pdf`, `_attempts`,
+`_preflight_history` chỉ ở storage, không HTTP. W-03 retry phân tích lại từ đầu qua
+cache in-memory, chưa durable page replay của W-04; semantic/provenance-invalid
+response bị invalidate cache. Scope marker chặn tự reset quota qua restart.
+Xem usage cho policy/budget/operator recovery và giới hạn single-process writer.
 
 Prefix `/api`; same-origin local. JSON UTF-8, UTC ISO8601 timestamps,
 Decimal hữu hạn là string (cả scale/delta/tolerance), không NaN/Infinity/float.

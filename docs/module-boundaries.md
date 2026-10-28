@@ -24,6 +24,12 @@ Các module dùng LLM phải đi qua Gateway chung khi được triển khai. Ch
 interfaces, hướng phụ thuộc ở mức code và cơ chế kết nối qua `api` là `TBD`,
 cần được xác định trong task liên quan trước khi viết logic.
 
+W-03: `api` là HTTP/composition/local storage/job adapters; nhận diện metadata
+và PDF raster riêng thuộc `document_processing.metadata_preflight`. Dùng lại
+core Gateway/Gemini/quota/cache/schema, không import ngược từ core/accounting.
+Không gọi financial runtime/extraction trong W-03. Chi tiết tại
+[Web API](web-demo-v1/api-contracts.md) và [usage](web-demo-v1/w-03-usage.md).
+
 `tests/unit/` kiểm tra độc lập; `tests/integration/` dành cho giao tiếp module;
 `tests/evaluation/` dành cho kiểm tra đánh giá. `evaluation/` giữ cấu hình và
 tài liệu thực nghiệm đã duyệt, không chứa dữ liệu gốc hoặc artifacts lớn.

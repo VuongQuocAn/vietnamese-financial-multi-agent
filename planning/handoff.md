@@ -2,61 +2,60 @@
 
 ## Active Task
 
-W-02 — Frontend/Backend Skeleton & Local Development
+W-03 — PDF Upload & Gemini Vision Metadata Preflight
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3. Sau fetch,
-local/origin feat/w-02-web-skeleton cùng `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`.
-W-02 REVIEW trước phiên nghiệm thu. Có thay đổi local sẵn web/next-env.d.ts,
-giữ nguyên và không stage. PR #2 OPEN, base docs/w-01-web-demo-design; PR #1
-vẫn OPEN, không tự merge.
+Fetch: W-02 HEAD 78a50c6, W-01/W-02 DONE; PR #1/#2 OPEN.
+Nhánh feat/w-03-pdf-upload-metadata, stacked base feat/w-02-web-skeleton.
+Giữ thay đổi có sẵn web/next-env.d.ts ngoài task. Không merge/W-04/M3.
 
 ## Completed Work
 
-Nghiệm thu W-02 REVIEW → DONE theo approval, đồng bộ spec/registry/dashboard/
-current-status/handoff/roadmap. Next.js + FastAPI skeleton đã được Tech Lead
-nghiệm thu tại db25039, lỗi format code fence W-01 đã sửa ở commit đó.
-Phiên này chỉ sửa planning, không sửa implementation/tests/UI/M1–M2/Stitch.
+PDF upload/list/detail/file Range, validation/limits/hash/UUID và local atomic
+snapshots; một metadata worker có bounds/polling/retry/idempotency/restart.
+Vision schema có candidates/raw text/page provenance, GeminiAdapter qua shared
+Gateway/guard/cache/registry; review/edit/confirm với revision và ticker nullable.
+Runtime namespace document:<UUID>, không gọi financial extraction M1–M2.
+Docs/usage/config example/tests đã có, không commit PDF/keys/cache.
 
 ## Remaining Work
 
-Không còn việc nghiệm thu W-02. PR #1/#2 vẫn OPEN, chưa merge main.
-Không bắt đầu W-03/M3; upload/metadata/viewer/evidence API/AI vẫn ngoài W-02.
+Tech Lead nghiệm thu độc lập. Live smoke chưa chạy vì chưa có scope budget W-03
+được xác nhận. W-04 orchestration/extraction và W-05 viewer ngoài task này.
 
 ## Modified Files
 
-Chỉ planning/tasks/W/W-02.md, planning/tasks.md, planning/progress.md,
-planning/current-status.md, planning/handoff.md và planning/roadmap.md.
-web/next-env.d.ts là thay đổi có sẵn, không thuộc commit nghiệm thu.
+src/api/{main,document_store,metadata_service,preflight_jobs}.py,
+src/document_processing/metadata_preflight.py, pyproject.toml/.env.example/config
+example, web upload/list/detail/navigation/proxy/styles/tests; Python tests,
+docs API/architecture/UI/local guide/usage/evidence, boundaries/contracts và planning.
+web/next-env.d.ts là thay đổi có sẵn, được khôi phục sau build và không stage.
 
 ## Tests
 
-Phiên nghiệm thu: `.venv/Scripts/python.exe scripts/check_planning.py` và
-`git diff --check` PASS; không chạy lại tests/CI đã xác minh.
-[CI 40703400345](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40703400345)
-SUCCESS đúng SHA db25039: Python 3.11/3.12 lint/format/planning/unit tests PASS
-(mỗi job 1460 PASS/11 SKIP); Web skeleton typecheck/lint/build + 5 smoke PASS.
-Đã kiểm trạng thái các steps. Không gán CI implementation cho SHA planning mới.
+36 focused unit/integration PASS; 139 Gateway/Gemini/quota/cache regression PASS.
+Ruff lint/format; TypeScript/lint/build; 11 browser/proxy tests PASS.
+Planning/diff/index kiểm tra trước publication; CI xác minh sau PR.
+PDF scan synthetic tạo local, không text layer; mock SDK/Gateway không có network.
+Live smoke NOT RUN, không đánh giá chất lượng metadata/financial trên dataset thật.
 
 ## Blockers
 
-Không blocker nghiệm thu; Tech Lead đã APPROVED. Stacked PR chưa merge là trạng
-thái Git, không đồng nghĩa W-02 chưa nghiệm thu. Không tự merge hoặc mở task mới.
+Không blocker implementation. Live cần policy/budget/exclusive accounting scope
+mới đã xác nhận; key local không đủ xác định quota/project. Không tự reset guard.
+Một API process/worker, quota/cache in-memory; scope marker không là durable guard.
 
 ## Git Checkpoint
 
-Commit đã nghiệm thu và đã push, remote khớp sau fetch:
-`db25039b818f7251cba7b4ed091dd2afa0dbc6ec`.
-Commit nghiệm thu tiếp theo chỉ sáu planning files, message được giao:
-`docs(planning): accept W-02 after Tech Lead approval [skip ci]`.
-SHA mới/remote xác minh sau publication, không ghi SHA tương lai.
-Giữ nguyên web/next-env.d.ts; không stage dữ liệu/secrets/artifacts.
+Baseline ổn định 78a50c6 trên W-02, chưa gán SHA tương lai cho implementation.
+Publication SHA/remote/PR/CI ghi sau khi xác minh trong evidence/checkpoint tiếp.
+Không stage next-env, PDF, private data, key, snapshots hoặc artifacts.
 
 ## Exact Next Action
 
-Chờ chỉ đạo tiếp theo.
+Tech Lead nghiệm thu độc lập W-03.
