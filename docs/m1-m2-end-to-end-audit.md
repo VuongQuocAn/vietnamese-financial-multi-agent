@@ -95,7 +95,7 @@ số không chặn recovered readable value, còn hai số khác nhau cùng iden
 Re-render/revalidate cache trang 5/7/8 từ PDF gốc 200 DPI. PDF SHA256:
 `6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1`.
 Cache hashes khớp toàn bộ receipt M2-07. Không ghi raw/processed/source cache.
-Trace trong ignored `artifacts/audit/M2-08/benchmark-final.json` giữ từng raw label/code,
+Trace trong ignored `artifacts/audit/M2-08/benchmark-label-regression.json` giữ từng raw label/code,
 value/header, period/unit/scale/statement/page, context/cell selectors, image/PDF hash,
 model/request, normalization/mapping và decision/reasons; raw Gemini payload ở records.
 
@@ -193,7 +193,7 @@ Một Gemini call, model `gemini-3.5-flash-lite`, 1.385 input +652 output =2.037
 0 provider failure/retry, monetary cost không đo. Dùng đúng credential/project đã cấu
 hình và policy cục bộ hiện có; không xoay keys. Không tính 5 calls/31.449 tokens lịch sử
 M2-04b thành chi phí phiên M2-08. Replay benchmark dùng **0 calls**, local elapsed
-khoảng 2,82 giây gồm render/revalidate/recovery-cache/query serialization, không là API
+khoảng 2,65 giây gồm render/revalidate/recovery-cache/query serialization, không là API
 latency; live latency chưa instrument, không suy từ thời gian tool.
 
 Không có ca live recovery failure trong một target đã thử; không bịa tỷ lệ success
@@ -238,7 +238,7 @@ Luôn output mới dưới artifacts; `--target` chỉ nhận một trang và fi
 Không chạy lại live khi recovery cache hiện có hợp lệ.
 
 Artifacts ignored tại `artifacts/audit/M2-08/`: `baseline-records.json`,
-`queries.json`, `references.json`, `benchmark-final.json`, `metrics.json`, `retention-trace.json`, `recovery/` response/manifest/meter.
+`queries.json`, `references.json`, `benchmark-label-regression.json`, `metrics-final.json`, `retention-trace.json`, `recovery/` response/manifest/meter.
 References SHA256 `c5ef4b6211c1f3d432aee9b68b3bba4b563a64404b9f826b1a8a74cae6fc0f2f`;
 recovery record SHA256 `0ea0ac380e4c9b19171228660a957a2c357d6a0dc198ae53538d11e2d57979bb`.
 Không commit raw responses/PDF/images/normalized datasets/credentials.
@@ -257,8 +257,11 @@ không bao phủ mọi raw item; không cần mở rộng để Direct QA đọc
 Không triển khai các hạng mục này hoặc M3 trong M2-08. Next action sau REVIEW:
 Chờ Tech Lead review M2-08.
 
-Benchmark-final SHA256 `39f4d73fda6812b35402ef31709bf29e23f1eaedbb82467ce77c5c53936eab36`;
-receipt `immutability-before.json` và `metrics.json` xác nhận PDF/cache/reference nguyên vẹn.
+Benchmark-final SHA256 `ef9c33e30816ef2f2bb4586f2a46f745892c1f7bba46f3adde2e732575ce598d`;
+receipt `immutability-before.json` và `metrics-final.json` xác nhận PDF/cache/reference nguyên vẹn.
 
 `retention-trace.json` giữ per-slot quality cho cả 138 slots sau recovery:28 usable,
 95 usable_with_caveat,15 insufficient; không có số parse được bị gate mất.
+
+Regression bổ sung: khác biệt ordinal/label giữa original và recovery không chặn
+query khi cùng document/page/code/period/value; conflict về số vẫn bị chặn.

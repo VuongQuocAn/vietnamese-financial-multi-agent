@@ -91,13 +91,13 @@ def test_readable_recovery_can_replace_missing_observation_for_query(sample):
     assert old.extraction.value.normalized_value is None
 
 
-def test_ambiguous_code_is_not_first_match(sample):
+def test_label_variation_does_not_block_same_source_code_and_value(sample):
     _, _, evidence, s = sample
     duplicate = evidence[0].model_copy(deep=True)
     duplicate.evidence_id += "/another-row"
-    duplicate.extraction.context.raw_item_label = "Different item with same code"
+    duplicate.extraction.context.raw_item_label = "1. Synthetic uncatalogued label"
     answer = answer_query(FinancialQuery("test", (s,)), [*evidence, duplicate])
-    assert answer["value"] is None and "ambiguous_source_code" in answer["reasons"]
+    assert answer["value"] == "1234"
 
 
 def test_runtime_keeps_good_page_after_provider_failure(sample, monkeypatch, tmp_path):

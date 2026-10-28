@@ -36,7 +36,7 @@ src/accounting/{automated_extraction,financial_runtime}.py; src/tools/financial_
 Không blocker local; CI chưa chạy cho implementation mới.
 
 ## Git Checkpoint
-Baseline sạch local/origin `2c9c63dbcfd8fd86cf5eb0b81090fc49f8bf5469`. Implementation đang uncommitted, đã qua targeted checks. Artifact benchmark-final SHA256 `39f4d73fda6812b35402ef31709bf29e23f1eaedbb82467ce77c5c53936eab36`.
+Baseline sạch local/origin `2c9c63dbcfd8fd86cf5eb0b81090fc49f8bf5469`. Implementation đang uncommitted, đã qua targeted checks. Artifact benchmark-label-regression SHA256 `ef9c33e30816ef2f2bb4586f2a46f745892c1f7bba46f3adde2e732575ce598d`.
 
 ## Exact Next Action
 Commit/push implementation M2-08 và xác minh CI đúng SHA.

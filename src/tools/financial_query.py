@@ -47,14 +47,9 @@ def answer_query(query, evidence, *, arithmetic_checks=(), relationship_checks=(
     produce a partial answer containing available raw facts, never a computed value.
     """
     evidence = list(evidence)
-    selected, missing, ambiguous = [], [], []
-    for index, selector in enumerate(query.operands):
+    selected = []
+    for selector in query.operands:
         found = [e for e in evidence if selector.matches(e)]
-        if not found:
-            missing.append(str(index))
-        # Same source code in multiple rows/labels is not a unique identity.
-        if len({e.extraction.context.raw_item_label for e in found}) > 1:
-            ambiguous.append(str(index))
         selected.extend(found)
     selected = list({e.evidence_id: e for e in selected}.values())
     direct = assess_evidence_for_task(selected)
@@ -101,7 +96,6 @@ def answer_query(query, evidence, *, arithmetic_checks=(), relationship_checks=(
         )
     can_answer = (
         not missing
-        and not ambiguous
         and not conflicts
         and assessment.decision in {"usable", "usable_with_caveat"}
         and all(i.decision in {"usable", "usable_with_caveat"} for i in assessment.items)
@@ -109,8 +103,6 @@ def answer_query(query, evidence, *, arithmetic_checks=(), relationship_checks=(
     value = None
     reasons = list(assessment.reason_counts)
     reasons.extend(code for code in direct.reason_counts if code not in reasons)
-    if ambiguous:
-        reasons.append("ambiguous_source_code")
     if len({s.document_id for s in query.operands}) != 1:
         can_answer = False
         reasons.append("mixed_documents")
