@@ -269,3 +269,8 @@ query khi cùng document/page/code/period/value; conflict về số vẫn bị c
 Conflict identity ưu tiên mã in nguồn khi có (document/statement/period/scope/unit
 vẫn giữ nguyên), rồi mới canonical ID/label khi thiếu code. Nhờ đó mapped original
 và unmapped recovery có cùng mã nhưng khác số không lọt thành hai identity riêng.
+
+M2-08 REVIEW. Implementation ổn định `12fd518526ae395566380313fe10d7a25bf58724` đã push; [CI40657097537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40657097537) SUCCESS đúng SHA, mọi steps Python3.11/3.12 đã xác minh.
+Checkpoint kết thúc chỉ docs/planning dùng [skip ci]; không gán CI implementation cho SHA tài liệu.
+
+Chờ Tech Lead nghiệm thu; không tự DONE.

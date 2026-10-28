@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 10 | 9 | 1 | 0 | 0 | 0 | 0 |
+| M2 | 10 | 9 | 0 | 0 | 0 | 0 | 1 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 85 | 45 | 1 | 0 | 39 | 0 | 0 |
+| TOTAL | 85 | 45 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -41,24 +41,27 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
 | `api` | Chỉ package/docstring; chưa có endpoints |
 
-Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và độ bao phủ
-benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
+Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
+trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
 
-M2-08 IN_PROGRESS — implementation/audit/pilot hoàn tất local, đang chờ CI.
+M2-08 REVIEW — chờ Tech Lead nghiệm thu, không tự DONE hoặc bắt đầu Web Demo/M3.
 Runtime primary: PDF → Gemini structured/cache bound → raw evidence → task-aware query.
-26 structured queries: 23/26 → 25/26 answered (88,46% → 96,15%); correct 23→25,
-incorrect/unsupported 0; partial 1→0; abstained 2→1; grounding 23/23→25/25.
+26 structured queries:23/26 →25/26 answered (88,46% →96,15%); correct23→25,
+incorrect/unsupported0; partial1→0; abstained2→1; grounding23/23→25/25.
 Gain từ targeted recovery mã300 trang6, không từ nới quality gate trên ba trang cũ.
 136→138 slots,121→123 numeric usable,28 canonical,93→95 ngoài catalog;
-28 accepted extraction không đổi. Một Gemini call/2.037 tokens; không đo monetary cost/live latency.
-18 focused +134 regression =152 targeted PASS; Ruff local PASS.
+28 accepted extraction không đổi. Một Gemini call/2.037 tokens; monetary cost/live latency chưa đo.
+18 focused +134 regression =152 targeted PASS; Ruff/planning/diff local PASS.
 PDF/cache/reference hash trước/sau khớp; không commit artifacts/dataset/secrets.
 Giới hạn: một PDF, intent khai báo trước; không là free-form chatbot accuracy.
 [Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
 
-Next action: Commit/push implementation M2-08 và xác minh CI đúng SHA.
+Implementation ổn định `12fd518526ae395566380313fe10d7a25bf58724` đã push; [CI40657097537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40657097537) SUCCESS đúng SHA, mọi steps Python3.11/3.12 đã xác minh.
+Checkpoint kết thúc chỉ docs/planning dùng [skip ci]; không gán CI implementation cho SHA tài liệu.
+
+Next action: Chờ Tech Lead review M2-08.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

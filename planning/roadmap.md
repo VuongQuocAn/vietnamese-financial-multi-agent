@@ -228,5 +228,5 @@ M0-04 chỉ thiết lập tài liệu quản lý; dừng sau M0-04, không bắt
 
 ## M2-08 — Audit bổ sung được giao
 
-[M2-08](tasks/M2/M2-08.md) IN_PROGRESS, dependency M2-07 DONE.
+[M2-08](tasks/M2/M2-08.md) REVIEW, dependency M2-07 DONE.
 Audit runtime, benchmark một PDF, targeted recovery; dừng REVIEW trước Web Demo V1.
