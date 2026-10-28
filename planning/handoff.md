@@ -4,10 +4,12 @@
 M1-13a — Vision-Grounded OCR Correction & Structured OCR Pilot
 
 ## Status
-REVIEW
+DONE
 
 ## Last Verified State
-Baseline main `10b626f` sạch; M1-13 DONE. User cho code/API/commit/push; dừng REVIEW.
+Implementation main `d8c2e6df215f234cd17e7ae8d03bb63c1ffc04a1`, working tree sạch trước nghiệm thu.
+Tech Lead APPROVED có điều kiện; [CI 40611646012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40611646012)
+completed/success đúng SHA, cho phép REVIEW → DONE.
 
 ## Completed Work
 Optional inline PNG Gateway/adapter; verified image mapping/hash/dimensions;
@@ -19,28 +21,32 @@ Correction0; structured unresolved2 do columns/index mismatch. SDK nhận đúng
 bytes/hash; frozen raw/image/manifest bất biến. Không API rerun/retry/rotation.
 
 ## Remaining Work
-CI exact implementation SHA sau push; Tech Lead nghiệm thu limitations và implementation.
-Không sửa kết quả model cho đẹp, không tự DONE/M1-14.
+Không còn công việc nghiệm thu M1-13a; giữ limitations, không bắt đầu M1-14.
 
 ## Modified Files
-Gateway contracts/adapter/schema; correction/meter/vision module; runner/tests;
-Gateway/adapter docs và evidence M1-13a; registry/spec/dashboard/current-status/handoff.
+Phiên nghiệm thu chỉ năm planning files: tasks.md; tasks/M1/M1-13a.md;
+handoff.md; current-status.md; progress.md.
 
 ## Tests
 219 focused/related tests passed, gồm9 mới +11 correction cũ; final focused9 sau cleanup.
 Ruff lint/format, planning checker, diff check; runner dry-run cả hai modes đạt.
-Không full suite local. CI hiện có Python3.11/3.12, không workflow mới.
+Không chạy lại tests/Gemini/pilot ở phiên nghiệm thu. Chỉ planning checker/diff check;
+CI implementation exact SHA đã PASS, không yêu cầu CI mới cho planning-only commit.
 
 ## Blockers
 Không independent verifier/ground truth; vision bỏ sót hai lỗi chữ đã biết.
 Structured có text/tables/cells nhưng invalid indices cả hai trang, bbox sai scale/axes;
 không coi output là raw OCR hợp lệ hoặc số tài chính được xác nhận.
 Quota owner-attested15/250000/500, money NOT_CONFIGURED, không chứng nhận billing.
+Giữ correction0, structured OCR0/2 valid, bbox chưa đáng tin; limitations đã được
+Tech Lead chấp nhận trong phạm vi pilot, không còn blocker nghiệm thu.
 
 ## Git Checkpoint
-Baseline `10b626f`; một implementation commit/push; exact SHA và CI kết quả bàn giao
-cuối phiên. Không publication commit. Artifacts ignored `artifacts/ocr-correction/M1-13a/`.
+Implementation `d8c2e6df215f234cd17e7ae8d03bb63c1ffc04a1`;
+[CI 40611646012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40611646012) PASS đúng SHA.
+Nghiệm thu chỉ planning, một commit/push; không chờ CI mới.
+Artifacts ignored `artifacts/ocr-correction/M1-13a/`.
 [Spec](tasks/M1/M1-13a.md), [evidence](../docs/reviews/M1-13a-evidence.md).
 
 ## Exact Next Action
-Tech Lead nghiệm thu implementation và limitations pilot; không tự DONE/M1-14.
+Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.

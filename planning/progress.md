@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 29 | 27 | 0 | 0 | 1 | 0 | 1 |
+| M1 | 29 | 28 | 0 | 0 | 1 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 79 | 31 | 0 | 0 | 47 | 0 | 1 |
+| TOTAL | 79 | 32 | 0 | 0 | 47 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,12 +46,13 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-13a REVIEW** — Gateway nhận PNG bytes, verified image binding, corrected view riêng;
+**M1-13a DONE** — Tech Lead APPROVED có điều kiện; Gateway nhận PNG bytes, verified image binding, corrected view riêng;
 image-only Structured OCR pilot. 219 tests; live4 requests/28506 tokens; corrections0,
 structured unresolved2 (invalid column indices), lỗi chữ vẫn bị bỏ sót, geometry chưa tin cậy.
 [Spec](tasks/M1/M1-13a.md), [evidence](../docs/reviews/M1-13a-evidence.md).
-CI exact SHA kiểm tra sau push; không publication commit.
-Next action: Tech Lead nghiệm thu implementation và limitations pilot; không tự DONE/M1-14.
+[CI 40611646012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40611646012) PASS đúng implementation `d8c2e6df215f234cd17e7ae8d03bb63c1ffc04a1`.
+Giữ correction0, structured OCR0/2 valid, bbox chưa đáng tin; nghiệm thu chỉ planning.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M1-14.
 Các đoạn sau là lịch sử.
 
 **M1-13 DONE** — Tech Lead APPROVED có điều kiện; CI exact SHA đã xác minh PASS.
