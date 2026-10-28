@@ -2,32 +2,26 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-W-02 REVIEW — Frontend/Backend Skeleton & Local Development.
+W-02 DONE — Frontend/Backend Skeleton & Local Development.
+Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3.
 [Spec](tasks/W/W-02.md), [chạy local](../docs/web-demo-v1/local-development.md).
-Next.js 16.4.3 / React 19.3.1, bốn routes, app shell, empty states, AI Coming
-Soon; FastAPI 0.162.0 health + Next.js proxy. Không key/PDF/database, chưa upload
-hoặc nối nghiệp vụ M1–M2. Không bắt đầu W-03/M3.
+Commit đã nghiệm thu `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`; đã fetch,
+local/origin feat/w-02-web-skeleton cùng SHA. Có thay đổi local sẵn trong
+web/next-env.d.ts, giữ nguyên và không stage.
 
-Dependency W-01 DONE theo Tech Lead APPROVED 28/10/2026. Baseline W-02 đã fetch,
-working tree sạch, exact acceptance `31ca5704c388b31ac102b19577b030fcb1026628`.
-PR #1 OPEN/chưa merge; không CI runs vì [skip ci], workflow không dispatch.
-Stacked branch feat/w-02-web-skeleton; PR base docs/w-01-web-demo-design để
-không lặp commits W-01. Không tự merge/force-push hoặc thay required checks.
+[CI 40703400345](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40703400345)
+SUCCESS trên exact SHA đã nghiệm thu: Python 3.11/3.12 đều qua lint, format,
+planning và unit tests (mỗi job 1460 PASS/11 SKIP); Web skeleton qua typecheck,
+lint, build và 5 browser/proxy tests. Lỗi format code fence W-01 đã khắc phục.
+Không chạy lại tests/CI hoặc gán CI này cho commit planning mới.
 
-Local typecheck/ESLint/build PASS, 16 targeted Python tests PASS, Ruff lint và
-format Python PASS, planning 88 tasks PASS, browser/proxy smoke 5 PASS.
-Đã xem screenshots dashboard/Explorer 1440, laptop 1280 và mobile 390; sửa
-mobile AI preview sau quan sát. Giữ light/navy/sidebar và split 45/55 theo Stitch,
-dùng font sans tiếng Việt local; không tuyên bố pixel-perfect hoặc financial accuracy.
+Đã có Next.js/React bốn routes, app shell, dashboard, documents/evidence empty
+states, AI Coming Soon, FastAPI health và proxy local. Chưa upload/PDF.js/
+metadata/sessions/evidence API/AI analysis. Không thay phạm vi nghiệm thu tài chính.
 
-Ruff 0.17.2 full-tree format FAIL có sẵn ở architecture W-01 (đã tái hiện trên
-Git baseline); bốn tài liệu cũ khác báo do CRLF local. Không sửa tài liệu nghiệm
-thu ngoài scope để che CI. Full unit suite local: 1469 PASS/2 SKIP (Windows).
-Implementation `22c48a5897350673d6082d6d9868f24df520c1a9` đã push, remote khớp.
-[PR #2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/2)
-OPEN, base W-01; [evidence](../docs/web-demo-v1/w-02-validation.md).
-CI 40701696004 tổng thể FAILURE: Python 3.11/3.12 FAIL đúng lỗi format baseline,
-unit/planning SKIPPED; Web skeleton SUCCESS gồm typecheck/lint/build và 5 browser/
-proxy smoke tests trên exact implementation SHA. Không có full CI SUCCESS.
+Dependency W-01 DONE. PR #1/#2 OPEN/chưa merge; PR #2 vẫn stacked base
+docs/w-01-web-demo-design. Không tự merge, không bắt đầu W-03 hoặc M3.
+Phiên nghiệm thu chỉ sửa sáu planning files, checker/diff PASS; commit đúng message
+được giao với [skip ci], push và xác minh remote sau commit.
 
-Next action: Tech Lead nghiệm thu độc lập W-02 và quyết định xử lý lỗi format baseline.
+Next action: Chờ chỉ đạo tiếp theo.

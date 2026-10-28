@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 2 | 1 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 88 | 48 | 0 | 0 | 39 | 0 | 1 |
+| W | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 88 | 49 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -40,12 +40,25 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
-| `api` | W-02 REVIEW: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
+| `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-02 DONE** — Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3.
+Commit đã nghiệm thu `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`, local/origin
+khớp sau fetch. [CI 40703400345](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40703400345)
+SUCCESS exact SHA: Python 3.11/3.12 qua lint/format/planning/unit tests, mỗi job
+1460 PASS/11 SKIP; Web skeleton typecheck/lint/build và 5 browser/proxy tests PASS.
+Lỗi format W-01 đã khắc phục. PR #1/#2 OPEN, PR #2 vẫn stacked trên W-01.
+Phiên nghiệm thu chỉ sáu planning files, checker/diff PASS; commit [skip ci] theo
+chỉ đạo. Giữ nguyên thay đổi local web/next-env.d.ts, không stage.
+Không sửa implementation/tests/UI/M1–M2/Stitch, không bắt đầu W-03/M3.
+Next action: Chờ chỉ đạo tiếp theo.
+
+Checkpoint W-02 REVIEW dưới đây là lịch sử trước approval và trước fix format.
 
 **W-02 REVIEW** — Next.js 16.4.3/React 19.3.1 + FastAPI local, bốn routes,
 app shell và empty/Coming Soon states theo W-01. Typecheck/lint/build, 16 targeted
