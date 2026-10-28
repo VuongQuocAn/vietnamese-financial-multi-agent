@@ -35,3 +35,56 @@ jobs:
         run: python scripts/check_planning.py
       - name: Unit tests
         run: python -m pytest tests/unit
+
+  web:
+    name: Web skeleton
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install HTTP layer
+        run: python -m pip install .
+      - name: Install frontend
+        working-directory: web
+        run: npm ci
+      - name: Typecheck
+        working-directory: web
+        run: npm run typecheck
+      - name: Lint
+        working-directory: web
+        run: npm run lint
+      - name: Production build
+        working-directory: web
+        run: npm run build
+      - name: Install browser
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+      - name: Routes, browser and proxy smoke
+        working-directory: web
+        shell: bash
+        run: |
+          python -m uvicorn vietnamese_financial_multi_agent.api.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
+          api_pid=$!
+          npm run start > "$RUNNER_TEMP/web.log" 2>&1 &
+          web_pid=$!
+          trap 'kill "$api_pid" "$web_pid" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/api/health; then
+              ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != true ]; then
+            cat "$RUNNER_TEMP/api.log" "$RUNNER_TEMP/web.log"
+            exit 1
+          fi
+          npm run test:smoke

@@ -25,16 +25,21 @@ trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng I
 W-01 DONE — Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
 Architecture/Design/Contracts; evaluation scope Architecture/Design/API Contracts.
 Phụ thuộc M2-09 DONE; chỉ nghiệm thu thiết kế, chưa có website hoạt động.
-W-02 chưa bắt đầu. Next action: Chờ giao W-02.
+W-02 DONE — Tech Lead APPROVED 28/10/2026 theo Research MVP Lean v3;
+[spec W-02](tasks/W/W-02.md), accepted `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`.
+[CI 40703400345](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40703400345)
+SUCCESS Python 3.11/3.12 và Web skeleton. Skeleton local bốn màn hình đã nghiệm
+thu; chưa upload/extraction. PR #1/#2 OPEN, PR #2 stacked base W-01, chưa merge.
+Next action: Chờ chỉ đạo tiếp theo.
 Nhánh ứng dụng này không thay M3–M8, không đưa M3 vào IN_PROGRESS.
 [Spec W-01](tasks/W/W-01.md), [thiết kế](../docs/web-demo-v1/architecture.md),
 [API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
-Chỉ W-01 đã đăng ký; bảng sau là đề xuất dependency/phạm vi, chưa cấp quyền bắt đầu
-và chưa tạo placeholder specs. Chuẩn bị spec/inputs/criteria trước READY.
+W-01/W-02 đã đăng ký; các task sau vẫn là đề xuất dependency/phạm vi, chưa cấp
+quyền bắt đầu và chưa tạo placeholder specs. Chuẩn bị spec/inputs/criteria trước READY.
 
 | Task dự kiến | Dependencies dự kiến | Đầu ra / criteria cần cụ thể hóa |
 | --- | --- | --- |
-| W-02 Frontend/Backend Skeleton & Local Development | W-01 DONE | Next.js/FastAPI skeleton, proxy local, cấu hình storage/limits, shell bốn modules; chưa live extraction |
+| W-02 Frontend/Backend Skeleton & Local Development | W-01 DONE | DONE: Next.js/FastAPI skeleton, health/proxy local, shell bốn modules; chưa storage/limits hoặc live extraction |
 | W-03 PDF Upload & Metadata Preflight | W-02 DONE | PDF validation, Vision-first schema/prompt/Gateway, unresolved + user confirmation; test budget giao riêng |
 | W-04 Processing Sessions & Progress | W-03 DONE | Bounded worker, page snapshots/polling, partial/retry/restart và quota recovery; giữ runtime M1–M2 |
 | W-05 PDF Viewer & Page Navigation | W-03 DONE | PDF gốc, page/zoom/fullscreen, file Range; có thể chuẩn bị độc lập W-04 nhưng không tự mở song song |

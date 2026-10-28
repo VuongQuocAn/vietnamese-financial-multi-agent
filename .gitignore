@@ -87,3 +87,10 @@ models/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Next.js và browser QA local
+node_modules/
+.next/
+*.tsbuildinfo
+playwright-report/
+test-results/
