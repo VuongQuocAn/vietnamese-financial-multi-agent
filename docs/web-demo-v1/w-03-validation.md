@@ -8,7 +8,10 @@ W-03 REVIEW, refinement auto-first/key rotation, không task mới.
 Baseline refinement f617e68295f79de1c5702fe8c27f7b0fcfcea0b1.
 Nhánh feat/w-03-pdf-upload-metadata, [PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
 draft OPEN base W-02; PR #1/#2 OPEN. Không merge. Giữ next-env local ngoài stage.
-Implementation/refinement SHA, remote và CI ghi sau publication.
+Implementation/refinement SHA 7048d92ba7215191dd8a5c9c12b777085fb9c23d đã push,
+ls-remote khớp. [CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
+SUCCESS exact implementation SHA, đã kiểm mọi steps của Python3.11/3.12 và Web.
+Commit evidence tiếp theo chỉ docs/planning [skip ci], không gán CI cho SHA mới.
 CI40710376652/b494788 là lịch sử baseline, không gán cho code refinement.
 
 ## 2. Key rotation
@@ -86,7 +89,9 @@ Targeted Python upload/metadata/pool/API: 44 PASS, không full local regression.
 Ruff check/format, TypeScript/ESLint/build, 8 targeted Playwright documents PASS
 (ready không form bắt buộc 1440/1366, upload/drop/list/edit/retry/errors, mobile
 layout giữ từ trước). Planning checker/diff/staged audit trước commit.
-CI sau push giữ full Python3.11/3.12 và full browser suite; cập nhật kết quả khi có.
+CI exact refinement SHA PASS: Python3.11/3.12 mỗi job1502 PASS/11 SKIP;
+Web typecheck/lint/build và full browser suite13 PASS. Planning/diff/staged audit
+PASS; không key/PDF/cache/counters/next-env hoặc protected module trong commit.
 Không sửa/tắt CI, không gọi mock SDK là live pass.
 
 ## 7. Local demo

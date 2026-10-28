@@ -25,7 +25,7 @@ Live scan synthetic 2 trang PASS + edit PASS; 3 attempts tổng, không thêm li
 
 ## Remaining Work
 
-Publication/CI exact refinement SHA và Tech Lead review. Không W-04/M3.
+Tech Lead review. Publication/CI exact refinement SHA đã PASS. Không W-04/M3.
 
 ## Modified Files
 
@@ -36,7 +36,10 @@ planning. Xóa config example manual policy obsolete. next-env có sẵn không 
 ## Tests
 
 8 targeted browser documents PASS, có auto-ready 1440/1366 không form bắt buộc.
-Python focused 44 cases và lint/format/TS/ESLint/build/planning/diff kiểm trước commit.
+Python focused44 PASS, Ruff/TS/ESLint/build/planning/diff/staged audit PASS.
+[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
+SUCCESS exact refinement SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS.
+Mọi steps đã kiểm; không chạy lại full local suite/CI hoặc Gemini sau PASS.
 Live: 2 HTTP400 ban đầu, sau flat schema/coalesce turn 1 success, 2805 tokens,
 tên/năm/scope đúng nguồn trang2, ready auto + user edit PASS. Không benchmark.
 
@@ -48,10 +51,13 @@ Live chỉ synthetic, chưa chất lượng metadata trên dataset thực.
 
 ## Git Checkpoint
 
-Baseline ổn định f617e68; implementation refinement chưa commit/push tại checkpoint
-này. CI40710376652/b494788 là lịch sử, không coi CI refinement đã PASS.
-Không stage key/PDF/images/cache/usage counters/next-env. Publication SHA/CI ghi sau.
+Baseline ổn định f617e68. Refinement ổn định đã push/remote khớp:
+7048d92ba7215191dd8a5c9c12b777085fb9c23d; CI40718128314 SUCCESS exact SHA.
+PR #3 draft OPEN base W-02, #1/#2 OPEN/chưa merge. Commit evidence tiếp theo chỉ
+docs/planning [skip ci], không gán CI này cho SHA documentation mới.
+Không stage key/PDF/images/cache/usage counters/next-env. Đã dừng hai server riêng
+của browser tests. Giữ nguyên thay đổi local next-env so với lúc bắt đầu phiên.
 
 ## Exact Next Action
 
-Commit/push refinement và xác minh CI.
+Tech Lead nghiệm thu độc lập W-03.

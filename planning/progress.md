@@ -52,9 +52,11 @@ rotation/cooldown/cap chung, bỏ policy/scope thủ công, UI neutral/form tùy
 8 browser targeted PASS (1440/1366 và mobile tối thiểu), 44 Python focused cases.
 Live scan synthetic2 trang PASS, model gemini-3.5-flash-lite, provenance trang2,
 auto-ready/edit PASS;3 attempts tổng gồm2 HTTP400 ban đầu và1 success/2805tokens.
-Baseline f617e68, PR#3 draft base W-02; publication/CI refinement đang xác minh.
+Baseline f617e68, PR#3 draft base W-02. Refinement7048d92 đã push/remote khớp;
+[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
+SUCCESS exact SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS.
 [Evidence](../docs/web-demo-v1/w-03-validation.md).
-Next action: Commit/push refinement và xác minh CI.
+Next action: Tech Lead nghiệm thu độc lập W-03.
 
 Các checkpoint W-03 bên dưới là lịch sử trước final refinement.
 
