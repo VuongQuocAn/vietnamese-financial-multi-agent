@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 10 | 10 | 0 | 0 | 0 | 0 | 0 |
+| M2 | 11 | 10 | 1 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 85 | 46 | 0 | 0 | 39 | 0 | 0 |
+| TOTAL | 86 | 46 | 1 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,27 +46,17 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M2-08 DONE — Tech Lead APPROVED trong phạm vi Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-26 structured queries: trước 23/26, sau 25/26 answered; sau tối ưu 25 đúng, 0 sai,
-0 partial, 1 abstained, 25/25 grounded (0 unsupported).
-Sau recovery: 123 numeric usable, gồm 95 ngoài catalog; 28 accepted extractions không đổi.
-Gemini recovery: một target B01 mã 300 trang PDF 6, một call, 2.037 tokens,
-hai giá trị được phục hồi. Gain do bổ sung trang 6, không do nới quality gate.
-Kiến trúc: Gemini structured financial extraction là primary path;
-OCR/unified, manual recovery và accounting checks là optional theo tác vụ.
-Giới hạn: một PDF BBS2025, structured query intent khai báo trước;
-chưa đánh giá chatbot ngôn ngữ tự nhiên.
-Phiên nghiệm thu giữ nguyên code/tests/PDF/cache/artifacts; chỉ planning checker
-và git diff --check đều PASS. Không chạy lại Gemini, pytest hoặc CI.
-[Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
+M2-09 IN_PROGRESS, dependency M2-08 DONE. Một PDF BBS2025/24 trang,
+discovery đúng 24/24; B01 5–6, B02 7, B03 8, B09 9–24, other 1–4.
+Primary coverage 4/4; numeric precision/recall/kỳ/unit/grounding/usability 163/163;
+reference toàn bộ coded rows, 7 dash sai glyph giữ missing. Notes sample 6/6 riêng.
+Queries M2-08 giữ 25/26 answered đúng/grounded; không runtime regression.
+25 live calls/37.382 tokens, recovery 0 vì không lỗi numeric trọng yếu cần phục hồi.
+140 targeted PASS; đang hoàn tất checks/commit/CI exact SHA.
+[Báo cáo/API](../docs/m2-09-full-pdf-evaluation.md), [spec](tasks/M2/M2-09.md).
+CONDITIONAL GO, chưa notes QA, chưa chứng minh generalization hoặc fresh-run stability.
 
-Implementation `12fd518526ae395566380313fe10d7a25bf58724` đã push; [CI40657097537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40657097537) SUCCESS đúng SHA;
-đã xác minh lại mọi bước Python 3.11/3.12.
-Evidence implementation trước nghiệm thu: 18 focused +134 regression =152 targeted PASS.
-Commit nghiệm thu chỉ planning, dùng [skip ci]; không gán CI implementation cho SHA nghiệm thu.
-
-Next action: Chờ Tech Lead giao Web Demo V1; chưa tự bắt đầu Web Demo hoặc M3.
+Next action: Hoàn tất checks, commit/push và xác minh CI đúng implementation SHA.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

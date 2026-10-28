@@ -1,55 +1,48 @@
 # Codex Handoff
 
 ## Active Task
-M2-08 — M1/M2 End-to-End Audit, Simplification & Answerability Optimization
+M2-09 — Full-PDF Real-World Evaluation & Targeted Hardening
 
 ## Status
-DONE
+IN_PROGRESS
 
 ## Last Verified State
-M2-08 DONE — Tech Lead APPROVED trong phạm vi Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-26 structured queries: trước 23/26, sau 25/26 answered; sau tối ưu 25 đúng, 0 sai,
-0 partial, 1 abstained, 25/25 grounded (0 unsupported).
-Sau recovery: 123 numeric usable, gồm 95 ngoài catalog; 28 accepted extractions không đổi.
-Gemini recovery: một target B01 mã 300 trang PDF 6, một call, 2.037 tokens,
-hai giá trị được phục hồi. Gain do bổ sung trang 6, không do nới quality gate.
-Kiến trúc: Gemini structured financial extraction là primary path;
-OCR/unified, manual recovery và accounting checks là optional theo tác vụ.
-Giới hạn: một PDF BBS2025, structured query intent khai báo trước;
-chưa đánh giá chatbot ngôn ngữ tự nhiên.
-Phiên nghiệm thu giữ nguyên code/tests/PDF/cache/artifacts; chỉ planning checker
-và git diff --check đều PASS. Không chạy lại Gemini, pytest hoặc CI.
-[Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
-
-Implementation `12fd518526ae395566380313fe10d7a25bf58724` đã push; [CI40657097537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40657097537) SUCCESS đúng SHA;
-đã xác minh lại mọi bước Python 3.11/3.12.
-Evidence implementation trước nghiệm thu: 18 focused +134 regression =152 targeted PASS.
-Commit nghiệm thu chỉ planning, dùng [skip ci]; không gán CI implementation cho SHA nghiệm thu.
-
+M2-08 DONE; M2-09 được user giao và cho phép live Gateway/commit/push/CI.
+PDF BBS2025 24 trang, SHA256 6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1.
+Discovery đúng 24/24; B01 5–6, B02 7, B03 8, B09 9–24. Full runtime không truyền pages.
+Numeric precision/recall/kỳ/unit/grounding/usability đều 163/163; 7 dash sai glyph giữ
+missing. Notes sample 6/6 riêng. Queries M2-08 giữ 25/26 answered đúng/grounded.
 
 ## Completed Work
-Tech Lead APPROVED M2-08 Research MVP Lean v3 ngày 2026-10-28. Phiên nghiệm thu xác minh implementation SHA và CI hiện có SUCCESS đúng SHA, mọi bước Python 3.11/3.12; đồng bộ sáu file planning REVIEW → DONE. Evidence implementation/pilot giữ nguyên, không chạy lại.
+Discovery/schema, optional pages trong runtime cũ, multi-page/uncertain/notes inventory,
+evaluation CLI, source-image reference/corrections và re-evaluation. 25 calls mới,
+37.382 tokens; recovery 0 vì không có lỗi numeric trọng yếu cần phục hồi.
+Source/cache lịch sử hash khớp; report CONDITIONAL GO. 140 targeted PASS.
 
 ## Remaining Work
-Không còn việc nghiệm thu M2-08. Hướng tiếp theo là Web Demo V1 sau nghiệm thu, chờ Tech Lead giao; chưa bắt đầu Web Demo hoặc M3.
+Checks cuối, commit/push implementation và xác minh CI full unit 3.11/3.12 đúng SHA;
+sau đó chuyển REVIEW chờ Tech Lead, không tự DONE/demo/M3.
 
 ## Modified Files
-Chỉ planning/tasks/M2/M2-08.md, planning/tasks.md, planning/progress.md, planning/current-status.md, planning/handoff.md và planning/roadmap.md.
+src/document_processing/financial_discovery.py; src/accounting/financial_runtime.py;
+scripts/evaluate_full_pdf.py; tests/unit/test_financial_discovery.py;
+tests/unit/test_full_pdf_evaluation.py; docs/m2-09-full-pdf-evaluation.md;
+planning/tasks/M2/M2-09.md; registry/dashboard/current-status/handoff/roadmap.
+Artifacts private ignored: artifacts/evaluation/M2-09/.
 
 ## Tests
-Phiên nghiệm thu: python scripts/check_planning.py và git diff --check đều PASS. Evidence trước nghiệm thu:152 targeted PASS; CI40657097537 full unit/lint/format/planning Python3.11/3.12 SUCCESS đúng implementation SHA. Không chạy lại Gemini, pytest hoặc CI.
+32 focused mới/query +108 extraction/quality/relationship/context =140 targeted PASS.
+Ruff/planning/diff và CI exact SHA đang hoàn tất; không chạy full local suite.
 
 ## Blockers
-Không blocker nghiệm thu; Tech Lead đã APPROVED. Giới hạn một PDF/structured intents và gain từ trang 6 vẫn được giữ rõ ràng; chưa đánh giá chatbot ngôn ngữ tự nhiên.
+Chưa có blocker runtime trong bốn bảng chính. Giới hạn: một PDF, chủ yếu replay,
+reference do cùng agent đối chiếu chưa reviewer người thứ hai; 7 dash glyph sai;
+notes chỉ inventory/M1 sample, chưa notes QA. Chưa có CI cho M2-09 trước push.
 
 ## Git Checkpoint
-Baseline nghiệm thu sạch local/origin `52fd721bec5283dd37dbb558c7fff17be33fe323` trên main.
-Implementation `12fd518526ae395566380313fe10d7a25bf58724` đã push; [CI40657097537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40657097537) SUCCESS đúng SHA;
-đã xác minh lại mọi bước Python 3.11/3.12.
-Evidence implementation trước nghiệm thu: 18 focused +134 regression =152 targeted PASS.
-Commit nghiệm thu chỉ planning, dùng [skip ci]; không gán CI implementation cho SHA nghiệm thu.
-Artifact benchmark-final-review SHA256 lịch sử `baa8c4651c0ca3c3526540f7feb5799c2645257ccf1ea3b3594c1f5268391b94`; không đọc lại hoặc sửa artifacts trong phiên nghiệm thu. Không stage code/tests/dataset/secrets.
+Baseline thực tế d0a82ea trên main sạch/trùng origin/main; không dùng SHA baseline
+cũ trong handoff M2-08. Chưa commit implementation; working tree đang có thay đổi
+M2-09. Source data/credentials/cache nguyên trạng, không stage raw/normalized/secrets.
 
 ## Exact Next Action
-Chờ Tech Lead giao Web Demo V1; chưa tự bắt đầu Web Demo hoặc M3.
+Hoàn tất checks, commit/push và xác minh CI đúng implementation SHA.

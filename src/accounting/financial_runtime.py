@@ -1,5 +1,6 @@
 """Small PDF-to-evidence composition and one-shot targeted recovery."""
 
+from ..document_processing.financial_discovery import discover_financial_pages
 from ..document_processing.gemini_ingestion import MODEL, load_pages
 from .automated_extraction import extract_financial_page, run_automated_pdf
 from .quality import assess_evidence_for_task, evidence_from_automated_records
@@ -10,32 +11,54 @@ def process_financial_pdf(
     *,
     symbol,
     year,
-    pages,
+    pages=None,
     service=None,
     credential_ref="",
     cached_records=None,
     model=MODEL,
     dpi=200,
+    discovery_cache=None,
+    discovery_service=None,
+    on_discovery_page=None,
 ):
     """Keep good pages when another response is unavailable; binding errors still raise.
 
-    Reuse public PDF cache validation. No M1 unified/manual path or extra LLM call.
+    Omit pages for automatic discovery; explicit selection keeps the previous path.
+    Reuse public PDF cache validation without an M1 unified/manual dependency.
     Input selection/render failures raise; invalid provider responses remain records.
     """
-    records = run_automated_pdf(
-        path,
-        symbol=symbol,
-        year=year,
-        pages=pages,
-        service=service,
-        credential_ref=credential_ref,
-        cached_records=cached_records,
-        model=model,
-        dpi=dpi,
+    inventory = None
+    if pages is None:
+        inventory = discover_financial_pages(
+            path,
+            symbol=symbol,
+            year=year,
+            service=discovery_service or service,
+            credential_ref=credential_ref,
+            cached_predictions=discovery_cache,
+            model=model,
+            on_page=on_discovery_page,
+        )
+        pages = [p["page"] for p in inventory if p["selected"]]
+    records = (
+        run_automated_pdf(
+            path,
+            symbol=symbol,
+            year=year,
+            pages=pages,
+            service=service,
+            credential_ref=credential_ref,
+            cached_records=cached_records,
+            model=model,
+            dpi=dpi,
+        )
+        if pages
+        else []
     )
     valid = [r for r in records if "invalid_extraction_response" not in r["extraction"]["issues"]]
     evidence = evidence_from_automated_records(valid)
     return dict(
+        inventory=inventory,
         records=records,
         evidence=evidence,
         quality=assess_evidence_for_task(evidence),

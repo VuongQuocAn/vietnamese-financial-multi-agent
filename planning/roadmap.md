@@ -233,4 +233,14 @@ Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28; nghiệm thu planning-
 Gemini structured financial extraction là primary path; OCR/unified, manual recovery
 và accounting checks optional theo tác vụ. Benchmark một PDF BBS2025, structured
 intents:23/26→25/26 answered; gain từ recovery thêm trang6, chưa đánh giá NL chatbot.
-Hướng tiếp theo: Web Demo V1 sau nghiệm thu, chờ Tech Lead giao; chưa tự bắt đầu hoặc mở M3.
+Sau nghiệm thu M2-08, Tech Lead giao thêm M2-09 trước quyết định Web Demo V1;
+chưa tự bắt đầu Web Demo hoặc M3.
+
+## M2-09 — Full-PDF evaluation bổ sung được giao
+
+[M2-09](tasks/M2/M2-09.md) IN_PROGRESS, dependency M2-08 DONE.
+Một PDF BBS2025/24 trang; discovery B01 5–6, B02 7, B03 8, B09 9–24;
+primary statement coverage 4/4, numeric precision/recall 163/163 trên reference
+đối chiếu ảnh nguồn. Notes sample 6/6 riêng; giữ giới hạn 7 dash sai glyph và chưa notes QA.
+Khuyến nghị CONDITIONAL GO, không suy generalization; chờ CI exact implementation SHA.
+[Báo cáo](../docs/m2-09-full-pdf-evaluation.md). Không tự DONE hoặc mở task demo.
