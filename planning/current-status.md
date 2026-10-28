@@ -1,26 +1,27 @@
 # Trạng thái hiện tại
 
-Cập nhật **2026-10-27** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
+Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-12 DONE — Tech Lead APPROVED** 27/10/2026; cho phép REVIEW → DONE.
-  Không task triển khai active. M1-11/M1-11b DONE, M1-13 TODO.
-- Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` /
-  [CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586)
-  success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đã xác minh.
-- `reconstruct_table` / `SpanEvidence` trả DU v1, giữ text/bbox/ID/source anchors;
-  ambiguity/conflict trả unresolved, không sinh ô hoặc sửa số liệu.
-- Giữ nguyên **4 trang/8 bảng/310 ô: 1 resolved/7 unresolved; Gemini0 requests/tokens**.
-  5 gaps, 32 cell bbox out-of-bounds, 2265 pairwise geometry conflicts,
-  47 observed empty cells; DU không source/status issues. 219 targeted passed giữ nguyên.
-- Limitation: deterministic reconstruction bảo thủ; chưa ground truth thực tế,
-  không claim reconstruction accuracy. Span annotations cần review; raw extras TBD,
-  trailing extent cần shape annotation; source run identity caller-bound.
-- **M1-12a — Gemini-Assisted Table Reconstruction** là follow-up đề xuất, TODO;
-  chưa tự triển khai, scope/budget và pilot criteria TBD trước giao task.
-- Review checkpoint `c38df351a6f4d86393b69e57fe2e3b3a15a4da6b` = HEAD/origin sau fetch;
-  working tree sạch trước acceptance. [CI 40515264179](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40515264179) success exact SHA.
-- Acceptance chỉ bảy docs/planning files; local Ruff/planning/diff, không API/full local
-  tests hoặc rerun validation. Acceptance SHA/CI xác minh sau push và báo cuối.
-- [Spec](tasks/M1/M1-12.md), [usage](../docs/table-reconstruction.md),
-  [evidence](../docs/reviews/M1-12-evidence.md).
-- Next action: **Chờ Tech Lead giao task; không tự bắt đầu M1-12a hoặc M1-13.**
+- **M1-12a REVIEW**, chờ Tech Lead; M1-12 DONE, M1-13 TODO.
+- Assisted API tái sử dụng M1-12/DU v1/loader/Gateway/Adapter/guard/cache/checkpoints;
+  full OCR evidence, structured JSON, source coverage/geometry gate; không raw mutation.
+- Cùng 4 trang/8 bảng/310 cells: **deterministic1/7 →assisted2/6 resolved/unresolved**;
+  318 source anchors checked, chỉ28 cells/30 anchors thuộc resolved tables.
+- Live **7 requests**, 55620 input/17177 output/72797 total tokens, failures0/unknown0.
+  Model gemini-3.5-flash-lite, text/layout mode; không retry/rotation, không total input cap.
+- 4 invalid coverage (bỏ17 empty cells/lặp1 source ID), 1 unsupported merge, 1 gaps;
+  giữ2265 original geometry conflicts unresolved. New resolved table có12 cells,
+  8 bbox ngoài bbox table nhưng valid/trong page và local grid/layout đạt; warning giữ.
+- Cache7/checkpoint1 probes; **offline checkpoint1/service0/API0**. 9 snapshots và
+  manifest/raw provenance bất biến; không sửa M1-12 report hoặc mở rộng mẫu.
+- **28 focused +233 regression =261 passed**; Ruff/planning/diff đạt.
+  Không full local suite; full unit suite CI 3.11/3.12 đạt exact implementation SHA.
+- Limitations: không ground truth/accuracy, source run caller-bound, text/layout only.
+  Guard money NOT_CONFIGURED; billing/project ID/quota remaining chưa independently verified.
+- Baseline HEAD/origin sạch `54d198e886fd41dcc8f9f84a26a40ed77b7a4088` trước triển khai;
+  implementation `dbc1b0941cff2c863066eafffff6233912049017` đã push main;
+  [CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, mọi steps 3.11/3.12 đạt.
+  Checkpoint REVIEW chỉ docs/planning, SHA/CI kiểm tra riêng sau push.
+- [Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
+  [evidence](../docs/reviews/M1-12a-evidence.md).
+- Next action: **Tech Lead review M1-12a; không DONE/M1-13.**

@@ -1,6 +1,6 @@
 # Master Task Registry
 
-Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-10-27**
+Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-10-28**
 (Asia/Bangkok). Một dòng duy nhất cho mỗi Task ID; lịch sử bên dưới là bằng
 chứng, không phải registry thứ hai. [Dashboard](progress.md),
 [roadmap](roadmap.md), [handoff](handoff.md), [mẫu task](task-template.md).
@@ -58,7 +58,7 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 | M1-11a | Bounded Real Classification Pilot | M1 | DONE | P1 | M1-11 | [M1-11a](tasks/M1/M1-11a.md) | Tech Lead APPROVED 27/10/2026; [Implementation 063bd29](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/063bd2935a47832d928a6869ea35a2bd0cf6f9f2), [CI 40505711042](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40505711042) success exact SHA 3.11/3.12; live 6 requests/5 real pages, safe token stop; [evidence](../docs/reviews/M1-11a-evidence.md) |
 | M1-11b | Classification Quality Gate Refinement & Real Pilot | M1 | DONE | P1 | M1-11a | [M1-11b](tasks/M1/M1-11b.md) | Tech Lead APPROVED 27/10/2026; [Implementation e3e86a3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/e3e86a3a879f7865868191e28f09c6e5ecd31fbd); [CI 40509984641](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40509984641) success exact SHA 3.11/3.12; 19 pages, 9 resolved/10 unresolved; [evidence](../docs/reviews/M1-11b-evidence.md) |
 | M1-12 | Table Structure Reconstruction | M1 | DONE | P1 | M1-11 | [M1-12](tasks/M1/M1-12.md) | Tech Lead APPROVED 27/10/2026; [Implementation 01b235c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/01b235cc83f08e3df86ac8341370ee43ebc866e8); [CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586) success exact SHA 3.11/3.12; 219 targeted, real 1 resolved/7 unresolved; [evidence](../docs/reviews/M1-12-evidence.md) |
-| M1-12a | Gemini-Assisted Table Reconstruction | M1 | TODO | P1 | M1-12 | [M1-12a](roadmap.md#m1-12a) | Follow-up đề xuất; chưa giao triển khai, scope/budget TBD |
+| M1-12a | Gemini-Assisted Table Reconstruction | M1 | REVIEW | P1 | M1-12 | [M1-12a](tasks/M1/M1-12a.md) | [Implementation dbc1b09](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/dbc1b0941cff2c863066eafffff6233912049017); [CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA 3.11/3.12; 261 targeted, same8 2 resolved/6 unresolved, 7 requests; [evidence](../docs/reviews/M1-12a-evidence.md) |
 | M1-13 | Evidence-Preserving OCR Correction | M1 | TODO | P1 | M1-12 | [M1-13](roadmap.md#m1-13) | - |
 | M1-14 | Document Understanding Evaluation | M1 | TODO | P1 | M1-13 | [M1-14](roadmap.md#m1-14) | - |
 | M2-01 | Financial Normalization Contracts | M2 | TODO | P2 | M1-14 | [M2-01](roadmap.md#m2-01) | - |

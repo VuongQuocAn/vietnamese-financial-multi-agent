@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-10-27** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-10-28** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 28 | 25 | 0 | 0 | 3 | 0 | 0 |
+| M1 | 28 | 25 | 0 | 0 | 2 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 78 | 29 | 0 | 0 | 49 | 0 | 0 |
+| TOTAL | 78 | 29 | 0 | 0 | 48 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -32,7 +32,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | Module | Trạng thái implementation đã xác minh |
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
-| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12 |
+| `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction REVIEW, 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | Chỉ package/docstring; chưa có normalization hoặc validators |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
@@ -46,20 +46,18 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-12 DONE — Tech Lead APPROVED** 27/10/2026; không task triển khai active.
-M1-12a Gemini-Assisted Table Reconstruction là follow-up đề xuất, TODO;
-chưa giao triển khai, scope/budget TBD. M1-13 TODO.
-Giữ nguyên validation 4 trang/8 bảng/310 ô: 1 resolved/7 unresolved, Gemini0 requests.
-Deterministic reconstruction bảo thủ, 2265 pairwise geometry conflicts;
-chưa có ground truth thực tế, không claim accuracy. 219 targeted passed giữ nguyên.
-[Spec](tasks/M1/M1-12.md), [evidence](../docs/reviews/M1-12-evidence.md).
-Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` /
-[CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586)
-success exact SHA 3.11/3.12. Review checkpoint `c38df351a6f4d86393b69e57fe2e3b3a15a4da6b` /
-[CI 40515264179](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40515264179) success exact SHA; HEAD/origin khớp, tree sạch trước acceptance.
-Acceptance chỉ docs/planning; local Ruff/planning/diff, không API/full local tests.
-Acceptance SHA/CI kiểm tra riêng sau push, báo cuối; không tự tham chiếu commit.
-Next action: Chờ Tech Lead giao task; không tự bắt đầu M1-12a hoặc M1-13.
+**M1-12a REVIEW**, chờ Tech Lead; M1-12 DONE, M1-13 TODO.
+Same8-table pilot: 4 pages/310 cells/318 source anchors checked,
+deterministic1 resolved/7 unresolved →assisted2 resolved/6 unresolved.
+7 requests, 55620 input/17177 output/72797 total tokens, failures0.
+4 coverage rejects/1 unsupported merge/1 gaps; 2265 original geometry conflicts giữ.
+Cache7/checkpoint1 probes; offline checkpoint1/service0/API0; 9 snapshots bất biến.
+28 focused +233 regression =261 passed; không full local suite, không API rerun.
+Model fixed gemini-3.5-flash-lite, text/layout mode; không ground truth/accuracy.
+[Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
+[evidence](../docs/reviews/M1-12a-evidence.md). Implementation `dbc1b0941cff2c863066eafffff6233912049017` /
+[CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, full unit suite Python 3.11/3.12 đạt.
+Next action: Tech Lead review M1-12a; không DONE/M1-13.
 Các đoạn dưới là lịch sử.
 
 **M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,

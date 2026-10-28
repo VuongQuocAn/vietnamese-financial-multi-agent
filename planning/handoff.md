@@ -2,59 +2,60 @@
 
 ## Active Task
 
-M1-12 — Final Acceptance; không task triển khai active.
+M1-12a — Gemini-Assisted Table Reconstruction.
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` /
-[CI 40514937586](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40514937586)
-success exact SHA, mọi steps Python 3.11/3.12 đã xác minh.
-Review checkpoint `c38df351a6f4d86393b69e57fe2e3b3a15a4da6b` khớp HEAD/origin sau fetch;
-working tree sạch trước acceptance. [CI 40515264179](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40515264179) success exact SHA.
-Tech Lead APPROVED 27/10/2026, cho phép REVIEW → DONE.
+Baseline 54d198e886fd41dcc8f9f84a26a40ed77b7a4088 khớp HEAD/origin sau fetch, tree sạch.
+M1-12 DONE. User giao M1-12a 28/10/2026, cho implement/API max15/test/commit/push;
+dừng REVIEW. Implementation `dbc1b0941cff2c863066eafffff6233912049017` đã push;
+[CI 40607344930](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607344930) success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đạt.
 
 ## Completed Work
 
-Đã nghiệm thu M1-12 và đồng bộ registry/spec/current-status/progress/handoff/evidence
-sang DONE. Roadmap/registry ghi M1-12a — Gemini-Assisted Table Reconstruction là
-follow-up đề xuất, TODO, chưa giao triển khai. Không thay code/tests/contracts/nguồn.
-Giữ nguyên validation 4 trang/8 bảng/310 ô, 1 resolved/7 unresolved; Gemini0 requests.
+Assisted module/schema/evidence gate, cache/checkpoint compatibility và revalidation;
+MeteredModels optional caps giữ defaults classification. Same8/4pages/310cells,
+318 source anchors checked: deterministic1/7 →assisted2/6. Live7 requests,
+55620 input/17177 output/72797 total tokens, failures0, không retry/rotation.
+Cache7/checkpoint1 probes; offline checkpoint1/service0/API0, 9 snapshots bất biến.
+Chỉ text/layout, không ảnh; raw/contracts/M1-12 report/credentials không sửa.
 
 ## Remaining Work
 
-Không còn công việc nghiệm thu M1-12. M1-12a chỉ đề xuất; M1-13 TODO.
-Acceptance SHA/CI xác minh riêng sau push và báo cuối, không self-reference.
+Chờ Tech Lead review; publication exact-SHA CI 3.11/3.12 đạt. Không M1-13/DONE.
 
 ## Modified Files
 
-Chỉ bảy files: planning/{tasks,roadmap,progress,current-status,handoff}.md;
-planning/tasks/M1/M1-12.md; docs/reviews/M1-12-evidence.md.
+src/document_processing/{table_assistance,table_pilot,classification_pilot}.py;
+scripts/run_table_assistance_pilot.py; tests/unit/test_table_assistance.py;
+docs/table-assistance.md; docs/reviews/M1-12a-evidence.md;
+planning/{tasks,roadmap,progress,current-status,handoff}.md; planning/tasks/M1/M1-12a.md.
 
 ## Tests
 
-Giữ evidence 219 targeted passed và full unit suite CI 3.11/3.12.
-Local acceptance chỉ Ruff lint/format, planning checker, git diff --check.
-Không API/full local tests hoặc real validation rerun. CI acceptance kiểm tra sau push.
+28 focused +233 related regression =261 passed; Ruff/planning/diff đạt trước commit.
+Không full local suite; CI full unit 3.11/3.12 đạt exact implementation SHA. Không rerun pilot/API/tests
+chỉ vì docs. Private records tại ignored artifacts/table-reconstruction/M1-12a.
 
 ## Blockers
 
-Không còn phần chờ nghiệm thu M1-12. Limitations giữ nguyên: deterministic
-reconstruction bảo thủ; 2265 pairwise geometry conflicts; chưa ground truth thực tế
-hoặc accuracy. Giữ 5 gaps, 32 bbox out-of-bounds, 47 observed empty cells;
-source run identity caller-bound, span/shape annotations cần review, raw extras TBD.
-M1-12a scope/budget/pilot criteria TBD; chưa được giao triển khai.
+Chưa ground truth/accuracy; source run caller-bound, text/layout only.
+6 unresolved: 4 coverage rejects (17 empty cells bị bỏ/1 source ID lặp), 1 unsupported
+merge, 1 gaps. 2265 geometry conflicts cũ vẫn giữ. Không live merge accepted.
+Guard money NOT_CONFIGURED; actual billing/project ID/quota remaining chưa independently
+verified. Không provider/quota blocker; chờ Tech Lead review engineering/policy.
 
 ## Git Checkpoint
 
-Stable implementation `01b235cc83f08e3df86ac8341370ee43ebc866e8` / CI 40514937586 success.
-Review checkpoint `c38df351a6f4d86393b69e57fe2e3b3a15a4da6b` / CI 40515264179 success exact SHA.
-Acceptance SHA/CI kiểm tra riêng sau push và báo cuối, không tự tham chiếu commit.
-[Evidence](../docs/reviews/M1-12-evidence.md), [spec](tasks/M1/M1-12.md).
+Stable implementation `dbc1b0941cff2c863066eafffff6233912049017` / CI 40607344930 success exact SHA.
+HEAD/origin khớp sau implementation push; remaining diff chỉ docs/planning REVIEW.
+Checkpoint docs SHA/CI kiểm tra riêng sau push, không tự tham chiếu commit.
+[Spec](tasks/M1/M1-12a.md), [evidence](../docs/reviews/M1-12a-evidence.md).
 
 ## Exact Next Action
 
-Chờ Tech Lead giao task; không tự bắt đầu M1-12a hoặc M1-13.
+Tech Lead review M1-12a; không DONE/M1-13.
