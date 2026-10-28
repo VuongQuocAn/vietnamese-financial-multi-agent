@@ -2,9 +2,8 @@
 
 Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-- **M2-04 DONE; M2-04a REVIEW**, chờ Tech Lead.
-- Gemini model gemini-3.5-flash-lite: 3 calls thành công, 0 retry. Pilot 40 ô: 6 accepted đúng, 0 sai, 12 rejected ngoài catalog, 22 unresolved. [Issue](tasks/M2/issues/M2-04-numeric-linking.md), [API/evidence](../docs/table-recovery.md).
-- Một reviewer đối chiếu ảnh; binding, cấu trúc, geometry và OCR witness được kiểm tra. Geometry Gemini/OCR chưa tin cậy; không verified financial facts hoặc accuracy toàn dataset.
-- 14 focused + 12 M2-04 regression PASS; Ruff, planning checker 83 và diff check PASS; hash 8 nguồn không đổi.
-- Implementation `4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd`; [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS exact SHA, mọi bước Python 3.11/3.12.
-- Next action: Chờ Tech Lead review M2-04a; không bắt đầu M2-05.
+- **M2-04a DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP; M2-04 vẫn DONE.
+- Pilot 40 slots: **6 accepted đúng, 0 sai, 12 rejected, 22 unresolved**. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts.
+- [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd); [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS đúng implementation SHA, mọi bước Python 3.11/3.12 đã xác minh. [Spec](tasks/M2/M2-04a.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
+- Nghiệm thu planning-only; baseline sạch local/origin `d436b755839aedd9ac56dcb76bf0579f1990b0b1`, diff từ implementation chỉ planning. Không chạy lại pytest, Gemini hoặc CI; không gán CI implementation cho SHA nghiệm thu.
+- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.

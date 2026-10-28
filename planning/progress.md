@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 8 | 4 | 0 | 0 | 3 | 0 | 1 |
+| M2 | 8 | 5 | 0 | 0 | 3 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 83 | 40 | 0 | 0 | 42 | 0 | 1 |
+| TOTAL | 83 | 41 | 0 | 0 | 42 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -33,7 +33,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | --- | --- |
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
-| `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted |
+| `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
 | `tools` | Chỉ package/docstring; chưa có shared executable tools |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
@@ -45,6 +45,14 @@ Tiến độ implementation nghiệp vụ, chất lượng OCR/QA/report và đ�
 benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
+
+**M2-04a DONE** — Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP.
+Pilot 40 slots: 6 accepted đúng, 0 sai, 12 rejected, 22 unresolved. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts.
+[Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd); [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS đúng SHA, mọi bước Python 3.11/3.12.
+Nghiệm thu chỉ planning; không chạy lại pytest, Gemini hoặc CI. [Spec](tasks/M2/M2-04a.md), [issue](tasks/M2/issues/M2-04-numeric-linking.md).
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-05.
+
+Các checkpoint bên dưới là lịch sử.
 
 **M2-04 DONE** — [spec](tasks/M2/M2-04.md), [API/evidence](../docs/financial-item-mapping.md).
 Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP Lean v3.

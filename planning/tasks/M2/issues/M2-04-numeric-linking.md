@@ -30,3 +30,6 @@ Gemini `gemini-3.5-flash-lite`: 3 calls thành công, 0 retry. Adapter kiểm tr
 | Unresolved / chưa xét | 12 chưa xét | 22 unresolved |
 
 12 rejected sau là nhãn ngoài catalog, trước đó chưa xét; 22 unresolved thuộc nhãn đã map, không có đủ review/binding. Kết quả là pilot ba trang, một reviewer, không đánh giá accuracy toàn dataset. Hash 2 unified exports, 3 ảnh và 3 OCR JSON giữ nguyên. [API và evidence](../../../../docs/table-recovery.md).
+
+## Nghiệm thu M2-04a
+Tech Lead APPROVED ngày 2026-10-28 trong phạm vi Research MVP; task DONE. Pilot 40 slots: 6 accepted đúng, 0 sai, 12 rejected, 22 unresolved. 6 liên kết chỉ thuộc B02 trang 7, có manual image review; chưa có automatic glyph verification, chưa xác minh numeric linking thực tế cho B01/B03, chưa phải verified financial facts. [Implementation](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/4d6221cf222d3bf6faa1380da11cbbe92ffcd5bd); [CI40644142273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40644142273) SUCCESS exact SHA Python 3.11/3.12. Nghiệm thu chỉ planning, không chạy lại pytest, Gemini hoặc CI.
