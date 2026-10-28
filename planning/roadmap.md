@@ -228,5 +228,9 @@ M0-04 chỉ thiết lập tài liệu quản lý; dừng sau M0-04, không bắt
 
 ## M2-08 — Audit bổ sung được giao
 
-[M2-08](tasks/M2/M2-08.md) REVIEW, dependency M2-07 DONE.
-Audit runtime, benchmark một PDF, targeted recovery; dừng REVIEW trước Web Demo V1.
+[M2-08](tasks/M2/M2-08.md) DONE, dependency M2-07 DONE.
+Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28; nghiệm thu planning-only.
+Gemini structured financial extraction là primary path; OCR/unified, manual recovery
+và accounting checks optional theo tác vụ. Benchmark một PDF BBS2025, structured
+intents:23/26→25/26 answered; gain từ recovery thêm trang6, chưa đánh giá NL chatbot.
+Hướng tiếp theo: Web Demo V1 sau nghiệm thu, chờ Tech Lead giao; chưa tự bắt đầu hoặc mở M3.
