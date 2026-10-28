@@ -1,5 +1,5 @@
-import { Plus } from "lucide-react";
 import { DocumentList } from "@/components/document-list";
+import { UploadDropzone } from "@/components/upload-dropzone";
 
 export default function DocumentsPage() {
   return (
@@ -12,18 +12,8 @@ export default function DocumentsPage() {
             Quản lý báo cáo tài chính và theo dõi trạng thái xử lý.
           </p>
         </div>
-        <button
-          className="button primary"
-          disabled
-          aria-describedby="documents-upload-note"
-        >
-          <Plus size={17} />
-          Thêm tài liệu
-        </button>
       </div>
-      <p className="notice" id="documents-upload-note">
-        Chức năng thêm tài liệu chưa khả dụng; sẽ được bổ sung trong W-03.
-      </p>
+      <UploadDropzone />
       <DocumentList />
     </div>
   );

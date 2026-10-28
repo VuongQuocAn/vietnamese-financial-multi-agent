@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 88 | 49 | 0 | 0 | 39 | 0 | 0 |
+| W | 3 | 2 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 89 | 49 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,32 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+**W-03 REVIEW — final refinement**: auto-first core có nguồn → ready; key-file
+rotation/cooldown/cap chung, bỏ policy/scope thủ công, UI neutral/form tùy chọn.
+8 browser targeted PASS (1440/1366 và mobile tối thiểu), 44 Python focused cases.
+Live scan synthetic2 trang PASS, model gemini-3.5-flash-lite, provenance trang2,
+auto-ready/edit PASS;3 attempts tổng gồm2 HTTP400 ban đầu và1 success/2805tokens.
+Baseline f617e68, PR#3 draft base W-02. Refinement7048d92 đã push/remote khớp;
+[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
+SUCCESS exact SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS.
+[Evidence](../docs/web-demo-v1/w-03-validation.md).
+Next action: Tech Lead nghiệm thu độc lập W-03.
+
+Các checkpoint W-03 bên dưới là lịch sử trước final refinement.
+
+**W-03 REVIEW** — upload/storage/Vision preflight và metadata review đã có.
+36 focused unit/integration, 139 Gateway/quota/cache regression và 11 browser/proxy
+PASS; Ruff/TypeScript/lint/build PASS. Live Gemini NOT RUN vì thiếu policy/budget
+scope W-03 mới được xác nhận. [Spec](tasks/W/W-03.md),
+[evidence](../docs/web-demo-v1/w-03-validation.md), [usage](../docs/web-demo-v1/w-03-usage.md).
+Stacked W-02 HEAD 78a50c6, PR #1/#2 OPEN; không merge/W-04/M3.
+Implementation b494788 đã push/remote khớp; [PR #3](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/3)
+draft OPEN base W-02. [CI 40710376652](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40710376652)
+SUCCESS exact SHA: Python 3.11/3.12 mỗi job 1494 PASS/11 SKIP; Web 11 PASS.
+Next action: Tech Lead nghiệm thu độc lập W-03.
+
+Các checkpoint W-02 bên dưới là lịch sử.
 
 **W-02 DONE** — Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3.
 Commit đã nghiệm thu `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`, local/origin

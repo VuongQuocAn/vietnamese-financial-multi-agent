@@ -2,61 +2,62 @@
 
 ## Active Task
 
-W-02 — Frontend/Backend Skeleton & Local Development
+W-03 — PDF Upload & Gemini Vision Metadata Preflight
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED ngày 28/10/2026 theo Research MVP Lean v3. Sau fetch,
-local/origin feat/w-02-web-skeleton cùng `db25039b818f7251cba7b4ed091dd2afa0dbc6ec`.
-W-02 REVIEW trước phiên nghiệm thu. Có thay đổi local sẵn web/next-env.d.ts,
-giữ nguyên và không stage. PR #2 OPEN, base docs/w-01-web-demo-design; PR #1
-vẫn OPEN, không tự merge.
+Baseline refinement f617e68295f79de1c5702fe8c27f7b0fcfcea0b1 sau fetch.
+PR #1/#2/#3 OPEN; #3 draft base W-02. W-01/W-02 DONE.
+Giữ next-env local, không core/M1–M2/Stitch/CI/merge/W-04/M3.
 
 ## Completed Work
 
-Nghiệm thu W-02 REVIEW → DONE theo approval, đồng bộ spec/registry/dashboard/
-current-status/handoff/roadmap. Next.js + FastAPI skeleton đã được Tech Lead
-nghiệm thu tại db25039, lỗi format code fence W-01 đã sửa ở commit đó.
-Phiên này chỉ sửa planning, không sửa implementation/tests/UI/M1–M2/Stitch.
+Key-file-only rotation/cooldown/auth/retry-after/cap chung qua existing
+Gateway/adapter/cache, không giả confirmed project. Counters persist, bỏ manual
+policy/fingerprint/scope. Metadata_v2 flat/one SDK user turn, runtime strict.
+Auto-ready core có nguồn, accepted/auto và confirmed/user tách riêng; revisions/
+history/user edits/suggestions giữ. UI neutral, form tùy chọn, desktop-first.
+Live scan synthetic 2 trang PASS + edit PASS; 3 attempts tổng, không thêm live calls.
 
 ## Remaining Work
 
-Không còn việc nghiệm thu W-02. PR #1/#2 vẫn OPEN, chưa merge main.
-Không bắt đầu W-03/M3; upload/metadata/viewer/evidence API/AI vẫn ngoài W-02.
+Tech Lead review. Publication/CI exact refinement SHA đã PASS. Không W-04/M3.
 
 ## Modified Files
 
-Chỉ planning/tasks/W/W-02.md, planning/tasks.md, planning/progress.md,
-planning/current-status.md, planning/handoff.md và planning/roadmap.md.
-web/next-env.d.ts là thay đổi có sẵn, không thuộc commit nghiệm thu.
+src/api metadata composition/store/jobs/list summary, metadata_preflight, web
+detail/labels/styles/tests; key-pool tests và smoke script, .env example, docs/
+planning. Xóa config example manual policy obsolete. next-env có sẵn không stage.
 
 ## Tests
 
-Phiên nghiệm thu: `.venv/Scripts/python.exe scripts/check_planning.py` và
-`git diff --check` PASS; không chạy lại tests/CI đã xác minh.
-[CI 40703400345](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40703400345)
-SUCCESS đúng SHA db25039: Python 3.11/3.12 lint/format/planning/unit tests PASS
-(mỗi job 1460 PASS/11 SKIP); Web skeleton typecheck/lint/build + 5 smoke PASS.
-Đã kiểm trạng thái các steps. Không gán CI implementation cho SHA planning mới.
+8 targeted browser documents PASS, có auto-ready 1440/1366 không form bắt buộc.
+Python focused44 PASS, Ruff/TS/ESLint/build/planning/diff/staged audit PASS.
+[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
+SUCCESS exact refinement SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS.
+Mọi steps đã kiểm; không chạy lại full local suite/CI hoặc Gemini sau PASS.
+Live: 2 HTTP400 ban đầu, sau flat schema/coalesce turn 1 success, 2805 tokens,
+tên/năm/scope đúng nguồn trang2, ready auto + user edit PASS. Không benchmark.
 
 ## Blockers
 
-Không blocker nghiệm thu; Tech Lead đã APPROVED. Stacked PR chưa merge là trạng
-thái Git, không đồng nghĩa W-02 chưa nghiệm thu. Không tự merge hoặc mở task mới.
+Không blocker implementation. Key file không chứng minh project/billing; Free
+Tier dựa trên user confirmation, cap chung bảo thủ và provider enforce quota thực.
+Live chỉ synthetic, chưa chất lượng metadata trên dataset thực.
 
 ## Git Checkpoint
 
-Commit đã nghiệm thu và đã push, remote khớp sau fetch:
-`db25039b818f7251cba7b4ed091dd2afa0dbc6ec`.
-Commit nghiệm thu tiếp theo chỉ sáu planning files, message được giao:
-`docs(planning): accept W-02 after Tech Lead approval [skip ci]`.
-SHA mới/remote xác minh sau publication, không ghi SHA tương lai.
-Giữ nguyên web/next-env.d.ts; không stage dữ liệu/secrets/artifacts.
+Baseline ổn định f617e68. Refinement ổn định đã push/remote khớp:
+7048d92ba7215191dd8a5c9c12b777085fb9c23d; CI40718128314 SUCCESS exact SHA.
+PR #3 draft OPEN base W-02, #1/#2 OPEN/chưa merge. Commit evidence tiếp theo chỉ
+docs/planning [skip ci], không gán CI này cho SHA documentation mới.
+Không stage key/PDF/images/cache/usage counters/next-env. Đã dừng hai server riêng
+của browser tests. Giữ nguyên thay đổi local next-env so với lúc bắt đầu phiên.
 
 ## Exact Next Action
 
-Chờ chỉ đạo tiếp theo.
+Tech Lead nghiệm thu độc lập W-03.

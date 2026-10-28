@@ -1,7 +1,10 @@
 # Chạy Web Demo V1 trên Windows
 
-W-02 cung cấp Next.js App Router + FastAPI trên loopback, không cần Docker,
-database, PDF hoặc Gemini API key. M1–M2 chưa được kết nối vào HTTP layer.
+W-03 bổ sung upload PDF/storage/preflight/review trên skeleton Next.js + FastAPI.
+Không cần Docker/database; upload và sửa thủ công chạy không cần key.
+Chỉ đặt GEMINI_API_KEY_FILE để bật nhận diện auto-first và key rotation.
+Cấu hình Gemini server-side, limits, retry/restart và luồng scan PDF tại
+[W-03 usage](w-03-usage.md). Financial extraction M1–M2 chưa nối vào HTTP layer.
 Thiết kế theo [UI handoff](ui-handoff.md), [kiến trúc](architecture.md).
 
 Yêu cầu Python 3.11+ và Node.js 24 LTS (package web yêu cầu Node >=24).
@@ -42,8 +45,8 @@ npm.cmd run dev
 
 Mở <http://127.0.0.1:3000>. Có thể chuyển bốn trang, thu/mở sidebar ở desktop,
 đổi tabs B01/B02/B03/B09/Graph, chỉnh độ rộng PDF bằng slider/keyboard và chuyển
-khung xem trên mobile. Upload/chọn tài liệu disabled có giải thích; không nhận,
-đọc hoặc lưu PDF. Documents/evidence rỗng; AI Coming Soon, chưa có chatbot.
+khung xem trên mobile. Upload PDF thật từ Dashboard/Documents, danh sách từ API,
+review metadata tại `/documents/[id]`. Evidence còn rỗng; AI Coming Soon.
 Font Be Vietnam Pro tiếng Việt được đóng gói local; không fetch Google Fonts.
 
 Kiểm tra backend và proxy từ terminal khác:

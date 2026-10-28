@@ -1,12 +1,44 @@
-# Web Demo V1 — API contracts đề xuất
+# Web Demo V1 — API contracts
 
-W-01 REVIEW, `web_demo_v1`; chưa có endpoints chạy thật.
+W-01 đã nghiệm thu; W-03 triển khai documents/metadata/preflight/file/status.
+Inventory/evidence/extract bên dưới còn là thiết kế dự kiến cho W-04 trở đi.
+[Implementation/usage W-03](w-03-usage.md).
 [Kiến trúc/lifecycle](architecture.md), [UI mapping](ui-handoff.md).
 Tất cả JSON ví dụ dưới đây là **synthetic minh họa contract**, không là dữ liệu
 tài chính, output Gemini hoặc kết quả chạy web thật. UUID dùng dạng chuẩn;
 hash trong ví dụ là placeholder 64 ký tự, không gán cho PDF pilot.
 
 ## Quy tắc chung và endpoints
+
+Refinement W-03: auto-first thay confirmation bắt buộc trong đề xuất W-01.
+POST process chỉ operation=preflight; extract chưa triển khai. metadata.accepted
+biểu thị sẵn sàng, acceptance_origin=auto/user/null. confirmed chỉ cho user,
+auto-accept không gán confirmed=true. Summary trả tên/ticker/năm khi accepted.
+
+Auto-accept khi tên công ty và năm valid/resolved/không conflict và có raw text/
+PDF page provenance. Optional ticker/period/scope có thể null. Auto-accept tăng
+metadata_revision, ghi acceptance_history origin=auto với source attempt; job giữ
+input revision và thêm accepted_metadata_revision khi tự chấp nhận. User PATCH
+giữ body metadata_revision/confirmed/values, accepted=confirmed, origin=user; edits
+và suggestions không mất. Không ghi đè user values khi retry. Retry origin=auto
+bỏ accepted cũ và đánh giá lại theo nguồn mới. Legacy snapshots confirmed=true
+được đọc thành accepted/user, không yêu cầu người dùng xác nhận lại.
+
+Document thêm size_bytes/updated_at/runtime_identity, nội bộ document:<UUID>.
+Job progress.preflight={completed_pages,total_pages}, terminal ready/needs_metadata
+hoặc failed; metadata ambiguity→needs_metadata, technical/quota/config error→failed
+khi chưa có accepted metadata. Restart active→interrupted, không tự gửi lại.
+UI needs_metadata hiển thị Cần bổ sung thông tin, ưu tiên retry và edit tùy chọn.
+
+Preflight schema_revision=metadata_v2, schema phục vụ flat; runtime Pydantic vẫn
+kiểm candidate limits/strict types/provenance. Chưa đủ core hoặc response invalid
+thì xem batch sau trong cap; dừng sufficient_evidence không đợi ticker. Batches
+giữ images/DPI/model/usage và safe attempt metadata, không raw response/keys.
+Counters chung Free Tier pool persist tự động, không scope marker thủ công.
+Xem [usage](w-03-usage.md) cho key rotation/caps và billing assumptions.
+
+Các examples W-01 bên dưới là synthetic lịch sử; body PATCH vẫn tương thích,
+response hiện hành thêm accepted/acceptance_origin/acceptance_history như trên.
 
 Prefix `/api`; same-origin local. JSON UTF-8, UTC ISO8601 timestamps,
 Decimal hữu hạn là string (cả scale/delta/tolerance), không NaN/Infinity/float.
@@ -28,11 +60,12 @@ credentials, image base64 hoặc raw provider errors. Lỗi client trả message
 | GET `/documents/{id}/file` | Range header tùy chọn | 200 application/pdf hoặc 206 byte range; Accept-Ranges: bytes | 416 range không hợp lệ; inline filename được sanitize |
 
 DocumentSummary: id, filename, created_at, state, metadata_revision,
-company_name/stock_ticker/reporting_year (confirmed values hoặc null),
+company_name/stock_ticker/reporting_year (accepted values hoặc null),
 latest_result (attempt_id/revision hoặc null). Document thêm content_id,
 page_count, metadata, job, limits (max_upload_bytes/max_pages), latest_result.
 `content_id` có prefix sha256; document id không đổi khi sửa metadata.
-Metadata object giữ `suggestions`, `values`, `confirmed`, `edits` và `preflight`.
+Metadata giữ `suggestions`, `values`, `accepted`, `acceptance_origin`, `acceptance_history`,
+`confirmed`, `edits` và `preflight`.
 Suggestions của AI không bị PATCH ghi đè; edits chứa field/previous/value và
 origin=user, không cần suy giá trị user nhập là bằng chứng PDF.
 
@@ -83,7 +116,8 @@ Upload thành công (201, preflight đã queue):
 ```
 
 Metadata preflight: fragment `metadata` trên Document sau job về needs_metadata;
-`values` vẫn null cho đến PATCH xác nhận. Không có ticker thì vẫn tiếp tục được.
+Trong refinement hiện hành, `values` tự điền khi core đủ nguồn và auto-accepted;
+không cần PATCH xác nhận. Fragment ví dụ W-01 dưới đây là trước refinement.
 
 ```json
 {
