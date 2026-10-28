@@ -2,7 +2,8 @@
 
 Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-12a REVIEW**, chờ Tech Lead; M1-12 DONE, M1-13 TODO.
+- **M1-12a DONE — Tech Lead APPROVED** 28/10/2026; cho phép REVIEW → DONE.
+  M1-12 DONE, M1-13 TODO; không task triển khai active.
 - Assisted API tái sử dụng M1-12/DU v1/loader/Gateway/Adapter/guard/cache/checkpoints;
   full OCR evidence, structured JSON, source coverage/geometry gate; không raw mutation.
 - Cùng 4 trang/8 bảng/310 cells: **deterministic1/7 →assisted2/6 resolved/unresolved**;
@@ -23,7 +24,9 @@ Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - Baseline HEAD/origin sạch `54d198e886fd41dcc8f9f84a26a40ed77b7a4088` trước triển khai;
   implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` đã push main;
   [CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, mọi steps 3.11/3.12 đạt.
-  Checkpoint REVIEW chỉ docs/planning, SHA/CI kiểm tra riêng sau push.
+  Review checkpoint `13c6e1735ef1eeaf1d05c033f66cd5ce52ceec9f` khớp HEAD/origin sau fetch,
+  working tree sạch trước acceptance. Acceptance chỉ năm planning files;
+  planning checker/diff check, không API/tests hoặc chờ/phân tích lại full CI.
 - [Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
   [evidence](../docs/reviews/M1-12a-evidence.md).
-- Next action: **Tech Lead review M1-12a; không DONE/M1-13.**
+- Next action: **Chờ Tech Lead giao task; không tự bắt đầu M1-13.**
