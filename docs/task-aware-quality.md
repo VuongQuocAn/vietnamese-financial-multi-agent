@@ -22,7 +22,9 @@ evidence = evidence_from_automated_records(records)
 # Caller chọn operands và khai báo IDs cần thiết, không truyền toàn PDF cho một comparison.
 selected = [e for e in evidence if e.canonical_item_id == "b02.gross_profit"]
 comparison = assess_evidence_for_task(
-    selected, "analytical_qa", required_evidence_ids=expected_ids,
+    selected,
+    "analytical_qa",
+    required_evidence_ids=expected_ids,
 )
 ```
 
