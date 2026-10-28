@@ -20,10 +20,11 @@ hoặc null. `model_dump_json()` và `export_result()` serialize Decimal thành 
 độ chính xác và trailing zeros, không qua float. Raw `1.234.567`, `(1.234)`, `-` chỉ là
 chuỗi nguyên văn; không được lấy làm normalized_value bằng contract này.
 
-Context có thể là `{}` (mọi field null); không suy luận ngữ cảnh từ identity.year,
-raw label hay unit. Period/period_type/currency/unit là metadata do caller cung cấp,
-chưa có vocabulary/rules chuẩn hóa; scale là hệ số biểu diễn do caller cung cấp,
-không tự nhân/chia normalized_value. Quy tắc áp dụng/đối chiếu còn TBD ở M2-02.
+Context có thể là `{}` (mọi field null); contract không suy luận ngữ cảnh từ identity.year,
+raw label hay unit. Period/period_type/currency/unit là metadata do caller cung cấp;
+scale là hệ số biểu diễn, không tự nhân/chia normalized_value. Consumer tùy chọn
+[resolver M2-02](financial-context-resolution.md) nhận text evidence M1 để chuẩn hóa
+period/currency/scale/scope, giữ candidate uncertainty; không thay wire schema v1.
 Status mô tả độ xác định của giá trị, không phải trạng thái xác minh tài chính.
 
 Provenance tái sử dụng nguyên `SourceAnchor`/`RawPageIdentity` M1 (symbol/year/page/image,

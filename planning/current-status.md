@@ -2,20 +2,13 @@
 
 Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M2-01 DONE** — Tech Lead APPROVED ngày 2026-10-28; nghiệm thu planning-only.
-- Dependency M1-16 DONE; không có implementation task khác đang chạy.
-- Baseline sạch `8c351bee80b81f609074c94c502299ff94b83315`, sau fast-forward
-  hai README-only commits từ local `813968496d06d0e0a41d0da910fd6a3debed289c`.
-- Financial Normalization v1: raw/Decimal, context nullable, SourceAnchor M1,
-  JSON Schema và quality signals riêng. Không extraction/normalization engine.
-- 8 focused tests PASS; Ruff lint/format 5 files, planning checker 82 tasks, diff check PASS.
-- Implementation `471ea80a35f9968ba43b712d4806b54353136373` đã push;
-  [CI40636728310](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636728310)
-  completed/SUCCESS đúng SHA, Python3.11/3.12 và mọi steps success.
-- SHA được nghiệm thu `96e51c4736c67ef4f665ea21a16ba190bb89a798` khớp local/origin;
-  [CI40636889415](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636889415)
-  completed/SUCCESS đúng SHA, Python3.11/3.12 và mọi steps đã xác minh lại.
-- Phiên này chỉ 5 planning files; không chạy lại tests/Gemini, không yêu cầu CI mới.
-- [Spec](tasks/M2/M2-01.md), [API/evidence](../docs/financial-normalization-contract.md).
-- Không dữ liệu thật/API; schema hợp lệ và resolved không xác minh financial fact.
-- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-02.
+- **M2-02 REVIEW** — được người dùng giao; dependency M2-01 DONE.
+- Resolver deterministic period/unit/scope, candidate uncertainty và adapter unified M1;
+  không sửa contracts/schema M1 hoặc financial_normalization_v1.
+- Baseline sạch HEAD/origin `1ca5091f5f33e2cf5dd082fdb068d08b116b34d0`.
+- Local 10 focused M2-02 +8 regression M2-01 PASS, Ruff 5 files, planning82/diff PASS.
+- Pilot5 trang/15 trường: 5 resolved đúng,0 resolved sai,3 uncertain,7 unresolved;
+  hash4 source files không đổi. Không suy độ chính xác dataset; không API/Gemini.
+- [Spec](tasks/M2/M2-02.md), [API/evidence](../docs/financial-context-resolution.md).
+- Implementation đã kiểm tra local, chờ commit/push, CI exact SHA và Tech Lead.
+- Next action: Xác minh CI exact implementation SHA sau commit/push.
