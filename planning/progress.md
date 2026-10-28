@@ -11,14 +11,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
-| M2 | 9 | 9 | 0 | 0 | 0 | 0 | 0 |
+| M2 | 10 | 9 | 1 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 84 | 45 | 0 | 0 | 39 | 0 | 0 |
+| TOTAL | 85 | 45 | 1 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -35,7 +35,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
 | `evidence` | Chỉ package/docstring; chưa có canonical layer, EF-EG hoặc retrieval |
-| `tools` | Chỉ package/docstring; chưa có shared executable tools |
+| `tools` | M2-08 structured financial query probe: exact source/page/code/period, Decimal và citations; chưa có full shared tool space hoặc natural-language QA |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
@@ -46,26 +46,19 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-M2-07 DONE — Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-APIs assess_evidence_for_task/assess_automated_records và raw adapter; bốn task types.
-Pilot BBS2025 trang5/7/8:136 slots,121 numeric usable cho Direct QA
-(28 có canonical mapping/93 ngoài catalog).
-Direct QA20 usable/101 usable_with_caveat/15 insufficient/0 conflicted thực.
-Ba analytical/accounting scenarios đầy đủ usable_with_caveat; partial giữ item usable;
-synthetic conflict giới hạn hai items, không coi là mâu thuẫn tài chính thực.
-28 accepted extraction giữ nguyên;0 Gemini calls; PDF/cache/records không đổi.
-20 focused +114 regression =134 targeted PASS; Ruff/planning/diff local.
-Giới hạn: chỉ một PDF, ba trang; đây là usability assessment, chưa phải độ chính xác
-trích xuất hoặc chatbot QA hoàn chỉnh. Không verified financial facts.
-Phiên nghiệm thu chỉ năm file planning; planning checker và git diff --check PASS;
-không chạy lại Gemini, pytest hoặc CI; code/tests/contracts/dữ liệu/artifacts giữ nguyên.
-[API/pilot](../docs/task-aware-quality.md), [spec](tasks/M2/M2-07.md).
+M2-08 IN_PROGRESS — implementation/audit/pilot hoàn tất local, đang chờ CI.
+Runtime primary: PDF → Gemini structured/cache bound → raw evidence → task-aware query.
+26 structured queries: 23/26 → 25/26 answered (88,46% → 96,15%); correct 23→25,
+incorrect/unsupported 0; partial 1→0; abstained 2→1; grounding 23/23→25/25.
+Gain từ targeted recovery mã300 trang6, không từ nới quality gate trên ba trang cũ.
+136→138 slots,121→123 numeric usable,28 canonical,93→95 ngoài catalog;
+28 accepted extraction không đổi. Một Gemini call/2.037 tokens; không đo monetary cost/live latency.
+17 focused +134 regression =151 targeted PASS; Ruff local PASS.
+PDF/cache/reference hash trước/sau khớp; không commit artifacts/dataset/secrets.
+Giới hạn: một PDF, intent khai báo trước; không là free-form chatbot accuracy.
+[Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
 
-Baseline nghiệm thu sạch local/origin `8e4554e0da0ca44f226418a31b776b3bc56ff00d`.
-Implementation `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh lại.
-Commit nghiệm thu dùng [skip ci]; không gán CI implementation cho SHA planning-only.
-Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-08 hoặc M3.
+Next action: Commit/push implementation M2-08 và xác minh CI đúng SHA.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

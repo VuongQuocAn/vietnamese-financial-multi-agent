@@ -77,10 +77,15 @@ def main():
     )
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--financial", action="store_true", help="M2-04b automated numeric links")
+    parser.add_argument(
+        "--target", help="One targeted financial recovery request per selected page"
+    )
     parser.add_argument("--policy", type=Path)
     parser.add_argument("--key-file", type=Path)
     parser.add_argument("--key-index", type=int)
     args = parser.parse_args()
+    if args.target and (not args.financial or len(parse_pages(args.pages)) != 1):
+        parser.error("target requires --financial and exactly one selected page")
     root = args.output.resolve()
     artifacts = (Path(__file__).resolve().parents[1] / "artifacts").resolve()
     if not root.is_relative_to(artifacts) or root == artifacts:
@@ -197,10 +202,12 @@ def main():
         for page in pages:
             meter.pace()
             record = (
-                extract_financial_page(service, page, credential_ref=credential)
+                extract_financial_page(service, page, credential_ref=credential, target=args.target)
                 if args.financial
                 else ingest_page(service, page, credential_ref=credential)
             )
+            if args.target:
+                record["recovery_request"] = dict(target=args.target, model=MODEL)
             write_once(root / f"page-{page.source['page_number']}.json", record)
             records.append(record)
             print(

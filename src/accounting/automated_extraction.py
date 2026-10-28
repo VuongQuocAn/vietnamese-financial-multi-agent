@@ -297,7 +297,9 @@ def validate_automated_extraction(image, record: dict) -> dict:
     )
 
 
-def extract_financial_page(service, page, *, credential_ref: str, model: str = MODEL) -> dict:
+def extract_financial_page(
+    service, page, *, credential_ref: str, model: str = MODEL, target: str | None = None
+) -> dict:
     """One bounded request via the shared Gateway; no runtime ManualReview."""
     image = page.image
     prompt = (
@@ -315,6 +317,14 @@ def extract_financial_page(service, page, *, credential_ref: str, model: str = M
         "distinct. Mark uncertain cells unknown/inferred, use null text/position if unreadable. "
         "Do not map accounting items or calculate values. Include limitations."
     )
+    if target:
+        prompt += (
+            " Targeted recovery: return only rows needed for the following target, "
+            "with their exact labels/codes, both visible period headers and unit/title context. "
+            "The target is a search request, never a source of values. "
+            "If absent/unreadable return no invented row and explain in limitations. Target: "
+            + target
+        )
     request = parse_llm_request(
         dict(
             contract_version="llm_gateway_v1",

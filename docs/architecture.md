@@ -1,5 +1,10 @@
 # Kiến trúc hệ thống
 
+Runtime Research MVP hiện hành được audit tại
+[M1/M2 end-to-end](m1-m2-end-to-end-audit.md): financial structured extraction
+độc lập nhánh OCR/unified, task-aware evidence và structured query/recovery probe.
+Các lớp ledger/agents/output bên dưới vẫn là định hướng, chưa được M2-08 triển khai.
+
 ## Cơ sở và phạm vi
 
 Nguồn: yêu cầu M0-01 và báo cáo giữa kỳ cục bộ `docs/report_midterm.docx`,

@@ -225,3 +225,8 @@ một task. Thực nghiệm/live API chỉ chạy khi task cho phép và có ng�
 Contracts, công thức kế toán, ngưỡng rủi ro/đánh giá và model chưa chốt không
 được tự suy đoán. Công việc ngoài phạm vi phải ghi thành đề xuất task mới.
 M0-04 chỉ thiết lập tài liệu quản lý; dừng sau M0-04, không bắt đầu M1-01.
+
+## M2-08 — Audit bổ sung được giao
+
+[M2-08](tasks/M2/M2-08.md) IN_PROGRESS, dependency M2-07 DONE.
+Audit runtime, benchmark một PDF, targeted recovery; dừng REVIEW trước Web Demo V1.

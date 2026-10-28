@@ -1,24 +1,18 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-10-28 (Asia/Bangkok).
 
-M2-07 DONE — Tech Lead APPROVED Research MVP Lean v3 ngày 2026-10-28;
-nghiệm thu planning-only.
-APIs assess_evidence_for_task/assess_automated_records và raw adapter; bốn task types.
-Pilot BBS2025 trang5/7/8:136 slots,121 numeric usable cho Direct QA
-(28 có canonical mapping/93 ngoài catalog).
-Direct QA20 usable/101 usable_with_caveat/15 insufficient/0 conflicted thực.
-Ba analytical/accounting scenarios đầy đủ usable_with_caveat; partial giữ item usable;
-synthetic conflict giới hạn hai items, không coi là mâu thuẫn tài chính thực.
-28 accepted extraction giữ nguyên;0 Gemini calls; PDF/cache/records không đổi.
-20 focused +114 regression =134 targeted PASS; Ruff/planning/diff local.
-Giới hạn: chỉ một PDF, ba trang; đây là usability assessment, chưa phải độ chính xác
-trích xuất hoặc chatbot QA hoàn chỉnh. Không verified financial facts.
-Phiên nghiệm thu chỉ năm file planning; planning checker và git diff --check PASS;
-không chạy lại Gemini, pytest hoặc CI; code/tests/contracts/dữ liệu/artifacts giữ nguyên.
-[API/pilot](../docs/task-aware-quality.md), [spec](tasks/M2/M2-07.md).
+M2-08 IN_PROGRESS — implementation/audit/pilot hoàn tất local, đang chờ CI.
+Runtime primary: PDF → Gemini structured/cache bound → raw evidence → task-aware query.
+26 structured queries: 23/26 → 25/26 answered (88,46% → 96,15%); correct 23→25,
+incorrect/unsupported 0; partial 1→0; abstained 2→1; grounding 23/23→25/25.
+Gain từ targeted recovery mã300 trang6, không từ nới quality gate trên ba trang cũ.
+136→138 slots,121→123 numeric usable,28 canonical,93→95 ngoài catalog;
+28 accepted extraction không đổi. Một Gemini call/2.037 tokens; không đo monetary cost/live latency.
+17 focused +134 regression =151 targeted PASS; Ruff local PASS.
+PDF/cache/reference hash trước/sau khớp; không commit artifacts/dataset/secrets.
+Giới hạn: một PDF, intent khai báo trước; không là free-form chatbot accuracy.
+[Audit/API/benchmark](../docs/m1-m2-end-to-end-audit.md), [spec](tasks/M2/M2-08.md).
 
-Baseline nghiệm thu sạch local/origin `8e4554e0da0ca44f226418a31b776b3bc56ff00d`.
-Implementation `4e02ae157b3dc75a1d8f929689c697357f3333ad` đã push; [CI40653814971](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40653814971) SUCCESS đúng SHA, mọi bước Python3.11/3.12 đã xác minh lại.
-Commit nghiệm thu dùng [skip ci]; không gán CI implementation cho SHA planning-only.
-Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2-08 hoặc M3.
+Baseline ổn định `2c9c63dbcfd8fd86cf5eb0b81090fc49f8bf5469`.
+Next action: Commit/push implementation M2-08 và xác minh CI đúng SHA.
