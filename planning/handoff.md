@@ -1,58 +1,55 @@
 # Codex Handoff
 
 ## Active Task
-M2-09 — Full-PDF Real-World Evaluation & Targeted Hardening
+W-01 — Web Demo V1 Architecture, API Contracts & UI Design
 
 ## Status
 DONE
 
 ## Last Verified State
-M2-09 DONE — Tech Lead APPROVED Research MVP Lean v3, Evaluation Level 1 ngày
-2026-10-28; nghiệm thu planning-only. M2-08 DONE.
-PDF BBS2025 24 trang, SHA256 6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1.
-Discovery đúng 24/24; B01 5–6, B02 7, B03 8, B09 9–24. Full runtime không truyền pages.
-Reference 163 numeric cells +7 dash; precision/recall/kỳ/đơn vị/grounding/usability
-đều 163/163 trong phạm vi reference. 7 dash sai raw glyph giữ ngữ nghĩa missing,
-không suy zero. Notes sample 6/6 riêng. Queries M2-08 giữ 25/26 answered đúng/grounded.
-25 Gemini calls mới/37.382 tokens; discovery 116,11 giây.
-Gemini-first, tự chọn trang, optional accounting checks, không ManualReview gate.
-Tech Lead đồng ý CONDITIONAL GO Document Explorer B01/B02/B03; B09 chỉ inventory/viewer.
+Tech Lead APPROVED ngày 28/10/2026; Research MVP Lean v3 —
+Architecture/Design/Contracts, evaluation scope Architecture/Design/API Contracts.
+Dependency M2-09 DONE. Chỉ nghiệm thu thiết kế, chưa có website hoạt động.
+Baseline sau fetch trên docs/w-01-web-demo-design: HEAD/origin cùng
+`ac52100a68863d13bffed96d4218977a8f445779`, working tree sạch.
+Design/API và sáu Stitch assets không đổi so với design commit.
 
 ## Completed Work
-Đã nghiệm thu M2-09 theo approval; xác minh lại implementation SHA và CI hiện có
-SUCCESS đúng SHA trên mọi bước Python 3.11/3.12; đồng bộ sáu file planning REVIEW
-→ DONE. Evidence pilot giữ nguyên, 140 targeted PASS trước nghiệm thu, không chạy lại.
+Đồng bộ W-01 REVIEW → DONE theo approval trong spec/registry/dashboard/status/
+handoff/roadmap. Giữ nguyên architecture/API/UI handoff và các assets Stitch.
+Không yêu cầu sửa kiến trúc lớn hoặc thêm verification layers.
 
 ## Remaining Work
-Không còn việc nghiệm thu M2-09. Dừng sau DONE; chờ Tech Lead giao Web Demo V1.
-Chưa bắt đầu Web Demo V1 hoặc M3.
+Không còn việc nghiệm thu W-01. W-02 chưa bắt đầu; không tự mở W-02 hoặc M3.
+PR/CI kiểm tra sau publication là xác nhận trước merge, không nghiệm thu website.
 
 ## Modified Files
-Chỉ planning/tasks/M2/M2-09.md, planning/tasks.md, planning/progress.md,
+Chỉ planning/tasks/W/W-01.md, planning/tasks.md, planning/progress.md,
 planning/current-status.md, planning/handoff.md và planning/roadmap.md.
-Không sửa implementation, tests, PDF, cache, reference hoặc artifacts.
+Không sửa implementation/tests/checker/docs/web-demo-v1/Stitch/data/cache/reference.
 
 ## Tests
-Phiên nghiệm thu: python scripts/check_planning.py và git diff --check đều PASS.
-Evidence trước nghiệm thu: 140 targeted PASS; không gọi Gemini, không chạy lại pytest/CI.
-[CI40661431781](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40661431781)
-SUCCESS đúng implementation SHA bd5a3c525f4cfe1d3f5204983e86746e748b1c93;
-đã xác minh lại mọi bước Python 3.11/3.12; không kích hoạt run mới.
+Phiên nghiệm thu: python từ .venv chạy scripts/check_planning.py và
+git diff --check đều PASS (planning 87 tasks), đã xác minh trước commit/push.
+Evidence trước nghiệm thu: checker regressions 3 PASS, Ruff PASS, 11 JSON examples
+parse/Decimal context validation PASS; không chạy lại trong phiên planning-only.
+CI chưa chạy trên nhánh W-01 tại checkpoint nghiệm thu; không báo CI SUCCESS.
+Commit nghiệm thu [skip ci] theo yêu cầu. PR/CI kiểm tra sau push; không tự merge,
+không sửa code nếu CI lỗi ngoài phạm vi. Không Gemini/live evaluation/web E2E.
 
 ## Blockers
-Không blocker nghiệm thu; Tech Lead đã APPROVED. Giới hạn: một PDF, reference do
-một agent đối chiếu trực tiếp PDF, không reviewer độc lập thứ hai; chưa đánh giá
-tổng quát, notes QA hoặc chatbot. 7 dash sai raw glyph giữ missing, không suy zero.
+Không blocker nghiệm thu thiết kế; Tech Lead đã APPROVED.
+Giới hạn chưa triển khai: website/FastAPI endpoints, metadata extractor,
+worker/session adapters, viewer/source linking; cache/quota hiện in-memory.
 
 ## Git Checkpoint
-Baseline nghiệm thu sạch local/origin c774b1dd7cc81195aee460708a272e3bf328dfc8.
-Implementation ổn định
-bd5a3c525f4cfe1d3f5204983e86746e748b1c93 đã push; CI40661431781 SUCCESS
-đúng SHA, Python 3.11/3.12 đã xác minh lại. Commit nghiệm thu chỉ planning [skip ci],
-không gán CI implementation cho SHA nghiệm thu. Source data/credentials/cache nguyên trạng,
-không stage raw/normalized/secrets. Reference SHA256
-8e5257a7710d38d43e3f2d17a38e4fa7631ef1655b464a78cd9a74100fbe2ebe;
-evaluation-after SHA256 4674d86c4b338a66362637f14ca8b5342830582a7b929a075beee9ab705583b9.
+Design/implementation ổn định đã push:
+`7a158f31e2feab0895d4ca5054bdbb56e78526be`.
+Review/planning evidence đã push và trùng baseline remote sau fetch:
+`ac52100a68863d13bffed96d4218977a8f445779`.
+Commit nghiệm thu tiếp theo chỉ sửa sáu planning files, dùng message được giao;
+SHA mới/remote/PR/CI được xác minh và báo cáo sau publication, không ghi SHA tương lai.
+Sáu Stitch assets giữ nguyên; không stage datasets/secrets/unrelated files.
 
 ## Exact Next Action
-Chờ Tech Lead giao Web Demo V1; không tự bắt đầu Web Demo V1 hoặc M3.
+Chờ giao W-02.

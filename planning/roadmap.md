@@ -20,6 +20,33 @@ M1-01 đến M1-04 giữ nguyên phạm vi đã đăng ký ở M0-03. Ba task l�
 là spec ngắn dự kiến, phải được cụ thể hóa bằng [template](task-template.md)
 trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng ID mới/hậu tố.
 
+## W — Web Demo V1 giữa M2 và M3
+
+W-01 DONE — Tech Lead APPROVED ngày 28/10/2026, Research MVP Lean v3 —
+Architecture/Design/Contracts; evaluation scope Architecture/Design/API Contracts.
+Phụ thuộc M2-09 DONE; chỉ nghiệm thu thiết kế, chưa có website hoạt động.
+W-02 chưa bắt đầu. Next action: Chờ giao W-02.
+Nhánh ứng dụng này không thay M3–M8, không đưa M3 vào IN_PROGRESS.
+[Spec W-01](tasks/W/W-01.md), [thiết kế](../docs/web-demo-v1/architecture.md),
+[API](../docs/web-demo-v1/api-contracts.md), [UI](../docs/web-demo-v1/ui-handoff.md).
+Chỉ W-01 đã đăng ký; bảng sau là đề xuất dependency/phạm vi, chưa cấp quyền bắt đầu
+và chưa tạo placeholder specs. Chuẩn bị spec/inputs/criteria trước READY.
+
+| Task dự kiến | Dependencies dự kiến | Đầu ra / criteria cần cụ thể hóa |
+| --- | --- | --- |
+| W-02 Frontend/Backend Skeleton & Local Development | W-01 DONE | Next.js/FastAPI skeleton, proxy local, cấu hình storage/limits, shell bốn modules; chưa live extraction |
+| W-03 PDF Upload & Metadata Preflight | W-02 DONE | PDF validation, Vision-first schema/prompt/Gateway, unresolved + user confirmation; test budget giao riêng |
+| W-04 Processing Sessions & Progress | W-03 DONE | Bounded worker, page snapshots/polling, partial/retry/restart và quota recovery; giữ runtime M1–M2 |
+| W-05 PDF Viewer & Page Navigation | W-03 DONE | PDF gốc, page/zoom/fullscreen, file Range; có thể chuẩn bị độc lập W-04 nhưng không tự mở song song |
+| W-06 Financial Evidence Tables & Source Linking | W-04 và W-05 DONE | B01/B02/B03 multi-period/raw/unmapped/quality/source; B09 inventory; cell → PDF page |
+| W-07 Integration, Regression & Web Demo V1 Acceptance | W-06 DONE | Integration/error/partial/restart/security, demo acceptance; CI/evaluation đúng ngân sách được giao |
+
+Một task implementation chính tại một thời điểm. W-02 chỉ bắt đầu sau nghiệm thu
+W-01 và giao việc rõ ràng; chia nhỏ task khi chuẩn bị nếu cần.
+M3 thêm Evidence Graph trong Explorer; M4 tools/QA, M5 planner/specialists,
+M6 verification và M7 QA/report dùng AI Workspace chung; M8 evaluation.
+Chưa xây hạ tầng tương lai.
+
 <a id="m0"></a>
 
 ## M0 — Project Foundation
