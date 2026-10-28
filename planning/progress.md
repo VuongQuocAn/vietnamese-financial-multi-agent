@@ -54,9 +54,12 @@ B02=2/0/2/0, B03=0/0/2/0; hai check thực, difference0/tolerance0, không gọi
 
 [Spec](tasks/M2/M2-05.md), [API/pilot](../docs/arithmetic-checks.md).
 28 focused/84 targeted PASS; Ruff/planning/diff checks PASS local.
-Chờ commit/push và CI exact implementation SHA; chưa có bằng chứng CI mới.
+Implementation `4472916ed19320d13b0a4d0f830d0a7a836fec90` đã push;
+[CI40649070030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40649070030)
+completed/SUCCESS exact SHA, mọi steps Python3.11/3.12 đã xác minh.
 Giới hạn: cùng source page; chưa xác minh financial facts/accuracy toàn dataset.
-Next action: commit/push và xác minh CI đúng implementation SHA trước bàn giao Tech Lead.
+Checkpoint evidence sau CI chỉ docs/planning; không gán CI implementation cho SHA docs.
+Next action: Chờ Tech Lead review M2-05.
 
 Các checkpoint M2-04a bên dưới là lịch sử.
 

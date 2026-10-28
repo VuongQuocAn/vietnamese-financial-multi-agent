@@ -108,3 +108,9 @@ accuracy toàn dataset hay các quan hệ liên báo cáo M2-06.
 financial item mapping và normalization contracts PASS. Ruff changed files PASS.
 Planning/diff checks và CI đúng SHA ghi trong [spec](../planning/tasks/M2/M2-05.md).
 CI dùng synthetic fixtures, không đọc PDF riêng hoặc gọi Gemini thật.
+
+Implementation `4472916ed19320d13b0a4d0f830d0a7a836fec90` đã push;
+[CI40649070030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40649070030)
+completed/SUCCESS exact SHA, mọi bước Python3.11/3.12 được xác minh.
+Checkpoint evidence sau CI chỉ docs/planning; không gán CI này cho SHA docs mới.
+M2-05 REVIEW; next action: Chờ Tech Lead review.

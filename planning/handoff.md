@@ -20,7 +20,7 @@ Replay PDF-bound cache, đọc ảnh nguồn5/7/8, đối chiếu hai đẳng th
 Tài liệu API/pilot/issue/spec và planning đồng bộ; không sửa M2-04b hoặc catalog.
 
 ## Remaining Work
-Commit/push, CI Python3.11/3.12 đúng implementation SHA và Tech Lead nghiệm thu.
+Chờ Tech Lead nghiệm thu M2-05; không còn công việc implementation/CI bắt buộc.
 
 ## Modified Files
 src/accounting/arithmetic.py, src/accounting/__init__.py,
@@ -40,9 +40,14 @@ scope null chỉ tính cùng trang, chưa hỗ trợ multi-page arithmetic hoặ
 
 ## Git Checkpoint
 Baseline sạch local/origin `99f2a91e3d2642268cc6bb0cd769de94cb6d5e37`.
-Implementation hiện ở working tree, chưa commit/push/CI; không gán CI cũ cho code mới.
+Implementation `4472916ed19320d13b0a4d0f830d0a7a836fec90` đã push, local/origin khớp
+và working tree sạch trước checkpoint evidence.
+[CI40649070030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40649070030)
+completed/SUCCESS đúng SHA, Python3.11/3.12 và mọi steps đã xác minh.
+Checkpoint evidence tiếp theo chỉ docs/planning, planning/diff checks;
+không gán CI implementation cho SHA docs, không chạy lại tests/pilot.
 Artifact local ignored: artifacts/arithmetic/M2-05/final/arithmetic.json;
 SHA256 6784479f9a03a0c16802fe18a0a33adea0e8665917c28706ec4639e8e8c82ce9.
 
 ## Exact Next Action
-Commit/push và xác minh CI đúng implementation SHA trước bàn giao Tech Lead.
+Chờ Tech Lead review M2-05.
