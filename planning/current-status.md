@@ -2,7 +2,7 @@
 
 Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 
-- **M1-16 REVIEW** — Unified Document Understanding Pipeline, không tự DONE/M2/demo.
+- **M1-16 DONE** — Tech Lead APPROVED có điều kiện trong phạm vi Research MVP.
 - Baseline `e80319975b1eeef79efc68fac5007980cb20a2a7`; main/tree sạch trước sửa.
 - Entrypoint chung OCR JSON/PDF/PNG và persisted manifest/PNG replay.
 - Existing BBS2025/page5:6 text/1 table/97 cells được giữ; table unresolved.
@@ -13,5 +13,9 @@ Cập nhật **2026-10-28** (Asia/Bangkok). Nguồn: [Registry](tasks.md).
 - [Evidence](../docs/reviews/M1-16-evidence.md), [API](../docs/unified-document-understanding.md).
 - Implementation `7486a6140ac075b90d2c2454f6703b6a56186b1a`; thêm commit sửa format
   code fence Markdown do CI40620767512 phát hiện; code/tests/replay không đổi.
-- CI exact implementation và checkpoint sửa format xác minh cuối phiên.
-- Next action: Tech Lead review implementation, CI exact SHA và giới hạn quality.
+- [CI 40620923159](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40620923159)
+  completed/SUCCESS đúng HEAD `d2df004e3cf347713028ba958abbbb56aec7cb20`;
+  cả Python3.11/3.12 và mọi bước liên quan success.
+- Output chỉ đủ text_evidence, chưa chứng minh financial accuracy.
+- Phiên nghiệm thu chỉ planning; không chạy lại code/tests/replay/Gemini, không yêu cầu CI mới.
+- Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2 hoặc web demo.
