@@ -50,8 +50,9 @@ finite Decimal strings được Python kiểm tra thêm. Không có verification
 - Local: 8 focused tests PASS (synthetic), gồm JSON round-trip/Decimal/raw, null context,
   page-level M1 consumer, invalid types/version, unverified facts, schema parity.
 - Ruff lint/format 5 Python files PASS; planning checker 82 tasks PASS; diff check PASS.
-- Implementation SHA: lấy bằng `git log -1 --format=%H -- src/accounting/contracts.py`.
-  CI exact SHA được xác minh sau push; chưa có kết quả ở thời điểm chuẩn bị commit.
+- Implementation `471ea80a35f9968ba43b712d4806b54353136373` đã push;
+  [CI40636728310](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636728310)
+  completed/SUCCESS đúng SHA: Python3.11/3.12 và mọi steps success.
 - Không sửa M1/raw/dataset, không gọi API, không full local suite/benchmark.
 - Chưa triển khai M2-02–07; không chứng minh financial extraction accuracy.
 - Status REVIEW; next action: Chờ Tech Lead review.

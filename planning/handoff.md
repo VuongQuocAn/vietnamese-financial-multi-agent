@@ -9,7 +9,9 @@ REVIEW
 ## Last Verified State
 M1-16 DONE. Baseline sạch `8c351bee80b81f609074c94c502299ff94b83315` sau fetch/fast-forward
 hai README-only commits. Contracts chạy được; 8 focused tests PASS.
-CI exact implementation SHA sẽ được kiểm tra sau commit/push.
+Implementation `471ea80a35f9968ba43b712d4806b54353136373` đã push;
+[CI40636728310](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636728310)
+completed/SUCCESS đúng SHA, Python3.11/3.12 và mọi steps success.
 
 ## Completed Work
 FinancialValue/Context/SourceReference/NormalizationResult; strict models và version,
@@ -18,7 +20,7 @@ focused tests synthetic và [API/evidence](../docs/financial-normalization-contr
 Registry dependency M2-01 đổi M1-14 → M1-16; spec IN_PROGRESS trước implementation.
 
 ## Remaining Work
-Xác minh CI exact SHA sau publication; Tech Lead review trước DONE.
+Chờ Tech Lead review trước DONE; không còn implementation work trong M2-01.
 
 ## Modified Files
 src/accounting/{__init__,contracts,validation}.py;
@@ -39,8 +41,9 @@ Không financial accuracy hoặc verified fact, kể cả khi không còn qualit
 
 ## Git Checkpoint
 Stable baseline `8c351bee80b81f609074c94c502299ff94b83315`.
-Implementation SHA xác định bằng `git log -1 --format=%H -- src/accounting/contracts.py`.
-Chưa có CI trên implementation tại thời điểm chuẩn bị commit; không suy CI baseline cho code mới.
+Implementation `471ea80a35f9968ba43b712d4806b54353136373`, CI40636728310 SUCCESS exact SHA.
+Checkpoint tiếp theo chỉ docs/planning ghi evidence CI, không thay code/tests/schema;
+CI checkpoint kiểm tra riêng sau push, không suy CI implementation cho HEAD mới.
 
 ## Exact Next Action
 Chờ Tech Lead review.

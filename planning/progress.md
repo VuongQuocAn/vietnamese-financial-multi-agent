@@ -49,7 +49,9 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 **M2-01 REVIEW** — Financial Normalization v1, 8 focused tests PASS.
 Dependency M1-16 DONE; raw/Decimal/context nullable, provenance M1 giữ giới hạn.
 [Spec](tasks/M2/M2-01.md), [API/evidence](../docs/financial-normalization-contract.md).
-CI exact SHA kiểm tra sau commit/push; không dữ liệu thật/API hoặc M2-02.
+[CI40636728310](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40636728310)
+SUCCESS đúng implementation `471ea80a35f9968ba43b712d4806b54353136373`, mọi steps Python3.11/3.12.
+Không dữ liệu thật/API hoặc M2-02.
 Next action: Chờ Tech Lead review.
 Các đoạn sau là lịch sử.
 
