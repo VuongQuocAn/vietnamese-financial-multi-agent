@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 31 | 30 | 0 | 0 | 0 | 0 | 1 |
+| M1 | 31 | 31 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 81 | 34 | 0 | 0 | 46 | 0 | 1 |
+| TOTAL | 81 | 35 | 0 | 0 | 46 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,12 +46,15 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-15 REVIEW** — PDF/PNG ingestion; PDF BBS2025 có24 trang, pilot5/5 thành công.
+**M1-15 DONE** — Tech Lead APPROVED có điều kiện; PDF BBS2025 có24 trang, pilot5/5 thành công.
 Text58/cell texts505 accepted, tables0/10 accepted; partial DU schema5/5,
 raw loader/DU quality0/5. 5 requests/50541 tokens, provider failures0; source bất biến.
-8 focused passed; [evidence](../docs/reviews/M1-15-evidence.md). CI exact SHA sau push
-ghi trong bàn giao cuối phiên, không publication commit chỉ cập nhật CI.
-Next action: Tech Lead review implementation, CI exact SHA và giới hạn adapter trước nghiệm thu.
+8 focused passed; [evidence](../docs/reviews/M1-15-evidence.md).
+[CI 40618548302](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40618548302)
+PASS đúng `c95e2be2982d5c86d9beb9508a8307455c96e53e`, mọi steps Python3.11/3.12 success.
+Adapter chỉ partial text/schema; không full M1 compatibility hoặc production OCR accuracy.
+Phiên nghiệm thu chỉ planning; không chạy lại Gemini/tests/pilot, không yêu cầu CI mới.
+Next action: Chờ Tech Lead giao task tiếp theo; không tự bắt đầu M2 hoặc web demo.
 Các đoạn sau là lịch sử.
 
 **M1-14 DONE** — Tech Lead APPROVED có điều kiện; offline4 pages/46 labels/18 values.
