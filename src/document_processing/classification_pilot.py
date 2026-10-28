@@ -157,6 +157,7 @@ class MeteredModels:
         request_limit=MAX_REQUESTS,
         output_cap=OUTPUT_CAP,
         request_input_bound=REQUEST_INPUT_BOUND,
+        rpm=5,
     ):
         if input_token_budget is not None and (
             type(input_token_budget) is not int or input_token_budget <= 0
@@ -164,13 +165,15 @@ class MeteredModels:
             raise PilotStop("invalid_input_token_budget")
         self._models, self._clock, self._sleep = models, clock, sleep
         if any(
-            type(v) is not int or v <= 0 for v in (request_limit, output_cap, request_input_bound)
+            type(v) is not int or v <= 0
+            for v in (request_limit, output_cap, request_input_bound, rpm)
         ):
             raise PilotStop("invalid_request_caps")
         self.request_limit = request_limit
         self.output_cap = output_cap
         self.request_input_bound = request_input_bound
         self.input_token_budget = input_token_budget
+        self._interval = 60 / rpm + 0.1
         self.requests = self.successes = self.failures = 0
         self.input_tokens = self.output_tokens = self.total_tokens = 0
         self.input_charged = 0
@@ -181,10 +184,9 @@ class MeteredModels:
         self._last_start = None
 
     def pace(self):
-        # Pace before Guard admission too; the sixth call must not hit RPM before
-        # the SDK-boundary sleep gets a chance to run.
+        # Pace before Guard admission too, using the selected project/model RPM.
         if self._last_start is not None:
-            delay = self._last_start + 12.1 - self._clock()
+            delay = self._last_start + self._interval - self._clock()
             if delay > 0:
                 self._sleep(delay)
 

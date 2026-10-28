@@ -10,7 +10,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | Milestone | Total | DONE | IN_PROGRESS | BLOCKED | TODO | READY | REVIEW |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
-| M1 | 28 | 26 | 0 | 0 | 2 | 0 | 0 |
+| M1 | 28 | 26 | 0 | 0 | 1 | 0 | 1 |
 | M2 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M3 | 7 | 0 | 0 | 0 | 7 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
@@ -18,7 +18,7 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| TOTAL | 78 | 30 | 0 | 0 | 48 | 0 | 0 |
+| TOTAL | 78 | 30 | 0 | 0 | 47 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,19 +46,13 @@ benchmark: **N/A** (chưa có implementation hoặc số đo hợp lệ).
 
 ## Active task và việc tiếp theo
 
-**M1-12a DONE — Tech Lead APPROVED** 28/10/2026; M1-12 DONE, M1-13 TODO.
-Không task triển khai active; acceptance chỉ planning checker/diff, không API/tests/full CI rerun.
-Same8-table pilot: 4 pages/310 cells/318 source anchors checked,
-deterministic1 resolved/7 unresolved →assisted2 resolved/6 unresolved.
-7 requests, 55620 input/17177 output/72797 total tokens, failures0.
-4 coverage rejects/1 unsupported merge/1 gaps; 2265 original geometry conflicts giữ.
-Cache7/checkpoint1 probes; offline checkpoint1/service0/API0; 9 snapshots bất biến.
-28 focused +233 regression =261 passed; không full local suite, không API rerun.
-Model fixed gemini-3.5-flash-lite, text/layout mode; không ground truth/accuracy.
-[Spec](tasks/M1/M1-12a.md), [usage](../docs/table-assistance.md),
-[evidence](../docs/reviews/M1-12a-evidence.md). Implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` /
-[CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, full unit suite Python 3.11/3.12 đạt.
-Next action: Chờ Tech Lead giao task; không tự bắt đầu M1-13.
+**M1-13 REVIEW** theo user authorization 28/10/2026, Research MVP Lean v3.
+M1-12a DONE; không implementation task khác active. 11 focused +47 regression passed.
+Pilot2 pages/2 requests, 0 corrections, 17450 input/40 output/17490 total tokens;
+raw bất biến, model bỏ sót lỗi chữ trực quan; không ground truth/accuracy.
+[Spec](tasks/M1/M1-13.md), [usage/evidence](../docs/reviews/M1-13-evidence.md).
+CI exact implementation SHA kiểm tra sau push trong bàn giao, không publication commit.
+Next action: Tech Lead review M1-13; không tự DONE hoặc bắt đầu M1-14.
 Các đoạn dưới là lịch sử.
 
 **M1-11a DONE**, Tech Lead APPROVED 27/10/2026; M1-11 DONE, M1-12 TODO,

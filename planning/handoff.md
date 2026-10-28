@@ -1,67 +1,51 @@
-# Codex Handoff
+﻿# Codex Handoff
 
 ## Active Task
-
-M1-12a — Final Acceptance; không task triển khai active.
+M1-13 — Evidence-Preserving OCR Correction; Research MVP Lean v3.
 
 ## Status
-
-DONE
+REVIEW
 
 ## Last Verified State
-
-Baseline 54d198e886fd41dcc8f9f84a26a40ed77b7a4088 khớp HEAD/origin sau fetch, tree sạch.
-M1-12 DONE. User giao M1-12a 28/10/2026, cho implement/API max15/test/commit/push;
-scope triển khai dừng REVIEW. Implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` đã push;
-[CI 40607679558](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40607679558) success exact SHA, mọi steps/full unit suite Python 3.11/3.12 đạt.
-
-Tech Lead APPROVED 28/10/2026, cho phép REVIEW → DONE.
-Review checkpoint `13c6e1735ef1eeaf1d05c033f66cd5ce52ceec9f` khớp HEAD/origin
-sau fetch, working tree sạch trước acceptance.
+Baseline main `9e93606`, working tree sạch trước triển khai; M1-12a DONE.
+User giao 28/10/2026, cho code/tests/Gemini/commit/push; dừng REVIEW, không M1-14.
 
 ## Completed Work
-
-Assisted module/schema/evidence gate, cache/checkpoint compatibility và revalidation;
-MeteredModels optional caps giữ defaults classification. Same8/4pages/310cells,
-318 source anchors checked: deterministic1/7 →assisted2/6. Live7 requests,
-55620 input/17177 output/72797 total tokens, failures0, không retry/rotation.
-Cache7/checkpoint1 probes; offline checkpoint1/service0/API0, 9 snapshots bất biến.
-Chỉ text/layout, không ảnh; raw/contracts/M1-12 report/credentials không sửa.
+Full-page structured Gemini proposals, exact scoped source-ID/original validation,
+DU v1 source anchors + source digest; output corrected view riêng, raw bất biến.
+Các trạng thái proposed/confirmed/unresolved tách biệt. MVP không verifier độc lập,
+không phát sinh confirmed; effective_text giữ raw, candidates chỉ ở proposed.
+MeteredModels thêm configurable RPM, M1-13 dùng15; defaults cũ giữ nguyên.
+Live2 pages/2 requests, 0 corrections/confirmed/unresolved; 17450 input/40 output/
+17490 total tokens; failures0/unknown0, OCR snapshots và manifest bất biến.
 
 ## Remaining Work
-
-Không còn công việc nghiệm thu M1-12a. M1-13 TODO; chờ Tech Lead giao task.
+Tech Lead nghiệm thu engineering scope và giới hạn hiệu quả pilot; không tự DONE.
 
 ## Modified Files
-
-Chỉ năm planning files: tasks.md; tasks/M1/M1-12a.md; handoff.md;
-current-status.md; progress.md (counts phải khớp registry để planning checker đạt).
+src/document_processing/ocr_correction.py; classification_pilot.py (RPM only);
+scripts/run_ocr_correction_pilot.py; tests/unit/test_ocr_correction.py;
+docs/reviews/M1-13-evidence.md; planning/tasks.md; tasks/M1/M1-13.md; handoff.md.
+current-status.md/progress.md chỉ đồng bộ trạng thái/counts để planning checker đạt.
 
 ## Tests
-
-Giữ evidence implementation: 28 focused +233 related regression =261 passed;
-Ruff/planning/diff và CI implementation đã đạt. Phiên acceptance chỉ planning checker
-và git diff --check; không Gemini/tests rerun, không chờ/phân tích lại full CI.
-Focused28 rerun sau source-rejection regression đạt; final code replay8/8 DU outputs
-khớp offline/API0. Không live pilot rerun; lỗi source binding hạ đồng bộ mọi statuses.
-Không full local suite; CI full unit 3.11/3.12 đạt exact implementation SHA. Không rerun pilot/API/tests
-chỉ vì docs. Private records tại ignored artifacts/table-reconstruction/M1-12a.
+11 focused +47 related regression passed; final focused11 passed sau source gate refinement.
+Ruff changed files, planning checker, diff check trước commit. Không full local suite,
+không cache/checkpoint/quota probes, không API rerun. CI pipeline hiện có chạy một lần
+full unit Python3.11/3.12 trên exact implementation SHA sau push; conclusion/test summary
+được báo trong bàn giao cuối, không full logs/publication commit cập nhật SHA.
 
 ## Blockers
-
-Chưa ground truth/accuracy; source run caller-bound, text/layout only.
-6 unresolved: 4 coverage rejects (17 empty cells bị bỏ/1 source ID lặp), 1 unsupported
-merge, 1 gaps. 2265 geometry conflicts cũ vẫn giữ. Không live merge accepted.
-Guard money NOT_CONFIGURED; actual billing/project ID/quota remaining chưa independently
-verified. Không còn phần chờ nghiệm thu; 6 unresolved là limitation được giữ nguyên.
+Không independent verifier/ground truth; live model bỏ sót lỗi chữ BCC đã nhìn trên ảnh.
+Không xác nhận correction nào hoặc accuracy. Owner-attested quota15/250000/500;
+provider remaining/billing chưa independently verified, guard money NOT_CONFIGURED.
+Đây là limitations để review, không tự mở rộng sang image verifier hoặc evaluation.
 
 ## Git Checkpoint
-
-Stable implementation `c9095aab9554c24485e48d193ad2f42d294be6cf` / CI 40607679558 success exact SHA.
-Review checkpoint `13c6e1735ef1eeaf1d05c033f66cd5ce52ceec9f` khớp HEAD/origin.
-Acceptance chỉ planning; commit/push một lần, không cần chờ full CI theo user.
-[Spec](tasks/M1/M1-12a.md), [evidence](../docs/reviews/M1-12a-evidence.md).
+Implementation là commit chứa handoff/spec/evidence này; baseline `9e93606`.
+Đọc `git log -1` và bàn giao cuối để lấy exact SHA/CI sau một commit/push.
+Private artifacts ignored `artifacts/ocr-correction/M1-13/`; không commit dataset/keys.
+[Spec](tasks/M1/M1-13.md), [evidence](../docs/reviews/M1-13-evidence.md).
 
 ## Exact Next Action
-
-Chờ Tech Lead giao task; không tự bắt đầu M1-13.
+Tech Lead review M1-13 và CI exact implementation SHA trong bàn giao; không M1-14.
