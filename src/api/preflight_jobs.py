@@ -1,4 +1,4 @@
-"""Single bounded metadata worker, durable attempts and explicit retry only."""
+"""One bounded worker for metadata and extraction, with explicit retry only."""
 
 from copy import deepcopy
 from queue import Empty, Queue
@@ -13,6 +13,7 @@ from ..document_processing.metadata_preflight import (
     merge_suggestions,
 )
 from .document_store import fail, now
+from .extraction_sessions import run_extraction
 
 
 class PreflightJobs:
@@ -43,7 +44,16 @@ class PreflightJobs:
             for identifier in store.identifiers():
                 doc = store.load(identifier)
                 if doc["job"] and doc["job"]["state"] in ("queued", "processing"):
-                    self._state(doc, "interrupted", "server_interrupted")
+                    error = (
+                        dict(
+                            code="application_interrupted",
+                            message="Phiên xử lý đã gián đoạn.",
+                            retryable=True,
+                        )
+                        if doc["job"]["operation"] == "extract"
+                        else "server_interrupted"
+                    )
+                    self._state(doc, "interrupted", error)
         self.worker = Thread(target=self._loop, name="metadata-preflight", daemon=True)
         self.worker.start()
 
@@ -60,27 +70,35 @@ class PreflightJobs:
         doc["_attempts"][job["id"]]["job"] = deepcopy(job)
         self.store.save(doc)
 
-    def submit(self, identifier, revision, key):
+    def submit(self, identifier, revision, key, operation="preflight"):
         with self.store.lock:
             doc = self.store.load(identifier)
             # Idempotency is checked before active/revision conflicts, allowing exact replay.
             for attempt in doc["_attempts"].values():
                 if attempt["key"] == key:
-                    if attempt["revision"] != revision:
+                    if attempt["revision"] != revision or attempt["job"]["operation"] != operation:
                         fail(409, "idempotency_conflict", "Khóa yêu cầu đã dùng cho revision khác.")
                     job = attempt["job"]
                     return job, 202 if job["state"] in ("queued", "processing") else 200
             if revision != doc["metadata_revision"]:
                 fail(409, "metadata_revision_conflict", "Thông tin đã thay đổi. Hãy tải lại.")
             if doc["job"] and doc["job"]["state"] in ("queued", "processing"):
-                fail(409, "job_active", "Tài liệu đang được nhận diện metadata.")
+                fail(409, "job_active", "Tài liệu đang được xử lý.")
+            if operation == "extract":
+                values = doc["metadata"]["values"]
+                if (
+                    not doc["metadata"]["accepted"]
+                    or not (values["company_name"] or "").strip()
+                    or not values["reporting_year"]
+                ):
+                    fail(409, "metadata_required", "Cần tên doanh nghiệp và năm báo cáo hợp lệ.")
             if self.active_count >= self.capacity or self.stopping.is_set():
                 fail(429, "queue_full", "Hàng đợi đã đầy. Vui lòng thử lại sau.")
             job = dict(
                 id=str(uuid4()),
-                operation="preflight",
+                operation=operation,
                 state="queued",
-                phase="preflight",
+                phase="preflight" if operation == "preflight" else "discovery",
                 metadata_revision=revision,
                 progress=dict(preflight=dict(completed_pages=0, total_pages=doc["page_count"])),
                 page_errors=[],
@@ -88,6 +106,11 @@ class PreflightJobs:
                 updated_at=now(),
                 revision=1,
             )
+            if operation == "extract":
+                job["progress"] = dict(
+                    discovery=dict(completed_pages=0, total_pages=doc["page_count"]),
+                    extraction=None,
+                )
             doc["job"] = job
             doc["state"] = "queued"
             doc["_attempts"][job["id"]] = dict(key=key, revision=revision, job=deepcopy(job))
@@ -103,15 +126,19 @@ class PreflightJobs:
             except Empty:
                 continue
             try:
-                self._run(identifier)
+                if self.store.load(identifier)["job"]["operation"] == "extract":
+                    run_extraction(self, identifier)
+                else:
+                    self._run(identifier)
             except Exception:
                 # No provider content, exception strings, credentials or paths in API/logs.
                 with self.store.lock:
                     doc = self.store.load(identifier)
-                    if doc["metadata"]["preflight"]:
+                    operation = doc["job"]["operation"]
+                    if operation == "preflight" and doc["metadata"]["preflight"]:
                         doc["metadata"]["preflight"]["stop_reason"] = "internal_error"
                         doc["metadata"]["preflight"]["issues"].append("preflight_failed")
-                    self._state(doc, "failed", "preflight_failed")
+                    self._state(doc, "failed", f"{operation}_failed")
             finally:
                 with self.store.lock:
                     self.active_count -= 1

@@ -15,13 +15,17 @@ from zoneinfo import ZoneInfo
 from google import genai
 from google.genai import errors, types
 
+from ..accounting.automated_extraction import EXTRACTION_REF, ExtractedPage
 from ..core.gemini_adapter import GeminiAdapter
 from ..core.llm_cache import CachedLLMService
 from ..core.llm_contracts import GatewayError
 from ..core.llm_gateway import SharedLLMGateway
 from ..core.llm_quota_budget import GuardResult, QuotaLimits, Reservation
+from ..core.llm_schema_validation import LocalSchemaRegistry
+from ..document_processing.financial_discovery import DISCOVERY_REF, PagePrediction
 from ..document_processing.metadata_preflight import (
     DEFAULT_METADATA_MODEL,
+    METADATA_REF,
     metadata_schema_registry,
 )
 from .document_store import atomic_json, safe_path
@@ -298,7 +302,14 @@ def compose_metadata_service(store):
         keys = list(dict.fromkeys(re.findall(r"(?m)^\s*(AIza[0-9A-Za-z_-]{35})\s*$", content)))
         if not 1 <= len(keys) <= 32:
             raise ValueError("No usable key configuration")
-        schemas = metadata_schema_registry()
+        metadata = metadata_schema_registry()
+        schemas = LocalSchemaRegistry(
+            [
+                (METADATA_REF, metadata.schema_for(METADATA_REF)),
+                (DISCOVERY_REF, PagePrediction.model_json_schema()),
+                (EXTRACTION_REF, ExtractedPage.model_json_schema()),
+            ]
+        )
         for key in keys:
             client = genai.Client(
                 api_key=key,

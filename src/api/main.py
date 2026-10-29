@@ -15,6 +15,7 @@ from starlette.datastructures import UploadFile
 
 from ..document_processing.metadata_preflight import MetadataModel, MetadataValues
 from .document_store import DocumentError, DocumentStore, fail, safe_path
+from .extraction_sessions import evidence_response, inventory_response, read_result
 from .metadata_service import compose_metadata_service
 from .preflight_jobs import PreflightJobs
 
@@ -26,7 +27,7 @@ class MetadataPatch(MetadataModel):
 
 
 class ProcessRequest(MetadataModel):
-    operation: Literal["preflight"]
+    operation: Literal["preflight", "extract"]
     metadata_revision: int = Field(ge=0)
 
 
@@ -287,6 +288,23 @@ def create_app(
             store.patch(identifier, payload.metadata_revision, payload.confirmed, payload.values)
         )
 
+    @app.get("/api/documents/{identifier}/inventory")
+    def inventory(identifier: str, request: Request, attempt_id: str):
+        return inventory_response(read_result(request.app.state.store, identifier, attempt_id))
+
+    @app.get("/api/documents/{identifier}/evidence")
+    def evidence(
+        identifier: str,
+        request: Request,
+        attempt_id: str,
+        statement: Literal["B01", "B02", "B03"] | None = None,
+        offset: int = Query(0, ge=0),
+        limit: int = Query(200, ge=1, le=500),
+    ):
+        return evidence_response(
+            read_result(request.app.state.store, identifier, attempt_id), statement, offset, limit
+        )
+
     @app.post("/api/documents/{identifier}/process")
     def process(
         identifier: str,
@@ -300,7 +318,7 @@ def create_app(
         except ValueError:
             fail(422, "invalid_idempotency_key", "Idempotency-Key phải là UUIDv4.")
         job, status_code = request.app.state.jobs.submit(
-            identifier, payload.metadata_revision, idempotency_key
+            identifier, payload.metadata_revision, idempotency_key, payload.operation
         )
         return JSONResponse(
             status_code=status_code,
