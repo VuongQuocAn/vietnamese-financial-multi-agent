@@ -51,7 +51,9 @@ Housekeeping W-03 — 2026-10-29: PR#1/#2/#3 đã MERGED main tuần tự, CI ma
 từng merge SUCCESS; baseline6dd0d1d. Root dev.ps1 một lệnh, local keys tự nạp,
 Ctrl+C/ports/failure cleanup và live scan upload→ready PASS (1 call/2794tokens).
 Giữ W-03 REVIEW, không tự DONE/W-04. [Evidence](../docs/web-demo-v1/w-03-validation.md).
-Next action: Commit/push housekeeping và xác minh CI.
+Launcher d8e7026 đã push main/remote khớp; [CI40791847627](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40791847627)
+SUCCESS exact SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP, Web13 PASS.
+Next action: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
 Các checkpoint bên dưới là lịch sử trước housekeeping/merge.
 
 **W-03 REVIEW — final refinement**: auto-first core có nguồn → ready; key-file

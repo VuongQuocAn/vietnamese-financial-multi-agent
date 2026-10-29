@@ -13,9 +13,13 @@ check dependencies, không hỏi/lộ key, Ctrl+C dừng sạch process tree s�
 Upload scan synthetic2 trang qua launcher auto-ready live PASS:1 call Gemini
 gemini-3.5-flash-lite,2794 tokens; không benchmark dữ liệu thật hoặc thêm AI calls.
 
-Main baseline6dd0d1d; launcher/docs chưa commit ở checkpoint này. Giữ next-env
-local byte-for-byte ngoài stage; temporary worktree/stash đã cleanup.
+Launcher/docs d8e7026c20116031c12c34828a22be664eb3d47d đã push main, remote khớp.
+[CI40791847627](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40791847627)
+SUCCESS exact launcher SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS,
+mọi steps đã kiểm. Commit evidence tiếp theo chỉ docs/planning [skip ci], không
+gán CI implementation cho SHA documentation mới. Giữ next-env local byte-for-byte
+ngoài stage; temporary worktree/stash đã cleanup.
 [Usage](../docs/web-demo-v1/local-development.md),
 [evidence](../docs/web-demo-v1/w-03-validation.md#10-housekeeping-sau-w-03--2026-10-29).
 
-Next action: Commit/push housekeeping và xác minh CI.
+Next action: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.

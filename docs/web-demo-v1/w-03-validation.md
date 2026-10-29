@@ -150,4 +150,10 @@ proxy health200, valid Origin nhận415 cho non-PDF, cross-site403; không AI ca
 Chủ động dừng backend test: launcher tự dừng Next.js, không orphan/listener.
 Không thêm Docker/auth/infra. Temporary worktree/stash/Next-generated AGENTS đã
 cleanup; next-env khôi phục byte-for-byte và không stage. Git main sau merge
-6dd0d1d; launcher/docs publication SHA/CI ghi sau push.
+6dd0d1d. Launcher/docs commit d8e7026c20116031c12c34828a22be664eb3d47d đã push
+main và ls-remote khớp. [CI40791847627](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40791847627)
+SUCCESS đúng launcher SHA, mọi steps đã kiểm: Python3.11/3.12 mỗi job1502 PASS/
+11 SKIP, Web typecheck/lint/build và13 browser/proxy PASS. Local PowerShell
+lifecycle/live test và Ruff/planning/diff/index/2 API unit tests PASS; không full
+local suite hoặc thêm AI calls. Commit evidence tiếp theo chỉ docs/planning
+[skip ci], không gán CI này cho SHA documentation mới.

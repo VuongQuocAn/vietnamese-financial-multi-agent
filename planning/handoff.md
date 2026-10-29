@@ -24,8 +24,7 @@ Launcher startup, live upload scan→auto-ready và cleanup/error cases đã PAS
 
 ## Remaining Work
 
-Commit/push housekeeping main, xác minh CI và ghi publication SHA. Chờ chỉ đạo;
-không bắt đầu W-04.
+Không còn implementation housekeeping. Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
 
 ## Modified Files
 
@@ -38,8 +37,10 @@ Giữ next-env local byte-for-byte, không stage. Không sửa backend/Next logi
 PowerShell syntax/startup/health/proxy/Ctrl+C/port-busy/custom ports/failure cleanup
 PASS trên Windows.1 live call synthetic2 trang, gemini-3.5-flash-lite,2794 tokens,
 metadata đúng và ready/auto; không chạy benchmark hoặc gọi lại AI.
-CI main từng merge SUCCESS; launcher publication CI chờ push. Ruff/targeted
-checks/planning/diff/index kiểm trước commit, không full local suite.
+CI main từng merge SUCCESS. [CI40791847627](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40791847627)
+SUCCESS exact launcher SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS,
+mọi steps đã kiểm. Ruff/planning/diff/index và2 API unit tests local PASS;
+không full local suite hoặc AI calls lặp lại.
 
 ## Blockers
 
@@ -48,10 +49,12 @@ file hợp lệ. Provider/tier/quota assumptions W-03 giữ nguyên, không tăn
 
 ## Git Checkpoint
 
-Main baseline6dd0d1d7c3fd2d92e3fc62d091348eb832d3c28e. Launcher chưa commit tại
-checkpoint này. Temporary worktree/stash và Next-generated AGENTS đã cleanup.
+Main merge baseline6dd0d1d7c3fd2d92e3fc62d091348eb832d3c28e. Launcher ổn định
+d8e7026c20116031c12c34828a22be664eb3d47d đã push/remote khớp, CI exact SHA PASS.
+Commit evidence tiếp theo chỉ docs/planning [skip ci], không gán CI cho SHA mới.
+Temporary worktree/stash và Next-generated AGENTS đã cleanup.
 Chỉ user next-env có sẵn ngoài task; không key/PDF/cache/counters trong Git.
 
 ## Exact Next Action
 
-Commit/push housekeeping và xác minh CI.
+Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
