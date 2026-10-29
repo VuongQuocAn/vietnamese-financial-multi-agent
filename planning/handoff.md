@@ -33,7 +33,7 @@ docs/canonical-provenance-contracts.md và planning task/status/progress/roadmap
 
 25 targeted PASS local (17 evidence + 8 normalization contracts); Ruff check/format đạt.
 Không full suite/build/browser/Gemini/benchmark/PDF processing; không sửa raw/M1/M2 runtime.
-Planning checker 93 tasks và diff check PASS. SHA/PR checkpoint tại spec sau bàn giao.
+Planning checker 93 tasks và diff check PASS. CI remote chưa xác minh.
 
 ## Blockers
 
@@ -42,7 +42,10 @@ metadata consistency không xác minh financial accuracy. Rules/conversions M4 c
 
 ## Git Checkpoint
 
-Branch `feat/m3-01-canonical-provenance`; implementation chưa commit.
+Branch `feat/m3-01-canonical-provenance`; implementation
+`f8199e5f8d6bb62adbe00e5740f99358610fc296` đã push;
+[PR #10](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/10) OPEN.
+Commit checkpoint sau chỉ docs/planning, code/tests vẫn đúng implementation SHA.
 Không merge; không stage dữ liệu, secrets hoặc next-env local.
 
 ## Exact Next Action
