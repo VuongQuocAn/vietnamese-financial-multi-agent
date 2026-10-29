@@ -25,6 +25,20 @@ chứng, không phải registry thứ hai. [Dashboard](progress.md),
 - Backlog xa chỉ có mô tả đầu ra/criteria dự kiến trong roadmap. Phải chuẩn bị
   spec theo template và rà soát phạm vi trước READY; không tạo placeholder hàng loạt.
 
+## Quy trình Research MVP Lean
+
+Áp dụng [AGENTS](../AGENTS.md) cho công việc mới từ W-04; registry này là nguồn
+trạng thái chính. Mỗi task ghi status, implementation SHA, thay đổi chính, tests
+thực sự đã chạy và một next action trong evidence/spec ngắn. Không bắt buộc lặp
+nội dung ở progress/roadmap/current-status/handoff. Chỉ cập nhật số đếm khi registry
+thay đổi; giữ lịch sử và quyền Tech Lead nghiệm thu DONE. Chức năng đúng + bằng
+chứng phù hợp + targeted validation đủ điều kiện REVIEW.
+
+Housekeeping Research MVP Workflow Simplification (2026-10-29): **REVIEW**;
+không phải milestone/task W mới, không bắt đầu W-04. Thay đổi AGENTS, task template,
+quy tắc planning và CI tối thiểu; SHA/validation/next action tại
+[current status](current-status.md). Không đổi trạng thái W-03 hoặc evidence cũ.
+
 ## Registry
 
 | Task ID | Tên | Milestone | Status | Priority | Dependencies | Specification / phạm vi dự kiến | Evidence |

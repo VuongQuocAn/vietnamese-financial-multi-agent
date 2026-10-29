@@ -1,5 +1,11 @@
 # Codex Handoff
 
+Housekeeping mới 2026-10-29 — Research MVP Workflow Simplification: **REVIEW**.
+Quy tắc/CI và bằng chứng hiện tại ở [current status](current-status.md); không
+thay trạng thái W-03 hoặc chạy lại evidence dưới đây. Next action duy nhất hiện
+tại: Tech Lead review PR housekeeping; không bắt đầu W-04. Các mục sau giữ
+checkpoint W-03 đã xác minh, không phải kết quả chạy lại trong housekeeping.
+
 ## Active Task
 
 W-03 — PDF Upload & Gemini Vision Metadata Preflight (housekeeping 2026-10-29)

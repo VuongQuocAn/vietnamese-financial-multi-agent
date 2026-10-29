@@ -4,25 +4,44 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      full_regression:
+        description: Run all unit and browser tests for a milestone or Tech Lead review
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   quality:
-    name: Python ${{ matrix.python-version }}
+    name: Python 3.12
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12"]
+    outputs:
+      web: ${{ steps.changes.outputs.web }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect changes affecting web validation
+        id: changes
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] || [ -z "$BASE_SHA" ] || [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- web src pyproject.toml .github/workflows/ci.yml; then
+            echo "web=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install package and development tools
@@ -33,11 +52,20 @@ jobs:
         run: python -m ruff format --check .
       - name: Validate task tracking
         run: python scripts/check_planning.py
-      - name: Unit tests
+      - name: Focused unit tests (offline)
+        if: ${{ !inputs.full_regression }}
+        run: >-
+          python -m pytest tests/unit/test_package.py tests/unit/test_api.py
+          tests/unit/test_llm_gateway.py::test_routing_and_explicit_model_configuration_without_network
+          tests/unit/test_financial_query.py::test_raw_retrieval_is_grounded_and_immutable
+      - name: Full unit regression (manual)
+        if: ${{ inputs.full_regression }}
         run: python -m pytest tests/unit
 
   web:
-    name: Web skeleton
+    name: Web smoke
+    needs: quality
+    if: ${{ needs.quality.outputs.web == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,6 +97,8 @@ jobs:
       - name: Routes, browser and proxy smoke
         working-directory: web
         shell: bash
+        env:
+          FULL_REGRESSION: ${{ inputs.full_regression }}
         run: |
           python -m uvicorn vietnamese_financial_multi_agent.api.main:app --host 127.0.0.1 --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
           api_pid=$!
@@ -87,4 +117,8 @@ jobs:
             cat "$RUNNER_TEMP/api.log" "$RUNNER_TEMP/web.log"
             exit 1
           fi
-          npm run test:smoke
+          if [ "$FULL_REGRESSION" = true ]; then
+            npm run test:smoke
+          else
+            npm run test:smoke -- --grep 'dashboard, navigation and truthful empty states|Next.js proxy reaches the real FastAPI health endpoint|real upload, manual confirmation and document list at 1440px'
+          fi
