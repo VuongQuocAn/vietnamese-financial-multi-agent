@@ -115,6 +115,7 @@ test("PDF scan viewer renders, synchronizes URL and navigates partial inventory"
   await page.goto(`/evidence/${doc.id}?page=2`);
   const canvas = page.locator('.react-pdf__Page[data-page-number="2"] canvas');
   await expect(canvas).toBeVisible();
+  await page.getByText("Danh mục trang nguồn", { exact: true }).click();
   await expect(
     page.getByText("Chưa có danh mục trích xuất.", { exact: false }),
   ).toBeVisible();
@@ -174,6 +175,7 @@ test("PDF scan viewer renders, synchronizes URL and navigates partial inventory"
     }),
   );
   await page.reload();
+  await page.getByText("Danh mục trang nguồn", { exact: true }).click();
   await page.getByRole("button", { name: "Trang 2", exact: true }).click();
   await expect(page).toHaveURL(/page=2$/);
   await expect(
@@ -210,6 +212,7 @@ test("BBS stored PDF source pages and inventory (read only)", async ({
     page.locator('.react-pdf__Page[data-page-number="7"] canvas'),
   ).toBeVisible();
   await expect(page.getByLabel("Số trang PDF")).toHaveValue("7");
+  await page.getByText("Danh mục trang nguồn", { exact: true }).click();
   for (const number of [
     5,
     6,

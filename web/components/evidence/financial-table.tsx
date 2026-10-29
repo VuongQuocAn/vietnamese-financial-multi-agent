@@ -5,7 +5,12 @@ import { StatusBadge } from "@/components/ui/status-badge";
 
 // Presentation props only, not a replacement for the W-01 API DTO.
 // Values are source strings; this component never parses, scales or formats them.
-export type FinancialPeriod = { key: string; label: string };
+export type FinancialPeriod = {
+  key: string;
+  label: string;
+  detail?: string;
+  unitLabel?: string;
+};
 export type FinancialCell = {
   id: string;
   rawValue: string | null;
@@ -23,10 +28,12 @@ export function FinancialTable({
   periods,
   rows,
   onSelect,
+  selectedCellId,
 }: {
   periods: FinancialPeriod[];
   rows: FinancialRow[];
   onSelect?: (selection: { rowKey: string; cellId: string | null }) => void;
+  selectedCellId?: string | null;
 }) {
   const [selected, setSelected] = useState<{
     rowKey: string;
@@ -53,8 +60,16 @@ export function FinancialTable({
             <th scope="col">Mã số</th>
             <th scope="col">Chỉ tiêu tài chính</th>
             {periods.map((period) => (
-              <th scope="col" className="numeric" key={period.key}>
-                {period.label}
+              <th
+                scope="col"
+                className="numeric"
+                key={period.key}
+                title={period.detail}
+              >
+                <span>{period.label}</span>
+                {period.unitLabel && (
+                  <small className="period-unit">{period.unitLabel}</small>
+                )}
               </th>
             ))}
           </tr>
@@ -68,7 +83,16 @@ export function FinancialTable({
             </tr>
           ) : (
             rows.map((row) => (
-              <tr key={row.key} data-selected={selected?.rowKey === row.key}>
+              <tr
+                key={row.key}
+                data-selected={
+                  selectedCellId !== undefined
+                    ? Object.values(row.cells).some(
+                        (cell) => cell?.id === selectedCellId,
+                      )
+                    : selected?.rowKey === row.key
+                }
+              >
                 <td>{row.sourceItemCode ?? "—"}</td>
                 <th scope="row">
                   <button
@@ -93,8 +117,17 @@ export function FinancialTable({
                       {cell ? (
                         <button
                           className="cell-select"
-                          data-selected={selected?.cellId === cell.id}
-                          aria-pressed={selected?.cellId === cell.id}
+                          data-evidence-id={cell.id}
+                          data-selected={
+                            (selectedCellId !== undefined
+                              ? selectedCellId
+                              : selected?.cellId) === cell.id
+                          }
+                          aria-pressed={
+                            (selectedCellId !== undefined
+                              ? selectedCellId
+                              : selected?.cellId) === cell.id
+                          }
                           onClick={() => select(row.key, cell.id)}
                           aria-label={`${row.rawLabel}, ${period.label}: ${cell.rawValue === null || cell.rawValue === "" ? "Thiếu" : cell.rawValue}`}
                         >

@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 91 | 52 | 0 | 0 | 39 | 0 | 0 |
+| W | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 92 | 53 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+W-06 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; CI40805486808 SUCCESS
+đúng b5de0a2. BBS_2025 178 observations, source linking B01/B02/B03 PASS;
+zero/precision/conflict chỉ synthetic, chưa accuracy toàn báo cáo.
+[Spec/evidence](tasks/W/W-06.md).
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-07.
+
+Checkpoint trước:
 
 W-05 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; CI40801877913 SUCCESS,
 BBS_2025 viewer PASS. [Evidence](tasks/W/W-05.md).
