@@ -12,7 +12,7 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026;
 implementation `ff10062b26bd311123b19c9c65d17949679729df`,
 [PR #5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/5)
-đã mở vào main, chưa merge. Người dùng giao task và cho
+đã MERGED vào main tại `00f77351cfaf14389a78b5d9d08581c217e8cced`, local main đã đồng bộ. Người dùng giao task và cho
 phép commit/push/PR trên `feat/w-04-processing-sessions`; baseline `4de9948`,
 main khớp origin/main và Lean đã merge qua PR #4.
 Sessions/API/UI đã nối runtime M1–M2. Live BBS_2025 24 trang, 29 calls, 178 evidence;
@@ -20,7 +20,7 @@ mẫu PDF/reference 6/6 khớp, không phải accuracy toàn PDF. [Evidence](tas
 CI40797755852 SUCCESS đúng ff10062: Python 18 PASS, desktop browser 3 PASS;
 lint/format/planning/typecheck/build PASS. Checkpoint sau chỉ tài liệu [skip ci].
 Chưa đánh giá accuracy toàn báo cáo/chưa verified financial facts.
-Next action: merge PR #5 và đồng bộ main theo chỉ đạo; không bắt đầu W-05.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-05.
 
 ## Housekeeping — Research MVP Workflow Simplification
 
