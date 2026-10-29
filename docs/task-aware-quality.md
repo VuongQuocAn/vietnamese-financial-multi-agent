@@ -82,6 +82,26 @@ FinancialNormalizationResult do caller cung cấp; không xác minh nguồn trê
 Output là snapshot riêng, không sửa source records, normalization hay accepted status.
 `financial_fact_verified` luôn false. Không thay contracts M1/M2-01 hoặc catalog.
 
+## Handoff quality sang M3 (định hướng, chưa triển khai)
+
+M3 phải giữ `usable`, `usable_with_caveat`, `insufficient`, `conflicted` theo tác vụ
+cùng reasons, evidence IDs và provenance của assessment. Unresolved provenance và
+missing operands cần đi theo facts/graph/DerivedMetric/lineage/retrieval dưới dạng
+tình trạng hoặc lý do; không phải enum quyết định mới và không được quy về zero.
+Giữ phân biệt item decision và task decision, partial evidence và raw ngoài catalog;
+không thay bằng global gate hoặc tự nâng usable_with_caveat thành usable.
+
+M3-01 thiết kế semantic compatibility contract, bao gồm operand roles; M3-06 thiết
+kế contract lan truyền quality để consumer thấy nguồn caveat, conflict hoặc thiếu
+đầu vào. Không chốt confidence score, thresholds hay thuật toán gộp/lan truyền tại
+preflight; thiết kế, cách đánh giá và thực nghiệm còn TBD.
+
+Source grounding, numerical calculation validity và claim verification là ba lớp
+riêng: evidence truy về nguồn hoặc check arithmetic PASS không đồng nghĩa claim
+đã verified. M3 chỉ biểu diễn và truy xuất; execution thuộc M4, claim verification
+và ledger thuộc M6. Xem [kiến trúc M3](architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
+Không đổi API, schemas, pilot hay kết luận M2-07 bên dưới.
+
 ## Pilot BBS2025 — 2026-10-28
 
 Replay cache M2-04b retry/page5, retry/page7, live/page8; render PDF 200DPI,

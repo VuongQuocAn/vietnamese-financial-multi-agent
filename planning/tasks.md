@@ -41,6 +41,14 @@ quy tắc planning và CI tối thiểu; SHA/validation/next action tại
 
 ## Registry
 
+M3 Preflight — Research Alignment (2026-10-29): **REVIEW**; documentation-only,
+không thêm task implementation hoặc thay đổi số đếm. Checkpoint chưa commit tại
+thời điểm ghi tài liệu; SHA xác minh và kết quả validation thực chạy được báo trong PR/bàn giao.
+[Decision](decisions.md#2026-10-29--m3-preflight-research-alignment) và
+[roadmap M3](roadmap.md#m3) làm rõ typed EF-EG, semantic compatibility và quality
+propagation; M3-01–M3-07 giữ TODO và dependencies hiện có.
+Next action: Tech Lead review PR preflight; không bắt đầu M3-01.
+
 | Task ID | Tên | Milestone | Status | Priority | Dependencies | Specification / phạm vi dự kiến | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | M0-01 | Initialize Project Repository | M0 | DONE | P0 | - | [M0-01](tasks.md#m0-01-history) | [9eb4483](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/9eb4483f4be4029c014a3a9552dfb5a1a91c8fea) |

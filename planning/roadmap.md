@@ -161,21 +161,44 @@ Phụ thuộc milestone: M1; dữ liệu hiểu tài liệu và contracts đã �
 
 ## M3 — Canonical Evidence & EF-EG
 
-Mục tiêu: Canonical facts, text/table evidence, source anchors, EF-EG nodes/edges, derived metrics, calculation lineage và retrieval.
+Mục tiêu: **Typed Executable Financial Evidence Graph with Semantic Compatibility
+and Evidence-Quality Propagation** theo [kiến trúc M3](../docs/architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
+Đây là định hướng nghiên cứu, chưa tuyên bố thuật toán mới, novelty/SOTA hoặc kết quả
+thực nghiệm đã xác minh. M3 chưa bắt đầu; preflight chỉ đồng bộ tài liệu.
 
 Phụ thuộc milestone: M2; giữ provenance từ M1, không chờ đến M3 mới ghi nguồn.
 
-Điều kiện hoàn thành: Contracts canonical/graph được duyệt, facts/evidence/lineage truy nguyên được và retrieval có kiểm thử. Engine lưu trữ là TBD cho đến task quyết định.
+Giữ pipeline `SourceFact → DerivedMetric → Claim → VerificationRecord`.
+M3 gồm SourceFact/CanonicalFinancialFact, EvidenceAnchor, TextEvidence/TableEvidence,
+typed graph relations, DerivedMetric representations, lineage và retrieval.
+Claim thuộc luồng M5/M6; Claim, VerificationRecord và Verified Claim Ledger không
+triển khai tại M3. M4 thực thi deterministic financial tools và baseline đã đăng ký;
+M5 adaptive planner/specialists; M6 verification/ledger; M7 grounded QA/report;
+M8 controlled evaluation/ablation. “Executable” tại M3 là biểu diễn phục vụ M4.
+
+Semantic compatibility phải xét financial item, reporting period, reporting scope,
+unit/scale, document/source identity và formula operand roles theo quy tắc được duyệt;
+không tự suy quy tắc kế toán. Quality contract bảo toàn `usable`, `usable_with_caveat`,
+`insufficient`, `conflicted`, cùng unresolved provenance và missing operands dưới dạng
+reasons/tình trạng. Phân biệt source grounding, numerical calculation validity và claim
+verification; không đặt confidence score, thresholds hoặc propagation algorithm tại preflight.
+
+Điều kiện hoàn thành dự kiến: Contracts canonical/provenance/semantic types và quality
+propagation được duyệt; facts/evidence/lineage truy nguyên được; retrieval có kiểm thử, giữ quality
+context và hỗ trợ đánh giá thực nghiệm sau này. Quy tắc chi tiết, cách đo và engine
+lưu trữ còn TBD. Không tự xây graph/vector database, LLM agents hay frontend.
+Giữ nguyên caveats M1/M2/W-07; usability hoặc smoke không chứng nhận financial accuracy.
+Giữ nguyên bảy task, IDs, dependencies và TODO trong registry; không tạo M3-08.
 
 | Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
 | --- | --- | --- |
-| <a id="m3-01"></a>M3-01 — Canonical and Provenance Contracts | Contracts canonical và evidence anchors | Định danh và truy nguyên được rà soát trước implementation |
-| <a id="m3-02"></a>M3-02 — Canonical Financial Facts | Lưu/truy xuất facts chuẩn hóa | Giữ kỳ/đơn vị/phạm vi và nguồn, không trộn facts chưa đạt gate |
-| <a id="m3-03"></a>M3-03 — Text and Table Evidence | Bằng chứng văn bản/bảng liên kết nguồn | Truy nguyên được đoạn/vùng/bảng theo contract |
-| <a id="m3-04"></a>M3-04 — EF-EG Nodes and Edges | EF-EG theo types/relations được duyệt | Kiểm tra tham chiếu và đồ thị mẫu; engine lưu trữ vẫn cần quyết định |
-| <a id="m3-05"></a>M3-05 — Derived Metric Records | Biểu diễn metric, công thức và inputs | Không dùng LLM làm máy tính; đây là model lưu trữ, executor thuộc M4 |
-| <a id="m3-06"></a>M3-06 — Calculation Lineage | Truy vết metric về công thức và bằng chứng | Lineage không đứt và có thể cung cấp input để thực thi lại |
-| <a id="m3-07"></a>M3-07 — Evidence Retrieval Interface | Giao tiếp truy xuất facts/text/table/graph | Kết quả có evidence IDs và nguồn; không tự chọn engine chưa duyệt |
+| <a id="m3-01"></a>M3-01 — Canonical and Provenance Contracts | Contracts SourceFact/CanonicalFinancialFact, EvidenceAnchor và semantic type rules | Rà soát identity/provenance và compatibility của item, kỳ, scope, unit/scale, document/source, operand roles; unknown giữ TBD/unresolved, không tự tạo quy tắc kế toán |
+| <a id="m3-02"></a>M3-02 — Canonical Financial Facts | Biểu diễn/lưu/truy xuất facts chuẩn hóa có nguồn | Giữ raw/context/quality và mapping đã duyệt; raw ngoài catalog còn truy xuất được, không tự gộp identity hoặc nâng thành verified |
+| <a id="m3-03"></a>M3-03 — Text and Table Evidence | TextEvidence/TableEvidence liên kết EvidenceAnchor | Truy nguyên đoạn/vùng/bảng theo contract; không nâng page-level thành cell-level khi chưa có bằng chứng |
+| <a id="m3-04"></a>M3-04 — EF-EG Nodes and Edges | Typed nodes/relations theo contracts, mở rộng về Claim/VerificationRecord | Kiểm tra types, references và semantic constraints được duyệt trên graph mẫu; không triển khai claim/verification/ledger tại M3, storage TBD |
+| <a id="m3-05"></a>M3-05 — Derived Metric Records | DerivedMetric representations: công thức, operand roles, inputs và kết quả nếu có | Giữ tham chiếu typed facts/evidence và operands thiếu; executor deterministic thuộc M4, không dùng LLM làm máy tính |
+| <a id="m3-06"></a>M3-06 — Calculation Lineage | Lineage và evidence-quality propagation contract | Truy metric → công thức/operands → facts/anchors; giữ bốn quality decisions, caveats/conflicts, unresolved provenance và missing operands; đủ input cho M4 thực thi lại khi có thể, không tự đặt scores/thresholds/algorithm |
+| <a id="m3-07"></a>M3-07 — Evidence Retrieval Interface | Truy xuất facts/text/table/graph/lineage phục vụ tools và đánh giá thực nghiệm | Trả IDs, nguồn, semantic/quality context và thiếu/mâu thuẫn để đối chiếu; chuẩn bị khả năng đánh giá, không tự chạy benchmark hoặc chọn engine chưa duyệt |
 
 <a id="m4"></a>
 

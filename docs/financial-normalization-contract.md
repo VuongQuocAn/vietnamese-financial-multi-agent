@@ -45,6 +45,25 @@ Schema tại `schemas/financial_normalization_v1.schema.json`; sinh lại bằng
 finite Decimal strings được Python kiểm tra thêm. Không có verification engine trong v1;
 `financial_fact_verified=true` bị từ chối ngay cả khi value.status=resolved.
 
+## Handoff dự kiến sang M3 (documentation-only preflight)
+
+SourceFact/CanonicalFinancialFact phải giữ raw value, Decimal, item mapping và
+ngữ cảnh kỳ/scope/unit/scale cùng document/source identity từ M1/M2. EvidenceAnchor
+không được nâng provenance cấp trang hoặc selector payload thành nguồn cấp ô đã xác minh.
+Raw items ngoài catalog và mapping unresolved vẫn là evidence có giới hạn, không tự
+gán canonical item hoặc loại bỏ chỉ vì thiếu mapping.
+
+M3-01 sẽ thiết kế semantic compatibility theo financial item, reporting period,
+reporting scope, unit/scale, document/source identity và formula operand roles.
+Quy tắc phải được duyệt theo phép toán; metadata thiếu/mơ hồ phải còn thấy được,
+không mặc định tương thích hoặc tự suy quy tắc kế toán. Chi tiết types/rules là TBD.
+M3-06 bảo toàn quality/reasons và lineage theo
+[định hướng kiến trúc](architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
+
+Phần này không sửa public API, wire schema v1 hoặc semantics M2 hiện có.
+`financial_fact_verified` vẫn luôn false; canonicalization, source grounding và
+numerical calculation validity không thay claim verification thuộc M6.
+
 ## Evidence M2-01 — 2026-10-28
 
 - Baseline sạch: `8c351bee80b81f609074c94c502299ff94b83315`; M1-16 DONE.

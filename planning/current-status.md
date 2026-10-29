@@ -7,6 +7,15 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
+## M3 Preflight — Research Alignment
+
+Status: **REVIEW**; xem [registry](tasks.md#registry) và
+[decision](decisions.md#2026-10-29--m3-preflight-research-alignment).
+Chỉ đồng bộ tài liệu typed EF-EG/semantic compatibility/quality propagation;
+M3-01–M3-07 giữ TODO, chưa bắt đầu implementation. SHA và validation thực chạy
+được báo trong PR/bàn giao, không suy CI từ W-07.
+Next action: Tech Lead review PR preflight; không bắt đầu M3-01.
+
 ## W-07 — End-to-End Acceptance
 
 Status: **DONE** — Tech Lead APPROVED 29/10/2026 trên

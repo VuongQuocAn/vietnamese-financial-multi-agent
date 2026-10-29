@@ -30,6 +30,24 @@ core Gateway/Gemini/quota/cache/schema, không import ngược từ core/account
 Không gọi financial runtime/extraction trong W-03. Chi tiết tại
 [Web API](web-demo-v1/api-contracts.md) và [usage](web-demo-v1/w-03-usage.md).
 
+## Ranh giới M3 sau research preflight
+
+`evidence` sở hữu biểu diễn SourceFact/CanonicalFinancialFact, EvidenceAnchor,
+TextEvidence/TableEvidence, typed EF-EG relations, DerivedMetric, calculation lineage
+và evidence retrieval theo [định hướng M3](architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
+Tái sử dụng output/provenance/quality annotations của `document_processing` và
+`accounting`; không đổi contracts M1/M2 hoặc tự bổ sung quy tắc kế toán.
+
+Semantic compatibility contract (M3-01) và quality propagation contract (M3-06)
+thuộc biểu diễn evidence; `tools` M4 sở hữu thực thi deterministic theo contracts
+được duyệt. `agents` M5 dùng shared tools để lập kế hoạch và tạo candidate claims;
+`verification` M6 sở hữu kiểm chứng và verified ledger; `outputs` M7 dùng ledger
+cho grounded QA/report. M8 kiểm soát evaluation/ablation. Không đưa Claim,
+VerificationRecord hoặc ledger implementation vào M3 dù graph cần mở rộng được.
+
+Chưa chốt tên class, wire schema, storage engine hoặc propagation algorithm tại
+preflight. Không thêm graph/vector database, LLM agents hay frontend trong task này.
+
 `tests/unit/` kiểm tra độc lập; `tests/integration/` dành cho giao tiếp module;
 `tests/evaluation/` dành cho kiểm tra đánh giá. `evaluation/` giữ cấu hình và
 tài liệu thực nghiệm đã duyệt, không chứa dữ liệu gốc hoặc artifacts lớn.
