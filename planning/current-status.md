@@ -7,6 +7,13 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
+## W-07 — End-to-End Acceptance
+
+Status: **IN_PROGRESS**; người dùng giao 29/10/2026. Main/origin/main `391c230`,
+PR #7 merged, W-01–W-06 DONE. Nhánh `feat/w-07-web-demo-acceptance`.
+[Spec/evidence](tasks/W/W-07.md). Chưa commit, chưa gọi Gemini.
+Next action: nghiệm thu tích hợp PDF BBS thực theo W-07.
+
 ## W-06 — Financial Evidence Tables & Source Linking
 
 Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026 trên

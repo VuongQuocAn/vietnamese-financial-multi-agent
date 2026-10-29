@@ -4,7 +4,8 @@ W-03 bổ sung upload PDF/storage/preflight/review trên skeleton Next.js + Fast
 Không cần Docker/database; upload và sửa thủ công chạy không cần key.
 Launcher tự dùng key file local, bật nhận diện auto-first và key rotation.
 Cấu hình Gemini server-side, limits, retry/restart và luồng scan PDF tại
-[W-03 usage](w-03-usage.md). Financial extraction M1–M2 chưa nối vào HTTP layer.
+[W-03 usage](w-03-usage.md). W-04–W-06 đã nối extraction M1–M2, bảng evidence
+và PDF/source linking. Hướng dẫn demo nghiệm thu: [W-07](demo-script.md).
 Thiết kế theo [UI handoff](ui-handoff.md), [kiến trúc](architecture.md).
 
 Yêu cầu Python 3.11+ và Node.js 24 LTS (package web yêu cầu Node >=24).
@@ -75,7 +76,8 @@ npm.cmd run dev
 Mở <http://127.0.0.1:3000>. Có thể chuyển bốn trang, thu/mở sidebar ở desktop,
 đổi tabs B01/B02/B03/B09/Graph, chỉnh độ rộng PDF bằng slider/keyboard và chuyển
 khung xem trên mobile. Upload PDF thật từ Dashboard/Documents, danh sách từ API,
-review metadata tại `/documents/[id]`. Evidence còn rỗng; AI Coming Soon.
+review metadata tại `/documents/[id]`. Khám phá dữ liệu hiển thị B01/B02/B03;
+chọn ô để tới nguồn PDF. B09 chỉ inventory; AI QA/Graph chưa triển khai.
 Font Be Vietnam Pro tiếng Việt được đóng gói local; không fetch Google Fonts.
 
 Kiểm tra backend và proxy từ terminal khác:
@@ -121,5 +123,6 @@ font, không runtime errors/broken resources, layout 1440/1280/390 và proxy hea
 Fixture bảng tổng hợp chỉ ở tests, giữ raw zero/dash/missing; không phải đánh giá
 chất lượng tài chính. Screenshots/trace ở `web/test-results/` bị Git ignore.
 
-CI giữ Python 3.11/3.12 full unit suite và thêm web typecheck/lint/build/browser/
-proxy. Không dùng kết quả local thay cho CI hoặc Tech Lead nghiệm thu.
+CI mặc định Python 3.12 với targeted unit tests; web typecheck/lint/build/browser/
+proxy khi có thay đổi liên quan. Full regression chạy thủ công. Không dùng kết quả
+local thay cho CI hoặc Tech Lead nghiệm thu.
