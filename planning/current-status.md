@@ -2,6 +2,21 @@
 
 Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M3-04 — EF-EG Nodes and Edges
+
+Status: **REVIEW**, Owner giao main-first ngày 29/10/2026.
+[Spec/evidence](tasks/M3/M3-04.md), [API](../docs/typed-evidence-graph.md),
+[real-artifact report](../docs/m3-04-real-graph-validation.md).
+Typed reference nodes, exact source edges, deterministic validation và input audit.
+Selected scope toàn bộ hai W07 attempts/bốn M3-03 repositories: 356 facts + 99
+evidence, 1747 nodes/7407 edges; tất cả unresolved, zero invalid/orphan/collision;
+7 missing identities giữ quarantine. 1299 selectors resolve với page binding đúng;
+53 source files hash unchanged. 10/10 real negative controls; B09 graph/full-PDF
+accuracy NOT VERIFIED. Không coi context association là semantic support.
+Implementation SHA/checks ghi tại spec sau push; zero Gemini/OCR/extraction/raw changes.
+Giữ local web/next-env.d.ts ngoài stage. Chưa DONE.
+Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
+
 ## M3-03 — Text and Table Evidence
 
 Status: **DONE**, Tech Lead APPROVED ngày 29/10/2026, main-first. Accepted implementation

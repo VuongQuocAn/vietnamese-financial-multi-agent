@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 3 | 0 | 0 | 4 | 0 | 0 |
+| M3 | 7 | 3 | 0 | 0 | 3 | 0 | 1 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 57 | 0 | 0 | 36 | 0 | 0 |
+| TOTAL | 93 | 57 | 0 | 0 | 35 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M3-04 REVIEW — [spec/evidence](tasks/M3/M3-04.md),
+[typed graph API](../docs/typed-evidence-graph.md),
+[real validation](../docs/m3-04-real-graph-validation.md).
+356 facts + 99 evidence: 1747 nodes/7407 edges unresolved, zero invalid/orphan/
+collision; 7 missing identities giữ quarantine. Zero extraction/raw changes.
+Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
+
+Checkpoint trước:
 
 M3-03 DONE — Tech Lead APPROVED ngày 29/10/2026. [Spec/evidence](tasks/M3/M3-03.md). Accepted implementation
 `3fca2b4ccba922c688acfc404477e655024dcb44` đã push main.

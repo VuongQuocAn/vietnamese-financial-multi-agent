@@ -1,4 +1,4 @@
-"""Canonical facts, adapter M2 và local persistence; chưa có graph engine."""
+"""Canonical/document evidence, persistence và typed EF-EG representation."""
 
 from .adapter import fact_from_m2, facts_from_persisted_result
 from .compatibility import (
@@ -34,9 +34,33 @@ from .document_evidence import (
     associate_fact,
 )
 from .document_repository import DocumentEvidenceRepository, EvidenceConflict
+from .graph import (
+    EvidenceAnchorNode,
+    EvidenceGraph,
+    GraphAssessment,
+    GraphEdge,
+    GraphNode,
+    GraphValidation,
+    SourceFactNode,
+    TableEvidenceNode,
+    TextEvidenceNode,
+    build_graph,
+    validate_graph,
+)
 from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
+    "EvidenceAnchorNode",
+    "EvidenceGraph",
+    "GraphAssessment",
+    "GraphEdge",
+    "GraphNode",
+    "GraphValidation",
+    "SourceFactNode",
+    "TableEvidenceNode",
+    "TextEvidenceNode",
+    "build_graph",
+    "validate_graph",
     "CanonicalFactRepository",
     "CanonicalFinancialFact",
     "CompatibilityAssessment",
