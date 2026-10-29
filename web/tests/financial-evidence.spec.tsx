@@ -187,6 +187,66 @@ function envelope(
   };
 }
 
+test("W06 document picker retries, paginates and opens the selected PDF", async ({
+  page,
+}) => {
+  await mockDocument(page);
+  let fail = true;
+  await page.route("**/api/documents?*", (route) => {
+    if (fail)
+      return route.fulfill({
+        status: 503,
+        json: { error: { message: "Synthetic list unavailable" } },
+      });
+    const offset = Number(
+      new URL(route.request().url()).searchParams.get("offset"),
+    );
+    const items =
+      offset === 0
+        ? Array.from({ length: 20 }, (_, index) => ({
+            id: `synthetic-${index}`,
+            filename: `synthetic-${index}.pdf`,
+            state: "uploaded",
+            company_name: null,
+            reporting_year: null,
+          }))
+        : [
+            {
+              id,
+              filename: "selected-synthetic.pdf",
+              state: "completed",
+              company_name: "Synthetic smoke",
+              reporting_year: null,
+            },
+          ];
+    return route.fulfill({ json: { items, total: 21, offset, limit: 20 } });
+  });
+  await page.route(`**/api/documents/${id}/evidence?*`, (route) =>
+    route.fulfill({ json: envelope([]) }),
+  );
+  await page.goto("/evidence");
+  const picker = page.getByRole("button", {
+    name: "Chọn tài liệu",
+    exact: true,
+  });
+  await expect(picker).toBeEnabled();
+  await picker.click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Synthetic list unavailable" }),
+  ).toBeVisible();
+  fail = false;
+  await page.getByRole("button", { name: "Tải lại danh sách" }).click();
+  await expect(
+    page.getByRole("link", { name: /synthetic-0.pdf/ }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Danh sách tiếp" }).click();
+  await page.getByRole("link", { name: /selected-synthetic.pdf/ }).click();
+  await expect(page).toHaveURL(new RegExp(`/evidence/${id}(?:\\?page=1)?$`));
+  await expect(
+    page.locator('.react-pdf__Page[data-page-number="1"] canvas'),
+  ).toBeVisible();
+});
+
 test("W06 financial cell links PDF and keeps selection across zoom and tabs with stale partial evidence", async ({
   page,
 }) => {

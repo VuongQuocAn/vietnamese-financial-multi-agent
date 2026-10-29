@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import {
-  ChevronDown,
   FileSearch,
   FileText,
   GripVertical,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FinancialTable } from "@/components/evidence/financial-table";
+import { DocumentPicker } from "./document-picker";
 
 const statements = [
   { id: "B01", label: "Cân đối kế toán" },
@@ -29,17 +29,7 @@ export function EvidenceExplorer() {
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   return (
     <>
-      <div className="document-picker panel">
-        <FileText size={18} />
-        <span>Chưa chọn tài liệu</span>
-        <button
-          className="button secondary"
-          disabled
-          aria-describedby="picker-note"
-        >
-          Chọn tài liệu <ChevronDown size={15} />
-        </button>
-      </div>
+      <DocumentPicker />
       <p id="picker-note" className="notice">
         Chọn một tài liệu đã xử lý để khám phá dữ liệu tài chính.
       </p>

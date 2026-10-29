@@ -1100,6 +1100,10 @@ main {
 .evidence-content .financial-table .numeric { max-width: 250px; }
 .evidence-content .inventory-panel { padding: 16px 0 0; gap: 12px; }
 .evidence-actions { display: flex; gap: 8px; padding: 12px 0; }
+.evidence-document-options { padding: 16px; }
+.evidence-document-options ul { list-style: none; padding: 0; margin: 12px 0; }
+.evidence-document-options li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.evidence-document-options .evidence-actions { flex-wrap: wrap; }
 .financial-explorer + .source-details { margin: 16px 0 0; padding: 16px; overflow-wrap: anywhere; }
 .source-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
 .source-fields dt { color: var(--muted); font-size: 13px; }
