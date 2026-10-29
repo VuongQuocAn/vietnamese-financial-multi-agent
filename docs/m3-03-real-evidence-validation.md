@@ -158,6 +158,7 @@ Local real-artifact runner đã hoàn tất: không conversion/persistence/sourc
 failure trong 99 selected records. Đã hash lại PDF/source files không đổi. Zero Gemini,
 OCR hoặc extraction calls; chỉ đọc persisted artifacts và render PDF để review.
 Runtime SHA vẫn `3fca2b4`; validation bổ sung chỉ script/docs/planning.
+Validation SHA `b12eebe299e40c766031b011943bd506c44e3414` đã push trực tiếp main.
 CI40830297216 của runtime đã completed/SUCCESS đúng SHA được xác minh; kết quả đó
 không thay thế các limitations/source failures nêu trên.
 Ruff lint/format script mới, planning checker 93 tasks và diff check PASS. Không

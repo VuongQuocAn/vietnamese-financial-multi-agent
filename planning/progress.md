@@ -53,7 +53,9 @@ Text/table contracts, adapters DU/unified/persisted và JSON repository riêng;
 40 targeted PASS; [real-artifact validation](../docs/m3-03-real-evidence-validation.md)
 bổ sung: 99/99 records exact preservation/restart, 7 missing binding giữ quarantine.
 PDF sample B01/B02/B03/B09 đã đối chiếu; còn period/glyph/segmentation failures,
-không full-PDF accuracy; validation bổ sung chưa commit.
+không full-PDF accuracy; validation bổ sung `b12eebe` đã push main,
+[CI40832246367](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40832246367)
+in_progress đúng validation SHA.
 178 facts có source associations, 150 unmapped giữ nguyên; page provenance không đổi.
 Không Gemini/OCR/extraction hoặc sửa raw; Ruff/planning/diff PASS local;
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)

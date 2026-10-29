@@ -16,8 +16,11 @@ Validation bổ sung: [real-artifact report](../docs/m3-03-real-evidence-validat
 7 missing document binding giữ quarantine. PDF B01/B02/B03/B09 đã đọc trực tiếp:
 72/72 numeric token occurrences khớp mẫu, 6/72 period bindings unresolved;
 B09 2/21 glyph mismatch,5/21 null; không full-PDF/independent human gold accuracy.
-13/13 PDF/image/dimension bindings khớp;49 source hashes unchanged. Chưa commit
-validation bổ sung. DU v1 còn synthetic; BBS_2024 coverage chưa xác minh.
+13/13 PDF/image/dimension bindings khớp;49 source hashes unchanged. Validation bổ sung
+`b12eebe299e40c766031b011943bd506c44e3414` đã push main;
+[CI40832246367](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40832246367)
+in_progress đúng validation SHA, chưa kết luận PASS. DU v1 còn synthetic;
+BBS_2024 coverage chưa xác minh.
 Zero Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
 completed/SUCCESS đúng runtime SHA đã xác minh. Ruff/planning/diff PASS local trước đó;
