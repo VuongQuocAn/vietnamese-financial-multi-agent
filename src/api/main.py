@@ -266,7 +266,14 @@ def create_app(
         return store.public(store.load(identifier))
 
     @app.get("/api/documents/{identifier}/file")
-    def original(identifier: str, request: Request):
+    def original(identifier: str, request: Request, viewer: bool = False):
+        if viewer:
+            # PDF.js reads the original bytes itself. Avoid PDF download headers
+            # that browser download managers can intercept (returning HTTP 204).
+            return FileResponse(
+                request.app.state.store.file(identifier),
+                media_type="application/octet-stream",
+            )
         return FileResponse(
             request.app.state.store.file(identifier),
             media_type="application/pdf",

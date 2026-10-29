@@ -40,13 +40,13 @@ test("PDF viewer retries one 204 and offers manual recovery without runtime erro
   );
   let requests = 0;
   let alwaysEmpty = false;
-  await page.route(`**/api/documents/${id}/file`, (route) => {
+  await page.route(`**/api/documents/${id}/file?viewer=true`, (route) => {
     requests += 1;
     return requests === 1 || alwaysEmpty
       ? route.fulfill({ status: 204 })
       : route.fulfill({
           status: 200,
-          contentType: "application/pdf",
+          contentType: "application/octet-stream",
           body: bytes,
         });
   });
@@ -104,11 +104,12 @@ test("PDF scan viewer renders, synchronizes URL and navigates partial inventory"
   const doc = await upload.json();
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  const range = await request.get(`/api/documents/${doc.id}/file`, {
+  const range = await request.get(`/api/documents/${doc.id}/file?viewer=true`, {
     headers: { Range: "bytes=0-31" },
   });
   expect(range.status()).toBe(206);
-  expect(range.headers()["content-type"]).toContain("application/pdf");
+  expect(range.headers()["content-type"]).toBe("application/octet-stream");
+  expect(range.headers()["content-disposition"]).toBeUndefined();
   expect(range.headers()["content-range"]).toMatch(/^bytes 0-31\//);
   expect((await range.body()).length).toBe(32);
   await page.goto(`/evidence/${doc.id}?page=2`);
@@ -181,7 +182,7 @@ test("PDF scan viewer renders, synchronizes URL and navigates partial inventory"
   await expect(
     page.getByRole("button", { name: "Trang 3", exact: true }),
   ).toBeVisible();
-  await page.route(`**/api/documents/${doc.id}/file`, (route) =>
+  await page.route(`**/api/documents/${doc.id}/file?viewer=true`, (route) =>
     route.fulfill({ status: 404 }),
   );
   await page.reload();

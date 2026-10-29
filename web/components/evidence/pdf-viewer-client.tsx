@@ -161,7 +161,7 @@ export default function PdfViewerClient({
       <div ref={viewport} className="pdf-viewport">
         <Document
           key={loadAttempt}
-          file={file}
+          file={`${file}?viewer=true`}
           suspense={false}
           onLoadSuccess={({ numPages }) => setTotal(numPages)}
           onLoadError={(error) => {
