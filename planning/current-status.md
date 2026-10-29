@@ -18,8 +18,9 @@ undetermined do thiếu company/scope/semantic roles và uncertain source; khôn
 M2 direct_qa decisions giữ 46 usable/246 caveat/64 insufficient/0 conflicted.
 1299 selectors resolve/page binding đúng, 53 hashes unchanged; 10/10 controls giữ
 status/reasons. B09 graph/full-PDF accuracy NOT VERIFIED, không semantic support.
-Baseline `57229123408f7b1c613c1a3346ea79f719c19fcb`; correction chưa commit,
-SHA/CI cập nhật tại spec sau push. Local 56 targeted PASS, Ruff PASS.
+Correction `76fa534f4bd82a8fc615091af2fd79b8ef99ded6` đã push trực tiếp main,
+HEAD/origin/main khớp sau push. Local56 targeted/Ruff/planning/diff PASS;
+CI đúng correction SHA ghi tại spec.
 Zero Gemini/OCR/extraction/raw changes.
 Giữ local web/next-env.d.ts ngoài stage. Chưa DONE.
 Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
