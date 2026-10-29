@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 2 | 0 | 0 | 5 | 0 | 0 |
+| M3 | 7 | 2 | 0 | 0 | 4 | 0 | 1 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 56 | 0 | 0 | 37 | 0 | 0 |
+| TOTAL | 93 | 56 | 0 | 0 | 36 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M3-03 REVIEW — [Spec/evidence](tasks/M3/M3-03.md). Chưa commit.
+Text/table contracts, adapters DU/unified/persisted và JSON repository riêng;
+40 targeted PASS; read-only BBS_2025: 24 text, 4 tables, exact restart PASS.
+178 facts có source associations, 150 unmapped giữ nguyên; page provenance không đổi.
+Không Gemini/OCR/extraction hoặc sửa raw; CI exact SHA chưa có.
+Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
+
+Checkpoint trước:
 
 M3-02 DONE — Tech Lead APPROVED 29/10/2026. [Spec/evidence](tasks/M3/M3-02.md).
 Owner giao main-first; 43 targeted PASS, persisted 178 restart round-trip PASS;

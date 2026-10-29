@@ -21,6 +21,19 @@ from .contracts import (
     TaskQualityContext,
     assess_fact_consistency,
 )
+from .document_adapter import (
+    evidence_from_persisted_result,
+    evidence_from_understanding,
+    evidence_from_unified_page,
+)
+from .document_evidence import (
+    EvidenceIdentity,
+    FactEvidenceAssociation,
+    TableEvidence,
+    TextEvidence,
+    associate_fact,
+)
+from .document_repository import DocumentEvidenceRepository, EvidenceConflict
 from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
@@ -44,4 +57,14 @@ __all__ = [
     "assess_fact_consistency",
     "fact_from_m2",
     "facts_from_persisted_result",
+    "DocumentEvidenceRepository",
+    "EvidenceConflict",
+    "EvidenceIdentity",
+    "FactEvidenceAssociation",
+    "TableEvidence",
+    "TextEvidence",
+    "associate_fact",
+    "evidence_from_persisted_result",
+    "evidence_from_understanding",
+    "evidence_from_unified_page",
 ]
