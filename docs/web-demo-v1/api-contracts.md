@@ -1,7 +1,7 @@
 # Web Demo V1 — API contracts
 
 W-01 đã nghiệm thu; W-03 triển khai documents/metadata/preflight/file/status.
-Inventory/evidence/extract bên dưới còn là thiết kế dự kiến cho W-04 trở đi.
+W-04 thêm extract/inventory/evidence, xem [sessions](w-04-sessions.md).
 [Implementation/usage W-03](w-03-usage.md).
 [Kiến trúc/lifecycle](architecture.md), [UI mapping](ui-handoff.md).
 Tất cả JSON ví dụ dưới đây là **synthetic minh họa contract**, không là dữ liệu
@@ -11,7 +11,7 @@ hash trong ví dụ là placeholder 64 ký tự, không gán cho PDF pilot.
 ## Quy tắc chung và endpoints
 
 Refinement W-03: auto-first thay confirmation bắt buộc trong đề xuất W-01.
-POST process chỉ operation=preflight; extract chưa triển khai. metadata.accepted
+POST process nhận operation=preflight/extract. metadata.accepted
 biểu thị sẵn sàng, acceptance_origin=auto/user/null. confirmed chỉ cho user,
 auto-accept không gán confirmed=true. Summary trả tên/ticker/năm khi accepted.
 

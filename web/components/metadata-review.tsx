@@ -64,7 +64,7 @@ export function MetadataReview({ id }: { id: string }) {
     };
   }, [id, reload]);
 
-  async function retry() {
+  async function retry(operation: "preflight" | "extract" = "preflight") {
     if (!doc || retrying) return;
     setRetrying(true);
     setError("");
@@ -76,7 +76,7 @@ export function MetadataReview({ id }: { id: string }) {
           "Idempotency-Key": crypto.randomUUID(),
         },
         body: JSON.stringify({
-          operation: "preflight",
+          operation,
           metadata_revision: doc.metadata_revision,
         }),
       });
@@ -120,13 +120,24 @@ export function MetadataReview({ id }: { id: string }) {
             aria-label="Trạng thái nhận diện"
           >
             <strong role="status">{stateLabels[doc.state] ?? doc.state}</strong>
-            {active(doc) && (
+            {active(doc) && doc.job?.operation !== "extract" && (
               <p>
-                Đã phân tích {doc.job?.progress.preflight.completed_pages ?? 0}/
+                Đã phân tích {doc.job?.progress.preflight?.completed_pages ?? 0}/
                 {doc.page_count} trang.
               </p>
             )}
-            {doc.metadata.preflight?.stop_reason && (
+            {doc.job?.operation === "extract" && (
+              <div>
+                {active(doc) && <p>Hệ thống đang phân tích… {doc.job.phase === "discovery" ? "Nhận diện trang báo cáo" : "Trích xuất số liệu"}</p>}
+                {doc.job.progress.discovery && <p>Đã nhận diện {doc.job.progress.discovery.completed_pages}/{doc.job.progress.discovery.total_pages} trang.</p>}
+                {doc.job.progress.extraction && <p>Đã xử lý {doc.job.progress.extraction.completed_pages}/{doc.job.progress.extraction.selected_pages} trang được chọn; {doc.job.progress.extraction.invalid_pages} trang lỗi.</p>}
+                {doc.job.summary && <p>B01: {doc.job.summary.statement_pages.B01} trang · B02: {doc.job.summary.statement_pages.B02} trang · B03: {doc.job.summary.statement_pages.B03} trang · B09: {doc.job.summary.statement_pages.B09} trang (chỉ danh mục). {doc.job.summary.evidence_items} mục dữ liệu có nguồn.</p>}
+                {doc.job.error && <p className="error-message">{typeof doc.job.error === "string" ? "Phân tích chưa hoàn tất. Kết quả đã lưu được giữ lại." : doc.job.error.message}</p>}
+                {!!doc.job.page_errors?.length && <p>Trang cần thử lại: {doc.job.page_errors.map(e => e.pdf_page).join(", ")}.</p>}
+                <p className="muted">Số liệu trích xuất chưa được xác minh; cần đối chiếu PDF gốc.</p>
+              </div>
+            )}
+            {doc.job?.operation !== "extract" && doc.metadata.preflight?.stop_reason && (
               <p>
                 {stopLabels[doc.metadata.preflight.stop_reason] ??
                   "Nhận diện đã dừng"}
@@ -144,7 +155,7 @@ export function MetadataReview({ id }: { id: string }) {
                 diện lại hoặc bổ sung thông tin.
               </p>
             )}
-            {doc.state === "failed" && (
+            {doc.state === "failed" && doc.job?.operation !== "extract" && (
               <p>
                 Không hoàn tất được nhận diện. PDF đã được giữ lại; bạn có thể
                 thử lại hoặc điền thông tin.
@@ -159,11 +170,16 @@ export function MetadataReview({ id }: { id: string }) {
               >
                 Mở PDF gốc
               </a>
+              {!active(doc) && doc.metadata.accepted && (
+                <button className="button primary" disabled={retrying} onClick={() => retry("extract")}>
+                  {retrying ? "Đang gửi yêu cầu…" : ["partial", "failed", "interrupted"].includes(doc.state) && doc.job?.operation === "extract" ? "Thử phân tích lại" : "Phân tích báo cáo"}
+                </button>
+              )}
               {!active(doc) && (
                 <button
                   className={`button ${doc.state !== "ready" ? "primary" : ""}`}
                   disabled={retrying}
-                  onClick={retry}
+                  onClick={() => retry()}
                 >
                   {retrying ? "Đang gửi yêu cầu…" : "Thử nhận diện lại"}
                 </button>

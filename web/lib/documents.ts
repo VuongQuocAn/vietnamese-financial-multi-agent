@@ -27,10 +27,18 @@ export type Suggestion = {
 };
 export type Job = {
   id: string;
+  operation: "preflight" | "extract";
+  phase: string;
   state: string;
   revision: number;
-  error: string | null;
-  progress: { preflight: { completed_pages: number; total_pages: number } };
+  error: string | { code: string; message: string; retryable: boolean } | null;
+  page_errors?: { pdf_page: number; code: string }[];
+  summary?: { statement_pages: Record<string, number>; evidence_items: number };
+  progress: {
+    preflight?: { completed_pages: number; total_pages: number };
+    discovery?: { completed_pages: number; total_pages: number };
+    extraction?: { completed_pages: number; selected_pages: number; valid_pages: number; invalid_pages: number } | null;
+  };
 };
 export type DocumentSummary = {
   id: string;
@@ -62,11 +70,13 @@ export type Document = DocumentSummary & {
 };
 export const stateLabels: Record<string, string> = {
   uploaded: "Đã tải lên",
-  queued: "Đang chờ nhận diện",
+  queued: "Đang chờ xử lý",
   processing: "Đang phân tích tài liệu",
   needs_metadata: "Cần bổ sung thông tin",
   ready: "Sẵn sàng",
-  failed: "Nhận diện thất bại",
+  failed: "Xử lý thất bại",
+  completed: "Đã trích xuất số liệu",
+  partial: "Đã có kết quả một phần",
   interrupted: "Đã gián đoạn",
 };
 export const fieldLabels: Record<keyof MetadataValues, string> = {

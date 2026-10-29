@@ -58,6 +58,7 @@ jobs:
           python -m pytest tests/unit/test_package.py tests/unit/test_api.py
           tests/unit/test_llm_gateway.py::test_routing_and_explicit_model_configuration_without_network
           tests/unit/test_financial_query.py::test_raw_retrieval_is_grounded_and_immutable
+          tests/unit/test_extraction_sessions.py
       - name: Full unit regression (manual)
         if: ${{ inputs.full_regression }}
         run: python -m pytest tests/unit

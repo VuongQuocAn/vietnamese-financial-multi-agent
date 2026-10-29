@@ -5,7 +5,22 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#3
 đã merge main; CI40718128314/refinement7048d92 và CI40791847627/launcherd8e7026
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
-BBS_2025 thực tế. Phiên này chỉ cập nhật trạng thái, không tests/Gemini/W-04.
+BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
+
+## W-04 — Financial Processing Sessions
+
+Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026;
+implementation `ff10062b26bd311123b19c9c65d17949679729df`,
+[PR #5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/5)
+đã mở vào main, chưa merge. Người dùng giao task và cho
+phép commit/push/PR trên `feat/w-04-processing-sessions`; baseline `4de9948`,
+main khớp origin/main và Lean đã merge qua PR #4.
+Sessions/API/UI đã nối runtime M1–M2. Live BBS_2025 24 trang, 29 calls, 178 evidence;
+mẫu PDF/reference 6/6 khớp, không phải accuracy toàn PDF. [Evidence](tasks/W/W-04.md).
+CI40797755852 SUCCESS đúng ff10062: Python 18 PASS, desktop browser 3 PASS;
+lint/format/planning/typecheck/build PASS. Checkpoint sau chỉ tài liệu [skip ci].
+Chưa đánh giá accuracy toàn báo cáo/chưa verified financial facts.
+Next action: merge PR #5 và đồng bộ main theo chỉ đạo; không bắt đầu W-05.
 
 ## Housekeeping — Research MVP Workflow Simplification
 

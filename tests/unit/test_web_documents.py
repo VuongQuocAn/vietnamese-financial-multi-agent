@@ -517,7 +517,7 @@ def test_storage_traversal_and_symlink(tmp_path):
     assert error.value.code == "unsafe_storage"
 
 
-def test_process_excludes_financial_extraction_and_invalid_ids(tmp_path):
+def test_process_requires_ready_metadata_and_valid_ids(tmp_path):
     app, _ = make_app(tmp_path)
     with TestClient(app) as client:
         doc = upload(client).json()
@@ -527,7 +527,7 @@ def test_process_excludes_financial_extraction_and_invalid_ids(tmp_path):
                 json=dict(operation="extract", metadata_revision=0),
                 headers={"Idempotency-Key": str(uuid4())},
             ).status_code
-            == 422
+            == 409
         )
         assert client.get("/api/documents/invalid").status_code == 404
         assert client.get("/api/documents?limit=101").status_code == 422

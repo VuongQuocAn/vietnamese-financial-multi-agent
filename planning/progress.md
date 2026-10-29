@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 89 | 50 | 0 | 0 | 39 | 0 | 0 |
+| W | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 90 | 51 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,8 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+W-04 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; [evidence](tasks/W/W-04.md).
 
 Housekeeping W-03 — 2026-10-29: PR#1/#2/#3 đã MERGED main tuần tự, CI main sau
 từng merge SUCCESS; baseline6dd0d1d. Root dev.ps1 một lệnh, local keys tự nạp,

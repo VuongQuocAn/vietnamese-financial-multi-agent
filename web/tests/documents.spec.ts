@@ -73,7 +73,7 @@ for (const width of [1440, 390]) {
         .getByRole("link", { name: "Tài liệu", exact: true }),
     ).toHaveAttribute("aria-current", "page");
     await expect(
-      page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
+      page.getByRole("status").filter({ hasText: "Xử lý thất bại" }),
     ).toBeVisible();
     await expect(
       page.getByText("Hệ thống chưa sẵn sàng nhận diện.", { exact: false }),
@@ -154,7 +154,7 @@ test("drag/drop upload and client/server validation errors", async ({
   await page.getByRole("button", { name: "Tải lên và nhận diện" }).click();
   await expect(page).toHaveURL(/\/documents\/[0-9a-f-]{36}$/);
   await expect(
-    page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
+    page.getByRole("status").filter({ hasText: "Xử lý thất bại" }),
   ).toBeVisible();
   const request = page.waitForResponse(
     (r) => r.url().endsWith("/process") && r.request().method() === "POST",
@@ -162,7 +162,7 @@ test("drag/drop upload and client/server validation errors", async ({
   await page.getByRole("button", { name: "Thử nhận diện lại" }).click();
   expect((await request).status()).toBe(202);
   await expect(
-    page.getByRole("status").filter({ hasText: "Nhận diện thất bại" }),
+    page.getByRole("status").filter({ hasText: "Xử lý thất bại" }),
   ).toBeVisible();
 });
 
