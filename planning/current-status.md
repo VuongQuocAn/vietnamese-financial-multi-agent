@@ -4,7 +4,7 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-05 — Derived Metric Records
 
-Status: **REVIEW**, người dùng giao 29/10/2026, main-first; implementation
+Status: **DONE**, Tech Lead APPROVED ngày 29/10/2026, main-first; accepted implementation
 `a4c8ff7b6265180b35906098af12c1b0447138f2` đã push main, origin/main khớp sau push.
 [Spec/evidence](tasks/M3/M3-05.md), [API](../docs/derived-metrics.md),
 [real report](../docs/m3-05-real-readiness.md). DerivedMetric/formula/operand contracts,
@@ -17,7 +17,10 @@ thiếu; 0 bindings applied, before=after. JSON restart exact, 49 source hashes 
 Không Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
 [CI40837854096](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40837854096)
 completed/SUCCESS đúng implementation SHA đã xác minh (Python 3.12 và Web smoke).
-Next action: Tech Lead independent review M3-05; không bắt đầu M3-06.
+Phạm vi nghiệm thu: Derived Metric Representation, chưa phải khả năng tính toán
+tài chính hoàn chỉnh. Phiên nghiệm thu chỉ cập nhật planning và chạy planning/diff
+checks; không chạy lại tests/Gemini/OCR/extraction hoặc sửa raw.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-06.
 
 ## M3-04 — EF-EG Nodes and Edges
 

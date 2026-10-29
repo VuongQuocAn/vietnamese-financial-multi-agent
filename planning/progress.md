@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 4 | 0 | 0 | 2 | 0 | 1 |
+| M3 | 7 | 5 | 0 | 0 | 2 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 58 | 0 | 0 | 34 | 0 | 1 |
+| TOTAL | 93 | 59 | 0 | 0 | 34 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -35,7 +35,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
-| `evidence` | M3-01/02/03/04 DONE; M3-05 REVIEW: DerivedMetric/used_in, 47 targeted PASS, 6 real metrics/10 bindings, 4 complete/2 incomplete nhưng 6 undetermined. Không computed/financial accuracy; [evidence](tasks/M3/M3-05.md) |
+| `evidence` | M3-01/02/03/04/05 DONE; M3-05 Tech Lead APPROVED phạm vi Derived Metric Representation, accepted a4c8ff7: DerivedMetric/used_in, 47 targeted PASS, 6 real metrics/10 bindings, 4 complete/2 incomplete nhưng 6 undetermined. Chưa có khả năng tính toán tài chính hoàn chỉnh; [evidence](tasks/M3/M3-05.md) |
 | `tools` | M2-08 structured financial query probe: exact source/page/code/period, Decimal và citations; chưa có full shared tool space hoặc natural-language QA |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
