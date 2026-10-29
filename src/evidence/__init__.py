@@ -1,5 +1,6 @@
-"""Public contracts Canonical Evidence; chưa có graph engine hoặc persistence."""
+"""Canonical facts, adapter M2 và local persistence; chưa có graph engine."""
 
+from .adapter import fact_from_m2, facts_from_persisted_result
 from .compatibility import (
     CompatibilityAssessment,
     CompatibilityReason,
@@ -20,8 +21,10 @@ from .contracts import (
     TaskQualityContext,
     assess_fact_consistency,
 )
+from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
+    "CanonicalFactRepository",
     "CanonicalFinancialFact",
     "CompatibilityAssessment",
     "CompatibilityReason",
@@ -29,6 +32,7 @@ __all__ = [
     "FactConsistencyAssessment",
     "FinancialOperand",
     "ObservationIdentity",
+    "ObservationConflict",
     "OperandReference",
     "OperandRequirement",
     "OperationCompatibilitySpec",
@@ -38,4 +42,6 @@ __all__ = [
     "TaskQualityContext",
     "assess_compatibility",
     "assess_fact_consistency",
+    "fact_from_m2",
+    "facts_from_persisted_result",
 ]

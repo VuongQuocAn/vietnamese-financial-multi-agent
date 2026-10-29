@@ -86,6 +86,8 @@ class CanonicalFinancialFact(FinancialModel):
     company_id: Identity | None = None
     canonical_item_id: Identity | None = None
     source_item_code: str | None = None
+    raw_header: str | None = None
+    source_metadata: dict = Field(default_factory=dict)
     semantic_role: Identity | None = None
     value: FinancialValue
     context: FinancialContext

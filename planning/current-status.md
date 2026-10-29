@@ -2,6 +2,15 @@
 
 Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M3-02 — Canonical Financial Facts
+
+Status: **REVIEW** — Owner giao main-first, baseline `4e6e188` khớp origin.
+[Spec/evidence](tasks/M3/M3-02.md); adapter M2 và local JSON repository implemented,
+43 targeted tests PASS; persisted 178 observations restart round-trip PASS,
+Ruff/planning/diff PASS. Implementation chưa commit; chưa có CI đúng SHA mới.
+Giữ local web/next-env.d.ts; không Gemini/extraction hoặc sửa raw.
+Next action: Tech Lead independent review M3-02; không bắt đầu M3-03.
+
 W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#3
 đã merge main; CI40718128314/refinement7048d92 và CI40791847627/launcherd8e7026
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF

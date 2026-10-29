@@ -4,7 +4,6 @@ import hashlib
 import json
 import os
 import stat
-import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from threading import RLock
@@ -12,6 +11,7 @@ from uuid import UUID, uuid4
 
 import pypdfium2 as pdfium
 
+from ..core.persistence import atomic_json
 from ..document_processing.metadata_preflight import (
     PDF_LOCK,
     MetadataValues,
@@ -44,20 +44,6 @@ def safe_path(root: Path, *parts):
     if not path.resolve().is_relative_to(root.resolve()):
         fail(500, "unsafe_storage", "Vị trí lưu trữ không an toàn.")
     return path
-
-
-def atomic_json(path, payload):
-    """Flush content before same-directory replace; callers hold store lock."""
-    descriptor, name = tempfile.mkstemp(prefix=".snapshot-", dir=path.parent)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            json.dump(payload, stream, ensure_ascii=False, allow_nan=False)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(name, path)
-    finally:
-        if os.path.exists(name):
-            os.unlink(name)
 
 
 class DocumentStore:

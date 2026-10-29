@@ -59,6 +59,7 @@ jobs:
           tests/unit/test_llm_gateway.py::test_routing_and_explicit_model_configuration_without_network
           tests/unit/test_financial_query.py::test_raw_retrieval_is_grounded_and_immutable
           tests/unit/test_extraction_sessions.py
+          tests/unit/test_canonical_facts.py
           tests/unit/test_web_documents.py::test_scan_upload_vision_review_confirm_ready
       - name: Full unit regression (manual)
         if: ${{ inputs.full_regression }}
