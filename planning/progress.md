@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 92 | 53 | 0 | 0 | 39 | 0 | 0 |
+| W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 93 | 54 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,16 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+W-07 DONE — Tech Lead APPROVED 29/10/2026. Web Demo V1
+**COMPLETED — CONDITIONAL GO (local research demo)**; W-01–W-07 DONE.
+BBS persisted + fresh PASS (30 calls), 178 observations, restart 0 calls;
+CI40821580233 SUCCESS đúng c65cef2. [Spec/evidence](tasks/W/W-07.md).
+Giới hạn: chưa accuracy toàn PDF/multi-document, chưa verified financial facts;
+IDM chưa xác nhận trên browser người dùng; live phụ thuộc Gemini Free Tier.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu M3 hoặc task mới.
+
+Checkpoint trước:
 
 W-06 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; CI40805486808 SUCCESS
 đúng b5de0a2. BBS_2025 178 observations, source linking B01/B02/B03 PASS;
