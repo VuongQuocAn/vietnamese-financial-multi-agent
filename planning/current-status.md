@@ -9,14 +9,14 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## W-06 — Financial Evidence Tables & Source Linking
 
-Status: **REVIEW**, được giao 29/10/2026. Baseline main `034c3ac` khớp remote;
-nhánh `feat/w-06-financial-evidence`. [Implementation/validation](tasks/W/W-06.md).
-Bảng B01–B03 + source details/cell → PDF, B09 inventory, partial/stale/pagination.
-Local targeted 6 PASS và typecheck/lint/build PASS; BBS persisted source linking PASS,
-không đánh giá accuracy toàn báo cáo. Implementation `553363d`,
-[PR #7](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/7);
-CI40803902058 IN_PROGRESS tại lần kiểm duy nhất. Chi tiết tại spec.
-Next action: Tech Lead nghiệm thu độc lập W-06 trên PR; không bắt đầu W-07.
+Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026 trên
+[PR #7](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/7).
+Implementation `b5de0a2d5e1c3305dff335ce1f771e9b27814300`;
+[CI40805486808](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40805486808)
+SUCCESS đúng SHA đã xác minh. BBS_2025 178 observations, source linking B01/B02/B03
+PASS; zero/precision/conflict chỉ synthetic, chưa accuracy toàn báo cáo.
+[Evidence](tasks/W/W-06.md). Phiên nghiệm thu không chạy lại tests/Gemini/extraction/benchmark.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-07.
 
 ## W-05 — PDF Viewer & Page Navigation
 
