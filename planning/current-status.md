@@ -4,7 +4,9 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## Housekeeping — Research MVP Workflow Simplification
 
-Status: **REVIEW**. Implementation SHA: chưa commit; baseline `e69a837`.
+Status: **REVIEW**. Implementation SHA: `cd2783e35cc5ddd5ac12b695e7e53739d2bf8248`;
+baseline main `e69a837`. Nhánh `chore/research-mvp-lean`; commit sau implementation
+chỉ ghi checkpoint này. PR/CI remote xem PR cùng nhánh, không gán CI cho SHA khác.
 Đã cập nhật AGENTS, task template và quy tắc registry theo Research-First,
 Minimal Engineering, Low Codex Quota. Giữ provenance, secrets, storage boundaries,
 giới hạn upload/request, Gateway/ngân sách và quyền Tech Lead nghiệm thu.
