@@ -24,7 +24,10 @@
   Caveats và evidence M1/M2/W-07 giữ nguyên; không chứng nhận financial accuracy mới.
 - Phạm vi/criteria dự kiến tại [roadmap](roadmap.md#m3); semantics tại
   [architecture](../docs/architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
-  Preflight dừng REVIEW, chờ Tech Lead nghiệm thu PR.
+  Preflight **DONE** — Tech Lead APPROVED `18ff8e0` ngày 29/10/2026;
+  [PR #9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/9)
+  đã merge main tại `0ac2b98471ba99a49d2a18c2fe14055a5ab3e65a`.
+  Cho phép cập nhật trạng thái trực tiếp trên main, không PR mới; không bắt đầu M3-01.
 
 ## 2026-10-27 — M1-11a Final Acceptance
 

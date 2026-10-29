@@ -9,12 +9,16 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## M3 Preflight — Research Alignment
 
-Status: **REVIEW**; xem [registry](tasks.md#registry) và
+Status: **DONE** — Tech Lead APPROVED ngày 29/10/2026 tại `18ff8e0`;
+[PR #9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/9)
+đã MERGED vào main tại `0ac2b98471ba99a49d2a18c2fe14055a5ab3e65a`.
+Xem [registry](tasks.md#registry) và
 [decision](decisions.md#2026-10-29--m3-preflight-research-alignment).
 Chỉ đồng bộ tài liệu typed EF-EG/semantic compatibility/quality propagation;
-M3-01–M3-07 giữ TODO, chưa bắt đầu implementation. SHA và validation thực chạy
-được báo trong PR/bàn giao, không suy CI từ W-07.
-Next action: Tech Lead review PR preflight; không bắt đầu M3-01.
+M3-01–M3-07 giữ TODO, chưa bắt đầu implementation. Planning checker và diff check
+PASS tại preflight; không suy CI từ W-07. Phiên nghiệm thu chỉ planning/diff,
+không chạy tests/build/Gemini/benchmark hoặc đổi runtime/schema.
+Next action: chờ Tech Lead giao việc; không bắt đầu M3-01.
 
 ## W-07 — End-to-End Acceptance
 
