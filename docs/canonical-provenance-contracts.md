@@ -79,6 +79,11 @@ Known mismatch ưu tiên incompatible khi đồng thời có missing metadata; m
 đều giữ lại. Compatible không có nghĩa input values đã chính xác hoặc đủ điều kiện
 thực thi phép chia (ví dụ denominator zero thuộc M4).
 
+Compatibility tái sử dụng các source issues từ `assess_fact_consistency()` cho từng
+operand: provenance inconsistent trả incompatible, unresolved trả undetermined.
+Giữ nguyên issue code và operand role; thiếu provenance không loại raw/unmapped fact
+khỏi model hoặc truy xuất. Consistency/compatibility vẫn không xác minh số liệu tài chính.
+
 ## TBD và giới hạn
 
 M3-02 quyết định cấp/kiểm tra uniqueness IDs, ingest/persistence và reconciliation

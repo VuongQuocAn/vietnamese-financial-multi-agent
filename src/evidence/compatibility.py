@@ -5,7 +5,12 @@ from typing import Literal
 from pydantic import Field, model_validator
 from vietnamese_financial_multi_agent.accounting.contracts import FinancialModel
 
-from .contracts import CanonicalFinancialFact, Identity, ObservationIdentity
+from .contracts import (
+    CanonicalFinancialFact,
+    Identity,
+    ObservationIdentity,
+    assess_fact_consistency,
+)
 
 
 class OperandRequirement(FinancialModel):
@@ -93,6 +98,14 @@ def assess_compatibility(
     if len(operands) == 2 and set(supplied) == set(roles) and len(set(supplied)) == 2:
         facts = [next(o.fact for o in operands if o.role == r) for r in roles]
         for requirement, f in zip(spec.operands, facts, strict=True):
+            consistency = assess_fact_consistency(f)
+            for issue in consistency.issues:
+                if issue.path and issue.path[0] == "sources":
+                    reason(
+                        issue.code,
+                        "incompatible" if consistency.status == "inconsistent" else "undetermined",
+                        [requirement.role],
+                    )
             if f.observation_identity() is None:
                 reason("missing_observation_identity", affected=[requirement.role])
             if f.resolution_issues:

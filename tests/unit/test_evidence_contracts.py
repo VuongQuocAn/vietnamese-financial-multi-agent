@@ -181,6 +181,34 @@ def test_operation_examples_compatible_metadata_only(yoy):
     assert operands == before
 
 
+@pytest.mark.parametrize("field", ["document_id", "snapshot_id"])
+def test_compatibility_detects_inconsistent_source_binding(field):
+    spec, operands = scenario()
+    setattr(operands[1].fact.sources[0], field, "other-source")
+    before = deepcopy(operands)
+    result = assess_compatibility(spec, operands)
+    assert result.status == "incompatible"
+    source_reasons = [r for r in result.reasons if r.code == "source_identity_mismatch"]
+    assert len(source_reasons) == 1
+    assert source_reasons[0].operand_roles == ["right"]
+    assert source_reasons[0].outcome == "incompatible"
+    assert result.financial_fact_verified is False
+    assert operands == before
+
+
+def test_compatibility_missing_source_reference_is_undetermined():
+    spec, operands = scenario()
+    operands[1].fact.sources[0].reference = None
+    before = deepcopy(operands)
+    result = assess_compatibility(spec, operands)
+    assert result.status == "undetermined"
+    assert [(r.code, r.operand_roles, r.outcome) for r in result.reasons] == [
+        ("unresolved_source_reference", ["right"], "undetermined")
+    ]
+    assert result.financial_fact_verified is False
+    assert operands == before
+
+
 @pytest.mark.parametrize(
     ("field", "value", "status", "reason"),
     [
@@ -224,6 +252,7 @@ def test_period_role_and_document_constraints_are_operation_specific():
     assert assess_compatibility(spec, operands).status == "incompatible"
     spec, operands = scenario()
     operands[1].fact.document_id = "another-report"
+    operands[1].fact.sources[0].document_id = "another-report"
     assert assess_compatibility(spec, operands).status == "compatible"
     spec.document_relation = "same"
     assert assess_compatibility(spec, operands).status == "incompatible"
