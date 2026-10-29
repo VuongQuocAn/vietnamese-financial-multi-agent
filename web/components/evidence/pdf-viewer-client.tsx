@@ -19,6 +19,7 @@ export default function PdfViewerClient({
   const [zoom, setZoom] = useState(1);
   const [width, setWidth] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const container = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const current = Math.max(1, Math.min(total || 1, Math.trunc(page) || 1));
@@ -159,18 +160,41 @@ export default function PdfViewerClient({
       </p>
       <div ref={viewport} className="pdf-viewport">
         <Document
+          key={loadAttempt}
           file={file}
+          suspense={false}
           onLoadSuccess={({ numPages }) => setTotal(numPages)}
+          onLoadError={(error) => {
+            setTotal(0);
+            // A no-content response cannot contain a PDF. Retry this transient
+            // failure once; subsequent failures remain visible for manual retry.
+            if (
+              "status" in error &&
+              error.status === 204 &&
+              loadAttempt === 0
+            ) {
+              setLoadAttempt(1);
+            }
+          }}
           loading={<p role="status">Đang tải PDF…</p>}
           error={
-            <p role="alert">
-              Không tải được PDF. Hãy dùng liên kết “Mở PDF gốc”.
-            </p>
+            <div>
+              <p role="alert">
+                Không tải được PDF. Hãy thử lại hoặc dùng liên kết “Mở PDF gốc”.
+              </p>
+              <button
+                className="button"
+                onClick={() => setLoadAttempt((n) => n + 1)}
+              >
+                Thử tải PDF lại
+              </button>
+            </div>
           }
         >
           {width > 0 && total > 0 && (
             <Page
               key={current}
+              suspense={false}
               pageNumber={current}
               width={width * zoom}
               renderTextLayer={false}

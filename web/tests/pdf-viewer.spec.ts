@@ -4,6 +4,70 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+test("PDF viewer retries one 204 and offers manual recovery without runtime errors", async ({
+  page,
+}) => {
+  const folder = mkdtempSync(join(tmpdir(), "w05-empty-response-"));
+  let bytes: Buffer;
+  try {
+    const file = join(folder, "scan.pdf");
+    execFileSync(
+      process.env.PYTHON ??
+        (process.platform === "win32"
+          ? "../.venv/Scripts/python.exe"
+          : "python"),
+      [
+        "-c",
+        "import sys; from PIL import Image; Image.new('RGB',(120,160),'white').save(sys.argv[1],format='PDF')",
+        file,
+      ],
+    );
+    bytes = readFileSync(file);
+  } finally {
+    rmSync(folder, { recursive: true });
+  }
+  const id = "00000000-0000-4000-8000-000000000005";
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.route(`**/api/documents/${id}`, (route) =>
+    route.fulfill({
+      json: {
+        filename: "synthetic-empty-response.pdf",
+        metadata: { values: { company_name: null, reporting_year: null } },
+        job: null,
+      },
+    }),
+  );
+  let requests = 0;
+  let alwaysEmpty = false;
+  await page.route(`**/api/documents/${id}/file`, (route) => {
+    requests += 1;
+    return requests === 1 || alwaysEmpty
+      ? route.fulfill({ status: 204 })
+      : route.fulfill({
+          status: 200,
+          contentType: "application/pdf",
+          body: bytes,
+        });
+  });
+  await page.goto(`/evidence/${id}`);
+  await expect(page.locator("canvas")).toBeVisible();
+  expect(requests).toBe(2);
+  requests = 0;
+  alwaysEmpty = true;
+  await page.reload();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Không tải được PDF" }),
+  ).toBeVisible();
+  expect(requests).toBe(2);
+  await expect(page.getByRole("link", { name: "Mở PDF gốc" })).toBeVisible();
+  alwaysEmpty = false;
+  await page.getByRole("button", { name: "Thử tải PDF lại" }).click();
+  await expect(page.locator("canvas")).toBeVisible();
+  expect(requests).toBe(3);
+  expect(errors).toEqual([]);
+});
+
 test("PDF scan viewer renders, synchronizes URL and navigates partial inventory", async ({
   page,
   request,

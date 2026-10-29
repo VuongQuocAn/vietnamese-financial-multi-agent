@@ -121,5 +121,5 @@ jobs:
           if [ "$FULL_REGRESSION" = true ]; then
             npm run test:smoke
           else
-            npm run test:smoke -- --grep 'dashboard, navigation and truthful empty states|Next.js proxy reaches the real FastAPI health endpoint|real upload, manual confirmation and document list at 1440px|PDF scan viewer renders, synchronizes URL and navigates partial inventory'
+            npm run test:smoke -- --grep 'dashboard, navigation and truthful empty states|Next.js proxy reaches the real FastAPI health endpoint|real upload, manual confirmation and document list at 1440px|PDF scan viewer renders, synchronizes URL and navigates partial inventory|PDF viewer retries one 204 and offers manual recovery without runtime errors'
           fi
