@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 5 | 4 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 91 | 51 | 0 | 0 | 39 | 0 | 1 |
+| W | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 91 | 52 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,8 +47,9 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-W-05 REVIEW — PDF viewer/URL/inventory; local browser 2 PASS, BBS_2025 thật đã kiểm.
-[Evidence](tasks/W/W-05.md). Next action: Tech Lead review W-05.
+W-05 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; CI40801877913 SUCCESS,
+BBS_2025 viewer PASS. [Evidence](tasks/W/W-05.md).
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-06.
 Các đoạn dưới là checkpoint lịch sử.
 
 W-04 DONE — Tech Lead APPROVED Engineering Scope 29/10/2026; [evidence](tasks/W/W-04.md).

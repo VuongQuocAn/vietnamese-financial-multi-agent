@@ -9,21 +9,15 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## W-05 — PDF Viewer & Page Navigation
 
-Status: **REVIEW**; người dùng giao 29/10/2026. Baseline `91dcc82`,
-branch `feat/w-05-pdf-viewer`; implementation `705d07f90591ce0880a6d9d9b470c74273a9e14e`
-đã push; [PR #6](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/6)
-chưa merge. [Evidence](tasks/W/W-05.md).
-React-PDF client-only, URL 1-based và inventory; local typecheck/lint/build và
-browser 2 PASS; BBS_2025 thật render 5–24, direct page=7, không AI calls.
-Refinement `41ce4f2bd7fd686c14e9021a39b569b267479c95` đã push cùng PR #6:
-lỗi HTTP 204 được retry một lần, lỗi tải hiện inline và có manual retry.
-Regression 204 + BBS trên đúng document người dùng PASS; typecheck/lint/build PASS.
-Refinement mới `5fb03cd5a6a669291dc52583bfcd0ac658075c73` đã push PR #6:
-người dùng xác nhận có IDM. Viewer file?viewer=true dùng binary MIME/không download
-filename; cùng bytes/Range. Local isolated browser 3 PASS + backend integration 1 PASS,
-Ruff/typecheck/lint/build PASS; chưa xác nhận trên trình duyệt có IDM.
-Cần khởi động lại dev.ps1 để nhận backend headers; nếu IDM vẫn chặn thì bỏ bắt tải local.
-Next action: Tech Lead review W-05.
+Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026 trên
+[PR #6](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/6).
+Implementation `705d07f90591ce0880a6d9d9b470c74273a9e14e`; refinements
+`41ce4f2bd7fd686c14e9021a39b569b267479c95`, `5fb03cd5a6a669291dc52583bfcd0ac658075c73`.
+[CI40801877913](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40801877913)
+SUCCESS đúng 5fb03cd đã xác minh; BBS_2025 viewer PASS. [Evidence](tasks/W/W-05.md).
+IDM chưa xác nhận giải quyết trên trình duyệt người dùng; inventory cần reload;
+chưa có financial cell linking. Phiên nghiệm thu không chạy lại tests/CI/Gemini/extraction.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-06.
 
 ## W-04 — Financial Processing Sessions
 
