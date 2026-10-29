@@ -6,7 +6,7 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable
 from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from ..accounting.contracts import FinancialModel
 from ..accounting.quality import QualityIssue
@@ -18,6 +18,7 @@ from .contracts import (
     TaskQualityContext,
 )
 from .document_evidence import EvidenceIdentity, TableEvidence, TextEvidence, associate_fact
+from .metrics import DerivedMetric, build_metric
 
 EvidenceRecord = TextEvidence | TableEvidence
 
@@ -26,6 +27,12 @@ class SourceFactNode(FinancialModel):
     kind: Literal["source_fact"] = "source_fact"
     node_id: Identity
     reference: ObservationIdentity
+
+
+class DerivedMetricNode(FinancialModel):
+    kind: Literal["derived_metric"] = "derived_metric"
+    node_id: Identity
+    reference: Identity
 
 
 class TextEvidenceNode(FinancialModel):
@@ -47,16 +54,23 @@ class EvidenceAnchorNode(FinancialModel):
 
 
 GraphNode = Annotated[
-    SourceFactNode | TextEvidenceNode | TableEvidenceNode | EvidenceAnchorNode,
+    SourceFactNode | TextEvidenceNode | TableEvidenceNode | EvidenceAnchorNode | DerivedMetricNode,
     Field(discriminator="kind"),
 ]
 
 
 class GraphEdge(FinancialModel):
     edge_id: Identity
-    relation: Literal["from_source", "associated_with"]
+    relation: Literal["from_source", "associated_with", "used_in"]
     source: Identity
     target: Identity
+    operand_role: Identity | None = None
+
+    @model_validator(mode="after")
+    def require_operand_role(self):
+        if self.relation == "used_in" and self.operand_role is None:
+            raise ValueError("used_in requires an operand role")
+        return self
 
 
 class SourceGrounding(FinancialModel):
@@ -168,7 +182,9 @@ def _assessment(subject, reference, invalid, unresolved):
 
 
 def build_graph(
-    facts: Iterable[CanonicalFinancialFact], evidence: Iterable[EvidenceRecord] = ()
+    facts: Iterable[CanonicalFinancialFact],
+    evidence: Iterable[EvidenceRecord] = (),
+    metrics: Iterable[DerivedMetric] = (),
 ) -> EvidenceGraph:
     """Không sửa inputs; thiếu identity ở input_issues, caller giữ payload quarantine."""
     graph = EvidenceGraph()
@@ -246,6 +262,25 @@ def build_graph(
                 )
     # Một record có thể nhắc cùng anchor nhiều lần; không nhân bản cạnh.
     graph.edges = list({e.edge_id: e for e in graph.edges}.values())
+    for metric in metrics:
+        graph.nodes.append(DerivedMetricNode(node_id=metric.metric_id, reference=metric.metric_id))
+        for operand in metric.operands:
+            if operand.status == "bound" and operand.observation is not None:
+                source = graph_id("source_fact", operand.observation.model_dump())
+                if source not in records:
+                    graph.input_issues.append(
+                        _assessment("input", metric.metric_id, [], ["missing_operand_reference"])
+                    )
+                    continue
+                graph.edges.append(
+                    GraphEdge(
+                        edge_id=graph_id("used_in", [source, metric.metric_id, operand.role]),
+                        relation="used_in",
+                        source=source,
+                        target=metric.metric_id,
+                        operand_role=operand.role,
+                    )
+                )
     return graph
 
 
@@ -253,8 +288,13 @@ def validate_graph(
     graph: EvidenceGraph,
     facts: Iterable[CanonicalFinancialFact],
     evidence: Iterable[EvidenceRecord] = (),
+    metrics: Iterable[DerivedMetric] = (),
 ) -> GraphValidation:
     """Resolve references từ records thật; known violations ưu tiên invalid."""
+    facts, evidence, metrics = list(facts), list(evidence), list(metrics)
+    metric_catalog = defaultdict(list)
+    for metric in metrics:
+        metric_catalog[metric.metric_id].append(metric)
     catalog = defaultdict(list)
     source_catalog = defaultdict(list)
     for record in [*facts, *evidence]:
@@ -267,7 +307,7 @@ def validate_graph(
     counts = Counter(n.node_id for n in graph.nodes)
     nodes = {n.node_id: n for n in graph.nodes}
     edge_counts = Counter(e.edge_id for e in graph.edges)
-    relations = Counter((e.relation, e.source, e.target) for e in graph.edges)
+    relations = Counter((e.relation, e.source, e.target, e.operand_role) for e in graph.edges)
     assessments, resolved, contexts = {}, {}, {}
     node_results = []
     for node in graph.nodes:
@@ -275,7 +315,45 @@ def validate_graph(
         sources = []
         if counts[node.node_id] > 1:
             bad.append("duplicate_node_identity")
-        if isinstance(node, EvidenceAnchorNode):
+        if isinstance(node, DerivedMetricNode):
+            matches = metric_catalog[node.reference]
+            if node.node_id != node.reference:
+                bad.append("node_identity_mismatch")
+            if not matches:
+                missing.append("missing_metric_reference")
+            elif len(matches) != 1:
+                bad.append("metric_identity_collision")
+            else:
+                metric = matches[0]
+                resolved[node.node_id] = metric
+                expected = build_metric(metric.definition, metric.request, facts)
+                if metric != expected:
+                    bad.append("metric_record_mismatch")
+                for operand in metric.operands:
+                    if operand.observation is not None:
+                        if not catalog[("source_fact", operand.observation)]:
+                            missing.append("missing_operand_reference")
+                        for fact in catalog[("source_fact", operand.observation)]:
+                            sources.extend(fact.sources)
+                        if (operand.observation.document_id, operand.observation.snapshot_id) != (
+                            metric.request.document_id,
+                            metric.request.snapshot_id,
+                        ):
+                            bad.append("operand_document_snapshot_mismatch")
+                        source = graph_id("source_fact", operand.observation.model_dump())
+                        edges = [
+                            e
+                            for e in graph.edges
+                            if e.relation == "used_in"
+                            and e.source == source
+                            and e.target == node.node_id
+                            and e.operand_role == operand.role
+                        ]
+                        if not edges:
+                            missing.append("missing_operand_edge")
+                        elif len(edges) > 1:
+                            bad.append("duplicate_operand_edge")
+        elif isinstance(node, EvidenceAnchorNode):
             sources = [node.anchor]
             a, b = _anchor_reasons(node.anchor)
             bad.extend(a)
@@ -328,10 +406,15 @@ def validate_graph(
         bad, missing = [], []
         if (
             edge_counts[edge.edge_id] > 1
-            or relations[(edge.relation, edge.source, edge.target)] > 1
+            or relations[(edge.relation, edge.source, edge.target, edge.operand_role)] > 1
         ):
             bad.append("duplicate_edge_identity")
-        if edge.edge_id != graph_id(edge.relation, [edge.source, edge.target]):
+        key = [edge.source, edge.target]
+        if edge.relation == "used_in":
+            key.append(edge.operand_role)
+        elif edge.operand_role is not None:
+            bad.append("unexpected_operand_role")
+        if edge.edge_id != graph_id(edge.relation, key):
             bad.append("edge_identity_mismatch")
         source, target = nodes.get(edge.source), nodes.get(edge.target)
         if source is None or target is None:
@@ -339,13 +422,21 @@ def validate_graph(
         else:
             connected.update((edge.source, edge.target))
             allowed = (
-                edge.relation == "from_source"
-                and source.kind in {"source_fact", "text", "table"}
-                and target.kind == "anchor"
-            ) or (
-                edge.relation == "associated_with"
-                and source.kind == "source_fact"
-                and target.kind in {"text", "table"}
+                (
+                    edge.relation == "from_source"
+                    and source.kind in {"source_fact", "text", "table"}
+                    and target.kind == "anchor"
+                )
+                or (
+                    edge.relation == "associated_with"
+                    and source.kind == "source_fact"
+                    and target.kind in {"text", "table"}
+                )
+                or (
+                    edge.relation == "used_in"
+                    and source.kind == "source_fact"
+                    and target.kind == "derived_metric"
+                )
             )
             if not allowed:
                 bad.append("edge_domain_mismatch")
@@ -354,6 +445,16 @@ def validate_graph(
                 other = resolved.get(target.node_id)
                 if record is None:
                     missing.append("missing_record_reference")
+                elif edge.relation == "used_in":
+                    if other is None:
+                        missing.append("missing_metric_reference")
+                    elif not any(
+                        o.status == "bound"
+                        and o.role == edge.operand_role
+                        and o.observation == source.reference
+                        for o in other.operands
+                    ):
+                        bad.append("operand_relation_mismatch")
                 elif edge.relation == "from_source":
                     for field in ("document_id", "snapshot_id"):
                         actual = getattr(target.anchor, field)

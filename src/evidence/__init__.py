@@ -35,6 +35,7 @@ from .document_evidence import (
 )
 from .document_repository import DocumentEvidenceRepository, EvidenceConflict
 from .graph import (
+    DerivedMetricNode,
     EvidenceAnchorNode,
     EvidenceGraph,
     EvidenceQualityContext,
@@ -49,9 +50,16 @@ from .graph import (
     build_graph,
     validate_graph,
 )
+from .metrics import DerivedMetric, FormulaDefinition, MetricOperand, MetricRequest, build_metric
 from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
+    "DerivedMetric",
+    "DerivedMetricNode",
+    "FormulaDefinition",
+    "MetricOperand",
+    "MetricRequest",
+    "build_metric",
     "EvidenceQualityContext",
     "SourceGrounding",
     "EvidenceAnchorNode",

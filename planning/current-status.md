@@ -2,6 +2,20 @@
 
 Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M3-05 — Derived Metric Records
+
+Status: **REVIEW**, người dùng giao 29/10/2026, main-first; implementation chưa commit.
+[Spec/evidence](tasks/M3/M3-05.md), [API](../docs/derived-metrics.md),
+[real report](../docs/m3-05-real-readiness.md). DerivedMetric/formula/operand contracts,
+DerivedMetricNode/used_in; reuse compatibility, không executor hoặc quality propagation.
+47 targeted PASS; hai W-07 attempts/356 facts tạo 6 metrics/10 used_in, 4 complete và
+2 incomplete; cả 6 undetermined. Company/scope/roles/context/source còn unresolved,
+liabilities thiếu canonical mapping. M2 insufficient của storage B02 giữ nguyên.
+Metadata auto-accepted chưa user-confirmed; không policy name→company_id, scope/roles
+thiếu; 0 bindings applied, before=after. JSON restart exact, 49 source hashes unchanged.
+Không Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
+Next action: Tech Lead independent review M3-05; không bắt đầu M3-06.
+
 ## M3-04 — EF-EG Nodes and Edges
 
 Status: **DONE**, Tech Lead APPROVED ngày 29/10/2026, main-first.
