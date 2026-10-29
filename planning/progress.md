@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 3 | 2 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 89 | 49 | 0 | 0 | 39 | 0 | 1 |
+| W | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 89 | 50 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -50,7 +50,8 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 Housekeeping W-03 — 2026-10-29: PR#1/#2/#3 đã MERGED main tuần tự, CI main sau
 từng merge SUCCESS; baseline6dd0d1d. Root dev.ps1 một lệnh, local keys tự nạp,
 Ctrl+C/ports/failure cleanup và live scan upload→ready PASS (1 call/2794tokens).
-Giữ W-03 REVIEW, không tự DONE/W-04. [Evidence](../docs/web-demo-v1/w-03-validation.md).
+W-03 DONE — Tech Lead APPROVED29/10/2026, engineering scope. Live synthetic PASS,
+chưa accuracy PDF BBS_2025 thực tế; không bắt đầu W-04. [Evidence](../docs/web-demo-v1/w-03-validation.md).
 Launcher d8e7026 đã push main/remote khớp; [CI40791847627](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40791847627)
 SUCCESS exact SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP, Web13 PASS.
 Next action: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.

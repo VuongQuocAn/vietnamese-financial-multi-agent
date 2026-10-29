@@ -24,7 +24,8 @@ trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng I
 
 Housekeeping29/10: PR#1→#2→#3 MERGED main không conflict, CI sau từng merge PASS.
 dev.ps1 chạy cả web/API bằng một lệnh, tự nạp local key và Ctrl+C cleanup đã test.
-Live synthetic upload→auto-ready PASS; chưa W-04/M3, W-03 vẫn REVIEW.
+W-03 DONE — Tech Lead APPROVED29/10/2026, engineering scope. Live synthetic
+upload→auto-ready PASS, chưa accuracy PDF BBS_2025 thực tế; chưa W-04/M3.
 Launcher d8e7026 đã push main, CI40791847627 SUCCESS exact SHA, remote khớp.
 Next action: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
 Các checkpoint PR draft/OPEN dưới đây là lịch sử trước housekeeping.

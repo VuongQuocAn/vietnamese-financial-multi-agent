@@ -2,7 +2,8 @@
 
 Housekeeping mới 2026-10-29 — Research MVP Workflow Simplification: **REVIEW**.
 Quy tắc/CI và bằng chứng hiện tại ở [current status](current-status.md); không
-thay trạng thái W-03 hoặc chạy lại evidence dưới đây. Next action duy nhất hiện
+chạy lại evidence dưới đây. W-03 đã được Tech Lead APPROVED / DONE29/10/2026,
+engineering scope; live synthetic PASS, chưa accuracy PDF BBS_2025 thực tế. Next action duy nhất hiện
 tại: Tech Lead review PR housekeeping; không bắt đầu W-04. Các mục sau giữ
 checkpoint W-03 đã xác minh, không phải kết quả chạy lại trong housekeeping.
 
@@ -12,14 +13,15 @@ W-03 — PDF Upload & Gemini Vision Metadata Preflight (housekeeping 2026-10-29)
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 PR#1/#2/#3 đã MERGED tuần tự vào main, không conflict/force/delete branch.
 Merge commits167e8fa/cb9efeb/6dd0d1d, CI main sau từng merge SUCCESS.
 PR#1 formatting fence5779d45 đã CI PASS trước merge. Quyền merge user cấp29/10
-thay giới hạn draft cũ. W-03 REVIEW, không tự DONE/W-04/M3.
+thay giới hạn draft cũ. W-03 DONE theo Tech Lead approval29/10/2026 engineering
+scope; CI/merge đã có, không chạy lại tests/Gemini và không bắt đầu W-04/M3.
 
 ## Completed Work
 

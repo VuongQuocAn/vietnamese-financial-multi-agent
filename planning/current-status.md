@@ -2,6 +2,11 @@
 
 Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#3
+đã merge main; CI40718128314/refinement7048d92 và CI40791847627/launcherd8e7026
+SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
+BBS_2025 thực tế. Phiên này chỉ cập nhật trạng thái, không tests/Gemini/W-04.
+
 ## Housekeeping — Research MVP Workflow Simplification
 
 Status: **REVIEW**. Implementation SHA: `cd2783e35cc5ddd5ac12b695e7e53739d2bf8248`;
@@ -26,7 +31,8 @@ Next action: Tech Lead review PR housekeeping; không bắt đầu W-04.
 Housekeeping sau W-03 được người dùng giao: PR #1→#2→#3 đã MERGED vào main,
 không conflict/force push/xóa branch. Merge SHA lần lượt167e8fa/cb9efeb/6dd0d1d;
 CI main sau từng merge SUCCESS. PR#1 cần backport formatting fence5779d45 đã
-CI PASS trước merge. W-01/W-02 DONE; W-03 giữ REVIEW, không tự bắt đầu W-04.
+CI PASS trước merge. W-01/W-02/W-03 DONE; W-03 được Tech Lead nghiệm thu29/10,
+engineering scope. Không bắt đầu W-04.
 
 Đã có root dev.ps1: một lệnh chạy FastAPI+Next.js, tự đọc key local/env/.env,
 check dependencies, không hỏi/lộ key, Ctrl+C dừng sạch process tree sở hữu.
