@@ -13,7 +13,11 @@ evidence, 1747 nodes/7407 edges; tất cả unresolved, zero invalid/orphan/coll
 7 missing identities giữ quarantine. 1299 selectors resolve với page binding đúng;
 53 source files hash unchanged. 10/10 real negative controls; B09 graph/full-PDF
 accuracy NOT VERIFIED. Không coi context association là semantic support.
-Implementation SHA/checks ghi tại spec sau push; zero Gemini/OCR/extraction/raw changes.
+Implementation `57229123408f7b1c613c1a3346ea79f719c19fcb` đã push main,
+HEAD/origin/main khớp; 55 targeted PASS, Ruff/planning/diff PASS local.
+[CI40834343143](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40834343143)
+in_progress đúng SHA đã xác minh tại checkpoint, chưa kết luận PASS.
+Zero Gemini/OCR/extraction/raw changes.
 Giữ local web/next-env.d.ts ngoài stage. Chưa DONE.
 Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
 
