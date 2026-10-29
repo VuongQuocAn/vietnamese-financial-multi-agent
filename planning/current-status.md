@@ -18,6 +18,11 @@ browser 2 PASS; BBS_2025 thật render 5–24, direct page=7, không AI calls.
 Refinement `41ce4f2bd7fd686c14e9021a39b569b267479c95` đã push cùng PR #6:
 lỗi HTTP 204 được retry một lần, lỗi tải hiện inline và có manual retry.
 Regression 204 + BBS trên đúng document người dùng PASS; typecheck/lint/build PASS.
+Refinement mới `5fb03cd5a6a669291dc52583bfcd0ac658075c73` đã push PR #6:
+người dùng xác nhận có IDM. Viewer file?viewer=true dùng binary MIME/không download
+filename; cùng bytes/Range. Local isolated browser 3 PASS + backend integration 1 PASS,
+Ruff/typecheck/lint/build PASS; chưa xác nhận trên trình duyệt có IDM.
+Cần khởi động lại dev.ps1 để nhận backend headers; nếu IDM vẫn chặn thì bỏ bắt tải local.
 Next action: Tech Lead review W-05.
 
 ## W-04 — Financial Processing Sessions
