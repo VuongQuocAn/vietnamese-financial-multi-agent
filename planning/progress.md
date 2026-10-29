@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 1 | 0 | 0 | 5 | 0 | 1 |
+| M3 | 7 | 2 | 0 | 0 | 5 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 55 | 0 | 0 | 37 | 0 | 1 |
+| TOTAL | 93 | 56 | 0 | 0 | 37 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -35,7 +35,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `core` | DataConfig/contracts/Gateway/Gemini/quota guard DONE; M1-09 cache DONE; targeted 139 passed; CI mỗi Python 3.11/3.12: 1040 passed/11 skipped |
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
-| `evidence` | M3-01 DONE; M3-02 REVIEW: M2 adapter, atomic JSON persistence/quarantine và basic fact retrieval; 43 targeted PASS, persisted 178 round-trip PASS; chưa graph |
+| `evidence` | M3-01/02 DONE, Tech Lead APPROVED; M2 adapter, atomic JSON persistence/quarantine và basic fact retrieval; 43 targeted PASS, persisted 178 round-trip PASS; CI40828484743 SUCCESS đúng 8471064; chưa graph |
 | `tools` | M2-08 structured financial query probe: exact source/page/code/period, Decimal và citations; chưa có full shared tool space hoặc natural-language QA |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
@@ -47,11 +47,12 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M3-02 REVIEW — [Spec/evidence](tasks/M3/M3-02.md).
+M3-02 DONE — Tech Lead APPROVED 29/10/2026. [Spec/evidence](tasks/M3/M3-02.md).
 Owner giao main-first; 43 targeted PASS, persisted 178 restart round-trip PASS;
 Ruff/planning/diff PASS. Implementation 8471064 đã push main;
-CI40828484743 in_progress đúng SHA tại checkpoint, chưa tuyên bố SUCCESS.
-Next action: Tech Lead independent review M3-02; không bắt đầu M3-03.
+CI40828484743 completed/SUCCESS đúng SHA đã xác minh; documentation checkpoint 12bfa8a.
+Phiên nghiệm thu chỉ planning/diff checks.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-03.
 
 Checkpoint trước:
 

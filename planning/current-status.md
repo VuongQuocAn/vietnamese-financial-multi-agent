@@ -4,14 +4,16 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-02 — Canonical Financial Facts
 
-Status: **REVIEW** — Owner giao main-first, baseline `4e6e188` khớp origin.
+Status: **DONE** — Tech Lead APPROVED ngày 29/10/2026, main-first.
 [Spec/evidence](tasks/M3/M3-02.md); adapter M2 và local JSON repository implemented,
 43 targeted tests PASS; persisted 178 observations restart round-trip PASS,
 Ruff/planning/diff PASS. Implementation `8471064820b681aef403d7bc784a627a0f5f5bda`
 đã push main; [CI40828484743](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40828484743)
-in_progress đúng SHA tại kiểm tra, chưa tuyên bố SUCCESS.
+completed/SUCCESS đúng SHA đã xác minh (Python 3.12 và Web smoke).
+Documentation checkpoint `12bfa8a`; phiên nghiệm thu chỉ planning/diff checks,
+không chạy lại tests/build/Gemini/extraction hoặc benchmark.
 Giữ local web/next-env.d.ts; không Gemini/extraction hoặc sửa raw.
-Next action: Tech Lead independent review M3-02; không bắt đầu M3-03.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-03.
 
 W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#3
 đã merge main; CI40718128314/refinement7048d92 và CI40791847627/launcherd8e7026
