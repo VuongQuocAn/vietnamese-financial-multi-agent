@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 7 | 6 | 1 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 53 | 1 | 0 | 39 | 0 | 0 |
+| W | 7 | 6 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 93 | 53 | 0 | 0 | 39 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,8 +47,9 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-W-07 IN_PROGRESS; [spec/evidence](tasks/W/W-07.md).
-Next action: nghiệm thu tích hợp PDF BBS thực theo W-07.
+W-07 REVIEW; BBS persisted + fresh PASS (30 calls), restart 0 calls;
+CI40821580233 SUCCESS đúng c65cef2. [Spec/evidence](tasks/W/W-07.md).
+Next action: Tech Lead nghiệm thu độc lập PR #8 và quyết định Web Demo V1.
 
 Checkpoint trước:
 

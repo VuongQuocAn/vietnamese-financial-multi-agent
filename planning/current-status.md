@@ -9,10 +9,15 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## W-07 — End-to-End Acceptance
 
-Status: **IN_PROGRESS**; người dùng giao 29/10/2026. Main/origin/main `391c230`,
-PR #7 merged, W-01–W-06 DONE. Nhánh `feat/w-07-web-demo-acceptance`.
-[Spec/evidence](tasks/W/W-07.md). Chưa commit, chưa gọi Gemini.
-Next action: nghiệm thu tích hợp PDF BBS thực theo W-07.
+Status: **REVIEW**; implementation `c65cef2616ad548e6cb2c12c10e5848c8533172f`,
+[PR #8](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/8), chưa merge.
+[CI40821580233](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40821580233)
+SUCCESS đúng SHA. BBS persisted và một fresh live browser run PASS, 30 Gemini calls;
+178 observations/163 numeric; restart đọc lại 0 calls. 45 backend + 11 Playwright
+PASS, typecheck/lint/build/Ruff/planning đạt. Không phát hiện P0/P1 cần sửa runtime.
+Đề xuất CONDITIONAL GO local demo; chưa accuracy toàn PDF/verified financial facts,
+IDM chưa xác nhận trên browser người dùng. [Evidence](tasks/W/W-07.md).
+Next action: Tech Lead nghiệm thu độc lập PR #8 và quyết định Web Demo V1.
 
 ## W-06 — Financial Evidence Tables & Source Linking
 
