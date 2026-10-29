@@ -1,10 +1,13 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { api, type Document } from "@/lib/documents";
+import { validSourcePage } from "@/lib/evidence";
 import { PdfViewer } from "./pdf-viewer";
+import { FinancialEvidence } from "./financial-evidence";
+import { SourceDetails, type EvidenceSelection } from "./source-details";
 
 type InventoryPage = {
   pdf_page: number;
@@ -27,10 +30,22 @@ export function DocumentExplorer({ documentId }: { documentId: string }) {
   const [inventoryMessage, setInventoryMessage] = useState(
     "Đang tải danh mục trang…",
   );
+  const [inventoryRevision, setInventoryRevision] = useState<number | null>(
+    null,
+  );
+  const [refresh, setRefresh] = useState(0);
+  const [tab, setTab] = useState("B01");
+  const [selection, setSelection] = useState<EvidenceSelection | null>(null);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const params = useSearchParams();
   const pathname = usePathname();
   const parsed = Number(params.get("page") ?? 1);
   const page = Number.isSafeInteger(parsed) && parsed > 0 ? parsed : 1;
+  const attemptId =
+    doc?.latest_result?.attempt_id ??
+    (doc?.job?.operation === "extract" ? doc.job.id : null);
+  const visibleSelection =
+    selection?.attemptId === attemptId ? selection : null;
   const changePage = useCallback(
     (next: number) => {
       const query = new URLSearchParams(window.location.search);
@@ -44,24 +59,35 @@ export function DocumentExplorer({ documentId }: { documentId: string }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      setError("");
+      setPages([]);
+      setInventoryRevision(null);
+      setInventoryMessage("Đang tải danh mục trang…");
       try {
         const value = await api<Document>(
           `/documents/${encodeURIComponent(documentId)}`,
         );
         if (cancelled) return;
         setDoc(value);
-        if (value.job?.operation !== "extract") {
+        const attempt =
+          value.latest_result?.attempt_id ??
+          (value.job?.operation === "extract" ? value.job.id : null);
+        if (!attempt) {
           setInventoryMessage(
             "Chưa có danh mục trích xuất. Bạn vẫn có thể xem mọi trang PDF.",
           );
           return;
         }
         try {
-          const inventory = await api<{ pages: InventoryPage[] }>(
-            `/documents/${encodeURIComponent(documentId)}/inventory?attempt_id=${encodeURIComponent(value.job.id)}`,
+          const inventory = await api<{
+            pages: InventoryPage[];
+            metadata_revision: number;
+          }>(
+            `/documents/${encodeURIComponent(documentId)}/inventory?attempt_id=${encodeURIComponent(attempt)}`,
           );
           if (cancelled) return;
           setPages(inventory.pages);
+          setInventoryRevision(inventory.metadata_revision);
           setInventoryMessage(
             inventory.pages.length
               ? ""
@@ -70,7 +96,7 @@ export function DocumentExplorer({ documentId }: { documentId: string }) {
         } catch {
           if (!cancelled)
             setInventoryMessage(
-              "Danh mục trang chưa sẵn sàng. Bạn vẫn có thể xem PDF và tải lại trang sau.",
+              "Danh mục trang chưa sẵn sàng hoặc tải lỗi. Bạn vẫn có thể xem PDF và tải lại dữ liệu.",
             );
         }
       } catch {
@@ -84,7 +110,7 @@ export function DocumentExplorer({ documentId }: { documentId: string }) {
     return () => {
       cancelled = true;
     };
-  }, [documentId]);
+  }, [documentId, refresh]);
 
   return (
     <div className="page">
@@ -109,50 +135,141 @@ export function DocumentExplorer({ documentId }: { documentId: string }) {
           {error}
         </p>
       )}
-      <div className="document-explorer">
-        <aside className="panel inventory-panel" aria-label="Danh mục trang">
-          <h2>Điều hướng theo biểu</h2>
-          {inventoryMessage && <p role="status">{inventoryMessage}</p>}
-          {groups.map(([code, label]) => (
-            <section key={code}>
-              <h3>{label}</h3>
-              <div className="inventory-pages">
-                {pages
-                  .filter((p) => {
-                    const group =
-                      p.classification === "uncertain" ||
-                      p.uncertainty ||
-                      !groups
-                        .slice(0, 4)
-                        .some(([key]) => key === p.statement_type)
-                        ? "other"
-                        : p.statement_type;
-                    return group === code;
-                  })
-                  .map((p) => (
-                    <button
-                      key={p.pdf_page}
-                      className="button"
-                      aria-current={page === p.pdf_page ? "page" : undefined}
-                      onClick={() => changePage(p.pdf_page)}
-                    >
-                      Trang {p.pdf_page}
-                    </button>
-                  ))}
-              </div>
-            </section>
-          ))}
-          <p className="muted">
-            B09 chỉ là danh mục trang; chưa trích xuất nội dung thuyết minh.
-            Phân loại AI chưa được xác minh.
+      <button className="button" onClick={() => setRefresh((r) => r + 1)}>
+        Tải lại dữ liệu
+      </button>
+      {doc &&
+        ["partial", "failed", "interrupted", "queued", "processing"].includes(
+          doc.state,
+        ) && (
+          <p role="status" className="notice">
+            Trạng thái: {doc.state}. Hiển thị snapshot đã lưu nếu có; kết quả có
+            thể chưa đầy đủ. Tải lại thủ công để cập nhật.
           </p>
-        </aside>
+        )}
+      <div className="statement-tabs" role="tablist" aria-label="Loại báo cáo">
+        {groups.map(([code, label], index) => (
+          <button
+            key={code}
+            ref={(node) => {
+              tabs.current[index] = node;
+            }}
+            role="tab"
+            id={`tab-${code}`}
+            aria-controls="financial-panel"
+            aria-selected={tab === code}
+            tabIndex={tab === code ? 0 : -1}
+            onClick={() => setTab(code)}
+            onKeyDown={(event) => {
+              let next = index;
+              if (event.key === "ArrowRight")
+                next = (index + 1) % groups.length;
+              else if (event.key === "ArrowLeft")
+                next = (index + groups.length - 1) % groups.length;
+              else if (event.key === "Home") next = 0;
+              else if (event.key === "End") next = groups.length - 1;
+              else return;
+              event.preventDefault();
+              setTab(groups[next][0]);
+              tabs.current[next]?.focus();
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div className="document-explorer financial-explorer">
+        <section
+          className="panel evidence-content"
+          id="financial-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${tab}`}
+        >
+          <h2>Bằng chứng tài chính</h2>
+          {tab === "B09" ? (
+            <p className="notice">
+              Chưa trích xuất nội dung thuyết minh. B09 chỉ hiển thị danh mục
+              trang.
+            </p>
+          ) : tab === "other" ? (
+            <p>Danh mục trang khác / chưa xác định.</p>
+          ) : attemptId && doc ? (
+            <FinancialEvidence
+              key={`${documentId}:${attemptId}:${tab}:${refresh}`}
+              documentId={documentId}
+              attemptId={attemptId}
+              statement={tab}
+              metadataRevision={doc.metadata_revision}
+              selection={visibleSelection}
+              onSelect={(next) => {
+                setSelection(next);
+                const source = next.item.sources.find((s) =>
+                  validSourcePage(s.pdf_page),
+                );
+                if (source && validSourcePage(source.pdf_page))
+                  changePage(source.pdf_page);
+              }}
+            />
+          ) : (
+            <p>Chưa có dữ liệu tài chính được trích xuất. PDF vẫn mở được.</p>
+          )}
+          <aside className="inventory-panel" aria-label="Danh mục trang">
+            <h2>Điều hướng theo biểu</h2>
+            {inventoryMessage && <p role="status">{inventoryMessage}</p>}
+            {inventoryRevision !== null &&
+              inventoryRevision !== doc?.metadata_revision && (
+                <p className="notice">
+                  Metadata phiên cũ — danh mục thuộc revision{" "}
+                  {inventoryRevision}.
+                </p>
+              )}
+            {groups.map(([code, label]) => (
+              <section key={code}>
+                <h3>{label}</h3>
+                <div className="inventory-pages">
+                  {pages
+                    .filter((p) => {
+                      const group =
+                        p.classification === "uncertain" ||
+                        p.uncertainty ||
+                        !groups
+                          .slice(0, 4)
+                          .some(([key]) => key === p.statement_type)
+                          ? "other"
+                          : p.statement_type;
+                      return group === code;
+                    })
+                    .map((p) => (
+                      <button
+                        key={p.pdf_page}
+                        className="button"
+                        aria-current={page === p.pdf_page ? "page" : undefined}
+                        onClick={() => changePage(p.pdf_page)}
+                      >
+                        Trang {p.pdf_page}
+                      </button>
+                    ))}
+                </div>
+              </section>
+            ))}
+            <p className="muted">
+              B09 chỉ là danh mục trang; chưa trích xuất nội dung thuyết minh.
+              Phân loại AI chưa được xác minh.
+            </p>
+          </aside>
+        </section>
         <PdfViewer
           documentId={documentId}
           page={page}
           onPageChange={changePage}
         />
       </div>
+      <SourceDetails
+        selection={visibleSelection}
+        page={page}
+        onPageChange={changePage}
+        metadataRevision={doc?.metadata_revision}
+      />
     </div>
   );
 }

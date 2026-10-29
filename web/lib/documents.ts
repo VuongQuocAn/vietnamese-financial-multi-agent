@@ -37,7 +37,12 @@ export type Job = {
   progress: {
     preflight?: { completed_pages: number; total_pages: number };
     discovery?: { completed_pages: number; total_pages: number };
-    extraction?: { completed_pages: number; selected_pages: number; valid_pages: number; invalid_pages: number } | null;
+    extraction?: {
+      completed_pages: number;
+      selected_pages: number;
+      valid_pages: number;
+      invalid_pages: number;
+    } | null;
   };
 };
 export type DocumentSummary = {
@@ -48,6 +53,7 @@ export type DocumentSummary = {
   company_name: string | null;
   stock_ticker: string | null;
   reporting_year: number | null;
+  latest_result?: { attempt_id: string; metadata_revision: number } | null;
 };
 export type Document = DocumentSummary & {
   content_id: string;

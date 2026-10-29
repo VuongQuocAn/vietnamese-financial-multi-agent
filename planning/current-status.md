@@ -7,6 +7,15 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
+## W-06 — Financial Evidence Tables & Source Linking
+
+Status: **REVIEW**, được giao 29/10/2026. Baseline main `034c3ac` khớp remote;
+nhánh `feat/w-06-financial-evidence`. [Implementation/validation](tasks/W/W-06.md).
+Bảng B01–B03 + source details/cell → PDF, B09 inventory, partial/stale/pagination.
+Local targeted 6 PASS và typecheck/lint/build PASS; BBS persisted source linking PASS,
+không đánh giá accuracy toàn báo cáo. SHA/PR cập nhật ở spec sau commit.
+Next action: Tech Lead nghiệm thu độc lập W-06 trên PR; không bắt đầu W-07.
+
 ## W-05 — PDF Viewer & Page Navigation
 
 Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026 trên

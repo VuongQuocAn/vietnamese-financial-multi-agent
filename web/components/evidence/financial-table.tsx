@@ -23,10 +23,12 @@ export function FinancialTable({
   periods,
   rows,
   onSelect,
+  selectedCellId,
 }: {
   periods: FinancialPeriod[];
   rows: FinancialRow[];
   onSelect?: (selection: { rowKey: string; cellId: string | null }) => void;
+  selectedCellId?: string | null;
 }) {
   const [selected, setSelected] = useState<{
     rowKey: string;
@@ -68,7 +70,16 @@ export function FinancialTable({
             </tr>
           ) : (
             rows.map((row) => (
-              <tr key={row.key} data-selected={selected?.rowKey === row.key}>
+              <tr
+                key={row.key}
+                data-selected={
+                  selectedCellId !== undefined
+                    ? Object.values(row.cells).some(
+                        (cell) => cell?.id === selectedCellId,
+                      )
+                    : selected?.rowKey === row.key
+                }
+              >
                 <td>{row.sourceItemCode ?? "—"}</td>
                 <th scope="row">
                   <button
@@ -93,8 +104,17 @@ export function FinancialTable({
                       {cell ? (
                         <button
                           className="cell-select"
-                          data-selected={selected?.cellId === cell.id}
-                          aria-pressed={selected?.cellId === cell.id}
+                          data-evidence-id={cell.id}
+                          data-selected={
+                            (selectedCellId !== undefined
+                              ? selectedCellId
+                              : selected?.cellId) === cell.id
+                          }
+                          aria-pressed={
+                            (selectedCellId !== undefined
+                              ? selectedCellId
+                              : selected?.cellId) === cell.id
+                          }
                           onClick={() => select(row.key, cell.id)}
                           aria-label={`${row.rawLabel}, ${period.label}: ${cell.rawValue === null || cell.rawValue === "" ? "Thiếu" : cell.rawValue}`}
                         >

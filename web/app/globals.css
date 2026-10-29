@@ -1089,3 +1089,23 @@ main {
 .pdf-expanded { position: fixed; inset: 12px; z-index: 100; display: flex; flex-direction: column; background: white; }
 .pdf-expanded .pdf-viewport { flex: 1; height: auto; }
 @media (max-width: 900px) { .document-explorer { grid-template-columns: minmax(0, 1fr); } .pdf-expanded { inset: 0; } }
+
+.financial-explorer { grid-template-columns: minmax(0, 1fr) minmax(420px, 1fr); }
+.evidence-content { min-width: 0; padding: 16px; }
+.evidence-content > h2 { margin-bottom: 12px; }
+.evidence-content .financial-table-scroll { max-height: 55vh; overflow: auto; }
+.evidence-content .financial-table thead { position: sticky; top: 0; z-index: 1; }
+.evidence-content .financial-table thead th { white-space: normal; min-width: 160px; font-size: 13px; }
+.evidence-content .financial-table thead th:nth-child(-n+2) { min-width: 80px; }
+.evidence-content .financial-table .numeric { max-width: 250px; }
+.evidence-content .inventory-panel { padding: 16px 0 0; gap: 12px; }
+.evidence-actions { display: flex; gap: 8px; padding: 12px 0; }
+.financial-explorer + .source-details { margin: 16px 0 0; padding: 16px; overflow-wrap: anywhere; }
+.source-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.source-fields dt { color: var(--muted); font-size: 13px; }
+.source-fields dd { margin: 4px 0; white-space: pre-wrap; font-variant-numeric: tabular-nums; }
+.source-list { display: grid; gap: 8px; }
+@media (max-width: 1000px) {
+  .financial-explorer { grid-template-columns: minmax(0, 1fr); }
+  .source-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
