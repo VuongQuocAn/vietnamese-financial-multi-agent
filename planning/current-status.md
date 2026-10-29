@@ -7,6 +7,14 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
+## W-05 — PDF Viewer & Page Navigation
+
+Status: **REVIEW**; người dùng giao 29/10/2026. Baseline `91dcc82`,
+branch `feat/w-05-pdf-viewer`; implementation chưa commit. [Evidence](tasks/W/W-05.md).
+React-PDF client-only, URL 1-based và inventory; local typecheck/lint/build và
+browser 2 PASS; BBS_2025 thật render 5–24, direct page=7, không AI calls.
+Next action: Tech Lead review W-05.
+
 ## W-04 — Financial Processing Sessions
 
 Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026;

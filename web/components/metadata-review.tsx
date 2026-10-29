@@ -162,6 +162,7 @@ export function MetadataReview({ id }: { id: string }) {
               </p>
             )}
             <div className="form-actions">
+              <Link className="button" href={`/evidence/${id}`}>Xem PDF</Link>
               <a
                 className="button"
                 href={`/api/documents/${id}/file`}
