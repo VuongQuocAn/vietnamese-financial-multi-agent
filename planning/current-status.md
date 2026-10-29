@@ -9,15 +9,17 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## M3-01 — Canonical and Provenance Contracts
 
-Status: **REVIEW**, Owner giao ngày 29/10/2026. [Spec/evidence](tasks/M3/M3-01.md).
-Models và metadata validators trong `evidence`; reuse M1/M2, giữ hai observations
-2024 từ hai document độc lập, không gộp theo semantic key. Local **25 targeted PASS**
-(17 mới + 8 normalization), Ruff/planning/diff đạt. Implementation
-`f8199e5f8d6bb62adbe00e5740f99358610fc296` đã push;
+Status: **DONE** — Tech Lead APPROVED code/contracts/phạm vi nghiên cứu ngày29/10/2026.
+[Spec/evidence](tasks/M3/M3-01.md). Implementation sau fix provenance
+`b1ed933425647b6bab6230175055580d75ef7f58`;
+[CI40827007004](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40827007004)
+completed/SUCCESS đúng SHA đã xác minh (Python 3.12 và Web smoke).
 [PR #10](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/10)
-chờ review, chưa merge. CI remote chưa xác minh; không suy từ kết quả local.
-Không Gemini/extraction/PDF evaluation, không sửa raw hoặc runtime M1/M2/Web Demo.
-Next action: Tech Lead review M3-01; không bắt đầu M3-02.
+MERGED main tại `fe664ba4b82a5712e367471ee6f7ceb3a0c46b06`; local main đã đồng bộ.
+20 focused tests PASS sau fix; không chạy lại tests/build/Gemini/extraction hoặc
+benchmark trong phiên nghiệm thu. Housekeeping chỉ planning/diff, không runtime/raw changes.
+Giữ hai observations 2024 cross-document; consistency/compatibility không xác minh số liệu.
+Next action: chờ giao nhiệm vụ mới; M3-02 vẫn TODO, chưa bắt đầu.
 
 ## M3 Preflight — Research Alignment (checkpoint trước)
 

@@ -6,12 +6,13 @@ M3-01 — Canonical and Provenance Contracts
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Main/origin khớp `ca2586f356b0cbbbede27fc3f66c46af4675c6f6`; PR #9 MERGED.
-Owner cho phép implementation/branch/commit/push/một PR M3-01 ngày29/10/2026.
+Tech Lead APPROVED ngày29/10/2026. CI40827007004 completed/SUCCESS đúng
+`b1ed933425647b6bab6230175055580d75ef7f58`; PR #10 MERGED main tại
+`fe664ba4b82a5712e367471ee6f7ceb3a0c46b06`, local main đã đồng bộ.
 
 ## Completed Work
 
@@ -21,19 +22,19 @@ Chi tiết [spec/evidence](tasks/M3/M3-01.md), [API/TBD](../docs/canonical-prove
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu, chưa DONE; M3-02–07 vẫn TODO.
+Không còn việc M3-01; M3-02–07 vẫn TODO, chưa được giao triển khai.
 
 ## Modified Files
 
-src/evidence/{__init__,contracts,compatibility}.py, tests/unit/test_evidence_contracts.py,
-docs/canonical-provenance-contracts.md và planning task/status/progress/roadmap/handoff.
+Phiên nghiệm thu chỉ planning task/status/progress/roadmap/handoff/registry.
 `web/next-env.d.ts` có sẵn trước task, giữ ngoài commit.
 
 ## Tests
 
-25 targeted PASS local (17 evidence + 8 normalization contracts); Ruff check/format đạt.
-Không full suite/build/browser/Gemini/benchmark/PDF processing; không sửa raw/M1/M2 runtime.
-Planning checker 93 tasks và diff check PASS. CI remote chưa xác minh.
+Review fix trước đó: 20 evidence tests, Ruff check/format/diff PASS local.
+CI40827007004 SUCCESS đúng b1ed933: Python 3.12 và Web smoke success.
+Phiên nghiệm thu chỉ planning checker/diff check; không chạy lại tests/build/Gemini,
+benchmark/PDF processing hoặc sửa raw/M1/M2 runtime.
 
 ## Blockers
 
@@ -42,12 +43,11 @@ metadata consistency không xác minh financial accuracy. Rules/conversions M4 c
 
 ## Git Checkpoint
 
-Branch `feat/m3-01-canonical-provenance`; implementation
-`f8199e5f8d6bb62adbe00e5740f99358610fc296` đã push;
-[PR #10](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/10) OPEN.
-Commit checkpoint sau chỉ docs/planning, code/tests vẫn đúng implementation SHA.
-Không merge; không stage dữ liệu, secrets hoặc next-env local.
+Main tại merge `fe664ba4b82a5712e367471ee6f7ceb3a0c46b06`;
+[PR #10](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/10) MERGED.
+Housekeeping DONE trực tiếp main, không branch/PR mới, không đổi code/tests.
+Không stage dữ liệu, secrets hoặc next-env local.
 
 ## Exact Next Action
 
-Tech Lead review M3-01; không bắt đầu M3-02.
+Chờ giao nhiệm vụ mới; M3-02 vẫn TODO, chưa bắt đầu.
