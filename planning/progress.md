@@ -49,7 +49,8 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 M3-02 REVIEW — [Spec/evidence](tasks/M3/M3-02.md).
 Owner giao main-first; 43 targeted PASS, persisted 178 restart round-trip PASS;
-Ruff/planning/diff PASS. Chưa có CI đúng SHA mới tại checkpoint.
+Ruff/planning/diff PASS. Implementation 8471064 đã push main;
+CI40828484743 in_progress đúng SHA tại checkpoint, chưa tuyên bố SUCCESS.
 Next action: Tech Lead independent review M3-02; không bắt đầu M3-03.
 
 Checkpoint trước:
