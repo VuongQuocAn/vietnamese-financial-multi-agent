@@ -4,7 +4,7 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-03 — Text and Table Evidence
 
-Status: **REVIEW**, Owner giao 29/10/2026 main-first. Implementation
+Status: **DONE**, Tech Lead APPROVED ngày 29/10/2026, main-first. Accepted implementation
 `3fca2b4ccba922c688acfc404477e655024dcb44` đã push trực tiếp main.
 [Spec/evidence](tasks/M3/M3-03.md), [API/coverage](../docs/text-table-evidence.md).
 Models/adapters DU/unified/W-04 payload, local JSON riêng và exact source association.
@@ -19,13 +19,15 @@ B09 2/21 glyph mismatch,5/21 null; không full-PDF/independent human gold accura
 13/13 PDF/image/dimension bindings khớp;49 source hashes unchanged. Validation bổ sung
 `b12eebe299e40c766031b011943bd506c44e3414` đã push main;
 [CI40832246367](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40832246367)
-in_progress đúng validation SHA, chưa kết luận PASS. DU v1 còn synthetic;
+completed/SUCCESS đúng accepted validation SHA đã xác minh. DU v1 còn synthetic;
 BBS_2024 coverage chưa xác minh.
 Zero Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
 completed/SUCCESS đúng runtime SHA đã xác minh. Ruff/planning/diff PASS local trước đó;
 smoke không chứng minh financial accuracy.
-Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning/diff checks; không chạy lại
+tests/Gemini/OCR/extraction. Giữ nguyên limitations, không nâng thành financial accuracy.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-04.
 
 ## M3-02 — Canonical Financial Facts
 

@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 2 | 0 | 0 | 4 | 0 | 1 |
+| M3 | 7 | 3 | 0 | 0 | 4 | 0 | 0 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 56 | 0 | 0 | 36 | 0 | 1 |
+| TOTAL | 93 | 57 | 0 | 0 | 36 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,7 +47,7 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M3-03 REVIEW — [Spec/evidence](tasks/M3/M3-03.md). Implementation
+M3-03 DONE — Tech Lead APPROVED ngày 29/10/2026. [Spec/evidence](tasks/M3/M3-03.md). Accepted implementation
 `3fca2b4ccba922c688acfc404477e655024dcb44` đã push main.
 Text/table contracts, adapters DU/unified/persisted và JSON repository riêng;
 40 targeted PASS; [real-artifact validation](../docs/m3-03-real-evidence-validation.md)
@@ -55,12 +55,13 @@ bổ sung: 99/99 records exact preservation/restart, 7 missing binding giữ qua
 PDF sample B01/B02/B03/B09 đã đối chiếu; còn period/glyph/segmentation failures,
 không full-PDF accuracy; validation bổ sung `b12eebe` đã push main,
 [CI40832246367](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40832246367)
-in_progress đúng validation SHA.
+completed/SUCCESS đúng accepted validation SHA đã xác minh.
 178 facts có source associations, 150 unmapped giữ nguyên; page provenance không đổi.
 Không Gemini/OCR/extraction hoặc sửa raw; Ruff/planning/diff PASS local;
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
 completed/SUCCESS đúng runtime SHA đã xác minh.
-Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
+Phiên nghiệm thu chỉ planning/diff checks, không chạy lại tests/Gemini/OCR/extraction.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-04.
 
 Checkpoint trước:
 
