@@ -4,7 +4,8 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-03 — Text and Table Evidence
 
-Status: **REVIEW**, Owner giao 29/10/2026 main-first. Chưa commit.
+Status: **REVIEW**, Owner giao 29/10/2026 main-first. Implementation
+`3fca2b4ccba922c688acfc404477e655024dcb44` đã push trực tiếp main.
 [Spec/evidence](tasks/M3/M3-03.md), [API/coverage](../docs/text-table-evidence.md).
 Models/adapters DU/unified/W-04 payload, local JSON riêng và exact source association.
 40 targeted PASS (8 M3-03 + 32 compatibility); persisted BBS_2025 24 text/4 tables,
@@ -12,7 +13,9 @@ Models/adapters DU/unified/W-04 payload, local JSON riêng và exact source asso
 và canonical-facts/source hash unchanged PASS. Mọi reference smoke vẫn page-level.
 DU/unified mới synthetic; chưa complete OCR hoặc BBS_2024 persisted coverage.
 Zero Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
-CI exact implementation SHA chưa có; smoke không chứng minh financial accuracy.
+[CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
+in_progress đúng SHA đã xác minh; chưa kết luận PASS. Ruff/planning/diff PASS local;
+smoke không chứng minh financial accuracy.
 Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
 
 ## M3-02 — Canonical Financial Facts

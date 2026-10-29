@@ -47,11 +47,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M3-03 REVIEW — [Spec/evidence](tasks/M3/M3-03.md). Chưa commit.
+M3-03 REVIEW — [Spec/evidence](tasks/M3/M3-03.md). Implementation
+`3fca2b4ccba922c688acfc404477e655024dcb44` đã push main.
 Text/table contracts, adapters DU/unified/persisted và JSON repository riêng;
 40 targeted PASS; read-only BBS_2025: 24 text, 4 tables, exact restart PASS.
 178 facts có source associations, 150 unmapped giữ nguyên; page provenance không đổi.
-Không Gemini/OCR/extraction hoặc sửa raw; CI exact SHA chưa có.
+Không Gemini/OCR/extraction hoặc sửa raw; Ruff/planning/diff PASS local;
+[CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
+in_progress đúng SHA đã xác minh, chưa kết luận PASS.
 Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
 
 Checkpoint trước:
