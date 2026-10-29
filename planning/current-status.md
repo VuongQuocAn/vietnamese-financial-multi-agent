@@ -4,10 +4,10 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-04 — EF-EG Nodes and Edges
 
-Status: **REVIEW**, Owner giao main-first ngày 29/10/2026.
+Status: **DONE**, Tech Lead APPROVED ngày 29/10/2026, main-first.
 [Spec/evidence](tasks/M3/M3-04.md), [API](../docs/typed-evidence-graph.md),
 [real-artifact report](../docs/m3-04-real-graph-validation.md).
-Tech Lead CHANGES REQUESTED: status cũ gộp structural với uncertainty/context.
+Đã khắc phục CHANGES REQUESTED: status cũ gộp structural với uncertainty/context.
 Correction tách status/reasons structural, grounding metadata và evidence_context
 giữ nguyên M2 quality/resolution issues. Cùng selected scope hai W07 attempts/bốn
 M3-03 repositories: 356 facts + 99 evidence; 1747 nodes/7407 edges structural valid,
@@ -18,12 +18,14 @@ undetermined do thiếu company/scope/semantic roles và uncertain source; khôn
 M2 direct_qa decisions giữ 46 usable/246 caveat/64 insufficient/0 conflicted.
 1299 selectors resolve/page binding đúng, 53 hashes unchanged; 10/10 controls giữ
 status/reasons. B09 graph/full-PDF accuracy NOT VERIFIED, không semantic support.
-Correction `76fa534f4bd82a8fc615091af2fd79b8ef99ded6` đã push trực tiếp main,
+Accepted implementation `76fa534f4bd82a8fc615091af2fd79b8ef99ded6` đã push trực tiếp main,
 HEAD/origin/main khớp sau push. Local56 targeted/Ruff/planning/diff PASS;
-CI đúng correction SHA ghi tại spec.
+[CI40835632968](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40835632968)
+completed/SUCCESS đúng accepted SHA đã xác minh.
 Zero Gemini/OCR/extraction/raw changes.
-Giữ local web/next-env.d.ts ngoài stage. Chưa DONE.
-Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
+Phiên nghiệm thu chỉ planning/diff checks; không chạy lại tests/runtime/Gemini/OCR.
+Giữ local web/next-env.d.ts ngoài stage và mọi limitations đã báo.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-05.
 
 ## M3-03 — Text and Table Evidence
 
