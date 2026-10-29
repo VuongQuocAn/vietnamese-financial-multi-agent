@@ -2,7 +2,7 @@
 
 W-03 bổ sung upload PDF/storage/preflight/review trên skeleton Next.js + FastAPI.
 Không cần Docker/database; upload và sửa thủ công chạy không cần key.
-Chỉ đặt GEMINI_API_KEY_FILE để bật nhận diện auto-first và key rotation.
+Launcher tự dùng key file local, bật nhận diện auto-first và key rotation.
 Cấu hình Gemini server-side, limits, retry/restart và luồng scan PDF tại
 [W-03 usage](w-03-usage.md). Financial extraction M1–M2 chưa nối vào HTTP layer.
 Thiết kế theo [UI handoff](ui-handoff.md), [kiến trúc](architecture.md).
@@ -18,7 +18,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
 Set-Location web
 npm.cmd ci
-Copy-Item .env.example .env.local
+if (-not (Test-Path .env.local)) { Copy-Item .env.example .env.local }
 Set-Location ..
 ```
 
@@ -29,6 +29,35 @@ không có secret/NEXT_PUBLIC key. Khi đổi URL cần restart Next.js; product
 rewrite được xác định khi build nên cần build lại nếu thay đổi backend URL.
 
 ## Khởi động
+
+Một terminal Windows PowerShell tại root repository:
+
+```powershell
+.\dev.ps1
+```
+
+Mở <http://127.0.0.1:3000>; API health tại <http://127.0.0.1:8000/api/health>.
+Script kiểm Python 3.11+/.venv, dependencies backend, Node 24+/Next.js đã cài;
+thiếu dependencies thì báo lệnh cài, không tự cài hoặc thay cấu hình máy.
+Hai server dùng chung terminal, không mở cửa sổ khác. Nhấn Ctrl+C một lần để
+dừng cả hai; có grace period rồi cleanup đúng process tree đã khởi động, không
+kill theo tên/port. Nếu một server lỗi/thoát, server kia cũng được dừng.
+
+Cấu hình Gemini: process environment ưu tiên hơn root `.env` (đọc như dữ liệu,
+không execute). Có GEMINI_API_KEY_FILE thì dùng đường dẫn đó, relative từ root;
+hoặc GEMINI_API_KEY đã có trong environment/.env. Nếu chưa có cấu hình hợp lệ,
+tự dùng `src/api/api_key/api_gemini.txt`. Không hỏi/ghi/hiển thị lại key, không
+truyền Gemini credentials sang process Next.js. Startup chỉ kiểm cấu hình/định
+dạng, không gửi request AI. Upload PDF mới kích hoạt preflight qua Gateway.
+
+Nếu port bận, script dừng trước khi mở server, giữ process đang có. Có thể chọn
+port khác: `.\dev.ps1 -BackendPort 8100 -FrontendPort 3100`; launcher cấu hình
+proxy/Origin cho đúng hai port trong child processes, không sửa `.env.local`.
+Với máy chặn PS1 theo execution policy, chạy cho lần này bằng
+`powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\dev.ps1`; không đổi
+execution policy hệ thống. Cài dependencies chỉ một lần theo phần trên.
+
+Các lệnh hai terminal dưới đây dành cho chạy thủ công/debugging:
 
 Terminal 1 tại repository:
 

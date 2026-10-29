@@ -1,5 +1,9 @@
 # W-03 — Upload PDF và metadata auto-first
 
+Chạy cả web/API bằng `.\dev.ps1` tại root Windows PowerShell sau khi cài dependencies.
+Launcher tự đọc `.env`/environment hoặc key file local đã có, Ctrl+C dừng cả hai.
+[Hướng dẫn một lệnh](local-development.md). Các lệnh thủ công bên dưới vẫn dùng được.
+
 Chạy Python 3.11+ với `pip install -e ".[dev]"`; frontend giữ dependencies W-02.
 Từ root repository, PowerShell (ứng dụng không tự load .env):
 

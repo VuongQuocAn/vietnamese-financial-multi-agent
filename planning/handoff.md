@@ -2,7 +2,7 @@
 
 ## Active Task
 
-W-03 — PDF Upload & Gemini Vision Metadata Preflight
+W-03 — PDF Upload & Gemini Vision Metadata Preflight (housekeeping 2026-10-29)
 
 ## Status
 
@@ -10,54 +10,48 @@ REVIEW
 
 ## Last Verified State
 
-Baseline refinement f617e68295f79de1c5702fe8c27f7b0fcfcea0b1 sau fetch.
-PR #1/#2/#3 OPEN; #3 draft base W-02. W-01/W-02 DONE.
-Giữ next-env local, không core/M1–M2/Stitch/CI/merge/W-04/M3.
+PR#1/#2/#3 đã MERGED tuần tự vào main, không conflict/force/delete branch.
+Merge commits167e8fa/cb9efeb/6dd0d1d, CI main sau từng merge SUCCESS.
+PR#1 formatting fence5779d45 đã CI PASS trước merge. Quyền merge user cấp29/10
+thay giới hạn draft cũ. W-03 REVIEW, không tự DONE/W-04/M3.
 
 ## Completed Work
 
-Key-file-only rotation/cooldown/auth/retry-after/cap chung qua existing
-Gateway/adapter/cache, không giả confirmed project. Counters persist, bỏ manual
-policy/fingerprint/scope. Metadata_v2 flat/one SDK user turn, runtime strict.
-Auto-ready core có nguồn, accepted/auto và confirmed/user tách riêng; revisions/
-history/user edits/suggestions giữ. UI neutral, form tùy chọn, desktop-first.
-Live scan synthetic 2 trang PASS + edit PASS; 3 attempts tổng, không thêm live calls.
+Root dev.ps1 kiểm dependencies, đọc local key/env/.env, chạy backend+frontend
+cùng console, URL và Ctrl+C cleanup process tree sở hữu. Proxy/Origin/ports tự
+đồng bộ, không gửi key sang Next. Update README/local guide/W-03 usage/evidence.
+Launcher startup, live upload scan→auto-ready và cleanup/error cases đã PASS.
 
 ## Remaining Work
 
-Tech Lead review. Publication/CI exact refinement SHA đã PASS. Không W-04/M3.
+Commit/push housekeeping main, xác minh CI và ghi publication SHA. Chờ chỉ đạo;
+không bắt đầu W-04.
 
 ## Modified Files
 
-src/api metadata composition/store/jobs/list summary, metadata_preflight, web
-detail/labels/styles/tests; key-pool tests và smoke script, .env example, docs/
-planning. Xóa config example manual policy obsolete. next-env có sẵn không stage.
+dev.ps1, README, docs/web-demo-v1/{local-development,w-03-usage,w-03-validation},
+planning/{current-status,handoff,progress,roadmap,tasks,tasks/W/W-03}.
+Giữ next-env local byte-for-byte, không stage. Không sửa backend/Next logic/CI.
 
 ## Tests
 
-8 targeted browser documents PASS, có auto-ready 1440/1366 không form bắt buộc.
-Python focused44 PASS, Ruff/TS/ESLint/build/planning/diff/staged audit PASS.
-[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
-SUCCESS exact refinement SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP; Web13 PASS.
-Mọi steps đã kiểm; không chạy lại full local suite/CI hoặc Gemini sau PASS.
-Live: 2 HTTP400 ban đầu, sau flat schema/coalesce turn 1 success, 2805 tokens,
-tên/năm/scope đúng nguồn trang2, ready auto + user edit PASS. Không benchmark.
+PowerShell syntax/startup/health/proxy/Ctrl+C/port-busy/custom ports/failure cleanup
+PASS trên Windows.1 live call synthetic2 trang, gemini-3.5-flash-lite,2794 tokens,
+metadata đúng và ready/auto; không chạy benchmark hoặc gọi lại AI.
+CI main từng merge SUCCESS; launcher publication CI chờ push. Ruff/targeted
+checks/planning/diff/index kiểm trước commit, không full local suite.
 
 ## Blockers
 
-Không blocker implementation. Key file không chứng minh project/billing; Free
-Tier dựa trên user confirmation, cap chung bảo thủ và provider enforce quota thực.
-Live chỉ synthetic, chưa chất lượng metadata trên dataset thực.
+Không blocker. Dependencies cài một lần theo guide; chỉ launcher nếu local key
+file hợp lệ. Provider/tier/quota assumptions W-03 giữ nguyên, không tăng phạm vi.
 
 ## Git Checkpoint
 
-Baseline ổn định f617e68. Refinement ổn định đã push/remote khớp:
-7048d92ba7215191dd8a5c9c12b777085fb9c23d; CI40718128314 SUCCESS exact SHA.
-PR #3 draft OPEN base W-02, #1/#2 OPEN/chưa merge. Commit evidence tiếp theo chỉ
-docs/planning [skip ci], không gán CI này cho SHA documentation mới.
-Không stage key/PDF/images/cache/usage counters/next-env. Đã dừng hai server riêng
-của browser tests. Giữ nguyên thay đổi local next-env so với lúc bắt đầu phiên.
+Main baseline6dd0d1d7c3fd2d92e3fc62d091348eb832d3c28e. Launcher chưa commit tại
+checkpoint này. Temporary worktree/stash và Next-generated AGENTS đã cleanup.
+Chỉ user next-env có sẵn ngoài task; không key/PDF/cache/counters trong Git.
 
 ## Exact Next Action
 
-Tech Lead nghiệm thu độc lập W-03.
+Commit/push housekeeping và xác minh CI.

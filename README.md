@@ -8,11 +8,12 @@ khởi tạo cấu trúc, cấu hình phát triển và tài liệu nền tảng
 dataset local vào `data/`. Các package hiện chỉ có docstring; chưa có chức năng
 nghiệp vụ, server, CLI, OCR, Agent hoặc LLM Gateway.
 
-Web Demo V1 W-02: đã có nền Next.js + FastAPI local, bốn trang và health proxy;
-xem [hướng dẫn Windows](docs/web-demo-v1/local-development.md).
+Web Demo V1 W-03: upload PDF thật, metadata auto-first có nguồn và chỉnh sửa tùy chọn.
+Windows PowerShell tại root: `.\dev.ps1` chạy cả Next.js + FastAPI, tự dùng key
+file local; Ctrl+C dừng cả hai. Xem [hướng dẫn Windows](docs/web-demo-v1/local-development.md).
 Đoạn mô tả M0-01 ở trên là lịch sử khởi tạo; trạng thái M1–M2 hiện hành xem
-[planning/current-status.md](planning/current-status.md). UI skeleton chưa kết nối
-upload, financial evidence hoặc AI analysis.
+[planning/current-status.md](planning/current-status.md). Financial evidence/extraction
+W-04 và AI analysis chưa triển khai.
 
 ## Mục tiêu và kiến trúc
 

@@ -22,6 +22,12 @@ trước READY. Nếu vẫn là M/L khi chuẩn bị, tiếp tục chia bằng I
 
 ## W — Web Demo V1 giữa M2 và M3
 
+Housekeeping29/10: PR#1→#2→#3 MERGED main không conflict, CI sau từng merge PASS.
+dev.ps1 chạy cả web/API bằng một lệnh, tự nạp local key và Ctrl+C cleanup đã test.
+Live synthetic upload→auto-ready PASS; chưa W-04/M3, W-03 vẫn REVIEW.
+Next action: Commit/push housekeeping và xác minh CI.
+Các checkpoint PR draft/OPEN dưới đây là lịch sử trước housekeeping.
+
 W-03 final refinement REVIEW: auto-accept core có nguồn, key-file-only Free Tier
 rotation với cap chung, UI neutral/human-on-exception. Live scan synthetic2 trang
 PASS, auto-ready/user edit, không xác minh dataset thật. [Evidence](../docs/web-demo-v1/w-03-validation.md).

@@ -3,6 +3,9 @@
 Ngày 28/10/2026 (Asia/Bangkok), Research MVP Lean v3.
 W-03 REVIEW, refinement auto-first/key rotation, không task mới.
 
+Checkpoint housekeeping 2026-10-29 trên main ở phần10; các phần1–9 giữ bằng chứng
+refinement trước merge, không dùng trạng thái PR draft cũ làm trạng thái hiện tại.
+
 ## 1. Git / PR / CI
 
 Baseline refinement f617e68295f79de1c5702fe8c27f7b0fcfcea0b1.
@@ -111,3 +114,40 @@ Partial/conflict cần retry hoặc user edit khi không đủ nguồn. Live ch�
 ## 9. Final status
 
 **W-03 REVIEW**. Next action: Tech Lead nghiệm thu độc lập W-03.
+
+## 10. Housekeeping sau W-03 — 2026-10-29
+
+Người dùng cho phép merge tuần tự và thêm launcher, không W-04. Đã merge-commit
+(không squash/force/delete branch), retarget PR#2/#3 sang main trước từng merge:
+
+| PR | Merge SHA | CI main sau merge |
+| --- | --- | --- |
+| #1 | 167e8fa7d386bea1f9a2232eec86fc9e00399eee | [40790312165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40790312165) SUCCESS |
+| #2 | cb9efeb7057acab80eb7f500b422d101b327bdc6 | [40790598368](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40790598368) SUCCESS |
+| #3 | 6dd0d1d7c3fd2d92e3fc62d091348eb832d3c28e | [40790882421](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40790882421) SUCCESS |
+
+Trước PR#1: backport đúng formatting fence đã có ở W-02, commit5779d45,
+[CI40789894796](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40789894796)
+SUCCESS trên exact head. Không đưa known format failure lên main. PR#3 được
+bỏ draft theo quyền merge được user cấp. Không tự đổi W-03 DONE.
+
+dev.ps1: check Python/.venv/backend imports, Node24+/Next dependencies, key file
+từ process env/root.env/fallback local; không prompt/print key. Root .env chỉ
+parse dữ liệu, secrets chỉ vào backend. Hai process chung console, Ctrl+C cho
+graceful shutdown rồi cleanup đúng PID tree/start time nếu còn; không kill theo
+tên/port. Có port overrides/proxy/origin phù hợp, busy port fail trước launch.
+
+Windows PowerShell syntax PASS; real one-command startup PASS. HTTP health trực
+tiếp/proxy và trang web PASS. Upload PDF raster synthetic2 trang qua Next proxy
+→ Gateway/Gemini thật1 call → ready/auto, tên/năm2025/scope riêng lẻ đúng nguồn;
+model gemini-3.5-flash-lite, input2411/output383/total2794 tokens, cost unknown.
+Không benchmark hoặc accuracy dataset. Report/PDF chỉ ở ignored artifacts.
+Không chạy lại AI sau call thành công.
+
+Ctrl+C PTY thật: Uvicorn báo shutdown complete, hai cổng3000/8000 không listener.
+Busy-port test giữ listener có sẵn, không mở server. Custom ports8100/3100:
+proxy health200, valid Origin nhận415 cho non-PDF, cross-site403; không AI call.
+Chủ động dừng backend test: launcher tự dừng Next.js, không orphan/listener.
+Không thêm Docker/auth/infra. Temporary worktree/stash/Next-generated AGENTS đã
+cleanup; next-env khôi phục byte-for-byte và không stage. Git main sau merge
+6dd0d1d; launcher/docs publication SHA/CI ghi sau push.

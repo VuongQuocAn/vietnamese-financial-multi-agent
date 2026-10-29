@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-10-28** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-10-29** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -46,6 +46,13 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+Housekeeping W-03 — 2026-10-29: PR#1/#2/#3 đã MERGED main tuần tự, CI main sau
+từng merge SUCCESS; baseline6dd0d1d. Root dev.ps1 một lệnh, local keys tự nạp,
+Ctrl+C/ports/failure cleanup và live scan upload→ready PASS (1 call/2794tokens).
+Giữ W-03 REVIEW, không tự DONE/W-04. [Evidence](../docs/web-demo-v1/w-03-validation.md).
+Next action: Commit/push housekeeping và xác minh CI.
+Các checkpoint bên dưới là lịch sử trước housekeeping/merge.
 
 **W-03 REVIEW — final refinement**: auto-first core có nguồn → ready; key-file
 rotation/cooldown/cap chung, bỏ policy/scope thủ công, UI neutral/form tùy chọn.

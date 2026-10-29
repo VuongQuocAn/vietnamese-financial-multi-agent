@@ -1,27 +1,21 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-10-28 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-W-03 REVIEW — final refinement auto-first metadata và key rotation.
-Tên/năm có nguồn rõ tự ready, ticker tùy chọn; accepted/auto khác confirmed/user.
-UI Hệ thống đề xuất, form tùy chọn, retry khi thiếu. Chỉ key file, bỏ manual
-project/policy/fingerprint/scope; một cap ứng dụng chung cho keys, counters durable.
-Core/M1–M2/Stitch/CI giữ nguyên; không W-04/M3/merge.
+Housekeeping sau W-03 được người dùng giao: PR #1→#2→#3 đã MERGED vào main,
+không conflict/force push/xóa branch. Merge SHA lần lượt167e8fa/cb9efeb/6dd0d1d;
+CI main sau từng merge SUCCESS. PR#1 cần backport formatting fence5779d45 đã
+CI PASS trước merge. W-01/W-02 DONE; W-03 giữ REVIEW, không tự bắt đầu W-04.
 
-Nhánh feat/w-03-pdf-upload-metadata, baseline refinement f617e68.
-PR #1/#2 OPEN, #3 draft OPEN base W-02. Bảo toàn next-env local ngoài stage.
-[Spec](tasks/W/W-03.md), [usage](../docs/web-demo-v1/w-03-usage.md),
-[evidence](../docs/web-demo-v1/w-03-validation.md).
+Đã có root dev.ps1: một lệnh chạy FastAPI+Next.js, tự đọc key local/env/.env,
+check dependencies, không hỏi/lộ key, Ctrl+C dừng sạch process tree sở hữu.
+Đã test startup/health/proxy, busy port/custom ports/failure cleanup và Ctrl+C.
+Upload scan synthetic2 trang qua launcher auto-ready live PASS:1 call Gemini
+gemini-3.5-flash-lite,2794 tokens; không benchmark dữ liệu thật hoặc thêm AI calls.
 
-Live synthetic scan 2 trang PASS: model gemini-3.5-flash-lite, nguồn trang2,
-tên/năm2025/scope separate, không ticker vẫn ready/auto; user edit/revision PASS.
-Tổng 3 attempts: 2 HTTP400 ban đầu + 1 success (2805 tokens), không thêm live calls.
-Không đánh giá accuracy dataset thật. 8 browser documents PASS; Python focused
-44 PASS, Ruff/TypeScript/ESLint/build/planning/diff/staged audit PASS.
-Refinement 7048d92ba7215191dd8a5c9c12b777085fb9c23d đã push/remote khớp.
-[CI40718128314](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40718128314)
-SUCCESS exact implementation SHA: Python3.11/3.12 mỗi job1502 PASS/11 SKIP;
-Web13 PASS, mọi steps đã kiểm. Commit evidence tiếp theo chỉ docs/planning,
-không gán CI implementation cho SHA documentation mới.
+Main baseline6dd0d1d; launcher/docs chưa commit ở checkpoint này. Giữ next-env
+local byte-for-byte ngoài stage; temporary worktree/stash đã cleanup.
+[Usage](../docs/web-demo-v1/local-development.md),
+[evidence](../docs/web-demo-v1/w-03-validation.md#10-housekeeping-sau-w-03--2026-10-29).
 
-Next action: Tech Lead nghiệm thu độc lập W-03.
+Next action: Commit/push housekeeping và xác minh CI.
