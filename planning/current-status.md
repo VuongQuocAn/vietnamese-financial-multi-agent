@@ -2,6 +2,25 @@
 
 Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## Housekeeping — Research MVP Workflow Simplification
+
+Status: **REVIEW**. Implementation SHA: chưa commit; baseline `e69a837`.
+Đã cập nhật AGENTS, task template và quy tắc registry theo Research-First,
+Minimal Engineering, Low Codex Quota. Giữ provenance, secrets, storage boundaries,
+giới hạn upload/request, Gateway/ngân sách và quyền Tech Lead nghiệm thu.
+CI mặc định Python 3.12: Ruff/planning và unit tests trọng tâm offline;
+typecheck/lint/build + ba browser smoke desktop khi web/backend/dependencies/CI
+thay đổi. Docs-only bỏ qua web; full unit/browser regression qua workflow_dispatch
+với `full_regression=true`, không xóa suites hoặc validations hiện có.
+Validation local: YAML/kiểu input/điều kiện cấu trúc CI và Bash syntax PASS;
+planning checker PASS (89 tasks); nhóm CI offline 15 PASS trong `.venv`;
+diff check PASS. Python hệ thống thiếu package nên collection ban đầu lỗi;
+đã dùng đúng `.venv` và PASS. Không chạy lại W-03/full regression/benchmark/live.
+CI remote chưa chạy tại checkpoint này; kết quả sẽ ở PR, không suy từ local.
+Next action: Tech Lead review PR housekeeping; không bắt đầu W-04.
+
+## Checkpoint trước housekeeping
+
 Housekeeping sau W-03 được người dùng giao: PR #1→#2→#3 đã MERGED vào main,
 không conflict/force push/xóa branch. Merge SHA lần lượt167e8fa/cb9efeb/6dd0d1d;
 CI main sau từng merge SUCCESS. PR#1 cần backport formatting fence5779d45 đã
@@ -22,4 +41,4 @@ ngoài stage; temporary worktree/stash đã cleanup.
 [Usage](../docs/web-demo-v1/local-development.md),
 [evidence](../docs/web-demo-v1/w-03-validation.md#10-housekeeping-sau-w-03--2026-10-29).
 
-Next action: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
+Next action tại checkpoint cũ: Chờ chỉ đạo tiếp theo; không bắt đầu W-04.
