@@ -11,7 +11,11 @@ from vietnamese_financial_multi_agent.core.persistence import atomic_json
 from vietnamese_financial_multi_agent.evidence import (
     CanonicalFactRepository,
     EvidenceGraph,
+    FinancialOperand,
     GraphEdge,
+    OperandRequirement,
+    OperationCompatibilitySpec,
+    assess_compatibility,
     associate_fact,
     build_graph,
     facts_from_persisted_result,
@@ -90,6 +94,128 @@ def controls(fact, evidence):
         assert matches and all(a.status == status for a in matches), case
         output.append(dict(case=case, reason=expected, status=status, detected=len(matches)))
     return output
+
+
+def usability_probes(facts, graph, validation, output):
+    """Chỉ demonstration deterministic; không API/tool mới, không calculation."""
+    nodes = {a.reference: a for a in validation.nodes}
+    displayable, blocked = [], Counter()
+    for fact in facts:
+        identity = fact.observation_identity()
+        nid = graph_id("source_fact", identity.model_dump()) if identity else None
+        reasons = []
+        if nid not in nodes or nodes[nid].status != "valid":
+            reasons.append("structural_reference_not_valid")
+        for field, value in (
+            ("raw_value", fact.value.raw_value),
+            ("normalized_value", fact.value.normalized_value),
+            ("period", fact.context.period),
+            ("unit", fact.value.unit),
+        ):
+            if value is None or value == "":
+                reasons.append(f"missing_{field}")
+        decisions = [q.decision for q in fact.quality_context if q.task_type == "direct_qa"]
+        # Giữ decision M2, không tự đánh giá lại hoặc đổi insufficient thành usable.
+        if len(decisions) != 1 or decisions[0] not in {"usable", "usable_with_caveat"}:
+            reasons.append("m2_direct_qa_not_usable")
+        if not any(s.reference and s.reference.anchor.page.page > 0 for s in fact.sources):
+            reasons.append("missing_source_page")
+        if reasons:
+            blocked.update(reasons)
+        else:
+            displayable.append(fact)
+    assert displayable, "No direct retrieval candidate; report limitation explicitly"
+    selected = displayable[0]
+    # Resolve theo observation ID qua persisted canonical repo, không semantic merge.
+    family = next(
+        name
+        for name in ("storage", "fresh-storage")
+        if CanonicalFactRepository(output / name).get(selected.observation_identity()) is not None
+    )
+    retrieved = CanonicalFactRepository(output / family).get(selected.observation_identity())
+    assert retrieved.model_dump_json() == selected.model_dump_json()
+    sample = dict(
+        observation=retrieved.observation_identity().model_dump(),
+        raw_value=retrieved.value.raw_value,
+        normalized_value=str(retrieved.value.normalized_value),
+        period=retrieved.context.period,
+        unit=retrieved.value.unit,
+        context=retrieved.context.model_dump(mode="json"),
+        quality_context=[q.model_dump(mode="json") for q in retrieved.quality_context],
+        resolution_issues=[q.model_dump(mode="json") for q in retrieved.resolution_issues],
+        sources=[s.model_dump(mode="json") for s in retrieved.sources],
+        grounding=nodes[
+            graph_id("source_fact", retrieved.observation_identity().model_dump())
+        ].grounding.model_dump(),
+        limitation="Extracted display with caveat; page provenance uncertain, not cell/financial verified",
+        financial_fact_verified=False,
+    )
+    spec = OperationCompatibilitySpec(
+        operation_id="gross_margin",
+        rule_reference="M3-01/task-examples",
+        operands=[
+            OperandRequirement(
+                role="revenue",
+                canonical_item_id="b02.net_revenue",
+                semantic_role="revenue",
+                statement_type="B02",
+            ),
+            OperandRequirement(
+                role="gross_profit",
+                canonical_item_id="b02.gross_profit",
+                semantic_role="gross_profit",
+                statement_type="B02",
+            ),
+        ],
+        period_relation="same",
+        document_relation="same",
+    )
+    analytical = []
+    for document, snapshot in sorted({(f.document_id, f.snapshot_id) for f in facts}):
+        # Tiêu chí chốt: gross margin B02 kỳ 2025, mỗi attempt; không điền metadata.
+        selected_operands = []
+        for requirement in spec.operands:
+            candidates = [
+                f
+                for f in facts
+                if (f.document_id, f.snapshot_id, f.context.period, f.canonical_item_id)
+                == (document, snapshot, "2025", requirement.canonical_item_id)
+            ]
+            assert len(candidates) <= 1, "Ambiguous operand identity; do not select arbitrarily"
+            if candidates:
+                selected_operands.append(
+                    FinancialOperand(role=requirement.role, fact=candidates[0])
+                )
+        before = [o.fact.model_dump_json() for o in selected_operands]
+        assessment = assess_compatibility(spec, selected_operands)
+        assert before == [o.fact.model_dump_json() for o in selected_operands]
+        analytical.append(assessment)
+    atomic_json(
+        output / "usability-probes.json",
+        dict(
+            direct_retrieval=sample,
+            operation_spec=spec.model_dump(mode="json"),
+            analytical=[a.model_dump(mode="json") for a in analytical],
+        ),
+    )
+    return dict(
+        direct_retrieval=dict(
+            total=len(facts),
+            usable_with_display_caveat=len(displayable),
+            blocked=len(facts) - len(displayable),
+            blocked_reasons=dict(blocked),
+            persisted_get_exact=True,
+        ),
+        analytical_readiness=dict(
+            operation=spec.operation_id,
+            selected_period="2025",
+            pairs=len(analytical),
+            operand_counts=[len(a.operands) for a in analytical],
+            status=dict(Counter(a.status for a in analytical)),
+            reasons=dict(Counter(r.code for a in analytical for r in a.reasons)),
+            calculation_executed=False,
+        ),
+    )
 
 
 def validate(root, output):
@@ -199,12 +325,18 @@ def validate(root, output):
                 observations=len(selected),
                 associations=len(links),
                 facts_associated=len({e.source for e in links}),
-                relationship_status="UNRESOLVED" if selected else "NOT VERIFIED",
+                structural_status=dict(
+                    Counter(
+                        a.status for a in result.edges if a.reference in {e.edge_id for e in links}
+                    )
+                ),
+                grounding_status="uncertain" if selected else "NOT VERIFIED",
                 pdf_grounded_correctness="NOT VERIFIED in M3-04; prior M3-03 sample only",
             )
         )
     first = associations[0]
     negatives = controls(f_by_id[first.source], e_by_id[first.target])
+    probes = usability_probes(facts, graph, result, output)
     same_page_rejected = 0
     pairs = {(e.source, e.target) for e in associations}
     for fid, f in f_by_id.items():
@@ -228,6 +360,31 @@ def validate(root, output):
         node_status=dict(Counter(a.status for a in result.nodes)),
         edge_status=dict(Counter(a.status for a in result.edges)),
         edge_reasons=dict(Counter(r for a in result.edges for r in a.reasons)),
+        grounding_source_statuses=dict(
+            Counter(n.anchor.reference.anchor.status for n in graph.nodes if n.kind == "anchor")
+        ),
+        grounding_edge_reasons=dict(Counter(r for a in result.edges for r in a.grounding.reasons)),
+        m2_quality_decisions={
+            decision: sum(
+                q.decision == decision
+                for c in result.evidence_context.values()
+                for q in c.quality_context
+            )
+            for decision in ("usable", "usable_with_caveat", "insufficient", "conflicted")
+        },
+        m2_quality_tasks=dict(
+            Counter(
+                q.task_type for c in result.evidence_context.values() for q in c.quality_context
+            )
+        ),
+        record_resolution_reasons=dict(
+            Counter(
+                r if isinstance(r, str) else r.code
+                for c in result.evidence_context.values()
+                for r in c.resolution_issues
+            )
+        ),
+        usability=probes,
         input_reasons=dict(Counter(r for a in result.inputs for r in a.reasons)),
         orphans=len(result.orphan_nodes),
         associated_facts=len({e.source for e in associations}),

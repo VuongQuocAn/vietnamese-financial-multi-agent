@@ -13,7 +13,10 @@ hoặc table structure. Caller giữ canonical/document repositories để resol
 | `EvidenceGraph` | Typed union nodes, edges, input_issues với occurrence locators |
 | `build_graph(facts, evidence=())` | Builder deterministic, chỉ exact source candidates; không mutate inputs |
 | `validate_graph(graph, facts, evidence=())` | Resolve và kiểm tra tất cả nodes/edges, trả GraphValidation |
-| `GraphValidation` | Node/edge/input assessments, orphan IDs, financial_fact_verified=false |
+| `GraphAssessment.status/reasons` | Chỉ structural validity và reasons: valid/invalid/unresolved |
+| `GraphAssessment.grounding` / `SourceGrounding` | Observed levels, source statuses và missing/unsupported/uncertain reasons riêng |
+| `GraphValidation.evidence_context` / `EvidenceQualityContext` | Map theo record node_id, giữ nguyên TaskQualityContext M2, resolution_issues và table structural_issues |
+| `GraphValidation` | Assessments, context và orphan IDs, financial_fact_verified=false |
 
 ```python
 graph = build_graph(facts, document_evidence)
@@ -46,10 +49,22 @@ catalog duplicates, node/edge identities, domain, dangling refs và bindings.
 
 ## Validation semantics và giới hạn
 
-`invalid`: known violation; `unresolved`: thiếu reference/căn cứ hoặc uncertain source,
-resolution_issues/context chưa rõ; `valid`: checks trên metadata đủ, không verified
-financial fact. Known violation ưu tiên invalid; reason codes được giữ và truyền
-qua cả hai endpoints tới edge. Schema từ chối unknown node/edge types; metadata
+Sau review correction, `status/reasons` chỉ phản ánh **structural validity**:
+`invalid` là known violation; `unresolved` là thiếu identity/source/reference hoặc
+chưa có exact association; `valid` là types/identity/refs/bindings/selectors đủ và
+đúng theo contracts. Known violation ưu tiên invalid. Chỉ structural reasons được
+truyền từ endpoints tới edge. Uncertain source hoặc ambiguous period/context không
+tự đổi structural status. Missing source hoặc unsupported provenance vẫn chặn valid.
+
+`grounding` giữ riêng observed levels, upstream source statuses và các reasons
+missing/unsupported/uncertain. Edge giữ hợp các metadata grounding từ endpoints,
+không tính confidence hoặc quality decision mới. `evidence_context[node_id]` giữ
+M2 quality decisions/issues/caveats và resolution/structural issues nguyên semantics;
+edge resolve context qua source/target node IDs. Không có aggregate quality status.
+Structural valid không chứng minh source resolved, semantic support hoặc financial
+fact verified. `financial_fact_verified` vẫn false.
+
+Schema từ chối unknown node/edge types; metadata
 provenance không hợp lệ bị phát hiện khi validate. Unreferenced anchor không có trong
 record catalog giữ unresolved. Orphans là nodes không có incident edge với đủ hai
 endpoints; báo riêng, không tự loại bỏ khỏi partial graph.
@@ -64,3 +79,7 @@ về sau dùng `assess_compatibility()` M3-01, không duplicate accounting rules
 Validator không đọc PDF hoặc chứng minh selector/cell glyph tồn tại ở nguồn độc lập.
 Runner real-artifact đối chiếu selectors với persisted payload riêng. Kết quả và
 limitations ở [real-artifact report](m3-04-real-graph-validation.md).
+
+Runner có hai probes deterministic: persisted direct retrieval với caveat (không
+yêu cầu cell grounding), và gross-margin operand readiness dùng nguyên
+`assess_compatibility()`. Không endpoint/chatbot/M4 tool và không thực thi phép tính.

@@ -37,11 +37,13 @@ from .document_repository import DocumentEvidenceRepository, EvidenceConflict
 from .graph import (
     EvidenceAnchorNode,
     EvidenceGraph,
+    EvidenceQualityContext,
     GraphAssessment,
     GraphEdge,
     GraphNode,
     GraphValidation,
     SourceFactNode,
+    SourceGrounding,
     TableEvidenceNode,
     TextEvidenceNode,
     build_graph,
@@ -50,6 +52,8 @@ from .graph import (
 from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
+    "EvidenceQualityContext",
+    "SourceGrounding",
     "EvidenceAnchorNode",
     "EvidenceGraph",
     "GraphAssessment",

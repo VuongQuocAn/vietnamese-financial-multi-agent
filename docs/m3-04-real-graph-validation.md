@@ -1,5 +1,9 @@
 # M3-04 — Real-artifact graph validation
 
+Kết quả dưới đây là checkpoint ban đầu `5722912`. **CHANGES REQUESTED** vì status
+gộp structural với uncertainty/context. Kết quả sửa semantics nằm ở phần
+**Review correction** cuối tài liệu; không sửa hoặc diễn giải lại artifact cũ.
+
 Ngày 29/10/2026. Scope chốt trước đánh giá: toàn bộ hai W-07 storage/fresh-storage
 attempts BBS_2025 và cả bốn repositories M3-03 final (M1-existing, M1-native,
 W07-storage, W07-fresh-storage). Không chọn subset theo kết quả PASS; không extraction.
@@ -109,3 +113,74 @@ có tồn tại nhưng chưa có export/adapter binding phù hợp để xây gr
 
 Zero Gemini/OCR/extraction calls, zero raw/source changes. Đây là structural/source
 association review, không financial benchmark hoặc một accuracy tổng hợp.
+
+## Review correction — tách ba chiều validation
+
+Tech Lead yêu cầu sửa semantics, giữ REVIEW/chưa DONE. Chạy cùng scope, cùng 356
+facts/99 evidence (92 indexed + 7 quarantine), không thêm nguồn hoặc chọn subset.
+Output mới: `artifacts/evidence/M3-04/review-correction`; invocation như trên với
+`--output` trỏ thư mục mới này. `usability-probes.json` giữ value/context/operands
+chi tiết trong storage ignored, không commit financial payload.
+
+| Chiều / mẫu số | Trước correction | Sau correction |
+| --- | --- | --- |
+| Structural nodes valid/invalid/unresolved | 0/0/1747 (status gộp) | 1747/0/0 |
+| Structural edges valid/invalid/unresolved | 0/0/7407 (status gộp) | 7407/0/0 |
+| Grounding unique anchors page/element/cell | 1299/0/0 | 1299/0/0 |
+| Grounding uncertain / resolved unique anchors | 1299/0 | 1299/0 |
+| Missing/unsupported source trong indexed records | 0/0 | 0/0 |
+| M2 direct_qa usable/usable_with_caveat/insufficient/conflicted | 46/246/64/0 trong source context, chưa báo riêng | 46/246/64/0 (356 annotations trên 356 facts) |
+| Direct retrieval usability | Chưa probe | 292/356 display được với caveat; 64 blocked |
+| Analytical readiness gross margin kỳ 2025 | Chưa probe | 2 pairs: 0 compatible, 0 incompatible, 2 undetermined |
+| Missing identities/quarantine | 7 | 7, không indexed node/source ID giả |
+| Orphans/collisions/source binding conflicts | 0/0/0 | 0/0/0 |
+| Existing real negative controls | 10/10 phát hiện | 10/10 phát hiện, status/reasons giữ nguyên |
+
+Không đặt ngưỡng PASS; counts structural valid đến từ tách dimensions. Các checks
+identity/types/references/document/snapshot/request/exact selectors và unsupported
+provenance giữ nguyên. Source statuses không được sửa thành resolved. Tất cả 7407
+edges vẫn có grounding reason `source_reference_uncertain`; mọi financial_fact_verified
+giữ false. Graph có 4887 from_source và 2520 associated_with như trước, không đổi
+node/edge topology. 1299/1299 unique selectors vẫn resolve/page-bind đúng với source
+payload; 53/53 source hashes unchanged, gồm raw/PDF và M3-03 repositories.
+Đối chiếu bổ sung hai canonical snapshots trước/sau byte-for-byte identical;
+356/356 graph evidence contexts giữ exact quality_context/resolution_issues của
+facts gốc; EvidenceGraph models trước/sau bằng nhau, không tạo topology mới.
+
+Resolution reasons được giữ riêng: missing_company_id 356, missing_reporting_scope
+356, missing_canonical_mapping 300, m2_extraction_issue 76; 92 indexed document records
+vẫn giữ source_reference_uncertain/page_level_provenance/missing_source_anchor_id.
+M2 decisions không được recompute; 92 text/table records không có M2 annotation
+không được tự gán usable. Analytical usability không suy từ direct_qa decision.
+
+Direct retrieval predicate chốt trong runner: structural node valid, có raw và
+normalized value, period, unit, source page và đúng một persisted direct_qa decision
+usable/usable_with_caveat. 292 đáp ứng; 64 blocked đều có M2 insufficient, gồm 30
+missing normalized value và 16 missing raw value (reasons có thể overlap). Lấy
+observation đầu tiên đáp ứng qua `CanonicalFactRepository.get(ObservationIdentity)`
+sau restart, so exact model JSON với input. Trả raw/normalized value, period/unit,
+context (currency/scale), nguyên quality context/resolution reasons/source pages
+và limitation: extracted display với page provenance uncertain, chưa cell/financial
+verified. Không đòi cell-level provenance để hiển thị có caveat và không nâng
+insufficient thành usable. Chi tiết giá trị thật chỉ lưu ở output ignored.
+
+Analytical spec tường minh lấy example gross_margin M3-01: B02 net_revenue role
+revenue và gross_profit role gross_profit, cùng kỳ, cùng document. Chọn kỳ 2025,
+mỗi attempt hai canonical item observations (không chọn tùy tiện khi duplicate).
+Chạy `assess_compatibility()` không sửa operands: 2/2 pairs undetermined vì
+missing_company_id, missing_reporting_scope, missing_semantic_role,
+unresolved_operand_context và source_reference_uncertain. Period 2025 có sẵn,
+không báo giả missing_period hoặc điền scope/company/roles để đạt compatible.
+Reasons occurrences: company 2, scope 2, semantic_role 4, unresolved context 4,
+uncertain-source 40 (lặp theo source refs). **Không thực thi phép tính.**
+
+Mẫu B01/B02/B03 vẫn có 72/84/84/96 associations structural valid, grounding
+uncertain; B09 vẫn NOT VERIFIED. Cả 2520 associations có exact sources nhưng
+**chưa chứng minh semantic support**; 3588 matching-source occurrences vẫn page-level.
+Same-page negative case thực trong scope là 0, control cố ý bỏ selectors vẫn chặn
+association như trước. Ambiguous period/cell geometry/full-PDF accuracy vẫn giữ
+limitations cũ, không được hợp thức hóa bởi structural valid.
+
+Local focused tests, Ruff/planning/diff và implementation SHA/CI cập nhật ở
+[task evidence](../planning/tasks/M3/M3-04.md). Zero Gemini/OCR/extraction/raw changes;
+chỉ usability probe, không M4 tool hoặc benchmark tài chính.

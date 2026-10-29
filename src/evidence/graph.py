@@ -9,7 +9,14 @@ from typing import Annotated, Literal
 from pydantic import Field
 
 from ..accounting.contracts import FinancialModel
-from .contracts import CanonicalFinancialFact, EvidenceAnchor, Identity, ObservationIdentity
+from ..accounting.quality import QualityIssue
+from .contracts import (
+    CanonicalFinancialFact,
+    EvidenceAnchor,
+    Identity,
+    ObservationIdentity,
+    TaskQualityContext,
+)
 from .document_evidence import EvidenceIdentity, TableEvidence, TextEvidence, associate_fact
 
 EvidenceRecord = TextEvidence | TableEvidence
@@ -52,11 +59,27 @@ class GraphEdge(FinancialModel):
     target: Identity
 
 
+class SourceGrounding(FinancialModel):
+    """Metadata nguồn quan sát được; không là chứng nhận grounding/financial accuracy."""
+
+    levels: list[str] = Field(default_factory=list)
+    source_statuses: list[str] = Field(default_factory=list)
+    reasons: list[str] = Field(default_factory=list)
+
+
+class EvidenceQualityContext(FinancialModel):
+    quality_context: list[TaskQualityContext] = Field(default_factory=list)
+    resolution_issues: list[QualityIssue | str] = Field(default_factory=list)
+    structural_issues: list[str] = Field(default_factory=list)
+
+
 class GraphAssessment(FinancialModel):
     subject: Literal["node", "edge", "input"]
     reference: str
+    # status/reasons chỉ structural; grounding và quality không thay status này.
     status: Literal["valid", "invalid", "unresolved"]
     reasons: list[str] = Field(default_factory=list)
+    grounding: SourceGrounding = Field(default_factory=SourceGrounding)
 
 
 class EvidenceGraph(FinancialModel):
@@ -72,6 +95,8 @@ class GraphValidation(FinancialModel):
     edges: list[GraphAssessment]
     inputs: list[GraphAssessment]
     orphan_nodes: list[str]
+    # Key là record node_id; edges resolve context qua endpoint IDs trong graph.
+    evidence_context: dict[str, EvidenceQualityContext] = Field(default_factory=dict)
     financial_fact_verified: Literal[False] = False
 
 
@@ -112,9 +137,25 @@ def _anchor_reasons(anchor):
             invalid.append("unsupported_element_provenance")
         if r.provenance_level not in {"page", "element", "cell"}:
             invalid.append("unknown_provenance_level")
-        if a.status != "resolved":
-            unresolved.append("source_reference_uncertain")
     return invalid, unresolved
+
+
+def _grounding(sources):
+    levels, statuses, reasons = set(), set(), set()
+    if not sources:
+        reasons.add("missing_source")
+    for source in sources:
+        bad, missing = _anchor_reasons(source)
+        reasons.update([*bad, *missing])
+        if source.reference is not None:
+            levels.add(source.reference.provenance_level)
+            status = source.reference.anchor.status
+            statuses.add(status)
+            if status != "resolved":
+                reasons.add("source_reference_uncertain")
+    return SourceGrounding(
+        levels=sorted(levels), source_statuses=sorted(statuses), reasons=sorted(reasons)
+    )
 
 
 def _assessment(subject, reference, invalid, unresolved):
@@ -227,13 +268,15 @@ def validate_graph(
     nodes = {n.node_id: n for n in graph.nodes}
     edge_counts = Counter(e.edge_id for e in graph.edges)
     relations = Counter((e.relation, e.source, e.target) for e in graph.edges)
-    assessments, resolved = {}, {}
+    assessments, resolved, contexts = {}, {}, {}
     node_results = []
     for node in graph.nodes:
         bad, missing = [], []
+        sources = []
         if counts[node.node_id] > 1:
             bad.append("duplicate_node_identity")
         if isinstance(node, EvidenceAnchorNode):
+            sources = [node.anchor]
             a, b = _anchor_reasons(node.anchor)
             bad.extend(a)
             missing.extend(b)
@@ -260,8 +303,11 @@ def validate_graph(
             else:
                 record = matches[0]
                 resolved[node.node_id] = record
-                if record.resolution_issues:
-                    missing.append("unresolved_record_context")
+                contexts[node.node_id] = EvidenceQualityContext(
+                    quality_context=getattr(record, "quality_context", []),
+                    resolution_issues=record.resolution_issues,
+                    structural_issues=getattr(record, "structural_issues", []),
+                ).model_copy(deep=True)
                 sources = record_sources(record)
                 if not sources:
                     missing.append("missing_source")
@@ -274,6 +320,7 @@ def validate_graph(
                         if actual is not None and actual != getattr(record, field):
                             bad.append(f"source_{field}_mismatch")
         result = _assessment("node", node.node_id, bad, missing)
+        result.grounding = _grounding(sources)
         node_results.append(result)
         assessments[node.node_id] = result
     edge_results, connected = [], set()
@@ -328,14 +375,23 @@ def validate_graph(
                         bad.append("association_request_id_mismatch")
                     if associate_fact(record, other) is None:
                         missing.append("exact_association_not_established")
-                # Giữ uncertainty/context cả hai đầu; không nâng thành valid.
+                # Chỉ structural violations/missing refs ảnh hưởng edge status.
                 for endpoint in (source, target):
                     assessment = assessments[endpoint.node_id]
                     (bad if assessment.status == "invalid" else missing).extend(assessment.reasons)
-        edge_results.append(_assessment("edge", edge.edge_id, bad, missing))
+        assessment = _assessment("edge", edge.edge_id, bad, missing)
+        endpoints = [assessments[n] for n in (edge.source, edge.target) if n in assessments]
+        assessment.grounding = SourceGrounding(
+            **{
+                field: sorted({value for a in endpoints for value in getattr(a.grounding, field)})
+                for field in ("levels", "source_statuses", "reasons")
+            }
+        )
+        edge_results.append(assessment)
     return GraphValidation(
         nodes=node_results,
         edges=edge_results,
         inputs=graph.input_issues,
         orphan_nodes=sorted(set(nodes) - connected),
+        evidence_context=contexts,
     )

@@ -5,6 +5,8 @@ from pydantic import ValidationError
 from vietnamese_financial_multi_agent.evidence import (
     EvidenceGraph,
     GraphEdge,
+    GraphValidation,
+    TaskQualityContext,
     TextEvidence,
     build_graph,
     validate_graph,
@@ -44,9 +46,38 @@ def test_build_references_roundtrip_uncertainty_and_identity():
     f.sources[0].reference.anchor.status = "uncertain"
     e.sources[0].reference.anchor.status = "uncertain"
     result = validate_graph(build_graph([f], [e]), [f], [e])
-    assert {a.status for a in result.edges} == {"unresolved"}
-    assert all("source_reference_uncertain" in a.reasons for a in result.edges)
+    assert {a.status for a in result.nodes + result.edges} == {"valid"}
+    assert all("source_reference_uncertain" in a.grounding.reasons for a in result.edges)
+    assert all(a.grounding.levels == ["page"] for a in result.nodes + result.edges)
     assert result.financial_fact_verified is False
+
+
+def test_structural_validity_keeps_quality_context_and_missing_provenance_separate():
+    f, e = pair()
+    f.quality_context = [
+        TaskQualityContext(
+            task_type="direct_qa",
+            decision=decision,
+            evidence_ids=["synthetic"],
+            caveats=["original caveat"],
+        )
+        for decision in ("usable", "usable_with_caveat", "insufficient", "conflicted")
+    ]
+    e.resolution_issues = ["ambiguous_period"]
+    before = [f.model_dump_json(), e.model_dump_json()]
+    graph = build_graph([f], [e])
+    result = validate_graph(graph, [f], [e])
+    assert {a.status for a in result.nodes + result.edges} == {"valid"}
+    assert result.evidence_context[graph.nodes[0].node_id].quality_context == f.quality_context
+    assert next(
+        c for c in result.evidence_context.values() if c.resolution_issues
+    ).resolution_issues == ["ambiguous_period"]
+    assert GraphValidation.model_validate_json(result.model_dump_json()) == result
+    assert before == [f.model_dump_json(), e.model_dump_json()]
+    f.sources[0].reference = None
+    result = validate_graph(build_graph([f], [e]), [f], [e])
+    assert result.nodes[0].status == "unresolved"
+    assert "missing_source_identity_or_reference" in result.nodes[0].reasons
 
 
 @pytest.mark.parametrize(

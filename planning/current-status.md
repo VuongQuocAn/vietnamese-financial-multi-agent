@@ -7,16 +7,19 @@ Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
 Status: **REVIEW**, Owner giao main-first ngày 29/10/2026.
 [Spec/evidence](tasks/M3/M3-04.md), [API](../docs/typed-evidence-graph.md),
 [real-artifact report](../docs/m3-04-real-graph-validation.md).
-Typed reference nodes, exact source edges, deterministic validation và input audit.
-Selected scope toàn bộ hai W07 attempts/bốn M3-03 repositories: 356 facts + 99
-evidence, 1747 nodes/7407 edges; tất cả unresolved, zero invalid/orphan/collision;
-7 missing identities giữ quarantine. 1299 selectors resolve với page binding đúng;
-53 source files hash unchanged. 10/10 real negative controls; B09 graph/full-PDF
-accuracy NOT VERIFIED. Không coi context association là semantic support.
-Implementation `57229123408f7b1c613c1a3346ea79f719c19fcb` đã push main,
-HEAD/origin/main khớp; 55 targeted PASS, Ruff/planning/diff PASS local.
-[CI40834343143](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40834343143)
-in_progress đúng SHA đã xác minh tại checkpoint, chưa kết luận PASS.
+Tech Lead CHANGES REQUESTED: status cũ gộp structural với uncertainty/context.
+Correction tách status/reasons structural, grounding metadata và evidence_context
+giữ nguyên M2 quality/resolution issues. Cùng selected scope hai W07 attempts/bốn
+M3-03 repositories: 356 facts + 99 evidence; 1747 nodes/7407 edges structural valid,
+zero invalid/unresolved trong indexed graph. 1299 anchors vẫn page/uncertain;
+7 missing identities giữ quarantine, zero orphan/collision/binding conflict.
+Direct display có caveat 292/356, blocked64; gross-margin readiness2 pairs đều
+undetermined do thiếu company/scope/semantic roles và uncertain source; không tính.
+M2 direct_qa decisions giữ 46 usable/246 caveat/64 insufficient/0 conflicted.
+1299 selectors resolve/page binding đúng, 53 hashes unchanged; 10/10 controls giữ
+status/reasons. B09 graph/full-PDF accuracy NOT VERIFIED, không semantic support.
+Baseline `57229123408f7b1c613c1a3346ea79f719c19fcb`; correction chưa commit,
+SHA/CI cập nhật tại spec sau push. Local 56 targeted PASS, Ruff PASS.
 Zero Gemini/OCR/extraction/raw changes.
 Giữ local web/next-env.d.ts ngoài stage. Chưa DONE.
 Next action: Tech Lead nghiệm thu M3-04; không bắt đầu M3-05.
