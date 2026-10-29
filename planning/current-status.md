@@ -11,10 +11,16 @@ Models/adapters DU/unified/W-04 payload, local JSON riêng và exact source asso
 40 targeted PASS (8 M3-03 + 32 compatibility); persisted BBS_2025 24 text/4 tables,
 19 headers/417 cells, 178 facts có associations (150 unmapped), restart/idempotence
 và canonical-facts/source hash unchanged PASS. Mọi reference smoke vẫn page-level.
-DU/unified mới synthetic; chưa complete OCR hoặc BBS_2024 persisted coverage.
+Validation bổ sung: [real-artifact report](../docs/m3-03-real-evidence-validation.md).
+99/99 records từ hai M1-16 exports và hai W-07 attempts exact preservation/restart;
+7 missing document binding giữ quarantine. PDF B01/B02/B03/B09 đã đọc trực tiếp:
+72/72 numeric token occurrences khớp mẫu, 6/72 period bindings unresolved;
+B09 2/21 glyph mismatch,5/21 null; không full-PDF/independent human gold accuracy.
+13/13 PDF/image/dimension bindings khớp;49 source hashes unchanged. Chưa commit
+validation bổ sung. DU v1 còn synthetic; BBS_2024 coverage chưa xác minh.
 Zero Gemini/OCR/extraction/raw changes; giữ local web/next-env.d.ts ngoài stage.
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
-in_progress đúng SHA đã xác minh; chưa kết luận PASS. Ruff/planning/diff PASS local;
+completed/SUCCESS đúng runtime SHA đã xác minh. Ruff/planning/diff PASS local trước đó;
 smoke không chứng minh financial accuracy.
 Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
 

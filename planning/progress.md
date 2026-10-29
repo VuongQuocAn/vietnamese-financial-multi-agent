@@ -50,11 +50,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M3-03 REVIEW — [Spec/evidence](tasks/M3/M3-03.md). Implementation
 `3fca2b4ccba922c688acfc404477e655024dcb44` đã push main.
 Text/table contracts, adapters DU/unified/persisted và JSON repository riêng;
-40 targeted PASS; read-only BBS_2025: 24 text, 4 tables, exact restart PASS.
+40 targeted PASS; [real-artifact validation](../docs/m3-03-real-evidence-validation.md)
+bổ sung: 99/99 records exact preservation/restart, 7 missing binding giữ quarantine.
+PDF sample B01/B02/B03/B09 đã đối chiếu; còn period/glyph/segmentation failures,
+không full-PDF accuracy; validation bổ sung chưa commit.
 178 facts có source associations, 150 unmapped giữ nguyên; page provenance không đổi.
 Không Gemini/OCR/extraction hoặc sửa raw; Ruff/planning/diff PASS local;
 [CI40830297216](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40830297216)
-in_progress đúng SHA đã xác minh, chưa kết luận PASS.
+completed/SUCCESS đúng runtime SHA đã xác minh.
 Next action: Tech Lead independent review M3-03; không bắt đầu M3-04.
 
 Checkpoint trước:

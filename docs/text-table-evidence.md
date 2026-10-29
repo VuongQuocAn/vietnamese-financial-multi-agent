@@ -81,9 +81,13 @@ record thiếu source payload ném ValueError, không fabricate hoặc silently 
 Hai file PDF BBS_2024/2025 trong raw không chứng minh persisted extraction của cả hai.
 Không đọc/xử lý BBS_2024; coverage text/table của BBS_2024 chưa xác minh.
 
-DU/unified adapters được kiểm tra synthetic; chưa xác minh trên persisted complete
-M1 export trong task này. Smoke persisted W-07 chỉ kiểm tra conversion/association
-và exact persistence/restart, không đánh giá accuracy PDF, completeness hoặc
-financial verification. Số liệu smoke và SHA tại [spec](../planning/tasks/M3/M3-03.md).
+Checkpoint ban đầu chỉ kiểm tra DU/unified synthetic và W-07 smoke. Validation bổ sung
+đã inventory raw OCR/M1-15 và kiểm tra toàn bộ hai M1-16 exports cùng hai W-07 attempts:
+99/99 records chuyển đổi/round-trip nguyên vẹn, 7 missing document binding giữ quarantine.
+Đã đối chiếu trực tiếp PDF cho mẫu B01/B02/B03 và B09 có source thật, phát hiện
+ambiguous columns/glyph/segmentation failures; không đồng nghĩa full-PDF accuracy.
+Phạm vi, mẫu số riêng từng metric và limitations tại
+[real-artifact validation](m3-03-real-evidence-validation.md),
+SHA/checkpoint tại [spec](../planning/tasks/M3/M3-03.md).
 Không OCR/Gemini/page discovery/reconstruction/normalization/quality reassessment.
 Graph, metrics, lineage và unified retrieval thuộc M3-04–07, chưa triển khai.
