@@ -10,7 +10,9 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 ## W-05 — PDF Viewer & Page Navigation
 
 Status: **REVIEW**; người dùng giao 29/10/2026. Baseline `91dcc82`,
-branch `feat/w-05-pdf-viewer`; implementation chưa commit. [Evidence](tasks/W/W-05.md).
+branch `feat/w-05-pdf-viewer`; implementation `705d07f90591ce0880a6d9d9b470c74273a9e14e`
+đã push; [PR #6](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/6)
+chưa merge. [Evidence](tasks/W/W-05.md).
 React-PDF client-only, URL 1-based và inventory; local typecheck/lint/build và
 browser 2 PASS; BBS_2025 thật render 5–24, direct page=7, không AI calls.
 Next action: Tech Lead review W-05.
