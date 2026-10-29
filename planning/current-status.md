@@ -9,11 +9,15 @@ BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dướ
 
 ## W-04 — Financial Processing Sessions
 
-Status: **REVIEW**; implementation chưa commit. Người dùng giao task và cho
+Status: **REVIEW**; implementation `ff10062b26bd311123b19c9c65d17949679729df`,
+[PR #5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/5)
+đã mở vào main, chưa merge. Người dùng giao task và cho
 phép commit/push/PR trên `feat/w-04-processing-sessions`; baseline `4de9948`,
 main khớp origin/main và Lean đã merge qua PR #4.
 Sessions/API/UI đã nối runtime M1–M2. Live BBS_2025 24 trang, 29 calls, 178 evidence;
 mẫu PDF/reference 6/6 khớp, không phải accuracy toàn PDF. [Evidence](tasks/W/W-04.md).
+CI40797755852 SUCCESS đúng ff10062: Python 18 PASS, desktop browser 3 PASS;
+lint/format/planning/typecheck/build PASS. Checkpoint sau chỉ tài liệu [skip ci].
 Next action: Tech Lead review W-04 độc lập trên PR.
 
 ## Housekeeping — Research MVP Workflow Simplification
