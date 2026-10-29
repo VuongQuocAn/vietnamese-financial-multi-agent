@@ -164,7 +164,8 @@ Phụ thuộc milestone: M1; dữ liệu hiểu tài liệu và contracts đã �
 Mục tiêu: **Typed Executable Financial Evidence Graph with Semantic Compatibility
 and Evidence-Quality Propagation** theo [kiến trúc M3](../docs/architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
 Đây là định hướng nghiên cứu, chưa tuyên bố thuật toán mới, novelty/SOTA hoặc kết quả
-thực nghiệm đã xác minh. M3 chưa bắt đầu; preflight chỉ đồng bộ tài liệu.
+thực nghiệm đã xác minh. M3-01 được Owner giao ngày29/10/2026, hiện REVIEW;
+[spec/evidence](tasks/M3/M3-01.md). M3-02–07 chưa bắt đầu.
 
 Phụ thuộc milestone: M2; giữ provenance từ M1, không chờ đến M3 mới ghi nguồn.
 
@@ -188,7 +189,7 @@ propagation được duyệt; facts/evidence/lineage truy nguyên được; retr
 context và hỗ trợ đánh giá thực nghiệm sau này. Quy tắc chi tiết, cách đo và engine
 lưu trữ còn TBD. Không tự xây graph/vector database, LLM agents hay frontend.
 Giữ nguyên caveats M1/M2/W-07; usability hoặc smoke không chứng nhận financial accuracy.
-Giữ nguyên bảy task, IDs, dependencies và TODO trong registry; không tạo M3-08.
+Giữ nguyên bảy task, IDs và dependencies; trạng thái theo registry, không tạo M3-08.
 
 | Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
 | --- | --- | --- |
