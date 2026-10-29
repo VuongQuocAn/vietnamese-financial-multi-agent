@@ -7,7 +7,16 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
-## M3 Preflight — Research Alignment
+## M3-01 — Canonical and Provenance Contracts
+
+Status: **REVIEW**, Owner giao ngày 29/10/2026. [Spec/evidence](tasks/M3/M3-01.md).
+Models và metadata validators trong `evidence`; reuse M1/M2, giữ hai observations
+2024 từ hai document độc lập, không gộp theo semantic key. Local 17 focused mới
++ 8 normalization contracts PASS; Ruff đạt. Implementation chưa commit.
+Không Gemini/extraction/PDF evaluation, không sửa raw hoặc runtime M1/M2/Web Demo.
+Next action: Tech Lead review M3-01; không bắt đầu M3-02.
+
+## M3 Preflight — Research Alignment (checkpoint trước)
 
 Status: **DONE** — Tech Lead APPROVED ngày 29/10/2026 tại `18ff8e0`;
 [PR #9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/9)
