@@ -1,5 +1,31 @@
 # Quyết định và điểm cần làm rõ
 
+## 2026-10-29 — M3 Preflight: Research Alignment
+
+- Theo chỉ đạo Tech Lead, định hướng M3 là **Typed Executable Financial Evidence
+  Graph with Semantic Compatibility and Evidence-Quality Propagation**. Đây là
+  hướng nghiên cứu, chưa chứng minh novelty/SOTA hoặc hiệu quả thực nghiệm.
+- Giữ Offline → Online → Output và `SourceFact → DerivedMetric → Claim → VerificationRecord`.
+  M3 biểu diễn SourceFact/CanonicalFinancialFact, EvidenceAnchor, TextEvidence/TableEvidence,
+  typed relations, DerivedMetric, lineage và retrieval. Claim thuộc M5/M6;
+  không triển khai Claim/VerificationRecord/Verified Claim Ledger tại M3.
+- M3-01 thiết kế compatibility của financial item, reporting period, reporting scope,
+  unit/scale, document/source identity và formula operand roles theo quy tắc được duyệt.
+  Không tự suy quy tắc kế toán; chi tiết types/rules TBD.
+- M3-06 thiết kế quality propagation contract, giữ bốn task-aware decisions của M2,
+  unresolved provenance, missing operands và reasons có nguồn. Không thêm enum hay
+  đặt confidence score, thresholds, propagation algorithm trước thiết kế/thực nghiệm.
+  Source grounding và numerical calculation validity không thay claim verification.
+- M4 sở hữu deterministic execution tools và baseline đã đăng ký; M5 planner/specialists;
+  M6 verification/ledger; M7 grounded QA/report; M8 controlled evaluation/ablation.
+  M3 retrieval chuẩn bị evidence cho đánh giá, không tự chạy benchmark.
+- Giữ nguyên M3-01–M3-07, IDs/dependencies/TODO, chưa bắt đầu M3-01; không task mới.
+  Không chọn graph/vector database, không thêm agents/frontend hoặc đổi runtime/schema.
+  Caveats và evidence M1/M2/W-07 giữ nguyên; không chứng nhận financial accuracy mới.
+- Phạm vi/criteria dự kiến tại [roadmap](roadmap.md#m3); semantics tại
+  [architecture](../docs/architecture.md#định-hướng-m3--typed-executable-financial-evidence-graph).
+  Preflight dừng REVIEW, chờ Tech Lead nghiệm thu PR.
+
 ## 2026-10-27 — M1-11a Final Acceptance
 
 - Tech Lead APPROVED sau review implementation `063bd2935a47832d928a6869ea35a2bd0cf6f9f2`,
