@@ -15,6 +15,9 @@ branch `feat/w-05-pdf-viewer`; implementation `705d07f90591ce0880a6d9d9b470c7427
 chưa merge. [Evidence](tasks/W/W-05.md).
 React-PDF client-only, URL 1-based và inventory; local typecheck/lint/build và
 browser 2 PASS; BBS_2025 thật render 5–24, direct page=7, không AI calls.
+Refinement `41ce4f2bd7fd686c14e9021a39b569b267479c95` đã push cùng PR #6:
+lỗi HTTP 204 được retry một lần, lỗi tải hiện inline và có manual retry.
+Regression 204 + BBS trên đúng document người dùng PASS; typecheck/lint/build PASS.
 Next action: Tech Lead review W-05.
 
 ## W-04 — Financial Processing Sessions
