@@ -57,7 +57,7 @@ credentials, image base64 hoặc raw provider errors. Lỗi client trả message
 | GET `/documents/{id}/status` | không | 200 `{document_id, metadata_revision, job}` | job=null nếu chưa queue; polling phase/counters |
 | GET `/documents/{id}/inventory?attempt_id={uuid}` | attempt_id bắt buộc | 200 `{document_id, attempt_id, metadata_revision, pages: PageSummary[]}` | 409 chưa publish trang; 404 attempt không thuộc document |
 | GET `/documents/{id}/evidence?attempt_id={uuid}&statement=B01&offset=0&limit=200` | statement B01/B02/B03 hoặc bỏ để lấy tất cả; limit 1..500 | 200 EvidencePage gồm items, invalid_pages, annotations, pagination | 409 chưa có snapshot; 422 B09 (dùng inventory) |
-| GET `/documents/{id}/file` | Range header tùy chọn | 200 application/pdf hoặc 206 byte range; Accept-Ranges: bytes | 416 range không hợp lệ; inline filename được sanitize |
+| GET `/documents/{id}/file` | Range header tùy chọn; `viewer=true` cho PDF.js | 200 hoặc 206 byte range; mặc định application/pdf + inline filename; viewer=true trả cùng bytes với application/octet-stream, không Content-Disposition; Accept-Ranges: bytes | 416 range không hợp lệ; viewer mode giảm việc tiện ích tải xuống bắt response PDF |
 
 DocumentSummary: id, filename, created_at, state, metadata_revision,
 company_name/stock_ticker/reporting_year (accepted values hoặc null),

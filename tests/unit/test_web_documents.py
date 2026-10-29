@@ -219,6 +219,15 @@ def test_scan_upload_vision_review_confirm_ready(tmp_path):
         listing = client.get("/api/documents").json()
         assert listing["items"][0]["company_name"] == "User Edited Company"
         original = client.get(f"/api/documents/{doc['id']}/file")
+        viewer = client.get(f"/api/documents/{doc['id']}/file?viewer=true")
+        assert viewer.status_code == 200 and viewer.content == content
+        assert viewer.headers["content-type"] == "application/octet-stream"
+        assert "content-disposition" not in viewer.headers
+        viewer_range = client.get(
+            f"/api/documents/{doc['id']}/file?viewer=true", headers={"Range": "bytes=0-9"}
+        )
+        assert viewer_range.status_code == 206 and viewer_range.content == content[:10]
+        assert viewer_range.headers["content-range"] == f"bytes 0-9/{len(content)}"
         assert original.content == content and original.headers["cache-control"] == "no-store"
         assert (
             client.get(f"/api/documents/{doc['id']}/file", headers={"Range": "bytes=0-9"}).content

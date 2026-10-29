@@ -7,6 +7,18 @@ W-03 DONE — Tech Lead APPROVED ngày 29/10/2026, engineering scope. PR #1/#2/#
 SUCCESS đã có. Live Gemini synthetic PASS, chưa đánh giá accuracy trên PDF
 BBS_2025 thực tế tại checkpoint W-03; W-04 được giao mới bên dưới.
 
+## W-05 — PDF Viewer & Page Navigation
+
+Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026 trên
+[PR #6](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/6).
+Implementation `705d07f90591ce0880a6d9d9b470c74273a9e14e`; refinements
+`41ce4f2bd7fd686c14e9021a39b569b267479c95`, `5fb03cd5a6a669291dc52583bfcd0ac658075c73`.
+[CI40801877913](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/40801877913)
+SUCCESS đúng 5fb03cd đã xác minh; BBS_2025 viewer PASS. [Evidence](tasks/W/W-05.md).
+IDM chưa xác nhận giải quyết trên trình duyệt người dùng; inventory cần reload;
+chưa có financial cell linking. Phiên nghiệm thu không chạy lại tests/CI/Gemini/extraction.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu W-06.
+
 ## W-04 — Financial Processing Sessions
 
 Status: **DONE** — Tech Lead APPROVED Engineering Scope 29/10/2026;
