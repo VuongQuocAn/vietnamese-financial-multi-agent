@@ -18,8 +18,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
-| W | 7 | 6 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 93 | 53 | 0 | 0 | 39 | 0 | 1 |
+| W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 93 | 54 | 0 | 0 | 39 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,9 +47,13 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-W-07 REVIEW; BBS persisted + fresh PASS (30 calls), restart 0 calls;
+W-07 DONE — Tech Lead APPROVED 29/10/2026. Web Demo V1
+**COMPLETED — CONDITIONAL GO (local research demo)**; W-01–W-07 DONE.
+BBS persisted + fresh PASS (30 calls), 178 observations, restart 0 calls;
 CI40821580233 SUCCESS đúng c65cef2. [Spec/evidence](tasks/W/W-07.md).
-Next action: Tech Lead nghiệm thu độc lập PR #8 và quyết định Web Demo V1.
+Giới hạn: chưa accuracy toàn PDF/multi-document, chưa verified financial facts;
+IDM chưa xác nhận trên browser người dùng; live phụ thuộc Gemini Free Tier.
+Next action: chờ chỉ đạo tiếp theo; không bắt đầu M3 hoặc task mới.
 
 Checkpoint trước:
 
