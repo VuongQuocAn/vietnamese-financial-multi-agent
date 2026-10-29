@@ -282,6 +282,18 @@ test("W06 financial cell links PDF and keeps selection across zoom and tabs with
     name: "Chỉ tiêu synthetic,",
     exact: false,
   });
+  const pdfPanel = page.locator(".pdf-source-panel");
+  const evidencePanel = page.locator(".evidence-content");
+  const pdfBounds = (await pdfPanel.boundingBox())!;
+  const evidenceBounds = (await evidencePanel.boundingBox())!;
+  expect(pdfBounds.x + pdfBounds.width).toBeLessThan(evidenceBounds.x);
+  expect(Math.abs(pdfBounds.y - evidenceBounds.y)).toBeLessThan(2);
+  await expect(
+    page.getByRole("button", { name: "Chọn tài liệu", exact: true }),
+  ).toBeEnabled();
+  expect(
+    (await page.getByRole("table").locator("thead").boundingBox())!.height,
+  ).toBeLessThan(100);
   await selected.click();
   await expect(page).toHaveURL(/page=2$/);
   await expect(
@@ -303,6 +315,12 @@ test("W06 financial cell links PDF and keeps selection across zoom and tabs with
   ).toBeVisible();
   await page.getByRole("button", { name: "Phóng to", exact: true }).click();
   await expect(selected).toHaveAttribute("aria-pressed", "true");
+  const slider = page.getByRole("slider", { name: "Độ rộng khung PDF" });
+  await slider.focus();
+  await slider.press("ArrowRight");
+  await expect(slider).toHaveValue("46");
+  await expect(selected).toHaveAttribute("aria-pressed", "true");
+  await expect(evidencePanel.getByLabel("Chi tiết nguồn")).toBeVisible();
   await page.getByRole("tab", { name: "B09", exact: false }).click();
   await expect(page.getByRole("table")).toHaveCount(0);
   await expect(
@@ -406,6 +424,27 @@ test("W06 BBS persisted evidence source linking read only", async ({
     }),
   );
   await page.goto(`/evidence/${documentId}?page=1`);
+  const cover = page.locator('.react-pdf__Page[data-page-number="1"] canvas');
+  await expect(cover).toBeVisible();
+  await expect
+    .poll(async () =>
+      cover.evaluate((canvas: HTMLCanvasElement) => {
+        const pixels = canvas
+          .getContext("2d")!
+          .getImageData(0, 0, canvas.width, canvas.height).data;
+        let dark = 0;
+        for (let i = 0; i < pixels.length; i += 4)
+          if (
+            pixels[i] < 150 &&
+            pixels[i + 1] < 150 &&
+            pixels[i + 2] < 150 &&
+            pixels[i + 3] > 0
+          )
+            dark++;
+        return dark;
+      }),
+    )
+    .toBeGreaterThan(300);
   for (const [statement, pdfPage] of [
     ["B01", 5],
     ["B01", 6],
@@ -446,6 +485,7 @@ test("W06 BBS persisted evidence source linking read only", async ({
       await expect(table.locator("thead th")).toHaveCount(
         expected.periods.length + 2,
       );
+      await page.screenshot({ path: "test-results/w06-bbs-layout-b02.png" });
     }
   }
   for (const predicate of [

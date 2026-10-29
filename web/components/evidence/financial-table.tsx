@@ -5,7 +5,12 @@ import { StatusBadge } from "@/components/ui/status-badge";
 
 // Presentation props only, not a replacement for the W-01 API DTO.
 // Values are source strings; this component never parses, scales or formats them.
-export type FinancialPeriod = { key: string; label: string };
+export type FinancialPeriod = {
+  key: string;
+  label: string;
+  detail?: string;
+  unitLabel?: string;
+};
 export type FinancialCell = {
   id: string;
   rawValue: string | null;
@@ -55,8 +60,16 @@ export function FinancialTable({
             <th scope="col">Mã số</th>
             <th scope="col">Chỉ tiêu tài chính</th>
             {periods.map((period) => (
-              <th scope="col" className="numeric" key={period.key}>
-                {period.label}
+              <th
+                scope="col"
+                className="numeric"
+                key={period.key}
+                title={period.detail}
+              >
+                <span>{period.label}</span>
+                {period.unitLabel && (
+                  <small className="period-unit">{period.unitLabel}</small>
+                )}
               </th>
             ))}
           </tr>

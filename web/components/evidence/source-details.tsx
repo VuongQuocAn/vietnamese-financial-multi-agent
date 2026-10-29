@@ -27,10 +27,10 @@ export function SourceDetails({
 }) {
   if (!selection)
     return (
-      <section className="panel source-details">
-        <h2>Chi tiết bằng chứng &amp; Nguồn dẫn</h2>
+      <details className="source-details">
+        <summary>Chi tiết bằng chứng &amp; Nguồn dẫn</summary>
         <p>Chọn một ô số liệu để xem giá trị và nguồn.</p>
-      </section>
+      </details>
     );
   const { item, attemptId, snapshotRevision } = selection;
   const c = item.context;
@@ -60,8 +60,8 @@ export function SourceDetails({
     ],
   ];
   return (
-    <section className="panel source-details" aria-label="Chi tiết nguồn">
-      <h2>Chi tiết bằng chứng &amp; Nguồn dẫn</h2>
+    <details className="source-details" aria-label="Chi tiết nguồn" open>
+      <summary>Chi tiết bằng chứng &amp; Nguồn dẫn</summary>
       {metadataRevision !== selection.metadataRevision && (
         <p className="notice" role="status">
           Metadata phiên cũ — bằng chứng thuộc revision{" "}
@@ -133,6 +133,6 @@ export function SourceDetails({
             : unknown}
         </p>
       </details>
-    </section>
+    </details>
   );
 }

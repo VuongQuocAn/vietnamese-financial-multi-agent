@@ -7,7 +7,7 @@ import { api, stateLabels, type DocumentSummary } from "@/lib/documents";
 
 const limit = 20;
 
-export function DocumentPicker() {
+export function DocumentPicker({ selectedLabel }: { selectedLabel?: string }) {
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState(0);
   const [refresh, setRefresh] = useState(0);
@@ -50,7 +50,9 @@ export function DocumentPicker() {
     <>
       <div className="document-picker panel">
         <FileText size={18} />
-        <span>Chưa chọn tài liệu</span>
+        <span className="document-picker-label" title={selectedLabel}>
+          {selectedLabel ?? "Chưa chọn tài liệu"}
+        </span>
         <button
           className="button secondary"
           aria-expanded={open}

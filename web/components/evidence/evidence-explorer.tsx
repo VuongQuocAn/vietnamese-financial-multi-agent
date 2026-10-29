@@ -1,18 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  FileSearch,
-  FileText,
-  GripVertical,
-  Network,
-  PanelLeft,
-  PanelRight,
-  ScanSearch,
-} from "lucide-react";
+import { FileSearch, FileText, Network, ScanSearch } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FinancialTable } from "@/components/evidence/financial-table";
 import { DocumentPicker } from "./document-picker";
+import { EvidenceLayout } from "./evidence-layout";
 
 const statements = [
   { id: "B01", label: "Cân đối kế toán" },
@@ -24,8 +17,6 @@ const statements = [
 
 export function EvidenceExplorer() {
   const [tab, setTab] = useState("B01");
-  const [split, setSplit] = useState(45);
-  const [mobilePane, setMobilePane] = useState("evidence");
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   return (
     <>
@@ -33,61 +24,27 @@ export function EvidenceExplorer() {
       <p id="picker-note" className="notice">
         Chọn một tài liệu đã xử lý để khám phá dữ liệu tài chính.
       </p>
-      <div className="explorer-controls">
-        <div className="mobile-pane-buttons" aria-label="Chọn khung xem">
-          <button
-            className="button secondary"
-            aria-pressed={mobilePane === "pdf"}
-            onClick={() => setMobilePane("pdf")}
+      <EvidenceLayout
+        pdf={
+          <section
+            className="pdf-panel panel"
+            aria-labelledby="pdf-panel-title"
           >
-            <PanelLeft size={16} />
-            PDF gốc
-          </button>
-          <button
-            className="button secondary"
-            aria-pressed={mobilePane === "evidence"}
-            onClick={() => setMobilePane("evidence")}
-          >
-            <PanelRight size={16} />
-            Bằng chứng
-          </button>
-        </div>
-        <label className="resize-control">
-          Độ rộng PDF{" "}
-          <input
-            aria-label="Độ rộng khung PDF"
-            type="range"
-            min={30}
-            max={65}
-            value={split}
-            onChange={(event) => setSplit(Number(event.target.value))}
-          />
-          <span>{split}%</span>
-        </label>
-      </div>
-      <div
-        className={`evidence-layout show-${mobilePane}`}
-        style={{
-          gridTemplateColumns: `minmax(0, ${split}fr) 16px minmax(0, ${100 - split}fr)`,
-        }}
+            <div className="panel-toolbar">
+              <FileText size={17} />
+              <h2 id="pdf-panel-title">Tài liệu PDF gốc</h2>
+              <span className="muted">Chưa có tài liệu</span>
+            </div>
+            <div className="pdf-canvas">
+              <EmptyState
+                icon={FileText}
+                title="Chưa có PDF để hiển thị"
+                description="Tài liệu gốc sẽ xuất hiện tại đây khi bạn chọn một báo cáo."
+              />
+            </div>
+          </section>
+        }
       >
-        <section className="pdf-panel panel" aria-labelledby="pdf-panel-title">
-          <div className="panel-toolbar">
-            <FileText size={17} />
-            <h2 id="pdf-panel-title">Tài liệu PDF gốc</h2>
-            <span className="muted">Chưa có tài liệu</span>
-          </div>
-          <div className="pdf-canvas">
-            <EmptyState
-              icon={FileText}
-              title="Chưa có PDF để hiển thị"
-              description="Tài liệu gốc sẽ xuất hiện tại đây khi bạn chọn một báo cáo."
-            />
-          </div>
-        </section>
-        <div className="splitter-decoration" aria-hidden="true">
-          <GripVertical size={15} />
-        </div>
         <section
           className="evidence-panel panel"
           aria-labelledby="financial-panel-title"
@@ -181,7 +138,7 @@ export function EvidenceExplorer() {
             </p>
           </details>
         </section>
-      </div>
+      </EvidenceLayout>
     </>
   );
 }

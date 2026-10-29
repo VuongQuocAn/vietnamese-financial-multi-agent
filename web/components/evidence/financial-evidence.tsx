@@ -81,10 +81,22 @@ export function FinancialEvidence({
   return (
     <div>
       {data && (
-        <p className="muted">
-          {data.items.length}/{data.total} observations · Metadata revision{" "}
-          {data.metadata_revision} · Snapshot revision {data.snapshot_revision}
-        </p>
+        <div className="evidence-summary">
+          <p className="muted">
+            {data.items.length}/{data.total} observations · Giá trị gốc
+          </p>
+          <details>
+            <summary>Phiên dữ liệu</summary>
+            <p>
+              Metadata revision {data.metadata_revision} · Snapshot revision{" "}
+              {data.snapshot_revision}
+            </p>
+            <p>
+              Quality không chứng minh độ chính xác tài chính; không tự quy đổi
+              đơn vị.
+            </p>
+          </details>
+        </div>
       )}
       {data && data.metadata_revision !== metadataRevision && (
         <p role="status" className="notice">
@@ -112,10 +124,6 @@ export function FinancialEvidence({
         </p>
       )}
       {loading && <p role="status">Đang tải evidence…</p>}
-      <p className="muted">
-        Giá trị gốc; không tự quy đổi đơn vị. Quality không chứng minh độ chính
-        xác tài chính.
-      </p>
       <FinancialTable
         {...grouped}
         selectedCellId={

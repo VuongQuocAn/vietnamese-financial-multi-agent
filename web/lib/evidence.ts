@@ -71,7 +71,10 @@ export function contextLabel(item: EvidenceItem) {
 
 // Each observation remains addressable; grouping never relies on item code alone.
 export function groupEvidence(items: EvidenceItem[]) {
-  const periods = new Map<string, { key: string; label: string }>();
+  const periods = new Map<
+    string,
+    { key: string; label: string; detail: string; unitLabel: string }
+  >();
   const rows: {
     key: string;
     sourceItemCode: string | null;
@@ -94,7 +97,18 @@ export function groupEvidence(items: EvidenceItem[]) {
       item.raw_header,
       item.binding?.column ?? null,
     ]);
-    periods.set(periodKey, { key: periodKey, label: contextLabel(item) });
+    periods.set(periodKey, {
+      key: periodKey,
+      label: item.raw_header || c.period || unknown,
+      detail: contextLabel(item),
+      unitLabel: [
+        item.value.unit ?? c.currency ?? unknown,
+        `Scale: ${c.scale ?? unknown}`,
+        c.reporting_scope,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    });
     const pages = [
       ...new Set(
         item.sources.map((s) => JSON.stringify([s.content_id, s.pdf_page])),
