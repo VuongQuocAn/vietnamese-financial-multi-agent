@@ -13,7 +13,9 @@ Status: **REVIEW**, được giao 29/10/2026. Baseline main `034c3ac` khớp rem
 nhánh `feat/w-06-financial-evidence`. [Implementation/validation](tasks/W/W-06.md).
 Bảng B01–B03 + source details/cell → PDF, B09 inventory, partial/stale/pagination.
 Local targeted 6 PASS và typecheck/lint/build PASS; BBS persisted source linking PASS,
-không đánh giá accuracy toàn báo cáo. SHA/PR cập nhật ở spec sau commit.
+không đánh giá accuracy toàn báo cáo. Implementation `553363d`,
+[PR #7](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/7);
+CI40803902058 IN_PROGRESS tại lần kiểm duy nhất. Chi tiết tại spec.
 Next action: Tech Lead nghiệm thu độc lập W-06 trên PR; không bắt đầu W-07.
 
 ## W-05 — PDF Viewer & Page Navigation
