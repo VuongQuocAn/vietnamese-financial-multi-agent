@@ -1,6 +1,20 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-10-29 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## M3-06 — Calculation Lineage
+
+Status: **REVIEW**, Project Owner giao ngày 30/10/2026, main-first; implementation
+chưa commit. [Spec/evidence](tasks/M3/M3-06.md),
+[API/inventory/real report/policy proposal](../docs/calculation-lineage.md).
+68 targeted PASS; sáu persisted metrics: 4 complete/2 partial, 10/12 roles resolve,
+98 anchor occurrences, 10/10 original quality/context preserved; 6 undetermined.
+PDF năm 2021 tên BB2_2021.pdf; cả năm PDF mở được, scan/no text layer.
+2021–2024 có OCR nhưng chưa canonical financial facts; current scope chỉ có annual
+periods 2024/2025 từ report 2025, chưa multi-year evaluation PASS. Final runner:
+171 input hashes unchanged, restart exact; zero Gemini/OCR/extraction calls.
+Không executor/compatibility-policy changes; giữ local web/next-env.d.ts ngoài stage.
+Next action: Tech Lead review M3-06; không bắt đầu M3-07.
 
 ## M3-05 — Derived Metric Records
 

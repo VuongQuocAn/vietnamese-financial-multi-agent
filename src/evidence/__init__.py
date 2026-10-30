@@ -50,10 +50,15 @@ from .graph import (
     build_graph,
     validate_graph,
 )
+from .lineage import LineageTaskContext, MetricLineage, OperandLineage, trace_metric_lineage
 from .metrics import DerivedMetric, FormulaDefinition, MetricOperand, MetricRequest, build_metric
 from .repository import CanonicalFactRepository, ObservationConflict
 
 __all__ = [
+    "LineageTaskContext",
+    "MetricLineage",
+    "OperandLineage",
+    "trace_metric_lineage",
     "DerivedMetric",
     "DerivedMetricNode",
     "FormulaDefinition",

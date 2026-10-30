@@ -2,52 +2,47 @@
 
 ## Active Task
 
-M3-02 — Canonical Financial Facts
+M3-06 — Calculation Lineage
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED ngày 29/10/2026. CI40828484743 completed/SUCCESS đúng
-`8471064820b681aef403d7bc784a627a0f5f5bda`; Python 3.12 và Web smoke success.
-Implementation và documentation checkpoint `12bfa8a` đã push main.
+68 targeted PASS; final real evaluation 4 complete/2 partial, 6 undetermined,
+10/12 roles resolved, 98 anchor occurrences; original quality/context preserved.
+171 input hashes unchanged, JSON restart exact; zero Gemini/OCR/extraction.
 
 ## Completed Work
 
-M2 adapter → canonical facts, durable JSON repository/retrieval và quarantine;
-giữ raw/Decimal/provenance/quality, document/attempt identities độc lập.
-Chi tiết [spec/evidence](tasks/M3/M3-02.md), [API/policy](../docs/canonical-financial-facts.md).
+Contracts/traversal/quality context và inventory năm PDF, multi-year coverage,
+policy đề xuất. [Spec](tasks/M3/M3-06.md), [report](../docs/calculation-lineage.md).
 
 ## Remaining Work
 
-Không còn việc M3-02; M3-03–07 vẫn TODO, chưa được giao triển khai.
+Tech Lead independent review; không tự DONE hoặc bắt đầu M3-07.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ planning task/status/progress/roadmap/handoff/registry.
-`web/next-env.d.ts` có sẵn trước task, giữ ngoài commit.
+evidence lineage/API export, focused tests, evaluation script, report và planning.
+Giữ local web/next-env.d.ts ngoài stage.
 
 ## Tests
 
-Implementation: 43 targeted tests PASS, persisted 178 observations restart round-trip PASS;
-Ruff/planning/diff PASS. CI40828484743 SUCCESS đúng 8471064.
-Phiên nghiệm thu chỉ planning checker/diff check; không chạy lại tests/build/Gemini,
-benchmark/PDF processing hoặc sửa raw/M1/M2 runtime.
+68 focused/regression PASS; real-artifact final runner PASS preservation/trace.
+Ruff/planning/diff và CI status ghi tại task evidence theo exact implementation SHA.
 
 ## Blockers
 
-Không blocker implementation. Company/context thiếu giữ unresolved; một writer mỗi
-storage root. Engineering smoke không xác minh financial accuracy.
+Không blocker implementation. Calculation bị chặn bởi missing liabilities,
+company/scope/roles/source/quality và formula policy. 2021–2024 chưa canonical facts.
 
 ## Git Checkpoint
 
-Accepted implementation `8471064820b681aef403d7bc784a627a0f5f5bda` trên main;
-documentation checkpoint `12bfa8a`.
-Housekeeping DONE trực tiếp main, không branch/PR mới, không đổi code/tests.
-Không stage dữ liệu, secrets hoặc next-env local.
+Baseline 17a770a trên main khớp origin/main; implementation chưa commit.
+Không branch/PR/worktree; không stage dữ liệu/secrets hoặc local web file.
 
 ## Exact Next Action
 
-Chờ giao nhiệm vụ mới; không bắt đầu M3-03.
+Tech Lead review M3-06; không bắt đầu M3-07.
