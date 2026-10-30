@@ -8,7 +8,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
-TASK_ID = re.compile(r"(?:M[0-8]|W)-\d{2}[a-z]?")
+TASK_ID = re.compile(r"(?:M[0-8]|W|D)-\d{2}[a-z]?")
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
 
@@ -92,6 +92,8 @@ def check(root: Path) -> int:
     milestones = [f"M{i}" for i in range(9)]
     if any(task[2] == "W" for task in tasks.values()):
         milestones.append("W")
+    if any(task[2] == "D" for task in tasks.values()):
+        milestones.append("D")
     require(len(counts) == len(milestones) + 1, "Dashboard must contain milestones and TOTAL")
     for row, milestone in zip(counts, [*milestones, "TOTAL"], strict=True):
         subset = [task for task in tasks.values() if milestone == "TOTAL" or task[2] == milestone]

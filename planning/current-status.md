@@ -2,6 +2,19 @@
 
 Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
+
+Status: **REVIEW**; main-first, baseline `24eedb1`, giữ local web/next-env.d.ts.
+[Spec/evidence](tasks/D/D-01.md), [report](../docs/d01-multi-year-readiness.md).
+Năm PDFs/133 pages inventory; 109 pages discovery và 16 primary + 4 fallback
+extraction pages mới, reuse 2025. 981 observations/165 mapped; exact retrieval và
+restart PASS. 119 targeted PASS; 48 cells khớp mẫu PDF, chưa full-PDF accuracy.
+29 queries: 22 available/1 quality blocked/4 ambiguous/1 mapping gap/1 source limit.
+15 metrics complete nhưng undetermined (scope/provenance), không executor.
+129 Gemini attempts/260,593 known tokens/4 provider errors; 173 unique input hashes
+unchanged. Implementation SHA/CI được ghi sau push; chờ Tech Lead nghiệm thu.
+Next action: Tech Lead review D-01; không bắt đầu M4-01.
+
 ## M3-07 — Evidence Retrieval Interface
 
 Status: **DONE**, Tech Lead APPROVED ngày 30/10/2026 theo chỉ đạo nghiệm thu;

@@ -19,7 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 61 | 0 | 0 | 32 | 0 | 0 |
+| D | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 94 | 61 | 0 | 0 | 32 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +47,11 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+D-01 REVIEW; 981 observations / 165 mapped; 119 targeted tests PASS. [Spec](tasks/D/D-01.md).
+Main-first, multi-year canonical coverage và evaluation. Không bắt đầu M4-01.
+
+Checkpoint trước:
 
 M3-07 DONE, Tech Lead APPROVED ngày 30/10/2026: unified retrieval;
 102 focused/regression PASS, Ruff toàn repository,

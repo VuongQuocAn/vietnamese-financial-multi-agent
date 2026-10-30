@@ -121,6 +121,25 @@ def test_automatic_association_and_provenance_without_review(sample):
         assert "manual_review" not in link
 
 
+def test_d01_liabilities_mapping_preserves_columns_and_rejects_wrong_source_code(sample):
+    image, record, payload = sample
+    payload["statement_type"] = "B01"
+    payload["context"] = ["BẢNG CÂN ĐỐI KẾ TOÁN", "Mẫu số B01 - DN", "Đơn vị tính: VND"]
+    table = payload["tables"][0]
+    table["headers"][0]["text"] = "31/12/2025"
+    table["headers"][1]["text"] = "01/01/2025"
+    table["cells"][0]["text"] = "C - NỢ PHẢI TRẢ"
+    table["cells"][1]["text"] = "300"
+    links = validate_automated_extraction(image, record)["links"]
+    assert [link["canonical_item_id"] for link in links] == ["b01.total_liabilities"] * 2
+    assert [link["result"]["context"]["period"] for link in links] == ["2025-12-31", "2025-01-01"]
+    assert [link["result"]["value"]["normalized_value"] for link in links] == ["1234", "-2345"]
+    table["cells"][1]["text"] = "310"
+    links = validate_automated_extraction(image, record)["links"]
+    assert all("source_code_conflict" in link["issues"] for link in links)
+    assert all(link["status"] != "accepted_extraction" for link in links)
+
+
 @pytest.mark.parametrize(
     "mutation",
     [

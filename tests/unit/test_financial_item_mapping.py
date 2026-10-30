@@ -37,6 +37,14 @@ def evidence(text, **changes):
     ).model_copy(update=changes)
 
 
+def test_d01_equity_total_does_not_map_unapproved_subtotal_or_other_statement():
+    result = map_item_label(evidence("D - VỐN CHỦ SỞ HỮU"), "B01")
+    assert result.canonical_item_id == "b01.total_equity"
+    assert result.candidates[0].catalog_evidence.startswith("D-01:original-PDF:")
+    assert map_item_label(evidence("I. Vốn chủ sở hữu"), "B01").canonical_item_id is None
+    assert map_item_label(evidence("D - VỐN CHỦ SỞ HỮU"), "B02").canonical_item_id is None
+
+
 def page():
     quality = ComponentQuality(
         text_accepted=True,

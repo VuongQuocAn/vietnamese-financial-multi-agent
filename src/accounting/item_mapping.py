@@ -62,6 +62,20 @@ ITEM_CATALOG = (
     ),
     ItemRule("b01.total_assets", "B01", "270", ("TỔNG CỘNG TÀI SẢN",), "BBS2025/page5"),
     ItemRule(
+        "b01.total_liabilities",
+        "B01",
+        "300",
+        ("C - NỢ PHẢI TRẢ", "C- NỢ PHẢI TRẢ", "C - Nợ phải trả", "NỢ PHẢI TRẢ"),
+        "D-01:original-PDF:BBS2021/page7;BBS2025/page6",
+    ),
+    ItemRule(
+        "b01.total_equity",
+        "B01",
+        "400",
+        ("D - VỐN CHỦ SỞ HỮU", "D- VỐN CHỦ SỞ HỮU", "VỐN CHỦ SỞ HỮU"),
+        "D-01:original-PDF:BBS2021/page7;BBS2025/page6",
+    ),
+    ItemRule(
         "b02.net_revenue",
         "B02",
         "10",
@@ -101,9 +115,10 @@ ITEM_CATALOG = (
         "60",
         (
             "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
+            "16. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "Lợi nhuận sau thuế thu nhập doanh nghiệp",
         ),
-        "BBS2025/page7",
+        "BBS2025/page7;D-01:original-PDF:BBS2021/page8",
     ),
     ItemRule(
         "b03.operating_cash_flow",

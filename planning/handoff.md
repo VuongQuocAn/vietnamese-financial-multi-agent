@@ -2,55 +2,51 @@
 
 ## Active Task
 
-M3-07 — Evidence Retrieval Interface
+D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED M3-07 ngày 30/10/2026; Owner cho phép chuyển DONE,
-planning trực tiếp main. Accepted implementation e8f293d giữ nguyên.
-102 focused/regression PASS; real run-2 356/356 exact,18/18 queries,172 hashes unchanged.
+Real evaluation hoàn tất: 981 observations/165 mapped, exact retrieval/restart/context
+preservation PASS; source hashes union 173 unchanged. Baseline main 24eedb1.
 
 ## Completed Work
 
-Unified retrieval/contracts/citations, inventory missing coverage, negative controls,
-real queries và deterministic question flow. [API/report](../docs/evidence-retrieval.md).
+109 discovery pages mới; 16 primary + 4 B09 fallback extraction pages, reuse 2025.
+Source-backed company binding, liabilities/equity mapping, versioned normalized-v2.
+29 queries: 22 available/1 blocked/4 ambiguous/1 mapping gap/1 source limit.
+48 numeric cells/48 label occurrences khớp controlled original PDF visual read.
+36 cross-year pairs numeric equal, scope thiếu nên undetermined.
+15 metrics complete/undetermined; matched six từ 4 lên 6 complete. Không executor.
+Chi tiết tại docs/d01-multi-year-readiness.md và planning/tasks/D/D-01.md.
 
 ## Remaining Work
 
-Không còn việc M3-07; M4-01 chưa được giao triển khai.
+Tech Lead nghiệm thu phạm vi D-01 và limitations; không tự DONE.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ sửa planning registry/spec/status/dashboard/handoff.
-Giữ local web/next-env.d.ts ngoài stage, không đưa artifacts/data vào Git.
+Hai scripts D-01, mapping, focused tests, docs và planning/checker hỗ trợ ID D.
 
 ## Tests
 
-102 focused/regression PASS; real run-2 356 exact/18 queries PASS; restart exact.
-9 complete-with-caveat/3 partial-quality-blocked/2 canonical-unavailable questions.
-Ruff lint/format toàn repository, planning/diff PASS.
-CI41056561499 completed/SUCCESS đúng e8f293de4445f91860ff8820f123502da649d2e6;
-Python 3.12 và Web smoke đều SUCCESS. Không suy CI từ checkpoint docs/planning.
-Phiên chuyển DONE chỉ planning checker/diff check; không chạy lại tests,
-real evaluation/Gemini/OCR/extraction hoặc mở rộng test suite/refactor.
+119 targeted/core PASS; Ruff toàn repo/planning/diff PASS.
+129 Gemini attempts, 260593 known tokens, 4 provider errors; zero calls ở evaluation.
+Offline evaluation resume sau WinError 5 và sửa lời gọi graph validation.
 
 ## Blockers
 
-Không blocker implementation. Chưa PDF financial verification/multi-year canonical
-coverage; liabilities mapping thiếu, M2 blocked và compatibility undetermined giữ nguyên.
-Zero Gemini/OCR/extraction/raw changes.
+Scope thiếu/source anchors uncertain; Q07 OCF 2022 table_position_conflict giữ blocked.
+Chưa full-PDF/independent human gold accuracy hoặc approved formula execution.
 
 ## Git Checkpoint
 
-Implementation `e8f293de4445f91860ff8820f123502da649d2e6` đã push main,
-origin/main khớp; baseline d0bf722. Main-first, không branch/PR/worktree.
-Checkpoint trước nghiệm thu `650582ff5335a5a107b873c6e2b5a76705882596` trên main.
-Local web/next-env.d.ts giữ nguyên SHA-256 trước/sau và ngoài commit.
+Implementation chưa commit; main-first, giữ web/next-env.d.ts byte-for-byte ngoài stage.
+Artifacts/data/secrets ignored; SHA và CI bổ sung sau push.
 
 ## Exact Next Action
 
-Chờ giao nhiệm vụ mới; không bắt đầu M4-01.
+Tech Lead review D-01; không bắt đầu M4-01.
