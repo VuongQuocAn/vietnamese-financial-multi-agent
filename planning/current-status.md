@@ -15,8 +15,14 @@ PDF năm 2021 tên BB2_2021.pdf; cả năm PDF mở được, scan/no text layer
 periods 2024/2025 từ report 2025, chưa multi-year evaluation PASS. Final runner:
 171 input hashes unchanged, restart exact; zero Gemini/OCR/extraction calls.
 Không executor/compatibility-policy changes; giữ local web/next-env.d.ts ngoài stage.
-Ruff/planning/diff PASS. [CI41053294032](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41053294032)
-đã xác minh đúng implementation SHA, đang in_progress tại lúc ghi nhận; chưa báo PASS.
+CI41053294032 của implementation FAILURE do Ruff formatting code fence trong docs.
+Tech Lead independent review xác nhận chức năng lineage đạt phạm vi M3-06.
+Formatting fix `c91cecae099a58124c36ccfad9d65bd9be0faf04` đã push trực tiếp main;
+[CI41054170265](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41054170265)
+SUCCESS đúng fix SHA: Python 3.12 lint/format/planning/focused offline tests đạt,
+Web smoke skipped vì docs-only. Local Ruff format/check toàn repository,
+planning checker và diff check PASS. Không chạy lại real-artifact evaluation,
+Gemini/OCR/extraction hoặc sửa code lineage/raw/M3 results; web local hash giữ nguyên.
 Next action: Tech Lead review M3-06; không bắt đầu M3-07.
 
 ## M3-05 — Derived Metric Records
