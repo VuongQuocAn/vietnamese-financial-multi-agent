@@ -44,8 +44,10 @@ Chưa full-PDF/independent human gold accuracy hoặc approved formula execution
 
 ## Git Checkpoint
 
-Implementation chưa commit; main-first, giữ web/next-env.d.ts byte-for-byte ngoài stage.
-Artifacts/data/secrets ignored; SHA và CI bổ sung sau push.
+Implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c` đã push main, origin/main khớp.
+CI41064083725 completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS.
+Giữ web/next-env.d.ts byte-for-byte ngoài stage.
+Artifacts/data/secrets ignored; không suy CI từ documentation checkpoint sau này.
 
 ## Exact Next Action
 

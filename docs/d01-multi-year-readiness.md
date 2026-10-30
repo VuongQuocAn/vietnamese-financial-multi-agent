@@ -173,7 +173,10 @@ primary scope **NOT CHECKED trong D-01**, toàn PDF và independent human gold
 compatibility, retrieval, metrics, lineage và D-01 period/comparison/retry controls.
 Ruff lint/format toàn repository PASS (312 files); planning checker 94 tasks PASS;
 git diff --check PASS. Không frontend/browser local hoặc full unit regression.
-CI và exact implementation SHA được ghi sau push tại task spec.
+Implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c` đã push trực tiếp main.
+[CI41064083725](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41064083725)
+completed/SUCCESS đúng implementation SHA; Python 3.12 và Web smoke đều SUCCESS,
+các steps đã xác minh. Không gán CI này cho documentation checkpoint sau đó.
 
 139 task input hashes before=after; 172 accepted M3-07 input hashes đối chiếu vẫn
 khớp, tổng union 173 files bao gồm unrelated local web/next-env.d.ts. Không ghi đè

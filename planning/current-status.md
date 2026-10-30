@@ -12,7 +12,9 @@ restart PASS. 119 targeted PASS; 48 cells khớp mẫu PDF, chưa full-PDF accur
 29 queries: 22 available/1 quality blocked/4 ambiguous/1 mapping gap/1 source limit.
 15 metrics complete nhưng undetermined (scope/provenance), không executor.
 129 Gemini attempts/260,593 known tokens/4 provider errors; 173 unique input hashes
-unchanged. Implementation SHA/CI được ghi sau push; chờ Tech Lead nghiệm thu.
+unchanged. Implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c` đã push main;
+CI41064083725 completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS.
+Checkpoint sau chỉ docs/planning; chờ Tech Lead nghiệm thu.
 Next action: Tech Lead review D-01; không bắt đầu M4-01.
 
 ## M3-07 — Evidence Retrieval Interface
