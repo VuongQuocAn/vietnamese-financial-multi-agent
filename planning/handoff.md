@@ -6,12 +6,14 @@ D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Real evaluation hoàn tất: 981 observations/165 mapped, exact retrieval/restart/context
-preservation PASS; source hashes union 173 unchanged. Baseline main 24eedb1.
+Tech Lead APPROVED D-01 ngày 30/10/2026, accepted implementation
+`0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c`. Real evaluation đã có:
+981 observations/165 mapped, exact retrieval/restart/context preservation PASS;
+source hashes union 173 unchanged. Không chạy lại evaluation khi chuyển DONE.
 
 ## Completed Work
 
@@ -25,17 +27,20 @@ Chi tiết tại docs/d01-multi-year-readiness.md và planning/tasks/D/D-01.md.
 
 ## Remaining Work
 
-Tech Lead nghiệm thu phạm vi D-01 và limitations; không tự DONE.
+Không còn việc D-01 trong phạm vi đã nghiệm thu; M4-01 chưa được giao.
 
 ## Modified Files
 
-Hai scripts D-01, mapping, focused tests, docs và planning/checker hỗ trợ ID D.
+Phiên nghiệm thu chỉ sửa registry/spec/current-status/dashboard/handoff trong planning.
+Không sửa code, report hoặc artifacts; giữ web/next-env.d.ts ngoài stage.
 
 ## Tests
 
 119 targeted/core PASS; Ruff toàn repo/planning/diff PASS.
 129 Gemini attempts, 260593 known tokens, 4 provider errors; zero calls ở evaluation.
 Offline evaluation resume sau WinError 5 và sửa lời gọi graph validation.
+Phiên chuyển DONE chỉ chạy planning checker và git diff --check; không chạy lại
+tests, Gemini/OCR/extraction hoặc real evaluation.
 
 ## Blockers
 
@@ -51,4 +56,4 @@ Artifacts/data/secrets ignored; không suy CI từ documentation checkpoint sau 
 
 ## Exact Next Action
 
-Tech Lead review D-01; không bắt đầu M4-01.
+Chờ giao nhiệm vụ mới; không bắt đầu M4-01.

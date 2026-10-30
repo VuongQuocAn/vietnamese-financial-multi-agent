@@ -4,7 +4,9 @@ Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
 
-Status: **REVIEW**; main-first, baseline `24eedb1`, giữ local web/next-env.d.ts.
+Status: **DONE**; Tech Lead APPROVED ngày 30/10/2026, main-first,
+accepted implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c`.
+Giữ local web/next-env.d.ts và artifacts ngoài commit.
 [Spec/evidence](tasks/D/D-01.md), [report](../docs/d01-multi-year-readiness.md).
 Năm PDFs/133 pages inventory; 109 pages discovery và 16 primary + 4 fallback
 extraction pages mới, reuse 2025. 981 observations/165 mapped; exact retrieval và
@@ -14,8 +16,9 @@ restart PASS. 119 targeted PASS; 48 cells khớp mẫu PDF, chưa full-PDF accur
 129 Gemini attempts/260,593 known tokens/4 provider errors; 173 unique input hashes
 unchanged. Implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c` đã push main;
 CI41064083725 completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS.
-Checkpoint sau chỉ docs/planning; chờ Tech Lead nghiệm thu.
-Next action: Tech Lead review D-01; không bắt đầu M4-01.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning/diff checks; không chạy lại
+tests/Gemini/OCR/extraction hoặc real evaluation. Giữ nguyên các limitations đã báo.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M4-01.
 
 ## M3-07 — Evidence Retrieval Interface
 
