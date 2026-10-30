@@ -65,6 +65,7 @@ jobs:
           tests/unit/test_derived_metrics.py
           tests/unit/test_metric_lineage.py
           tests/unit/test_evidence_retrieval.py
+          tests/unit/test_d02_readiness.py
           tests/unit/test_web_documents.py::test_scan_upload_vision_review_confirm_ready
       - name: Full unit regression (manual)
         if: ${{ inputs.full_regression }}

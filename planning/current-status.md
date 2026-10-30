@@ -2,6 +2,18 @@
 
 Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## D-02 — Blocker Resolution & Analytical Readiness
+
+Status: **REVIEW**, Owner giao trực tiếp; main-first. Implementation chưa commit.
+[Spec](tasks/D/D-02.md), [audit](../docs/d02-blocker-resolution.md).
+25 operands / 30 occurrences có value-row review; 15/15 candidate compatible theo
+profile experimental, approved vẫn 15 undetermined; eligibility 0, chưa M4.
+Q07 blocked → available qua một page-8 recovery; 29 queries: 23 available,
+4 ambiguous/1 mapping gap/1 absent snapshot. 36 pairs vẫn undetermined.
+120 targeted/core PASS; một Gateway attempt/7,312 tokens; 2,352 input hashes giữ nguyên.
+Giữ D-01/raw và web local; source reviews không phải independent human gold.
+Next action: Tech Lead review D-02 và quyết định scope/profile/formula policy.
+
 ## D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
 
 Status: **DONE**; Tech Lead APPROVED ngày 30/10/2026, main-first,

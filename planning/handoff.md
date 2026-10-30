@@ -2,58 +2,47 @@
 
 ## Active Task
 
-D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
+D-02 — Blocker Resolution & Analytical Readiness
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED D-01 ngày 30/10/2026, accepted implementation
-`0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c`. Real evaluation đã có:
-981 observations/165 mapped, exact retrieval/restart/context preservation PASS;
-source hashes union 173 unchanged. Không chạy lại evaluation khi chuyển DONE.
+Baseline main 3d9fa32; D-02 chưa commit.
+Chi tiết tại [spec](tasks/D/D-02.md), [report](../docs/d02-blocker-resolution.md).
 
 ## Completed Work
 
-109 discovery pages mới; 16 primary + 4 B09 fallback extraction pages, reuse 2025.
-Source-backed company binding, liabilities/equity mapping, versioned normalized-v2.
-29 queries: 22 available/1 blocked/4 ambiguous/1 mapping gap/1 source limit.
-48 numeric cells/48 label occurrences khớp controlled original PDF visual read.
-36 cross-year pairs numeric equal, scope thiếu nên undetermined.
-15 metrics complete/undetermined; matched six từ 4 lên 6 complete. Không executor.
-Chi tiết tại docs/d01-multi-year-readiness.md và planning/tasks/D/D-01.md.
+25 reviewed operands/30 occurrences, 5 accounting-basis records; profile riêng.
+Q07 recovered qua một page-8 attempt, original giữ nguyên. 15 candidate compatible;
+approved15 undetermined/eligible0; 36 pairs undetermined; 29 queries không giảm.
 
 ## Remaining Work
 
-Không còn việc D-01 trong phạm vi đã nghiệm thu; M4-01 chưa được giao.
+Tech Lead review/decide scope/profile/formula P1; chưa đạt strict success.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ sửa registry/spec/current-status/dashboard/handoff trong planning.
-Không sửa code, report hoặc artifacts; giữ web/next-env.d.ts ngoài stage.
+analytical_readiness, evaluator D-02, focused tests/CI, report và planning.
+Giữ web/next-env.d.ts ngoài stage; artifacts/data/secrets không commit.
 
 ## Tests
 
-119 targeted/core PASS; Ruff toàn repo/planning/diff PASS.
-129 Gemini attempts, 260593 known tokens, 4 provider errors; zero calls ở evaluation.
-Offline evaluation resume sau WinError 5 và sửa lời gọi graph validation.
-Phiên chuyển DONE chỉ chạy planning checker và git diff --check; không chạy lại
-tests, Gemini/OCR/extraction hoặc real evaluation.
+120 focused/core PASS; real fixed15/36/29 evaluation,981 exact,15 lineages exact.
+2,352 input hashes giữ nguyên. Một Gateway attempt/7,312 tokens.
+Chưa independent human gold/full-PDF accuracy.
 
 ## Blockers
 
-Scope thiếu/source anchors uncertain; Q07 OCF 2022 table_position_conflict giữ blocked.
-Chưa full-PDF/independent human gold accuracy hoặc approved formula execution.
+A/C scope unknown, E formula reference_example, F cross-year scope; Tech Lead quyết định.
+Recovery có lỗi năm ở ngày ký, không dùng làm period; chưa full-table verification.
 
 ## Git Checkpoint
 
-Implementation `0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c` đã push main, origin/main khớp.
-CI41064083725 completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS.
-Giữ web/next-env.d.ts byte-for-byte ngoài stage.
-Artifacts/data/secrets ignored; không suy CI từ documentation checkpoint sau này.
+Chưa commit D-02; commit/push trực tiếp main theo Owner, đối chiếu CI exact SHA.
 
 ## Exact Next Action
 
-Chờ giao nhiệm vụ mới; không bắt đầu M4-01.
+Tech Lead review D-02 và quyết định scope/profile/formula policy.
