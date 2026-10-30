@@ -10,7 +10,7 @@ REVIEW
 
 ## Last Verified State
 
-Baseline main 3d9fa32; D-02 chưa commit.
+Baseline main 3d9fa32; D-02 implementation 3933182 đã push main, CI SUCCESS đúng SHA.
 Chi tiết tại [spec](tasks/D/D-02.md), [report](../docs/d02-blocker-resolution.md).
 
 ## Completed Work
@@ -41,7 +41,10 @@ Recovery có lỗi năm ở ngày ký, không dùng làm period; chưa full-tabl
 
 ## Git Checkpoint
 
-Chưa commit D-02; commit/push trực tiếp main theo Owner, đối chiếu CI exact SHA.
+Implementation `3933182c13ae9a2886b9ddf951efc878b567b818` đã push trực tiếp main;
+[CI41069642585](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41069642585)
+completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS, các steps đã kiểm.
+Checkpoint sau chỉ docs/planning, không suy CI cho SHA checkpoint; giữ web local.
 
 ## Exact Next Action
 

@@ -19,7 +19,11 @@ REVIEW implementation không đồng nghĩa analytical readiness hay nghiệm th
 
 ## Disposition sau implementation
 
-D-02 dừng REVIEW, chưa commit tại thời điểm lập báo cáo. Tech Lead quyết định
+D-02 dừng REVIEW. Implementation `3933182c13ae9a2886b9ddf951efc878b567b818`
+đã push trực tiếp main, baseline `3d9fa32`;
+[CI41069642585](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41069642585)
+completed/SUCCESS đúng SHA: Python 3.12 và Web smoke SUCCESS, các steps đã kiểm.
+Checkpoint sau chỉ docs/planning, không gán CI này cho SHA checkpoint. Tech Lead quyết định
 nghiệm thu/risk acceptance; Owner quyết định thay đổi phạm vi, agent không tự duyệt.
 
 | ID | Sau D-02 | Quyết định còn cần |
@@ -141,7 +145,9 @@ PDF/image/selector từ local sources đã chọn. Không sửa global compatibi
 **2,352 input SHA-256 trước = sau**, gồm accepted D-01 artifacts, PDFs/OCR và unrelated
 web/next-env.d.ts. Năm PDF hashes giữ đúng bảng D-01; full manifest ignored
 `D-02/hashes-before.json`. Không commit readings/dataset/PDF/OCR/ảnh/payload/secrets.
-Ruff toàn repo/planning/diff và exact SHA/CI ghi trong spec khi hoàn tất Git workflow.
+Ruff lint/format toàn repo (317 files), planning95 và diff check PASS. Local120
+targeted PASS tách biệt CI offline/Web smoke; engineering không chứng minh financial
+accuracy. SHA/CI được ghi trong spec; không chạy lại evaluation/Gemini khi ghi checkpoint.
 
 Next action: Tech Lead review D-02 và quyết định scope/profile/formula policy;
 không tự DONE hoặc bắt đầu M4-01.
