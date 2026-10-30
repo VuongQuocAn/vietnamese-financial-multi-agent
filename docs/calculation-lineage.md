@@ -219,9 +219,10 @@ no invented result, unrelated graph isolation, unresolved source metadata đều
 Các tests synthetic là engineering evidence; bảng sáu metrics là real-artifact
 evaluation, không accuracy benchmark.
 
-171 input files SHA-256 unchanged trong initial run, gồm năm PDF, 133 OCR JSON,
+171 input files SHA-256 unchanged trong review-final run, gồm năm PDF, 133 OCR JSON,
 49-file M3-05 baseline (có overlap) và inputs/catalogs đã dùng; không ghi raw/processed.
-Final run/checks và exact implementation SHA được ghi tại task evidence.
+Implementation `5300bcff4b49371dcaa5278b444a100b3beeec9a` đã push main;
+Ruff/planning/diff PASS. Final run/checks và CI link được ghi tại task evidence.
 Zero Gemini/OCR/extraction calls, không full regression/frontend build/Playwright.
 CI remote báo riêng theo exact implementation SHA, không suy từ local PASS.
 

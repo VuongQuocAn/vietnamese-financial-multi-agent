@@ -31,7 +31,8 @@ Giữ local web/next-env.d.ts ngoài stage.
 ## Tests
 
 68 focused/regression PASS; real-artifact final runner PASS preservation/trace.
-Ruff/planning/diff và CI status ghi tại task evidence theo exact implementation SHA.
+Ruff/planning/diff PASS. CI41053294032 in_progress đúng implementation SHA tại lúc
+ghi nhận; không suy CI PASS từ local tests. Xem task evidence cho link.
 
 ## Blockers
 
@@ -40,7 +41,8 @@ company/scope/roles/source/quality và formula policy. 2021–2024 chưa canonic
 
 ## Git Checkpoint
 
-Baseline 17a770a trên main khớp origin/main; implementation chưa commit.
+Implementation `5300bcff4b49371dcaa5278b444a100b3beeec9a` đã push main,
+origin/main khớp sau push; baseline 17a770a. Documentation checkpoint chỉ evidence.
 Không branch/PR/worktree; không stage dữ liệu/secrets hoặc local web file.
 
 ## Exact Next Action

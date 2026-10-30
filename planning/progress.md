@@ -47,10 +47,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M3-06 REVIEW, implementation chưa commit. 68 targeted PASS; sáu real metrics có
+M3-06 REVIEW, implementation 5300bcff đã push main. 68 targeted PASS; sáu real metrics có
 4 complete/2 partial, 6 undetermined, quality/context giữ nguyên; năm PDF có OCR,
 chưa historical canonical facts 2021–2024. 171 hashes unchanged, zero AI calls.
 [API/inventory/report](../docs/calculation-lineage.md).
+Ruff/planning/diff PASS; CI41053294032 in_progress đúng implementation SHA tại lúc ghi nhận.
 Next action: Tech Lead review M3-06; không bắt đầu M3-07.
 
 Checkpoint trước:
