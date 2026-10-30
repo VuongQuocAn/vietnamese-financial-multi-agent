@@ -6,11 +6,12 @@ M3-07 — Evidence Retrieval Interface
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
-Baseline d0bf722 trên main khớp origin/main; Owner cho phép commit/push main.
+Tech Lead APPROVED M3-07 ngày 30/10/2026; Owner cho phép chuyển DONE,
+planning trực tiếp main. Accepted implementation e8f293d giữ nguyên.
 102 focused/regression PASS; real run-2 356/356 exact,18/18 queries,172 hashes unchanged.
 
 ## Completed Work
@@ -20,11 +21,11 @@ real queries và deterministic question flow. [API/report](../docs/evidence-retr
 
 ## Remaining Work
 
-Tech Lead nghiệm thu độc lập trước DONE.
+Không còn việc M3-07; M4-01 chưa được giao triển khai.
 
 ## Modified Files
 
-Retrieval module/exports, focused tests, real runner, API docs, planning, CI test list.
+Phiên nghiệm thu chỉ sửa planning registry/spec/status/dashboard/handoff.
 Giữ local web/next-env.d.ts ngoài stage, không đưa artifacts/data vào Git.
 
 ## Tests
@@ -34,6 +35,8 @@ Giữ local web/next-env.d.ts ngoài stage, không đưa artifacts/data vào Git
 Ruff lint/format toàn repository, planning/diff PASS.
 CI41056561499 completed/SUCCESS đúng e8f293de4445f91860ff8820f123502da649d2e6;
 Python 3.12 và Web smoke đều SUCCESS. Không suy CI từ checkpoint docs/planning.
+Phiên chuyển DONE chỉ planning checker/diff check; không chạy lại tests,
+real evaluation/Gemini/OCR/extraction hoặc mở rộng test suite/refactor.
 
 ## Blockers
 
@@ -45,8 +48,9 @@ Zero Gemini/OCR/extraction/raw changes.
 
 Implementation `e8f293de4445f91860ff8820f123502da649d2e6` đã push main,
 origin/main khớp; baseline d0bf722. Main-first, không branch/PR/worktree.
+Checkpoint trước nghiệm thu `650582ff5335a5a107b873c6e2b5a76705882596` trên main.
 Local web/next-env.d.ts giữ nguyên SHA-256 trước/sau và ngoài commit.
 
 ## Exact Next Action
 
-Tech Lead review M3-07; không tự DONE hoặc bắt đầu M4-01.
+Chờ giao nhiệm vụ mới; không bắt đầu M4-01.

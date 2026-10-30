@@ -4,7 +4,8 @@ Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-07 — Evidence Retrieval Interface
 
-Status: **REVIEW**, Owner giao ngày 30/10/2026; implementation
+Status: **DONE**, Tech Lead APPROVED ngày 30/10/2026 theo chỉ đạo nghiệm thu;
+accepted implementation
 `e8f293de4445f91860ff8820f123502da649d2e6` đã push main, origin/main khớp.
 Unified typed retrieval/citations giữ original M2 quality/provenance.
 102 focused/regression PASS; Ruff toàn repository/planning/diff PASS.
@@ -15,7 +16,11 @@ JSON restart exact, 172 hashes unchanged; zero Gemini/OCR/extraction/raw changes
 [CI41056561499](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41056561499)
 completed/SUCCESS đúng implementation SHA; Python 3.12 và Web smoke đều SUCCESS.
 Checkpoint sau implementation chỉ docs/planning, không gán CI cho SHA checkpoint.
-Next action: Tech Lead review M3-07; không tự DONE hoặc bắt đầu M4-01.
+Phạm vi nghiệm thu là unified evidence retrieval; chưa financial accuracy toàn PDF,
+formula execution hoặc historical canonical coverage. Phiên chuyển DONE chỉ cập nhật
+planning và chạy planning/diff checks; không refactor, mở rộng tests hoặc chạy lại
+test suite/real evaluation/Gemini/OCR/extraction. Giữ local web/next-env.d.ts.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M4-01.
 
 ## M3-06 — Calculation Lineage
 
