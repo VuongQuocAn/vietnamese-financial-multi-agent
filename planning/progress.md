@@ -12,14 +12,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M0 | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
-| M3 | 7 | 6 | 0 | 0 | 1 | 0 | 0 |
+| M3 | 7 | 6 | 0 | 0 | 0 | 0 | 1 |
 | M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 93 | 60 | 0 | 0 | 33 | 0 | 0 |
+| TOTAL | 93 | 60 | 0 | 0 | 32 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -46,6 +46,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M3-07 REVIEW: unified retrieval; 102 focused/regression PASS, Ruff toàn repository,
+planning/diff PASS. Real 356 exact lookups/18 queries PASS; 14 questions có
+9 complete/3 partial/2 canonical unavailable. Chưa commit, CI sẽ ghi sau push.
+[Spec](tasks/M3/M3-07.md), [API/report](../docs/evidence-retrieval.md).
+Next action: Tech Lead review M3-07; không tự DONE hoặc bắt đầu M4-01.
+
+Checkpoint trước:
 
 M3-06 DONE, Tech Lead APPROVED ngày 30/10/2026; implementation 5300bcff và fix
 c91ceca đã push main. 68 targeted PASS; sáu real metrics có

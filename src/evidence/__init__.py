@@ -53,8 +53,24 @@ from .graph import (
 from .lineage import LineageTaskContext, MetricLineage, OperandLineage, trace_metric_lineage
 from .metrics import DerivedMetric, FormulaDefinition, MetricOperand, MetricRequest, build_metric
 from .repository import CanonicalFactRepository, ObservationConflict
+from .retrieval import (
+    CanonicalCoverage,
+    EvidenceCitation,
+    EvidenceQuery,
+    EvidenceRetrieval,
+    RetrievalMatch,
+    RetrievalReference,
+    RetrievalResult,
+)
 
 __all__ = [
+    "CanonicalCoverage",
+    "EvidenceCitation",
+    "EvidenceQuery",
+    "EvidenceRetrieval",
+    "RetrievalMatch",
+    "RetrievalReference",
+    "RetrievalResult",
     "LineageTaskContext",
     "MetricLineage",
     "OperandLineage",
