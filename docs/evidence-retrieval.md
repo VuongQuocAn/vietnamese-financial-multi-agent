@@ -116,3 +116,13 @@ Output phải là directory mới. Không full regression/browser tests hoặc l
 Đây là retrieval consistency và deterministic evidence usability trên persisted
 extractions, chưa xác minh financial accuracy ngoài PDF, coverage toàn báo cáo
 hoặc nhiều original filings. Tech Lead nghiệm thu độc lập trước DONE.
+
+14 focused M3-07 test cases bao phủ negative controls: wrong document/snapshot/
+period/item, ambiguous same-value cross-document/snapshots và không latest,
+missing SourceFact/anchor/used_in, dangling anchor, uncertain provenance,
+M2 insufficient/conflicted, missing metric/broken lineage, text/table identity
+mismatch và structural validity không financial verification. Nhóm targeted
+M3-02–06/contracts kèm M3-07 tổng 102 PASS; Ruff toàn repository/planning/diff PASS.
+Implementation `e8f293de4445f91860ff8820f123502da649d2e6` đã push main;
+[CI41056561499](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41056561499)
+completed/SUCCESS đúng SHA, Python 3.12 và Web smoke đều SUCCESS.

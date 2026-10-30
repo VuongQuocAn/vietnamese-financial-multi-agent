@@ -20,7 +20,7 @@ real queries và deterministic question flow. [API/report](../docs/evidence-retr
 
 ## Remaining Work
 
-Commit/push và ghi CI đúng implementation SHA. Tech Lead nghiệm thu trước DONE.
+Tech Lead nghiệm thu độc lập trước DONE.
 
 ## Modified Files
 
@@ -32,6 +32,8 @@ Giữ local web/next-env.d.ts ngoài stage, không đưa artifacts/data vào Git
 102 focused/regression PASS; real run-2 356 exact/18 queries PASS; restart exact.
 9 complete-with-caveat/3 partial-quality-blocked/2 canonical-unavailable questions.
 Ruff lint/format toàn repository, planning/diff PASS.
+CI41056561499 completed/SUCCESS đúng e8f293de4445f91860ff8820f123502da649d2e6;
+Python 3.12 và Web smoke đều SUCCESS. Không suy CI từ checkpoint docs/planning.
 
 ## Blockers
 
@@ -41,7 +43,9 @@ Zero Gemini/OCR/extraction/raw changes.
 
 ## Git Checkpoint
 
-Chưa commit; baseline d0bf722. Main-first, không branch/PR/worktree.
+Implementation `e8f293de4445f91860ff8820f123502da649d2e6` đã push main,
+origin/main khớp; baseline d0bf722. Main-first, không branch/PR/worktree.
+Local web/next-env.d.ts giữ nguyên SHA-256 trước/sau và ngoài commit.
 
 ## Exact Next Action
 

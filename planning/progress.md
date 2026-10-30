@@ -49,7 +49,8 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 M3-07 REVIEW: unified retrieval; 102 focused/regression PASS, Ruff toàn repository,
 planning/diff PASS. Real 356 exact lookups/18 queries PASS; 14 questions có
-9 complete/3 partial/2 canonical unavailable. Chưa commit, CI sẽ ghi sau push.
+9 complete/3 partial/2 canonical unavailable. Implementation e8f293d đã push main;
+CI41056561499 completed/SUCCESS đúng implementation SHA, Python 3.12/Web smoke SUCCESS.
 [Spec](tasks/M3/M3-07.md), [API/report](../docs/evidence-retrieval.md).
 Next action: Tech Lead review M3-07; không tự DONE hoặc bắt đầu M4-01.
 
