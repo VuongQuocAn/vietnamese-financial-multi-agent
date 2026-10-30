@@ -4,7 +4,8 @@ Cập nhật 2026-10-30 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M3-06 — Calculation Lineage
 
-Status: **REVIEW**, Project Owner giao ngày 30/10/2026, main-first; implementation
+Status: **DONE**, Tech Lead APPROVED ngày 30/10/2026 theo chỉ đạo nghiệm thu,
+main-first; accepted implementation
 `5300bcff4b49371dcaa5278b444a100b3beeec9a` đã push main, origin/main khớp sau push.
 [Spec/evidence](tasks/M3/M3-06.md),
 [API/inventory/real report/policy proposal](../docs/calculation-lineage.md).
@@ -23,7 +24,10 @@ SUCCESS đúng fix SHA: Python 3.12 lint/format/planning/focused offline tests �
 Web smoke skipped vì docs-only. Local Ruff format/check toàn repository,
 planning checker và diff check PASS. Không chạy lại real-artifact evaluation,
 Gemini/OCR/extraction hoặc sửa code lineage/raw/M3 results; web local hash giữ nguyên.
-Next action: Tech Lead review M3-06; không bắt đầu M3-07.
+Phạm vi nghiệm thu: lineage và evidence-quality context, chưa formula execution
+hoặc financial accuracy toàn PDF/multi-year. Phiên chốt DONE chỉ planning/diff
+checks, không chạy lại tests/pipeline/Gemini/OCR/extraction hoặc sửa dữ liệu.
+Next action: chờ giao nhiệm vụ mới; không bắt đầu M3-07.
 
 ## M3-05 — Derived Metric Records
 

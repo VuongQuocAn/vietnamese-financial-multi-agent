@@ -6,9 +6,12 @@ M3-06 — Calculation Lineage
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
+
+Tech Lead APPROVED M3-06 ngày 30/10/2026; REVIEW → DONE theo chỉ đạo nghiệm thu.
+Accepted implementation 5300bcff và fix c91ceca, CI41054170265 SUCCESS đúng fix SHA.
 
 68 targeted PASS; final real evaluation 4 complete/2 partial, 6 undetermined,
 10/12 roles resolved, 98 anchor occurrences; original quality/context preserved.
@@ -21,18 +24,19 @@ policy đề xuất. [Spec](tasks/M3/M3-06.md), [report](../docs/calculation-lin
 
 ## Remaining Work
 
-Tech Lead independent review; không tự DONE hoặc bắt đầu M3-07.
+Không còn việc M3-06; M3-07 chưa được giao triển khai.
 
 ## Modified Files
 
-evidence lineage/API export, focused tests, evaluation script, report và planning.
+Phiên nghiệm thu chỉ sửa planning status/dashboard/spec/evidence/handoff.
 Giữ local web/next-env.d.ts ngoài stage.
 
 ## Tests
 
 68 focused/regression PASS; real-artifact final runner PASS preservation/trace.
-Ruff/planning/diff PASS. CI41053294032 in_progress đúng implementation SHA tại lúc
-ghi nhận; không suy CI PASS từ local tests. Xem task evidence cho link.
+CI41054170265 SUCCESS đúng fix c91ceca đã xác minh ở phiên trước; xem task evidence.
+Phiên nghiệm thu chỉ planning checker/diff check; không chạy lại tests/pipeline,
+Gemini/OCR/extraction hoặc real-artifact evaluation.
 
 ## Blockers
 
@@ -43,8 +47,10 @@ company/scope/roles/source/quality và formula policy. 2021–2024 chưa canonic
 
 Implementation `5300bcff4b49371dcaa5278b444a100b3beeec9a` đã push main,
 origin/main khớp sau push; baseline 17a770a. Documentation checkpoint chỉ evidence.
+Accepted formatting fix `c91cecae099a58124c36ccfad9d65bd9be0faf04`;
+checkpoint trước nghiệm thu `e1c35f170bbe451bc2d0a77c0f1fc03163a9e090` trên main.
 Không branch/PR/worktree; không stage dữ liệu/secrets hoặc local web file.
 
 ## Exact Next Action
 
-Tech Lead review M3-06; không bắt đầu M3-07.
+Chờ giao nhiệm vụ mới; không bắt đầu M3-07.
