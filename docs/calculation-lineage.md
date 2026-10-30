@@ -11,8 +11,7 @@ Public qua `vietnamese_financial_multi_agent.evidence`:
 `MetricLineage`, `OperandLineage`, `LineageTaskContext`, `trace_metric_lineage()`.
 
 ```python
-lineage = trace_metric_lineage(metric, graph, facts, evidence,
-                              expected_formula=definition)
+lineage = trace_metric_lineage(metric, graph, facts, evidence, expected_formula=definition)
 ```
 
 `evidence=()` và `expected_formula=None` mặc định. Caller cung cấp persisted
