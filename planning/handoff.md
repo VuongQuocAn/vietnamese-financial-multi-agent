@@ -6,12 +6,14 @@ D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Baseline main `fe1df29916d53d12ca8f0b4a636a7551895b9db1`; accepted D-02 fix f80b842.
 [Spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system-blocker-audit.md).
+Tech Lead nghiệm thu D-03 ngày 31/10/2026, accepted implementation e11821b;
+Owner xác nhận D-02 đã nghiệm thu ở lượt trước, cho đồng bộ cả hai DONE trên main.
 
 ## Completed Work
 
@@ -21,17 +23,18 @@ Snapshot recovery2022 thiếu closure; EPS2024 omitted/EPS restatement có sourc
 
 ## Remaining Work
 
-Tech Lead independent review, quyết định severity/corrective groups và minimum M4 scope.
+Không còn việc trong phạm vi nghiệm thu D-02/D-03; corrective tasks chưa được giao.
 
 ## Modified Files
 
-Audit/spec/planning và scripts/diagnose_d03_blockers.py.
+Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff và hai task specs D-02/D-03.
 Giữ web/next-env.d.ts ngoài stage; ignored outputs D-03-final-audit không commit.
 
 ## Tests
 
-Diagnostic PASS:981 exact/36 pairs exact/20 QA,2,421 input hashes unchanged.
-5 existing targeted PASS; Ruff script/planning/diff trước commit. Zero Gemini/tokens.
+Evidence đã nghiệm thu:981 exact/36 pairs exact/20 QA,2,421 input hashes unchanged,
+5 targeted PASS. Phiên này chỉ planning/diff checks; không chạy lại diagnostics,
+tests/Gemini. Không gán evidence cũ thành kết quả chạy mới.
 
 ## Blockers
 
@@ -48,4 +51,4 @@ Không sửa production/policy/data; giữ local web/next-env.d.ts ngoài stage.
 
 ## Exact Next Action
 
-Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
+Chờ Owner/Tech Lead giao corrective task theo D-03; không tự bắt đầu M4.

@@ -4,7 +4,8 @@ Cập nhật 2026-10-31 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
 
-Status: **REVIEW**; [spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system-blocker-audit.md).
+Status: **DONE**, Tech Lead APPROVED ngày 31/10/2026 theo chỉ đạo nghiệm thu;
+[spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system-blocker-audit.md).
 16 mục:14 confirmed/1 probable/1 unknown, P0=0/P1=12/P2=4;15 mở/1 đã recovery D-02.
 20 QA cases:8 answer-data-with-caveat/12 bị chặn ở bước cụ thể. Snapshot recovery2022
 chưa khép kín reviews/basis/metrics; EPS2024 bị bỏ dòng, EPS restatement có nguồn
@@ -13,12 +14,15 @@ và corrective groups đã đề xuất. Diagnostic981 exact/36 pairs exact;5 ta
 2,421 hashes unchanged,zero Gemini. Implementation `e11821b153871f34b44bcbd7ea08293aafe4b039`
 đã push main; [CI41211560836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41211560836)
 completed/SUCCESS đúng SHA, Python3.12 SUCCESS/Web smoke SKIPPED; checkpoint sau chỉ docs.
-Giữ web/next-env.d.ts; D-02 vẫn REVIEW, không tự DONE.
-Next action: Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
+Phiên nghiệm thu chỉ planning/diff checks, không chạy lại diagnostics/tests/Gemini;
+giữ nguyên report/blocker registry/stable IDs và web/next-env.d.ts. Owner cho đồng bộ
+D-02 DONE vì đã được Tech Lead nghiệm thu ở lượt trước; không mở execution gates.
+Next action: chờ Owner/Tech Lead giao corrective task theo D-03; không tự bắt đầu M4.
 
 ## D-02 — Blocker Resolution & Analytical Readiness
 
-Status: **REVIEW**, final fix theo Tech Lead ngày31/10/2026; implementation
+Status: **DONE**, Tech Lead đã nghiệm thu final fix; Owner xác nhận đồng bộ planning
+ngày 31/10/2026 cùng nghiệm thu D-03; accepted implementation
 `f80b84254765d9a5e73208e80f8fb7c577b72668` đã push main.
 [CI41208806188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41208806188)
 completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS; checkpoint sau chỉ docs.
@@ -29,7 +33,9 @@ preflight/negative controls, execution approvals rỗng. Signing date overlay ri
 36 cross-year pairs vẫn undetermined;29 queries exact với D-02 (23 available,
 4 ambiguous/1 mapping gap/1 absent snapshot).981 exact retrieval/15 lineages exact.
 124 focused/core PASS;zero Gemini/tokens;2,406 input hashes giữ nguyên, web local giữ.
-Next action: Tech Lead nghiệm thu D-02 final fix và review formula execution definitions.
+Phiên đồng bộ chỉ planning/diff checks, không chạy lại tests/diagnostics/Gemini;
+giữ nguyên limitations/blockers, chưa execution approval hoặc full-PDF accuracy.
+Next action: chờ Owner/Tech Lead giao corrective task theo D-03; không tự bắt đầu M4.
 
 ## D-01 — BBS Multi-Year Canonical Coverage & Analytical Readiness
 

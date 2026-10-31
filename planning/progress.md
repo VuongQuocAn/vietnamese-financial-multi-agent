@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 3 | 1 | 0 | 0 | 0 | 0 | 2 |
-| TOTAL | 96 | 62 | 0 | 0 | 32 | 0 | 2 |
+| D | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 96 | 64 | 0 | 0 | 32 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,11 +48,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-03 REVIEW: [audit/registry](../docs/d03-system-blocker-audit.md),
+D-03 DONE, Tech Lead APPROVED ngày 31/10/2026;
+[audit/registry](../docs/d03-system-blocker-audit.md),
 [spec](tasks/D/D-03.md). 16 mục/20 structured QA cases; diagnostic read-only,
 5 targeted PASS,2,421 hashes unchanged,zero Gemini. M4 chưa execution-ready;
-không production/data/policy fixes. D-02 giữ REVIEW, D-01 DONE.
-Next action: Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
+không production/data/policy fixes. Owner xác nhận D-02 đã nghiệm thu và cho đồng bộ
+DONE; D-01–D-03 đều DONE. Phiên nghiệm thu chỉ planning/diff checks, không chạy lại
+tests/diagnostics/Gemini; giữ blockers/stable IDs, chưa mở M4.
+Next action: chờ Owner/Tech Lead giao corrective task theo D-03; không tự bắt đầu M4.
 
 Checkpoint trước:
 
