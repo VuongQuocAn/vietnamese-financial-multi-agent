@@ -1,5 +1,6 @@
-"""D-02 source review overlay và experimental readiness; không sửa M3-01/facts."""
+"""D-02 source review và approved preparation profile; không sửa M3-01/facts."""
 
+from collections.abc import Sequence
 from typing import Literal
 
 from pydantic import Field
@@ -8,8 +9,13 @@ from ..accounting.automated_extraction import parse_vietnamese_number
 from ..accounting.contracts import FinancialModel
 from .compatibility import FinancialOperand, OperationCompatibilitySpec, assess_compatibility
 from .contracts import CanonicalFinancialFact, EvidenceAnchor, Identity, ObservationIdentity
-
-PROFILE = "D-02/document-statement-v1"
+from .preparation_policy import (
+    PROFILE,
+    FormulaExecutionApproval,
+    PreparationApproval,
+    PreparedFormulaPolicy,
+    check_formula_policy,
+)
 
 
 class SourceReview(FinancialModel):
@@ -94,13 +100,20 @@ def assess_analytical_readiness(
     operands: list[FinancialOperand],
     reviews: list[SourceReview],
     bases: list[AccountingBasisReview],
+    *,
+    approval: PreparationApproval | None = None,
+    formula_policy: PreparedFormulaPolicy | None = None,
+    formula_approvals: Sequence[FormulaExecutionApproval] = (),
 ) -> dict:
-    """Candidate profile luôn pending review; không có tham số tự approve.
+    """Explicit Tech Lead record chỉ approve analytical preparation đúng profile.
 
     Global assessment được trả nguyên vẹn. Chỉ waive unknown scope trong cùng
     statement/document/snapshot khi mọi operand được review và không known conflict.
     Formula approval và financial claims nằm ngoài profile này.
     """
+    if approval is not None:
+        # Revalidate selected mutable record, không chấp nhận đổi version/purpose ngầm.
+        approval = PreparationApproval.model_validate_json(approval.model_dump_json())
     original = assess_compatibility(spec, operands)
     facts = [o.fact for o in operands]
     blockers = []
@@ -155,9 +168,36 @@ def assess_analytical_readiness(
         status == "source_inconsistent" for status in source_status.values()
     )
     candidate = "incompatible" if incompatible else "undetermined" if blockers else "compatible"
+    profile_status = (
+        candidate if approval is not None else ("incompatible" if incompatible else "undetermined")
+    )
+    preparation_ready = approval is not None and profile_status == "compatible"
+    formula = check_formula_policy(formula_policy, spec, operands, formula_approvals)
+    eligibility_blockers = list(blockers) + formula["blockers"]
+    if approval is None:
+        eligibility_blockers.append("compatibility_profile_not_approved")
+    if not formula["execution_approved"]:
+        eligibility_blockers.append("formula_policy_not_approved")
+    if original.status != "compatible":
+        # Preparation-only approval không tự cấp exception cho execution.
+        eligibility_blockers.append("global_execution_compatibility_not_established")
     return dict(
         profile=PROFILE,
-        policy_status="experimental_pending_tech_lead",
+        policy_status="approved_analytical_preparation"
+        if approval
+        else "experimental_pending_tech_lead",
+        global_compatibility=original.model_dump(mode="json"),
+        approved_profile_compatibility=dict(
+            profile=PROFILE,
+            purpose="analytical_preparation",
+            status=profile_status,
+            approval_reference=approval.decision_reference if approval else None,
+            reasons=sorted(set(blockers))
+            + ([] if approval else ["compatibility_profile_not_approved"]),
+        ),
+        preparation_ready=preparation_ready,
+        formula_policy=formula,
+        # Legacy alias của global assessment, giữ cho consumers baseline D-02.
         approved_compatibility=original.model_dump(mode="json"),
         candidate_compatibility=candidate,
         source_status=source_status,
@@ -166,7 +206,9 @@ def assess_analytical_readiness(
         },
         candidate_blockers=sorted(set(blockers)),
         preparation_source_ready=candidate == "compatible",
-        calculation_eligible=False,
-        eligibility_blockers=["compatibility_profile_not_approved", "formula_policy_not_approved"],
+        calculation_eligible=preparation_ready
+        and formula["execution_approved"]
+        and not eligibility_blockers,
+        eligibility_blockers=sorted(set(eligibility_blockers)),
         financial_fact_verified=False,
     )

@@ -1,6 +1,7 @@
 """Focused D-02 controls; synthetic PASS không chứng minh accuracy PDF."""
 
 import importlib
+import json
 from decimal import Decimal
 from pathlib import Path
 
@@ -14,8 +15,26 @@ from vietnamese_financial_multi_agent.evidence.analytical_readiness import (
     assess_analytical_readiness,
     source_review_status,
 )
+from vietnamese_financial_multi_agent.evidence.preparation_policy import (
+    FormulaExecutionApproval,
+    PreparationApproval,
+    PreparedFormulaPolicy,
+    check_formula_policy,
+)
 
 from .test_evidence_contracts import scenario
+
+
+def registry():
+    return json.loads(
+        (Path(__file__).resolve().parents[2] / "configs/d02-analytical-policies.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
+def preparation_approval():
+    return PreparationApproval(**registry()["preparation_approval"])
 
 
 def sample():
@@ -90,6 +109,22 @@ def test_candidate_is_separate_from_approval_and_preserves_original_sources():
     assert result["approved_compatibility"]["status"] == "undetermined"
     assert result["calculation_eligible"] is False
     assert result["policy_status"] == "experimental_pending_tech_lead"
+    assert not result["preparation_ready"]
+    approved = assess_analytical_readiness(
+        spec, operands, reviews, bases, approval=preparation_approval()
+    )
+    assert approved["global_compatibility"] == result["approved_compatibility"]
+    assert approved["approved_profile_compatibility"]["status"] == "compatible"
+    assert approved["preparation_ready"] and not approved["calculation_eligible"]
+    assert approved["approved_profile_compatibility"]["approval_reference"]
+    assert "formula_policy_not_approved" in approved["eligibility_blockers"]
+    assert "global_execution_compatibility_not_established" in approved["eligibility_blockers"]
+    for field, value in (
+        ("profile", "D-02/document-statement-v2"),
+        ("purpose", "formula_execution"),
+    ):
+        with pytest.raises(ValidationError):
+            PreparationApproval(**{**registry()["preparation_approval"], field: value})
     assert [o.model_dump_json() for o in operands] == before
     assert source_review_status(operands[0].fact, []) == "unverified"
     page = reviews[0].model_copy(update={"level": "page_resolved"})
@@ -155,10 +190,14 @@ def test_known_conflicts_and_missing_context_never_become_eligible(control):
         f.context.statement_type = "B01"
     elif control == "wrong_normalized_value":
         f.value.normalized_value = Decimal("999")
-    result = assess_analytical_readiness(spec, operands, reviews, bases)
+    result = assess_analytical_readiness(
+        spec, operands, reviews, bases, approval=preparation_approval()
+    )
     assert result["candidate_compatibility"] in {"undetermined", "incompatible"}
     assert result["calculation_eligible"] is False
     assert result["candidate_blockers"]
+    assert result["approved_profile_compatibility"]["status"] != "compatible"
+    assert not result["preparation_ready"]
 
 
 def test_ambiguous_position_and_output_overwrite_are_rejected(monkeypatch, tmp_path):
@@ -187,3 +226,118 @@ def test_ambiguous_position_and_output_overwrite_are_rejected(monkeypatch, tmp_p
     with pytest.raises(ValueError, match="output_changed"):
         module.save(path, {"original": False})
     assert module.load(path) == {"original": True}
+
+
+@pytest.mark.parametrize("formula_id", ["gross_margin", "debt_to_assets", "revenue_yoy"])
+def test_formula_preflight_and_explicit_execution_approval(formula_id, monkeypatch):
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[2] / "scripts"))
+    definitions = importlib.import_module("validate_m3_metrics")
+    definition, periods = next((d, p) for d, p in definitions.examples() if d.name == formula_id)
+    policy = PreparedFormulaPolicy(
+        **next(p for p in registry()["formula_policies"] if p["formula_id"] == formula_id)
+    )
+    _, operands, _, _ = sample()
+    for operand, req in zip(operands, policy.operands, strict=True):
+        operand.role = req.role
+        operand.fact.canonical_item_id = req.canonical_item_id
+        operand.fact.semantic_role = req.semantic_role
+        operand.fact.context.statement_type = req.statement_type
+        operand.fact.context.period = periods[req.role]
+        operand.fact.context.period_type = "as_of" if req.statement_type == "B01" else "fiscal_year"
+    result = check_formula_policy(policy, definition.compatibility, operands, [])
+    assert not result["blockers"] and not result["execution_approved"]
+    assert result["status"] == "draft_pending_tech_lead"
+    assert registry()["formula_execution_approvals"] == []
+    original_type = operands[0].fact.context.period_type
+    operands[0].fact.context.period_type = "quarter"
+    assert (
+        "formula_period_type_mismatch"
+        in check_formula_policy(policy, definition.compatibility, operands, [])["blockers"]
+    )
+    operands[0].fact.context.period_type = original_type
+    original_item = operands[0].fact.canonical_item_id
+    operands[0].fact.canonical_item_id = "wrong.item"
+    assert (
+        "formula_fact_semantics_mismatch"
+        in check_formula_policy(policy, definition.compatibility, operands, [])["blockers"]
+    )
+    operands[0].fact.canonical_item_id = original_item
+    # An explicit reviewed definition/version/digest is needed; a status flag is not input.
+    approval = FormulaExecutionApproval(
+        formula_id=formula_id,
+        version=policy.version,
+        definition_sha256=policy.definition_digest(),
+        authority="Tech Lead",
+        purpose="formula_execution",
+        decision_reference="synthetic-only-decision",
+        negative_controls_reference="synthetic-only-reviewed-controls",
+    )
+    assert check_formula_policy(policy, definition.compatibility, operands, [approval])[
+        "execution_approved"
+    ]
+    for field in ("version", "definition_sha256"):
+        wrong = approval.model_copy(update={field: "not-the-reviewed-definition"})
+        assert not check_formula_policy(policy, definition.compatibility, operands, [wrong])[
+            "execution_approved"
+        ]
+    with pytest.raises(ValidationError):
+        FormulaExecutionApproval(**{**approval.model_dump(), "negative_controls_reference": ""})
+    for field, value in (
+        ("precision", 5),
+        ("rounding", "ROUND_DOWN"),
+        ("output_unit", "VND"),
+        ("output_quantum", "1"),
+    ):
+        with pytest.raises(ValidationError):
+            PreparedFormulaPolicy(**{**policy.model_dump(), field: value})
+    denominator = next(o.fact for o in operands if o.role == policy.denominator_role)
+    for invalid in (Decimal("0"), Decimal("-1")):
+        denominator.value.normalized_value = invalid
+        assert (
+            "denominator_non_positive_or_missing"
+            in check_formula_policy(policy, definition.compatibility, operands, [approval])[
+                "blockers"
+            ]
+        )
+    denominator.value.normalized_value = Decimal("1234")
+    numerator = operands[0].fact
+    numerator.value.normalized_value = Decimal("-1")
+    issues = check_formula_policy(policy, definition.compatibility, operands, [])["blockers"]
+    assert ("nonnegative_operand_required" in issues) == (formula_id != "gross_margin")
+    operands[0].fact.context.period = "2020"
+    assert (
+        "formula_period_relation_mismatch"
+        in check_formula_policy(policy, definition.compatibility, operands, [])["blockers"]
+    )
+    wrong = policy.model_copy(update={"expression": "assets / liabilities"})
+    assert (
+        "formula_expression_mismatch"
+        in check_formula_policy(wrong, definition.compatibility, operands, [approval])["blockers"]
+    )
+
+
+def test_signing_date_overlay_is_field_scoped_and_source_bound(monkeypatch):
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[2] / "scripts"))
+    module = importlib.import_module("evaluate_d02_final")
+    record = dict(
+        source=dict(page=dict(source_ref="synthetic", page=8)),
+        response=dict(output=dict(payload=dict(context=["synthetic old signature"]))),
+    )
+    review = dict(
+        field="signing_date",
+        document_id="synthetic",
+        snapshot_id="attempt",
+        pdf_page=8,
+        context_index=0,
+        original_text="synthetic old signature",
+        source_quote="ngày 15 tháng 03 năm 2023",
+        signing_date="2023-03-15",
+        method="controlled_original_pdf_visual_read",
+    )
+    before = json.dumps(record)
+    result = module.signing_date_overlay(record, review, "attempt")
+    assert result["usable_for"] == "signing_date_only" and not result["financial_period_override"]
+    assert json.dumps(record) == before
+    for change in ({"snapshot_id": "another"}, {"signing_date": "2022-03-15"}, {"field": "period"}):
+        with pytest.raises(ValueError):
+            module.signing_date_overlay(record, {**review, **change}, "attempt")

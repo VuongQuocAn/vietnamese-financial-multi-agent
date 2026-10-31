@@ -1,5 +1,103 @@
 # D-02 — Blocker audit và analytical readiness
 
+## Final fix — Approved analytical preparation, 31/10/2026
+
+Tech Lead đã review `3933182` và phê duyệt `D-02/document-statement-v1` **chỉ cho
+analytical preparation**, theo quyết định `D-02/final-fix/2026-10-31` trong yêu cầu
+Owner/Tech Lead của phiên này. Quyết định lưu trong
+`configs/d02-analytical-policies.json`: profile/version, purpose, authority và
+decision reference tường minh; không dùng một status flag để approve execution.
+Caller chọn approval record; thiếu record vẫn undetermined. Global M3-01 không sửa.
+
+| Cùng tập real D-02 | Trước final fix | Sau final fix |
+| --- | ---: | ---: |
+| Complete metric bindings | 15 | 15 |
+| **Approved preparation-ready** | **0** | **15** |
+| Global compatibility | 15 undetermined | 15 undetermined |
+| Approved preparation profile compatibility | Chưa approved | 15 compatible |
+| Calculation eligible / computed | 0 / 0 | 0 / 0 |
+| Cross-year pairs | 36 undetermined | 36 undetermined |
+| Fixed queries | 23 available, 4 ambiguous, 1 mapping gap, 1 absent snapshot | Giữ nguyên cả result/citations |
+
+Readiness sau fix dựa trên 25 value-row reviewed observations/30 operand occurrences
+và 5 accounting-basis records cũ, cùng document/snapshot/statement, đầy đủ context
+ngoài scope unknown, không known conflict. Không dùng candidate-compatible để đếm
+approved readiness. Source hashes/observation identities/review records không đổi.
+API trả riêng `global_compatibility`, `approved_profile_compatibility`,
+`preparation_ready`, `calculation_eligible`. Các aliases cũ chỉ để tương thích:
+`approved_compatibility` vẫn là global, `preparation_source_ready` vẫn là candidate;
+không dùng hai aliases này làm approved readiness.
+
+### Formula preparation policy — draft, chưa execution approval
+
+Ba definition version `D-02/formula-preparation-v1` được lưu trong cùng registry.
+
+| Formula | Semantics / operands | Kỳ / guards |
+| --- | --- | --- |
+| gross_margin | gross_profit / net_revenue, B02; cho phép gross loss | Cùng fiscal year; revenue > 0 |
+| debt_to_assets | total_liabilities / total_assets, B01; không thay nợ phải trả bằng nợ vay; cho phép >100% | Cùng as-of date; assets > 0, liabilities >= 0 |
+| revenue_yoy | (current_net_revenue - prior_net_revenue) / prior_net_revenue, B02 | Hai fiscal years liên tiếp, current trước prior trong roles; prior > 0, current >= 0 |
+
+Tất cả: số Decimal, precision 34 significant digits, chỉ round cuối cùng bằng
+ROUND_HALF_EVEN; ratio nhân 100, output percent, quantum 0.01 (hai chữ số thập phân
+của phần trăm). Zero/negative denominator là undefined, không zero/infinity;
+không tự dùng absolute prior revenue. Đây là lựa chọn **draft cần Tech Lead duyệt**.
+Preflight chỉ kiểm tra guards/metadata, không chia/nhân/quantize hoặc tạo result.
+15/15 metrics vượt formula input preflight nhưng không đồng nghĩa approved execution.
+
+`formula_execution_approvals` hiện rỗng. Approval execution chỉ được nhận khi có
+explicit Tech Lead record khớp formula ID/version/definition SHA-256 và reference
+tới negative controls đã được review. Tests kiểm tra matching record, sai version/
+digest, thiếu controls reference; không tạo approval thật từ synthetic tests PASS.
+Kết quả hiện tại: 15 `draft_pending_tech_lead`, eligibility blocker
+`formula_policy_not_approved`. Preparation approval không cấp execution exception:
+nếu global chưa compatible, còn gate `global_execution_compatibility_not_established`.
+Formula approval tương lai không tự nới phạm vi profile; Tech Lead phải quyết định
+compatibility cho execution trước khi dùng unknown-scope operands để tính.
+Không đổi FormulaDefinition M3-05/reference_example.
+
+### Signing date và disposition blockers
+
+Đọc lại original PDF page 8 xác nhận ngày ký 15/03/2023. Metadata overlay riêng
+ghi corrected ISO date, exact source quote, method, PDF hash/page, review render hash,
+extraction hash, context index, original text và snapshot identity. Overlay chỉ
+usable_for=signing_date_only, financial_period_override=false; không sửa extraction,
+CanonicalFinancialFact hoặc FinancialContext. Sai source/snapshot/field/quote bị từ chối.
+
+| Blocker | Disposition sau final fix |
+| --- | --- |
+| A/C scope và generic context blocker | Đã xử lý cho analytical preparation bằng quyết định Tech Lead có giới hạn; scope vẫn unknown trong source/global |
+| B provenance | Giữ 25 reviewed operands và giới hạn controlled visual read; không nâng toàn bộ 981 facts/không independent human gold |
+| D recovery/signing date | Recovery được Tech Lead chấp nhận; ngày ký sửa qua source-backed overlay riêng, không chỉnh extraction |
+| E formula execution | Definition/preflight/controls đã chuẩn bị; execution chưa approved, gate đóng. Tech Lead phải duyệt definition/version/digest/controls và execution compatibility trước khi thực thi |
+| F cross-document scope | Ngoài approved profile, vẫn undetermined. Không dùng 36 pairs làm consistent; cần evidence/policy riêng nếu giao so sánh cross-document |
+| G/H mapping và accuracy | Không mở taxonomy/full-dataset review; giữ research limitations, không chuyển thành verified claim |
+
+Không chuyển E/F sang M4 một cách ngầm định: execution/cross-document use bị chặn
+tường minh. Acceptance approved preparation sample đã có evidence; D-02 vẫn REVIEW
+chờ Tech Lead nghiệm thu DONE, không bắt đầu M4-01.
+
+### Final validation và artifacts
+
+`scripts/evaluate_d02_final.py` chỉ đọc persisted facts/reviews/recovery, không gọi
+extraction/Gateway. Output mới ignored `artifacts/evidence/D-02-final/`: metrics,
+cross-year, retrieval, signing-date overlay, hashes và summary. Không thay D-01/D-02.
+Approved preparation before/after lấy từ approval/readiness, không lấy candidate.
+981 exact retrieval và 15 original lineages exact; 2,406 input hashes trước=sau,
+bao gồm toàn bộ D-02 artifacts cùng manifests D-01/raw/OCR/web local trước đó.
+**Zero Gemini calls/tokens** trong final fix.
+
+124 focused/core tests PASS (22 D-02 + 102 regression). Negative controls cũ được
+chạy với approved preparation record, vẫn từ chối context/source/quality conflicts;
+bổ sung 3 formula cases và signing-date overlay controls. Ruff lint/format toàn
+repo319 files, planning95 và diff check PASS; implementation/CI final fix chờ ghi.
+
+```powershell
+.venv/Scripts/python.exe scripts/evaluate_d02_final.py
+```
+
+## Lịch sử audit và implementation trước final fix
+
 Baseline từ accepted D-01 `0f2ca61`, kiểm tra trực tiếp artifacts ngày 30/10/2026.
 Audit này lập trước khi sửa implementation; artifacts riêng `artifacts/evidence/D-02/`.
 

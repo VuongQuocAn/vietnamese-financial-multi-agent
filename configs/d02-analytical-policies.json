@@ -1,0 +1,108 @@
+{
+  "preparation_approval": {
+    "profile": "D-02/document-statement-v1",
+    "purpose": "analytical_preparation",
+    "authority": "Tech Lead",
+    "decision_reference": "D-02/final-fix/2026-10-31"
+  },
+  "formula_policies": [
+    {
+      "formula_id": "gross_margin",
+      "version": "D-02/formula-preparation-v1",
+      "semantics": "Lợi nhuận gộp chia doanh thu thuần cùng kỳ tài chính; lợi nhuận gộp âm được giữ.",
+      "expression": "gross_profit / revenue",
+      "operands": [
+        {
+          "role": "gross_profit",
+          "canonical_item_id": "b02.gross_profit",
+          "semantic_role": "gross_profit",
+          "statement_type": "B02"
+        },
+        {
+          "role": "revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        }
+      ],
+      "period_relation": "same",
+      "denominator_role": "revenue",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    },
+    {
+      "formula_id": "debt_to_assets",
+      "version": "D-02/formula-preparation-v1",
+      "semantics": "Tổng nợ phải trả chia tổng tài sản tại cùng ngày; cho phép tỷ lệ vượt 100%, không thay bằng nợ vay.",
+      "expression": "liabilities / assets",
+      "operands": [
+        {
+          "role": "liabilities",
+          "canonical_item_id": "b01.total_liabilities",
+          "semantic_role": "liabilities",
+          "statement_type": "B01"
+        },
+        {
+          "role": "assets",
+          "canonical_item_id": "b01.total_assets",
+          "semantic_role": "assets",
+          "statement_type": "B01"
+        }
+      ],
+      "period_relation": "same",
+      "denominator_role": "assets",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [
+        "liabilities"
+      ],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    },
+    {
+      "formula_id": "revenue_yoy",
+      "version": "D-02/formula-preparation-v1",
+      "semantics": "Tăng trưởng doanh thu thuần của hai năm tài chính liên tiếp trong cùng statement/snapshot, lấy năm trước làm mẫu số.",
+      "expression": "(current_revenue - prior_revenue) / prior_revenue",
+      "operands": [
+        {
+          "role": "current_revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        },
+        {
+          "role": "prior_revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        }
+      ],
+      "period_relation": "consecutive_fiscal_years_descending",
+      "denominator_role": "prior_revenue",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [
+        "current_revenue"
+      ],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    }
+  ],
+  "formula_execution_approvals": []
+}
