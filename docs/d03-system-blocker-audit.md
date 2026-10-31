@@ -520,8 +520,12 @@ Ruff lint/format script, planning checker và git diff --check được chạy t
 Không full regression, frontend build/browser, benchmark hoặc Gemini calls.
 CI là engineering checks của commit audit; không xác nhận chất lượng tài chính.
 
-Exact audit SHA/CI được ghi ở task spec/current-status trong checkpoint sau push,
-không suy từ baseline hoặc CI của D-02. D-02 vẫn giữ REVIEW trong registry cũ: task mới
+Audit implementation `e11821b153871f34b44bcbd7ea08293aafe4b039` đã push main;
+[CI41211560836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41211560836)
+completed/SUCCESS đúng SHA. Python3.12/lint/format/planning/focused offline tests
+SUCCESS; Web smoke SKIPPED vì không đổi web/backend, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning, không gán CI implementation cho SHA checkpoint.
+Ruff script/planning96/diff checks local PASS. D-02 vẫn giữ REVIEW trong registry cũ: task mới
 xác nhận accepted fix làm input, D-03 không tự nghiệm thu D-02 DONE.
 
 **Next action duy nhất:** Tech Lead independent review Blocker Registry và quyết

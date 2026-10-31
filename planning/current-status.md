@@ -10,7 +10,9 @@ Status: **REVIEW**; [spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system
 chưa khép kín reviews/basis/metrics; EPS2024 bị bỏ dòng, EPS restatement có nguồn
 PDF2025:23; Web chưa bridge canonical. M4 NO-GO execution-ready, minimum decisions
 và corrective groups đã đề xuất. Diagnostic981 exact/36 pairs exact;5 targeted PASS,
-2,421 hashes unchanged,zero Gemini. Chỉ docs/planning/diagnostic; chưa commit audit.
+2,421 hashes unchanged,zero Gemini. Implementation `e11821b153871f34b44bcbd7ea08293aafe4b039`
+đã push main; [CI41211560836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41211560836)
+completed/SUCCESS đúng SHA, Python3.12 SUCCESS/Web smoke SKIPPED; checkpoint sau chỉ docs.
 Giữ web/next-env.d.ts; D-02 vẫn REVIEW, không tự DONE.
 Next action: Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
 

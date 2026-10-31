@@ -40,8 +40,11 @@ Không independent gold; scope-source còn UNKNOWN; EPS-unit PROBABLE.
 
 ## Git Checkpoint
 
-Audit chưa commit tại checkpoint này; main-first, sẽ push và đối chiếu CI đúng SHA.
-Không sửa production/policy/data; không dùng CI cũ để xác nhận audit.
+Audit implementation `e11821b153871f34b44bcbd7ea08293aafe4b039` đã push main;
+[CI41211560836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41211560836)
+completed/SUCCESS đúng SHA, Python3.12 SUCCESS/Web smoke SKIPPED. Checkpoint sau
+chỉ docs/planning; không gán CI implementation cho SHA checkpoint.
+Không sửa production/policy/data; giữ local web/next-env.d.ts ngoài stage.
 
 ## Exact Next Action
 
