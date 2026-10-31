@@ -1,8 +1,8 @@
-# Codex Handoff
+﻿# Codex Handoff
 
 ## Active Task
 
-D-02 — Blocker Resolution & Analytical Readiness
+D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
 
 ## Status
 
@@ -10,42 +10,39 @@ REVIEW
 
 ## Last Verified State
 
-Final fix 31/10/2026 baseline main c33e8aa; implementation f80b842 đã push main,
-CI41208806188 SUCCESS đúng SHA.
-Implementation cũ3933182/CI41069642585 giữ nguyên evidence lịch sử.
-Chi tiết tại [spec](tasks/D/D-02.md), [report](../docs/d02-blocker-resolution.md).
+Baseline main `fe1df29916d53d12ca8f0b4a636a7551895b9db1`; accepted D-02 fix f80b842.
+[Spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system-blocker-audit.md).
 
 ## Completed Work
 
-Approved preparation-ready0→15/15, global15 undetermined/eligible0.
-Explicit approval record, ba draft formula definitions/preflight/controls; signing-date overlay.
-36 pairs undetermined,29 queries exact,981 exact/15 lineages exact.
+Audit A–G,16 mục (14 confirmed/1 probable/1 unknown),20 QA cases và corrective groups.
+Snapshot recovery2022 thiếu closure; EPS2024 omitted/EPS restatement có source;
+748 financial unmapped/79 groups, Web chưa canonical bridge. Không thực hiện fixes.
 
 ## Remaining Work
 
-Tech Lead nghiệm thu final fix; execution definitions cần approval riêng, gate đóng.
+Tech Lead independent review, quyết định severity/corrective groups và minimum M4 scope.
 
 ## Modified Files
 
-Readiness/preparation approval/formula policy registry, final evaluator, tests, report/planning.
-Giữ web/next-env.d.ts ngoài stage; artifacts/data/secrets không commit.
+Audit/spec/planning và scripts/diagnose_d03_blockers.py.
+Giữ web/next-env.d.ts ngoài stage; ignored outputs D-03-final-audit không commit.
 
 ## Tests
 
-124 focused/core PASS;zero Gemini/tokens;2,406 input hashes giữ nguyên.
-Chưa independent human gold/full-PDF accuracy.
+Diagnostic PASS:981 exact/36 pairs exact/20 QA,2,421 input hashes unchanged.
+5 existing targeted PASS; Ruff script/planning/diff trước commit. Zero Gemini/tokens.
 
 ## Blockers
 
-Cross-document scope vẫn undetermined và execution chưa approved; không chuyển ngầm sang M4.
+15 mục còn mở,1 mục đã recovery D-02; M4 NO-GO execution-ready.
+Không independent gold; scope-source còn UNKNOWN; EPS-unit PROBABLE.
 
 ## Git Checkpoint
 
-Final fix implementation `f80b84254765d9a5e73208e80f8fb7c577b72668` đã push main;
-[CI41208806188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41208806188)
-completed/SUCCESS đúng SHA: Python 3.12/Web smoke SUCCESS, các steps đã kiểm.
-Checkpoint sau chỉ docs/planning; giữ web/next-env.d.ts ngoài stage, sources read-only.
+Audit chưa commit tại checkpoint này; main-first, sẽ push và đối chiếu CI đúng SHA.
+Không sửa production/policy/data; không dùng CI cũ để xác nhận audit.
 
 ## Exact Next Action
 
-Tech Lead nghiệm thu D-02 final fix và review formula execution definitions.
+Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.

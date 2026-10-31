@@ -2,6 +2,18 @@
 
 Cập nhật 2026-10-31 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
+
+Status: **REVIEW**; [spec](tasks/D/D-03.md), [audit/registry](../docs/d03-system-blocker-audit.md).
+16 mục:14 confirmed/1 probable/1 unknown, P0=0/P1=12/P2=4;15 mở/1 đã recovery D-02.
+20 QA cases:8 answer-data-with-caveat/12 bị chặn ở bước cụ thể. Snapshot recovery2022
+chưa khép kín reviews/basis/metrics; EPS2024 bị bỏ dòng, EPS restatement có nguồn
+PDF2025:23; Web chưa bridge canonical. M4 NO-GO execution-ready, minimum decisions
+và corrective groups đã đề xuất. Diagnostic981 exact/36 pairs exact;5 targeted PASS,
+2,421 hashes unchanged,zero Gemini. Chỉ docs/planning/diagnostic; chưa commit audit.
+Giữ web/next-env.d.ts; D-02 vẫn REVIEW, không tự DONE.
+Next action: Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
+
 ## D-02 — Blocker Resolution & Analytical Readiness
 
 Status: **REVIEW**, final fix theo Tech Lead ngày31/10/2026; implementation

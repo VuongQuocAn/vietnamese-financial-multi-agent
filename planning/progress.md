@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-10-30** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-10-31** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 2 | 1 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 95 | 62 | 0 | 0 | 32 | 0 | 1 |
+| D | 3 | 1 | 0 | 0 | 0 | 0 | 2 |
+| TOTAL | 96 | 62 | 0 | 0 | 32 | 0 | 2 |
 
 ## Implementation thực tế
 
@@ -48,11 +48,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-01 DONE, Tech Lead APPROVED ngày 30/10/2026; accepted implementation
-`0f2ca6124cd4a4c994f38c32557d3f9b88f42e7c`. [Spec](tasks/D/D-01.md).
-981 observations / 165 mapped; 119 targeted PASS, CI41064083725 SUCCESS đúng SHA.
-Phiên nghiệm thu chỉ planning/diff checks; giữ limitations, web local và artifacts.
-Next action: chờ giao nhiệm vụ mới; không bắt đầu M4-01.
+D-03 REVIEW: [audit/registry](../docs/d03-system-blocker-audit.md),
+[spec](tasks/D/D-03.md). 16 mục/20 structured QA cases; diagnostic read-only,
+5 targeted PASS,2,421 hashes unchanged,zero Gemini. M4 chưa execution-ready;
+không production/data/policy fixes. D-02 giữ REVIEW, D-01 DONE.
+Next action: Tech Lead independent review registry và quyết định corrective groups; không M4/fixes.
 
 Checkpoint trước:
 
