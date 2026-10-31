@@ -90,7 +90,11 @@ bao gồm toàn bộ D-02 artifacts cùng manifests D-01/raw/OCR/web local trư�
 124 focused/core tests PASS (22 D-02 + 102 regression). Negative controls cũ được
 chạy với approved preparation record, vẫn từ chối context/source/quality conflicts;
 bổ sung 3 formula cases và signing-date overlay controls. Ruff lint/format toàn
-repo319 files, planning95 và diff check PASS; implementation/CI final fix chờ ghi.
+repo319 files, planning95 và diff check PASS.
+Final implementation `f80b84254765d9a5e73208e80f8fb7c577b72668` đã push main;
+[CI41208806188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41208806188)
+completed/SUCCESS đúng SHA: Python 3.12 và Web smoke SUCCESS, các steps đã kiểm.
+Documentation checkpoint sau không thay implementation hoặc suy CI cho SHA khác.
 
 ```powershell
 .venv/Scripts/python.exe scripts/evaluate_d02_final.py

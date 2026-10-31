@@ -4,7 +4,10 @@ Cập nhật 2026-10-31 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-02 — Blocker Resolution & Analytical Readiness
 
-Status: **REVIEW**, final fix theo Tech Lead ngày31/10/2026, chưa commit.
+Status: **REVIEW**, final fix theo Tech Lead ngày31/10/2026; implementation
+`f80b84254765d9a5e73208e80f8fb7c577b72668` đã push main.
+[CI41208806188](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41208806188)
+completed/SUCCESS đúng SHA, Python 3.12/Web smoke SUCCESS; checkpoint sau chỉ docs.
 [Spec](tasks/D/D-02.md), [report](../docs/d02-blocker-resolution.md).
 Approved preparation-ready **0/15 → 15/15** theo document-statement-v1;
 global15 undetermined, calculation eligible0. Ba formula definitions/draft có
