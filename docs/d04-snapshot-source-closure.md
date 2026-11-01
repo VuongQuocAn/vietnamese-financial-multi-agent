@@ -1,8 +1,11 @@
 # D-04 — Khép kín snapshot và truy xuất source review
 
 Ngày 01/11/2026 (Asia/Bangkok). Status **REVIEW**, chờ Tech Lead nghiệm thu;
-baseline main `74ddea30891a61ba5a84ae3fbc61a2e61c06aa05`. Implementation SHA/CI
-ghi trong [task spec](../planning/tasks/D/D-04.md) sau commit/push. D03-B04/B08
+baseline main `74ddea30891a61ba5a84ae3fbc61a2e61c06aa05`. Implementation
+`73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd` đã push main;
+[CI41311527741](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41311527741)
+completed/SUCCESS đúng SHA; Python3.12 và Web smoke đều SUCCESS, full unit regression
+SKIPPED. Checkpoint sau chỉ docs/planning, không gán CI cho SHA checkpoint. D03-B04/B08
 được sửa trong runtime và có evidence review; chưa tự chuyển DONE.
 
 ## Runtime tổng quát và contracts

@@ -11,7 +11,10 @@ explicit selection, không auto-inherit/merge/latest. Local122 focused PASS gồ
 generic controls/hai synthetic documents. Real BBS recovery3/3,6/6 operands,
 baseline15/15;32 reviews exact;15 baseline lineages/29 queries/36 pairs unchanged;
 persisted restart exact;eligible0. 2,437 input hashes unchanged,zero Gateway.
-Implementation chưa commit tại checkpoint này; main-first, giữ web/next-env.d.ts.
+Implementation `73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd` đã push main;
+[CI41311527741](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41311527741)
+completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS; checkpoint sau chỉ docs.
+Ruff toàn repository/planning97/diff PASS. Giữ web/next-env.d.ts.
 Không suy full-PDF/other-company accuracy; D03-B04/B08 REVIEW, các blockers khác giữ.
 Next action: Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
 
