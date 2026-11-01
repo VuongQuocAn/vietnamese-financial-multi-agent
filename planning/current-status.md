@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## D-06 — Canonical Mapping & Financial Validation Fix
+
+Status: **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
+Baseline main004957b; chưa commit, CI implementation chờ push. Generic catalog
+16→24 IDs, corrected D-06/mapping-v2.1 parent D-05/corrected-v1 riêng:910 slots,
+mapped160→240 (+80;73 numeric/11 quality-blocked),unmapped670/71 code pairs.
+QA09 found đúng2024-12-31/source; QA15 assets=L+E và assets=funding residual0.
+100 checks:65 consistent/35 insufficient,8 rules thực sự tính;B01 cả5 filings.
+322 focused PASS;baseline15/recovery3,graph/18 lineages/29 queries/36 pairs exact,
+1.177 exact accepted lookups. 2.506 input hashes unchanged,zero Gateway.
+Giữ10 EPS per-share/5 corrections/terminal coverage;new snapshots không tự ready,
+không trộn D-04 recovery2022,không mở M4/scope/cross-year gates. B05/B11 REVIEW,
+chờ Tech Lead;giữ web/next-env.d.ts. Next action: Tech Lead independent review D-06.
+
 ## D-05 — Extraction Completeness & Data Corrections
 
 Status: **DONE**, Tech Lead nghiệm thu ngày 01/11/2026; [spec](tasks/D/D-05.md),

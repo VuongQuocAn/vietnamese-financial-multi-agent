@@ -46,6 +46,7 @@ class RelationshipRule:
     operands: tuple[RelationshipItem, ...]
     basis: str
     unavailable_reason: str | None = None
+    version: str = "source-relationship-v2"
 
     @property
     def statements(self) -> tuple[str, ...]:
@@ -72,8 +73,17 @@ RELATIONSHIP_RULES = (
         "Tổng tài sản = tổng nguồn vốn",
         RelationshipItem("b01.total_assets", "B01"),
         (RelationshipItem("b01.total_funding", "B01"),),
-        "Task M2-06 A; chưa xác nhận trang nguồn vốn trong bounded pilot",
-        "source_unconfirmed:b01.total_funding;funding_page_not_in_pilot",
+        "B01-DN: 270 = 440; cùng document, reporting date, scope và unit/scale",
+    ),
+    RelationshipRule(
+        "b01.assets_liabilities_equity",
+        "Tổng tài sản = nợ phải trả + vốn chủ sở hữu",
+        RelationshipItem("b01.total_assets", "B01"),
+        (
+            RelationshipItem("b01.total_liabilities", "B01"),
+            RelationshipItem("b01.total_equity", "B01"),
+        ),
+        "B01-DN: 270 = 300 + 400; direct source identity, không phải M4 ratio",
     ),
     RelationshipRule(
         "b01_b02.retained_earnings",
@@ -92,8 +102,8 @@ RELATIONSHIP_RULES = (
             RelationshipItem("b03.net_cash_flow", "B03"),
             RelationshipItem("b03.exchange_effect", "B03"),
         ),
-        "Task M2-06 D; BBS2025 trang8 có mã60/50/70, không có dòng ảnh hưởng tỷ giá",
-        "exchange_effect_not_present;missing_is_not_zero;source_mapping_unconfirmed",
+        "B03-DN: closing = opening + net flow + exchange effect; required adjustment retained",
+        "catalog_missing:b03.exchange_effect;missing_is_not_zero",
     ),
 )
 
@@ -107,6 +117,7 @@ class RelationshipInput(FinancialModel):
 
 class RelationshipCheck(FinancialModel):
     rule_id: str
+    rule_version: str = "source-relationship-v2"
     description: str
     statements: list[str]
     pdf_sha256: str | None = None
@@ -240,6 +251,7 @@ def evaluate_accounting_relationships(
             checks.append(
                 RelationshipCheck(
                     rule_id=rule.rule_id,
+                    rule_version=rule.version,
                     description=rule.description,
                     statements=list(rule.statements),
                     status="not_applicable",
@@ -253,6 +265,7 @@ def evaluate_accounting_relationships(
             digest, endpoint, scope, currency, unit, scale = key
             check = RelationshipCheck(
                 rule_id=rule.rule_id,
+                rule_version=rule.version,
                 description=rule.description,
                 statements=list(rule.statements),
                 pdf_sha256=digest,
@@ -310,8 +323,7 @@ def evaluate_accounting_relationships(
                     ):
                         check.issues.append(f"link_conflict:{item.item_id}")
                     if (
-                        rule.rule_id == "b01_b03.closing_cash"
-                        and result.context.statement_type == "B01"
+                        result.context.statement_type == "B01"
                         and result.context.period_type != "as_of"
                     ):
                         check.issues.append("balance_requires_as_of")

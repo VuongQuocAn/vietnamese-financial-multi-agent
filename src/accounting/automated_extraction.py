@@ -33,7 +33,7 @@ from .extraction_semantics import (
     numeric_token_issues,
     row_role,
 )
-from .item_mapping import ITEM_CATALOG, map_item_label
+from .item_mapping import map_item_label
 from .raw_corrections import extraction_payload
 from .statement_resolution import resolve_statement_type
 
@@ -231,18 +231,15 @@ def validate_automated_extraction(image, record: dict, *, source_inventory=None)
                 ):
                     decision.issues.append("duplicate_or_conflicting_binding")
                 item = map_item_label(
-                    evidence(decision.raw_label, f"{prefix}/cells/{li}"), statement.statement_type
+                    evidence(decision.raw_label, f"{prefix}/cells/{li}"),
+                    statement.statement_type,
+                    source_code=decision.source_item_code,
                 )
                 if item.status != "resolved":
                     decision.issues.extend(item.issues)
                 else:
                     decision.canonical_item_id = item.canonical_item_id
-                    expected = {
-                        r.observed_source_code
-                        for r in ITEM_CATALOG
-                        if r.canonical_item_id == item.canonical_item_id
-                    }
-                    if decision.source_item_code not in expected:
+                    if decision.source_item_code is None:
                         decision.issues.append("source_code_conflict")
                 period_evidence = evidence(header.text, f"{prefix}/headers/{hi}")
                 # Bare dates printed in B01 column headers have as-of semantics.
@@ -254,10 +251,11 @@ def validate_automated_extraction(image, record: dict, *, source_inventory=None)
                 period = resolve_financial_context([period_evidence])
                 if period.period.status != "resolved":
                     decision.issues.append("period_unresolved")
-                elif item.canonical_item_id:
+                else:
                     # Count even a conflicting row: it must also block another
                     # apparently valid row claiming the same item and period.
-                    bindings[item.canonical_item_id, period.context.period] += 1
+                    for candidate in {c.canonical_item_id for c in item.candidates}:
+                        bindings[candidate, period.context.period] += 1
                 normalized = parse_vietnamese_number(decision.raw_value or "")
                 decision.issues.extend(numeric_token_issues(decision.raw_value, normalized))
                 semantic_unit, semantic_scale, unit_issues = item_unit(

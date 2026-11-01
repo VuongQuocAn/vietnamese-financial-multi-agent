@@ -1,60 +1,56 @@
-﻿# Codex Handoff
+# Codex Handoff
 
 ## Active Task
 
-D-04 — Snapshot & Source Closure Fix
+D-06 — Canonical Mapping & Financial Validation Fix
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Baseline main/origin/main `74ddea30891a61ba5a84ae3fbc61a2e61c06aa05`.
-[Spec](tasks/D/D-04.md), [report](../docs/d04-snapshot-source-closure.md).
-Tech Lead nghiệm thu D-04 ngày 01/11/2026; accepted implementation
-`73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd`. Owner cho checkpoint DONE chỉ planning/
-Blocker Registry; giữ nguyên accepted evidence và các blockers khác.
+Baseline main/origin/main `004957b06972635ea35cc5e27ead7888f35174c4`.
+[Spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
+Implementation chưa commit; Owner cho commit/push main và chờ Tech Lead nghiệm thu.
 
 ## Completed Work
 
-Generic catalog/selection/closure, exact-bound source-review adapter và typed
-lineage overlay; hai synthetic documents/tám snapshots. Real BBS recovery3/3,
-6/6 operands; baseline15/15;32 source bindings exact;eligible0. Existing builders/
-repositories, persisted restart exact; không runtime BBS/path/year branching.
+Generic mapping16→24 IDs, registry sửa total_* refs/stale flags; snapshot-bound
+source-validation adapter gọi existing M2 evaluators. Projection riêng910 slots,
++80 mapped; QA09 found đúng kỳ,QA15 hai balance identities residual0. Real100
+checks65 consistent/35 insufficient,8 rules thực sự tính. B05/B11 REVIEW.
 
 ## Remaining Work
 
-Không còn việc trong phạm vi nghiệm thu D-04; chưa có task tiếp theo được giao.
+Commit/push main và ghi CI đúng implementation SHA; chờ Tech Lead nghiệm thu.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff/spec D-04 và
-D03 Blocker Registry. Không sửa runtime hoặc D-04 evaluation report/artifacts;
-giữ web/next-env.d.ts ngoài stage.
+Accounting mapping/extraction/recovery/arithmetic/relationships, evidence adapter,
+focused tests/CI, bounded evaluation và docs/planning. Giữ web/next-env.d.ts ngoài stage.
 
 ## Tests
 
-Bằng chứng đã nghiệm thu:122 focused PASS; real15 baseline lineages/29 queries/36 pairs unchanged;
-1,177 exact fact lookups;2,437 input hashes unchanged,zero Gateway calls.
-Ruff toàn repository/planning97/diff PASS; CI đúng SHA completed/SUCCESS,
-Python3.12 và Web smoke SUCCESS; full unit regression SKIPPED.
-Phiên này chỉ planning checker/diff check, không chạy lại tests/Gemini/OCR/
-extraction/evaluation; không gọi evidence cũ là kết quả chạy mới.
+322 focused PASS gồm30 D-06 generic cases/hai synthetic documents. Real baseline15,
+recovery3,29 queries/graph/18 lineages/36 pairs/1.177 lookups exact. Replay29 ở D-06
+còn selection ambiguity;2.506 protected hashes unchanged,26 projection files giữ
+nguyên;10 EPS VND/share/5 overlays/terminal coverage preserved;zero Gateway.
+Ruff/planning/diff kiểm tra trước bàn giao. Chưa có CI implementation mới.
 
 ## Blockers
 
-D03-B04 DONE; D03-B08 DONE trong phạm vi typed review lookup/lineage overlay.
-Global compatibility/formula execution/scope/cross-document/Web blockers giữ nguyên. Chưa full-PDF hoặc
-independent human gold; synthetic PASS không là chất lượng tài chính thực tế.
+Không có blocker core D-06 sau fix. 670 financial slots ngoài bounded mapping;
+null/layout B03/2022/required exchange effect/adjustments giữ insufficient. Không
+full-PDF accuracy, scope/cross-year approvals hoặc M4 execution. D-04 recovery2022
+là explicit alternative, không trộn vào D-05/D-06 corrected projection.
 
 ## Git Checkpoint
 
-Main-first; implementation `73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd` đã push main,
-HEAD/origin/main khớp. [CI41311527741](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41311527741)
-completed/SUCCESS đúng SHA. Checkpoint sau chỉ docs/planning, không gán
-CI implementation cho SHA checkpoint. Giữ local web/next-env.d.ts và ignored artifacts.
+Main-first, chưa commit. Accepted D-05 `401c12a4f5172e186b820252c6bcce9adb47d9df`;
+giữ nguyên accepted artifacts và web local. D-06-final là projection riêng,
+D-06-review chứa final validation/source outputs, đều ignored.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-05/M4.
+Tech Lead independent review D-06 và disposition B05/B11.

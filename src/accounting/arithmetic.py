@@ -40,9 +40,10 @@ class ArithmeticRule:
     period_types: tuple[str, ...]
     basis: str
     unavailable_reason: str | None = None
+    version: str = "source-arithmetic-v2"
 
 
-# Unavailable IDs reserve names only; they do not extend ITEM_CATALOG or map labels.
+# Registry refs are canonical catalog IDs, never pilot-specific availability flags.
 ARITHMETIC_RULES = (
     ArithmeticRule(
         "b01.total_assets",
@@ -51,18 +52,16 @@ ARITHMETIC_RULES = (
         "b01.total_assets",
         (("b01.current_assets", 1), ("b01.noncurrent_assets", 1)),
         ("as_of",),
-        "Ứng viên task M2-05; BBS2025/page5 mã270/100/200",
-        "catalog_missing:b01.current_assets,b01.noncurrent_assets",
+        "B01-DN: 270 = 100 + 200, cùng kỳ as-of và đơn vị",
     ),
     ArithmeticRule(
         "b01.total_funding",
         "B01",
         "Tổng nguồn vốn = nợ phải trả + vốn chủ sở hữu",
         "b01.total_funding",
-        (("b01.liabilities", 1), ("b01.equity", 1)),
+        (("b01.total_liabilities", 1), ("b01.total_equity", 1)),
         ("as_of",),
-        "Ứng viên task M2-05; chưa có trang nguồn vốn trong pilot5/7/8",
-        "catalog_and_source_missing:b01.total_funding,b01.liabilities,b01.equity",
+        "B01-DN: 440 = 300 + 400, cùng kỳ as-of và đơn vị",
     ),
     ArithmeticRule(
         "b02.gross_profit",
@@ -80,8 +79,7 @@ ARITHMETIC_RULES = (
         "b02.net_revenue",
         (("b02.sales_revenue", 1), ("b02.revenue_deductions", -1)),
         ("fiscal_year",),
-        "Ứng viên task M2-05; BBS2025/page7 mã10/01/02; dấu gạch không là zero",
-        "catalog_missing:b02.sales_revenue,b02.revenue_deductions;deductions_not_numeric",
+        "B02-DN: 10 = 01 - 02; dấu gạch/null không là zero",
     ),
     ArithmeticRule(
         "b03.net_cash_flow",
@@ -94,8 +92,7 @@ ARITHMETIC_RULES = (
             ("b03.financing_cash_flow", 1),
         ),
         ("fiscal_year",),
-        "Ứng viên task M2-05; BBS2025/page8 mã50/20/30/40; ngoặc là âm",
-        "catalog_missing:b03.net_cash_flow",
+        "B03-DN: 50 = 20 + 30 + 40; ngoặc là âm",
     ),
 )
 
@@ -110,6 +107,7 @@ class ArithmeticInput(FinancialModel):
 
 class ArithmeticCheck(FinancialModel):
     rule_id: str
+    rule_version: str = "source-arithmetic-v2"
     statement_type: str
     period: str | None
     period_type: str | None
@@ -177,6 +175,7 @@ def evaluate_arithmetic_rules(
             checks.append(
                 ArithmeticCheck(
                     rule_id=rule.rule_id,
+                    rule_version=rule.version,
                     statement_type=rule.statement_type,
                     period=None,
                     period_type=None,
@@ -191,6 +190,7 @@ def evaluate_arithmetic_rules(
         for key, rows in matching:
             check = ArithmeticCheck(
                 rule_id=rule.rule_id,
+                rule_version=rule.version,
                 statement_type=rule.statement_type,
                 period=key[1],
                 period_type=key[2],

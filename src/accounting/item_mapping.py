@@ -1,5 +1,6 @@
 """Mapping nhãn có kiểm soát; liên kết ô riêng, không xác minh financial facts."""
 
+import re
 import unicodedata
 from dataclasses import dataclass
 from typing import Literal
@@ -35,9 +36,17 @@ class ItemRule:
     observed_source_code: str
     aliases: tuple[str, ...]
     evidence: str
+    semantic_role: str = "monetary_amount"
+    version: str = "financial-item-mapping-v2"
+    requires_source_code: bool = False
+    unit_kind: str = "monetary"
+
+    @property
+    def period_types(self) -> tuple[str, ...]:
+        return ("as_of",) if self.statement_type == "B01" else ("fiscal_year",)
 
 
-# ID nội bộ, không phải mã kế toán chuẩn. Nhãn/mã đối chiếu ảnh BBS2025/5,7,8.
+# ID nội bộ, không phải mã kế toán chuẩn. Source readings ở D-06 evaluation/report.
 # Giữ ordinal: 140 và 141 cùng tên; bare label phải uncertain.
 ITEM_CATALOG = (
     ItemRule(
@@ -45,35 +54,45 @@ ITEM_CATALOG = (
         "B01",
         "110",
         ("I. Tiền và các khoản tương đương tiền", "Tiền và các khoản tương đương tiền"),
-        "BBS2025/page5",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b01.short_term_receivables",
         "B01",
         "130",
         ("II. Các khoản phải thu ngắn hạn", "Các khoản phải thu ngắn hạn"),
-        "BBS2025/page5",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
-        "b01.inventory_total", "B01", "140", ("III. Hàng tồn kho", "Hàng tồn kho"), "BBS2025/page5"
+        "b01.inventory_total",
+        "B01",
+        "140",
+        ("III. Hàng tồn kho", "Hàng tồn kho"),
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
-        "b01.inventory_gross", "B01", "141", ("1. Hàng tồn kho", "Hàng tồn kho"), "BBS2025/page5"
+        "b01.inventory_gross",
+        "B01",
+        "141",
+        ("1. Hàng tồn kho", "Hàng tồn kho"),
+        "source-backed:DN/monetary-v1",
     ),
-    ItemRule("b01.total_assets", "B01", "270", ("TỔNG CỘNG TÀI SẢN",), "BBS2025/page5"),
+    ItemRule(
+        "b01.total_assets", "B01", "270", ("TỔNG CỘNG TÀI SẢN",), "source-backed:DN/monetary-v1"
+    ),
     ItemRule(
         "b01.total_liabilities",
         "B01",
         "300",
         ("C - NỢ PHẢI TRẢ", "C- NỢ PHẢI TRẢ", "C - Nợ phải trả", "NỢ PHẢI TRẢ"),
-        "D-01:original-PDF:BBS2021/page7;BBS2025/page6",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b01.total_equity",
         "B01",
         "400",
         ("D - VỐN CHỦ SỞ HỮU", "D- VỐN CHỦ SỞ HỮU", "VỐN CHỦ SỞ HỮU"),
-        "D-01:original-PDF:BBS2021/page7;BBS2025/page6",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b02.net_revenue",
@@ -83,14 +102,14 @@ ITEM_CATALOG = (
             "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ",
             "Doanh thu thuần về bán hàng và cung cấp dịch vụ",
         ),
-        "BBS2025/page7",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b02.cost_of_sales",
         "B02",
         "11",
         ("4. Giá vốn hàng bán", "Giá vốn hàng bán"),
-        "BBS2025/page7",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b02.gross_profit",
@@ -100,14 +119,14 @@ ITEM_CATALOG = (
             "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
             "Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
         ),
-        "BBS2025/page7",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b02.profit_before_tax",
         "B02",
         "50",
         ("14. Tổng lợi nhuận kế toán trước thuế", "Tổng lợi nhuận kế toán trước thuế"),
-        "BBS2025/page7",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b02.profit_after_tax",
@@ -118,31 +137,107 @@ ITEM_CATALOG = (
             "16. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "Lợi nhuận sau thuế thu nhập doanh nghiệp",
         ),
-        "BBS2025/page7;D-01:original-PDF:BBS2021/page8",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b03.operating_cash_flow",
         "B03",
         "20",
         ("Lưu chuyển tiền thuần từ hoạt động kinh doanh",),
-        "BBS2025/page8",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b03.investing_cash_flow",
         "B03",
         "30",
         ("Lưu chuyển tiền thuần từ hoạt động đầu tư",),
-        "BBS2025/page8",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
         "b03.financing_cash_flow",
         "B03",
         "40",
         ("Lưu chuyển tiền thuần từ hoạt động tài chính",),
-        "BBS2025/page8",
+        "source-backed:DN/monetary-v1",
     ),
     ItemRule(
-        "b03.closing_cash", "B03", "70", ("Tiền và tương đương tiền cuối năm",), "BBS2025/page8"
+        "b03.closing_cash",
+        "B03",
+        "70",
+        ("Tiền và tương đương tiền cuối năm",),
+        "source-backed:DN/monetary-v1",
+    ),
+    ItemRule(
+        "b01.current_assets",
+        "B01",
+        "100",
+        ("Tài sản ngắn hạn",),
+        "source-backed:B01-DN/100",
+        "current_assets",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b01.noncurrent_assets",
+        "B01",
+        "200",
+        ("Tài sản dài hạn",),
+        "source-backed:B01-DN/200",
+        "noncurrent_assets",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b01.short_term_liabilities",
+        "B01",
+        "310",
+        ("Nợ ngắn hạn",),
+        "source-backed:B01-DN/310",
+        "current_liabilities",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b01.total_funding",
+        "B01",
+        "440",
+        ("Tổng cộng nguồn vốn",),
+        "source-backed:B01-DN/440",
+        "funding",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b02.sales_revenue",
+        "B02",
+        "01",
+        ("Doanh thu bán hàng và cung cấp dịch vụ",),
+        "source-backed:B02-DN/01",
+        "gross_revenue",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b02.revenue_deductions",
+        "B02",
+        "02",
+        ("Các khoản giảm trừ doanh thu",),
+        "source-backed:B02-DN/02",
+        "revenue_deductions",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b03.net_cash_flow",
+        "B03",
+        "50",
+        ("Lưu chuyển tiền thuần trong năm", "Lưu chuyển tiền thuần trong kỳ"),
+        "source-backed:B03-DN/50",
+        "net_cash_flow",
+        requires_source_code=True,
+    ),
+    ItemRule(
+        "b03.opening_cash",
+        "B03",
+        "60",
+        ("Tiền và tương đương tiền đầu năm", "Tiền và tương đương tiền đầu kỳ"),
+        "source-backed:B03-DN/60",
+        "opening_cash",
+        requires_source_code=True,
     ),
 )
 
@@ -164,6 +259,8 @@ class ItemMapping(FinancialModel):
     evidence: ContextEvidence
     source_item_code: str | None = None
     source_code_evidence: ContextEvidence | None = None
+    mapping_version: str = "financial-item-mapping-v2"
+    semantic_role: str | None = None
     issues: list[str]
     value_link_status: ResolutionStatus = "unresolved"
     value_link_issues: list[str] = Field(default_factory=list)
@@ -176,23 +273,62 @@ def _text(value: str) -> str:
     return " ".join(unicodedata.normalize("NFC", value).casefold().split())
 
 
-def map_item_label(evidence: ContextEvidence, statement_type: StatementType | None) -> ItemMapping:
+def _label(value: str, *, strip_ordinal: bool = False) -> str:
+    # Bounded punctuation/ordinal normalization; no fuzzy match, dropped words or accents.
+    value = _text(value).replace("–", "-").replace("—", "-")
+    if strip_ordinal:
+        value = re.sub(r"^(?:[a-d]\s*-\s*|[ivxlcdm]+\.\s*|\d+\.\s*)", "", value)
+    return value.rstrip(" .:")
+
+
+def map_item_label(
+    evidence: ContextEvidence,
+    statement_type: StatementType | None,
+    *,
+    source_code: str | None = None,
+) -> ItemMapping:
     """Caller xác nhận phạm vi statement; không suy mã nguồn từ danh mục."""
     candidates = []
+    conflicting_candidates = []
+    matched_rules = []
+    code_conflict = False
     for rule in ITEM_CATALOG:
         if statement_type is not None and rule.statement_type != statement_type:
             continue
         for index, alias in enumerate(rule.aliases):
-            if _text(evidence.raw_text) == _text(alias):
+            label_matches = (
+                _label(evidence.raw_text, strip_ordinal=rule.requires_source_code)
+                == _label(alias, strip_ordinal=rule.requires_source_code)
+                if source_code is not None
+                else _text(evidence.raw_text) == _text(alias)
+            )
+            if label_matches:
+                if source_code is not None and source_code.strip() != rule.observed_source_code:
+                    code_conflict = True
+                    conflicting_candidates.append(
+                        ItemCandidate(
+                            canonical_item_id=rule.canonical_item_id,
+                            rule_id=f"{rule.version}/{rule.canonical_item_id}",
+                            alias_id=f"{rule.canonical_item_id}/alias/{index}",
+                            catalog_evidence=rule.evidence,
+                        )
+                    )
+                    continue
+                if source_code is None and rule.requires_source_code:
+                    continue
+                matched_rules.append(rule)
                 candidates.append(
                     ItemCandidate(
                         canonical_item_id=rule.canonical_item_id,
-                        rule_id=rule.canonical_item_id,
+                        rule_id=f"{rule.version}/{rule.canonical_item_id}",
                         alias_id=f"{rule.canonical_item_id}/alias/{index}",
                         catalog_evidence=rule.evidence,
                     )
                 )
     issues = []
+    if code_conflict and not candidates:
+        issues.append("source_code_conflict")
+        candidates = conflicting_candidates
     if not candidates:
         issues.append("unsupported_label_or_statement")
     if statement_type is None:
@@ -203,13 +339,19 @@ def map_item_label(evidence: ContextEvidence, statement_type: StatementType | No
         issues.append("missing_provenance")
     if len({c.canonical_item_id for c in candidates}) > 1:
         issues.append("ambiguous_label")
-    status = "unresolved" if not candidates else "uncertain" if issues else "resolved"
+    status = (
+        "uncertain"
+        if "source_code_conflict" in issues
+        else ("unresolved" if not candidates else "uncertain" if issues else "resolved")
+    )
     return ItemMapping(
         raw_item_label=evidence.raw_text,
         statement_type=statement_type,
         canonical_item_id=candidates[0].canonical_item_id if status == "resolved" else None,
         status=status,
         candidates=candidates,
+        source_item_code=source_code,
+        semantic_role=matched_rules[0].semantic_role if status == "resolved" else None,
         evidence=evidence,
         issues=issues,
         value_link_issues=["row_column_period_unit_not_established"],
@@ -251,15 +393,11 @@ def _link_values(
         ):
             item.source_item_code = cells[0].text
             item.source_code_evidence = evidence[cells[0].source_pointer]
-            expected = {
-                r.observed_source_code
-                for r in ITEM_CATALOG
-                if r.canonical_item_id == item.canonical_item_id
-            }
-            if expected and item.source_item_code not in expected:
-                item.status = "uncertain"
-                item.canonical_item_id = None
-                item.issues.append("source_code_conflict")
+            mapped = map_item_label(
+                item.evidence, item.statement_type, source_code=item.source_item_code
+            )
+            for field in ("status", "canonical_item_id", "semantic_role", "issues", "candidates"):
+                setattr(item, field, getattr(mapped, field))
     if item.status != "resolved":
         item.value_link_issues = ["item_not_resolved"]
         return

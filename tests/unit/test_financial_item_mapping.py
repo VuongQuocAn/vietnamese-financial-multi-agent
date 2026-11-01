@@ -40,7 +40,7 @@ def evidence(text, **changes):
 def test_d01_equity_total_does_not_map_unapproved_subtotal_or_other_statement():
     result = map_item_label(evidence("D - VỐN CHỦ SỞ HỮU"), "B01")
     assert result.canonical_item_id == "b01.total_equity"
-    assert result.candidates[0].catalog_evidence.startswith("D-01:original-PDF:")
+    assert result.candidates[0].catalog_evidence.startswith("source-backed:")
     assert map_item_label(evidence("I. Vốn chủ sở hữu"), "B01").canonical_item_id is None
     assert map_item_label(evidence("D - VỐN CHỦ SỞ HỮU"), "B02").canonical_item_id is None
 
@@ -107,10 +107,16 @@ def test_catalog_exact_aliases_and_unicode_whitespace():
     for rule in ITEM_CATALOG:
         for alias in rule.aliases:
             raw = unicodedata.normalize("NFD", "  " + alias.upper().replace(" ", "\n ") + "  ")
-            result = map_item_label(evidence(raw), rule.statement_type)
+            result = map_item_label(
+                evidence(raw),
+                rule.statement_type,
+                **({"source_code": rule.observed_source_code} if rule.requires_source_code else {}),
+            )
             assert rule.canonical_item_id in {c.canonical_item_id for c in result.candidates}
             assert result.raw_item_label == raw
-            assert result.source_item_code is None
+            assert result.source_item_code == (
+                rule.observed_source_code if rule.requires_source_code else None
+            )
 
 
 def test_similar_labels_do_not_match_by_substring():

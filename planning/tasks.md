@@ -1,6 +1,6 @@
 # Master Task Registry
 
-Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-10-31**
+Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-11-01**
 (Asia/Bangkok). Một dòng duy nhất cho mỗi Task ID; lịch sử bên dưới là bằng
 chứng, không phải registry thứ hai. [Dashboard](progress.md),
 [roadmap](roadmap.md), [handoff](handoff.md), [mẫu task](task-template.md).
@@ -122,6 +122,7 @@ Next action: chờ Tech Lead giao việc; không bắt đầu M3-01.
 | D-03 | System-Wide Blocker Root Cause Investigation & Resolution Plan | D | DONE | P0 | D-01 | [D-03](tasks/D/D-03.md) | Tech Lead APPROVED 31/10/2026; [implementation e11821b](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/e11821b153871f34b44bcbd7ea08293aafe4b039), [CI41211560836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41211560836) SUCCESS đúng SHA, Python 3.12/Web smoke SKIPPED; [audit/registry](../docs/d03-system-blocker-audit.md):16 mục/20 QA,5 targeted PASS,2,421 hashes unchanged; giữ nguyên blockers/stable IDs |
 | D-04 | Snapshot & Source Closure Fix | D | DONE | P0 | D-02, D-03 | [D-04](tasks/D/D-04.md) | [Implementation73e2f9e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd); [CI41311527741](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41311527741) SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;122 targeted PASS;recovery3/3,baseline15/15,eligible0;2,437 hashes unchanged;[report](../docs/d04-snapshot-source-closure.md);Tech Lead APPROVED 01/11/2026 |
 | D-05 | Extraction Completeness & Data Corrections | D | DONE | P1 | D-03, D-04 | [D-05](tasks/D/D-05.md) | Tech Lead APPROVED 01/11/2026; accepted [implementation401c12a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/401c12a4f5172e186b820252c6bcce9adb47d9df);[CI41316310651](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41316310651) SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;243 focused PASS;981−73+2=910;baseline15/15,recovery3/3,2.457 hashes unchanged;[report/reconciliation](../docs/d05-extraction-corrections.md);B06/B07/B14/B15 DONE đúng scoped acceptance;diluted/ambiguous EPS giữ uncertainty |
+| D-06 | Canonical Mapping & Financial Validation Fix | D | REVIEW | P1 | D-03, D-04, D-05 | [D-06](tasks/D/D-06.md) | Chưa commit;322 focused PASS;8 IDs/+80 mapped slots;QA09 found/QA15 two identities residual0;100 checks65 consistent/35 insufficient;baseline15/recovery3/29 queries/graph/18 lineages exact;2.506 hashes unchanged;[report](../docs/d06-canonical-mapping-validation.md);chờ Tech Lead/CI đúng SHA |
 | M4-01 | Executable Tool Contracts | M4 | TODO | P2 | M3-07 | [M4-01](roadmap.md#m4-01) | - |
 | M4-02 | Typed Financial Retrieval Tools | M4 | TODO | P2 | M4-01 | [M4-02](roadmap.md#m4-02) | - |
 | M4-03 | Calculator and Formula Executor | M4 | TODO | P2 | M4-02 | [M4-03](roadmap.md#m4-03) | - |

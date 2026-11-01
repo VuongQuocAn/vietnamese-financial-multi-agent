@@ -240,7 +240,9 @@ def link_reviewed_candidate(
     }
     if titles[review.statement_type] not in statement_text:
         errors.append("statement_not_supported")
-    item = map_item_label(evidence(review.label), review.statement_type)
+    item = map_item_label(
+        evidence(review.label), review.statement_type, source_code=review.code.text
+    )
     if item.status != "resolved":
         errors.append("item_unresolved")
     expected_codes = {

@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 98 | 66 | 0 | 0 | 32 | 0 | 0 |
+| D | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 99 | 66 | 0 | 0 | 32 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,13 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+D-06 **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
+Chưa commit;322 focused PASS;8 new IDs/+80 slots, QA09 found/QA15 residual0;
+65 consistent/35 insufficient. Baseline15/recovery3 và accepted regression exact;
+2.506 hashes unchanged,zero Gateway. Next action: Tech Lead review D-06.
+
+Checkpoint D-05 đã nghiệm thu:
 
 D-05 **DONE**, Tech Lead nghiệm thu 01/11/2026; [spec](tasks/D/D-05.md),
 [report](../docs/d05-extraction-corrections.md). Accepted implementation

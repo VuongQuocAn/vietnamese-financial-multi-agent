@@ -293,8 +293,8 @@ def test_unavailable_never_evaluates_fake_equality():
     (check,) = evaluate_accounting_relationships([sample(), sample("B03")], [rule])
     assert check.status == "insufficient_data"
     assert check.difference is None
-    assert len(RELATIONSHIP_RULES) == 4
-    assert sum(r.unavailable_reason is None for r in RELATIONSHIP_RULES) == 1
+    assert len(RELATIONSHIP_RULES) == 5
+    assert sum(r.unavailable_reason is None for r in RELATIONSHIP_RULES) == 3
 
 
 def test_statement_present_without_accepted_links_is_insufficient():
