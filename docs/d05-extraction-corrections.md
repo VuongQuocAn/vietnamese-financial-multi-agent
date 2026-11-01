@@ -1,8 +1,14 @@
 # D-05 — Extraction completeness và hiệu chỉnh theo nguồn
 
 Ngày 01/11/2026, Asia/Bangkok. Baseline main `53a7836`, sau accepted D-04
-`73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd`. Owner giao commit/push trực tiếp main;
-SHA và CI được ghi ở checkpoint sau implementation. Status **REVIEW**, chờ Tech Lead nghiệm thu.
+`73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd`. Implementation
+[`401c12a4f5172e186b820252c6bcce9adb47d9df`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/401c12a4f5172e186b820252c6bcce9adb47d9df)
+đã commit/push trực tiếp main, đúng16 task files;
+[CI41316310651](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41316310651)
+completed/SUCCESS đúng implementation SHA, event push. Python3.12 và Web smoke
+đều SUCCESS, full unit regression SKIPPED theo focused workflow. Checkpoint sau
+chỉ docs/planning, không gán CI implementation cho SHA checkpoint.
+Status **REVIEW**, chờ Tech Lead nghiệm thu.
 Main-first, giữ local web/next-env.d.ts.
 Report này không chứng nhận full-PDF accuracy hoặc independent human gold.
 
@@ -191,6 +197,8 @@ Chạy live chỉ cho target page nếu chưa có cache; runner từ chối gọ
 runtime không chứa company/year/page/snapshot hoặc malformed-token đặc thù này.
 PDF mới dùng contracts/inventory/overlays riêng và explicit snapshot selection.
 
+<a id="reconciliation"></a>
+
 ## Reconciliation để independent review
 
 Kết quả review cached evidence: **981 − 73 + 2 = 910**, giảm ròng **71**.
@@ -356,5 +364,11 @@ hashes** và **39 D-05 input files** unchanged; zero Gateway attempts ở lượ
 Local focused243 PASS (8.98s); Ruff lint/format toàn repository335 PASS;
 planning98 và diff checks được chạy trước commit. CI của implementation là evidence
 engineering riêng, không thay source review hoặc chứng minh full-PDF accuracy.
+Stage audit đúng16 files, zero detected secrets/private paths/raw datasets;
+AST string-literal check ở7 production files không có company/year/page/snapshot
+fixture literals. `web/next-env.d.ts` không stage và SHA-256 khớp input manifest.
+CI evidence metadata/job steps ở ignored `D-05-review-prep/ci.json`: headSha đúng
+401c12a, Python3.12 SUCCESS26s; Web smoke SUCCESS1m35s gồm typecheck/lint/build/
+browser routes và proxy. Không rerun suites/live evaluation để ghi checkpoint này.
 
 Next action: Tech Lead review D-05 và source evidence; không tự DONE/D-06/M4.

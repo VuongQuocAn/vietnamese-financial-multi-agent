@@ -5,8 +5,11 @@ Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 ## D-05 — Extraction Completeness & Data Corrections
 
 Status: **REVIEW**; [spec](tasks/D/D-05.md),
-[report](../docs/d05-extraction-corrections.md). Owner giao commit/push main để
-independent review; baseline `53a7836`, SHA/CI ghi sau push. Generic completeness/roles/
+[report](../docs/d05-extraction-corrections.md). Implementation
+`401c12a4f5172e186b820252c6bcce9adb47d9df` đã commit/push trực tiếp main;
+[CI41316310651](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41316310651)
+completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS. Baseline `53a7836`;
+checkpoint sau chỉ docs/planning. Generic completeness/roles/
 numeric-token issues/basic EPS units, immutable source-backed overlays. Real
 981 original giữ nguyên; corrected910, bỏ73 structural/note và thêm2 EPS;
 5 raw corrections/7 exact SourceReviews. Coverage rows_missing→covered;

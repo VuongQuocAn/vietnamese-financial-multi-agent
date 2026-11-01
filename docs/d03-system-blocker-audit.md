@@ -6,8 +6,10 @@ completeness/token issues/basic EPS units; một target-page recovery, hai EPS s
 và năm raw overlays/7 SourceReviews mới. Corrected projection910 tách original981;
 73 note/structural slots chỉ bỏ khỏi financial view, raw/table evidence giữ nguyên.
 243 focused PASS;baseline15/15,D-04 recovery3/3,graph/15 lineages exact;
-2.457 hashes unchanged. Owner giao commit/push main để independent review;
-SHA/CI ghi sau push, chờ Tech Lead review. Giữ findings/samples D-03 dưới đây là baseline lịch sử;
+2.457 hashes unchanged. Implementation `401c12a4f5172e186b820252c6bcce9adb47d9df`
+đã push main; [CI41316310651](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41316310651)
+SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS; chờ Tech Lead review, chưa DONE.
+Giữ findings/samples D-03 dưới đây là baseline lịch sử;
 không tự đóng B09 hoặc suy full-PDF/restatement consistency.
 
 D-04 corrective update 01/11/2026: Tech Lead đã nghiệm thu; **D03-B04 DONE**,
