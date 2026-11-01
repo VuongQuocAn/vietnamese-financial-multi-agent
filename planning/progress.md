@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 4 | 3 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 97 | 64 | 0 | 0 | 32 | 0 | 1 |
+| D | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 97 | 65 | 0 | 0 | 32 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,11 +48,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-04 REVIEW, [report](../docs/d04-snapshot-source-closure.md),
+D-04 DONE, Tech Lead nghiệm thu 01/11/2026, [report](../docs/d04-snapshot-source-closure.md),
 [spec](tasks/D/D-04.md). Generic snapshot closure/review retrieval/lineage;
 122 focused PASS, real recovery3/3 và baseline15/15, eligible0;2,437 hashes unchanged,
 zero Gateway. Giữ original quality/provenance và local web/next-env.d.ts.
-Next action: Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
+D03-B04 DONE, D03-B08 DONE trong phạm vi typed review lookup/lineage overlay;
+các blockers khác giữ nguyên. Phiên nghiệm thu chỉ planning/Blocker Registry và
+planning/diff checks; không chạy lại tests/Gemini/OCR/extraction/evaluation.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-05/M4.
 
 Checkpoint trước:
 

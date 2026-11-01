@@ -4,7 +4,8 @@ Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-04 — Snapshot & Source Closure Fix
 
-Status: **REVIEW**, Owner giao 01/11/2026; [spec](tasks/D/D-04.md),
+Status: **DONE**, Tech Lead nghiệm thu 01/11/2026 theo chỉ đạo Owner;
+[spec](tasks/D/D-04.md),
 [report](../docs/d04-snapshot-source-closure.md). Generic catalog/closure,
 exact SourceReview lookup và optional lineage overlay; arbitrary parent chains,
 explicit selection, không auto-inherit/merge/latest. Local122 focused PASS gồm18
@@ -15,8 +16,11 @@ Implementation `73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd` đã push main;
 [CI41311527741](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41311527741)
 completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS; checkpoint sau chỉ docs.
 Ruff toàn repository/planning97/diff PASS. Giữ web/next-env.d.ts.
-Không suy full-PDF/other-company accuracy; D03-B04/B08 REVIEW, các blockers khác giữ.
-Next action: Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
+Không suy full-PDF/other-company accuracy; D03-B04 DONE, D03-B08 DONE trong phạm vi
+typed review lookup/lineage overlay; các blockers khác giữ nguyên. Checkpoint nghiệm
+thu chỉ planning/Blocker Registry và planning/diff checks; không chạy lại tests,
+Gemini/OCR/extraction hoặc evaluation, không gán CI implementation cho SHA checkpoint.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-05/M4.
 
 ## D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
 

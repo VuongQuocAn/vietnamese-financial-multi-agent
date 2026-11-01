@@ -6,13 +6,15 @@ D-04 — Snapshot & Source Closure Fix
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Baseline main/origin/main `74ddea30891a61ba5a84ae3fbc61a2e61c06aa05`.
 [Spec](tasks/D/D-04.md), [report](../docs/d04-snapshot-source-closure.md).
-Owner giao D03-B04/B08 và bắt buộc tổng quát hóa ngày 01/11/2026.
+Tech Lead nghiệm thu D-04 ngày 01/11/2026; accepted implementation
+`73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd`. Owner cho checkpoint DONE chỉ planning/
+Blocker Registry; giữ nguyên accepted evidence và các blockers khác.
 
 ## Completed Work
 
@@ -23,25 +25,27 @@ repositories, persisted restart exact; không runtime BBS/path/year branching.
 
 ## Remaining Work
 
-Tech Lead independent review/nghiệm thu. Không tự DONE hoặc mở D-05/M4.
+Không còn việc trong phạm vi nghiệm thu D-04; chưa có task tiếp theo được giao.
 
 ## Modified Files
 
-evidence runtime/exports, generic tests, D-04 evaluator, D-02 binder wrapper,
-CI focused list, report và planning/D03 blocker dispositions. Ignored final
-outputs D-04-review không commit; giữ web/next-env.d.ts ngoài stage.
+Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff/spec D-04 và
+D03 Blocker Registry. Không sửa runtime hoặc D-04 evaluation report/artifacts;
+giữ web/next-env.d.ts ngoài stage.
 
 ## Tests
 
-122 focused PASS; real15 baseline lineages/29 queries/36 pairs unchanged;
+Bằng chứng đã nghiệm thu:122 focused PASS; real15 baseline lineages/29 queries/36 pairs unchanged;
 1,177 exact fact lookups;2,437 input hashes unchanged,zero Gateway calls.
 Ruff toàn repository/planning97/diff PASS; CI đúng SHA completed/SUCCESS,
 Python3.12 và Web smoke SUCCESS; full unit regression SKIPPED.
+Phiên này chỉ planning checker/diff check, không chạy lại tests/Gemini/OCR/
+extraction/evaluation; không gọi evidence cũ là kết quả chạy mới.
 
 ## Blockers
 
-D03-B04/B08 REVIEW, chưa Tech Lead nghiệm thu. Global compatibility/formula
-execution/scope/cross-document/Web blockers không tự đóng. Chưa full-PDF hoặc
+D03-B04 DONE; D03-B08 DONE trong phạm vi typed review lookup/lineage overlay.
+Global compatibility/formula execution/scope/cross-document/Web blockers giữ nguyên. Chưa full-PDF hoặc
 independent human gold; synthetic PASS không là chất lượng tài chính thực tế.
 
 ## Git Checkpoint
@@ -53,4 +57,4 @@ CI implementation cho SHA checkpoint. Giữ local web/next-env.d.ts và ignored 
 
 ## Exact Next Action
 
-Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
+Chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-05/M4.
