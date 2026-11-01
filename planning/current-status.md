@@ -4,7 +4,7 @@ Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-05 — Extraction Completeness & Data Corrections
 
-Status: **REVIEW**; [spec](tasks/D/D-05.md),
+Status: **DONE**, Tech Lead nghiệm thu ngày 01/11/2026; [spec](tasks/D/D-05.md),
 [report](../docs/d05-extraction-corrections.md). Implementation
 `401c12a4f5172e186b820252c6bcce9adb47d9df` đã commit/push trực tiếp main;
 [CI41316310651](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41316310651)
@@ -17,8 +17,12 @@ baseline15/15 và D-04 recovery3/3, graph/15 lineages exact;2.457 hashes unchang
 243 focused PASS sau hai generic review fixes;20 cached pages/18 lineages exact,
 39 D-05 files unchanged;Ruff/planning98/diff PASS. Lượt chuẩn bị review zero Gateway;
 implementation trước có một attempt/5.966 tokens đúng target page, không full-PDF accuracy/
-restatement approval. B06/B07/B14/B15 REVIEW, chưa DONE. Giữ web local và evidence.
-Next action: Tech Lead review D-05 và source evidence; không tự DONE/D-06/M4.
+restatement approval. B06 DONE cho classification/projection; B07 DONE cho targeted
+EPS recovery/generic completeness; B14 DONE cho source-backed correction; B15 DONE
+cho basic EPS semantic unit. Diluted EPS/cases thiếu bằng chứng vẫn uncertainty.
+Phiên đồng bộ nghiệm thu chỉ planning/Blocker Registry và planning/diff checks;
+không chạy lại tests/Gemini/OCR/extraction/evaluation. Giữ web local và evidence.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-06/M4.
 
 ## D-04 — Snapshot & Source Closure Fix
 

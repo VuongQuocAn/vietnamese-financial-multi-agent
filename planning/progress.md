@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 5 | 4 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 98 | 65 | 0 | 0 | 32 | 0 | 1 |
+| D | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 98 | 66 | 0 | 0 | 32 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,11 +48,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-05 **REVIEW**; [spec](tasks/D/D-05.md),
-[report](../docs/d05-extraction-corrections.md). Owner giao commit/push main; SHA/CI ghi sau push;
+D-05 **DONE**, Tech Lead nghiệm thu 01/11/2026; [spec](tasks/D/D-05.md),
+[report](../docs/d05-extraction-corrections.md). Accepted implementation
+`401c12a4f5172e186b820252c6bcce9adb47d9df`; CI41316310651 SUCCESS đúng SHA.
 243 focused PASS/16 generic controls, real981 original giữ nguyên/corrected910,
 2 EPS recovered/5 raw overlays;baseline15/15,recovery3/3,2.457 hashes unchanged.
-Next action: Tech Lead review D-05 và source evidence; không tự DONE/D-06/M4.
+B06/B07/B14/B15 DONE đúng phạm vi nghiệm thu; diluted EPS/cases thiếu bằng chứng
+vẫn uncertainty. Phiên đồng bộ chỉ planning/Blocker Registry và planning/diff checks.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu D-06/M4.
 
 Checkpoint D-04 đã nghiệm thu:
 
