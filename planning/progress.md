@@ -49,7 +49,7 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 ## Active task và việc tiếp theo
 
 D-06 **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
-Chưa commit;322 focused PASS;8 new IDs/+80 slots, QA09 found/QA15 residual0;
+Implementation/CI xem report;322 focused PASS;8 new IDs/+80 slots, QA09 found/QA15 residual0;
 65 consistent/35 insufficient. Baseline15/recovery3 và accepted regression exact;
 2.506 hashes unchanged,zero Gateway. Next action: Tech Lead review D-06.
 

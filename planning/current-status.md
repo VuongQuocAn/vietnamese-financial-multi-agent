@@ -5,7 +5,10 @@ Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 ## D-06 — Canonical Mapping & Financial Validation Fix
 
 Status: **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
-Baseline main004957b; chưa commit, CI implementation chờ push. Generic catalog
+Baseline main004957b; implementation `7cc4dec9e8afb381e386b5b1fd2f1b2431928a01`
+đã push main; [CI41319706092](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41319706092)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Checkpoint sau chỉ docs.
+Generic catalog
 16→24 IDs, corrected D-06/mapping-v2.1 parent D-05/corrected-v1 riêng:910 slots,
 mapped160→240 (+80;73 numeric/11 quality-blocked),unmapped670/71 code pairs.
 QA09 found đúng2024-12-31/source; QA15 assets=L+E và assets=funding residual0.

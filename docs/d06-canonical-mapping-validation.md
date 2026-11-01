@@ -98,6 +98,18 @@ Before, coverage theo statement/code, added/unmapped identities, validation oper
 residuals, SourceReviews, retrieval queries, hashes và summary đều ở outputs này.
 Không commit dataset/PDF/OCR/ảnh/keys. Zero Gateway/live extraction.
 
+## Git và CI
+
+Implementation [`7cc4dec9e8afb381e386b5b1fd2f1b2431928a01`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/7cc4dec9e8afb381e386b5b1fd2f1b2431928a01)
+đã push trực tiếp main,19 task files. [CI41319706092](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41319706092)
+completed/SUCCESS, event push, đúng implementation SHA; Python3.12 và Web smoke
+đều SUCCESS (typecheck/lint/build/bounded browser smoke). Full unit regression
+SKIPPED theo focused workflow. Checkpoint sau chỉ docs/
+planning, không gán CI implementation cho SHA checkpoint. Web local hash giữ nguyên,
+không stage dataset/PDF/OCR/ảnh/secrets/personal paths. Local322 focused PASS;
+Ruff toàn repository340 files/planning99/diff PASS. CI là engineering checks,
+không thay research evaluation hoặc chứng nhận chất lượng tài chính.
+
 ## Giới hạn và nghiệm thu
 
 ## Kết quả real-data trước/sau

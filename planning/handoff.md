@@ -12,7 +12,9 @@ REVIEW
 
 Baseline main/origin/main `004957b06972635ea35cc5e27ead7888f35174c4`.
 [Spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
-Implementation chưa commit; Owner cho commit/push main và chờ Tech Lead nghiệm thu.
+Implementation `7cc4dec9e8afb381e386b5b1fd2f1b2431928a01` đã push main;
+[CI41319706092](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41319706092)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS; chờ Tech Lead nghiệm thu.
 
 ## Completed Work
 
@@ -23,7 +25,7 @@ checks65 consistent/35 insufficient,8 rules thực sự tính. B05/B11 REVIEW.
 
 ## Remaining Work
 
-Commit/push main và ghi CI đúng implementation SHA; chờ Tech Lead nghiệm thu.
+Chờ Tech Lead independent review; không còn việc implementation trong scope D-06.
 
 ## Modified Files
 
@@ -36,7 +38,9 @@ focused tests/CI, bounded evaluation và docs/planning. Giữ web/next-env.d.ts 
 recovery3,29 queries/graph/18 lineages/36 pairs/1.177 lookups exact. Replay29 ở D-06
 còn selection ambiguity;2.506 protected hashes unchanged,26 projection files giữ
 nguyên;10 EPS VND/share/5 overlays/terminal coverage preserved;zero Gateway.
-Ruff/planning/diff kiểm tra trước bàn giao. Chưa có CI implementation mới.
+Ruff340 files/planning99/diff PASS. CI implementation completed/SUCCESS đúng SHA,
+Python3.12/Web smoke SUCCESS; full unit regression SKIPPED. Checkpoint này chỉ docs,
+không chạy lại tests/evaluation đã PASS hoặc Gemini/OCR/extraction.
 
 ## Blockers
 
@@ -47,7 +51,10 @@ là explicit alternative, không trộn vào D-05/D-06 corrected projection.
 
 ## Git Checkpoint
 
-Main-first, chưa commit. Accepted D-05 `401c12a4f5172e186b820252c6bcce9adb47d9df`;
+Main-first, implementation `7cc4dec9e8afb381e386b5b1fd2f1b2431928a01` đã push;
+CI41319706092 completed/SUCCESS đúng SHA. Checkpoint sau chỉ docs/planning;
+không gán CI implementation cho SHA checkpoint.
+Accepted D-05 `401c12a4f5172e186b820252c6bcce9adb47d9df`;
 giữ nguyên accepted artifacts và web local. D-06-final là projection riêng,
 D-06-review chứa final validation/source outputs, đều ignored.
 
