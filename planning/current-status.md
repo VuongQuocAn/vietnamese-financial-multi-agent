@@ -4,7 +4,8 @@ Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-06 — Canonical Mapping & Financial Validation Fix
 
-Status: **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
+Status: **DONE**, Tech Lead nghiệm thu theo xác nhận Owner 01/11/2026;
+[spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
 Baseline main004957b; implementation `7cc4dec9e8afb381e386b5b1fd2f1b2431928a01`
 đã push main; [CI41319706092](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41319706092)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Checkpoint sau chỉ docs.
@@ -16,8 +17,11 @@ QA09 found đúng2024-12-31/source; QA15 assets=L+E và assets=funding residual0
 322 focused PASS;baseline15/recovery3,graph/18 lineages/29 queries/36 pairs exact,
 1.177 exact accepted lookups. 2.506 input hashes unchanged,zero Gateway.
 Giữ10 EPS per-share/5 corrections/terminal coverage;new snapshots không tự ready,
-không trộn D-04 recovery2022,không mở M4/scope/cross-year gates. B05/B11 REVIEW,
-chờ Tech Lead;giữ web/next-env.d.ts. Next action: Tech Lead independent review D-06.
+không trộn D-04 recovery2022,không mở M4/scope/cross-year gates. B05/B11 DONE
+trong phạm vi tám items/shared validation;670 slots ngoài scope giữ unmapped.
+Checkpoint nghiệm thu chỉ planning/Blocker Registry và planning/diff checks;
+không chạy lại tests/Gemini/OCR/extraction/evaluation;giữ report/artifacts và web local.
+Next action: chờ Owner giao task tiếp theo;không tự bắt đầu M4 hoặc corrective task khác.
 
 ## D-05 — Extraction Completeness & Data Corrections
 

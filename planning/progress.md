@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 99 | 66 | 0 | 0 | 32 | 0 | 1 |
+| D | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 99 | 67 | 0 | 0 | 32 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,10 +48,14 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-06 **REVIEW**, [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
-Implementation/CI xem report;322 focused PASS;8 new IDs/+80 slots, QA09 found/QA15 residual0;
+D-06 **DONE**, Tech Lead nghiệm thu theo xác nhận Owner 01/11/2026;
+[spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).
+Accepted implementation `7cc4dec9e8afb381e386b5b1fd2f1b2431928a01`;
+CI41319706092 SUCCESS đúng SHA. 322 focused PASS;8 new IDs/+80 slots, QA09 found/QA15 residual0;
 65 consistent/35 insufficient. Baseline15/recovery3 và accepted regression exact;
-2.506 hashes unchanged,zero Gateway. Next action: Tech Lead review D-06.
+2.506 hashes unchanged,zero Gateway. B05/B11 DONE đúng phạm vi D-06;giữ limitations.
+Checkpoint này chỉ planning/Blocker Registry và planning/diff checks,không chạy lại
+tests/Gemini/evaluation. Next action: chờ Owner giao task tiếp theo;không tự bắt đầu M4.
 
 Checkpoint D-05 đã nghiệm thu:
 
