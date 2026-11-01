@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-10-31** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-01** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 96 | 64 | 0 | 0 | 32 | 0 | 0 |
+| D | 4 | 3 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 97 | 64 | 0 | 0 | 32 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+D-04 REVIEW, [report](../docs/d04-snapshot-source-closure.md),
+[spec](tasks/D/D-04.md). Generic snapshot closure/review retrieval/lineage;
+122 focused PASS, real recovery3/3 và baseline15/15, eligible0;2,437 hashes unchanged,
+zero Gateway. Giữ original quality/provenance và local web/next-env.d.ts.
+Next action: Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
+
+Checkpoint trước:
 
 D-03 DONE, Tech Lead APPROVED ngày 31/10/2026;
 [audit/registry](../docs/d03-system-blocker-audit.md),

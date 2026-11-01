@@ -1,6 +1,19 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-10-31 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## D-04 — Snapshot & Source Closure Fix
+
+Status: **REVIEW**, Owner giao 01/11/2026; [spec](tasks/D/D-04.md),
+[report](../docs/d04-snapshot-source-closure.md). Generic catalog/closure,
+exact SourceReview lookup và optional lineage overlay; arbitrary parent chains,
+explicit selection, không auto-inherit/merge/latest. Local122 focused PASS gồm18
+generic controls/hai synthetic documents. Real BBS recovery3/3,6/6 operands,
+baseline15/15;32 reviews exact;15 baseline lineages/29 queries/36 pairs unchanged;
+persisted restart exact;eligible0. 2,437 input hashes unchanged,zero Gateway.
+Implementation chưa commit tại checkpoint này; main-first, giữ web/next-env.d.ts.
+Không suy full-PDF/other-company accuracy; D03-B04/B08 REVIEW, các blockers khác giữ.
+Next action: Tech Lead independent review và nghiệm thu D-04; không bắt đầu D-05/M4.
 
 ## D-03 — System-Wide Blocker Root Cause Investigation & Resolution Plan
 

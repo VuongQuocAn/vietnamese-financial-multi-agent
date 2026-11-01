@@ -41,6 +41,9 @@ class SourceReview(FinancialModel):
     raw_header: str
     period: Identity
     statement_type: Identity
+    # Mỗi binding mới có verification riêng; parent chỉ là provenance, không fallback.
+    verification_reference: Identity | None = None
+    reused_from: ObservationIdentity | None = None
     # Không có cell_verified: chưa có exact cell geometry independent evidence.
 
 
@@ -55,6 +58,8 @@ class AccountingBasisReview(FinancialModel):
     source_quote: Identity
     basis: Literal["VAS/TT200/accrual-historical-cost"]
     statement_types: list[Literal["B01", "B02"]] = Field(min_length=1)
+    verification_reference: Identity | None = None
+    reused_from_snapshot: Identity | None = None
 
 
 def source_review_status(fact: CanonicalFinancialFact, reviews: list[SourceReview]) -> str:
@@ -66,6 +71,8 @@ def source_review_status(fact: CanonicalFinancialFact, reviews: list[SourceRevie
     if len(selected) != 1:
         return "source_inconsistent"
     r = selected[0]
+    if r.reused_from is not None and not r.verification_reference:
+        return "source_inconsistent"
     if r.sources != fact.sources or fact.document_id != "sha256:" + r.pdf_sha256:
         return "source_inconsistent"
     for s in fact.sources:

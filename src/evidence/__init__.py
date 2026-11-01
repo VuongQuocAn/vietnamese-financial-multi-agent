@@ -62,8 +62,36 @@ from .retrieval import (
     RetrievalReference,
     RetrievalResult,
 )
+from .snapshots import (
+    ClosureIssue,
+    MetricSnapshotClosure,
+    SnapshotCatalog,
+    SnapshotDescriptor,
+    SnapshotEntry,
+    SnapshotSelection,
+    rebuild_snapshot_metrics,
+)
+from .source_reviews import (
+    OperandSourceReview,
+    ReviewedMetricLineage,
+    SourceReviewLookup,
+    SourceReviewView,
+    bind_source_review,
+)
 
 __all__ = [
+    "ClosureIssue",
+    "MetricSnapshotClosure",
+    "SnapshotCatalog",
+    "SnapshotDescriptor",
+    "SnapshotEntry",
+    "SnapshotSelection",
+    "rebuild_snapshot_metrics",
+    "OperandSourceReview",
+    "ReviewedMetricLineage",
+    "SourceReviewLookup",
+    "SourceReviewView",
+    "bind_source_review",
     "CanonicalCoverage",
     "EvidenceCitation",
     "EvidenceQuery",

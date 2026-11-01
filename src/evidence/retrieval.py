@@ -17,6 +17,12 @@ from .document_evidence import EvidenceIdentity, TableEvidence, TextEvidence, as
 from .graph import graph_id, record_sources
 from .lineage import MetricLineage, trace_metric_lineage
 from .metrics import DerivedMetric
+from .source_reviews import (
+    OperandSourceReview,
+    ReviewedMetricLineage,
+    SourceReviewLookup,
+    review_view,
+)
 
 RecordKind = Literal["fact", "text", "table", "anchor", "metric", "lineage"]
 Record = (
@@ -124,12 +130,49 @@ class EvidenceRetrieval:
     Catalog là snapshot bất biến riêng; methods trả deep copies.
     """
 
-    def __init__(self, facts=(), evidence=(), metrics=(), *, graph=None, coverage=()):
+    def __init__(
+        self, facts=(), evidence=(), metrics=(), *, graph=None, coverage=(), source_reviews=()
+    ):
         self._facts = _ordered({f.model_dump_json(): f.model_copy(deep=True) for f in facts})
         self._evidence = _ordered({e.model_dump_json(): e.model_copy(deep=True) for e in evidence})
         self._metrics = _ordered({m.model_dump_json(): m.model_copy(deep=True) for m in metrics})
         self._graph = graph.model_copy(deep=True) if graph is not None else None
         self._coverage = [c.model_copy(deep=True) for c in coverage]
+        self._source_reviews = [r.model_copy(deep=True) for r in source_reviews]
+
+    def get_source_review(self, identity: ObservationIdentity) -> SourceReviewLookup:
+        """Exact-bound overlay; original citations và quality không thay đổi."""
+        facts = [f for f in self._facts if f.observation_identity() == identity]
+        if not facts:
+            return SourceReviewLookup(status="not_found", reasons=["no_matching_fact"])
+        views = [review_view(f, self._source_reviews) for f in facts]
+        conflict = len(facts) != 1 or any(v.status == "source_inconsistent" for v in views)
+        return SourceReviewLookup(
+            status="conflicted" if conflict else "found",
+            matches=views,
+            reasons=["source_binding_conflict"] if conflict else [],
+        )
+
+    def get_reviewed_lineage(self, metric_id: str, *, snapshot_chain=()) -> ReviewedMetricLineage:
+        result = self.get_lineage(metric_id)
+        lineage = result.matches[0].record if len(result.matches) == 1 else None
+        if not isinstance(lineage, MetricLineage):
+            lineage = None
+        return ReviewedMetricLineage(
+            lineage=lineage,
+            status=result.status,
+            reasons=result.reasons,
+            snapshot_chain=list(snapshot_chain),
+            operands=[
+                OperandSourceReview(
+                    role=o.binding.role,
+                    bindings=[self.get_source_review(i) for i in o.binding.candidates],
+                )
+                for o in lineage.operands
+            ]
+            if lineage
+            else [],
+        )
 
     @classmethod
     def from_repositories(

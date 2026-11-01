@@ -31,9 +31,7 @@ from vietnamese_financial_multi_agent.evidence import (
 )
 from vietnamese_financial_multi_agent.evidence.analytical_readiness import (
     AccountingBasisReview,
-    SourceReview,
     assess_analytical_readiness,
-    source_review_status,
 )
 
 
@@ -54,60 +52,10 @@ def pointer(payload, selector):
 
 
 def bind_review(fact, reading, record):
-    """Bind separately transcribed visual reading to exact extraction selectors.
+    """Compatibility wrapper; generic binding thuộc evidence runtime."""
+    from vietnamese_financial_multi_agent.evidence.source_reviews import bind_source_review
 
-    A matching raw number alone is insufficient: label/header selectors must also
-    exist in the same source association, and row/column positions must be unique.
-    Caller resolves PDF/render hash before invoking this function.
-    """
-    payload = record["response"]["output"]["payload"]
-    selectors = [s.reference.source_pointer for s in fact.sources if s.reference]
-
-    def select(text, kind):
-        matches = [
-            s
-            for s in selectors
-            if s and f"/{kind}/" in s and pointer(payload, s).get("text") == text
-        ]
-        if len(matches) != 1:
-            raise ValueError("ambiguous_or_missing_review_selector")
-        return matches[0]
-
-    value = select(reading["raw_value"], "cells")
-    label = select(reading["raw_label"], "cells")
-    header = select(reading["raw_header"], "headers")
-    value_cell, label_cell, header_cell = [pointer(payload, s) for s in (value, label, header)]
-    table_paths = {s.split("/cells/")[0].split("/headers/")[0] for s in (value, label, header)}
-    if (
-        len(table_paths) != 1
-        or value == label
-        or None
-        in (value_cell["row"], label_cell["row"], value_cell["column"], header_cell["column"])
-        or value_cell["row"] != label_cell["row"]
-        or value_cell["column"] != header_cell["column"]
-        or any(c["reading"] != "observed" for c in (value_cell, label_cell, header_cell))
-    ):
-        raise ValueError("review_row_column_mismatch")
-    table = pointer(payload, next(iter(table_paths)))
-    for cell in (value_cell, label_cell, header_cell):
-        if (
-            sum(
-                c["row"] == cell["row"] and c["column"] == cell["column"]
-                for c in table["cells"] + table["headers"]
-            )
-            != 1
-        ):
-            raise ValueError("ambiguous_review_position")
-    review = SourceReview(
-        **reading,
-        sources=fact.sources,
-        value_selector=value,
-        label_selector=label,
-        header_selector=header,
-    )
-    if source_review_status(fact, [review]) != "value_row_verified":
-        raise ValueError("review_fact_mismatch")
-    return review
+    return bind_source_review(fact, reading, record["response"]["output"]["payload"])
 
 
 def recover(root, output, live=False):
