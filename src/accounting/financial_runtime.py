@@ -20,6 +20,7 @@ def process_financial_pdf(
     discovery_cache=None,
     discovery_service=None,
     on_discovery_page=None,
+    source_inventories=None,
 ):
     """Keep good pages when another response is unavailable; binding errors still raise.
 
@@ -51,6 +52,7 @@ def process_financial_pdf(
             cached_records=cached_records,
             model=model,
             dpi=dpi,
+            source_inventories=source_inventories,
         )
         if pages
         else []

@@ -2,6 +2,21 @@
 
 Cập nhật 2026-11-01 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## D-05 — Extraction Completeness & Data Corrections
+
+Status: **REVIEW**; [spec](tasks/D/D-05.md),
+[report](../docs/d05-extraction-corrections.md). Owner giao commit/push main để
+independent review; baseline `53a7836`, SHA/CI ghi sau push. Generic completeness/roles/
+numeric-token issues/basic EPS units, immutable source-backed overlays. Real
+981 original giữ nguyên; corrected910, bỏ73 structural/note và thêm2 EPS;
+5 raw corrections/7 exact SourceReviews. Coverage rows_missing→covered;
+baseline15/15 và D-04 recovery3/3, graph/15 lineages exact;2.457 hashes unchanged.
+243 focused PASS sau hai generic review fixes;20 cached pages/18 lineages exact,
+39 D-05 files unchanged;Ruff/planning98/diff PASS. Lượt chuẩn bị review zero Gateway;
+implementation trước có một attempt/5.966 tokens đúng target page, không full-PDF accuracy/
+restatement approval. B06/B07/B14/B15 REVIEW, chưa DONE. Giữ web local và evidence.
+Next action: Tech Lead review D-05 và source evidence; không tự DONE/D-06/M4.
+
 ## D-04 — Snapshot & Source Closure Fix
 
 Status: **DONE**, Tech Lead nghiệm thu 01/11/2026 theo chỉ đạo Owner;

@@ -235,7 +235,9 @@ def evidence_from_persisted_result(result: dict) -> list[TextEvidence | TableEvi
         raw = ((record.get("response") or {}).get("output") or {}).get("payload")
         if raw is None:
             raise ValueError("Source extraction payload unavailable; explicit adapter required")
-        payload = ExtractedPage.model_validate(raw)
+        from ..accounting.raw_corrections import extraction_payload
+
+        payload = ExtractedPage.model_validate(extraction_payload(record))
         page = RawPageIdentity.model_validate(record["source"]["page"])
         doc, snapshot = result.get("document_id"), result.get("attempt_id")
         provenance = record.get("provenance") or {}
@@ -255,6 +257,10 @@ def evidence_from_persisted_result(result: dict) -> list[TextEvidence | TableEvi
             record_index=index,
             model=deepcopy(record["response"].get("provenance")),
         )
+        if record.get("raw_corrections"):
+            metadata["raw_corrections"] = deepcopy(record["raw_corrections"])
+        if record.get("structure_corrections"):
+            metadata["structure_corrections"] = deepcopy(record["structure_corrections"])
         for kind, components in (("text", payload.context), ("table", payload.tables)):
             for n, component in enumerate(components):
                 pointer = f"/context/{n}" if kind == "text" else f"/tables/{n}"

@@ -18,6 +18,7 @@ from vietnamese_financial_multi_agent.document_processing.gemini_ingestion impor
 from vietnamese_financial_multi_agent.document_processing.ocr_correction import OUTPUT_CAP
 from vietnamese_financial_multi_agent.document_processing.vision_ocr import image_source
 
+from .completeness import assess_row_completeness
 from .context_resolution import ContextEvidence, resolve_financial_context
 from .contracts import (
     FinancialModel,
@@ -25,7 +26,15 @@ from .contracts import (
     FinancialSourceReference,
     FinancialValue,
 )
+from .extraction_semantics import (
+    SEMANTICS_VERSION,
+    column_roles,
+    item_unit,
+    numeric_token_issues,
+    row_role,
+)
 from .item_mapping import ITEM_CATALOG, map_item_label
+from .raw_corrections import extraction_payload
 from .statement_resolution import resolve_statement_type
 
 EXTRACTION_REF = SchemaReference(
@@ -93,7 +102,7 @@ def parse_vietnamese_number(raw: str) -> Decimal | None:
     return value.copy_negate() if negative else value
 
 
-def validate_automated_extraction(image, record: dict) -> dict:
+def validate_automated_extraction(image, record: dict, *, source_inventory=None) -> dict:
     """Validate semantic associations in one image-bound Gateway response.
 
     JSON pointers refer to extraction payload, never pretend to be raw OCR IDs.
@@ -121,7 +130,7 @@ def validate_automated_extraction(image, record: dict) -> dict:
         or not extraction_schema_registry().is_valid(EXTRACTION_REF, output.get("payload"))
     ):
         return dict(base, issues=["invalid_extraction_response"])
-    page = ExtractedPage.model_validate(output["payload"])
+    page = ExtractedPage.model_validate(extraction_payload(record))
 
     def evidence(text, pointer):
         return ContextEvidence(
@@ -146,10 +155,13 @@ def validate_automated_extraction(image, record: dict) -> dict:
     links = []
     bindings = Counter()
     diagnostics = []
+    structure = []
     if not page.tables:
         diagnostics.append("tables_missing")
     for ti, table in enumerate(page.tables):
         prefix = f"/tables/{ti}"
+        roles = column_roles(table)
+        structure.extend(dict(table=ti, column=col, role=role) for col, role in roles.items())
         positions = Counter((c.row, c.column) for c in [*table.headers, *table.cells])
         table_issues = []
         if (
@@ -175,6 +187,10 @@ def validate_automated_extraction(image, record: dict) -> dict:
             diagnostics.append(f"table_{ti}:positioned_rows_missing")
         diagnostics.extend(f"table_{ti}:{issue}" for issue in table_issues)
         for row in rows:
+            role = row_role(table, row, roles)
+            structure.append(dict(table=ti, row=row, role=role))
+            if role not in {"financial_item", "subtotal"}:
+                continue
 
             def select(column, table=table, row=row):
                 found = [
@@ -185,12 +201,7 @@ def validate_automated_extraction(image, record: dict) -> dict:
             li, label = select(table.label_column)
             ci, code = select(table.code_column)
             for hi, header in enumerate(table.headers):
-                if " ".join((header.text or "").casefold().split()) in {
-                    "chỉ tiêu",
-                    "mã số",
-                    "thuyết minh",
-                }:
-                    # These are descriptive headers, not financial value slots.
+                if roles.get(header.column) != "financial_value":
                     continue
                 vi, value = select(header.column)
                 decision = AutomatedLink(
@@ -248,6 +259,15 @@ def validate_automated_extraction(image, record: dict) -> dict:
                     # apparently valid row claiming the same item and period.
                     bindings[item.canonical_item_id, period.context.period] += 1
                 normalized = parse_vietnamese_number(decision.raw_value or "")
+                decision.issues.extend(numeric_token_issues(decision.raw_value, normalized))
+                semantic_unit, semantic_scale, unit_issues = item_unit(
+                    page.statement_type,
+                    decision.source_item_code,
+                    decision.raw_label,
+                    unit.context.currency,
+                    unit.context.scale,
+                )
+                decision.issues.extend(unit_issues)
                 if normalized is None:
                     decision.issues.append("numeric_unresolved")
                 if not decision.issues:
@@ -257,13 +277,13 @@ def validate_automated_extraction(image, record: dict) -> dict:
                         value=FinancialValue(
                             raw_value=decision.raw_value,
                             normalized_value=normalized,
-                            unit=unit.context.currency,
+                            unit=semantic_unit,
                             status="resolved",
                         ),
                         context=period.context.model_copy(
                             update={
                                 "currency": unit.context.currency,
-                                "scale": unit.context.scale,
+                                "scale": semantic_scale,
                                 "statement_type": page.statement_type,
                                 "raw_item_label": decision.raw_label,
                                 "mapped_item_code": item.canonical_item_id,
@@ -292,6 +312,9 @@ def validate_automated_extraction(image, record: dict) -> dict:
         base,
         statement_type=page.statement_type,
         limitations=page.limitations,
+        semantics_version=SEMANTICS_VERSION,
+        structure=structure,
+        completeness=assess_row_completeness(page, image.identity, source_inventory),
         links=[link.model_dump(mode="json") for link in links],
         issues=[*page_issues, *diagnostics],
     )
@@ -308,7 +331,7 @@ def extract_financial_page(
         "codes (preserve leading zeros), raw numeric punctuation/signs, period headers and "
         "unit. Never infer digits, missing values or zero. context contains exact visible "
         "statement title, form code, unit and date text. Each table uses zero-based physical "
-        "row/column positions including headers, label, code and notes columns. Put only "
+        "row/column positions including headers, label, code and notes columns. "
         "Set rows = 1 + the maximum row index and columns = 1 + the maximum column "
         "index. Check these bounds before returning JSON; counts are NOT the last index. "
         "Start the header at row 0 and number each subsequent physical row once. "
@@ -316,6 +339,9 @@ def extract_financial_page(
         "each. Combine wrapped text within a cell. Columns for different periods MUST be "
         "distinct. Mark uncertain cells unknown/inferred, use null text/position if unreadable. "
         "Do not map accounting items or calculate values. Include limitations."
+        " Check coverage through the last physical table row before signatures/footer; "
+        "include per-share items even when their unit differs from monetary rows. "
+        "If the bottom boundary or any row cannot be read, say so in limitations."
     )
     if target:
         prompt += (
@@ -348,6 +374,12 @@ def extract_financial_page(
     record = dict(
         source=image_source(image),
         provenance=page.source,
+        request_metadata=dict(
+            prompt=prompt,
+            schema_ref=EXTRACTION_REF.export(),
+            generation=request.generation.model_dump(mode="json"),
+            model=request.model.model_dump(mode="json"),
+        ),
         response=outcome.response.export() if outcome.response else None,
     )
     record["extraction"] = validate_automated_extraction(image, record)
@@ -365,6 +397,7 @@ def run_automated_pdf(
     model: str = MODEL,
     dpi: int = 200,
     cached_records: dict[int, dict] | None = None,
+    source_inventories: dict | None = None,
 ) -> list[dict]:
     """Render the original PDF, revalidate exact cached image/page binding or call Gateway."""
     if path.suffix.lower() != ".pdf":
@@ -373,7 +406,11 @@ def run_automated_pdf(
     for page in load_pages(path, symbol=symbol, year=year, pages=pages, dpi=dpi):
         cached = (cached_records or {}).get(page.source["page_number"])
         if cached is not None:
-            validated = validate_automated_extraction(page.image, cached)
+            validated = validate_automated_extraction(
+                page.image,
+                cached,
+                source_inventory=(source_inventories or {}).get(page.source["page_number"]),
+            )
             if validated["issues"] == ["image_binding_mismatch"]:
                 raise ValueError("cached_image_binding_mismatch")
             records.append(dict(cached, provenance=page.source, extraction=validated))
@@ -381,6 +418,12 @@ def run_automated_pdf(
             records.append(
                 extract_financial_page(service, page, credential_ref=credential_ref, model=model)
             )
+            if source_inventories:
+                records[-1]["extraction"] = validate_automated_extraction(
+                    page.image,
+                    records[-1],
+                    source_inventory=source_inventories.get(page.source["page_number"]),
+                )
         else:
             raise ValueError("service_or_bound_cache_required")
     return records

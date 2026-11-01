@@ -22,6 +22,8 @@ from .contracts import (
     FinancialSourceReference,
     FinancialValue,
 )
+from .extraction_semantics import item_unit, numeric_token_issues
+from .raw_corrections import extraction_payload
 from .relationships import RelationshipCheck
 
 TaskType = Literal["direct_qa", "analytical_qa", "accounting_analysis", "report_generation"]
@@ -257,7 +259,7 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
     """
     evidence = []
     for record in records:
-        payload = ExtractedPage.model_validate(record["response"]["output"]["payload"])
+        payload = ExtractedPage.model_validate(extraction_payload(record))
         identity = RawPageIdentity.model_validate(record["source"]["page"])
         anchor = SourceAnchor(page=identity, status="uncertain")
 
@@ -295,12 +297,19 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
                 if c.row == link.row
                 and c.column in {link.column, table.label_column, table.code_column}
             )
+            semantic_unit, semantic_scale, unit_issues = item_unit(
+                payload.statement_type,
+                link.source_item_code,
+                link.raw_label,
+                context.context.currency,
+                context.context.scale,
+            )
             result = link.result or FinancialNormalizationResult(
                 contract_version="financial_normalization_v1",
                 value=FinancialValue(
                     raw_value=link.raw_value or "",
                     normalized_value=parse_vietnamese_number(link.raw_value or ""),
-                    unit=context.context.currency,
+                    unit=semantic_unit,
                     status="resolved",
                 ),
                 context=period.context.model_copy(
@@ -308,7 +317,7 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
                         statement_type=payload.statement_type,
                         raw_item_label=link.raw_label,
                         currency=context.context.currency,
-                        scale=context.context.scale,
+                        scale=semantic_scale,
                         reporting_scope=context.context.reporting_scope,
                     )
                 ),
@@ -324,6 +333,10 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
             errors = [
                 i for i in [*record["extraction"]["issues"], *link.issues] if i not in nonblocking
             ]
+            errors.extend(unit_issues)
+            errors.extend(
+                numeric_token_issues(result.value.raw_value, result.value.normalized_value)
+            )
             # Missing code is allowed when the label identifies the item. Other
             # uncertain selected cells must still block raw fallback.
             selected = [
@@ -361,6 +374,13 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
                             "provenance": record.get("provenance"),
                             "model": record["response"].get("provenance"),
                             "request_id": record["response"].get("request_id"),
+                            "unit_semantics": dict(
+                                raw_unit_context=payload.context,
+                                semantic_unit=semantic_unit,
+                                issues=unit_issues,
+                            ),
+                            "raw_corrections": record.get("raw_corrections", []),
+                            "structure_corrections": record.get("structure_corrections", []),
                         }
                     ),
                 )
