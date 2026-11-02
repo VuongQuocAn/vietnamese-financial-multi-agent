@@ -1,5 +1,12 @@
-"""Public typed financial retrieval API cho M4-03/M4-05; không executor."""
+"""Public typed financial retrieval và deterministic calculator API."""
 
+from .financial_calculator import (
+    CalculateFinancialMetricRequest,
+    CalculationOperand,
+    CalculationTrace,
+    FinancialCalculationResponse,
+    FinancialCalculator,
+)
 from .financial_retrieval import (
     FinancialFactMatch,
     FinancialMetricMatch,
@@ -14,6 +21,11 @@ from .financial_retrieval import (
 )
 
 __all__ = [
+    "CalculateFinancialMetricRequest",
+    "CalculationOperand",
+    "CalculationTrace",
+    "FinancialCalculationResponse",
+    "FinancialCalculator",
     "FinancialFactMatch",
     "FinancialMetricMatch",
     "FinancialMetricOperand",

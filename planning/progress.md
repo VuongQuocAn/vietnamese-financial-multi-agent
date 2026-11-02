@@ -13,14 +13,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| M4 | 5 | 2 | 0 | 0 | 3 | 0 | 0 |
+| M4 | 5 | 2 | 1 | 0 | 2 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 100 | 70 | 0 | 0 | 30 | 0 | 0 |
+| TOTAL | 100 | 70 | 1 | 0 | 29 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -37,7 +37,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
-| `tools` | M4-02 DONE,Tech Lead nghiệm thu02/11/2026:bốn typed read-only retrieval tools,exact facts/persisted metrics,scope overlay/partial coverage và production eligibility;146 focused PASS,real baseline2.087 facts/40 cases/18 metrics + scope regression;chưa executor hoặc natural-language QA |
+| `tools` | M4-02 DONE; M4-03 IN_PROGRESS: public Decimal calculator qua production closure, original metrics b?t bi?n;186 focused PASS v? BBS18 computed/restart/independent arithmetic exact; bounded regression PASS; ch? commit/CI |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
@@ -48,16 +48,17 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M4-02 **DONE**, Tech Lead nghiệm thu02/11/2026. [Spec](tasks/M4/M4-02.md).
-145 focused PASS;real2.087 exact facts/40 cases/18 metrics;15+3 eligible/computed0;
-29 queries/36 pairs/5 scopes/QA09/QA15 không regression;2.626 hashes unchanged.
-Accepted correction3dba041bcc61b41cec92b04d950212805d78a45e đã push main;
-[CI41375092119](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41375092119)
-completed/SUCCESS đúng fix SHA,Python3.12/Web smoke SUCCESS;
-146 focused PASS và BBS scope regression found/1 + partial_scope_coverage.
-Phiên chốt chỉ planning/diff checks,giữ code/evidence/web local;
-[report](../docs/m4-02-financial-retrieval-tools.md).
-Next action: chờ Owner/Tech Lead giao M4-03; không tự bắt đầu.
+M4-03 **IN_PROGRESS**, Owner giao02/11/2026; baseline main f433777.
+[Spec](tasks/M4/M4-03.md), [report](../docs/m4-03-calculator-executor.md).
+Public Decimal executor qua production gates;186 focused PASS; BBS18 computed,
+independent arithmetic18/JSON restart exact; 2.087 facts/18 retrievals/41 cases/15+3/29 queries/36 pairs/D-07/D-06 PASS;
+2.641 hashes unchanged,zero Gateway; ch? commit/CI.
+Gi? accepted evidence/web local, kh?ng b?t ??u M4-04.
+Next action: ho?n t?t validation/CI M4-03 r?i b?n giao Tech Lead independent review.
+
+Checkpoint M4-02 ?? nghi?m thu: accepted correction3dba041,
+CI41375092119 SUCCESS ??ng SHA;146 focused PASS, real2.087 exact facts/18 metrics,
+15+3 eligible/computed0, partial scope found/1 original2024/four unresolved.
 
 Checkpoint D-07 đã nghiệm thu:
 

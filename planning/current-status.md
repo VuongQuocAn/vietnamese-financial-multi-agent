@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M4-03 ? Calculator and Formula Executor
+
+Status: **IN_PROGRESS**; local implementation/validation ho?n t?t, ch? commit/CI.
+Owner giao02/11/2026; baseline main f433777. [Spec](tasks/M4/M4-03.md),
+[report](../docs/m4-03-calculator-executor.md). Public FinancialCalculator qua M4-02
+retrieval/M4-01 closure, Decimal34/HALF_EVEN/final0.01, result/trace ri?ng; gi? web local.
+186 focused PASS;real18 computed (6 m?i formula),independent18/restart exact,
+3 real negative controls;2.087 facts/18 retrievals/41 cases/15+3 eligibility/29 queries/
+36 undetermined pairs/5 D-07 scopes/D-06 QA09/QA15 PASS;2.641 hashes unchanged,
+zero Gateway/Gemini/OCR/extraction. D03-B03 local ?? criteria executor, ch? CI/TL.
+Next action: commit/push v? x?c minh CI ??ng implementation SHA tr??c REVIEW.
+
 ## M4-02 — Typed Financial Retrieval Tools
 
 Status: **DONE**; Tech Lead nghiệm thu ngày02/11/2026 và cho phép đồng bộ planning.
