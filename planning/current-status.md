@@ -4,7 +4,8 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M4-02 — Typed Financial Retrieval Tools
 
-Status: **REVIEW**; Owner giao02/11/2026, baseline075222a.
+Status: **DONE**; Tech Lead nghiệm thu ngày02/11/2026 và cho phép đồng bộ planning.
+Owner giao02/11/2026, baseline075222a; accepted correction3dba041.
 [Spec](tasks/M4/M4-02.md), [report](../docs/m4-02-financial-retrieval-tools.md).
 Bốn typed tools,145 focused PASS;real2.087 exact facts/40 cases/18 metrics;
 15+3 eligible/computed0;29 queries/36 pairs/5 scopes/QA09/QA15 không regression.
@@ -20,7 +21,9 @@ Fix `3dba041bcc61b41cec92b04d950212805d78a45e` đã push main;
 [CI41375092119](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41375092119)
 completed/SUCCESS đúng fix SHA,Python3.12/Web smoke SUCCESS;
 không chạy lại baseline real acceptance.
-Next action: Tech Lead independent review M4-02 correction.
+Phiên chốt DONE chỉ cập nhật planning và chạy planning/diff checks; giữ nguyên
+code/evidence/web local, không chạy lại tests/evaluation/Gemini hoặc bắt đầu task mới.
+Next action: chờ Owner/Tech Lead giao M4-03; không tự bắt đầu.
 
 ## D-07 — Reporting Scope Source Resolution
 

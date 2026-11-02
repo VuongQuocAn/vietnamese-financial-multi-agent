@@ -6,13 +6,14 @@ M4-02 — Typed Financial Retrieval Tools
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Baseline main `075222afcf4992dd80fbd600c4979b7d66f3f78e` đúng yêu cầu Owner.
 M4-01/D-07 DONE; [spec](tasks/M4/M4-02.md). Main-first, commit/push được phép.
 Unrelated web/next-env.d.ts giữ nguyên hash a419cbe4e3a5e8d4b481b851dbf4ac767de069e6.
+Tech Lead đã nghiệm thu M4-02 ngày02/11/2026,cho phép đồng bộ DONE trong planning.
 
 ## Completed Work
 
@@ -23,13 +24,12 @@ scope exact-bound D-07, no latest/parent fallback; public contract v1 và contro
 
 ## Remaining Work
 
-Chờ Tech Lead review partial scope coverage correction; không tự DONE hoặc bắt đầu M4-03.
+Không còn việc trong phạm vi M4-02 đã nghiệm thu; chưa được giao triển khai M4-03.
 
 ## Modified Files
 
-src/tools, targeted tests, evaluator, D-06 regression schema-default adapter,
-CI focused list, docs và planning M4-02.
-Giữ evidence runtime/accepted artifacts và unrelated web file.
+Phiên chốt chỉ registry/current-status/dashboard/handoff/spec M4-02 trong planning.
+Giữ nguyên code,report,accepted artifacts và unrelated web file.
 
 ## Tests
 
@@ -38,6 +38,8 @@ Ruff355/planning100/diff PASS. artifacts/evidence/M4-02-final/summary.json:
 1.177 baseline/recovery +910 corrected exact facts;40 cases/18 metrics;
 15+3 eligible/computed0;29 queries/36 pairs/5 scope views/D-06 PASS;
 2.626 hashes unchanged,zero Gateway;JSON/restart exact.
+Phiên đồng bộ DONE chỉ chạy planning checker và git diff --check;
+không chạy lại tests/evaluation/Gemini/OCR/extraction.
 
 ## Blockers
 
@@ -59,4 +61,4 @@ completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Checkpoint sau chỉ 
 
 ## Exact Next Action
 
-Tech Lead independent review M4-02 correction.
+Chờ Owner/Tech Lead giao M4-03; không tự bắt đầu.
