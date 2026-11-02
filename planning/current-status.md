@@ -4,7 +4,8 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-03 — Risk-Aware Supervisor
 
-Status: **REVIEW**; Owner giao02/11/2026, baseline main/origin03b7d23 đã xác minh.
+Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.
+Owner giao02/11/2026, baseline main/origin03b7d23 đã xác minh.
 [Spec](tasks/M5/M5-03.md), [report](../docs/m5-03-risk-aware-supervisor.md).
 Supervisor/typed results/whitelist4 tools/internal operations, dependency/evidence
 scheduler, risk/stops/budget và full M4 evidence propagation.19/19 scenarios:
@@ -17,7 +18,9 @@ không tính là executions mới. Implementation `1e43c2b0005d85b1905299761dcb4
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI trên cho SHA checkpoint.
 Giữ Web local, D03-B10 và financial_fact_verified=False; không bắt đầu M5-04.
-Next action: Tech Lead review M5-03.
+Phiên nghiệm thu chỉ planning/checker/diff; không sửa runtime hoặc chạy lại
+Gemini/tests/benchmark/artifacts. Giữ nguyên evidence implementation.
+Next action: chờ Owner/Tech Lead giao task mới; không tự bắt đầu M5-04.
 
 ## M5-02 — Evidence-Aware Query Planner
 

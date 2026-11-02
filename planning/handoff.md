@@ -6,7 +6,7 @@ M5-03 — Risk-Aware Supervisor
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -19,7 +19,7 @@ Artifacts completion local `artifacts/evidence/M5-03-complete`, tái dùng trace
 `1e43c2b0005d85b1905299761dcb462e55e1c692` đã push main;
 [CI41421589655](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41421589655)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
-Chờ Tech Lead review.
+Tech Lead APPROVED — DONE ngày02/11/2026, cho phép đồng bộ planning.
 
 ## Completed Work
 
@@ -28,11 +28,11 @@ runtime risk/stop/budget handling, focused tests và real evaluator. Không đ�
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu; không tự DONE hoặc bắt đầu M5-04.
+Không còn việc M5-03 sau nghiệm thu; chờ task mới, không tự bắt đầu M5-04.
 
 ## Modified Files
 
-agents Supervisor/public exports, focused test/evaluator/CI, docs/planning.
+Phiên nghiệm thu chỉ planning: registry, spec, current-status, progress và handoff.
 Giữ web/next-env.d.ts local ngoài stage; artifacts/dataset/secrets ignored.
 
 ## Tests
@@ -41,6 +41,8 @@ Giữ web/next-env.d.ts local ngoài stage; artifacts/dataset/secrets ignored.
 planning101 và diff PASS;19 scenarios và bounded M4/M5 regressions exact,
 3.231 protected hashes unchanged,JSON round-trip PASS.
 Không full regression, Gemini live hoặc OCR/extraction.
+Phiên nghiệm thu chỉ chạy planning checker/diff check; không chạy lại tests,
+Gemini, benchmark hoặc artifacts. Giữ nguyên accepted evidence phía trên.
 
 ## Blockers
 
@@ -55,4 +57,4 @@ không branch/PR/worktree. Protected manifest giữ cả Web local.
 
 ## Exact Next Action
 
-Tech Lead review M5-03.
+Chờ Owner/Tech Lead giao task mới; không tự bắt đầu M5-04.
