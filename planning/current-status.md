@@ -6,12 +6,17 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 Status: **REVIEW**,Tech Lead giao02/11/2026;baseline main/origin `6b5e05d`.
 [Spec](tasks/M4/M4-05a.md),[report](../docs/m4-05a-gemini-live-validation.md).
-Chưa commit;local key0 hoạt động. Resolver/CLI và bounded semantic fallback/prompt
+Implementation `23faa718d952fc90682973fac485180c37b014d8` đã push main;local key0
+hoạt động. Resolver/CLI và bounded semantic fallback/prompt
 fix;30 focused PASS. Live5 câu giữ4answers đúng/grounded+negative đúng,ban đầu3/5;
 9API attempts,8recorded success,1provider outcome unknown do writer bug đã sửa.
 Known10.798tokens,total9 N/A;provider model gemini-3.5-flash-lite,không rotation.
 Offline36/18metrics/29queries/36pairs/D-06/D-07/2.670hashes exact;live2.665hashes
-unchanged. Chờ commit/push/CI/Tech Lead;giữ M4-05 DONE,không M5-01/web/raw changes.
+unchanged. [CI41387830765](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41387830765)
+attempt2 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+Attempt1 Web PDF retry counter fail2/1,rerun failed jobs một lần PASS cùng SHA,
+không sửa web. Checkpoint sau docs-only [skip ci],không gán CI cho SHA checkpoint.
+Chờ Tech Lead;giữ M4-05 DONE,không M5-01/web/raw changes.
 Next action: Tech Lead independent review M4-05a.
 
 ## M4-05 — Question Answering Baseline

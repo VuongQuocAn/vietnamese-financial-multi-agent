@@ -52,7 +52,10 @@ M4-05a **REVIEW**;[spec](tasks/M4/M4-05a.md),
 [report](../docs/m4-05a-gemini-live-validation.md).30 focused PASS;live4answers đúng/
 grounded+negative đúng sau targeted fix.9API attempts/8recorded success/1unknown;
 known10.798tokens,total9 N/A.Offline36/18metrics/29queries/36pairs/D-06/D-07/2.670
-hashes exact. Chưa commit,chờ CI/Tech Lead;giữ M4-05 DONE,không bắt đầu M5-01.
+hashes exact. Implementation `23faa718d952fc90682973fac485180c37b014d8` đã push main;
+CI41387830765 attempt2 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression
+SKIPPED. Attempt1 PDF retry counter fail2/1,rerun một lần PASS,không sửa web.
+Chờ Tech Lead;giữ M4-05 DONE,không bắt đầu M5-01.
 Next action: Tech Lead independent review M4-05a.
 
 Checkpoint nghiệm thu trước task bổ sung:

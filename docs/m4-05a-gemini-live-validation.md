@@ -142,7 +142,14 @@ nhận ra,nhưng vẫn cần schema/allowlists và backend compatibility/quality
 Provenance thật vẫn page-level/scope có unresolved;`financial_fact_verified=False`.
 D03-B10 vẫn BLOCKED với cross-document. Giữ M4-05 APPROVED/DONE.
 
-Status **REVIEW**;local/regressions hoàn tất,chưa commit/CI tại checkpoint này.
-Giữ M4-05 DONE;không bắt đầu M5-01. Giữ unrelated web local byte-for-byte.
+Status **REVIEW**;implementation `23faa718d952fc90682973fac485180c37b014d8` đã
+push main. [CI41387830765](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41387830765)
+attempt2 completed/SUCCESS đúng SHA:Python3.12 và Web smoke/typecheck/lint/build/
+browser/proxy SUCCESS;full unit regression SKIPPED theo workflow.
+Attempt1 Python PASS nhưng Web8/9:test PDF viewer cũ tại `pdf-viewer.spec.ts:62`
+expected2requests/received1 sau reload. Rerun failed jobs một lần trên cùng SHA
+PASS,không sửa web;dấu hiệu timing của assertion vẫn ghi nhận ngoài scope task.
+Checkpoint sau chỉ docs/planning [skip ci],không gán CI implementation cho SHA
+checkpoint. Giữ M4-05 DONE;không bắt đầu M5-01. Web local giữ byte-for-byte.
 
 Next action: Tech Lead independent review M4-05a.

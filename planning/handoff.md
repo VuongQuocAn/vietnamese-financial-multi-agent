@@ -12,7 +12,11 @@ REVIEW
 
 Baseline main/origin `6b5e05d4305b5d3278987d8fedc75022bbfccf67` đã xác minh.
 [Spec](tasks/M4/M4-05a.md),[report](../docs/m4-05a-gemini-live-validation.md).
-Chưa commit. M4-05 giữ APPROVED/DONE;D03-B10 vẫn BLOCKED với cross-document.
+Implementation `23faa718d952fc90682973fac485180c37b014d8` đã push main.
+[CI41387830765](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41387830765)
+attempt2 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression
+SKIPPED. Attempt1 Web PDF retry counter fail2/1,rerun failed jobs một lần PASS,
+không sửa web. M4-05 giữ APPROVED/DONE;D03-B10 vẫn BLOCKED với cross-document.
 
 ## Completed Work
 
@@ -22,7 +26,7 @@ không truyền sẵn target vào context,không thay Gateway/adapter hoặc acc
 
 ## Remaining Work
 
-Commit/push/CI đúng SHA và Tech Lead nghiệm thu;không M5-01.
+Tech Lead nghiệm thu;không M5-01.
 
 ## Modified Files
 
@@ -47,7 +51,8 @@ financial_fact_verified=False,D03-B10 chặn cross-document;không bắt đầu 
 
 ## Git Checkpoint
 
-Chưa commit;không stage key file/artifacts. Web SHA256 trước task giữ nguyên:
+Implementation đã push;checkpoint sau docs-only [skip ci],không gán CI implementation
+cho SHA checkpoint. Không stage key file/artifacts. Web SHA256 giữ nguyên:
 `0f70629890b72a0a82e91972cc032c04b658b26c265373cb711cf576bfbf8fcc`.
 Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 
