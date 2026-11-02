@@ -149,7 +149,7 @@ Bảy real negative controls PASS: ba `unavailable` (missing anchor, missing gra
 unsupported period), bốn `not_found` (missing evidence/snapshot, sai document,
 recovery metric với original guard). Không fallback nguồn gần giống.
 
-## Review checkpoint
+## Checkpoint nghiệm thu
 
 Implementation [`304da3a6a95873acd88fc3b49a5fd0268e07653f`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/304da3a6a95873acd88fc3b49a5fd0268e07653f),
 format fix [`a36493b60834c32b5629f23dc4bfa0062359db01`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/a36493b60834c32b5629f23dc4bfa0062359db01)
@@ -160,4 +160,9 @@ format Python code fence trong tài liệu; correction chỉ format, runtime kh�
 Local Ruff lint/format toàn repo365 files/planning100/diff PASS.
 Checkpoint sau chỉ ghi evidence/docs/planning, không gán CI fix cho SHA checkpoint.
 Không phát hiện P0/P1 còn mở trong phạm vi đã kiểm tra. Giữ web local byte-for-byte.
-Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
+Tech Lead APPROVED ngày02/11/2026: M4-04 DONE, cho phép đồng bộ planning;
+không P0/P1 mới cần sửa. Web smoke/full regression SKIPPED theo workflow,
+không phải test failure. D03-B10 giữ BLOCKED đối với so sánh liên tài liệu.
+Phiên nghiệm thu chỉ docs/planning và planning/diff checks; không chạy lại tests/
+evaluation/Gemini/OCR/extraction hoặc sửa runtime/evidence/web local.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu M4-05.

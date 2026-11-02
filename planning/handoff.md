@@ -6,7 +6,7 @@ M4-04 — Evidence Retrieval Tools
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -17,6 +17,8 @@ Implementation `304da3a6a95873acd88fc3b49a5fd0268e07653f` và format fix
 [CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
 completed/SUCCESS đúng fix SHA;Python3.12 lint/format/planning/focused tests SUCCESS;
 Web smoke/full regression SKIPPED. Format fix chỉ code fence tài liệu, runtime giữ nguyên.
+Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ DONE; không P0/P1 mới cần sửa.
+Web smoke/full regression SKIPPED theo workflow, không phải test failure.
 
 ## Completed Work
 
@@ -26,12 +28,13 @@ ba regression controls FAIL trước/PASS sau. Không refactor graph/engine/poli
 
 ## Remaining Work
 
-Tech Lead independent review trước DONE.
+Không còn việc trong phạm vi M4-04 đã nghiệm thu; chưa được giao M4-05.
 
 ## Modified Files
 
 src/tools, src/evidence/retrieval.py, hai test files, evaluator, focused CI list,
 docs/planning. Giữ web/next-env.d.ts ngoài stage và byte-for-byte.
+Phiên nghiệm thu chỉ cập nhật docs/planning, không sửa runtime/evidence/web.
 
 ## Tests
 
@@ -42,11 +45,14 @@ Sau correction:2.087 fact sources/163 evidence sources/29 queries/7 real control
 15+3 eligibility/36 undetermined pairs/D-07 scopes/D-06 QA09/QA15 giữ nguyên;
 2.657 protected input hashes unchanged,zero Gateway/Gemini/OCR/extraction.
 Ignored outputs:artifacts/evidence/M4-04 và M4-04-source-check.
+Phiên đồng bộ DONE chỉ chạy planning checker và git diff --check; không chạy lại
+tests/evaluation/Gemini/OCR/extraction.
 
 ## Blockers
 
 Không P0/P1 còn mở trong phạm vi kiểm tra. All real anchors uncertain/page-level;
 financial_fact_verified=False. Cross-document approval vẫn ngoài scope.
+D03-B10 giữ BLOCKED đối với so sánh liên tài liệu.
 
 ## Git Checkpoint
 
@@ -57,4 +63,4 @@ Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 
 ## Exact Next Action
 
-Tech Lead independent review M4-04; chưa bắt đầu M4-05.
+Chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu M4-05.

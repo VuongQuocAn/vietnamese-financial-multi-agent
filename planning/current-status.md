@@ -4,7 +4,8 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M4-04 — Evidence Retrieval Tools
 
-Status: **REVIEW**; Owner giao 02/11/2026, baseline main749d37f.
+Status: **DONE**; Tech Lead APPROVED ngày 02/11/2026, cho phép đồng bộ planning.
+Owner giao 02/11/2026, baseline main749d37f.
 [Spec](tasks/M4/M4-04.md), [report](../docs/m4-04-evidence-retrieval-tools.md).
 Năm typed read-only tools;203 focused PASS;real139 text/24 tables/2.973 anchors/
 18 lineages exact.18 accepted executions/arithmetic/restart exact;25 priority sources.
@@ -18,7 +19,11 @@ M3 get_sources sửa false-found khi thiếu reference/image hoặc sai binding;
 completed/SUCCESS đúng fix SHA,Python3.12 lint/format/planning/focused tests SUCCESS;
 Web smoke/full regression SKIPPED. Giữ web local;không P0/P1 còn mở trong phạm vi
 kiểm tra. Checkpoint sau chỉ docs/planning,không gán CI fix cho SHA checkpoint.
-Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
+Phiên nghiệm thu chỉ docs/planning và planning/diff checks; không chạy lại tests,
+evaluation/Gemini/OCR/extraction hoặc sửa runtime/evidence/web. Web smoke/full
+regression SKIPPED theo workflow, không phải failure; không P0/P1 mới cần sửa.
+D03-B10 giữ BLOCKED đối với so sánh liên tài liệu.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu M4-05.
 
 ## M4-03 — Calculator and Formula Executor
 
