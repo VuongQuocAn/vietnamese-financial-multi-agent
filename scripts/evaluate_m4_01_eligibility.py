@@ -9,6 +9,7 @@ from evaluate_d01_coverage import compare_observations, fixed_queries
 from evaluate_d04_closure import save
 from evaluate_d06_validation import SNAPSHOT, qa09, selected_facts
 from run_d01_coverage import digest, load
+from vietnamese_financial_multi_agent.accounting.relationships import RelationshipCheck
 from vietnamese_financial_multi_agent.evidence import (
     CanonicalCoverage,
     CanonicalFactRepository,
@@ -207,7 +208,16 @@ def d06_regression(root):
                 for c in checks
                 if c.rule_id.startswith("b01") == ("-" in period)
             )
-    assert validations == load(root / "artifacts/evidence/D-06-review/validation.json")
+    expected_validations = load(root / "artifacts/evidence/D-06-review/validation.json")
+    # D-07 thêm ContextEvidence.scope_selection=None. Hydrate accepted typed
+    # relationship checks để áp schema defaults; không bỏ fields hoặc caveats.
+    for row in expected_validations:
+        check = row.get("check")
+        if check and check["rule_version"] == "source-relationship-v2":
+            row["check"] = RelationshipCheck.model_validate_json(json.dumps(check)).model_dump(
+                mode="json"
+            )
+    assert validations == expected_validations
     qa15 = [
         v
         for v in validations

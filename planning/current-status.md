@@ -2,6 +2,16 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M4-02 — Typed Financial Retrieval Tools
+
+Status: **REVIEW**; Owner giao02/11/2026, baseline075222a.
+[Spec](tasks/M4/M4-02.md), [report](../docs/m4-02-financial-retrieval-tools.md).
+Bốn typed tools,145 focused PASS;real2.087 exact facts/40 cases/18 metrics;
+15+3 eligible/computed0;29 queries/36 pairs/5 scopes/QA09/QA15 không regression.
+2.626 input hashes unchanged,zero Gateway. Chưa commit, chờ push/CI đúng SHA.
+Giữ web local và accepted artifacts;không executor hoặc M3 runtime changes.
+Next action: Tech Lead independent review M4-02.
+
 ## D-07 — Reporting Scope Source Resolution
 
 Status: **DONE**, Tech Lead nghiệm thu ngày02/11/2026:đạt mục tiêu điều tra và sửa
