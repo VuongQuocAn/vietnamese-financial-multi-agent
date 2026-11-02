@@ -2,65 +2,50 @@
 
 ## Active Task
 
-M4-04 — Evidence Retrieval Tools
+M4-05 — Question Answering Baseline
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Baseline main/origin main/remote `749d37fbe832f7aa2701162269eb8e42402a2ba5`.
-[Spec](tasks/M4/M4-04.md), [report](../docs/m4-04-evidence-retrieval-tools.md).
-Implementation `304da3a6a95873acd88fc3b49a5fd0268e07653f` và format fix
-`a36493b60834c32b5629f23dc4bfa0062359db01` đã push main;
-[CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
-completed/SUCCESS đúng fix SHA;Python3.12 lint/format/planning/focused tests SUCCESS;
-Web smoke/full regression SKIPPED. Format fix chỉ code fence tài liệu, runtime giữ nguyên.
-Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ DONE; không P0/P1 mới cần sửa.
-Web smoke/full regression SKIPPED theo workflow, không phải test failure.
+Baseline main/origin `eca8cc84c626556e7f1fa5e6faab92797e3e06d8` đã xác minh.
+[Spec](tasks/M4/M4-05.md), [report](../docs/m4-05-qa-baseline.md).
+Chưa commit; final real-data evaluation/replay/regressions PASS.
 
 ## Completed Work
 
-Năm typed tools cho document evidence, anchors, sources và metric lineage.
-Sửa M3 get_sources false-found khi source thiếu reference/image hoặc sai binding;
-ba regression controls FAIL trước/PASS sau. Không refactor graph/engine/policies.
+Public QA API/contracts, deterministic rules/dispatcher/composer, optional một
+Gateway call với schema/allowlists, CLI và benchmark 36 câu có references độc lập.
 
 ## Remaining Work
 
-Không còn việc trong phạm vi M4-04 đã nghiệm thu; chưa được giao M4-05.
+Commit/push/CI đúng SHA và Tech Lead independent review; không tự DONE/M5.
 
 ## Modified Files
 
-src/tools, src/evidence/retrieval.py, hai test files, evaluator, focused CI list,
-docs/planning. Giữ web/next-env.d.ts ngoài stage và byte-for-byte.
-Phiên nghiệm thu chỉ cập nhật docs/planning, không sửa runtime/evidence/web.
+src/tools, tests/unit/test_financial_qa.py, hai scripts, evaluation question config,
+focused CI list và docs/planning. Giữ web/next-env.d.ts ngoài stage và byte-for-byte.
 
 ## Tests
 
-203 focused PASS; Ruff/planning/diff PASS trước commit.
-Real139 text/24 tables/2.973 anchors/18 lineages exact;25 priority sources;
-18 accepted executions/independent arithmetic/restart exact.
-Sau correction:2.087 fact sources/163 evidence sources/29 queries/7 real controls PASS.
-15+3 eligibility/36 undetermined pairs/D-07 scopes/D-06 QA09/QA15 giữ nguyên;
-2.657 protected input hashes unchanged,zero Gateway/Gemini/OCR/extraction.
-Ignored outputs:artifacts/evidence/M4-04 và M4-04-source-check.
-Phiên đồng bộ DONE chỉ chạy planning checker và git diff --check; không chạy lại
-tests/evaluation/Gemini/OCR/extraction.
+193 targeted PASS; sau chỉnh rendering/cache, 25 QA PASS. Ruff372/planning100/diff
+PASS. Final benchmark36:28 answered đúng/grounded,6 abstained/unsupported,2 clarification;
+intent/tools36/36.18 metrics/29 queries/36 pairs/D-06/D-07 và2.670 hashes giữ nguyên.
+Final outputs riêng artifacts/evidence/M4-05-final; zero Gateway/Gemini/OCR/extraction.
 
 ## Blockers
 
-Không P0/P1 còn mở trong phạm vi kiểm tra. All real anchors uncertain/page-level;
-financial_fact_verified=False. Cross-document approval vẫn ngoài scope.
-D03-B10 giữ BLOCKED đối với so sánh liên tài liệu.
+Chưa live Gemini do không có process credentials/live config; financial_fact_verified=False.
+Nguồn vẫn page-level; D03-B10 chặn cross-document. Không bắt đầu M5.
 
 ## Git Checkpoint
 
-Implementation/fix và CI trên đã xác minh; checkpoint sau chỉ docs/planning
-[skip ci], không gán CI fix cho SHA checkpoint. Web SHA256 trước task:
+Chưa commit. Web SHA256 trước task, đã kiểm giữ nguyên:
 `0f70629890b72a0a82e91972cc032c04b658b26c265373cb711cf576bfbf8fcc`.
 Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu M4-05.
+Tech Lead independent review M4-05.

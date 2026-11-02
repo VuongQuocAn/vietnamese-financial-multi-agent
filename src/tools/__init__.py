@@ -17,6 +17,7 @@ from .financial_calculator import (
     FinancialCalculationResponse,
     FinancialCalculator,
 )
+from .financial_qa import FinancialQABaseline, QAContext, QADocument, QAResponse, QAUnderstanding
 from .financial_retrieval import (
     FinancialFactMatch,
     FinancialMetricMatch,
@@ -31,6 +32,11 @@ from .financial_retrieval import (
 )
 
 __all__ = [
+    "FinancialQABaseline",
+    "QAContext",
+    "QADocument",
+    "QAResponse",
+    "QAUnderstanding",
     "EvidenceRetrievalTools",
     "EvidenceToolRequest",
     "EvidenceToolResponse",

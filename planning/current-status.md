@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M4-05 — Question Answering Baseline
+
+Status: **REVIEW**, Owner giao02/11/2026; baseline main/origin `eca8cc8`.
+[Spec](tasks/M4/M4-05.md), [report](../docs/m4-05-qa-baseline.md).
+QA API/rules/optional một Gateway call/dispatcher/composer/CLI;193 targeted PASS.
+Final36 câu:28 answered đúng/grounded,6 abstained/unsupported,2 clarification;
+intent/tools36/36.18 metrics/29 queries/36 pairs/D-06/D-07/inventory giữ nguyên,
+2.670 protected hashes unchanged;zero Gateway,live Gemini NOT RUN vì thiếu process
+credentials/live configuration. Chưa commit;chờ commit/push/CI và Tech Lead nghiệm thu.
+Giữ local web/next-env.d.ts;không tự DONE hoặc bắt đầu M5.
+Next action: Tech Lead independent review M4-05.
+
 ## M4-04 — Evidence Retrieval Tools
 
 Status: **DONE**; Tech Lead APPROVED ngày 02/11/2026, cho phép đồng bộ planning.
