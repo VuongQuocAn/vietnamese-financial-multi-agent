@@ -169,7 +169,11 @@ metrics và final hashes đều PASS. Fresh run yêu cầu output directory mớ
 `--resume` chỉ dùng cho interrupted evaluation cùng runtime và inputs, không dùng
 kết quả cũ sau khi thay tools. Accepted artifacts read-only, không re-extraction.
 
-Implementation SHA/CI: sẽ ghi sau commit/push và xác minh run đúng SHA.
+Implementation [`3ac01c02ef1ba6d713bf67706ade436da3ebb97f`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3ac01c02ef1ba6d713bf67706ade436da3ebb97f)
+đã push trực tiếp main. [CI41373589020](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41373589020)
+completed/SUCCESS đúng SHA; Python3.12 và Web smoke SUCCESS. Full unit regression
+skipped theo focused policy. Checkpoint sau chỉ docs/planning `[skip ci]`,không gán
+CI implementation cho SHA checkpoint. web/next-env.d.ts giữ nguyên ngoài commit.
 
 Đây là retrieval/identity/provenance regression trên persisted BBS, chưa independent
 gold hoặc full-PDF financial accuracy. Chưa executor, QA baseline hoặc Multi-Agent.

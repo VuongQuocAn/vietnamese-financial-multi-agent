@@ -8,7 +8,10 @@ Status: **REVIEW**; Owner giao02/11/2026, baseline075222a.
 [Spec](tasks/M4/M4-02.md), [report](../docs/m4-02-financial-retrieval-tools.md).
 Bốn typed tools,145 focused PASS;real2.087 exact facts/40 cases/18 metrics;
 15+3 eligible/computed0;29 queries/36 pairs/5 scopes/QA09/QA15 không regression.
-2.626 input hashes unchanged,zero Gateway. Chưa commit, chờ push/CI đúng SHA.
+2.626 input hashes unchanged,zero Gateway. Implementation
+`3ac01c02ef1ba6d713bf67706ade436da3ebb97f` đã push main;
+[CI41373589020](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41373589020)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
 Giữ web local và accepted artifacts;không executor hoặc M3 runtime changes.
 Next action: Tech Lead independent review M4-02.
 
