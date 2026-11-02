@@ -6,7 +6,7 @@ D-07 — Reporting Scope Source Resolution
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -16,6 +16,8 @@ Tech Lead giao02/11/2026,main-first/commit/push được phép. Implementation c
 `54663b92cc7881a63c37b68729d0749998963522` đã push main;
 [CI41370688198](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41370688198)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
+Tech Lead nghiệm thu ngày02/11/2026:D-07 DONE,đạt mục tiêu điều tra và sửa lỗi
+xác định được. B10 vẫn BLOCKED một phần;không audit lặp bốn PDF insufficient.
 
 ## Completed Work
 
@@ -28,14 +30,14 @@ Bốn filings2021/2022/2023/2025 insufficient,giữNone với reason cụ thể.
 
 ## Remaining Work
 
-Chờ Tech Lead independent review D-07;không tự nghiệm thu DONE.
-Không mở cross-document execution hoặc tự bắt đầu M4-02.
+Không còn việc trong phạm vi nghiệm thu D-07;chưa có task tiếp theo được giao.
+Không audit lặp bốn PDF hoặc mở cross-document comparisons khi thiếu compatibility;
+không tự bắt đầu M4-02.
 
 ## Modified Files
 
-Accounting context,evidence scope overlay/catalog,exports,focused tests/evaluator,
-CI focused list,policy report và planning/Blocker Registry. Giữ web/next-env.d.ts.
-Ignored evidence D-07;không stage dataset/raw/PDF/secrets.
+Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff/spec D-07 và
+D-03 Blocker Registry. Giữ runtime/report/artifacts và web/next-env.d.ts ngoài stage.
 
 ## Tests
 
@@ -45,13 +47,15 @@ scope2024 separate confirmed/four insufficient,restart exact;M4-01 eligibility
 Final read-only guard và5 persisted scope views exact/hash unchanged;Ruff350,
 planning100/diff PASS. CI Python3.12/Web smoke SUCCESS đúng SHA;full regression
 SKIPPED. Checkpoint sau chỉ docs/planning,không chạy lại tests/evaluation/Gemini/OCR.
+Phiên nghiệm thu chỉ chạy planning checker và git diff --check.
 
 ## Blockers
 
 D03-B10 partial resolution:2024 source-backed scope đã có,bốn filing scopes
 UNKNOWN vì insufficient source;giữ BLOCKED cross-document. Dependency tiếp theo:
-source-backed filing declarations cho2021/2022/2023/2025 hoặc comparison policy
-riêng được Tech Lead giao/phê duyệt,không audit lặp lại cùng nguồn như code bug.
+source-backed filing declarations cho2021/2022/2023/2025 và đầy đủ các điều kiện
+tương thích trước so sánh liên tài liệu. Theo nghiệm thu,không audit lặp bốn PDF này;
+chưa cho phép so sánh khi thiếu compatibility.
 
 ## Git Checkpoint
 
@@ -62,4 +66,4 @@ accepted D-01–D-06/M4-01 artifacts/policies.
 
 ## Exact Next Action
 
-Tech Lead independent review D-07.
+Chờ Owner/Tech Lead giao task tiếp theo.

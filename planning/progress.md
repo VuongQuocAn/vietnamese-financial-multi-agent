@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 7 | 6 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 100 | 68 | 0 | 0 | 31 | 0 | 1 |
+| D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 100 | 69 | 0 | 0 | 31 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,7 +48,7 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-D-07 **REVIEW**, chờ Tech Lead independent review; [spec](tasks/D/D-07.md).
+D-07 **DONE**, Tech Lead nghiệm thu ngày02/11/2026; [spec](tasks/D/D-07.md).
 Baseline mainf0b4328;2024 separate/PDFp1,4 filing insufficient giữNone.
 273 focused PASS;real15+3 closures/lineages,36 pairs/29 queries exact,
 2.573 hashes unchanged,zero Gateway. B10 còn BLOCKED cross-document.
@@ -56,8 +56,11 @@ Baseline mainf0b4328;2024 separate/PDFp1,4 filing insufficient giữNone.
 54663b92cc7881a63c37b68729d0749998963522 đã push main;
 [CI41370688198](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41370688198)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Ruff350/planning100/diff PASS;
-checkpoint sau chỉ docs/planning,không mở M4-02/cross-document execution.
-Next action: Tech Lead independent review D-07.
+Phiên nghiệm thu chỉ planning/Blocker Registry và planning/diff checks,giữ runtime/
+report/artifacts/web local. B10 vẫn BLOCKED một phần;không audit lặp bốn PDF hoặc
+cho phép cross-document comparisons khi thiếu compatibility. Không chạy lại tests/
+evaluation/Gemini hoặc mở M4-02.
+Next action: chờ Owner/Tech Lead giao task tiếp theo.
 
 Checkpoint M4-01 đã nghiệm thu:
 
