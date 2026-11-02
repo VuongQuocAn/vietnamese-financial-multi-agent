@@ -16,7 +16,10 @@ Giữ web local và accepted artifacts;không executor hoặc M3 runtime changes
 Review correction:partial scope coverage không chặn found khi có valid match;
 conflicting evidence/snapshot selection giữ fail-closed.146 focused PASS và một
 real BBS regression found/1 original2024/four unresolved;2.626 hashes unchanged.
-Fix chưa commit, chờ CI mới đúng SHA;không chạy lại baseline real acceptance.
+Fix `3dba041bcc61b41cec92b04d950212805d78a45e` đã push main;
+[CI41375092119](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41375092119)
+completed/SUCCESS đúng fix SHA,Python3.12/Web smoke SUCCESS;
+không chạy lại baseline real acceptance.
 Next action: Tech Lead independent review M4-02 correction.
 
 ## D-07 — Reporting Scope Source Resolution

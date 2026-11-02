@@ -195,7 +195,10 @@ Match/citations/reviews bằng lookup riêng original2024; JSON round-trip exact
 2.626 hashes unchanged, original facts unchanged, zero Gateway. Baseline acceptance
 ở trên giữ lịch sử, không chạy lại full real acceptance cho fix hẹp này.
 
-Fix implementation: chưa commit; CI mới sẽ được xác minh sau push main.
+Fix implementation [`3dba041bcc61b41cec92b04d950212805d78a45e`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3dba041bcc61b41cec92b04d950212805d78a45e)
+đã push main; [CI41375092119](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41375092119)
+completed/SUCCESS đúng fix SHA,Python3.12/Web smoke SUCCESS. Checkpoint tiếp theo
+chỉ docs/planning `[skip ci]`; M4-02 giữ REVIEW chờ Tech Lead nghiệm thu correction.
 
 Đây là retrieval/identity/provenance regression trên persisted BBS, chưa independent
 gold hoặc full-PDF financial accuracy. Chưa executor, QA baseline hoặc Multi-Agent.
