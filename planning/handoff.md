@@ -6,7 +6,7 @@ M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -17,6 +17,8 @@ Final acceptance M4-01/verified PASS;implementation
 `49e793eb82b60b1fd22108cac472f094a91f184c` đã push main.
 [CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
+Tech Lead APPROVED ngày02/11/2026,cho phép đồng bộ DONE;B01/B02 DONE trong phạm vi
+execution eligibility.
 
 ## Completed Work
 
@@ -28,28 +30,30 @@ computed0;29 queries/36 pairs/QA09/QA15/D-06 exact,2.545 hashes unchanged.
 
 ## Remaining Work
 
-Chờ Tech Lead independent review M4-01;không tự nghiệm thu DONE hoặc bắt đầu
-M4-02/M4-03.
+Không còn việc trong phạm vi nghiệm thu M4-01;chưa có task tiếp theo được giao.
+Không tự bắt đầu M4-02/M4-03 hoặc điều tra PDF.
 
 ## Modified Files
 
-Implementation17 task files đã commit. Checkpoint sau chỉ policy report/planning
-và evidence CI;không stage artifacts/dataset/secrets hoặc web/next-env.d.ts.
+Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff/spec M4-01 và
+D-03 Blocker Registry;giữ runtime/report/artifacts và web/next-env.d.ts ngoài stage.
 
 ## Tests
 
 246 focused PASS;JUnit ignored M4-01/final-focused-tests.xml. Ruff lint/format
 toàn repository345 files PASS;planning99/diff PASS. CI Python3.12/Web smoke SUCCESS,
 full unit regression SKIPPED;không chạy lại tests/evaluation sau docs checkpoint.
+Phiên nghiệm thu chỉ chạy planning checker và git diff --check.
 Offline real runner không Gemini/OCR/extraction. Source/quality/citations/lineage
 và protected input hashes giữ nguyên; eligibility PASS chưa numeric calculation PASS.
 
 ## Blockers
 
-D03-B01/B02 đã có runtime/evidence, chỉ đề xuất DONE sau Tech Lead review.
+D03-B01/B02 DONE trong phạm vi execution eligibility theo quyết định Tech Lead.
 D03-B03 executor thuộc M4-03, explicit dependency M4-01/M4-02. D03-B10 UNKNOWN:
 đọc cover/audit opinion và consolidation notes của5 PDFs, ghi source-backed scope
-hoặc insufficient trước cross-document approval. Không B09/Web/gold trong task.
+hoặc insufficient trước cross-document approval;ưu tiên điều tra PDF trước phát triển
+so sánh liên tài liệu. Không B09/Web/gold trong task.
 
 ## Git Checkpoint
 
@@ -60,4 +64,4 @@ evidence ignored M4-01/verified và final-focused-tests.xml không commit.
 
 ## Exact Next Action
 
-Tech Lead independent review M4-01.
+Chờ Owner/Tech Lead giao task tiếp theo.

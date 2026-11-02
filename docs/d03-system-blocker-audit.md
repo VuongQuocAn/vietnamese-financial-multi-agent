@@ -145,8 +145,8 @@ Effort XS/S/M là ước lượng tương đối. Chi tiết reproduction/first 
 
 | ID | Root cause / điều kiện gây chặn | Confidence | Severity | Affected components / impact | Fix proposal cụ thể | Effort | Dependency | Acceptance test | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| D03-B01 | `assess_analytical_readiness` bắt global compatible cho execution; approval hiện có chỉ purpose preparation, không có execution profile xử lý scope/source exception | CONFIRMED | P1 | 15/15 metrics, financial tools | Chốt record execution compatibility riêng, giới hạn same document/statement/snapshot, reviewed operands/basis; evaluator nhận record đúng purpose, giữ global assessment gốc | S | Tech Lead quyết định scope execution | 15 selected baseline metrics clear compatibility execution nếu approved; cross-doc/known conflict/quality blocked vẫn từ chối | REVIEW |
-| D03-B02 | `formula_execution_approvals=[]`; ba version/digest không có matching approval | CONFIRMED | P1 | 15 metrics/3 formulas | Tech Lead duyệt/bác semantics, denominator/sign/rounding và negative controls; persist explicit formula/version/digest/authority/reference, không đổi status cờ | XS | Tech Lead review definitions | 15 preflight clear + matching approvals; wrong digest/version hoặc denominator không hợp lệ vẫn blocked | REVIEW |
+| D03-B01 | `assess_analytical_readiness` bắt global compatible cho execution; approval hiện có chỉ purpose preparation, không có execution profile xử lý scope/source exception | CONFIRMED | P1 | 15/15 metrics, financial tools | Chốt record execution compatibility riêng, giới hạn same document/statement/snapshot, reviewed operands/basis; evaluator nhận record đúng purpose, giữ global assessment gốc | S | Tech Lead quyết định scope execution | 15 selected baseline metrics clear compatibility execution nếu approved; cross-doc/known conflict/quality blocked vẫn từ chối | DONE |
+| D03-B02 | `formula_execution_approvals=[]`; ba version/digest không có matching approval | CONFIRMED | P1 | 15 metrics/3 formulas | Tech Lead duyệt/bác semantics, denominator/sign/rounding và negative controls; persist explicit formula/version/digest/authority/reference, không đổi status cờ | XS | Tech Lead review definitions | 15 preflight clear + matching approvals; wrong digest/version hoặc denominator không hợp lệ vẫn blocked | DONE |
 | D03-B03 | `src/tools` chưa triển khai; DerivedMetric chỉ cho result None/not_computed | CONFIRMED | P1 | M4 execution; anomaly QA chưa có rule | Trong M4 được giao, thêm executor Decimal ba formulas sau gates; anomaly chỉ thêm khi có rule/threshold/baseline được duyệt, hoặc trả unsupported rõ ràng | M | M4-01, M4-02; B04 DONE; executor M4-03 | Tính ba metric types với citations/lineage từ selected real operands; invalid inputs không có numeric answer | TODO |
 | D03-B04 | Evaluator recovery đổi snapshot của cả 2022, nhưng reviews/basis/metrics vẫn bind snapshot gốc | CONFIRMED | P1 | 3 metrics, 5 reviews, 1 basis review; 6 operand occurrences không resolve trong effective view | Thêm snapshot catalog/selection giữ original và recovery; pin metric vào snapshot đóng dependency. Nếu chọn recovery cho metric: rebind reviews/basis sau exact source check và build metric/lineage mới, không sửa identity cũ | S | B08; không cần Gemini | Với từng snapshot được công bố ready: mọi metric reference resolve, reviews/basis khớp; 2022 không còn 15/15 baseline bị dùng nhầm cho recovery; D-04: [implementation73e2f9e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd), [real-data regression](d04-snapshot-source-closure.md) | DONE |
 | D03-B05 | ITEM_CATALOG chỉ 16 IDs; 748 financial slots/79 statement-code pairs không có rule | CONFIRMED | P1 | QA nợ ngắn hạn, validation và expanded analysis | Ưu tiên rules B01 100/200/310/440, B02 01/02, B03 50/60; code + source-backed labels/statement, snapshot projection mới; không map header/signature | S theo nhóm | B06; Tech Lead chốt IDs/labels | Tech Lead nghiệm thu D-06 bounded8 items: catalog24 IDs,+80 mapped slots;QA09 đúng310/kỳ/source;balance/asset decomposition chạy thật;negative code/label/statement giữ abstain;670 slots ngoài scope vẫn unmapped;[evidence](d06-canonical-mapping-validation.md) | DONE |
@@ -169,17 +169,20 @@ phép thử trước giải pháp chắc chắn; B15 cần xác minh semantics t
 
 Owner/Tech Lead đã giao M4-01 CONDITIONAL GO; quyết định
 `M4-01/design-decision/2026-11-02` duyệt execution profile và ba formula semantics.
-D03-B01/B02 đã sửa bằng production runtime, giữ REVIEW và **đề xuất DONE** chờ
-Tech Lead independent review: original15+recovery3 eligible, global18 undetermined,
+D03-B01/B02 **DONE trong phạm vi execution eligibility**, Tech Lead APPROVED
+M4-01 ngày02/11/2026 tại implementation `49e793eb82b60b1fd22108cac472f094a91f184c`:
+original15+recovery3 eligible, global18 undetermined,
 computed0,36 cross-document pairs không execution-approved;246 focused PASS.
 [Policy và real-data evidence](m4-01-execution-policy.md). Không thay evidence
-diagnostic D-03 hoặc tự nghiệm thu các blocker này.
+diagnostic D-03;trạng thái DONE theo quyết định nghiệm thu của Tech Lead.
 D03-B03 giao M4-03, explicit dependency M4-01/M4-02, chưa executor.
 D03-B10 vẫn **UNKNOWN/TODO**, reporting scope ở nguồn chưa được giải quyết.
 Next corrective action của B10: đọc cover/audit opinion và consolidation notes
 của từng5 original PDFs, ghi source-backed scope với exact page/quote hoặc
 insufficient. Phải giải quyết trước khi phê duyệt cross-document comparisons;
 không suy separate/consolidated từ same-document execution exception.
+Theo quyết định Tech Lead02/11/2026,ưu tiên điều tra PDF trước khi phát triển
+so sánh liên tài liệu;chưa giao bắt đầu điều tra trong phiên đồng bộ planning này.
 
 ## 4. A — Calculation eligibility và snapshot closure
 
