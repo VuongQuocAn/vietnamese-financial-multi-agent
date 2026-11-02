@@ -1,7 +1,7 @@
 # D-07 — Reporting scope source resolution
 
-Ngày02/11/2026 (Asia/Bangkok). Status **IN_PROGRESS**, chuẩn bị implementation
-commit/CI trước REVIEW. Baseline main `f0b4328e68597b0ff37760ffe2507203c4c19e51`.
+Ngày02/11/2026 (Asia/Bangkok). Status **REVIEW**, chờ Tech Lead independent review.
+Baseline main `f0b4328e68597b0ff37760ffe2507203c4c19e51`.
 Chỉ giải quyết reporting scope; không mở cross-document execution/M4-02.
 
 ## Kết luận từ nguồn
@@ -114,6 +114,12 @@ hoặc policy comparison riêng được Tech Lead phê duyệt trong task tươ
 Không liên tục audit lại cùng nguồn như một implementation bug; không tự cấp
 document-pair exception hoặc lan scope2024 sang các năm khác.
 
-Implementation chưa commit; CI chưa chạy. Dừng REVIEW sau validation/Git/CI,
-chờ Tech Lead nghiệm thu; không bắt đầu M4-02 hoặc cross-document execution.
+Implementation cuối [`54663b92cc7881a63c37b68729d0749998963522`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/54663b92cc7881a63c37b68729d0749998963522)
+đã push trực tiếp main;[CI41370688198](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41370688198)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS (typecheck/lint/build/
+bounded browser smoke);full unit regression SKIPPED. Local273 focused PASS,
+Ruff lint/format350 files,planning100/diff PASS. Final source views/hash check PASS.
+Checkpoint sau chỉ docs/planning `[skip ci]`,không gán CI trên cho SHA checkpoint.
+Giữ web/next-env.d.ts byte-for-byte ngoài stage;không commit ignored evidence,
+PDF/OCR/dataset/secrets. Không bắt đầu M4-02 hoặc cross-document execution.
 Next action duy nhất sau bàn giao: Tech Lead independent review D-07.

@@ -4,7 +4,7 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## D-07 — Reporting Scope Source Resolution
 
-Status: **IN_PROGRESS**, Tech Lead giao02/11/2026; [spec](tasks/D/D-07.md).
+Status: **REVIEW**, chờ Tech Lead independent review; [spec](tasks/D/D-07.md).
 Baseline mainf0b4328e68597b0ff37760ffe2507203c4c19e51;giữ web local.
 Kiểm tra5 PDFs/cache,source-backed scope hoặc insufficient với reason cụ thể;
 không đổi M4-01 policies hoặc mở cross-document execution. Original2024 PDFp1
@@ -13,8 +13,13 @@ giữNone. Generic Raw OCR checkbox adapter/selected-option resolver và Snapsho
 scope lookup;273 focused PASS. Real133 cached pages/38 direct pages,15+3 closures/
 lineages và36 pairs/29 queries exact,2.573 hashes unchanged,zero Gateway.
 B10 giải quyết một phần,còn BLOCKED với cross-document vì thiếu nguồn bốn filings.
-[Report](../docs/d07-reporting-scope-resolution.md);chưa commit/CI.
-Next action: commit/push và xác minh CI đúng implementation SHA trước REVIEW.
+[Report](../docs/d07-reporting-scope-resolution.md). Implementation cuối
+`54663b92cc7881a63c37b68729d0749998963522` đã push main;
+[CI41370688198](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41370688198)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Final read-only fix/five
+scope views exact;Ruff350/planning100/diff PASS. Checkpoint sau chỉ docs/planning,
+giữ web local,không tự bắt đầu M4-02 hoặc cross-document execution.
+Next action: Tech Lead independent review D-07.
 
 ## M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts
 
