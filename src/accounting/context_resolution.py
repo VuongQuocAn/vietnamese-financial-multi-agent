@@ -8,8 +8,13 @@ from typing import Literal
 
 from pydantic import Field
 from vietnamese_financial_multi_agent.document_processing.contracts.document_understanding import (
+    RawPageIdentity,
     ResolutionStatus,
     SourceAnchor,
+)
+from vietnamese_financial_multi_agent.document_processing.contracts.raw_ocr import (
+    OCRCheckbox,
+    OCRPage,
 )
 from vietnamese_financial_multi_agent.document_processing.contracts.unified_document import (
     UnifiedPage,
@@ -23,6 +28,8 @@ class ContextEvidence(FinancialModel):
     provenance: list[FinancialSourceReference]
     # Trạng thái text M1, độc lập với độ chi tiết/độ tin cậy geometry của anchor.
     status: ResolutionStatus = "resolved"
+    # Chỉ dùng cho explicit filing-scope options; text mention không tự có selection.
+    scope_selection: Literal["selected", "unselected", "unknown"] | None = None
 
 
 class ContextCandidate(FinancialModel):
@@ -58,6 +65,7 @@ _PERIOD_RULES = (
     (r"(\d{1,2}) tháng đầu năm (\d{4})", "year_to_month"),
 )
 _SCOPE = r"báo cáo tài chính (hợp nhất|riêng)"
+_SCOPE_OPTION = r"(?:báo cáo tài chính|bctc) (riêng|hợp nhất|tổng hợp)(?:\s*\([^)]*\))?"
 
 
 def _iso(parts: tuple[str, ...]) -> str:
@@ -127,6 +135,22 @@ def resolve_financial_context(evidence: Iterable[ContextEvidence]) -> ContextRes
     evidence = list(evidence)
     periods, units, scopes = [], [], []
     for item in evidence:
+        if item.scope_selection is not None:
+            # Giữ ')' để kiểm đủ option có mô tả trong ngoặc.
+            text = " ".join(item.raw_text.casefold().split()).strip(" .:;")
+            match = re.fullmatch(_SCOPE_OPTION, text)
+            if item.scope_selection != "unselected":
+                scope = (
+                    {"riêng": "separate", "hợp nhất": "consolidated"}.get(match[1])
+                    if match
+                    else None
+                )
+                issues = [] if scope else ["unsupported_scope_option"]
+                if item.scope_selection == "unknown":
+                    issues.append("scope_selection_unresolved")
+                scopes.append(_candidate(FinancialContext(reporting_scope=scope), item, issues))
+            # Không diễn giải unchecked option như title/narrative evidence.
+            continue
         for line in item.raw_text.splitlines():
             text = " ".join(line.casefold().split()).strip(" .:;()")
             if parsed := _period(text):
@@ -188,6 +212,56 @@ def evidence_from_unified_page(page: UnifiedPage) -> list[ContextEvidence]:
                     )
                 ],
                 status="resolved" if accepted else "unresolved",
+            )
+        )
+    return result
+
+
+def evidence_from_ocr_scope_choices(
+    page: OCRPage, *, source_page: RawPageIdentity
+) -> list[ContextEvidence]:
+    """Read-only adapter cho scope checkboxes đã có trong Raw OCR v1.
+
+    source_page do caller bind với PDF; raw OCR không có PDF hash. Candidate vẫn
+    unresolved cho tới controlled PDF verification, không tin checkbox detector
+    như một financial approval hoặc tự đi tìm scope ở document khác.
+    """
+    if not source_page.source_ref or (source_page.page, source_page.symbol, source_page.year) != (
+        page.page.page,
+        page.page.symbol,
+        page.page.year,
+    ):
+        raise ValueError("scope_source_page_binding_mismatch")
+    result = []
+    for index, element in enumerate(page.elements):
+        if not isinstance(element, OCRCheckbox):
+            continue
+        text = " ".join(element.label.casefold().split())
+        if not re.match(r"(?:bctc|báo cáo tài chính)\b", text):
+            continue
+        selection = (
+            "selected"
+            if element.checked and element.choice == "yes"
+            else "unselected"
+            if not element.checked and element.choice == "no"
+            else "unknown"
+        )
+        result.append(
+            ContextEvidence(
+                raw_text=element.label,
+                status="unresolved",
+                scope_selection=selection,
+                provenance=[
+                    FinancialSourceReference(
+                        anchor=SourceAnchor(
+                            page=source_page.model_copy(deep=True),
+                            element_id=element.id,
+                            status="uncertain",
+                        ),
+                        source_pointer=f"/elements/{index}",
+                        provenance_level="element",
+                    )
+                ],
             )
         )
     return result

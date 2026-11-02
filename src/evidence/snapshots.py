@@ -14,6 +14,7 @@ from .execution_compatibility import assess_execution_compatibility
 from .graph import graph_id, record_sources
 from .metrics import DerivedMetric, MetricRequest, build_metric
 from .preparation_policy import check_metric_formula_policy
+from .reporting_scope import resolve_reporting_scope
 from .retrieval import EvidenceRetrieval
 
 
@@ -104,6 +105,7 @@ class SnapshotCatalog:
         formula_policies=(),
         formula_approvals=(),
         execution_approval=None,
+        reporting_scope_reviews=(),
     ):
         self.descriptors = [d.model_copy(deep=True) for d in descriptors]
         self.facts = [f.model_copy(deep=True) for f in facts]
@@ -115,6 +117,7 @@ class SnapshotCatalog:
         self.policies = list(formula_policies)
         self.formula_approvals = list(formula_approvals)
         self.execution_approval = execution_approval
+        self.scope_reviews = [r.model_copy(deep=True) for r in reporting_scope_reviews]
         self.graph = graph.model_copy(deep=True) if graph is not None else None
         self.api = EvidenceRetrieval(
             self.facts, self.evidence, self.metrics, graph=graph, source_reviews=self.reviews
@@ -157,6 +160,32 @@ class SnapshotCatalog:
                 break
             current = parents[0]
         return chain, issues
+
+    def get_reporting_scope(self, document_id, snapshot_id):
+        """Separate read-only context overlay; không thay metric/fact compatibility."""
+        descriptors = [
+            d
+            for d in self.descriptors
+            if (d.document_id, d.snapshot_id) == (document_id, snapshot_id)
+        ]
+        if len(descriptors) != 1:
+            from .reporting_scope import ReportingScopeResolution
+
+            return ReportingScopeResolution(
+                document_id=document_id,
+                snapshot_id=snapshot_id,
+                status="unresolved",
+                evidence_status="insufficient",
+                reasons=["scope_snapshot_missing_or_ambiguous"],
+                reviews=[],
+            )
+        result = resolve_reporting_scope(descriptors[0], self.scope_reviews)
+        _, issues = self.ancestry(descriptors[0])
+        if issues:
+            result.reporting_scope = None
+            result.status, result.evidence_status = "unresolved", "insufficient"
+            result.reasons = sorted(set([*result.reasons, *issues]))
+        return result
 
     def assess_metric(self, descriptor, metric) -> MetricSnapshotClosure:
         issues, supplied = [], []

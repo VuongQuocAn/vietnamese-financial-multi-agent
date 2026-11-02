@@ -58,6 +58,7 @@ from .graph import (
 )
 from .lineage import LineageTaskContext, MetricLineage, OperandLineage, trace_metric_lineage
 from .metrics import DerivedMetric, FormulaDefinition, MetricOperand, MetricRequest, build_metric
+from .reporting_scope import ReportingScopeResolution, ReportingScopeReview, resolve_reporting_scope
 from .repository import CanonicalFactRepository, ObservationConflict
 from .retrieval import (
     CanonicalCoverage,
@@ -87,6 +88,9 @@ from .source_reviews import (
 from .source_validation import SourceValidation, evaluate_source_validations
 
 __all__ = [
+    "ReportingScopeResolution",
+    "ReportingScopeReview",
+    "resolve_reporting_scope",
     "ExecutionCompatibilityApproval",
     "ExecutionCompatibilityAssessment",
     "ExecutionCompatibilityDecision",

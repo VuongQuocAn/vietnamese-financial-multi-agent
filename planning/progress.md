@@ -19,8 +19,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| D | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 99 | 68 | 0 | 0 | 31 | 0 | 0 |
+| D | 7 | 6 | 1 | 0 | 0 | 0 | 0 |
+| TOTAL | 100 | 68 | 1 | 0 | 31 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+D-07 **IN_PROGRESS**, Tech Lead giao02/11/2026; [spec](tasks/D/D-07.md).
+Baseline mainf0b4328;2024 separate/PDFp1,4 filing insufficient giữNone.
+273 focused PASS;real15+3 closures/lineages,36 pairs/29 queries exact,
+2.573 hashes unchanged,zero Gateway. B10 còn BLOCKED cross-document.
+[Report](../docs/d07-reporting-scope-resolution.md);giữ web local,chưa commit/CI.
+Next action: commit/push và xác minh CI đúng implementation SHA trước REVIEW.
+
+Checkpoint M4-01 đã nghiệm thu:
 
 M4-01 **DONE**, Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.
 [Spec](tasks/M4/M4-01.md), [report](../docs/m4-01-execution-policy.md);

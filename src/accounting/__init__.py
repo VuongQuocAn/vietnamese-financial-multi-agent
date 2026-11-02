@@ -19,6 +19,7 @@ from .context_resolution import (
     ContextEvidence,
     ContextFieldResolution,
     ContextResolution,
+    evidence_from_ocr_scope_choices,
     evidence_from_unified_page,
     resolve_financial_context,
 )
@@ -72,6 +73,7 @@ from .table_recovery import (
 from .validation import validate_financial_quality
 
 __all__ = [
+    "evidence_from_ocr_scope_choices",
     "AssessableEvidence",
     "EvidenceAssessment",
     "QualityAssessment",

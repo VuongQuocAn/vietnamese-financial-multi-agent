@@ -2,66 +2,57 @@
 
 ## Active Task
 
-M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts
+D-07 — Reporting Scope Source Resolution
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Baseline main/origin/main8bddff415df98239f507802dc3b55e2e51f2c3b8.
-[Spec](tasks/M4/M4-01.md), [report](../docs/m4-01-execution-policy.md).
-Owner/Tech Lead CONDITIONAL GO02/11/2026; main-first, commit/push được phép.
-Final acceptance M4-01/verified PASS;implementation
-`49e793eb82b60b1fd22108cac472f094a91f184c` đã push main.
-[CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
-completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
-Tech Lead APPROVED ngày02/11/2026,cho phép đồng bộ DONE;B01/B02 DONE trong phạm vi
-execution eligibility.
+Baseline main/origin/main `f0b4328e68597b0ff37760ffe2507203c4c19e51`.
+[Spec](tasks/D/D-07.md), [report](../docs/d07-reporting-scope-resolution.md).
+Tech Lead giao02/11/2026,main-first/commit/push được phép. Chưa commit/CI.
 
 ## Completed Work
 
-Versioned execution profile/typed approval; registry M4 riêng/ba formula digests,
-exact definition/guards và SnapshotCatalog closure gate. Giữ global M3/facts,
-D-02 historical registry, original metrics/result=None và web local.
-246 focused PASS;real original15/recovery3 eligible,global18 undetermined,
-computed0;29 queries/36 pairs/QA09/QA15/D-06 exact,2.545 hashes unchanged.
+133 cached OCR pages/38 original PDF renders đã kiểm.2024p1 selected BCTC riêng,
+OCR đã giữ nhưng context chưa truyền/parse;generic OCR checkbox adapter/selected
+scope resolver và ReportingScopeReview/SnapshotCatalog overlay đã sửa,restart exact.
+Bốn filings2021/2022/2023/2025 insufficient,giữNone với reason cụ thể.
+273 focused PASS;15+3 closures/lineages,36 pairs/29 queries exact;
+2.573 hashes unchanged,zero Gateway/computed0. M4 policies/facts giữ nguyên.
 
 ## Remaining Work
 
-Không còn việc trong phạm vi nghiệm thu M4-01;chưa có task tiếp theo được giao.
-Không tự bắt đầu M4-02/M4-03 hoặc điều tra PDF.
+Ruff/planning/diff cuối,implementation commit/push và CI đúng SHA;chuyển REVIEW.
+Không mở cross-document execution hoặc tự bắt đầu M4-02.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ registry/current-status/dashboard/handoff/spec M4-01 và
-D-03 Blocker Registry;giữ runtime/report/artifacts và web/next-env.d.ts ngoài stage.
+Accounting context,evidence scope overlay/catalog,exports,focused tests/evaluator,
+CI focused list,policy report và planning/Blocker Registry. Giữ web/next-env.d.ts.
+Ignored evidence D-07;không stage dataset/raw/PDF/secrets.
 
 ## Tests
 
-246 focused PASS;JUnit ignored M4-01/final-focused-tests.xml. Ruff lint/format
-toàn repository345 files PASS;planning99/diff PASS. CI Python3.12/Web smoke SUCCESS,
-full unit regression SKIPPED;không chạy lại tests/evaluation sau docs checkpoint.
-Phiên nghiệm thu chỉ chạy planning checker và git diff --check.
-Offline real runner không Gemini/OCR/extraction. Source/quality/citations/lineage
-và protected input hashes giữ nguyên; eligibility PASS chưa numeric calculation PASS.
+273 focused PASS,JUnit D-07/focused-tests.xml. Real5 PDFs/133 cache/38 direct pages;
+scope2024 separate confirmed/four insufficient,restart exact;M4-01 eligibility
+15+3 và36 undetermined pairs/29 queries không regression;2.573 input hashes exact.
+Chưa chạy CI implementation;không Gemini/OCR/re-extraction.
 
 ## Blockers
 
-D03-B01/B02 DONE trong phạm vi execution eligibility theo quyết định Tech Lead.
-D03-B03 executor thuộc M4-03, explicit dependency M4-01/M4-02. D03-B10 UNKNOWN:
-đọc cover/audit opinion và consolidation notes của5 PDFs, ghi source-backed scope
-hoặc insufficient trước cross-document approval;ưu tiên điều tra PDF trước phát triển
-so sánh liên tài liệu. Không B09/Web/gold trong task.
+D03-B10 partial resolution:2024 source-backed scope đã có,bốn filing scopes
+UNKNOWN vì insufficient source;giữ BLOCKED cross-document. Dependency tiếp theo:
+source-backed filing declarations cho2021/2022/2023/2025 hoặc comparison policy
+riêng được Tech Lead giao/phê duyệt,không audit lặp lại cùng nguồn như code bug.
 
 ## Git Checkpoint
 
-Main-first, implementation49e793eb82b60b1fd22108cac472f094a91f184c và CI41365782993
-đã xác minh. Checkpoint tiếp theo chỉ docs/planning `[skip ci]`,không gán CI trên
-cho SHA checkpoint. Chỉ unrelated local web/next-env.d.ts giữ hash ban đầu;
-evidence ignored M4-01/verified và final-focused-tests.xml không commit.
+Main-first tại baselinef0b4328;chưa commit. Unrelated local web/next-env.d.ts được
+pin hash và giữ nguyên. Không đổi accepted D-01–D-06/M4-01 artifacts/policies.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao task tiếp theo.
+Commit/push và xác minh CI đúng implementation SHA trước REVIEW.
