@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-03 — Risk-Aware Supervisor
+
+Status: **REVIEW**; Owner giao02/11/2026, baseline main/origin03b7d23 đã xác minh.
+[Spec](tasks/M5/M5-03.md), [report](../docs/m5-03-risk-aware-supervisor.md).
+Supervisor/typed results/whitelist4 tools/internal operations, dependency/evidence
+scheduler, risk/stops/budget và full M4 evidence propagation.19/19 scenarios:
+13completed/3partial/3blocked; Gross Margin2025=7,21%; saved Gemini F01/F03/F04 đúng.
+8 Supervisor+172 bounded tests PASS;18metrics/29queries/36pairs/QA36/M5-01 15cases/
+D-06/D-07 exact;3.231 protected hashes unchanged,0 Gateway calls. Completion ở
+`artifacts/evidence/M5-03-complete`, tái dùng19 traces đã thực thi cùng runtime,
+không tính là executions mới. Chưa commit; đang chờ push/CI và Tech Lead review.
+Giữ Web local, D03-B10 và financial_fact_verified=False; không bắt đầu M5-04.
+Next action: push implementation main và kiểm CI đúng SHA.
+
 ## M5-02 — Evidence-Aware Query Planner
 
 Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.

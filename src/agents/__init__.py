@@ -1,4 +1,4 @@
-"""Public M5 contracts và evidence-aware query planning; chưa execution."""
+"""Public M5 planning contracts và bounded evidence execution."""
 
 from .contracts import (
     SPECIALIST_BOUNDARIES,
@@ -27,6 +27,12 @@ from .planner_contracts import (
     PlannerTrace,
 )
 from .query_planner import EvidenceAwareQueryPlanner
+from .supervisor import (
+    ExecutionEvidenceBundle,
+    RiskAwareSupervisor,
+    StepExecutionResult,
+    SupervisorResult,
+)
 
 __all__ = [
     "SPECIALIST_BOUNDARIES",
@@ -36,6 +42,7 @@ __all__ = [
     "EvidenceRequirement",
     "EvidenceSelector",
     "ExecutionState",
+    "ExecutionEvidenceBundle",
     "InputBinding",
     "PlanStep",
     "PlanValidation",
@@ -47,6 +54,9 @@ __all__ = [
     "PlannerTrace",
     "QuerySpecification",
     "RiskSignal",
+    "RiskAwareSupervisor",
+    "StepExecutionResult",
+    "SupervisorResult",
     "SpecialistBoundary",
     "SpecialistRole",
     "StopCondition",
