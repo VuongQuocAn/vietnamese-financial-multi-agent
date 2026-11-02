@@ -23,7 +23,8 @@ typed records. Inputs và returned objects được deep-copy, không sửa cata
 
 ```python
 from vietnamese_financial_multi_agent.tools import (
-    EvidenceRetrievalTools, GetEvidenceSourcesRequest,
+    EvidenceRetrievalTools,
+    GetEvidenceSourcesRequest,
 )
 
 evidence_tools = EvidenceRetrievalTools(catalog)
