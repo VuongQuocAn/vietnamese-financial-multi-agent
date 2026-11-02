@@ -10,8 +10,13 @@ Public typed contracts, deferred bindings, combined DAG/selector validation và
 read-only catalog preflight; chưa có agent runtime.35 M5/tổng131 targeted PASS;
 15 real cases:10valid/4blocked/1invalid, BBS2021–2025/recovery2022;2.681 hashes
 unchanged,zero Gateway/calculation calls. Ruff382/planning101/diff PASS.
-Chưa commit tại lúc ghi; SHA/CI sẽ ghi checkpoint sau push. M4-05/M4-05a DONE;
-giữ D03-B10/web local. Next action: Tech Lead independent review M5-01.
+Final implementation `adb4738bcb3024c79998f8695fe868d17a3cf61d` đã push main;
+[CI41408676517](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41408676517)
+completed/SUCCESS đúng SHA:Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Scope cấp query/selector được gate dù step không lặp lại constraint; real case đúng.
+Checkpoint sau docs-only [skip ci],không gán CI implementation cho SHA checkpoint.
+M4-05/M4-05a DONE;giữ D03-B10/web local.
+Next action: Tech Lead independent review M5-01; không bắt đầu M5-02.
 
 ## M4-05a — Gemini Live Integration & QA Validation
 

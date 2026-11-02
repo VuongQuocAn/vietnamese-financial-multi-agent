@@ -12,7 +12,10 @@ REVIEW
 
 Baseline main/origin `ca9570d61f9fc0dd45d78956f27590631e601120` đúng brief.
 M4-05/M4-05a DONE; [spec](tasks/M5/M5-01.md),
-[report](../docs/m5-01-evidence-plan-contracts.md). Chưa commit.
+[report](../docs/m5-01-evidence-plan-contracts.md).
+Final implementation `adb4738bcb3024c79998f8695fe868d17a3cf61d` đã push main;
+[CI41408676517](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41408676517)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
 
 ## Completed Work
 
@@ -22,8 +25,7 @@ Không agent runtime, Gemini, formula execution hoặc M4 production changes.
 
 ## Remaining Work
 
-Commit/push main và xác minh CI đúng implementation SHA, ghi checkpoint;
-chờ Tech Lead independent review.
+Chờ Tech Lead independent review; không còn implementation work trong scope.
 
 ## Modified Files
 
@@ -44,8 +46,9 @@ page-level provenance và financial_fact_verified=False giữ nguyên.
 
 ## Git Checkpoint
 
-main; chưa commit implementation. Owner đã cho phép commit/push trực tiếp main,
-không branch/PR/worktree. Chỉ stage files M5-01; web local giữ byte-for-byte.
+main; final implementation đã push, origin khớp sau push. Checkpoint sau chỉ
+docs/planning [skip ci], không gán CI trên cho SHA checkpoint.
+Không branch/PR/worktree; web local giữ byte-for-byte, protected hash trong manifest.
 
 ## Exact Next Action
 

@@ -169,7 +169,10 @@ optional evidence vô tình trở thành global gate. Negative controls giữ c�
 này. Self-review sau initial commit phát hiện scope cấp query chưa truyền vào
 preflight khi step không lặp lại constraint; đã sửa cả query-level/selector-level
 scope, thêm hai focused controls và real2025 query-only scope case. Initial CI
-success thuộc SHA34a96d1; final implementation/CI ghi riêng ở spec.
+success thuộc SHA34a96d1; final implementation `adb4738bcb3024c79998f8695fe868d17a3cf61d`
+đã push main. [CI41408676517](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41408676517)
+completed/SUCCESS đúng final SHA:Python3.12 và Web smoke SUCCESS;full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI implementation cho SHA đó.
 Không đổi accepted accounting semantics hoặc production M4 code.
 
 M5-02 kế thừa version/API này, tạo plan bằng structured understanding và catalog;
