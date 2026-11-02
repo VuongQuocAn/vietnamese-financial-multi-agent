@@ -5,6 +5,26 @@ Ngày02/11/2026; trạng thái REVIEW, chờ Tech Lead nghiệm thu. Baseline ma
 `ebea73076975acdd331f22ce6122d0c0aa48625d` đã push trực tiếp main, remote khớp.
 Không triển khai M5-06 hoặc M6.
 
+## P1 correction — explicit reporting scope
+
+Tech Lead phát hiện “giữ riêng bằng chứng” bị hiểu thành báo cáo riêng; M4
+`understand()` còn có thể trả false ambiguity khi câu hỏi có cả “hợp nhất” và
+“giữ riêng”. Fix dùng trực tiếp `_explicit_constraints()` của M5-02 cho scope và
+scope ambiguity; M4 chỉ cung cấp period/formula parsing, không dùng scope gate.
+Không sửa parser hoặc accepted financial semantics M4, không đổi M5-04/common.
+Ba regression cases kiểm tra giữ riêng evidence, báo cáo riêng và báo cáo hợp nhất
+kèm giữ riêng evidence; explicit scope chưa confirmed vẫn bị chặn, matching
+confirmed scope qua được, yêu cầu thực sự cả hai scopes vẫn abstain.
+43 targeted tests PASS (M5-05/M5-04 và Planner scope regression). Câu BBS2025
+“Giải thích Debt-to-Assets BBS năm2025, giữ riêng bằng chứng nợ phải trả và tổng tài
+sản” chạy Planner → Supervisor → Specialist: scope=None, completed,2 candidates
+59,06%, exact accepted citations/calculation/lineage. Replay ba real M5-04 cases
+R01/R05/R08 khớp outputs trước sửa, bỏ random IDs/correlation/timing.
+Evidence mới: `artifacts/evidence/M5-05-scope-fix`;10 input/code/Web hashes unchanged.
+Gateway dùng4 saved-response replays; **0 actual Gemini calls,0 OCR**, không fresh
+benchmark hoặc chạy lại live6. Fix chưa commit; CI41466737325 bên dưới thuộc
+implementation gốc, chưa phải CI của fix.
+
 ## Kiến trúc và audit M5-04
 
 `LiquidityLeverageSpecialist` nhận `SupervisorResult`, chọn B01 evidence, gửi một

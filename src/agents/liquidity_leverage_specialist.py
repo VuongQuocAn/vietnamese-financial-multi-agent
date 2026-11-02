@@ -13,6 +13,7 @@ from ..core.llm_contracts import ModelIdentity
 from ..core.llm_gateway import SharedLLMGateway
 from ..tools.question_understanding import normalize, understand
 from .contracts import SPECIALIST_BOUNDARIES
+from .query_planner import _explicit_constraints
 from .specialist_common import (
     ClaimKind,
     SpecialistResult,
@@ -267,13 +268,18 @@ class LiquidityLeverageSpecialist:
                 result.missing_evidence.append("snapshot_or_D03-B10_blocked")
                 return result
             question_text = normalize(question)
+            # Use M5-02's contextual scope rules. M4 understand() below is retained
+            # for period/formula parsing only; its broad "rieng" rule is not a gate.
+            _, explicit_scopes, _, _ = _explicit_constraints(question)
+            if len(explicit_scopes) > 1:
+                result.missing_evidence.append("ambiguous_reporting_scope")
+                return result
             parsed, period_reasons = understand(question)
             if any(
                 reason in period_reasons
                 for reason in (
                     "invalid_period",
                     "multiple_periods_unsupported",
-                    "ambiguous_reporting_scope",
                     "cross_document_comparison_blocked_D03_B10",
                 )
             ):
@@ -286,10 +292,8 @@ class LiquidityLeverageSpecialist:
             if not unsupported or independent:
                 self._select(upstream, result)
             requested_scope = (
-                "consolidated"
-                if "hop nhat" in question_text
-                else "separate"
-                if "rieng" in question_text
+                explicit_scopes[0]
+                if explicit_scopes
                 else plan.query.reporting_scope
                 if plan
                 else None

@@ -4,6 +4,12 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-05 — Liquidity and Leverage Specialist
 
+P1 scope correction theo Tech Lead: dùng explicit constraints M5-02, không dùng
+“riêng” hoặc false scope ambiguity từ M4.43 targeted tests PASS; BBS2025 câu giữ
+riêng evidence tạo2 candidates59,06% với exact lineage; M5-04 real compatibility3/3.
+0 actual Gemini/OCR,4 saved-response replays;10 pinned hashes unchanged.
+Fix chưa commit, chờ push/CI đúng SHA; implementation/CI dưới đây là bản gốc.
+
 Status: **REVIEW**; Owner giao02/11/2026. Baseline main/origin
 `348528fc6e39356b9ac2706307e9ade7db5f12fc` đã xác minh.
 [Spec](tasks/M5/M5-05.md), [report](../docs/m5-05-liquidity-leverage-specialist.md).

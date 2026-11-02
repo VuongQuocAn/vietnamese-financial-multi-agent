@@ -187,3 +187,44 @@ def test_partial_independent_facts_unsupported_mixed_request_and_scope(source):
         changed.status = status
         result, seen = run(changed, [claim()])
         assert not result.candidates and not seen
+
+
+@pytest.mark.parametrize(
+    "scope_phrase,expected_scope",
+    [
+        ("giữ riêng bằng chứng nợ phải trả và tổng tài sản", None),
+        ("báo cáo riêng", "separate"),
+        (
+            "báo cáo hợp nhất, giữ riêng bằng chứng nợ phải trả và tổng tài sản",
+            "consolidated",
+        ),
+    ],
+)
+def test_reporting_scope_uses_context_and_does_not_inherit_m4_false_ambiguity(
+    source, scope_phrase, expected_scope
+):
+    question = f"Giải thích Debt-to-Assets TEST năm 2030, {scope_phrase}."
+    result, _ = run(source, [claim()], question)
+    assert "ambiguous_reporting_scope" not in result.missing_evidence
+    if expected_scope is None:
+        assert result.status == "generated" and len(result.candidates) == 1
+        assert result.candidates[0].calculation == source.evidence_bundle.calculations[0]
+        return
+    assert result.status == "abstained" and not result.supporting_evidence
+    assert "reporting_scope_unresolved_or_mismatched" in result.missing_evidence
+
+    # Synthetic confirmed-scope overlay: matching explicit scope must pass even
+    # when M4 sees "hop nhat" + the unrelated phrase "giu rieng bang chung".
+    confirmed = deepcopy(source)
+    scopes = [f.reporting_scope for f in confirmed.evidence_bundle.facts]
+    scopes += [c.evidence.reporting_scope for c in confirmed.evidence_bundle.calculations]
+    for scope in scopes:
+        scope.status, scope.evidence_status = "resolved", "confirmed"
+        scope.reporting_scope = expected_scope
+    result, _ = run(confirmed, [claim()], question)
+    assert result.status == "generated" and len(result.candidates) == 1
+    assert "ambiguous_reporting_scope" not in result.missing_evidence
+
+    result, seen = run(source, [claim()], question + " Báo cáo riêng và báo cáo hợp nhất.")
+    assert result.status == "abstained" and not seen
+    assert "ambiguous_reporting_scope" in result.missing_evidence
