@@ -10,7 +10,7 @@ Gemini proposal → deterministic catalog/materializer → validate_plan, không
 Offline18/18; live14calls/59.428tokens:initial6/targeted2/fresh6. Fresh4/6;
 fixed replay6/6,raw Gemini intent5/6; không live retest sau fixes cuối.
 197 focused +final13 Planner PASS; M4 36/18/29/36pairs/D-06/D-07 exact;
-M5-01 giữ15cases,2.701hashes unchanged. Chưa commit/CI pending.
+M5-01 giữ15cases,2.701hashes unchanged. Implementation `b5c7a02da82ed38378fbacd370b0a8734dd7fbf3` đã push main; [CI41414639830](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41414639830) SUCCESS đúng SHA (Python3.12/Web smoke SUCCESS; full regression SKIPPED).
 Giữ Web local/D03-B10,không OCR/extraction;financial_fact_verified=False.
 Next action: Tech Lead review M5-02; không tự DONE/M5-03.
 

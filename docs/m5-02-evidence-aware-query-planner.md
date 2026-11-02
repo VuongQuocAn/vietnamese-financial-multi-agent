@@ -1,7 +1,7 @@
 # M5-02 — Evidence-Aware Query Planner
 
-Trạng thái **REVIEW**, chưa nghiệm thu. Baseline `33a1f4e`; implementation chưa
-commit tại lúc ghi báo cáo, CI chưa chạy. Không bắt đầu M5-03.
+Trạng thái **REVIEW**, chưa nghiệm thu. Baseline `33a1f4e`; implementation
+`b5c7a02da82ed38378fbacd370b0a8734dd7fbf3` đã push main; [CI41414639830](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41414639830) SUCCESS đúng SHA (Python3.12/Web smoke SUCCESS; full regression SKIPPED). Không bắt đầu M5-03.
 
 Planner nhận câu hỏi tiếng Việt, gọi Gemini một lần để đề xuất targets, nhu cầu
 bằng chứng, M4 operations và dependencies. Backend resolve metadata/catalog rồi
@@ -195,6 +195,9 @@ tests bao phủ gate này và yêu cầu persisted bindings đúng cả hai kỳ
 tests PASS sau correction. Existing invalid_decimal negative control có một warning.
 Ruff check/format toàn repo389files, planning101tasks và diff check PASS trước commit.
 CI focused list bổ sung Planner tests, không đổi existing gates hoặc web smoke.
+CI đúng implementation SHA:463tests PASS, Python3.12 và mọi Web smoke steps
+SUCCESS; full unit regression SKIPPED. Checkpoint sau chỉ docs/planning [skip ci],
+không gán CI implementation cho SHA checkpoint.
 
 Bounded real regressions: M4-05 giữ36/36 dispositions,28answers/grounded citations;
 M4-03 giữ18/18 accepted execution/trace/independent arithmetic; M4-02 giữ29queries;
