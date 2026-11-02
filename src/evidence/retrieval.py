@@ -480,6 +480,15 @@ class EvidenceRetrieval:
             result = self.get_anchor(reference.record_id)
         else:
             result = self.get_lineage(reference.record_id)
-        if result.status == "found" and not any(m.citations for m in result.matches):
+        # Citation wrapper có thể tồn tại dù anchor thiếu reference/image hoặc
+        # binding sai. Presence của wrapper không có nghĩa truy xuất được nguồn.
+        if result.status == "found" and not any(
+            c.source.source_key() is not None
+            and c.source.reference.anchor.page.page > 0
+            and c.source.reference.anchor.page.image.strip()
+            and "source_identity_mismatch" not in c.limitations
+            for m in result.matches
+            for c in m.citations
+        ):
             result.status, result.reasons = "unavailable", ["source_unavailable"]
         return result

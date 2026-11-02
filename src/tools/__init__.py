@@ -1,5 +1,15 @@
-"""Public typed financial retrieval và deterministic calculator API."""
+"""Public typed financial/evidence retrieval và deterministic calculator API."""
 
+from .evidence_retrieval import (
+    EvidenceRetrievalTools,
+    EvidenceToolRequest,
+    EvidenceToolResponse,
+    FindDocumentEvidenceRequest,
+    GetEvidenceAnchorRequest,
+    GetEvidenceItemRequest,
+    GetEvidenceSourcesRequest,
+    GetMetricEvidenceLineageRequest,
+)
 from .financial_calculator import (
     CalculateFinancialMetricRequest,
     CalculationOperand,
@@ -21,6 +31,14 @@ from .financial_retrieval import (
 )
 
 __all__ = [
+    "EvidenceRetrievalTools",
+    "EvidenceToolRequest",
+    "EvidenceToolResponse",
+    "FindDocumentEvidenceRequest",
+    "GetEvidenceAnchorRequest",
+    "GetEvidenceItemRequest",
+    "GetEvidenceSourcesRequest",
+    "GetMetricEvidenceLineageRequest",
     "CalculateFinancialMetricRequest",
     "CalculationOperand",
     "CalculationTrace",

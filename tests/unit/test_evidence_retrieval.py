@@ -34,6 +34,23 @@ def setup():
     return facts, text, metric, graph
 
 
+@pytest.mark.parametrize("failure", ["reference", "binding", "image"])
+def test_sources_without_retrievable_reference_are_unavailable(failure):
+    _, text, _, _ = setup()
+    source = text.sources[0]
+    if failure == "reference":
+        source.reference = None
+    elif failure == "binding":
+        source.snapshot_id = "wrong-snapshot"
+    else:
+        source.reference.anchor.page.image = ""
+    api = EvidenceRetrieval(evidence=[text])
+    result = api.get_sources(RetrievalReference(kind="text", evidence=text.evidence_identity()))
+    assert result.status == "unavailable" and "source_unavailable" in result.reasons
+    assert result.matches[0].record == text
+    assert result.matches[0].citations[0].source == source
+
+
 def test_exact_sources_restart_and_json(tmp_path):
     facts, text, metric, graph = setup()
     repo = CanonicalFactRepository(tmp_path / "facts")

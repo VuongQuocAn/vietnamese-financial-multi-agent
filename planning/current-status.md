@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M4-04 — Evidence Retrieval Tools
+
+Status: **REVIEW**; Owner giao 02/11/2026, baseline main749d37f.
+[Spec](tasks/M4/M4-04.md), [report](../docs/m4-04-evidence-retrieval-tools.md).
+Năm typed read-only tools;203 focused PASS;real139 text/24 tables/2.973 anchors/
+18 lineages exact.18 accepted executions/arithmetic/restart exact;25 priority sources.
+M3 get_sources sửa false-found khi thiếu reference/image hoặc sai binding;
+2.087 fact sources/163 evidence sources/29 queries/7 real negative controls PASS.
+15+3 eligibility/36 pairs/D-07 scopes/D-06 QA09/QA15 giữ nguyên;
+2.657 protected hashes unchanged,zero Gateway. Chưa commit; chuẩn bị push main
+và xác minh CI đúng SHA. Giữ web local; không P0/P1 còn mở trong phạm vi kiểm tra.
+Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
+
 ## M4-03 — Calculator and Formula Executor
 
 Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.
