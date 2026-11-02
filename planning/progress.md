@@ -13,14 +13,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| M4 | 5 | 0 | 1 | 0 | 4 | 0 | 0 |
+| M4 | 5 | 0 | 0 | 0 | 4 | 0 | 1 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 99 | 67 | 1 | 0 | 31 | 0 | 0 |
+| TOTAL | 99 | 67 | 0 | 0 | 31 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -48,11 +48,15 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M4-01 **IN_PROGRESS**, Owner/Tech Lead CONDITIONAL GO02/11/2026.
+M4-01 **REVIEW**, chờ Tech Lead independent review.
 [Spec](tasks/M4/M4-01.md), [report](../docs/m4-01-execution-policy.md);
 246 focused PASS;real original15/recovery3 eligible,global18 undetermined/computed0;
 29 queries/36 pairs/D-06 exact,2.545 hashes unchanged,zero Gateway. Giữ web local.
-Next action: commit/push và xác minh CI đúng SHA trước REVIEW.
+Implementation49e793eb82b60b1fd22108cac472f094a91f184c đã push main;
+[CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. B01/B02 đề xuất DONE,
+B03 thuộc M4-03,B10 UNKNOWN. Checkpoint sau chỉ docs/planning.
+Next action: Tech Lead independent review M4-01.
 
 Checkpoint D-06 đã nghiệm thu:
 

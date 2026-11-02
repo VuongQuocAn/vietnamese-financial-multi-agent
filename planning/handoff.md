@@ -6,14 +6,17 @@ M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
 Baseline main/origin/main8bddff415df98239f507802dc3b55e2e51f2c3b8.
 [Spec](tasks/M4/M4-01.md), [report](../docs/m4-01-execution-policy.md).
 Owner/Tech Lead CONDITIONAL GO02/11/2026; main-first, commit/push được phép.
-Final acceptance M4-01/verified PASS;chưa implementation commit và CI.
+Final acceptance M4-01/verified PASS;implementation
+`49e793eb82b60b1fd22108cac472f094a91f184c` đã push main.
+[CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
 
 ## Completed Work
 
@@ -25,18 +28,19 @@ computed0;29 queries/36 pairs/QA09/QA15/D-06 exact,2.545 hashes unchanged.
 
 ## Remaining Work
 
-Implementation commit/push, CI đúng SHA,
-cập nhật REVIEW và evidence checkpoint. Không bắt đầu M4-02/M4-03.
+Chờ Tech Lead independent review M4-01;không tự nghiệm thu DONE hoặc bắt đầu
+M4-02/M4-03.
 
 ## Modified Files
 
-Evidence runtime, M4 config/tests/evaluator, CI focused list, policy report và
-planning. Không stage artifacts/dataset/secrets hoặc web/next-env.d.ts.
+Implementation17 task files đã commit. Checkpoint sau chỉ policy report/planning
+và evidence CI;không stage artifacts/dataset/secrets hoặc web/next-env.d.ts.
 
 ## Tests
 
 246 focused PASS;JUnit ignored M4-01/final-focused-tests.xml. Ruff lint/format
-toàn repository345 files PASS;planning99/diff PASS, sẽ kiểm lại sau planning edits.
+toàn repository345 files PASS;planning99/diff PASS. CI Python3.12/Web smoke SUCCESS,
+full unit regression SKIPPED;không chạy lại tests/evaluation sau docs checkpoint.
 Offline real runner không Gemini/OCR/extraction. Source/quality/citations/lineage
 và protected input hashes giữ nguyên; eligibility PASS chưa numeric calculation PASS.
 
@@ -49,9 +53,11 @@ hoặc insufficient trước cross-document approval. Không B09/Web/gold trong 
 
 ## Git Checkpoint
 
-Main-first, chưa commit; remote main vẫn baseline8bddff4. Chỉ có unrelated local
-web/next-env.d.ts trước task; hash đã pin và giữ nguyên. Evidence ignored M4-01.
+Main-first, implementation49e793eb82b60b1fd22108cac472f094a91f184c và CI41365782993
+đã xác minh. Checkpoint tiếp theo chỉ docs/planning `[skip ci]`,không gán CI trên
+cho SHA checkpoint. Chỉ unrelated local web/next-env.d.ts giữ hash ban đầu;
+evidence ignored M4-01/verified và final-focused-tests.xml không commit.
 
 ## Exact Next Action
 
-Hoàn tất validation, commit/push và bàn giao M4-01 ở REVIEW.
+Tech Lead independent review M4-01.

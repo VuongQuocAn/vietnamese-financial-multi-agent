@@ -1,8 +1,8 @@
 # M4-01 — Execution compatibility và formula approvals
 
 Ngày02/11/2026 (Asia/Bangkok), baseline main
-`8bddff415df98239f507802dc3b55e2e51f2c3b8`. Status **IN_PROGRESS**, chờ chốt
-validation/Git/CI trước REVIEW. Phạm vi là eligibility, chưa numeric execution.
+`8bddff415df98239f507802dc3b55e2e51f2c3b8`. Status **REVIEW**, chờ Tech Lead
+independent review. Phạm vi là eligibility, chưa numeric execution.
 
 ## Quyết định thiết kế
 
@@ -161,5 +161,13 @@ Corrective action trước cross-document approval: đọc cover/audit opinion v
 consolidation notes của từng5 PDFs, ghi exact nguồn scope hoặc insufficient.
 Không mở B09 restatement/Web integration/independent gold.
 
-Implementation chưa commit; CI chưa chạy. Ruff/planning/diff sẽ chốt trước push.
+Implementation [`49e793eb82b60b1fd22108cac472f094a91f184c`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/49e793eb82b60b1fd22108cac472f094a91f184c)
+đã commit/push trực tiếp main,17 task files. [CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
+completed/SUCCESS, event push đúng SHA: Python3.12 và Web smoke đều SUCCESS,
+typecheck/lint/build/bounded browser smoke PASS; full unit regression SKIPPED.
+Local246 focused PASS; Ruff lint/format345 files,planning99,diff PASS.
+Checkpoint sau chỉ docs/planning `[skip ci]`, không gán CI implementation cho
+SHA checkpoint. Chỉ web/next-env.d.ts còn local, giữ hash trước=sau ngoài stage;
+không commit dataset/raw/ignored evidence/secrets. CI là engineering evidence,
+không numeric calculation PASS hoặc chứng nhận financial accuracy.
 **Next action duy nhất:** Tech Lead independent review M4-01 sau bàn giao REVIEW.

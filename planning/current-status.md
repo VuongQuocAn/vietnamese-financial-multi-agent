@@ -4,14 +4,19 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts
 
-Status: **IN_PROGRESS**, Owner/Tech Lead CONDITIONAL GO ngày02/11/2026.
+Status: **REVIEW**, chờ Tech Lead independent review; Owner/Tech Lead CONDITIONAL GO
+ngày02/11/2026.
 [Spec](tasks/M4/M4-01.md). Baseline main8bddff4; profile
 M4/same-document-execution-v1 và ba formula semantics được duyệt; giữ web local.
 246 focused PASS;final real original15/recovery3 eligible,global18 undetermined,
 computed0;29 queries/36 pairs/QA09/QA15/D-06 exact,2.545 hashes unchanged,zero Gateway.
-Ruff345/planning99/diff PASS. Runtime/policy report và ignored M4-01/verified
-đã chốt;chưa commit/CI. B01/B02 đề xuất DONE chờ review,B03 thuộc M4-03,B10 UNKNOWN.
-Next action: commit/push implementation và xác minh CI đúng SHA trước REVIEW.
+Ruff345/planning99/diff PASS. Implementation
+`49e793eb82b60b1fd22108cac472f094a91f184c` đã push main;
+[CI41365782993](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41365782993)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. [Policy/report](../docs/m4-01-execution-policy.md),
+ignored evidence M4-01/verified. B01/B02 đề xuất DONE chờ review,B03 thuộc M4-03,
+B10 UNKNOWN;computed0 chưa numeric PASS. Checkpoint sau chỉ docs/planning,giữ web local.
+Next action: Tech Lead independent review M4-01.
 
 ## D-06 — Canonical Mapping & Financial Validation Fix
 
