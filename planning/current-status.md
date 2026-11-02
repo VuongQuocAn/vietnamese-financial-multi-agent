@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-01 — Evidence Plan and Planner Contracts
+
+Status: **REVIEW**; Owner giao02/11/2026, baseline main/origin `ca9570d`.
+[Spec](tasks/M5/M5-01.md),[report/example](../docs/m5-01-evidence-plan-contracts.md).
+Public typed contracts, deferred bindings, combined DAG/selector validation và
+read-only catalog preflight; chưa có agent runtime.33 M5/tổng129 targeted PASS;
+15 real cases:10valid/4blocked/1invalid, BBS2021–2025/recovery2022;2.681 hashes
+unchanged,zero Gateway/calculation calls. Ruff382/planning101/diff PASS.
+Chưa commit tại lúc ghi; SHA/CI sẽ ghi checkpoint sau push. M4-05/M4-05a DONE;
+giữ D03-B10/web local. Next action: Tech Lead independent review M5-01.
+
 ## M4-05a — Gemini Live Integration & QA Validation
 
 Status: **DONE**,Tech Lead APPROVED ngày02/11/2026,cho phép đồng bộ planning;
