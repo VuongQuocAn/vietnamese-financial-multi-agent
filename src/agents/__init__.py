@@ -1,4 +1,4 @@
-"""Public M5 contracts; chưa triển khai agent runtime."""
+"""Public M5 contracts và evidence-aware query planning; chưa execution."""
 
 from .contracts import (
     SPECIALIST_BOUNDARIES,
@@ -18,10 +18,20 @@ from .contracts import (
     bind_step_request,
     validate_plan,
 )
+from .planner_contracts import (
+    PlannerContext,
+    PlannerLLMMetadata,
+    PlannerOperation,
+    PlannerProposal,
+    PlannerResult,
+    PlannerTrace,
+)
+from .query_planner import EvidenceAwareQueryPlanner
 
 __all__ = [
     "SPECIALIST_BOUNDARIES",
     "TOOL_CONTRACTS",
+    "EvidenceAwareQueryPlanner",
     "EvidencePlan",
     "EvidenceRequirement",
     "EvidenceSelector",
@@ -29,6 +39,12 @@ __all__ = [
     "InputBinding",
     "PlanStep",
     "PlanValidation",
+    "PlannerContext",
+    "PlannerLLMMetadata",
+    "PlannerOperation",
+    "PlannerProposal",
+    "PlannerResult",
+    "PlannerTrace",
     "QuerySpecification",
     "RiskSignal",
     "SpecialistBoundary",

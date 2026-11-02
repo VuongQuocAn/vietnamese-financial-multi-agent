@@ -1,0 +1,20 @@
+[
+  {"id":"P01","group":"direct_fact","question":"BBS năm 2025 có tổng tài sản bao nhiêu và lấy từ trang nào?","year":2025,"items":["b01.total_assets"],"intent":"direct_fact","status":"planned"},
+  {"id":"P02","group":"direct_fact","question":"Doanh thu thuần BBS năm 2024 là bao nhiêu?","year":2024,"items":["b02.net_revenue"],"intent":"direct_fact","status":"planned"},
+  {"id":"P03","group":"direct_fact","question":"Dòng tiền thuần từ hoạt động kinh doanh BBS năm 2023?","year":2023,"items":["b03.operating_cash_flow"],"intent":"direct_fact","status":"planned"},
+  {"id":"P04","group":"direct_fact","question":"Vốn chủ sở hữu BBS năm 2021 và nguồn số liệu?","year":2021,"items":["b01.total_equity"],"intent":"direct_fact","status":"planned"},
+  {"id":"P05","group":"analytical_metric","question":"Tính biên lợi nhuận gộp BBS năm 2025.","year":2025,"formulas":["gross_margin"],"intent":"calculated_metric","status":"planned"},
+  {"id":"P06","group":"analytical_metric","question":"Tính tỷ lệ nợ trên tổng tài sản BBS năm 2024.","year":2024,"formulas":["debt_to_assets"],"intent":"calculated_metric","status":"planned"},
+  {"id":"P07","group":"analytical_metric","question":"Tăng trưởng doanh thu BBS năm 2022 bản recovery?","year":2022,"snapshot":"recovery","formulas":["revenue_yoy"],"intent":"calculated_metric","status":"planned"},
+  {"id":"P08","group":"analytical_metric","question":"Biên lợi nhuận gộp BBS năm 2021 là bao nhiêu?","year":2021,"formulas":["gross_margin"],"intent":"calculated_metric","status":"planned"},
+  {"id":"P09","group":"multi_step_analysis","question":"Phân tích doanh thu, giá vốn hàng bán và lợi nhuận gộp BBS năm 2024.","year":2024,"items":["b02.net_revenue","b02.cost_of_sales","b02.gross_profit"],"intent":"multi_step_analysis","status":"planned"},
+  {"id":"P10","group":"multi_step_analysis","question":"Phân tích tổng nợ phải trả và tổng tài sản BBS năm 2023.","year":2023,"items":["b01.total_liabilities","b01.total_assets"],"intent":"multi_step_analysis","status":"planned"},
+  {"id":"P11","group":"multi_step_analysis","question":"Phân tích dòng tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2025.","year":2025,"items":["b03.operating_cash_flow","b02.profit_before_tax"],"intent":"multi_step_analysis","status":"planned"},
+  {"id":"P12","group":"multi_step_analysis","question":"Phân tích tổng tài sản và vốn chủ sở hữu BBS năm 2021.","year":2021,"items":["b01.total_assets","b01.total_equity"],"intent":"multi_step_analysis","status":"planned"},
+  {"id":"P13","group":"evidence_explanation","question":"Công thức và bằng chứng để tính biên lợi nhuận gộp BBS năm 2023 là gì?","year":2023,"formulas":["gross_margin"],"intent":"evidence_explanation","status":"planned"},
+  {"id":"P14","group":"evidence_explanation","question":"Tăng trưởng doanh thu BBS năm 2022 bản recovery được xác định từ đâu?","year":2022,"snapshot":"recovery","formulas":["revenue_yoy"],"intent":"evidence_explanation","status":"planned"},
+  {"id":"P15","group":"negative","question":"So sánh doanh thu BBS năm 2021 với năm 2025.","years":[2021,2025],"items":["b02.net_revenue"],"intent":"direct_fact","status":"blocked","gate":"D03-B10"},
+  {"id":"P16","group":"negative","question":"Doanh thu BBS năm 2022 nhưng chưa chọn snapshot?","year":2022,"items":["b02.net_revenue"],"intent":"direct_fact","status":"clarification_required","gate":"snapshot_selection_required"},
+  {"id":"P17","group":"negative","question":"Tính ROE của BBS năm 2025.","year":2025,"intent":"unsupported","status":"unsupported"},
+  {"id":"P18","group":"negative","question":"Báo cáo hợp nhất BBS năm 2025 cho thấy tổng tài sản bao nhiêu?","year":2025,"scope":"consolidated","items":["b01.total_assets"],"intent":"direct_fact","status":"blocked","materialized":true,"gate":"required_scope_unresolved_or_mismatched"}
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "L01",
+    "group": "multi_step_analysis",
+    "question": "Hãy lập kế hoạch xem xét BBS năm 2025: doanh thu thuần, giá vốn hàng bán và lợi nhuận gộp; mỗi khoản cần có nguồn để đối chiếu.",
+    "year": 2025,
+    "items": [
+      "b02.net_revenue",
+      "b02.cost_of_sales",
+      "b02.gross_profit"
+    ],
+    "intent": "multi_step_analysis",
+    "status": "planned"
+  },
+  {
+    "id": "L02",
+    "group": "multi_step_analysis",
+    "question": "Tôi muốn xem đồng thời tiền thuần từ hoạt động kinh doanh và lợi nhuận sau thuế của BBS trong báo cáo năm 2023, kèm đường dẫn về bằng chứng.",
+    "year": 2023,
+    "items": [
+      "b03.operating_cash_flow",
+      "b02.profit_after_tax"
+    ],
+    "intent": "multi_step_analysis",
+    "status": "planned"
+  },
+  {
+    "id": "L03",
+    "group": "analytical_metric",
+    "question": "Trong báo cáo BBS 2024, cứ một trăm đồng tổng tài sản thì bao nhiêu đồng được tài trợ bằng nợ phải trả? Hãy lên kế hoạch tính chỉ số này.",
+    "year": 2024,
+    "formulas": [
+      "debt_to_assets"
+    ],
+    "intent": "calculated_metric",
+    "status": "planned"
+  },
+  {
+    "id": "L04",
+    "group": "evidence_explanation",
+    "question": "Muốn giải thích biên lợi nhuận gộp của BBS năm 2025, tôi phải kiểm tra những số liệu đầu vào, công thức và nguồn PDF nào?",
+    "year": 2025,
+    "formulas": [
+      "gross_margin"
+    ],
+    "intent": "evidence_explanation",
+    "status": "planned"
+  },
+  {
+    "id": "L05",
+    "group": "negative",
+    "question": "Lên kế hoạch truy xuất doanh thu BBS năm 2022; hiện tôi chưa quyết định dùng bản gốc hay bản recovery.",
+    "year": 2022,
+    "items": [
+      "b02.net_revenue"
+    ],
+    "intent": "direct_fact",
+    "status": "clarification_required",
+    "gate": "snapshot_selection_required",
+    "intents": [
+      "direct_fact",
+      "ambiguous"
+    ]
+  },
+  {
+    "id": "L06",
+    "group": "negative",
+    "question": "Tôi cần tỷ suất sinh lời trên vốn chủ sở hữu (ROE) BBS 2025; hãy lên kế hoạch tính và kiểm tra bằng chứng.",
+    "year": 2025,
+    "intent": "unsupported",
+    "status": "unsupported"
+  }
+]
