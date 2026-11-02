@@ -60,6 +60,8 @@ quote, scope, role của evidence, original source references, render hash và
 verification/inspection references. Chỉ role `filing_scope` được resolve;
 `other_entity`/`inspected_context` giữ provenance nhưng không xác định filing scope.
 Runtime revalidate quote/value/source binding, giữ cả nguồn khi conflict.
+Selected reviews được deep-copy trước khi dựng context result;negative control
+đã tái hiện và chặn việc caller sửa object trả về làm thay đổi review nội bộ.
 
 `SnapshotCatalog.get_reporting_scope(document_id, snapshot_id)` trả overlay riêng,
 không latest/parent fallback/merge. JSON restart qua existing model contracts,
@@ -79,14 +81,17 @@ Controls: separate/consolidated, mixed/conflicting sources, unknown/unverified
 selection, missing/source/document/snapshot/hash/selector/quote/value/verification,
 insufficient, unsupported tổng hợp, subsidiary description, parent isolation,
 restart/immutability và scope không tự cấp formula execution.
-JUnit ignored `artifacts/evidence/D-07/focused-tests.xml`, SHA256
-`d253743358185d5d9fdac0a83d6c169a9ee328887a494b1ff253fc28d9c31c1d`.
+JUnit cuối ignored `artifacts/evidence/D-07/final-focused-tests.xml`, SHA256
+`ebbbef45df3cbedf29b26d3e50a25e613284971a60104758daff7a7ea4e5305c`.
 
 Real regression với scope reviews đã nạp vào production catalog: **15/15 original
 +3/3 recovery eligible**,18 closure outputs và18 reviewed lineages exact với
 accepted M4-01;**36 cross-document pairs vẫn undetermined**,29 retrieval queries
 exact. Original facts/snapshots/lineage/source references và D-02/M4 policies
 không ghi đè;**2.573 protected input hashes before=after**,computed0,zero Gateway.
+Sau fix read-only cuối,5 scope views trên persisted real reviews được kiểm lại
+exact và hash inputs không đổi (`final-scope-regression.json`);giữ bằng chứng
+regression15+3/36 đã PASS vì metric compatibility/policies không thay đổi.
 
 Ignored `artifacts/evidence/D-07/`: cache-inventory/candidates,38 original renders
 (renders+extra-renders),source-inspections,reporting-scope-reviews,scope-results

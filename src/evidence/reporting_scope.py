@@ -53,7 +53,7 @@ def resolve_reporting_scope(descriptor, reviews=()) -> ReportingScopeResolution:
     hai nguồn khi conflict; không sửa global M3 hoặc original FinancialContext.
     """
     selected = [
-        r
+        r.model_copy(deep=True)
         for r in reviews
         if (r.document_id, r.snapshot_id) == (descriptor.document_id, descriptor.snapshot_id)
     ]

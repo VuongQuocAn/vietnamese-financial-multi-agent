@@ -94,12 +94,18 @@ def test_two_documents_scopes_restart_and_no_parent_fallback():
         assert all(e.status == "unresolved" for e in evidence)
         all_descriptors.append(descriptor)
         all_reviews.extend(reviews)
-        result = SnapshotCatalog([descriptor], reporting_scope_reviews=reviews).get_reporting_scope(
-            descriptor.document_id, descriptor.snapshot_id
-        )
+        scoped_catalog = SnapshotCatalog([descriptor], reporting_scope_reviews=reviews)
+        result = scoped_catalog.get_reporting_scope(descriptor.document_id, descriptor.snapshot_id)
         assert result.reporting_scope == ("separate", "consolidated")[document]
         assert result.status == "resolved" and result.evidence_status == "confirmed"
         assert not result.cross_document_execution_approved
+        result.context_resolution.evidence[0].raw_text = "client-mutated return value"
+        assert (
+            scoped_catalog.get_reporting_scope(
+                descriptor.document_id, descriptor.snapshot_id
+            ).status
+            == "resolved"
+        )
         assert page.export_source() == before
     restarted = [ReportingScopeReview.model_validate_json(r.model_dump_json()) for r in all_reviews]
     catalog = SnapshotCatalog(all_descriptors, reporting_scope_reviews=restarted)
