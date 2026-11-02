@@ -76,7 +76,7 @@ Optional work không là điều kiện khởi động toàn plan; nếu đượ
 
 Factory `metric_plan` trong evaluator tạo plan bằng actual selected metric/request
 và persisted operands. Full serialized plan cùng citations/caveats/probes nằm ở
-ignored `artifacts/evidence/M5-01-final/gross_margin.json`; không commit canonical
+ignored `artifacts/evidence/M5-01-scope-final/gross_margin.json`; không commit canonical
 records hoặc private dataset. Có thể đọc lại bằng public contract:
 
 ```python
@@ -86,7 +86,7 @@ from pathlib import Path
 from vietnamese_financial_multi_agent.agents import EvidencePlan
 
 payload = json.loads(
-    Path("artifacts/evidence/M5-01-final/gross_margin.json").read_text(encoding="utf-8")
+    Path("artifacts/evidence/M5-01-scope-final/gross_margin.json").read_text(encoding="utf-8")
 )
 plan = EvidencePlan.model_validate(payload["plan"])
 assert EvidencePlan.model_validate_json(plan.model_dump_json()) == plan
@@ -126,7 +126,7 @@ Source grounding/approved arithmetic không phải independent financial verific
 Chạy offline, output mới, không ghi đè accepted artifacts:
 
 ```console
-.venv/Scripts/python.exe scripts/evaluate_m5_01_contracts.py --output artifacts/evidence/M5-01-final
+.venv/Scripts/python.exe scripts/evaluate_m5_01_contracts.py --output artifacts/evidence/M5-01-scope-final
 ```
 
 | Case | Kết quả contracts và đối chiếu M4/catalog |
@@ -141,7 +141,7 @@ Chạy offline, output mới, không ghi đè accepted artifacts:
 | Canonical item chưa có data | blocked; ID lấy từ ITEM_RULES thật, không có usable record; M4 probe không found |
 | Explicit original2021/2022/2023/2024 | valid, bốn case; selectors thật và sources đúng;2024 scope resolved separate |
 | Explicit recovery2022 | valid; recovery identity riêng, không merge/fallback về original |
-| Required separate scope2025 | blocked; scope chưa có căn cứ, không giả định separate |
+| Required separate scope2025 | blocked; constraint chỉ ở query vẫn gate đúng, M4 scoped probe unavailable; không giả định separate |
 | Period binding cố ý sai | invalid; arguments2024 mâu thuẫn requirement/selector2025 |
 
 Tổng15 cases:10 valid,4 blocked,1 invalid, lấy trực tiếp từ `summary.json`. Persisted years2021–2025
@@ -156,7 +156,7 @@ Multi-Agent. Found records, original quality, source limitations và scope revie
 
 ## Engineering validation và quyết định kế thừa
 
-33 focused M5 controls; tổng129 targeted PASS khi chạy cùng M4 financial retrieval,
+35 focused M5 controls; tổng131 targeted PASS khi chạy cùng M4 financial retrieval,
 calculator, evidence tools và QA Gateway. Một Pydantic warning đến từ negative
 control invalid_decimal hiện có của M4, không phải failure. Ruff/check format382 files,
 planning checker101 tasks và diff check PASS; exact CI ghi ở spec.
@@ -166,7 +166,11 @@ Trong phạm vi task không phát hiện lỗi M4/data cần sửa. Các lỗi c
 trong triển khai đã sửa: combined dependency cycle; deferred selector guard sau bind;
 required scope chỉ xuất hiện ở requirement; controlled source-review conflict;
 optional evidence vô tình trở thành global gate. Negative controls giữ các root causes
-này. Không đổi accepted accounting semantics hoặc production M4 code.
+này. Self-review sau initial commit phát hiện scope cấp query chưa truyền vào
+preflight khi step không lặp lại constraint; đã sửa cả query-level/selector-level
+scope, thêm hai focused controls và real2025 query-only scope case. Initial CI
+success thuộc SHA34a96d1; final implementation/CI ghi riêng ở spec.
+Không đổi accepted accounting semantics hoặc production M4 code.
 
 M5-02 kế thừa version/API này, tạo plan bằng structured understanding và catalog;
 không suy document từ năm/alias, không coi unknown scope là compatible. M5-03 quản lý

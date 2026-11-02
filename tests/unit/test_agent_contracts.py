@@ -206,6 +206,8 @@ def test_bindings_roundtrip_and_m4_api_compatibility():
         "completion",
         "source_conflict",
         "requirement_scope",
+        "query_scope",
+        "query_selector_scope",
         "period_unit",
         "lineage",
     ],
@@ -248,6 +250,12 @@ def test_execution_gate_and_quality(case):
         data["source_reviews"][0].raw_value = "999"
     elif case == "requirement_scope":
         plan.requirements[0].selector.reporting_scope = "consolidated"
+    elif case == "query_scope":
+        plan.query.reporting_scope = "consolidated"
+    elif case == "query_selector_scope":
+        plan.query.selectors[0] = plan.query.selectors[0].model_copy(
+            update={"reporting_scope": "consolidated"}
+        )
     elif case == "period_unit":
         data["facts"][0].context.currency = "USD"
     elif case == "lineage":

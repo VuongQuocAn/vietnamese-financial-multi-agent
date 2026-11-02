@@ -445,6 +445,14 @@ def evaluate(root, output):
             "blocked",
         )
     )
+    # Constraint chỉ ở query vẫn phải gate plan, dù tool chưa lặp lại argument.
+    query_scope = cases[-1][0]
+    query_scope.query.selectors = [EvidenceSelector(**scopes[2025])]
+    for requirement in query_scope.requirements:
+        requirement.selector = requirement.selector.model_copy(update={"reporting_scope": None})
+    for step in query_scope.steps:
+        step.selector = step.selector.model_copy(update={"reporting_scope": None})
+        step.arguments.pop("reporting_scope", None)
 
     rows = []
     for plan, expected in cases:
@@ -452,7 +460,16 @@ def evaluate(root, output):
         for step in plan.steps:
             if step.tool == "find_financial_facts":
                 response = financial.find_financial_facts(
-                    FindFinancialFactsRequest(**step.arguments)
+                    FindFinancialFactsRequest(
+                        **{
+                            **step.arguments,
+                            **(
+                                {"reporting_scope": plan.query.reporting_scope}
+                                if plan.query.reporting_scope
+                                else {}
+                            ),
+                        }
+                    )
                 )
                 probes.append(response.model_dump(mode="json"))
                 req = next(

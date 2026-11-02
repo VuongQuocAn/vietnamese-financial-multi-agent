@@ -469,6 +469,16 @@ def _selector_matches(selector, arguments):
         return False
 
 
+def _query_scope(query, selector):
+    scopes = {
+        q.reporting_scope
+        for q in query.selectors
+        if q.reporting_scope and _selector_matches(q, selector.model_dump(exclude_none=True))
+    }
+    scopes.update(s for s in (query.reporting_scope, selector.reporting_scope) if s)
+    return scopes
+
+
 def bind_step_request(plan: EvidencePlan, step_id: str, outputs: dict[str, Any]):
     """Tạo một request M4 từ outputs đã có; kiểm bindings, không dispatch."""
     plan = EvidencePlan.model_validate_json(plan.model_dump_json())
@@ -494,10 +504,8 @@ def bind_step_request(plan: EvidencePlan, step_id: str, outputs: dict[str, Any])
         arguments[binding.argument] = value
     request = TOOL_CONTRACTS[step.tool][0].model_validate_json(json.dumps(arguments))
     _guard_selector(step.selector, request.model_dump())
-    if plan.query.reporting_scope:
-        _guard_selector(
-            EvidenceSelector(reporting_scope=plan.query.reporting_scope), request.model_dump()
-        )
+    for scope in _query_scope(plan.query, step.selector):
+        _guard_selector(EvidenceSelector(reporting_scope=scope), request.model_dump())
     for requirement in plan.requirements:
         if requirement.requirement_id in step.output_evidence_ids:
             _guard_selector(requirement.selector, request.model_dump())
@@ -562,6 +570,21 @@ def validate_plan(
         if stop:
             stops.append(stop)
 
+    def apply_scope(selector, *, required=True, step=None, requirement=None):
+        scopes = _query_scope(plan.query, selector)
+        if len(scopes) > 1:
+            signal(
+                "reporting_scope_unresolved",
+                "ambiguous_query_scope_constraints",
+                "unresolved_ambiguity" if required else None,
+                blocking=required,
+                step=step,
+                requirement=requirement,
+            )
+        elif scopes:
+            selector.reporting_scope = next(iter(scopes))
+        return selector
+
     for risk in plan.risks:
         if risk.blocking:
             stops.append(
@@ -620,6 +643,7 @@ def validate_plan(
         selector = requirement.selector.model_copy(deep=True)
         selector.canonical_item_id = requirement.canonical_item_id or selector.canonical_item_id
         required = requirement.importance == "required"
+        selector = apply_scope(selector, required=required, requirement=requirement.requirement_id)
         if not selector.document_id:
             signal(
                 "missing_evidence",
@@ -725,6 +749,7 @@ def validate_plan(
                 **{k: v for k, v in step.arguments.items() if k in EvidenceSelector.model_fields},
             }
         )
+        selector = apply_scope(selector, step=step.step_id)
         if catalog is None:
             signal(
                 "missing_evidence",

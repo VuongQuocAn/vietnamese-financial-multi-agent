@@ -32,7 +32,7 @@ Giữ web/next-env.d.ts local ngoài stage; không stage artifacts/dataset/secre
 
 ## Tests
 
-33 M5 controls; tổng129 targeted PASS với M4 retrieval/calculator/evidence/Gateway.
+35 M5 controls; tổng131 targeted PASS với M4 retrieval/calculator/evidence/Gateway.
 Final run:15 real cases,10valid/4blocked/1invalid;2.681 hashes unchanged,
 JSON round-trip/records exact. Ruff382/planning101/diff PASS;
 không full local regression hoặc Gemini/OCR/calculation calls.
