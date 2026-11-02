@@ -53,7 +53,9 @@ M4-04 **REVIEW**, [spec](tasks/M4/M4-04.md),
 139 text/24 tables/2.973 anchors/18 lineages exact;18 accepted executions/arithmetic/
 restart exact.2.087 fact-source cases/163 evidence sources/29 queries/7 real controls
 PASS sau M3 correction;15+3/36 pairs/D-07/D-06 giữ nguyên;2.657 hashes unchanged.
-Chưa commit; chuẩn bị push main và exact-SHA CI; giữ web local.
+Implementation304da3a và format fix a36493b đã push main;
+[CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
+SUCCESS đúng fix SHA,Python3.12 SUCCESS;Web smoke/full regression SKIPPED;giữ web local.
 Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
 
 Checkpoint M4-02 đã nghiệm thu: accepted correction3dba041,

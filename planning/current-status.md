@@ -11,8 +11,13 @@ Năm typed read-only tools;203 focused PASS;real139 text/24 tables/2.973 anchors
 M3 get_sources sửa false-found khi thiếu reference/image hoặc sai binding;
 2.087 fact sources/163 evidence sources/29 queries/7 real negative controls PASS.
 15+3 eligibility/36 pairs/D-07 scopes/D-06 QA09/QA15 giữ nguyên;
-2.657 protected hashes unchanged,zero Gateway. Chưa commit; chuẩn bị push main
-và xác minh CI đúng SHA. Giữ web local; không P0/P1 còn mở trong phạm vi kiểm tra.
+2.657 protected hashes unchanged,zero Gateway. Implementation
+`304da3a6a95873acd88fc3b49a5fd0268e07653f` và format fix
+`a36493b60834c32b5629f23dc4bfa0062359db01` đã push main;
+[CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
+completed/SUCCESS đúng fix SHA,Python3.12 lint/format/planning/focused tests SUCCESS;
+Web smoke/full regression SKIPPED. Giữ web local;không P0/P1 còn mở trong phạm vi
+kiểm tra. Checkpoint sau chỉ docs/planning,không gán CI fix cho SHA checkpoint.
 Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
 
 ## M4-03 — Calculator and Formula Executor

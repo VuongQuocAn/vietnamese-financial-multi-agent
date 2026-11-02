@@ -12,7 +12,11 @@ REVIEW
 
 Baseline main/origin main/remote `749d37fbe832f7aa2701162269eb8e42402a2ba5`.
 [Spec](tasks/M4/M4-04.md), [report](../docs/m4-04-evidence-retrieval-tools.md).
-Local implementation hoàn tất; chưa commit, chuẩn bị push và exact-SHA CI.
+Implementation `304da3a6a95873acd88fc3b49a5fd0268e07653f` và format fix
+`a36493b60834c32b5629f23dc4bfa0062359db01` đã push main;
+[CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
+completed/SUCCESS đúng fix SHA;Python3.12 lint/format/planning/focused tests SUCCESS;
+Web smoke/full regression SKIPPED. Format fix chỉ code fence tài liệu, runtime giữ nguyên.
 
 ## Completed Work
 
@@ -22,7 +26,7 @@ ba regression controls FAIL trước/PASS sau. Không refactor graph/engine/poli
 
 ## Remaining Work
 
-Commit/push main và xác minh CI; Tech Lead independent review trước DONE.
+Tech Lead independent review trước DONE.
 
 ## Modified Files
 
@@ -46,7 +50,8 @@ financial_fact_verified=False. Cross-document approval vẫn ngoài scope.
 
 ## Git Checkpoint
 
-Chưa commit; chỉ stage task files. Web SHA256 trước task:
+Implementation/fix và CI trên đã xác minh; checkpoint sau chỉ docs/planning
+[skip ci], không gán CI fix cho SHA checkpoint. Web SHA256 trước task:
 `0f70629890b72a0a82e91972cc032c04b658b26c265373cb711cf576bfbf8fcc`.
 Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 

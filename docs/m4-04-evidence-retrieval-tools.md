@@ -151,6 +151,13 @@ recovery metric với original guard). Không fallback nguồn gần giống.
 
 ## Review checkpoint
 
-Chưa commit; local validation hoàn tất, đang chuẩn bị push main và xác minh
-CI đúng implementation SHA. Không phát hiện P0/P1 còn mở trong phạm vi đã kiểm tra.
+Implementation [`304da3a6a95873acd88fc3b49a5fd0268e07653f`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/304da3a6a95873acd88fc3b49a5fd0268e07653f),
+format fix [`a36493b60834c32b5629f23dc4bfa0062359db01`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/a36493b60834c32b5629f23dc4bfa0062359db01)
+đã push main. [CI41381388861](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41381388861)
+completed/SUCCESS đúng fix SHA; Python3.12 lint/format/planning/focused tests SUCCESS;
+Web smoke/full regression SKIPPED theo workflow. CI implementation ban đầu dừng ở
+format Python code fence trong tài liệu; correction chỉ format, runtime không đổi.
+Local Ruff lint/format toàn repo365 files/planning100/diff PASS.
+Checkpoint sau chỉ ghi evidence/docs/planning, không gán CI fix cho SHA checkpoint.
+Không phát hiện P0/P1 còn mở trong phạm vi đã kiểm tra. Giữ web local byte-for-byte.
 Next action: Tech Lead independent review M4-04; chưa bắt đầu M4-05.
