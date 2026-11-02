@@ -14,13 +14,13 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M5 | 8 | 4 | 0 | 0 | 4 | 0 | 0 |
+| M5 | 8 | 4 | 0 | 0 | 3 | 0 | 1 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 78 | 0 | 0 | 23 | 0 | 0 |
+| TOTAL | 101 | 78 | 0 | 0 | 22 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M5-05 **REVIEW**, Owner giao02/11/2026; baseline main/origin348528f.
+[Spec](tasks/M5/M5-05.md),[report](../docs/m5-05-liquidity-leverage-specialist.md).
+Offline21/21; live initial6/6,6calls/9.879tokens,targeted0; grounding/numeric/citations100%.
+217 bounded +2 evaluator tests PASS; M5-04 outputs13/13 exact,3.818hashes unchanged.
+Chưa commit; đang chuẩn bị push/CI đúng SHA. Giữ Web local và accepted evidence.
+Next action: Tech Lead review M5-05; không tự DONE hoặc bắt đầu M5-06.
+
+Checkpoint trước:
 
 M5-04 **DONE**, Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning;
 không phát hiện P0/P1 mới cần sửa trước M5-05 trong phạm vi đã review.

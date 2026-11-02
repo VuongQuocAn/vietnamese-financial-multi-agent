@@ -18,6 +18,7 @@ from .contracts import (
     bind_step_request,
     validate_plan,
 )
+from .liquidity_leverage_specialist import LiquidityLeverageSpecialist
 from .planner_contracts import (
     PlannerContext,
     PlannerLLMMetadata,
@@ -33,6 +34,7 @@ from .profitability_specialist import (
     SpecialistResult,
 )
 from .query_planner import EvidenceAwareQueryPlanner
+from .specialist_common import SpecialistCandidate, SpecialistEvidence, SpecialistTrace
 from .supervisor import (
     ExecutionEvidenceBundle,
     RiskAwareSupervisor,
@@ -50,6 +52,7 @@ __all__ = [
     "ExecutionState",
     "ExecutionEvidenceBundle",
     "InputBinding",
+    "LiquidityLeverageSpecialist",
     "PlanStep",
     "PlanValidation",
     "PlannerContext",
@@ -62,6 +65,9 @@ __all__ = [
     "ProfitabilityEvidence",
     "ProfitabilitySpecialist",
     "SpecialistResult",
+    "SpecialistCandidate",
+    "SpecialistEvidence",
+    "SpecialistTrace",
     "QuerySpecification",
     "RiskSignal",
     "RiskAwareSupervisor",

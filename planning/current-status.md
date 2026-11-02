@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-05 — Liquidity and Leverage Specialist
+
+Status: **REVIEW**; Owner giao02/11/2026. Baseline main/origin
+`348528fc6e39356b9ac2706307e9ade7db5f12fc` đã xác minh.
+[Spec](tasks/M5/M5-05.md), [report](../docs/m5-05-liquidity-leverage-specialist.md).
+Specialist/common grounding hoàn tất; offline21/21, live initial6/6,6calls/9.879tokens,
+targeted0; grounding/numeric/citations100%, BBS2025 Debt-to-Assets59,06% full lineage.
+217 bounded +2 evaluator tests PASS; M5-04 before/after13/13 exact; accepted
+18metrics/29queries/QA36/M5-01 15cases giữ nguyên;3.818 protected hashes unchanged.
+Chưa commit; đang chuẩn bị push và CI đúng implementation SHA. Giữ Web local,
+D03-B10, financial_fact_verified=False; chưa verification M6.
+Next action: Tech Lead review M5-05; không tự DONE hoặc bắt đầu M5-06.
+
 ## M5-04 — Profitability Specialist
 
 Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.

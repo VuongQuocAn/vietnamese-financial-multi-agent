@@ -1,34 +1,40 @@
 """M5 candidate generation; bounded arithmetic prose, never M6 claim verification."""
 
-import json
 import re
 import unicodedata
 from decimal import Decimal
 from time import perf_counter
-from typing import Any, Literal
-from uuid import uuid4
+from typing import Literal
 
 from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
-from ..core.llm_contracts import (
-    GenerationParameters,
-    JSONOutput,
-    LLMRequest,
-    Message,
-    ModelIdentity,
-    OutputSpec,
-    RequestConstraints,
-)
+from ..core.llm_contracts import ModelIdentity
 from ..core.llm_gateway import SharedLLMGateway
-from ..evidence.graph import graph_id
-from ..evidence.retrieval import EvidenceCitation, RetrievalReference
-from ..tools.financial_calculator import FinancialCalculationResponse
 from ..tools.question_understanding import normalize
-from .contracts import SPECIALIST_BOUNDARIES, RiskSignal
-from .planner_contracts import PlannerLLMMetadata
+from .contracts import SPECIALIST_BOUNDARIES
+from .specialist_common import (
+    ClaimKind,
+    SpecialistResult,
+    SpecialistTrace,
+    _number,
+    generate_candidates,
+    select_evidence,
+)
+
+# Legacy public names remain available after moving wire contracts to common.
+from .specialist_common import SpecialistCandidate as ProfitabilityCandidate
+from .specialist_common import SpecialistEvidence as ProfitabilityEvidence
 from .supervisor import SupervisorResult
+
+__all__ = [
+    "ProfitabilityCandidate",
+    "ProfitabilityEvidence",
+    "ProfitabilitySpecialist",
+    "SpecialistResult",
+    "SpecialistTrace",
+]
 
 ITEM_LABELS = {
     "b02.net_revenue": "Doanh thu thuần",
@@ -38,75 +44,7 @@ ITEM_LABELS = {
     "b02.profit_after_tax": "Lợi nhuận sau thuế",
 }
 METRIC_LABELS = {"gross_margin": "Biên lợi nhuận gộp", "revenue_yoy": "Tăng trưởng doanh thu"}
-ClaimKind = Literal["fact", "approved_metric", "supported_interpretation"]
 Meaning = Literal["fact_value", "metric_value", "gross_profit_per_100_revenue", "revenue_change"]
-
-
-class ProfitabilityEvidence(FinancialModel):
-    evidence_id: str
-    kind: Literal["fact", "metric"]
-    reference: RetrievalReference
-    company_id: str
-    document_id: str
-    snapshot_id: str
-    period: str
-    operand_periods: dict[str, str] = Field(default_factory=dict)
-    label: str
-    value: str
-    unit: str
-    scale: str = "1"
-    canonical_item_id: str | None = None
-    citations: list[EvidenceCitation]
-    caveats: list[str]
-    # Full accepted execution includes formula/version, operands, lineage and reviews.
-    calculation: FinancialCalculationResponse | None = None
-
-
-class ProfitabilityCandidate(FinancialModel):
-    """Temporary M5 contract; M6-01 owns the eventual CandidateClaim."""
-
-    candidate_id: str
-    kind: ClaimKind
-    content: str
-    company_id: str
-    document_id: str
-    snapshot_id: str
-    period: str
-    fact_references: list[RetrievalReference] = Field(default_factory=list)
-    metric_ids: list[str] = Field(default_factory=list)
-    supporting_evidence_ids: list[str]
-    citations: list[EvidenceCitation]
-    calculation: FinancialCalculationResponse | None = None
-    caveats: list[str] = Field(default_factory=list)
-    missing_information: list[str] = Field(default_factory=list)
-    status: Literal["candidate", "insufficient_evidence"] = "candidate"
-    financial_fact_verified: Literal[False] = False
-
-
-class SpecialistTrace(FinancialModel):
-    stage: Literal["selection", "generation", "grounding"]
-    outcome: str
-    evidence_id: str | None = None
-    proposal_index: int | None = None
-    reasons: list[str] = Field(default_factory=list)
-
-
-class SpecialistResult(FinancialModel):
-    version: Literal["profitability_specialist_v1"] = "profitability_specialist_v1"
-    role: Literal["profitability"] = "profitability"
-    question: str
-    upstream_status: Literal["completed", "partial", "blocked", "failed"]
-    candidates: list[ProfitabilityCandidate] = Field(default_factory=list)
-    supporting_evidence: list[ProfitabilityEvidence] = Field(default_factory=list)
-    missing_evidence: list[str] = Field(default_factory=list)
-    risks: list[RiskSignal] = Field(default_factory=list)
-    limitations: list[str] = Field(default_factory=list)
-    status: Literal["generated", "partial", "abstained", "failed"] = "abstained"
-    llm: PlannerLLMMetadata = Field(default_factory=PlannerLLMMetadata)
-    raw_output: Any = None
-    trace: list[SpecialistTrace] = Field(default_factory=list)
-    latency_ms: float = 0.0
-    financial_fact_verified: Literal[False] = False
 
 
 class ProfitabilityProposal(FinancialModel):
@@ -116,137 +54,6 @@ class ProfitabilityProposal(FinancialModel):
     period: str
     # Facts/metrics may request exact backend rendering. Interpretations require prose.
     statement: str | None = Field(default=None, max_length=700)
-
-
-def _unique(values):
-    return list({v.model_dump_json(): v for v in values}.values())
-
-
-def _number(value):
-    # Display only; never calculate a new financial metric or silently change scale.
-    return format(Decimal(value), ",f").translate(str.maketrans({",": ".", ".": ","}))
-
-
-def _citations_valid(citations, document, snapshot, sources, bundle):
-    return bool(citations) and all(
-        c in bundle.citations
-        and c.document_id == c.source.document_id == document
-        and c.snapshot_id == c.source.snapshot_id == snapshot
-        and c.source in sources
-        and c.source.source_key() is not None
-        and c.anchor_id == graph_id("anchor", c.source.source_key())
-        and c.source.reference is not None
-        and c.pdf_page == c.source.reference.anchor.page.page
-        and c.provenance_level == c.source.reference.provenance_level
-        for c in citations
-    )
-
-
-def _fact_error(match, bundle):
-    fact = match.record
-    decisions = [q.decision for q in fact.quality_context if q.task_type == "direct_qa"]
-    if (
-        not fact.company_id
-        or not fact.context.period
-        or not fact.context.scale
-        or not fact.value.unit
-        or fact.value.status != "resolved"
-        or fact.value.normalized_value is None
-        or match.reference.observation != fact.observation_identity()
-    ):
-        return "fact_context_or_identity_missing"
-    if (
-        match.display_status == "blocked"
-        or not decisions
-        or any(d in {"insufficient", "conflicted"} for d in decisions)
-        or match.source_review.status != "found"
-        or not match.source_review.matches
-        or any(
-            v.observation != fact.observation_identity()
-            or v.original_sources != fact.sources
-            or v.status in {"source_inconsistent", "source_missing"}
-            for v in match.source_review.matches
-        )
-    ):
-        return "fact_conflicted_or_unusable"
-    if not _citations_valid(
-        match.citations, fact.document_id, fact.snapshot_id, fact.sources, bundle
-    ):
-        return "fact_citations_missing_or_mismatched"
-    return None
-
-
-def _metric_error(calc, bundle):
-    evidence, trace = calc.evidence, calc.trace
-    if (
-        calc.status != "computed"
-        or calc.result is None
-        or evidence is None
-        or trace is None
-        or not evidence.closure.calculation_eligible
-        or evidence.closure.status != "closed"
-        or evidence.reviewed_lineage.status != "found"
-        or evidence.reviewed_lineage.lineage is None
-        or evidence.reviewed_lineage.lineage.completeness != "complete"
-    ):
-        return "metric_trace_or_lineage_incomplete"
-    if (
-        calc.metric_id != evidence.record.metric_id
-        or calc.document_id != evidence.record.request.document_id
-        or calc.snapshot_id != evidence.record.request.snapshot_id
-        or calc.formula_id != evidence.record.definition.name
-        or calc.formula_id != trace.formula.formula_id
-        or calc.formula_id != trace.approval.formula_id
-        or calc.formula_version != trace.formula.version
-        or calc.formula_version != trace.approval.version
-        or calc.formula_digest != trace.formula.definition_digest()
-        or calc.formula_digest != trace.approval.definition_sha256
-    ):
-        return "metric_formula_binding_mismatch"
-    if (
-        evidence.closure.metric_id != calc.metric_id
-        or evidence.reviewed_lineage.lineage.metric_id != calc.metric_id
-        or evidence.reviewed_lineage.lineage.request != evidence.record.request
-        or Decimal(calc.result) != Decimal(trace.scaled_value).quantize(Decimal("0.01"))
-    ):
-        return "metric_result_or_lineage_binding_mismatch"
-    operands = trace.operands
-    if len(operands) != 2 or len({o.role for o in operands}) != 2:
-        return "metric_operand_missing"
-    for operand in operands:
-        facts = [f for f in bundle.facts if f.reference.observation == operand.observation]
-        bindings = [b for b in evidence.record.operands if b.role == operand.role]
-        if (
-            len(facts) != 1
-            or len(bindings) != 1
-            or bindings[0].observation != operand.observation
-            or bindings[0].source_fact_node_id != operand.source_fact_node_id
-            or evidence.record.request.operand_periods.get(operand.role) != operand.context.period
-            or _fact_error(facts[0], bundle)
-            or operand.observation.document_id != calc.document_id
-            or operand.observation.snapshot_id != calc.snapshot_id
-            or operand.value != str(facts[0].record.value.normalized_value)
-            or operand.unit != facts[0].record.value.unit
-            or operand.context != facts[0].record.context
-            or operand.company_id != facts[0].record.company_id
-        ):
-            return "metric_operand_binding_mismatch"
-    if len({o.company_id for o in operands}) != 1:
-        return "metric_company_mismatch"
-    if not _citations_valid(
-        evidence.citations,
-        calc.document_id,
-        calc.snapshot_id,
-        [
-            s
-            for f in bundle.facts
-            if f.reference.observation in {o.observation for o in operands}
-            for s in f.record.sources
-        ],
-        bundle,
-    ):
-        return "metric_citations_missing_or_mismatched"
-    return None
 
 
 # Full-match semantic grammar, NOT a blacklist: no extra clauses, invented causes,
@@ -343,125 +150,13 @@ class ProfitabilitySpecialist:
         self._model = model or ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
 
     def _select(self, upstream, result):
-        bundle = upstream.evidence_bundle
-
-        # Conflicts within the same observation or same financial context block all
-        # variants, rather than picking the first record.
-        def key(f):
-            r = f.record
-            return (
-                r.document_id,
-                r.snapshot_id,
-                r.company_id,
-                r.canonical_item_id,
-                (
-                    r.context.period,
-                    r.context.period_type,
-                    r.context.reporting_scope,
-                    r.context.currency,
-                    str(r.context.scale),
-                ),
-                r.value.unit,
-            )
-
-        groups = {}
-        for fact in bundle.facts:
-            groups.setdefault(key(fact), set()).add(fact.record.model_dump_json())
-        rejected_observations = set()
-        for fact in bundle.facts:
-            record = fact.record
-            if record.canonical_item_id not in ITEM_LABELS:
-                continue
-            error = _fact_error(fact, bundle)
-            if len(groups[key(fact)]) > 1:
-                error = "conflicting_fact_variants"
-            if error:
-                rejected_observations.add(fact.reference.observation)
-                result.missing_evidence.append(error)
-                result.trace.append(
-                    SpecialistTrace(stage="selection", outcome="excluded", reasons=[error])
-                )
-                continue
-            caveats = [
-                *fact.issues,
-                *fact.reporting_scope.reasons,
-                *[c for view in fact.source_review.matches for c in view.quality_caveats],
-                *[i.code for i in record.resolution_issues],
-                *[c for q in record.quality_context for c in [q.decision, *q.caveats]],
-                *[c for cite in fact.citations for c in cite.limitations],
-            ]
-            result.supporting_evidence.append(
-                ProfitabilityEvidence(
-                    evidence_id="",
-                    kind="fact",
-                    reference=fact.reference,
-                    company_id=record.company_id,
-                    document_id=record.document_id,
-                    snapshot_id=record.snapshot_id,
-                    period=record.context.period,
-                    label=ITEM_LABELS[record.canonical_item_id],
-                    canonical_item_id=record.canonical_item_id,
-                    value=str(record.value.normalized_value),
-                    unit=record.value.unit,
-                    scale=str(record.context.scale),
-                    citations=fact.citations,
-                    caveats=sorted(set(caveats)),
-                )
-            )
-        for calc in bundle.calculations:
-            if calc.formula_id not in METRIC_LABELS:
-                continue
-            error = _metric_error(calc, bundle)
-            if calc.trace and any(
-                o.observation in rejected_observations for o in calc.trace.operands
-            ):
-                error = "metric_operand_conflicted"
-            if error:
-                result.missing_evidence.append(error)
-                result.trace.append(
-                    SpecialistTrace(stage="selection", outcome="excluded", reasons=[error])
-                )
-                continue
-            periods = {o.role: o.context.period for o in calc.trace.operands}
-            period = (
-                periods["current_revenue"]
-                if calc.formula_id == "revenue_yoy"
-                else periods["revenue"]
-            )
-            result.supporting_evidence.append(
-                ProfitabilityEvidence(
-                    evidence_id="",
-                    kind="metric",
-                    reference=RetrievalReference(kind="metric", record_id=calc.metric_id),
-                    company_id=calc.trace.operands[0].company_id,
-                    document_id=calc.document_id,
-                    snapshot_id=calc.snapshot_id,
-                    period=period,
-                    operand_periods=periods,
-                    label=METRIC_LABELS[calc.formula_id],
-                    value=calc.result,
-                    unit="percent",
-                    citations=calc.evidence.citations,
-                    caveats=sorted(
-                        set(
-                            calc.caveats
-                            + [c for cite in calc.evidence.citations for c in cite.limitations]
-                        )
-                    ),
-                    calculation=calc,
-                )
-            )
-        result.supporting_evidence = _unique(result.supporting_evidence)
-        years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", result.question))
-        if years:
-            result.supporting_evidence = [
-                e for e in result.supporting_evidence if e.period in years
-            ]
-        if len(result.supporting_evidence) > 24:
-            result.missing_evidence.append("evidence_digest_limit_exceeded")
-            result.supporting_evidence = []
-        for index, evidence in enumerate(result.supporting_evidence, 1):
-            evidence.evidence_id = f"E{index:03d}"
+        select_evidence(
+            upstream,
+            result,
+            item_labels=ITEM_LABELS,
+            metric_labels=METRIC_LABELS,
+            period_roles={"gross_margin": "revenue", "revenue_yoy": "current_revenue"},
+        )
 
     def _prompt(self, result):
         digest = []
@@ -548,119 +243,14 @@ class ProfitabilitySpecialist:
                 self._select(upstream, result)
             if not result.supporting_evidence:
                 result.missing_evidence.append("no_usable_profitability_evidence")
-            request = LLMRequest(
-                contract_version="llm_gateway_v1",
-                request_id="profitability-" + uuid4().hex,
+            generate_candidates(
+                gateway=self._gateway,
                 model=self._model,
-                messages=[
-                    Message(
-                        role="system", content=json.dumps(self._prompt(result), ensure_ascii=False)
-                    ),
-                    Message(role="user", content=question),
-                ],
-                generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),
-                output_spec=OutputSpec(format="json"),
-                constraints=RequestConstraints(timeout_seconds=60.0),
-            )
-            result.llm.calls, result.llm.model = 1, self._model
-            call_start = perf_counter()
-            response = self._gateway.generate(request)
-            result.llm.latency_ms = (perf_counter() - call_start) * 1000
-            result.llm.status, result.llm.usage, result.llm.cost = (
-                response.status,
-                response.usage,
-                response.cost,
-            )
-            result.llm.provenance, result.llm.error = response.provenance, response.error
-            if isinstance(response.output, JSONOutput):
-                result.raw_output = response.output.payload
-            if response.status != "success" or not isinstance(result.raw_output, dict):
-                result.status = "failed"
-                result.trace.append(
-                    SpecialistTrace(
-                        stage="generation", outcome="failed", reasons=["gateway_response_failed"]
-                    )
-                )
-                return result
-            payload = result.raw_output
-            if (
-                set(payload) != {"claims", "missing_information"}
-                or not isinstance(payload["claims"], list)
-                or len(payload["claims"]) > 32
-            ):
-                raise ValueError("invalid_proposal_envelope")
-            missing = payload["missing_information"]
-            if not isinstance(missing, list) or any(not isinstance(m, str) for m in missing):
-                raise ValueError("invalid_missing_information")
-            # Model limitations are untrusted annotations, never financial claims.
-            result.missing_evidence.extend(missing)
-            evidence_by_id = {e.evidence_id: e for e in result.supporting_evidence}
-            seen = set()
-            for index, raw in enumerate(payload["claims"]):
-                try:
-                    proposal = ProfitabilityProposal.model_validate(raw)
-                    if proposal.evidence_id not in evidence_by_id:
-                        raise ValueError("unknown_evidence_id")
-                    evidence = evidence_by_id[proposal.evidence_id]
-                    content = _render(proposal, evidence)
-                    key = (proposal.evidence_id, proposal.meaning)
-                    if key in seen:
-                        raise ValueError("duplicate_proposition")
-                    seen.add(key)
-                    calc = evidence.calculation
-                    facts = (
-                        [
-                            RetrievalReference(kind="fact", observation=o.observation)
-                            for o in calc.trace.operands
-                        ]
-                        if calc
-                        else [evidence.reference]
-                    )
-                    result.candidates.append(
-                        ProfitabilityCandidate(
-                            candidate_id="profitability-" + uuid4().hex,
-                            kind=proposal.kind,
-                            content=content,
-                            company_id=evidence.company_id,
-                            document_id=evidence.document_id,
-                            snapshot_id=evidence.snapshot_id,
-                            period=evidence.period,
-                            fact_references=facts,
-                            metric_ids=[calc.metric_id] if calc else [],
-                            supporting_evidence_ids=[evidence.evidence_id],
-                            citations=evidence.citations,
-                            calculation=calc,
-                            caveats=evidence.caveats,
-                        )
-                    )
-                    result.trace.append(
-                        SpecialistTrace(
-                            stage="grounding",
-                            outcome="candidate",
-                            evidence_id=proposal.evidence_id,
-                            proposal_index=index,
-                        )
-                    )
-                except (ValidationError, ValueError) as error:
-                    reason = (
-                        "invalid_claim_schema" if isinstance(error, ValidationError) else str(error)
-                    )
-                    result.trace.append(
-                        SpecialistTrace(
-                            stage="grounding",
-                            outcome="excluded",
-                            proposal_index=index,
-                            reasons=[reason],
-                        )
-                    )
-            rejected = any(t.outcome == "excluded" for t in result.trace)
-            result.status = (
-                "partial"
-                if result.candidates
-                and (upstream.status == "partial" or result.missing_evidence or rejected)
-                else "generated"
-                if result.candidates
-                else "abstained"
+                result=result,
+                prompt=self._prompt(result),
+                proposal_type=ProfitabilityProposal,
+                render=_render,
+                prefix="profitability",
             )
         except (ValueError, ValidationError):
             result.status = "failed"

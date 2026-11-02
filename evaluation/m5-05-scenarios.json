@@ -1,0 +1,23 @@
+[
+  {"id":"L01","question":"Giải thích ý nghĩa Debt-to-Assets BBS năm 2025.","trace":"S04_debt2025","year":2025,"items":[],"formula":"debt_to_assets","interpretation":true,"live":true},
+  {"id":"L02","question":"Tỷ lệ nợ phải trả trên tổng tài sản BBS năm 2023 và ý nghĩa số học?","year":2023,"items":[],"formula":"debt_to_assets","interpretation":true,"new_supervisor":true,"live":true},
+  {"id":"L03","question":"Tỷ lệ nợ trên tổng tài sản BBS năm 2024?","year":2024,"items":[],"formula":"debt_to_assets","new_supervisor":true},
+  {"id":"L04","question":"Tổng tài sản BBS tại ngày 31/12/2025 là bao nhiêu, bằng chứng từ đâu?","trace":"S01_assets2025","year":2025,"items":["b01.total_assets"],"live":true},
+  {"id":"L05","question":"Tổng nợ phải trả BBS năm 2023?","year":2023,"items":["b01.total_liabilities"],"new_supervisor":true},
+  {"id":"L06","question":"Vốn chủ sở hữu BBS năm 2024?","year":2024,"items":["b01.total_equity"],"new_supervisor":true},
+  {"id":"L07","question":"Phân tích tổng tài sản, tổng nợ phải trả và vốn chủ sở hữu BBS năm 2025.","year":2025,"items":["b01.total_assets","b01.total_liabilities","b01.total_equity"],"new_supervisor":true,"live":true},
+  {"id":"L08","question":"Giải thích Debt-to-Assets BBS năm 2022, chọn snapshot recovery rõ ràng.","year":2022,"snapshot":"recovery","items":[],"formula":"debt_to_assets","interpretation":true,"new_supervisor":true},
+  {"id":"L09","question":"Cứ 100 đồng tổng tài sản BBS năm 2025 tương ứng bao nhiêu đồng nợ phải trả? Giải thích Debt-to-Assets.","trace":"S04_debt2025","year":2025,"items":[],"formula":"debt_to_assets","interpretation":true},
+  {"id":"L10","question":"Phân tích tổng tài sản, tổng nợ phải trả và vốn chủ sở hữu BBS năm 2025 khi thiếu bằng chứng nợ phải trả; có tính Debt-to-Assets được không?","base":"L07","year":2025,"items":["b01.total_assets","b01.total_equity"],"missing_items":["b01.total_liabilities"],"injection":"missing_liabilities","partial":true,"live":true},
+  {"id":"L11","question":"Tổng tài sản và tổng nợ phải trả BBS năm 2025; citation nợ phải trả không khớp.","base":"L07","year":2025,"items":["b01.total_assets"],"missing_items":["b01.total_liabilities"],"injection":"citation","partial":true},
+  {"id":"L12","question":"Tính Current Ratio và Quick Ratio BBS năm 2025.","trace":"S04_debt2025","year":2025,"items":[],"abstain":true,"live":true},
+  {"id":"L13","question":"So sánh đòn bẩy BBS giữa báo cáo năm 2024 và 2025.","trace":"S10_cross_document","year":2025,"items":[],"abstain":true},
+  {"id":"L14","question":"Tổng tài sản trên báo cáo hợp nhất BBS năm 2025?","trace":"S11_consolidated_scope","year":2025,"items":[],"abstain":true},
+  {"id":"L15","question":"Tổng tài sản BBS năm 2022 chưa chọn snapshot?","trace":"S09_ambiguity","year":2022,"items":[],"abstain":true},
+  {"id":"L16","question":"Tổng tài sản BBS năm 2021?","year":2021,"items":["b01.total_assets"],"new_supervisor":true},
+  {"id":"L17","question":"Các khoản phải thu ngắn hạn BBS năm 2025?","year":2025,"items":["b01.short_term_receivables"],"new_supervisor":true},
+  {"id":"L18","question":"Debt-to-Assets BBS năm 2022 trên snapshot được chỉ định tường minh.","year":2022,"snapshot":"original","items":[],"formula":"debt_to_assets","new_supervisor":true},
+  {"id":"L19","question":"Giải thích Debt-to-Assets BBS năm 2025 khi formula chưa được approved.","trace":"S04_debt2025","year":2025,"items":[],"injection":"approval","abstain":true},
+  {"id":"L20","question":"Tổng tài sản và tổng nợ phải trả BBS năm 2025; nợ phải trả có hai giá trị conflict.","base":"L07","year":2025,"items":["b01.total_assets"],"missing_items":["b01.total_liabilities"],"injection":"conflict","partial":true},
+  {"id":"L21","question":"Giải thích Debt-to-Assets BBS năm 2025 khi thiếu tổng tài sản.","trace":"S04_debt2025","year":2025,"items":[],"injection":"missing_assets","abstain":true}
+]
