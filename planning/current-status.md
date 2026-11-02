@@ -13,7 +13,11 @@ Bốn typed tools,145 focused PASS;real2.087 exact facts/40 cases/18 metrics;
 [CI41373589020](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41373589020)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.
 Giữ web local và accepted artifacts;không executor hoặc M3 runtime changes.
-Next action: Tech Lead independent review M4-02.
+Review correction:partial scope coverage không chặn found khi có valid match;
+conflicting evidence/snapshot selection giữ fail-closed.146 focused PASS và một
+real BBS regression found/1 original2024/four unresolved;2.626 hashes unchanged.
+Fix chưa commit, chờ CI mới đúng SHA;không chạy lại baseline real acceptance.
+Next action: Tech Lead independent review M4-02 correction.
 
 ## D-07 — Reporting Scope Source Resolution
 

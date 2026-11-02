@@ -215,6 +215,74 @@ def test_quality_and_null_not_promoted(control):
         assert result.matches[0].record.value.normalized_value is None
 
 
+def test_partial_scope_coverage_preserves_matches_and_fail_closed_controls():
+    first, second = fixture(), fixture(document=1)
+    descriptors = [first["descriptors"][0], second["descriptors"][0]]
+
+    def scope_reviews(document):
+        _, _, _, reviews = scope_fixture(document)
+        for review in reviews:
+            review.snapshot_id = descriptors[document].snapshot_id
+            for source in review.sources:
+                source.snapshot_id = review.snapshot_id
+        return reviews
+
+    data = dict(
+        descriptors=descriptors,
+        facts=[first["facts"][0], second["facts"][0]],
+        reporting_scope_reviews=scope_reviews(0),
+    )
+    request = FindFinancialFactsRequest(
+        canonical_item_id=first["facts"][0].canonical_item_id, reporting_scope="separate"
+    )
+
+    def lookup(request=request):
+        return FinancialRetrievalTools(SnapshotCatalog(**data)).find_financial_facts(request)
+
+    result = lookup()
+    assert result.status == "found" and len(result.matches) == 1
+    assert result.matches[0].record == first["facts"][0]
+    assert "partial_scope_coverage" in result.caveats
+    assert "reporting_scope_unresolved" in result.reasons
+    missing = lookup(request.model_copy(update={"canonical_item_id": "absent"}))
+    assert missing.status == "unavailable" and not missing.matches
+    assert "partial_scope_coverage" not in missing.caveats
+    duplicate = first["facts"][0].model_copy(
+        update={"local_observation_id": "another-match"}, deep=True
+    )
+    data["facts"].append(duplicate)
+    multiple = lookup()
+    assert multiple.status == "ambiguous" and len(multiple.matches) == 2
+    assert "partial_scope_coverage" in multiple.caveats
+    data["facts"].pop()
+
+    conflicting = scope_reviews(1)
+    conflicting[0].evidence.scope_selection = "selected"
+    conflicting[0].reporting_scope = "separate"
+    data["reporting_scope_reviews"].extend(conflicting)
+    conflict = lookup()
+    assert conflict.status == "conflicted" and len(conflict.matches) == 1
+    assert any(s.status == "conflicted" for s in conflict.reporting_scopes)
+
+    descriptors.append(
+        descriptors[0].model_copy(
+            update={
+                "snapshot_id": "broken-child",
+                "parent_snapshot_id": "absent",
+                "origin": "recovery",
+            }
+        )
+    )
+    ambiguous = lookup()
+    assert ambiguous.status == "ambiguous" and not ambiguous.matches
+    blocked = lookup(
+        request.model_copy(
+            update={"document_id": descriptors[0].document_id, "snapshot_id": "broken-child"}
+        )
+    )
+    assert blocked.status == "unavailable" and not blocked.matches
+
+
 @pytest.mark.parametrize("formula", ["gross_margin", "debt_to_assets", "revenue_yoy"])
 @pytest.mark.parametrize("document", [0, 1])
 def test_metric_production_readiness_operands_list_and_restart(formula, document):

@@ -225,6 +225,7 @@ class FinancialRetrievalTools:
         response = FinancialToolResponse(request=request, status="not_found")
         entries = self._select(response, request.document_id, request.snapshot_id)
         statuses = []
+        unresolved_scope = False
         for entry in entries:
             descriptor = entry.descriptor
             scope = self._scope(descriptor)
@@ -232,6 +233,8 @@ class FinancialRetrievalTools:
             if request.reporting_scope is not None:
                 if scope.status != "resolved":
                     statuses.append("conflicted" if scope.status == "conflicted" else "unavailable")
+                    if scope.status != "conflicted":
+                        unresolved_scope = True
                     response.reasons.append("reporting_scope_unresolved")
                     continue
                 if scope.reporting_scope != request.reporting_scope:
@@ -258,12 +261,14 @@ class FinancialRetrievalTools:
                 if "conflicted" in statuses
                 else "ambiguous"
                 if "ambiguous" in statuses or len(response.matches) > 1
-                else "unavailable"
-                if "unavailable" in statuses
                 else "found"
                 if response.matches
+                else "unavailable"
+                if "unavailable" in statuses
                 else "not_found"
             )
+            if response.matches and unresolved_scope:
+                response.caveats.append("partial_scope_coverage")
             if response.status == "ambiguous":
                 response.reasons.append("ambiguous_candidates")
         return self._finish(response)

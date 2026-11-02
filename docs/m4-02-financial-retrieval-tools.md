@@ -90,7 +90,10 @@ thực sự có snapshot đó. Parent chain chỉ là lineage, không nguồn fa
 Scope filter dùng exact-bound ReportingScopeResolution của selected snapshot.
 Confirmed khớp mới truy facts qua các AND filters còn lại; confirmed khác trả
 not_found/reporting_scope_mismatch; unknown/ambiguous trả
-unavailable/reporting_scope_unresolved, conflicting review trả conflicted.
+reporting_scope_unresolved và không trả match cho document đó. Khi không có match
+hợp lệ, response là unavailable; khi có một match từ document confirmed khác,
+response là found kèm caveat `partial_scope_coverage`; nhiều matches giữ ambiguous.
+Conflicting review vẫn trả conflicted; snapshot selection vẫn fail-closed.
 Không sửa `CanonicalFinancialFact.context.reporting_scope`. Không scope filter
 vẫn cho đọc record unknown scope với caveats và đầy đủ review reasons.
 
@@ -126,7 +129,7 @@ wrong scope/identity isolation, Decimal/null/unit/scale, insufficient quality,
 source-backed scope và unknown scope, metric operands/approvals/lineage,
 JSON/restart/returned-object isolation và deterministic ordering.
 
-Local **145 focused PASS** trên tools/retrieval/execution/closure/scope; Ruff toàn
+Baseline local **145 focused PASS** trên tools/retrieval/execution/closure/scope; Ruff toàn
 repo **355 files**, planning100 và diff check PASS. CI focused list thêm tools tests.
 
 Offline evaluator: `python scripts/evaluate_m4_02_retrieval.py --output artifacts/evidence/M4-02-final`.
@@ -174,6 +177,25 @@ Implementation [`3ac01c02ef1ba6d713bf67706ade436da3ebb97f`](https://github.com/V
 completed/SUCCESS đúng SHA; Python3.12 và Web smoke SUCCESS. Full unit regression
 skipped theo focused policy. Checkpoint sau chỉ docs/planning `[skip ci]`,không gán
 CI implementation cho SHA checkpoint. web/next-env.d.ts giữ nguyên ngoài commit.
+
+## Correction sau independent review — partial scope coverage
+
+Root cause: find_financial_facts gộp unknown scope chung với các trạng thái
+unavailable khác và ưu tiên chúng trước found. Ưu tiên valid matches trước
+unavailable, theo dõi riêng unresolved scope để cảnh báo coverage chưa đầy đủ;
+conflicted và snapshot selection không đổi. Không sửa scope reviews/facts/M3 gates.
+
+Một synthetic control mới kiểm một match, nhiều matches, không match, conflicting
+scope evidence, snapshot ambiguity và broken snapshot. **146 focused PASS**.
+Regression thật: `python scripts/evaluate_m4_02_retrieval.py --partial-scope-only --output artifacts/evidence/M4-02-scope-fix-final`.
+Truy vấn không document_id, snapshot `D-01/normalized-v2`, item b01.total_assets,
+period2024-12-31/B01/as_of/separate trả **found/1 match BBS2024**, caveat
+partial_scope_coverage; bốn document scope unresolved giữ trong reporting_scopes.
+Match/citations/reviews bằng lookup riêng original2024; JSON round-trip exact.
+2.626 hashes unchanged, original facts unchanged, zero Gateway. Baseline acceptance
+ở trên giữ lịch sử, không chạy lại full real acceptance cho fix hẹp này.
+
+Fix implementation: chưa commit; CI mới sẽ được xác minh sau push main.
 
 Đây là retrieval/identity/provenance regression trên persisted BBS, chưa independent
 gold hoặc full-PDF financial accuracy. Chưa executor, QA baseline hoặc Multi-Agent.

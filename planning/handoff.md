@@ -23,7 +23,8 @@ scope exact-bound D-07, no latest/parent fallback; public contract v1 và contro
 
 ## Remaining Work
 
-Chờ Tech Lead independent review, không tự DONE hoặc bắt đầu M4-03.
+Push/CI đúng SHA của partial scope coverage correction rồi chờ Tech Lead review;
+không tự DONE hoặc bắt đầu M4-03.
 
 ## Modified Files
 
@@ -46,6 +47,9 @@ giữ nguyên D-07; chưa executor hoặc full-PDF financial accuracy.
 
 ## Git Checkpoint
 
+Review correction chưa commit:146 focused PASS;real BBS original2024 assets query
+found/1 + partial_scope_coverage/four unresolved;2.626 hashes unchanged,zero Gateway.
+
 Implementation `3ac01c02ef1ba6d713bf67706ade436da3ebb97f` đã push main;
 [CI41373589020](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41373589020)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Checkpoint sau chỉ docs/planning
@@ -53,4 +57,4 @@ completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS. Checkpoint sau chỉ 
 
 ## Exact Next Action
 
-Tech Lead independent review M4-02.
+Tech Lead independent review M4-02 correction.

@@ -77,6 +77,64 @@ def exact(fact):
     )
 
 
+def partial_scope_regression(tools, scopes):
+    snapshot = scopes[2024]["snapshot_id"]
+    assert all(s["snapshot_id"] == snapshot for s in scopes.values())
+    request = FindFinancialFactsRequest(
+        snapshot_id=snapshot,
+        canonical_item_id="b01.total_assets",
+        statement_type="B01",
+        period="2024-12-31",
+        period_type="as_of",
+        reporting_scope="separate",
+    )
+    result = tools.find_financial_facts(request)
+    assert result.status == "found" and len(result.matches) == 1
+    assert "partial_scope_coverage" in result.caveats
+    assert "reporting_scope_unresolved" in result.reasons
+    assert len(result.reporting_scopes) == 5
+    assert sum(s.status == "unresolved" for s in result.reporting_scopes) == 4
+    assert result.matches[0].reference.observation.document_id == scopes[2024]["document_id"]
+    expected = tools.find_financial_facts(
+        request.model_copy(update={"document_id": scopes[2024]["document_id"]})
+    )
+    assert expected.status == "found" and result.matches == expected.matches
+    assert result.matches[0].record.context.reporting_scope is None
+    assert FinancialToolResponse.model_validate_json(result.model_dump_json()) == result
+    return result
+
+
+def evaluate_partial_scope(root, output):
+    if not output.is_relative_to(root / "artifacts/evidence"):
+        raise ValueError("Output must stay under artifacts/evidence")
+    output.mkdir(parents=True, exist_ok=False)
+    hashes = manifest(root)
+    save(output / "hashes-before.json", hashes)
+    data, scopes, _ = hydrate(root)
+    before = [f.model_dump_json() for f in data["facts"]]
+    result = partial_scope_regression(FinancialRetrievalTools(SnapshotCatalog(**data)), scopes)
+    save(output / "partial-scope.json", result.model_dump(mode="json"))
+    assert before == [f.model_dump_json() for f in data["facts"]]
+    after = manifest(root)
+    assert after == hashes
+    save(output / "hashes-after.json", after)
+    summary = dict(
+        regression_cases=1,
+        status=result.status,
+        matches=len(result.matches),
+        unresolved_documents=4,
+        partial_scope_coverage="partial_scope_coverage" in result.caveats,
+        protected_input_hashes=len(hashes),
+        input_hashes_unchanged=True,
+        original_facts_unchanged=True,
+        json_round_trip_exact=True,
+        gateway_calls=0,
+        financial_fact_verified=False,
+    )
+    save(output / "summary.json", summary)
+    print(json.dumps(summary, ensure_ascii=False), flush=True)
+
+
 def evaluate(root, output, *, resume=False):
     if not output.is_relative_to(root / "artifacts/evidence"):
         raise ValueError("Output must stay under artifacts/evidence")
@@ -253,6 +311,12 @@ def evaluate(root, output, *, resume=False):
         response = tools.get_financial_fact(exact(blocked))
         assert response.matches[0].display_status == "blocked"
         cases.append(dict(case="quality-insufficient", response=response.model_dump(mode="json")))
+        cases.append(
+            dict(
+                case="partial-scope-coverage",
+                response=partial_scope_regression(tools, scopes).model_dump(mode="json"),
+            )
+        )
         save(output / "cases.json", cases)
         print(
             f"Semantic/scope/negative cases: {len(cases)}; replaying accepted regressions",
@@ -337,5 +401,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Resume saved checks only when all protected input hashes match",
     )
+    parser.add_argument("--partial-scope-only", action="store_true")
     args = parser.parse_args()
-    evaluate(Path.cwd().resolve(), args.output.resolve(), resume=args.resume)
+    if args.partial_scope_only:
+        if args.resume:
+            parser.error("--partial-scope-only requires a fresh output directory")
+        evaluate_partial_scope(Path.cwd().resolve(), args.output.resolve())
+    else:
+        evaluate(Path.cwd().resolve(), args.output.resolve(), resume=args.resume)
