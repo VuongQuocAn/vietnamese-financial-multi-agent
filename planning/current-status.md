@@ -4,15 +4,19 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-02 — Evidence-Aware Query Planner
 
-Status: **REVIEW**; Owner giao02/11/2026,baseline main/origin `33a1f4e`.
+Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.
+Owner giao02/11/2026,baseline main/origin `33a1f4e`.
 [Spec](tasks/M5/M5-02.md),[report/examples](../docs/m5-02-evidence-aware-query-planner.md).
 Gemini proposal → deterministic catalog/materializer → validate_plan, không execution.
 Offline18/18; live14calls/59.428tokens:initial6/targeted2/fresh6. Fresh4/6;
-fixed replay6/6,raw Gemini intent5/6; không live retest sau fixes cuối.
+fixed replay6/6,raw Gemini intent5/6; giữ làm baseline, không công bố Gemini live6/6.
 197 focused +final13 Planner PASS; M4 36/18/29/36pairs/D-06/D-07 exact;
-M5-01 giữ15cases,2.701hashes unchanged. Implementation `b5c7a02da82ed38378fbacd370b0a8734dd7fbf3` đã push main; [CI41414639830](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41414639830) SUCCESS đúng SHA (Python3.12/Web smoke SUCCESS; full regression SKIPPED).
+M5-01 giữ15cases. Evaluator ghi nhận2.701hashes unchanged; Tech Lead chưa chạy lại
+artifacts trên môi trường local. Implementation `b5c7a02da82ed38378fbacd370b0a8734dd7fbf3` đã push main; [CI41414639830](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41414639830) SUCCESS đúng SHA (Python3.12/Web smoke SUCCESS; full regression SKIPPED).
 Giữ Web local/D03-B10,không OCR/extraction;financial_fact_verified=False.
-Next action: Tech Lead review M5-02; không tự DONE/M5-03.
+Phiên nghiệm thu chỉ planning/checker/diff; không sửa runtime hoặc chạy lại
+Gemini/tests/benchmark/artifacts. Giữ nguyên evidence implementation.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-03.
 
 ## M5-01 — Evidence Plan and Planner Contracts
 
