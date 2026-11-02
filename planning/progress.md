@@ -51,8 +51,10 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M4-05 **REVIEW**, baseline main/origin eca8cc8;[spec](tasks/M4/M4-05.md),
 [report](../docs/m4-05-qa-baseline.md).193 targeted PASS;36 real questions:28 answered
 đúng/grounded,6 abstained/unsupported,2 clarification;intent/tools36/36.18 metrics/
-29 queries/36 pairs/D-06/D-07/2.670 hashes giữ nguyên;zero Gateway. Chưa commit,
-chờ commit/push/CI và Tech Lead nghiệm thu;giữ web local,không tự DONE/M5.
+29 queries/36 pairs/D-06/D-07/2.670 hashes giữ nguyên;zero Gateway. Implementation
+`359babb9dcfbf40275ef693399c5bdf204aea150` đã push main;CI41384217552 completed/
+SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full unit regression SKIPPED.
+Chờ Tech Lead nghiệm thu;giữ web local,không tự DONE/M5.
 Next action: Tech Lead independent review M4-05.
 
 Checkpoint đã nghiệm thu trước task:

@@ -200,8 +200,13 @@ không được tự sửa bởi QA. Không specialist agents, planner, verifier
 
 ## Git và review
 
-Status **REVIEW**; local implementation/evaluation hoàn tất, chưa commit tại lúc
-ghi report. CI được xác minh theo đúng SHA sau push và ghi ở checkpoint planning.
+Status **REVIEW**; implementation
+`359babb9dcfbf40275ef693399c5bdf204aea150` đã push main, origin khớp.
+[CI41384217552](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41384217552)
+completed/SUCCESS đúng implementation SHA: Python3.12 lint/format/planning/focused
+tests và Web smoke/typecheck/lint/build/browser/proxy SUCCESS. Full unit regression
+SKIPPED theo workflow. Checkpoint sau chỉ docs/planning [skip ci]; không gán CI
+implementation cho SHA checkpoint.
 Quyền nghiệm thu DONE thuộc Tech Lead. Không bắt đầu M5.
 
 Next action: Tech Lead independent review M4-05.

@@ -12,7 +12,11 @@ REVIEW
 
 Baseline main/origin `eca8cc84c626556e7f1fa5e6faab92797e3e06d8` đã xác minh.
 [Spec](tasks/M4/M4-05.md), [report](../docs/m4-05-qa-baseline.md).
-Chưa commit; final real-data evaluation/replay/regressions PASS.
+Implementation `359babb9dcfbf40275ef693399c5bdf204aea150` đã push main,origin khớp.
+Final real-data evaluation/replay/regressions PASS;
+[CI41384217552](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41384217552)
+completed/SUCCESS đúng implementation SHA,Python3.12 và Web smoke SUCCESS;
+full unit regression SKIPPED theo workflow.
 
 ## Completed Work
 
@@ -21,7 +25,7 @@ Gateway call với schema/allowlists, CLI và benchmark 36 câu có references �
 
 ## Remaining Work
 
-Commit/push/CI đúng SHA và Tech Lead independent review; không tự DONE/M5.
+Tech Lead independent review; không tự DONE/M5.
 
 ## Modified Files
 
@@ -42,7 +46,8 @@ Nguồn vẫn page-level; D03-B10 chặn cross-document. Không bắt đầu M5.
 
 ## Git Checkpoint
 
-Chưa commit. Web SHA256 trước task, đã kiểm giữ nguyên:
+Implementation đã push main; checkpoint tiếp theo chỉ docs/planning [skip ci],
+không gán CI implementation cho SHA checkpoint. Web SHA256 trước task giữ nguyên:
 `0f70629890b72a0a82e91972cc032c04b658b26c265373cb711cf576bfbf8fcc`.
 Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 

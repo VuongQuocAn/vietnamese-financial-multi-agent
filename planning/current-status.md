@@ -10,7 +10,12 @@ QA API/rules/optional một Gateway call/dispatcher/composer/CLI;193 targeted PA
 Final36 câu:28 answered đúng/grounded,6 abstained/unsupported,2 clarification;
 intent/tools36/36.18 metrics/29 queries/36 pairs/D-06/D-07/inventory giữ nguyên,
 2.670 protected hashes unchanged;zero Gateway,live Gemini NOT RUN vì thiếu process
-credentials/live configuration. Chưa commit;chờ commit/push/CI và Tech Lead nghiệm thu.
+credentials/live configuration. Implementation `359babb9dcfbf40275ef693399c5bdf204aea150`
+đã push main, origin khớp;
+[CI41384217552](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41384217552)
+completed/SUCCESS đúng SHA;Python3.12 và Web smoke/typecheck/lint/build/browser
+SUCCESS,full unit regression SKIPPED theo workflow. Checkpoint sau chỉ docs/planning
+[skip ci],không gán CI implementation cho SHA checkpoint;chờ Tech Lead nghiệm thu.
 Giữ local web/next-env.d.ts;không tự DONE hoặc bắt đầu M5.
 Next action: Tech Lead independent review M4-05.
 
