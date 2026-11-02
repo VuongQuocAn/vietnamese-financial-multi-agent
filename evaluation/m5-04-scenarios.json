@@ -1,0 +1,15 @@
+[
+  {"id":"R01","question":"Giải thích ý nghĩa biên lợi nhuận gộp BBS năm 2025.","trace":"S03_gross_margin2025","year":2025,"items":[],"formula":"gross_margin","interpretation":true,"live":true},
+  {"id":"R02","question":"Biên lợi nhuận gộp BBS năm 2023 có ý nghĩa số học gì?","trace":"S15_Gemini_metric2023","year":2023,"items":[],"formula":"gross_margin","interpretation":true,"live":true},
+  {"id":"R03","question":"Phân tích tăng trưởng doanh thu BBS năm 2025 trong cùng filing.","trace":"S05_yoy2025","year":2025,"items":[],"formula":"revenue_yoy","interpretation":true,"live":true},
+  {"id":"R04","question":"Doanh thu thuần và lợi nhuận gộp BBS năm 2024 là bao nhiêu?","trace":"S06_multi2024_Gemini","year":2024,"items":["b02.net_revenue","b02.gross_profit"]},
+  {"id":"R05","question":"Phân tích doanh thu thuần, giá vốn hàng bán và lợi nhuận gộp BBS năm 2024.","trace":"S06_multi2024_Gemini","year":2024,"items":["b02.net_revenue","b02.cost_of_sales","b02.gross_profit"],"live":true},
+  {"id":"R06","question":"Lợi nhuận trước thuế BBS năm 2025?","trace":"S07_cash_profit2025","year":2025,"items":["b02.profit_before_tax"]},
+  {"id":"R07","question":"Lợi nhuận sau thuế BBS năm 2025?","year":2025,"items":["b02.profit_after_tax"],"new_supervisor":true},
+  {"id":"R08","question":"Giải thích tăng trưởng doanh thu BBS năm 2022 snapshot recovery trong cùng filing.","trace":"S08_recovery2022_Gemini","year":2022,"snapshot":"recovery","items":[],"formula":"revenue_yoy","interpretation":true},
+  {"id":"R09","question":"Phân tích doanh thu, giá vốn hàng bán và lợi nhuận gộp BBS năm 2024 khi nhánh doanh thu thiếu evidence.","trace":"S12_runtime_missing","year":2024,"items":["b02.cost_of_sales","b02.gross_profit"],"missing_items":["b02.net_revenue"],"partial":true},
+  {"id":"R10","question":"Phân tích doanh thu, giá vốn hàng bán và lợi nhuận gộp BBS năm 2024; evidence doanh thu đang conflicted.","trace":"S12b_runtime_conflict","year":2024,"items":["b02.cost_of_sales","b02.gross_profit"],"missing_items":["b02.net_revenue"],"partial":true,"live":true},
+  {"id":"R11","question":"So sánh khả năng sinh lời giữa hai báo cáo BBS năm 2024 và 2025.","trace":"S10_cross_document","year":2025,"items":[],"abstain":true},
+  {"id":"R12","question":"Tính ROE và Net Profit Margin BBS năm 2024.","trace":"S06_multi2024_Gemini","year":2024,"items":[],"abstain":true,"live":true},
+  {"id":"R13","question":"Lợi nhuận sau thuế BBS năm 2021?","year":2021,"items":["b02.profit_after_tax"],"new_supervisor":true}
+]

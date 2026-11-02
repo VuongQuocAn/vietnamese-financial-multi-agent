@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-04 — Profitability Specialist
+
+Status: **REVIEW**; Owner giao02/11/2026, baseline main/origin07a577f đã xác minh.
+[Spec](tasks/M5/M5-04.md), [report](../docs/m5-04-profitability-specialist.md).
+Profitability specialist/Gateway và per-candidate grounding, không verification M6.
+Final offline13/13;21 focused PASS,199 bounded PASS trước focused fixes.
+Initial live2/6, targeted4/4, tổng10calls/17.901tokens; không fresh6/6.
+3 supported interpretations thật; Gross Margin2025=7,21%, full M4 lineage.
+18metrics/29queries/QA36/M5-01 15cases exact; M5-02/M5-03 evidence giữ nguyên.
+3.379 protected hashes unchanged; giữ Web local/D03-B10 và financial_fact_verified=False.
+Chưa commit; đang chờ push/exact-SHA CI. Không tự DONE hoặc bắt đầu M5-05.
+Next action: Tech Lead review M5-04.
+
 ## M5-03 — Risk-Aware Supervisor
 
 Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.

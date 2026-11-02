@@ -26,6 +26,12 @@ from .planner_contracts import (
     PlannerResult,
     PlannerTrace,
 )
+from .profitability_specialist import (
+    ProfitabilityCandidate,
+    ProfitabilityEvidence,
+    ProfitabilitySpecialist,
+    SpecialistResult,
+)
 from .query_planner import EvidenceAwareQueryPlanner
 from .supervisor import (
     ExecutionEvidenceBundle,
@@ -52,6 +58,10 @@ __all__ = [
     "PlannerProposal",
     "PlannerResult",
     "PlannerTrace",
+    "ProfitabilityCandidate",
+    "ProfitabilityEvidence",
+    "ProfitabilitySpecialist",
+    "SpecialistResult",
     "QuerySpecification",
     "RiskSignal",
     "RiskAwareSupervisor",
