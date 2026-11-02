@@ -2,56 +2,59 @@
 
 ## Active Task
 
-M4-03 ? Calculator and Formula Executor
+M4-03 — Calculator and Formula Executor
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
-Baseline main/origin/main/remote `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
-Owner giao02/11/2026, cho ph?p commit/push tr?c ti?p main v? x?c minh CI ??ng SHA.
+Owner giao02/11/2026; baseline main `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
 [Spec](tasks/M4/M4-03.md), [report](../docs/m4-03-calculator-executor.md).
-Gi? web/next-env.d.ts hash a419cbe4e3a5e8d4b481b851dbf4ac767de069e6.
+Implementation `fd2ef5c27001a22b70760d52919abd096281aefd` đã push main;
+[CI41377619691](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41377619691)
+completed/SUCCESS đúng SHA,Python3.12 và Web smoke SUCCESS; full regression SKIPPED.
+Giữ web/next-env.d.ts hash a419cbe4e3a5e8d4b481b851dbf4ac767de069e6 ngoài commit.
 
 ## Completed Work
 
-Public FinancialCalculator.calculate_financial_metric, versioned response/trace;
-reuse M4-02 retrieval v? production closure. Decimal34/HALF_EVEN/final0.01,
-original metrics b?t bi?n; reviewed lineage/citations v? approvals trong evidence.
-186 focused PASS; BBS18/18 computed, independent arithmetic18 v? JSON/restart exact.
+FinancialCalculator.calculate_financial_metric public API, response/trace versioned;
+reuse M4-02 retrieval/M4-01 production closure; Decimal34/HALF_EVEN/final0.01.
+Result riêng, original DerivedMetric bất biến; exact operands/SourceFact IDs,
+policy/approval/rounding, source reviews/basis và reviewed lineage/citations.
 
 ## Remaining Work
 
-Commit/push v? CI ??ng SHA;
-sau ?? chuy?n REVIEW ch? Tech Lead. Kh?ng b?t ??u M4-04.
+Chờ Tech Lead nghiệm thu M4-03 và đề xuất D03-B03 DONE. Không tự DONE hoặc M4-04.
 
 ## Modified Files
 
-src/tools, focused calculator tests/evaluator, CI focused list, docs/report/blocker
-v? planning M4-03; kh?ng stage web ho?c ignored evidence artifacts.
+Implementation:src/tools,calculator tests/evaluator,CI focused list và docs/planning.
+Checkpoint sau implementation chỉ report/blocker/planning,không sửa code/evidence/web.
 
 ## Tests
 
-186 focused PASS (54 calculator + typed retrieval/execution/closure/scope).
-BBS original15/recovery3 ?? computed, independent18/restart18 exact;
-regression2.087 exact facts/18 retrievals/41 cases/15+3 eligibility/29 queries/
-36 undetermined pairs/5 scopes/QA09/QA15 PASS;2.641 protected hashes unchanged,
-zero Gateway/Gemini/OCR/extraction;3 real negative controls PASS.
-Ruff check/format360 files PASS; planning100/diff PASS.
-M?t warning do test c? ? ??a invalid Decimal v?o mutable synthetic record.
+186 focused PASS (54 calculator),negative controls/ties/precision/immutable inputs.
+Real18 computed (6 mỗi formula),independent arithmetic18/restart18 exact;
+3 real negative controls;2.087 exact facts/18 retrievals/41 cases/15+3 eligibility/
+29 queries/36 undetermined pairs/5 scopes/D-06 QA09/QA15 PASS.
+2.641 protected input hashes unchanged,zero Gateway/Gemini/OCR/extraction.
+Ruff360/planning100/diff PASS. Một warning do test cố ý invalid mutable Decimal.
+Artifacts riêng ignored:artifacts/evidence/M4-03-final/summary.json và executions.json.
 
 ## Blockers
 
-Kh?ng blocker implementation; ch? CI ??ng SHA.
-Gi? B10/cross-document v? provenance limitations; financial_fact_verified=False.
+Không còn lỗi implementation trong phạm vi M4-03;D03-B03 giữ REVIEW,đủ đề xuất DONE.
+B10/cross-document/provenance limitations giữ nguyên;financial_fact_verified=False.
+Anomaly chưa có approved rules/thresholds nên ngoài scope,không detector.
 
 ## Git Checkpoint
 
-Ch?a commit M4-03. Kh?ng ??i approved policies/accepted evidence/M3 runtime.
-Baseline v? web local hash ?? x?c minh; ignored outputs ri?ng M4-03-final.
+Implementation `fd2ef5c27001a22b70760d52919abd096281aefd` và CI trên đã xác minh;checkpoint này chỉ docs/planning
+[skip ci],không gán CI implementation cho SHA checkpoint.Không stage dataset/secrets/web.
+Sửa mã hóa tiếng Việt của các đoạn planning ghi qua PowerShell;code không thay đổi.
 
 ## Exact Next Action
 
-Commit/push v? x?c minh CI M4-03 r?i b?n giao Tech Lead independent review.
+Tech Lead independent review M4-03, sau đó M4-04 — Evidence Retrieval Tools.

@@ -2,17 +2,22 @@
 
 Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## M4-03 ? Calculator and Formula Executor
+## M4-03 — Calculator and Formula Executor
 
-Status: **IN_PROGRESS**; local implementation/validation ho?n t?t, ch? commit/CI.
-Owner giao02/11/2026; baseline main f433777. [Spec](tasks/M4/M4-03.md),
-[report](../docs/m4-03-calculator-executor.md). Public FinancialCalculator qua M4-02
-retrieval/M4-01 closure, Decimal34/HALF_EVEN/final0.01, result/trace ri?ng; gi? web local.
-186 focused PASS;real18 computed (6 m?i formula),independent18/restart exact,
+Status: **REVIEW**; Owner giao02/11/2026, baseline main f433777.
+[Spec](tasks/M4/M4-03.md), [report](../docs/m4-03-calculator-executor.md).
+Public FinancialCalculator qua M4-02 retrieval/M4-01 production closure;
+Decimal34/HALF_EVEN/final0.01, result/trace riêng, original DerivedMetric bất biến.
+186 focused PASS;real18 computed (6 mỗi formula),independent18/restart exact,
 3 real negative controls;2.087 facts/18 retrievals/41 cases/15+3 eligibility/29 queries/
 36 undetermined pairs/5 D-07 scopes/D-06 QA09/QA15 PASS;2.641 hashes unchanged,
-zero Gateway/Gemini/OCR/extraction. D03-B03 local ?? criteria executor, ch? CI/TL.
-Next action: commit/push v? x?c minh CI ??ng implementation SHA tr??c REVIEW.
+zero Gateway/Gemini/OCR/extraction. D03-B03 đủ đề xuất DONE,giữ REVIEW chờ Tech Lead.
+Implementation `fd2ef5c27001a22b70760d52919abd096281aefd` đã push main;
+[CI41377619691](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41377619691)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS; full regression SKIPPED.
+Checkpoint sau chỉ docs/planning,không gán CI trên cho SHA checkpoint. Giữ web local
+và accepted evidence; không tự DONE hoặc bắt đầu M4-04.
+Next action: Tech Lead independent review M4-03, sau đó M4-04 — Evidence Retrieval Tools.
 
 ## M4-02 — Typed Financial Retrieval Tools
 

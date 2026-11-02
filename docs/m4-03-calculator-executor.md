@@ -1,6 +1,6 @@
 # M4-03 — Calculator and Formula Executor
 
-Status: **IN_PROGRESS**; baseline main `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
+Status: **REVIEW**; baseline main `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
 Ngày02/11/2026 (Asia/Bangkok). Phạm vi: ba formulas được duyệt tại M4-01,
 same-document/snapshot; không anomaly, cross-document, agents hoặc Web.
 
@@ -89,7 +89,7 @@ không sửa parser/gates để tạo test fractional operands.
 Lượt local: **186 PASS** (calculator, typed retrieval, execution, snapshot closure,
 reporting scope). Một warning chủ đích do synthetic mutable record chứa chuỗi
 invalid thay Decimal trước catalog serialization; API vẫn trả invalid_inputs.
-Ruff check/format toàn repository359 files PASS trước report cuối.
+Ruff check/format toàn repository360 files PASS;planning100 và diff check PASS.
 
 ## BBS real-data acceptance
 
@@ -134,8 +134,20 @@ Recovery2022 dùng target snapshot D-04 đã chọn; tất cả operand observat
 citations phải có chính document/snapshot đó. Result bằng original không có nghĩa
 dùng chung observation IDs. Original evidence/lineage payload so exact với M4-02.
 
-Phần restart, bounded regression và hashes đang được runner hoàn tất; chưa gán PASS
-cho checks chưa kết thúc.
+Final local evaluator PASS:18/18 JSON/restart/recompute exact,18 independent
+arithmetic checks và3 real negative controls (bỏ execution approval vẫn đủ số
+nhưng blocked/result=None).Regression:1.177 original/recovery +910 corrected
+=2.087 exact fact lookups,18 metric retrievals,41 semantic/scope cases gồm partial
+scope correction,15+3 eligibility,29 accepted queries,36 cross-document pairs vẫn
+undetermined,5 D-07 scope views và D-06 QA09/QA15 exact.Persisted original metrics
+computed0 là contract cũ được giữ;execution artifacts riêng computed18.
+2.641 protected input hashes unchanged (nested M4-02 regression:2.626);original
+facts/metrics/policies/reviews/lineage giữ nguyên;zero Gateway/Gemini/OCR/extraction.
+Implementation `fd2ef5c27001a22b70760d52919abd096281aefd` đã commit/push trực tiếp main;
+[CI41377619691](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41377619691)
+completed/SUCCESS đúng SHA:Python3.12 và Web smoke SUCCESS (typecheck/lint/build/
+routes/browser/proxy);full regression manual SKIPPED.Checkpoint tiếp theo chỉ
+report/planning và sửa mã hóa tiếng Việt,không gán CI implementation cho SHA checkpoint.
 
 ## Disposition và limitations
 
@@ -150,7 +162,9 @@ PDF review hiện có, không nâng thành cell-verified/independent gold. Mọi
 giữ financial_fact_verified=False. B10 reporting scope/cross-document restrictions,
 EPS/restatement/anomaly và financial accuracy toàn PDF ngoài phạm vi.
 
-D03-B03: đang thu đủ bằng chứng executor; chỉ đề xuất DONE sau khi validation và
-CI đúng SHA hoàn tất, Tech Lead có quyền nghiệm thu. M4-03 dừng REVIEW.
+D03-B03:đủ sáu criteria executor để **đề xuất DONE**,disposition **REVIEW** chờ
+Tech Lead quyết định.Public API tích hợp,ba formulas thực thi thật,production
+gates không nhận caller boolean,real18 có lineage/replay,blocked không numeric,
+regressions/CI đạt.Không tự nghiệm thu DONE;M4-03 giữ REVIEW.
 
 Next action: Tech Lead independent review M4-03, sau đó M4-04 — Evidence Retrieval Tools.
