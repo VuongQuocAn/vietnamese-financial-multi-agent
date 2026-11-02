@@ -34,6 +34,12 @@ from .document_evidence import (
     associate_fact,
 )
 from .document_repository import DocumentEvidenceRepository, EvidenceConflict
+from .execution_compatibility import (
+    ExecutionCompatibilityApproval,
+    ExecutionCompatibilityAssessment,
+    ExecutionCompatibilityDecision,
+    assess_execution_compatibility,
+)
 from .graph import (
     DerivedMetricNode,
     EvidenceAnchorNode,
@@ -81,6 +87,10 @@ from .source_reviews import (
 from .source_validation import SourceValidation, evaluate_source_validations
 
 __all__ = [
+    "ExecutionCompatibilityApproval",
+    "ExecutionCompatibilityAssessment",
+    "ExecutionCompatibilityDecision",
+    "assess_execution_compatibility",
     "SourceValidation",
     "evaluate_source_validations",
     "ClosureIssue",

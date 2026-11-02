@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-11-01** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-02** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -13,14 +13,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| M4 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
+| M4 | 5 | 0 | 1 | 0 | 4 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 99 | 67 | 0 | 0 | 32 | 0 | 0 |
+| TOTAL | 99 | 67 | 1 | 0 | 31 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M4-01 **IN_PROGRESS**, Owner/Tech Lead CONDITIONAL GO02/11/2026.
+[Spec](tasks/M4/M4-01.md), [report](../docs/m4-01-execution-policy.md);
+246 focused PASS;real original15/recovery3 eligible,global18 undetermined/computed0;
+29 queries/36 pairs/D-06 exact,2.545 hashes unchanged,zero Gateway. Giữ web local.
+Next action: commit/push và xác minh CI đúng SHA trước REVIEW.
+
+Checkpoint D-06 đã nghiệm thu:
 
 D-06 **DONE**, Tech Lead nghiệm thu theo xác nhận Owner 01/11/2026;
 [spec](tasks/D/D-06.md), [report](../docs/d06-canonical-mapping-validation.md).

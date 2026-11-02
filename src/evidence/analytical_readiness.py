@@ -85,7 +85,8 @@ def source_review_status(fact: CanonicalFinancialFact, reviews: list[SourceRevie
         ):
             return "source_inconsistent"
     pointers = {s.reference.source_pointer for s in fact.sources}
-    if not {r.value_selector, r.label_selector, r.header_selector} <= pointers:
+    selectors = {r.value_selector, r.label_selector, r.header_selector}
+    if len(selectors) != 3 or not selectors <= pointers:
         return "source_inconsistent"
     if r.level == "page_resolved":
         return "page_resolved"
@@ -188,6 +189,9 @@ def assess_analytical_readiness(
     if original.status != "compatible":
         # Preparation-only approval không tự cấp exception cho execution.
         eligibility_blockers.append("global_execution_compatibility_not_established")
+    if not eligibility_blockers:
+        # M4: analytical preparation alone cannot establish execution/closure.
+        eligibility_blockers.append("execution_snapshot_approval_required")
     return dict(
         profile=PROFILE,
         policy_status="approved_analytical_preparation"
@@ -213,9 +217,7 @@ def assess_analytical_readiness(
         },
         candidate_blockers=sorted(set(blockers)),
         preparation_source_ready=candidate == "compatible",
-        calculation_eligible=preparation_ready
-        and formula["execution_approved"]
-        and not eligibility_blockers,
+        calculation_eligible=False,
         eligibility_blockers=sorted(set(eligibility_blockers)),
         financial_fact_verified=False,
     )

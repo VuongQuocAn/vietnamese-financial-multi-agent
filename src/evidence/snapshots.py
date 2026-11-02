@@ -10,8 +10,10 @@ from .analytical_readiness import AccountingBasisReview, assess_analytical_readi
 from .compatibility import FinancialOperand
 from .contracts import Identity, ObservationIdentity, assess_fact_consistency
 from .document_evidence import associate_fact
+from .execution_compatibility import assess_execution_compatibility
 from .graph import graph_id, record_sources
 from .metrics import DerivedMetric, MetricRequest, build_metric
+from .preparation_policy import check_metric_formula_policy
 from .retrieval import EvidenceRetrieval
 
 
@@ -101,6 +103,7 @@ class SnapshotCatalog:
         approval=None,
         formula_policies=(),
         formula_approvals=(),
+        execution_approval=None,
     ):
         self.descriptors = [d.model_copy(deep=True) for d in descriptors]
         self.facts = [f.model_copy(deep=True) for f in facts]
@@ -111,6 +114,7 @@ class SnapshotCatalog:
         self.approval = approval
         self.policies = list(formula_policies)
         self.formula_approvals = list(formula_approvals)
+        self.execution_approval = execution_approval
         self.graph = graph.model_copy(deep=True) if graph is not None else None
         self.api = EvidenceRetrieval(
             self.facts, self.evidence, self.metrics, graph=graph, source_reviews=self.reviews
@@ -163,9 +167,11 @@ class SnapshotCatalog:
                 issues.append(record)
 
         selected = (descriptor.document_id, descriptor.snapshot_id)
+        metric_valid = True
         try:
             DerivedMetric.model_validate_json(metric.model_dump_json())
         except ValidationError:
+            metric_valid = False
             issue("invalid_metric_record", metric.metric_id)
         records = [m for m in self.metrics if m.metric_id == metric.metric_id]
         if len(records) != 1 or records[0] != metric:
@@ -250,8 +256,8 @@ class SnapshotCatalog:
                 bases[0].reused_from_snapshot and not bases[0].verification_reference
             ):
                 issue("accounting_basis_source_inconsistent", locator)
-        lineage = self.api.get_lineage(metric.metric_id)
-        if lineage.status not in {"found"} or lineage.reasons:
+        lineage = self.api.get_lineage(metric.metric_id) if metric_valid else None
+        if lineage is not None and (lineage.status not in {"found"} or lineage.reasons):
             for reason in lineage.reasons or ["lineage_unavailable"]:
                 issue(
                     reason,
@@ -261,7 +267,7 @@ class SnapshotCatalog:
                     else "partial",
                 )
         readiness = None
-        if len(supplied) == len(metric.operands):
+        if len(supplied) == len(metric.operands) or self.execution_approval is not None:
             policies = [p for p in self.policies if p.formula_id == metric.definition.name]
             readiness = assess_analytical_readiness(
                 metric.definition.compatibility,
@@ -279,6 +285,42 @@ class SnapshotCatalog:
             if issues
             else "closed"
         )
+        eligible = False
+        if self.execution_approval is not None and readiness is not None:
+            execution = assess_execution_compatibility(
+                metric.definition.compatibility,
+                supplied,
+                self.reviews,
+                self.bases,
+                approval=self.execution_approval,
+                formula_policy=policies[0] if len(policies) == 1 else None,
+            ).model_dump(mode="json")
+            formula = check_metric_formula_policy(
+                policies[0] if len(policies) == 1 else None,
+                metric.definition,
+                supplied,
+                self.formula_approvals,
+            )
+            blockers = execution["execution_blockers"] + formula["blockers"]
+            if not formula["execution_approved"]:
+                blockers.append("formula_policy_not_approved")
+            if status != "closed":
+                blockers.append("snapshot_closure_not_closed")
+                blockers.extend(i.code for i in issues)
+            eligible = (
+                status == "closed"
+                and execution["execution_profile_approved"]
+                and execution["approved_execution_compatibility"]["status"] == "compatible"
+                and formula["execution_approved"]
+                and not blockers
+            )
+            readiness.update(execution)
+            readiness.update(
+                formula_policy=formula,
+                execution_blockers=sorted(set(blockers)),
+                eligibility_blockers=sorted(set(blockers)),
+                calculation_eligible=eligible,
+            )
         return MetricSnapshotClosure(
             metric_id=metric.metric_id,
             document_id=descriptor.document_id,
@@ -290,8 +332,7 @@ class SnapshotCatalog:
             readiness=readiness,
             preparation_ready=status == "closed"
             and bool(readiness and readiness["preparation_ready"]),
-            calculation_eligible=status == "closed"
-            and bool(readiness and readiness["calculation_eligible"]),
+            calculation_eligible=eligible,
         )
 
     def entry(self, descriptor):

@@ -215,7 +215,7 @@ Phụ thuộc milestone: M3 và Gateway của M1.
 
 | Task | Đầu ra dự kiến | Tiêu chí nghiệm thu dự kiến |
 | --- | --- | --- |
-| <a id="m4-01"></a>M4-01 — Executable Tool Contracts | Contracts Shared Executable Tool Space | Đầu vào/ra/lỗi/provenance có kiểu và được duyệt |
+| <a id="m4-01"></a>M4-01 — Execution Compatibility, Formula Approvals & Tool Contracts | Execution profile và formula approvals | Closed snapshot, approved compatibility/formula và input preflight clear; chưa executor |
 | <a id="m4-02"></a>M4-02 — Typed Financial Retrieval Tools | Công cụ truy xuất facts/metrics | Đối chiếu kỳ, đơn vị, phạm vi và evidence IDs |
 | <a id="m4-03"></a>M4-03 — Calculator and Formula Executor | Thực thi công thức được duyệt bằng công cụ xác định | Kiểm thử input thiếu, số học, dung sai và khả năng tính lại qua lineage |
 | <a id="m4-04"></a>M4-04 — Evidence Retrieval Tools | Tool wrappers cho truy xuất bằng chứng | Dùng interface M3, trả nguồn và trạng thái; không thêm storage engine ngầm |

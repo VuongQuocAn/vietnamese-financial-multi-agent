@@ -1,0 +1,138 @@
+{
+  "version": "M4/execution-registry-v1",
+  "execution_approval": {
+    "version": "execution_compatibility_approval_v1",
+    "profile": "M4/same-document-execution-v1",
+    "purpose": "formula_execution_compatibility",
+    "authority": "Tech Lead",
+    "decision_reference": "M4-01/design-decision/2026-11-02"
+  },
+  "formula_policies": [
+    {
+      "formula_id": "gross_margin",
+      "version": "M4/formula-execution-v1",
+      "semantics": "Lợi nhuận gộp chia doanh thu thuần cùng kỳ tài chính; lợi nhuận gộp âm được giữ.",
+      "expression": "gross_profit / revenue",
+      "operands": [
+        {
+          "role": "gross_profit",
+          "canonical_item_id": "b02.gross_profit",
+          "semantic_role": "gross_profit",
+          "statement_type": "B02"
+        },
+        {
+          "role": "revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        }
+      ],
+      "period_relation": "same",
+      "denominator_role": "revenue",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    },
+    {
+      "formula_id": "debt_to_assets",
+      "version": "M4/formula-execution-v1",
+      "semantics": "Tổng nợ phải trả chia tổng tài sản tại cùng ngày; cho phép tỷ lệ vượt 100%, không thay bằng nợ vay.",
+      "expression": "liabilities / assets",
+      "operands": [
+        {
+          "role": "liabilities",
+          "canonical_item_id": "b01.total_liabilities",
+          "semantic_role": "liabilities",
+          "statement_type": "B01"
+        },
+        {
+          "role": "assets",
+          "canonical_item_id": "b01.total_assets",
+          "semantic_role": "assets",
+          "statement_type": "B01"
+        }
+      ],
+      "period_relation": "same",
+      "denominator_role": "assets",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [
+        "liabilities"
+      ],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    },
+    {
+      "formula_id": "revenue_yoy",
+      "version": "M4/formula-execution-v1",
+      "semantics": "Tăng trưởng doanh thu thuần của hai năm tài chính liên tiếp trong cùng statement/snapshot, lấy năm trước làm mẫu số.",
+      "expression": "(current_revenue - prior_revenue) / prior_revenue",
+      "operands": [
+        {
+          "role": "current_revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        },
+        {
+          "role": "prior_revenue",
+          "canonical_item_id": "b02.net_revenue",
+          "semantic_role": "revenue",
+          "statement_type": "B02"
+        }
+      ],
+      "period_relation": "consecutive_fiscal_years_descending",
+      "denominator_role": "prior_revenue",
+      "denominator_policy": "strictly_positive_else_undefined",
+      "nonnegative_roles": [
+        "current_revenue"
+      ],
+      "arithmetic": "Decimal",
+      "precision": 34,
+      "rounding": "ROUND_HALF_EVEN",
+      "output_multiplier": "100",
+      "output_unit": "percent",
+      "output_quantum": "0.01",
+      "rounding_stage": "final_output_only"
+    }
+  ],
+  "formula_execution_approvals": [
+    {
+      "formula_id": "gross_margin",
+      "version": "M4/formula-execution-v1",
+      "definition_sha256": "f9fb82dfdd9330056e6eafb7fd1518de45ef8899d6d5727038ead52ecb4dc4f7",
+      "authority": "Tech Lead",
+      "purpose": "formula_execution",
+      "decision_reference": "M4-01/design-decision/2026-11-02",
+      "negative_controls_reference": "docs/m4-01-execution-policy.md#negative-controls"
+    },
+    {
+      "formula_id": "debt_to_assets",
+      "version": "M4/formula-execution-v1",
+      "definition_sha256": "396bcc315e2c625b650a46917d2e1e1ec2006b4cb4b68e8712387e8cd918838b",
+      "authority": "Tech Lead",
+      "purpose": "formula_execution",
+      "decision_reference": "M4-01/design-decision/2026-11-02",
+      "negative_controls_reference": "docs/m4-01-execution-policy.md#negative-controls"
+    },
+    {
+      "formula_id": "revenue_yoy",
+      "version": "M4/formula-execution-v1",
+      "definition_sha256": "612581e60d99c55b5cddbde15fa5875bd1e7d85cbf36e8bbb1740ff295d62e32",
+      "authority": "Tech Lead",
+      "purpose": "formula_execution",
+      "decision_reference": "M4-01/design-decision/2026-11-02",
+      "negative_controls_reference": "docs/m4-01-execution-policy.md#negative-controls"
+    }
+  ]
+}

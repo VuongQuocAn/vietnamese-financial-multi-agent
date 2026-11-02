@@ -3,9 +3,10 @@
 import hashlib
 import json
 from collections.abc import Sequence
+from datetime import date
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
 from .compatibility import FinancialOperand, OperandRequirement, OperationCompatibilitySpec
@@ -66,6 +67,13 @@ def check_formula_policy(
         return dict(
             execution_approved=False, blockers=["formula_definition_missing"], status="missing"
         )
+    try:
+        policy = PreparedFormulaPolicy.model_validate_json(policy.model_dump_json())
+        operands = [FinancialOperand.model_validate_json(o.model_dump_json()) for o in operands]
+    except ValidationError:
+        return dict(
+            execution_approved=False, blockers=["formula_input_contract_invalid"], status="invalid"
+        )
     blockers = []
     if spec.operation_id != policy.formula_id or spec.operands != policy.operands:
         blockers.append("formula_semantics_or_operands_mismatch")
@@ -122,6 +130,21 @@ def check_formula_policy(
             ):
                 blockers.append("nonnegative_operand_required")
         periods = [facts[r].context.period for r in roles]
+        for period in periods:
+            try:
+                if expected_period_type == "as_of":
+                    if not period or date.fromisoformat(period).isoformat() != period:
+                        raise ValueError("Invalid as-of date")
+                elif not (
+                    period
+                    and len(period) == 4
+                    and period.isascii()
+                    and period.isdigit()
+                    and 1 <= int(period) <= 9999
+                ):
+                    raise ValueError("Invalid fiscal year")
+            except ValueError:
+                blockers.append("formula_period_invalid")
         if policy.formula_id == "revenue_yoy":
             if (
                 policy.period_relation != "consecutive_fiscal_years_descending"
@@ -137,13 +160,22 @@ def check_formula_policy(
             or periods[0] != periods[1]
         ):
             blockers.append("formula_period_relation_mismatch")
+    # Revalidate mutable records: a changed purpose/authority cannot retain approval.
+    selected, invalid_approval = [], False
+    for record in approvals:
+        try:
+            record = FormulaExecutionApproval.model_validate_json(record.model_dump_json())
+        except (ValidationError, AttributeError):
+            invalid_approval = True
+            continue
+        if record.formula_id == policy.formula_id:
+            selected.append(record)
     matching = [
         a
-        for a in approvals
-        if (a.formula_id, a.version, a.definition_sha256)
-        == (policy.formula_id, policy.version, policy.definition_digest())
+        for a in selected
+        if (a.version, a.definition_sha256) == (policy.version, policy.definition_digest())
     ]
-    approved = len(matching) == 1
+    approved = len(selected) == len(matching) == 1 and not invalid_approval
     return dict(
         formula_id=policy.formula_id,
         version=policy.version,
@@ -153,3 +185,25 @@ def check_formula_policy(
         approval_reference=matching[0].decision_reference if approved else None,
         blockers=sorted(set(blockers)),
     )
+
+
+def check_metric_formula_policy(policy, definition, operands, approvals):
+    """Bind persisted descriptive definition to approved policy; reference != authority."""
+    result = check_formula_policy(policy, definition.compatibility, operands, approvals)
+    if policy is not None and (
+        definition.name != policy.formula_id
+        or definition.expression != policy.expression
+        or definition.compatibility.operation_id != policy.formula_id
+        or definition.compatibility.operands != policy.operands
+        or definition.compatibility.period_relation
+        != (
+            "ordered_pair"
+            if policy.period_relation == "consecutive_fiscal_years_descending"
+            else "same"
+        )
+        or definition.compatibility.document_relation != "same"
+    ):
+        result["blockers"] = sorted(
+            set(result["blockers"] + ["metric_formula_definition_mismatch"])
+        )
+    return result
