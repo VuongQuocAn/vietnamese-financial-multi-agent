@@ -11,8 +11,11 @@ Specialist/common grounding hoàn tất; offline21/21, live initial6/6,6calls/9.
 targeted0; grounding/numeric/citations100%, BBS2025 Debt-to-Assets59,06% full lineage.
 217 bounded +2 evaluator tests PASS; M5-04 before/after13/13 exact; accepted
 18metrics/29queries/QA36/M5-01 15cases giữ nguyên;3.818 protected hashes unchanged.
-Chưa commit; đang chuẩn bị push và CI đúng implementation SHA. Giữ Web local,
-D03-B10, financial_fact_verified=False; chưa verification M6.
+Implementation `ebea73076975acdd331f22ce6122d0c0aa48625d` đã push main, remote khớp.
+[CI41466737325](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41466737325)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
+Giữ Web local/D03-B10/financial_fact_verified=False; chưa M6.
 Next action: Tech Lead review M5-05; không tự DONE hoặc bắt đầu M5-06.
 
 ## M5-04 — Profitability Specialist

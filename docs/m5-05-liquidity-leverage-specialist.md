@@ -1,8 +1,9 @@
 # M5-05 — Liquidity and Leverage Specialist
 
 Ngày02/11/2026; trạng thái REVIEW, chờ Tech Lead nghiệm thu. Baseline main/origin
-`348528fc6e39356b9ac2706307e9ade7db5f12fc`. Implementation chưa commit tại thời điểm
-viết report; SHA/CI được bổ sung sau push. Không triển khai M5-06 hoặc M6.
+`348528fc6e39356b9ac2706307e9ade7db5f12fc`. Implementation
+`ebea73076975acdd331f22ce6122d0c0aa48625d` đã push trực tiếp main, remote khớp.
+Không triển khai M5-06 hoặc M6.
 
 ## Kiến trúc và audit M5-04
 
@@ -177,5 +178,8 @@ Local evidence dưới `artifacts/evidence/` (ignored):
 
 3.818 protected hashes trước/sau unchanged, gồm PDFs, canonical facts, accepted
 artifacts và Web local. Không OCR/extraction, sửa raw/processed hoặc leak key.
-Ruff lint/format, planning checker và diff check PASS. CI đúng implementation SHA
-sẽ ghi sau push. Next action: Tech Lead review M5-05; không tự DONE/M5-06.
+Ruff lint/format, planning checker và diff check PASS.
+[CI41466737325](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41466737325)
+completed/SUCCESS đúng implementation SHA; Python3.12/Web smoke SUCCESS, full unit
+regression SKIPPED. Checkpoint sau chỉ docs/planning [skip ci], không gán CI này
+cho SHA checkpoint. Next action: Tech Lead review M5-05; không tự DONE/M5-06.

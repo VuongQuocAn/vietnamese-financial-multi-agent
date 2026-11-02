@@ -52,7 +52,9 @@ M5-05 **REVIEW**, Owner giao02/11/2026; baseline main/origin348528f.
 [Spec](tasks/M5/M5-05.md),[report](../docs/m5-05-liquidity-leverage-specialist.md).
 Offline21/21; live initial6/6,6calls/9.879tokens,targeted0; grounding/numeric/citations100%.
 217 bounded +2 evaluator tests PASS; M5-04 outputs13/13 exact,3.818hashes unchanged.
-Chưa commit; đang chuẩn bị push/CI đúng SHA. Giữ Web local và accepted evidence.
+Implementationebea730 đã push main;CI41466737325 SUCCESS đúng SHA,
+Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+Giữ Web local và accepted evidence; checkpoint sau chỉ docs/planning.
 Next action: Tech Lead review M5-05; không tự DONE hoặc bắt đầu M5-06.
 
 Checkpoint trước:
