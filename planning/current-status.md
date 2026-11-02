@@ -4,6 +4,8 @@ Cập nhật 2026-11-02 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-05 — Liquidity and Leverage Specialist
 
+Status: **DONE**; Tech Lead APPROVED ngày02/11/2026, cho phép đồng bộ planning.
+
 P1 scope correction theo Tech Lead: dùng explicit constraints M5-02, không dùng
 “riêng” hoặc false scope ambiguity từ M4.43 targeted tests PASS; BBS2025 câu giữ
 riêng evidence tạo2 candidates59,06% với exact lineage; M5-04 real compatibility3/3.
@@ -11,10 +13,10 @@ riêng evidence tạo2 candidates59,06% với exact lineage; M5-04 real compatib
 Fix `3f7e1ce46a51db0648243d1c8776a661e693133f` đã push main, remote khớp;
 [CI41469949667](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41469949667)
 completed/SUCCESS đúng fix SHA, Python3.12/Web smoke SUCCESS, full regression
-SKIPPED. Checkpoint sau chỉ docs/planning [skip ci]. Giữ REVIEW chờ Tech Lead review.
+SKIPPED. Chấp thuận gồm P1 scope fix; checkpoint sau chỉ docs/planning [skip ci].
 Implementation/CI dưới đây là bản gốc.
 
-Status: **REVIEW**; Owner giao02/11/2026. Baseline main/origin
+Owner giao02/11/2026. Baseline main/origin
 `348528fc6e39356b9ac2706307e9ade7db5f12fc` đã xác minh.
 [Spec](tasks/M5/M5-05.md), [report](../docs/m5-05-liquidity-leverage-specialist.md).
 Specialist/common grounding hoàn tất; offline21/21, live initial6/6,6calls/9.879tokens,
@@ -26,7 +28,10 @@ Implementation `ebea73076975acdd331f22ce6122d0c0aa48625d` đã push main, remote
 completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
 Giữ Web local/D03-B10/financial_fact_verified=False; chưa M6.
-Next action: Tech Lead review M5-05; không tự DONE hoặc bắt đầu M5-06.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning checker/diff check; không
+chạy lại tests/Gemini/benchmark/OCR hoặc sửa runtime/artifacts. Giữ claims chưa
+verified và D03-B10 không thay đổi.
+Next action: chờ Owner/Tech Lead giao task mới; không tự bắt đầu M5-06.
 
 ## M5-04 — Profitability Specialist
 
