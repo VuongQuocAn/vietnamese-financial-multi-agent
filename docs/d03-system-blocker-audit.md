@@ -147,7 +147,7 @@ Effort XS/S/M là ước lượng tương đối. Chi tiết reproduction/first 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | D03-B01 | `assess_analytical_readiness` bắt global compatible cho execution; approval hiện có chỉ purpose preparation, không có execution profile xử lý scope/source exception | CONFIRMED | P1 | 15/15 metrics, financial tools | Chốt record execution compatibility riêng, giới hạn same document/statement/snapshot, reviewed operands/basis; evaluator nhận record đúng purpose, giữ global assessment gốc | S | Tech Lead quyết định scope execution | 15 selected baseline metrics clear compatibility execution nếu approved; cross-doc/known conflict/quality blocked vẫn từ chối | DONE |
 | D03-B02 | `formula_execution_approvals=[]`; ba version/digest không có matching approval | CONFIRMED | P1 | 15 metrics/3 formulas | Tech Lead duyệt/bác semantics, denominator/sign/rounding và negative controls; persist explicit formula/version/digest/authority/reference, không đổi status cờ | XS | Tech Lead review definitions | 15 preflight clear + matching approvals; wrong digest/version hoặc denominator không hợp lệ vẫn blocked | DONE |
-| D03-B03 | `src/tools` chưa triển khai; DerivedMetric chỉ cho result None/not_computed | CONFIRMED | P1 | M4 execution; anomaly QA chưa có rule | Trong M4 được giao, thêm executor Decimal ba formulas sau gates; anomaly chỉ thêm khi có rule/threshold/baseline được duyệt, hoặc trả unsupported rõ ràng | M | M4-01, M4-02; B04 DONE; executor M4-03 | Tính ba metric types với citations/lineage từ selected real operands; invalid inputs không có numeric answer | REVIEW |
+| D03-B03 | `src/tools` chưa triển khai; DerivedMetric chỉ cho result None/not_computed | CONFIRMED | P1 | M4 execution; anomaly QA chưa có rule | Trong M4 được giao, thêm executor Decimal ba formulas sau gates; anomaly chỉ thêm khi có rule/threshold/baseline được duyệt, hoặc trả unsupported rõ ràng | M | M4-01, M4-02; B04 DONE; executor M4-03 | Tech Lead nghiệm thu M4-03 ngày02/11/2026:production formula executor ba types,real18 có citations/lineage/replay;invalid inputs không numeric;anomaly rules ngoài phạm vi | DONE |
 | D03-B04 | Evaluator recovery đổi snapshot của cả 2022, nhưng reviews/basis/metrics vẫn bind snapshot gốc | CONFIRMED | P1 | 3 metrics, 5 reviews, 1 basis review; 6 operand occurrences không resolve trong effective view | Thêm snapshot catalog/selection giữ original và recovery; pin metric vào snapshot đóng dependency. Nếu chọn recovery cho metric: rebind reviews/basis sau exact source check và build metric/lineage mới, không sửa identity cũ | S | B08; không cần Gemini | Với từng snapshot được công bố ready: mọi metric reference resolve, reviews/basis khớp; 2022 không còn 15/15 baseline bị dùng nhầm cho recovery; D-04: [implementation73e2f9e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/73e2f9e9cc412dc86a2dbf7e45903d8a6449d5dd), [real-data regression](d04-snapshot-source-closure.md) | DONE |
 | D03-B05 | ITEM_CATALOG chỉ 16 IDs; 748 financial slots/79 statement-code pairs không có rule | CONFIRMED | P1 | QA nợ ngắn hạn, validation và expanded analysis | Ưu tiên rules B01 100/200/310/440, B02 01/02, B03 50/60; code + source-backed labels/statement, snapshot projection mới; không map header/signature | S theo nhóm | B06; Tech Lead chốt IDs/labels | Tech Lead nghiệm thu D-06 bounded8 items: catalog24 IDs,+80 mapped slots;QA09 đúng310/kỳ/source;balance/asset decomposition chạy thật;negative code/label/statement giữ abstain;670 slots ngoài scope vẫn unmapped;[evidence](d06-canonical-mapping-validation.md) | DONE |
 | D03-B06 | Header filter chỉ bỏ “chỉ tiêu/mã số/thuyết minh”, bỏ lọt “Thuyết số”; financial projection còn giữ section/signature | CONFIRMED | P2 | 25 note slots (20 unmapped), 48 structural slots; 10 numeric note references | Sửa phân loại header role tại validate_automated_extraction và projection: note reference/text giữ ở table evidence, không tạo monetary slot; lưu snapshot mới | S | Không đổi raw/M2 cũ | Tech Lead nghiệm thu D-05 classification/projection: bỏ25 note/48 structural slots khỏi financial view; giữ411a/421b/raw tables và mapped monetary operands; [evidence](d05-extraction-corrections.md) | DONE |
@@ -186,8 +186,8 @@ so sánh liên tài liệu;chưa giao bắt đầu điều tra trong phiên đ�
 
 ### M4-03 disposition — 02/11/2026
 
-D03-B03 **REVIEW**,đủ sáu criteria để **đề xuất DONE** sau Tech Lead independent
-review;chưa tự chuyển DONE.Public FinancialCalculator đã tích hợp,ba formulas
+D03-B03 **DONE trong phạm vi production formula executor**,Tech Lead APPROVED
+M4-03 ngày02/11/2026 và cho phép đồng bộ DONE.Public FinancialCalculator đã tích hợp,ba formulas
 thực thi thật trên BBS18/18;API không nhận caller eligibility/values và vẫn dùng
 production closure.Real18 giữ source/lineage,JSON/restart/recompute exact;
 blocked/invalid không numeric result.Original DerivedMetric None/not_computed;
@@ -198,7 +198,10 @@ execution response/trace riêng.186 focused PASS và18 independent arithmetic ch
 đã push main;[CI41377619691](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41377619691)
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS.Anomaly rules chưa được
 phê duyệt vẫn ngoài phạm vi M4-03;không triển khai detector.Evidence diagnostic
-D-03 bên dưới giữ nguyên lịch sử;disposition này ghi kết quả executor mới.
+D-03 bên dưới giữ nguyên lịch sử;disposition này ghi kết quả executor đã nghiệm thu.
+D03-B10 vẫn **BLOCKED đối với so sánh liên tài liệu**;không ảnh hưởng các phép tính
+cùng filing đã phê duyệt.Phiên đồng bộ DONE chỉ docs/planning và planning/diff checks,
+không chạy lại tests/evaluation/Gemini/OCR/extraction hoặc sửa runtime/evidence/web.
 
 ### D-07 disposition — 02/11/2026
 

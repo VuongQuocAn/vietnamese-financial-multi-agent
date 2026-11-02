@@ -1,6 +1,7 @@
 # M4-03 — Calculator and Formula Executor
 
-Status: **REVIEW**; baseline main `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
+Status: **DONE**, Tech Lead APPROVED02/11/2026,cho phép đồng bộ planning;
+baseline main `f433777935f8212d395ee80f0c2d5b5f75cc6805`.
 Ngày02/11/2026 (Asia/Bangkok). Phạm vi: ba formulas được duyệt tại M4-01,
 same-document/snapshot; không anomaly, cross-document, agents hoặc Web.
 
@@ -162,9 +163,11 @@ PDF review hiện có, không nâng thành cell-verified/independent gold. Mọi
 giữ financial_fact_verified=False. B10 reporting scope/cross-document restrictions,
 EPS/restatement/anomaly và financial accuracy toàn PDF ngoài phạm vi.
 
-D03-B03:đủ sáu criteria executor để **đề xuất DONE**,disposition **REVIEW** chờ
-Tech Lead quyết định.Public API tích hợp,ba formulas thực thi thật,production
+D03-B03 **DONE trong phạm vi production formula executor**,Tech Lead nghiệm thu
+cùng M4-03 ngày02/11/2026.Public API tích hợp,ba formulas thực thi thật,production
 gates không nhận caller boolean,real18 có lineage/replay,blocked không numeric,
-regressions/CI đạt.Không tự nghiệm thu DONE;M4-03 giữ REVIEW.
+regressions/CI đạt.D03-B10 vẫn **BLOCKED đối với so sánh liên tài liệu**;không ảnh
+hưởng các phép tính cùng filing đã phê duyệt.Phiên nghiệm thu chỉ docs/planning
+và planning/diff checks,không chạy lại tests/evaluation/Gemini/OCR hoặc sửa runtime.
 
-Next action: Tech Lead independent review M4-03, sau đó M4-04 — Evidence Retrieval Tools.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu M4-04.
