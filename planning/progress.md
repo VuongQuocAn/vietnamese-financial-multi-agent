@@ -51,7 +51,9 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M5-04 **REVIEW**, Owner giao02/11/2026, baseline07a577f.
 [Spec](tasks/M5/M5-04.md),[report](../docs/m5-04-profitability-specialist.md).
 Final offline13/13;21 focused PASS;live initial2/6+targeted4/4,không fresh6/6.
-3.379 protected hashes unchanged;chưa commit,chờ push/exact-SHA CI.Giữ Web local/D03-B10.
+3.379 protected hashes unchanged;implementationcf5b399 đã push main,
+CI41461098831 SUCCESS đúng SHA,Python3.12/Web smoke;full regression SKIPPED.
+Checkpoint sau chỉ planning/docs [skip ci].Giữ Web local/D03-B10.
 Next action: Tech Lead review M5-04;không tự DONE hoặc bắt đầu M5-05.
 
 Checkpoint trước:

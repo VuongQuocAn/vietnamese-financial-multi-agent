@@ -12,7 +12,10 @@ Initial live2/6, targeted4/4, tổng10calls/17.901tokens; không fresh6/6.
 3 supported interpretations thật; Gross Margin2025=7,21%, full M4 lineage.
 18metrics/29queries/QA36/M5-01 15cases exact; M5-02/M5-03 evidence giữ nguyên.
 3.379 protected hashes unchanged; giữ Web local/D03-B10 và financial_fact_verified=False.
-Chưa commit; đang chờ push/exact-SHA CI. Không tự DONE hoặc bắt đầu M5-05.
+Implementation `cf5b399d9fa65d071ff95753cde943c1c0013d05` đã push main;
+[CI41461098831](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41461098831)
+completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci]. Không tự DONE hoặc bắt đầu M5-05.
 Next action: Tech Lead review M5-04.
 
 ## M5-03 — Risk-Aware Supervisor

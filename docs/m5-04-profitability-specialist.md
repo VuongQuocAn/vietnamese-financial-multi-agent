@@ -1,7 +1,7 @@
 # M5-04 — Profitability Specialist
 
 Status: REVIEW; baseline main `07a577f947f5956405524fbf9ce06d35a75f4a6d`.
-Ngày thực hiện02/11/2026 (Asia/Bangkok). Chờ Tech Lead nghiệm thu; CI đang chờ push.
+Ngày thực hiện02/11/2026 (Asia/Bangkok). Chờ Tech Lead nghiệm thu; CI SUCCESS.
 
 ## Kiến trúc và API
 
@@ -188,6 +188,11 @@ canonical/source reviews/snapshots/previous artifacts và local Web file. Không
 OCR/extraction/financial value/formula approval changes; không full regression.
 Ruff files đã sửa/planning/diff PASS. Key và raw artifacts ignored,không tracked.
 
-Implementation chưa commit; CI được kiểm sau push, không suy từ local PASS.
+Implementation `cf5b399d9fa65d071ff95753cde943c1c0013d05` đã push trực tiếp main.
+[CI41461098831](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41461098831)
+completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS;
+lint/format/planning/focused tests/typecheck/build/browser-proxy smoke đều đạt,
+full unit regression SKIPPED. Checkpoint tiếp theo chỉ docs/planning,
+không gán CI implementation cho SHA checkpoint.
 
 Next action: Tech Lead review M5-04; không tự DONE hoặc bắt đầu M5-05.
