@@ -101,7 +101,11 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     elif parsed.reporting_year and "dau nam" in text:
         parsed.period = f"{parsed.reporting_year}-01-01"
     # Một baseline đơn mục tiêu; không diễn giải phép so sánh thành một fact.
-    if len(years) > 1 or any(p in text for p in ("so sanh", "chenh lech", "lien tai lieu")):
+    if len(years) > 1 or "lien tai lieu" in text:
+        return parsed, ["cross_document_comparison_blocked_D03_B10"]
+    if any(p in text for p in ("so sanh", "chenh lech")):
+        if len(years) == 1 and "cung bao cao" in text:
+            return parsed, ["semantic_intent_requires_gateway"]
         return parsed, ["cross_document_comparison_blocked_D03_B10"]
     if any(
         p in text

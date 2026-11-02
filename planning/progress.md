@@ -13,14 +13,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| M4 | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
+| M4 | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 100 | 73 | 0 | 0 | 27 | 0 | 0 |
+| TOTAL | 101 | 73 | 0 | 0 | 27 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M4-05a **REVIEW**;[spec](tasks/M4/M4-05a.md),
+[report](../docs/m4-05a-gemini-live-validation.md).30 focused PASS;live4answers đúng/
+grounded+negative đúng sau targeted fix.9API attempts/8recorded success/1unknown;
+known10.798tokens,total9 N/A.Offline36/18metrics/29queries/36pairs/D-06/D-07/2.670
+hashes exact. Chưa commit,chờ CI/Tech Lead;giữ M4-05 DONE,không bắt đầu M5-01.
+Next action: Tech Lead independent review M4-05a.
+
+Checkpoint nghiệm thu trước task bổ sung:
 
 M4-05 **DONE**, Tech Lead APPROVED ngày02/11/2026;M4 hoàn tất trong phạm vi phê duyệt.
 Baseline main/origin eca8cc8;[spec](tasks/M4/M4-05.md),

@@ -266,3 +266,69 @@ def test_explicit_dates_opening_balance_and_unsupported_quarter_are_not_year_end
     assert conflict.status == "clarification_required" and not conflict.tool_trace
     quarterly = api.answer("Doanh thu TEST quý 1 năm 2030?")
     assert quarterly.status == "unsupported" and not quarterly.tool_trace
+
+
+@pytest.mark.parametrize(
+    "formula,question",
+    [
+        (
+            "debt_to_assets",
+            "TEST năm 2030 lấy tổng nợ chia toàn bộ tài sản ra bao nhiêu phần trăm?",
+        ),
+        (
+            "revenue_yoy",
+            "Doanh thu TEST năm 2030 thay đổi bao nhiêu phần trăm so với kỳ so sánh trên cùng báo cáo?",
+        ),
+    ],
+)
+def test_soft_parser_rejection_can_use_exactly_one_gateway_call(formula, question):
+    seen = []
+    api = baseline(
+        fixture(formula=formula),
+        gateway=gateway_for(
+            {
+                "intent": "calculated_metric",
+                "formula_id": formula,
+                "reporting_year": 2030,
+            },
+            seen,
+        ),
+    )
+    offline = api.answer(question)
+    assert offline.status == "unsupported" and offline.llm.calls == 0
+    result = api.answer(question, QAContext(allow_gateway=True))
+    assert result.status == "answered" and result.llm.calls == len(seen) == 1
+    assert result.llm.parsing_method == "gateway" and result.citations
+    assert result.numerical_result == result.calculation.result
+    prompt = json.loads(seen[0].messages[0].content)
+    assert (
+        prompt["approved_formulas"][formula]["expression"]
+        == result.calculation.trace.formula.expression
+    )
+    assert (
+        prompt["approved_formulas"][formula]["semantics"]
+        == result.calculation.trace.formula.semantics
+    )
+    blocked = api.answer("So sánh doanh thu TEST năm 2021 và 2030", QAContext(allow_gateway=True))
+    assert blocked.status == "unsupported" and blocked.llm.calls == 0 and len(seen) == 1
+
+
+def test_gateway_cannot_replace_ratio_with_direct_fact_or_enable_unsupported_formula():
+    seen = []
+    api = baseline(
+        gateway=gateway_for(
+            {
+                "intent": "direct_fact",
+                "canonical_item_id": "b02.net_revenue",
+                "reporting_year": 2030,
+            },
+            seen,
+        )
+    )
+    result = api.answer(
+        "Doanh thu TEST năm 2030 ra bao nhiêu phần trăm?", QAContext(allow_gateway=True)
+    )
+    assert result.status == "unsupported" and result.reasons == ["gateway_formula_required"]
+    assert result.llm.calls == 1 and not result.tool_trace
+    denied = api.answer("ROE TEST năm 2030?", QAContext(allow_gateway=True))
+    assert denied.llm.calls == 0 and len(seen) == 1

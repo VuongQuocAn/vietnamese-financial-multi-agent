@@ -1,0 +1,7 @@
+[
+  {"id":"L01","group":"direct","question":"Năm 2025, BBS thu về bao nhiêu từ hoạt động bán hàng sau các khoản giảm trừ?","year":2025,"item":"b02.net_revenue"},
+  {"id":"L02","group":"analytical","question":"BBS năm 2025, lấy tổng nợ chia toàn bộ tài sản thì ra khoảng bao nhiêu phần trăm?","year":2025,"formula":"debt_to_assets"},
+  {"id":"L03","group":"analytical","question":"Doanh thu bán hàng của BBS năm 2025 thay đổi bao nhiêu phần trăm so với kỳ so sánh trên cùng báo cáo?","year":2025,"formula":"revenue_yoy"},
+  {"id":"L04","group":"direct","question":"BBS năm 2024 còn lại bao nhiêu lợi nhuận từ bán hàng sau khi trừ giá vốn?","year":2024,"item":"b02.gross_profit"},
+  {"id":"L05","group":"negative","question":"BBS năm 2025, mỗi đồng vốn của cổ đông tạo ra bao nhiêu đồng lãi sau thuế?","year":2025,"expected_status":"unsupported","expected_intent":"unsupported","expected_tools":[]}
+]

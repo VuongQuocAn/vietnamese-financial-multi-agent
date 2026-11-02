@@ -13,6 +13,7 @@ from ..accounting.contracts import FinancialModel
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
 from ..core.llm_contracts import (
     Cost,
+    GatewayError,
     GenerationParameters,
     JSONOutput,
     LLMRequest,
@@ -20,6 +21,7 @@ from ..core.llm_contracts import (
     ModelIdentity,
     OutputSpec,
     RequestConstraints,
+    ResponseProvenance,
     Usage,
 )
 from ..core.llm_gateway import SharedLLMGateway
@@ -83,6 +85,8 @@ class QALLMMetadata(FinancialModel):
     model: ModelIdentity | None = None
     usage: Usage | None = None
     cost: Cost | None = None
+    provenance: ResponseProvenance | None = None
+    error: GatewayError | None = None
     latency_ms: float | None = None
     parsing_method: Literal["deterministic", "gateway"] = "deterministic"
     generation_method: Literal["deterministic_tool_rendering"] = "deterministic_tool_rendering"
@@ -180,17 +184,33 @@ class FinancialQABaseline:
 
     def _parse_gateway(self, question, context, response):
         meta = response.llm
+        if meta.calls:
+            return
         if not context.allow_gateway or self._gateway is None:
             meta.status = "disabled" if not context.allow_gateway else "gateway_unavailable"
             return
         catalog = {key: list(rule.aliases) for key, rule in ITEM_RULES.items()}
         prompt = {
-            "instruction": "Chỉ phân loại câu hỏi đơn mục tiêu. Không trả số liệu, nguồn hoặc IDs. "
+            "instruction": "Chỉ phân loại câu hỏi đơn mục tiêu. Chỉ xuất canonical_item_id/formula_id "
+            "trong allowlist; không xuất document_id/snapshot_id, giá trị tài chính hoặc citations. "
+            "Không tính toán. Khi câu hỏi mô tả phép tính đúng semantics của formula được duyệt, "
+            "chọn formula_id tương ứng dù cách nói không trùng nhãn. "
             "Không đổi câu hỏi không hỗ trợ thành chỉ tiêu gần giống. Thiếu dữ kiện dùng null. "
-            "intent=unsupported cho chỉ số ngoài allowlist, dự báo, nhiều mục tiêu/so sánh.",
+            "intent=unsupported cho chỉ số ngoài allowlist, dự báo, nhiều mục tiêu/so sánh liên tài liệu. "
+            "Revenue YoY được phép dùng kỳ so sánh bind trong cùng báo cáo. "
+            "period=null nếu câu hỏi chỉ nêu năm; reporting_scope=null nếu không chỉ rõ riêng/hợp nhất.",
             "schema": QAUnderstanding.model_json_schema(),
             "canonical_catalog": catalog,
-            "approved_formulas": FORMULA_LABELS,
+            "approved_formulas": {
+                policy.formula_id: dict(
+                    label=FORMULA_LABELS[policy.formula_id],
+                    semantics=policy.semantics,
+                    expression=policy.expression,
+                    operands={o.role: o.canonical_item_id for o in policy.operands},
+                )
+                for policy in self._catalog.policies
+                if policy.formula_id in FORMULA_LABELS
+            },
             "company_aliases": sorted({a for d in self._documents for a in d.company_aliases}),
         }
         request = LLMRequest(
@@ -210,6 +230,7 @@ class FinancialQABaseline:
         meta.calls, meta.model = 1, context.model
         meta.latency_ms = (perf_counter() - start) * 1000
         meta.status, meta.usage, meta.cost = result.status, result.usage, result.cost
+        meta.provenance, meta.error = result.provenance, result.error
         if result.status != "success" or not isinstance(result.output, JSONOutput):
             response.reasons.append("gateway_unavailable_or_invalid_output")
             return
@@ -256,6 +277,16 @@ class FinancialQABaseline:
         )
         if not question.strip():
             return self._stop(response, "clarification_required", "Cần nhập câu hỏi.", "question")
+        if errors and set(errors) <= {"unsupported_formula", "semantic_intent_requires_gateway"}:
+            self._parse_gateway(question, context, response)
+            if response.llm.parsing_method == "gateway":
+                response.caveats.append("deterministic_parser_requires_semantic_fallback")
+                response.reasons = []
+                parsed = response.parsed
+                if parsed.intent != "unsupported" and parsed.formula_id is None:
+                    response.reasons.append("gateway_formula_required")
+                    return response
+                errors = []
         if errors:
             if errors == ["cross_document_comparison_blocked_D03_B10"]:
                 response.answer_vi = (

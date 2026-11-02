@@ -5,7 +5,8 @@ import json
 from pathlib import Path
 
 from evaluate_m4_05_qa import setup
-from vietnamese_financial_multi_agent.core.gemini_adapter import DEFAULT_GEMINI_MODEL, GeminiAdapter
+from vietnamese_financial_multi_agent.api.qa_gateway import QACredentialError, create_qa_adapter
+from vietnamese_financial_multi_agent.core.gemini_adapter import DEFAULT_GEMINI_MODEL
 from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
@@ -20,7 +21,13 @@ def main():
     parser.add_argument("--year", type=int)
     parser.add_argument("--formula-id", help="Target explicit cho câu hỏi tiếp nối")
     parser.add_argument(
-        "--allow-live", action="store_true", help="Tối đa một Gemini request; cần GEMINI_API_KEY"
+        "--allow-live",
+        action="store_true",
+        help="Tối đa một Gemini request; env hoặc local key file",
+    )
+    parser.add_argument("--key-file", type=Path, help="Override local key file; không in nội dung")
+    parser.add_argument(
+        "--key-index", type=int, default=0, help="Một key cụ thể, không tự rotation"
     )
     parser.add_argument("--model", default=DEFAULT_GEMINI_MODEL)
     parser.add_argument("--json", action="store_true")
@@ -30,10 +37,12 @@ def main():
     gateway = None
     if args.allow_live:
         try:
-            adapter = GeminiAdapter.from_environment()
+            adapter, _ = create_qa_adapter(
+                Path.cwd().resolve(), key_file=args.key_file, key_index=args.key_index
+            )
             gateway = SharedLLMGateway({"gemini": adapter})
-        except ValueError:
-            print("Gateway chưa cấu hình; tiếp tục với deterministic baseline.")
+        except QACredentialError as error:
+            print(f"Gateway configuration: {error}. Tiếp tục với deterministic baseline.")
     try:
         response = FinancialQABaseline(SnapshotCatalog(**data), documents, gateway=gateway).answer(
             args.question,
