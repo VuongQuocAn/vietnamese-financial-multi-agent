@@ -207,6 +207,11 @@ Giữ nguyên bảy task, IDs và dependencies; trạng thái theo registry, kh�
 
 ## M4 — Financial Tools & QA Baseline
 
+Trạng thái: **DONE**, Tech Lead xác nhận ngày02/11/2026, trong phạm vi phê duyệt.
+Financial Retrieval,Calculator,Evidence Retrieval và QA Baseline có triển khai và
+kiểm thử trên dữ liệu thật. D03-B10 vẫn BLOCKED đối với so sánh liên tài liệu;
+không suy nghiệm thu M4 thành independent financial verification.
+
 Mục tiêu: Shared Executable Tool Space, retrieval, calculator và baseline QA.
 
 Phụ thuộc milestone: M3 và Gateway của M1.

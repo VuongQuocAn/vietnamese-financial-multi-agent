@@ -200,13 +200,16 @@ không được tự sửa bởi QA. Không specialist agents, planner, verifier
 
 ## Git và review
 
-Status **REVIEW**; implementation
+Status **DONE**, Tech Lead APPROVED ngày02/11/2026,cho phép đồng bộ planning,
+không cần sửa thêm; implementation
 `359babb9dcfbf40275ef693399c5bdf204aea150` đã push main, origin khớp.
 [CI41384217552](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41384217552)
 completed/SUCCESS đúng implementation SHA: Python3.12 lint/format/planning/focused
 tests và Web smoke/typecheck/lint/build/browser/proxy SUCCESS. Full unit regression
 SKIPPED theo workflow. Checkpoint sau chỉ docs/planning [skip ci]; không gán CI
 implementation cho SHA checkpoint.
-Quyền nghiệm thu DONE thuộc Tech Lead. Không bắt đầu M5.
+M4 hoàn tất trong phạm vi phê duyệt;D03-B10 vẫn BLOCKED với cross-document.
+Phiên nghiệm thu chỉ docs/planning và planning/diff checks;không chạy lại tests,
+benchmark hoặc Gemini/OCR/extraction,không sửa runtime/accepted artifacts/web local.
 
-Next action: Tech Lead independent review M4-05.
+Next action: chờ Tech Lead gửi brief M5-01 — Evidence Plan and Planner Contracts.

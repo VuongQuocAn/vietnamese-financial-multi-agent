@@ -6,7 +6,7 @@ M4-05 — Question Answering Baseline
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -17,6 +17,8 @@ Final real-data evaluation/replay/regressions PASS;
 [CI41384217552](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41384217552)
 completed/SUCCESS đúng implementation SHA,Python3.12 và Web smoke SUCCESS;
 full unit regression SKIPPED theo workflow.
+Tech Lead APPROVED M4-05 ngày02/11/2026 và cho phép đồng bộ DONE,không cần sửa thêm.
+M4 hoàn tất trong phạm vi phê duyệt;D03-B10 vẫn BLOCKED với cross-document.
 
 ## Completed Work
 
@@ -25,12 +27,14 @@ Gateway call với schema/allowlists, CLI và benchmark 36 câu có references �
 
 ## Remaining Work
 
-Tech Lead independent review; không tự DONE/M5.
+M4-05 không còn việc sau nghiệm thu. M5-01 là task tiếp theo;Tech Lead xác nhận sẽ
+gửi brief riêng,giữ TODO,chưa soạn spec hoặc bắt đầu implementation.
 
 ## Modified Files
 
 src/tools, tests/unit/test_financial_qa.py, hai scripts, evaluation question config,
 focused CI list và docs/planning. Giữ web/next-env.d.ts ngoài stage và byte-for-byte.
+Phiên nghiệm thu chỉ sửa docs/planning.
 
 ## Tests
 
@@ -38,11 +42,12 @@ focused CI list và docs/planning. Giữ web/next-env.d.ts ngoài stage và byte
 PASS. Final benchmark36:28 answered đúng/grounded,6 abstained/unsupported,2 clarification;
 intent/tools36/36.18 metrics/29 queries/36 pairs/D-06/D-07 và2.670 hashes giữ nguyên.
 Final outputs riêng artifacts/evidence/M4-05-final; zero Gateway/Gemini/OCR/extraction.
+Phiên nghiệm thu chỉ planning checker và diff check;không chạy lại các tests/evaluation.
 
 ## Blockers
 
 Chưa live Gemini do không có process credentials/live config; financial_fact_verified=False.
-Nguồn vẫn page-level; D03-B10 chặn cross-document. Không bắt đầu M5.
+Nguồn vẫn page-level; D03-B10 chặn cross-document. M5-01 chờ brief riêng của Tech Lead.
 
 ## Git Checkpoint
 
@@ -53,4 +58,4 @@ Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 
 ## Exact Next Action
 
-Tech Lead independent review M4-05.
+Chờ Tech Lead gửi brief M5-01 — Evidence Plan and Planner Contracts.
