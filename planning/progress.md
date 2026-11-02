@@ -51,8 +51,10 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M5-03 **REVIEW**, Owner giao02/11/2026; baseline03b7d23.
 [Spec](tasks/M5/M5-03.md), [report](../docs/m5-03-risk-aware-supervisor.md).
 19 scenarios đạt mong đợi,8 Supervisor+172 bounded tests PASS;3.231 hashes unchanged,
-0 Gemini calls. Bounded M4/M5 regressions exact; chưa commit/CI. Giữ Web local.
-Next action: push implementation main và kiểm CI đúng SHA.
+0 Gemini calls. Bounded M4/M5 regressions exact; implementation1e43c2b đã push main,
+CI41421589655 SUCCESS đúng SHA (Python3.12/Web smoke;full regression SKIPPED).
+Giữ Web local và trạng thái REVIEW; checkpoint sau chỉ docs/planning [skip ci].
+Next action: Tech Lead review M5-03.
 
 Checkpoint trước:
 

@@ -12,9 +12,12 @@ scheduler, risk/stops/budget và full M4 evidence propagation.19/19 scenarios:
 8 Supervisor+172 bounded tests PASS;18metrics/29queries/36pairs/QA36/M5-01 15cases/
 D-06/D-07 exact;3.231 protected hashes unchanged,0 Gateway calls. Completion ở
 `artifacts/evidence/M5-03-complete`, tái dùng19 traces đã thực thi cùng runtime,
-không tính là executions mới. Chưa commit; đang chờ push/CI và Tech Lead review.
+không tính là executions mới. Implementation `1e43c2b0005d85b1905299761dcb462e55e1c692`
+đã push main; [CI41421589655](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41421589655)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI trên cho SHA checkpoint.
 Giữ Web local, D03-B10 và financial_fact_verified=False; không bắt đầu M5-04.
-Next action: push implementation main và kiểm CI đúng SHA.
+Next action: Tech Lead review M5-03.
 
 ## M5-02 — Evidence-Aware Query Planner
 

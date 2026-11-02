@@ -1,8 +1,10 @@
 # M5-03 — Risk-Aware Supervisor
 
 Status: **REVIEW**; baseline main/origin `03b7d23`, Owner giao02/11/2026.
-Implementation chưa commit;19 scenarios và bounded regressions PASS, đang chờ CI
-và Tech Lead review. Không gọi Gemini mới.
+Implementation `1e43c2b0005d85b1905299761dcb462e55e1c692` đã push main;
+[CI41421589655](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41421589655)
+completed/SUCCESS đúng SHA. Python3.12/Web smoke SUCCESS; full regression SKIPPED.
+Chờ Tech Lead review; không gọi Gemini mới, không tự DONE hoặc bắt đầu M5-04.
 
 ## API và lifecycle
 
@@ -205,6 +207,10 @@ Bounded real regression:18calculations (full response + independent arithmetic),
 29queries,36undetermined pairs,D-06/D-07,QA36,M5-01 15cases exact;139text/24tables/
 2.973anchors/18lineages giữ nguyên.3.231 protected hashes unchanged, bao gồm Web local.
 Ruff modified files/planning101/diff PASS; không full regression, OCR/extraction
-hoặc live Gemini. Đang chờ commit/push và CI đúng implementation SHA.
+hoặc live Gemini. CI đúng implementation SHA đã xác minh mọi step cần thiết:
+lint/format/planning/focused tests Python3.12 và Web typecheck/lint/build/browser
+smoke SUCCESS; full unit regression SKIPPED theo workflow. Local Web giữ nguyên.
+Checkpoint tiếp theo chỉ docs/planning [skip ci], không gán CI implementation
+cho SHA của checkpoint tài liệu.
 
-Next action: push implementation main và kiểm CI đúng SHA.
+Next action: Tech Lead review M5-03.
