@@ -22,8 +22,11 @@ sản” chạy Planner → Supervisor → Specialist: scope=None, completed,2 c
 R01/R05/R08 khớp outputs trước sửa, bỏ random IDs/correlation/timing.
 Evidence mới: `artifacts/evidence/M5-05-scope-fix`;10 input/code/Web hashes unchanged.
 Gateway dùng4 saved-response replays; **0 actual Gemini calls,0 OCR**, không fresh
-benchmark hoặc chạy lại live6. Fix chưa commit; CI41466737325 bên dưới thuộc
-implementation gốc, chưa phải CI của fix.
+benchmark hoặc chạy lại live6. Fix `3f7e1ce46a51db0648243d1c8776a661e693133f`
+đã push main, remote khớp; [CI41469949667](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41469949667)
+completed/SUCCESS đúng fix SHA: Python3.12/Web smoke SUCCESS, full regression
+SKIPPED. Checkpoint sau chỉ docs/planning [skip ci], không gán CI fix cho SHA
+checkpoint. CI41466737325 bên dưới thuộc implementation gốc. Status giữ REVIEW.
 
 ## Kiến trúc và audit M5-04
 

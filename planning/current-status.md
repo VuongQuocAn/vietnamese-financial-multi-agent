@@ -8,7 +8,11 @@ P1 scope correction theo Tech Lead: dùng explicit constraints M5-02, không dù
 “riêng” hoặc false scope ambiguity từ M4.43 targeted tests PASS; BBS2025 câu giữ
 riêng evidence tạo2 candidates59,06% với exact lineage; M5-04 real compatibility3/3.
 0 actual Gemini/OCR,4 saved-response replays;10 pinned hashes unchanged.
-Fix chưa commit, chờ push/CI đúng SHA; implementation/CI dưới đây là bản gốc.
+Fix `3f7e1ce46a51db0648243d1c8776a661e693133f` đã push main, remote khớp;
+[CI41469949667](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41469949667)
+completed/SUCCESS đúng fix SHA, Python3.12/Web smoke SUCCESS, full regression
+SKIPPED. Checkpoint sau chỉ docs/planning [skip ci]. Giữ REVIEW chờ Tech Lead review.
+Implementation/CI dưới đây là bản gốc.
 
 Status: **REVIEW**; Owner giao02/11/2026. Baseline main/origin
 `348528fc6e39356b9ac2706307e9ade7db5f12fc` đã xác minh.
