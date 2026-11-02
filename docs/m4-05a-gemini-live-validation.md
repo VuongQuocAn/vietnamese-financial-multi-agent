@@ -142,7 +142,8 @@ nhận ra,nhưng vẫn cần schema/allowlists và backend compatibility/quality
 Provenance thật vẫn page-level/scope có unresolved;`financial_fact_verified=False`.
 D03-B10 vẫn BLOCKED với cross-document. Giữ M4-05 APPROVED/DONE.
 
-Status **REVIEW**;implementation `23faa718d952fc90682973fac485180c37b014d8` đã
+Status **DONE**,Tech Lead APPROVED ngày02/11/2026,không P0/P1 mới cần sửa trong
+phạm vi task;implementation `23faa718d952fc90682973fac485180c37b014d8` đã
 push main. [CI41387830765](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41387830765)
 attempt2 completed/SUCCESS đúng SHA:Python3.12 và Web smoke/typecheck/lint/build/
 browser/proxy SUCCESS;full unit regression SKIPPED theo workflow.
@@ -151,5 +152,9 @@ expected2requests/received1 sau reload. Rerun failed jobs một lần trên cùn
 PASS,không sửa web;dấu hiệu timing của assertion vẫn ghi nhận ngoài scope task.
 Checkpoint sau chỉ docs/planning [skip ci],không gán CI implementation cho SHA
 checkpoint. Giữ M4-05 DONE;không bắt đầu M5-01. Web local giữ byte-for-byte.
+Tech Lead xác nhận QA baseline đã được kiểm chứng cả deterministic (36 câu,
+28answers đúng có nguồn) và Gemini live (hiểu paraphrases,dispatch M4 tools,
+grounded answers). Phiên nghiệm thu chỉ docs/planning và planning/diff checks;
+không gọi Gemini,chạy lại tests/regression hoặc sửa runtime/accepted artifacts.
 
-Next action: Tech Lead independent review M4-05a.
+Next action: chờ Tech Lead gửi brief M5-01.

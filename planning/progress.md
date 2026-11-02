@@ -13,14 +13,14 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M1 | 32 | 32 | 0 | 0 | 0 | 0 | 0 |
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| M4 | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
+| M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 73 | 0 | 0 | 27 | 0 | 1 |
+| TOTAL | 101 | 74 | 0 | 0 | 27 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -37,7 +37,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `document_processing` | Contracts/resolver/loader và M1-03a/b/c/d/e/f DONE; M1-04a/b DONE, 199 reconstructed table crops nghiệm thu engineering; M1-10 checkpoints DONE; M1-11 classifier DONE; M1-11a bounded pilot DONE; M1-11b evidence-aware gate DONE (Tech Lead APPROVED), 319 targeted/regression passed, live 20 requests/19 pages/9 resolved; M1-12 reconstruction DONE (Tech Lead APPROVED), 219 targeted/real 1 resolved/7 unresolved; CI exact 01b235c success 3.11/3.12; M1-12a assisted reconstruction DONE (Tech Lead APPROVED), 261 targeted; same8 2 resolved/6 unresolved, 7 requests |
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
-| `tools` | M4-01–05 DONE; Tech Lead APPROVED M4-05 ngày02/11/2026. M4 hoàn tất trong phạm vi phê duyệt; public natural-language QA baseline,193 targeted PASS;36 real BBS questions,28 answered đúng/grounded,8 safe refusals/clarifications;zero Gateway/live NLP chưa chạy. Chưa financial verification hoặc M5 agents |
+| `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | Chỉ package/docstring; chưa có Planner/Supervisor/Specialists |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
@@ -48,15 +48,18 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M4-05a **REVIEW**;[spec](tasks/M4/M4-05a.md),
+M4-05a **DONE**,Tech Lead APPROVED ngày02/11/2026;không P0/P1 mới trong phạm vi task.
+[Spec](tasks/M4/M4-05a.md),
 [report](../docs/m4-05a-gemini-live-validation.md).30 focused PASS;live4answers đúng/
 grounded+negative đúng sau targeted fix.9API attempts/8recorded success/1unknown;
 known10.798tokens,total9 N/A.Offline36/18metrics/29queries/36pairs/D-06/D-07/2.670
 hashes exact. Implementation `23faa718d952fc90682973fac485180c37b014d8` đã push main;
 CI41387830765 attempt2 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression
 SKIPPED. Attempt1 PDF retry counter fail2/1,rerun một lần PASS,không sửa web.
-Chờ Tech Lead;giữ M4-05 DONE,không bắt đầu M5-01.
-Next action: Tech Lead independent review M4-05a.
+QA baseline nghiệm thu cả deterministic và Gemini live. Phiên này chỉ docs/planning
+và planning/diff checks;không chạy lại Gemini/tests/regression. Giữ M4-05 DONE,
+D03-B10 BLOCKED và web local;M5-01 giữ TODO,chờ brief riêng.
+Next action: chờ Tech Lead gửi brief M5-01.
 
 Checkpoint nghiệm thu trước task bổ sung:
 

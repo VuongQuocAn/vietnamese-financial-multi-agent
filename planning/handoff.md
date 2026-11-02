@@ -6,7 +6,7 @@ M4-05a — Gemini Live Integration & QA Validation
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -17,6 +17,8 @@ Implementation `23faa718d952fc90682973fac485180c37b014d8` đã push main.
 attempt2 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression
 SKIPPED. Attempt1 Web PDF retry counter fail2/1,rerun failed jobs một lần PASS,
 không sửa web. M4-05 giữ APPROVED/DONE;D03-B10 vẫn BLOCKED với cross-document.
+Tech Lead APPROVED M4-05a ngày02/11/2026,cho phép đồng bộ DONE;không P0/P1 mới
+cần sửa trong phạm vi task. QA baseline nghiệm thu cả deterministic và Gemini live.
 
 ## Completed Work
 
@@ -26,12 +28,13 @@ không truyền sẵn target vào context,không thay Gateway/adapter hoặc acc
 
 ## Remaining Work
 
-Tech Lead nghiệm thu;không M5-01.
+Không còn việc M4-05a sau nghiệm thu. M5-01 giữ TODO,chờ brief riêng của Tech Lead.
 
 ## Modified Files
 
 src/api/qa_gateway.py,QA tools,CLI/live runner,hai test files,live question config,
 focused CI list và docs/planning. Giữ web/next-env.d.ts ngoài stage và byte-for-byte.
+Phiên nghiệm thu chỉ sửa docs/planning.
 
 ## Tests
 
@@ -42,6 +45,7 @@ Known tokens10.798,total cả9 N/A.Model provider gemini-3.5-flash-lite,key0 kh�
 Offline regression PASS:36/36disposition,28answered đúng/grounded,18metrics/29queries/
 36pairs/D-06/D-07/2.670hashes exact,replay exact;live2.665hashes unchanged.
 Outputs riêng M4-05a-regression/live/validation;không OCR/extraction.
+Phiên nghiệm thu chỉ planning/diff checks;không gọi Gemini/chạy lại tests/regression.
 
 ## Blockers
 
@@ -58,4 +62,4 @@ Không stage artifacts/dataset/secrets, không branch/PR/worktree/force-push.
 
 ## Exact Next Action
 
-Tech Lead independent review M4-05a.
+Chờ Tech Lead gửi brief M5-01.
