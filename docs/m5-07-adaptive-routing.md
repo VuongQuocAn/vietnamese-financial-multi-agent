@@ -1,6 +1,6 @@
 # M5-07 — Adaptive Routing Rules
 
-Status: REVIEW; chờ exact-SHA CI và Tech Lead nghiệm thu. Baseline main/origin
+Status: REVIEW; CI SUCCESS, chờ Tech Lead nghiệm thu. Baseline main/origin
 `86a8cc5a0c9b76dead6eba9891be54ab79f8ba83`, Owner giao03/11/2026.
 Phạm vi: quyết định routing, chưa thực thi Specialists/M5-08 hoặc verification/M6.
 
@@ -189,5 +189,10 @@ financial evidence, mọi artifacts trước M5-07 và Web local. Final routing 
 chạy lại compatibility đã PASS vì Router/contracts mới không sửa modules cũ.
 Implementation hashes Router/contracts/evaluator/manifest khớp final42 run.
 Không đổi shared financial contracts hoặc formulas; claims chưa verified.
-Implementation SHA/CI sẽ được ghi sau khi xác minh remote.
-Next action: hoàn tất exact-SHA CI để bàn giao Tech Lead REVIEW; không bắt đầu M5-08.
+Implementation `c40947687e1e9e62a21a7179a11ed2ef13447dcc` đã push main,origin/main khớp.
+[CI41556677681](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41556677681)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Metadata jobs/steps tại `artifacts/evidence/M5-07-handoff/ci-exact-sha.json`. Proof local tại
+`artifacts/evidence/M5-07-handoff/implementation-sha.json` xác nhận final routing
+hashes khớp implementation. Checkpoint tiếp theo chỉ docs/planning [skip ci].
+Next action: Tech Lead review M5-07; không tự DONE hoặc bắt đầu M5-08.

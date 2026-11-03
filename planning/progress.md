@@ -50,9 +50,10 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 M5-07 **REVIEW**; [spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
 Router final42/42,zero Gemini/tool;250 bounded+4 final focused PASS,
-9 compatibility assertions exact,4.725hashes unchanged. Implementation chưa commit;
-chờ exact-SHA CI, giữ Web local/D03-B10/claims chưa verified.
-Next action: hoàn tất exact-SHA CI để bàn giao REVIEW.
+9 compatibility assertions exact,4.725hashes unchanged. Implementation c409476
+đã push main;CI41556677681 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,
+full regression SKIPPED. Giữ Web local/D03-B10/claims chưa verified.
+Next action: Tech Lead review M5-07;không tự DONE/M5-08.
 
 Checkpoint trước:
 

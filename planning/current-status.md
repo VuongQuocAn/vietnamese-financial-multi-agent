@@ -10,9 +10,12 @@ Router deterministic/read-only, typed references/trace;không execution/M5-08.
 Final42/42,precision/recall100%,partial9/9,risk20/20,determinism42/42;zero Gemini/tool.
 250 bounded+4 final focused PASS;9 compatibility assertions exact;
 18metrics/29queries/QA36/15contracts/19traces và4.725hashes unchanged.
-Implementation chưa commit;chờ exact-SHA CI và Tech Lead nghiệm thu.
+Implementation `c40947687e1e9e62a21a7179a11ed2ef13447dcc` đã push main,remote khớp;
+[CI41556677681](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41556677681)
+completed/SUCCESS đúng SHA;Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau docs/planning [skip ci];không gán CI cho checkpoint SHA.
 Giữ Web local/D03-B10,claims chưa verified. Initial36/41 reason scoring giữ riêng.
-Next action: hoàn tất exact-SHA CI để bàn giao REVIEW.
+Next action: Tech Lead review M5-07;không tự DONE/M5-08.
 
 ## M5-06 — Cash Flow and Earnings Quality Specialist
 

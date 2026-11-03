@@ -23,7 +23,7 @@ Initial reason-scoring36/41 giữ riêng;expected roles/status không đổi.
 
 ## Remaining Work
 
-Exact-SHA CI và Tech Lead review;không tự DONE/M5-08.
+Tech Lead review;không tự DONE/M5-08.
 
 ## Modified Files
 
@@ -39,14 +39,17 @@ Không full regression/live Gemini/OCR/extraction;claims chưa verified.
 
 ## Blockers
 
-Không blocker implementation;chờ CI và nghiệm thu.
+Không blocker implementation;chờ Tech Lead nghiệm thu.
 D03-B10/snapshot/scope giữ gates;financial_fact_verified=False.
 
 ## Git Checkpoint
 
-Implementation chưa commit;được phép commit/push trực tiếp main theo brief.
+Implementation `c40947687e1e9e62a21a7179a11ed2ef13447dcc` đã push main,remote khớp.
+CI41556677681 completed/SUCCESS đúng SHA;Python3.12/Web smoke SUCCESS,
+full regression SKIPPED. Proof tại artifacts/evidence/M5-07-handoff/ci-exact-sha.json.
+Checkpoint tiếp theo docs/planning [skip ci],không gán CI cho checkpoint SHA.
 Không branch/PR/worktree;giữ Web local.
 
 ## Exact Next Action
 
-Hoàn tất exact-SHA CI để bàn giao Tech Lead REVIEW.
+Tech Lead review M5-07.
