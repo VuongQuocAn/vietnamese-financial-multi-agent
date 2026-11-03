@@ -4,7 +4,8 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-06 — Cash Flow and Earnings Quality Specialist
 
-Status: **REVIEW**; Owner giao03/11/2026, baseline main/origin7364acc đã xác minh.
+Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.
+Owner giao03/11/2026, baseline main/origin7364acc đã xác minh.
 [Spec](tasks/M5/M5-06.md), [report](../docs/m5-06-cash-flow-earnings-quality-specialist.md).
 Reuse common/Gateway; B03 facts/sign và B02 profit nguồn riêng; chưa verification.
 Offline v2 28/28; Gemini initial5/6, targeted2/2,8calls/17.103tokens, không fresh6/6.
@@ -16,7 +17,9 @@ Implementation `b7bd376530e84e93ab04189361ae07672c7c72d2` đã push main;
 completed/SUCCESS đúng SHA: Python3.12/Web smoke SUCCESS, full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
 Giữ Web local/D03-B10, claims chưa verified.
-Next action: Tech Lead review M5-06; không bắt đầu M5-07.
+Phiên nghiệm thu chỉ planning/checker/diff; không gọi thêm Gemini hoặc chạy lại
+tests/benchmark/OCR/extraction, không sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-07.
 
 ## M5-05 — Liquidity and Leverage Specialist
 

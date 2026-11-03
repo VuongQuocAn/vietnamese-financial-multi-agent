@@ -6,7 +6,7 @@ M5-06 — Cash Flow and Earnings Quality Specialist
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
@@ -14,6 +14,7 @@ Baseline main/origin `7364acc2f9c9e6310ac2b4a152d70ddbcc6cc6dc`, Owner giao03/11
 [Spec](tasks/M5/M5-06.md), [report](../docs/m5-06-cash-flow-earnings-quality-specialist.md).
 Offline v2 28/28; Gemini initial5/6 và targeted2/2,8calls/17.103tokens.
 2 supported sign interpretations thật; CFO/PBT2025 nguồn riêng.
+Tech Lead APPROVED — DONE ngày03/11/2026; cho phép đồng bộ planning.
 
 ## Completed Work
 
@@ -24,11 +25,11 @@ Initial failures và summary repair giữ riêng, không gọi là fresh benchma
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu; không tự DONE hoặc bắt đầu M5-07.
+Không còn việc M5-06 sau nghiệm thu; chờ giao nhiệm vụ mới, không tự bắt đầu M5-07.
 
 ## Modified Files
 
-Specialist/common exports, focused tests/CI list, evaluator/manifest, report/planning.
+Phiên nghiệm thu chỉ registry, spec, current-status, progress và handoff.
 Giữ web/next-env.d.ts local ngoài stage; artifacts/dataset/secrets ignored.
 
 ## Tests
@@ -37,6 +38,8 @@ Giữ web/next-env.d.ts local ngoài stage; artifacts/dataset/secrets ignored.
 replays exact.18metrics/29queries/QA36/15contracts/19traces/D-06/D-07 giữ nguyên;
 4.135 protected hashes unchanged. Ruff/planning/diff trước commit.
 Không full regression, Gemini Planner/Specialists cũ hoặc OCR/extraction.
+Phiên nghiệm thu chỉ chạy planning checker/diff check, không chạy lại tests,
+Gemini, benchmark hoặc artifacts.
 
 ## Blockers
 
@@ -54,4 +57,4 @@ artifacts/evidence/M5-06-handoff/ci-exact-sha.json. Checkpoint sau chỉ docs/pl
 
 ## Exact Next Action
 
-Tech Lead review M5-06; không bắt đầu M5-07.
+Chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-07.
