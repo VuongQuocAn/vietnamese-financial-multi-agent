@@ -1,0 +1,284 @@
+[
+  {
+    "id": "C01",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025 là bao nhiêu, nguồn từ đâu?",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow"
+    ],
+    "live": true
+  },
+  {
+    "id": "C02",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2023?",
+    "trace": "S17_cash2023",
+    "year": 2023,
+    "items": [
+      "b03.operating_cash_flow"
+    ]
+  },
+  {
+    "id": "C03",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2021?",
+    "year": 2021,
+    "items": [
+      "b03.operating_cash_flow"
+    ]
+  },
+  {
+    "id": "C04",
+    "question": "Lưu chuyển tiền thuần từ hoạt động đầu tư BBS năm 2023?",
+    "year": 2023,
+    "items": [
+      "b03.investing_cash_flow"
+    ]
+  },
+  {
+    "id": "C05",
+    "question": "Lưu chuyển tiền thuần từ hoạt động tài chính BBS năm 2024 và diễn giải dấu?",
+    "year": 2024,
+    "items": [
+      "b03.financing_cash_flow"
+    ],
+    "interpretation": "b03.financing_cash_flow"
+  },
+  {
+    "id": "C06",
+    "question": "Tiền và tương đương tiền cuối năm BBS năm 2025?",
+    "year": 2025,
+    "items": [
+      "b03.closing_cash"
+    ]
+  },
+  {
+    "id": "C07",
+    "question": "Lưu chuyển tiền thuần trong kỳ BBS năm 2025?",
+    "year": 2025,
+    "items": [],
+    "missing_items": [
+      "b03.net_cash_flow"
+    ],
+    "abstain": true,
+    "note": "Audit: chưa có accepted source-code mapped net_cash_flow trong cả năm năm; kiểm missing thật thay vì giả định có số."
+  },
+  {
+    "id": "C08",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh, lưu chuyển tiền thuần từ hoạt động đầu tư và lưu chuyển tiền thuần từ hoạt động tài chính BBS năm 2025?",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow",
+      "b03.investing_cash_flow",
+      "b03.financing_cash_flow"
+    ],
+    "live": true
+  },
+  {
+    "id": "C09",
+    "question": "Trình bày lưu chuyển tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2025, giữ nguồn riêng cho từng chỉ tiêu.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow",
+      "b02.profit_before_tax"
+    ],
+    "live": true
+  },
+  {
+    "id": "C10",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh và lợi nhuận sau thuế BBS năm 2025?",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow",
+      "b02.profit_after_tax"
+    ]
+  },
+  {
+    "id": "C11",
+    "question": "Giải thích dấu của lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2023.",
+    "trace": "S17_cash2023",
+    "year": 2023,
+    "items": [
+      "b03.operating_cash_flow"
+    ],
+    "interpretation": "b03.operating_cash_flow",
+    "live": true
+  },
+  {
+    "id": "C12",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh và lưu chuyển tiền thuần trong kỳ BBS năm 2025? Nêu rõ chỉ tiêu nào thiếu bằng chứng.",
+    "year": 2025,
+    "items": [],
+    "missing_items": [
+      "b03.net_cash_flow"
+    ],
+    "note": "Thiếu net_cash_flow thật: approved preflight chặn toàn plan trước khi Supervisor lấy CFO. Zero-call control; không bypass policy. Initial expectation partial sai đã lưu riêng.",
+    "abstain": true
+  },
+  {
+    "id": "C13",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2025 khi dòng tiền conflicted?",
+    "base": "C09",
+    "year": 2025,
+    "items": [
+      "b02.profit_before_tax"
+    ],
+    "missing_items": [
+      "b03.operating_cash_flow"
+    ],
+    "injection": "conflict",
+    "partial": true
+  },
+  {
+    "id": "C14",
+    "question": "Tính CFO/Net Income BBS năm 2025.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C15",
+    "question": "So sánh dòng tiền giữa báo cáo BBS năm 2024 và 2025.",
+    "trace": "S10_cross_document",
+    "year": 2025,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C16",
+    "question": "Dòng tiền BBS năm 2022, chưa chọn original hoặc recovery?",
+    "trace": "S09_ambiguity",
+    "year": 2022,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C17",
+    "question": "Theo báo cáo hợp nhất, giữ riêng nguồn bằng chứng dòng tiền và lợi nhuận BBS năm 2025.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C18",
+    "question": "Tiền và tương đương tiền cuối năm BBS năm 2025; có đủ dữ liệu xác nhận cash bridge tiền cuối kỳ bằng tiền đầu kỳ cộng lưu chuyển tiền thuần trong kỳ không?",
+    "base": "C06",
+    "year": 2025,
+    "items": [
+      "b03.closing_cash"
+    ],
+    "partial": true
+  },
+  {
+    "id": "C19",
+    "question": "Dòng tiền và lợi nhuận trước thuế BBS năm 2025 khi kỳ CFO sai?",
+    "base": "C09",
+    "year": 2025,
+    "items": [
+      "b02.profit_before_tax"
+    ],
+    "missing_items": [
+      "b03.operating_cash_flow"
+    ],
+    "injection": "period",
+    "partial": true
+  },
+  {
+    "id": "C20",
+    "question": "Dòng tiền và lợi nhuận trước thuế BBS năm 2025 với đơn vị không tương thích?",
+    "base": "C09",
+    "year": 2025,
+    "items": ["b02.profit_before_tax"],
+    "missing_items": ["b03.operating_cash_flow"],
+    "injection": "unit",
+    "partial": true
+  },
+  {
+    "id": "C21",
+    "question": "Dòng tiền và lợi nhuận trước thuế BBS năm 2025 khi citation CFO sai trang?",
+    "base": "C09",
+    "year": 2025,
+    "items": [
+      "b02.profit_before_tax"
+    ],
+    "missing_items": [
+      "b03.operating_cash_flow"
+    ],
+    "injection": "citation",
+    "partial": true
+  },
+  {
+    "id": "C22",
+    "question": "Trình bày lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025. Dữ liệu này đã đủ để kết luận chất lượng lợi nhuận cao và dòng tiền bền vững, hay xác định nguyên nhân do tồn kho chưa?",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow"
+    ],
+    "partial": true,
+    "live": true
+  },
+  {
+    "id": "C23",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2022 trên snapshot được chỉ định tường minh.",
+    "year": 2022,
+    "snapshot": "original",
+    "items": [],
+    "abstain": true,
+    "note": "Chỉ định exact snapshot original normalized_projection qua PlannerContext; không suy original_extraction origin."
+  },
+  {
+    "id": "C24",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2022 trên snapshot recovery.",
+    "year": 2022,
+    "snapshot": "recovery",
+    "items": [
+      "b03.operating_cash_flow",
+      "b02.profit_before_tax"
+    ]
+  },
+  {
+    "id": "C25",
+    "question": "Giữ riêng bằng chứng dòng tiền và lợi nhuận BBS năm 2025.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow",
+      "b02.profit_before_tax"
+    ]
+  },
+  {
+    "id": "C26",
+    "question": "Theo báo cáo tài chính riêng BBS năm 2025, trình bày dòng tiền.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C27",
+    "question": "Theo báo cáo riêng và báo cáo hợp nhất BBS năm 2025, trình bày dòng tiền.",
+    "trace": "S07_cash_profit2025",
+    "year": 2025,
+    "items": [],
+    "abstain": true
+  },
+  {
+    "id": "C28",
+    "question": "Trình bày lưu chuyển tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2025 khi nhánh lợi nhuận thiếu bằng chứng. Nêu rõ giới hạn.",
+    "base": "C09",
+    "year": 2025,
+    "items": [
+      "b03.operating_cash_flow"
+    ],
+    "missing_items": [
+      "b02.profit_before_tax"
+    ],
+    "injection": "missing_profit",
+    "partial": true,
+    "live": true,
+    "note": "Synthetic injected runtime failure trên bản copy trace thật; thay C12 bị preflight blocked trong live budget."
+  }
+]

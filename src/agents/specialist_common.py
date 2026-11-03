@@ -80,10 +80,14 @@ class SpecialistTrace(FinancialModel):
 
 
 class SpecialistResult(FinancialModel):
-    version: Literal["profitability_specialist_v1", "liquidity_leverage_specialist_v1"] = (
-        "profitability_specialist_v1"
+    version: Literal[
+        "profitability_specialist_v1",
+        "liquidity_leverage_specialist_v1",
+        "cash_flow_earnings_quality_specialist_v1",
+    ] = "profitability_specialist_v1"
+    role: Literal["profitability", "liquidity_and_leverage", "cash_flow_and_earnings_quality"] = (
+        "profitability"
     )
-    role: Literal["profitability", "liquidity_and_leverage"] = "profitability"
     question: str
     upstream_status: Literal["completed", "partial", "blocked", "failed"]
     candidates: list[SpecialistCandidate] = Field(default_factory=list)

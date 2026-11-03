@@ -1,5 +1,9 @@
 """Public M5 planning contracts và bounded evidence execution."""
 
+from .cash_flow_earnings_quality_specialist import (
+    CashFlowEarningsQualityProposal,
+    CashFlowEarningsQualitySpecialist,
+)
 from .contracts import (
     SPECIALIST_BOUNDARIES,
     TOOL_CONTRACTS,
@@ -43,6 +47,8 @@ from .supervisor import (
 )
 
 __all__ = [
+    "CashFlowEarningsQualityProposal",
+    "CashFlowEarningsQualitySpecialist",
     "SPECIALIST_BOUNDARIES",
     "TOOL_CONTRACTS",
     "EvidenceAwareQueryPlanner",

@@ -2,59 +2,53 @@
 
 ## Active Task
 
-M5-03 — Risk-Aware Supervisor
+M5-06 — Cash Flow and Earnings Quality Specialist
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Owner giao02/11/2026; baseline main/origin03b7d23 đúng brief. M5-01/02 DONE.
-[Spec](tasks/M5/M5-03.md), [report](../docs/m5-03-risk-aware-supervisor.md).
-Bounded execution đã chạy Gross Margin2025 và saved Gemini multi-step F01 đúng.
-19/19 scenarios đúng; bounded regression và3.231 hashes unchanged đã kiểm.
-Artifacts completion local `artifacts/evidence/M5-03-complete`, tái dùng traces
-đã chạy cùng Supervisor source hash. Implementation
-`1e43c2b0005d85b1905299761dcb462e55e1c692` đã push main;
-[CI41421589655](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41421589655)
-completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
-Tech Lead APPROVED — DONE ngày02/11/2026, cho phép đồng bộ planning.
+Baseline main/origin `7364acc2f9c9e6310ac2b4a152d70ddbcc6cc6dc`, Owner giao03/11/2026.
+[Spec](tasks/M5/M5-06.md), [report](../docs/m5-06-cash-flow-earnings-quality-specialist.md).
+Offline v2 28/28; Gemini initial5/6 và targeted2/2,8calls/17.103tokens.
+2 supported sign interpretations thật; CFO/PBT2025 nguồn riêng.
 
 ## Completed Work
 
-Supervisor/typed result/bundle, dispatcher4 tools, dependency/evidence scheduler,
-runtime risk/stop/budget handling, focused tests và real evaluator. Không đổi M4.
+Specialist/proposal/public exports; common selection/grounding/Gateway reuse,
+chỉ mở rộng result role/version. Audit BBS2021–2025/original/recovery2022;
+net/opening chưa có canonical facts. Evidence mới ở artifacts/evidence/M5-06*.
+Initial failures và summary repair giữ riêng, không gọi là fresh benchmark.
 
 ## Remaining Work
 
-Không còn việc M5-03 sau nghiệm thu; chờ task mới, không tự bắt đầu M5-04.
+Chờ exact-SHA CI và Tech Lead nghiệm thu; không tự DONE hoặc bắt đầu M5-07.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ planning: registry, spec, current-status, progress và handoff.
+Specialist/common exports, focused tests/CI list, evaluator/manifest, report/planning.
 Giữ web/next-env.d.ts local ngoài stage; artifacts/dataset/secrets ignored.
 
 ## Tests
 
-8 Supervisor PASS;172 bounded contracts/Planner/M4/Gateway PASS. Ruff modified,
-planning101 và diff PASS;19 scenarios và bounded M4/M5 regressions exact,
-3.231 protected hashes unchanged,JSON round-trip PASS.
-Không full regression, Gemini live hoặc OCR/extraction.
-Phiên nghiệm thu chỉ chạy planning checker/diff check; không chạy lại tests,
-Gemini, benchmark hoặc artifacts. Giữ nguyên accepted evidence phía trên.
+245 bounded PASS ở vòng implementation;24 final focused PASS;7 compatibility
+replays exact.18metrics/29queries/QA36/15contracts/19traces/D-06/D-07 giữ nguyên;
+4.135 protected hashes unchanged. Ruff/planning/diff trước commit.
+Không full regression, Gemini Planner/Specialists cũ hoặc OCR/extraction.
 
 ## Blockers
 
-D03-B10 và explicit unresolved scope giữ gate; không blocker implementation mới.
-financial_fact_verified=False; chưa claim verification.
+Không blocker implementation. D03-B10, unknown explicit scope và snapshot ambiguity
+giữ gates; found lookup có row-review unverified giữ caveat.
+financial_fact_verified=False; chưa earnings-quality ratio hoặc M6.
 
 ## Git Checkpoint
 
-main, implementation1e43c2b đã push và CI exact SHA SUCCESS. Checkpoint sau chỉ
-docs/planning [skip ci], không gán CI implementation cho SHA checkpoint;
-không branch/PR/worktree. Protected manifest giữ cả Web local.
+Chưa commit; được phép commit/push trực tiếp main, không branch/PR/worktree.
+Đang push/kiểm CI đúng implementation SHA.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao task mới; không tự bắt đầu M5-04.
+Tech Lead review M5-06; không bắt đầu M5-07.
