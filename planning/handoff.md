@@ -6,13 +6,14 @@ M5-07 — Adaptive Routing Rules
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Baseline main/origin86a8cc5, Owner giao03/11/2026.
 [Spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
 Final42/42 routing,zero Gemini/tool;4.725 protected hashes unchanged.
+Tech Lead APPROVED — DONE ngày03/11/2026; cho phép đồng bộ planning.
 
 ## Completed Work
 
@@ -23,11 +24,11 @@ Initial reason-scoring36/41 giữ riêng;expected roles/status không đổi.
 
 ## Remaining Work
 
-Tech Lead review;không tự DONE/M5-08.
+Không còn việc M5-07 sau nghiệm thu; chờ giao nhiệm vụ mới, không tự bắt đầu M5-08.
 
 ## Modified Files
 
-Router/contracts/exports,tests/evaluator/manifest,CI focused entry,docs/planning.
+Phiên nghiệm thu chỉ registry, spec, current-status, progress và handoff.
 Giữ web/next-env.d.ts local ngoài stage;artifacts/dataset/secrets ignored.
 
 ## Tests
@@ -36,10 +37,11 @@ Giữ web/next-env.d.ts local ngoài stage;artifacts/dataset/secrets ignored.
 18metrics/29queries/QA36/15contracts/19traces giữ nguyên;Ruff417/planning101/diff PASS.
 Final42/42,precision/recall100%,partial9/9,risk20/20,determinism42/42.
 Không full regression/live Gemini/OCR/extraction;claims chưa verified.
+Phiên nghiệm thu chỉ chạy planning checker/diff check; không chạy lại tests/benchmark.
 
 ## Blockers
 
-Không blocker implementation;chờ Tech Lead nghiệm thu.
+Không blocker implementation sau nghiệm thu.
 D03-B10/snapshot/scope giữ gates;financial_fact_verified=False.
 
 ## Git Checkpoint
@@ -52,4 +54,4 @@ Không branch/PR/worktree;giữ Web local.
 
 ## Exact Next Action
 
-Tech Lead review M5-07.
+Chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-08.

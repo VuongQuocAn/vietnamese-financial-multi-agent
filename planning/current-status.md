@@ -4,7 +4,8 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-07 — Adaptive Routing Rules
 
-Status: **REVIEW**, Owner giao03/11/2026; baseline main/origin86a8cc5.
+Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.
+Owner giao03/11/2026; baseline main/origin86a8cc5.
 [Spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
 Router deterministic/read-only, typed references/trace;không execution/M5-08.
 Final42/42,precision/recall100%,partial9/9,risk20/20,determinism42/42;zero Gemini/tool.
@@ -15,7 +16,9 @@ Implementation `c40947687e1e9e62a21a7179a11ed2ef13447dcc` đã push main,remote 
 completed/SUCCESS đúng SHA;Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 Checkpoint sau docs/planning [skip ci];không gán CI cho checkpoint SHA.
 Giữ Web local/D03-B10,claims chưa verified. Initial36/41 reason scoring giữ riêng.
-Next action: Tech Lead review M5-07;không tự DONE/M5-08.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning checker/diff check;
+không gọi Gemini, chạy lại tests/benchmark hoặc sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-08.
 
 ## M5-06 — Cash Flow and Earnings Quality Specialist
 
