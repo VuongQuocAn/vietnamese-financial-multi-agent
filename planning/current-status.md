@@ -2,6 +2,15 @@
 
 Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M6-01 — Candidate Claim Contracts
+
+Status: **IN_PROGRESS**; Owner giao03/11/2026, baseline main/origin8407897 khớp.
+[Spec](tasks/M6/M6-01.md), [report](../docs/m6-01-candidate-claim-contracts.md).
+Typed pending claims và M5→M6 adapter;95 bounded +10 final focused PASS;
+21/21 final saved BBS conversions,26claims/5calculations/1conflict,zero live calls.
+12.635 protected hashes unchanged; implementation chưa commit, CI chưa chạy.
+Next action: hoàn tất validation M6-01 để Tech Lead review.
+
 ## M5-08 — Agent and Tool Orchestration
 
 Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.

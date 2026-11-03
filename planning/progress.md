@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
+| M6 | 6 | 0 | 1 | 0 | 5 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 82 | 0 | 0 | 19 | 0 | 0 |
+| TOTAL | 101 | 82 | 1 | 0 | 18 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -39,7 +39,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
-| `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
+| `verification` | M6-01 IN_PROGRESS: typed pending claims/provenance và deterministic M5→M6 adapter;21/21 saved conversions PASS, chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
@@ -47,6 +47,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M6-01 **IN_PROGRESS**, Owner giao03/11/2026; baseline main/origin8407897.
+[Spec](tasks/M6/M6-01.md), [report](../docs/m6-01-candidate-claim-contracts.md).
+Contracts và adapter giữ pending;95 bounded +10 final focused,21/21 conversions PASS;
+12.635 protected hashes unchanged. Chưa commit; CI chưa chạy.
+Next action: hoàn tất validation M6-01 để Tech Lead review.
+
+Checkpoint trước:
 
 M5-08 **DONE**, Tech Lead APPROVED ngày03/11/2026; cho phép đồng bộ planning; [spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
 Offline36/36 hợp nhất,8/8 post-fix reruns;live initial1/4,targeted partial-live2/2,
