@@ -11,15 +11,27 @@ from .contracts import (
     VerificationFinding,
     VerificationInput,
 )
+from .validation_contracts import (
+    CheckStatus,
+    ClaimValidationResult,
+    ValidationCheck,
+    ValidationResult,
+)
+from .validators import DeterministicFinancialValidator
 
 __all__ = [
     "CandidateClaim",
+    "CheckStatus",
+    "ClaimValidationResult",
     "ClaimProvenance",
     "ConversionIssue",
+    "DeterministicFinancialValidator",
     "FindingKind",
     "VerificationDecision",
     "VerificationEvidence",
     "VerificationFinding",
     "VerificationInput",
+    "ValidationCheck",
+    "ValidationResult",
     "to_verification_input",
 ]

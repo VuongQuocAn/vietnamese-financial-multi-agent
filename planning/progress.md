@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 1 | 0 | 0 | 5 | 0 | 0 |
+| M6 | 6 | 1 | 1 | 0 | 4 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 83 | 0 | 0 | 18 | 0 | 0 |
+| TOTAL | 101 | 83 | 1 | 0 | 17 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,12 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M6-02 **IN_PROGRESS**, Owner giao03/11/2026; baseline51292cf, M6-01 DONE.
+[Spec](tasks/M6/M6-02.md); independent canonical/M4 validators, không LLM.
+Next action: hoàn tất implementation và bounded validation M6-02.
+
+Checkpoint trước:
 
 M6-01 **DONE**, Tech Lead APPROVED ngày03/11/2026 sau review trực tiếp
 contracts/adapter/focused tests, không P0/P1; baseline main/origin8407897.
