@@ -4,12 +4,17 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-01 — Candidate Claim Contracts
 
-Status: **IN_PROGRESS**; Owner giao03/11/2026, baseline main/origin8407897 khớp.
+Status: **REVIEW**; Owner giao03/11/2026, baseline main/origin8407897 khớp.
 [Spec](tasks/M6/M6-01.md), [report](../docs/m6-01-candidate-claim-contracts.md).
 Typed pending claims và M5→M6 adapter;95 bounded +10 final focused PASS;
 21/21 final saved BBS conversions,26claims/5calculations/1conflict,zero live calls.
-12.635 protected hashes unchanged; implementation chưa commit, CI chưa chạy.
-Next action: hoàn tất validation M6-01 để Tech Lead review.
+12.635 protected hashes unchanged, gồm Web local và accepted artifacts.
+Implementation `f803ebfc8ca8f7c41ee83e09808da453299e53c5` đã push main;
+[CI41636974349](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41636974349)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
+Giữ D03-B10/scope/source quality/page-level caveats; claims vẫn pending/null decision.
+Next action: Tech Lead review M6-01.
 
 ## M5-08 — Agent and Tool Orchestration
 

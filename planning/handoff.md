@@ -6,7 +6,7 @@ M6-01 — Candidate Claim Contracts
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -21,7 +21,7 @@ public exports; focused tests/evaluator, CI entry. Giữ M5 API và accepted dat
 
 ## Remaining Work
 
-Commit/push main và xác minh exact-SHA CI trước REVIEW.
+Chờ Tech Lead nghiệm thu M6-01; không triển khai M6-02.
 
 ## Modified Files
 
@@ -41,8 +41,11 @@ còn nguyên. Chưa có verification engine và chưa financial verification acc
 
 ## Git Checkpoint
 
-Chưa commit implementation; main baseline8407897.
+Implementation `f803ebfc8ca8f7c41ee83e09808da453299e53c5` đã push main;
+[CI41636974349](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41636974349)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Exact Next Action
 
-Hoàn tất validation M6-01 và bàn giao Tech Lead review.
+Tech Lead review M6-01.

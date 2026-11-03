@@ -1,8 +1,12 @@
 # M6-01 — Candidate Claim Contracts
 
-Owner giao03/11/2026; baseline main/origin
+Status: **REVIEW**, chờ Tech Lead nghiệm thu. Owner giao03/11/2026; baseline main/origin
 `8407897f7dff75fa4614b508f7a035a872666138`.
-Implementation SHA: chưa commit. CI: chưa chạy.
+Implementation `f803ebfc8ca8f7c41ee83e09808da453299e53c5` đã push trực tiếp main;
+remote khớp SHA. [CI41636974349](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41636974349)
+completed/SUCCESS đúng implementation SHA; Python3.12/Web smoke SUCCESS,
+full regression SKIPPED. Checkpoint tiếp theo chỉ docs/planning [skip ci],
+không gán CI implementation cho SHA checkpoint.
 
 ## API và mapping
 
@@ -66,7 +70,7 @@ revenue_yoy giữ nguyên; adapter không bypass hoặc chạy lại gates.
 ## Validation
 
 95 bounded tests PASS (candidate contracts + Orchestrator/Router/ba Specialists);
-sau bổ sung diagnostics metadata/trace, 10 final focused tests PASS. CI sẽ kiểm tra
+sau bổ sung diagnostics metadata/trace, 10 final focused tests PASS. CI đã kiểm tra
 final implementation SHA riêng. Ruff lint/format file đã sửa, planning101/diff PASS.
 12.635 protected file hashes (raw/processed/accepted evidence và local Web) unchanged;
 không stage artifacts/dataset/secrets. Không thay runtime M5, accepted outputs hoặc UI.
@@ -105,4 +109,4 @@ Phân biệt persisted BBS + mock generation, synthetic controls trên persisted
 saved Gemini-response replay và replay có synthetic control. Đây là kiểm tra
 conversion/provenance integrity, chưa phải verification accuracy hay benchmark mới.
 
-Next action: xác minh CI đúng implementation SHA và bàn giao Tech Lead review M6-01.
+Next action: Tech Lead review M6-01.
