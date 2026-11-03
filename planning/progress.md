@@ -52,7 +52,9 @@ M5-06 **REVIEW**, [spec](tasks/M5/M5-06.md),
 [report](../docs/m5-06-cash-flow-earnings-quality-specialist.md).
 Offline28/28, Gemini initial5/6 và targeted2/2,8calls/17.103tokens;
 245 bounded +24 final focused PASS,7 compatibility replays exact,4.135hashes unchanged.
-Chưa commit; chờ push/CI đúng implementation SHA. Giữ Web local,claims chưa verified.
+Implementation b7bd376 đã push main, CI41552323768 SUCCESS đúng SHA,
+Python3.12/Web smoke SUCCESS, full regression SKIPPED. Checkpoint sau docs/planning.
+Giữ Web local,claims chưa verified.
 Next action: Tech Lead review M5-06; không bắt đầu M5-07.
 
 Checkpoint trước:

@@ -24,7 +24,7 @@ Initial failures và summary repair giữ riêng, không gọi là fresh benchma
 
 ## Remaining Work
 
-Chờ exact-SHA CI và Tech Lead nghiệm thu; không tự DONE hoặc bắt đầu M5-07.
+Chờ Tech Lead nghiệm thu; không tự DONE hoặc bắt đầu M5-07.
 
 ## Modified Files
 
@@ -46,8 +46,11 @@ financial_fact_verified=False; chưa earnings-quality ratio hoặc M6.
 
 ## Git Checkpoint
 
-Chưa commit; được phép commit/push trực tiếp main, không branch/PR/worktree.
-Đang push/kiểm CI đúng implementation SHA.
+Implementation `b7bd376530e84e93ab04189361ae07672c7c72d2` đã push trực tiếp main,
+origin/main khớp sau push. CI41552323768 completed/SUCCESS đúng SHA,
+Python3.12/Web smoke SUCCESS, full regression SKIPPED. Metadata jobs/steps lưu ở
+artifacts/evidence/M5-06-handoff/ci-exact-sha.json. Checkpoint sau chỉ docs/planning
+[skip ci], không gán CI implementation cho SHA checkpoint. Không branch/PR/worktree.
 
 ## Exact Next Action
 

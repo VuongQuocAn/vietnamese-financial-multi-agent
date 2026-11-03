@@ -2,7 +2,11 @@
 
 Ngày 03/11/2026 (Asia/Bangkok). Baseline main/origin
 `7364acc2f9c9e6310ac2b4a152d70ddbcc6cc6dc`. Trạng thái REVIEW;
-implementation chưa commit, chờ push/CI đúng SHA. Chỉ Tech Lead nghiệm thu DONE.
+implementation `b7bd376530e84e93ab04189361ae07672c7c72d2` đã push main.
+[CI41552323768](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41552323768)
+completed/SUCCESS đúng SHA: Python3.12 và Web smoke SUCCESS; full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI implementation cho SHA đó.
+Chỉ Tech Lead nghiệm thu DONE.
 
 ## Kiến trúc và public API
 
@@ -193,7 +197,8 @@ Bounded real checks: 18 accepted calculations exact/independent arithmetic,
 M5-01 15 contract cases, M5-03 19 preserved traces, D-06/D-07 giữ nguyên.
 M5-02 offline18/fresh4/6/raw5/6/replay6/6 và M5-04/M5-05 live histories được bảo toàn,
 không gọi lại thành fresh evaluation. Không full regression hoặc OCR/extraction.
-CI đúng implementation SHA đang chờ sau commit/push.
+CI41552323768 completed/SUCCESS đúng implementation SHA; metadata jobs/steps ở
+`M5-06-handoff/ci-exact-sha.json`. Không gán CI này cho documentation checkpoint.
 
 ## Reproduce trong môi trường có persisted BBS
 

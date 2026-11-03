@@ -11,7 +11,11 @@ Offline v2 28/28; Gemini initial5/6, targeted2/2,8calls/17.103tokens, không fre
 245 bounded PASS ở vòng implementation,24 final focused PASS;7 compatibility
 replays exact;18metrics/29queries/QA36/15contracts/19traces và4.135hashes giữ nguyên.
 Initial failures/summary repair giữ riêng; source-review unverified giữ caveat.
-Chưa commit; đang push/kiểm CI đúng implementation SHA. Giữ Web local/D03-B10.
+Implementation `b7bd376530e84e93ab04189361ae07672c7c72d2` đã push main;
+[CI41552323768](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41552323768)
+completed/SUCCESS đúng SHA: Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
+Giữ Web local/D03-B10, claims chưa verified.
 Next action: Tech Lead review M5-06; không bắt đầu M5-07.
 
 ## M5-05 — Liquidity and Leverage Specialist
