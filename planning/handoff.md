@@ -6,7 +6,7 @@ M6-02 — Deterministic Financial Validators
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -20,7 +20,7 @@ replay, focused tests/evaluation script. Không decision/ledger/LLM hoặc sửa
 
 ## Remaining Work
 
-Commit/push implementation theo brief, xác minh exact-SHA CI và bàn giao REVIEW.
+Chờ Tech Lead nghiệm thu phạm vi/finding policies M6-02; không tự DONE.
 
 ## Modified Files
 
@@ -40,8 +40,12 @@ semantic support/reasoning thuộc Critics sau. Không bắt đầu M6-03.
 
 ## Git Checkpoint
 
-Implementation chưa commit; local main trên51292cf. CI chưa chạy.
+Implementation `58980d1abde246bfd6a8ec97a6fe34bd84919497` đã push main;
+[CI41641546537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41641546537)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
+Web local ngoài commit.
 
 ## Exact Next Action
 
-Xác minh exact-SHA CI để bàn giao REVIEW.
+Tech Lead review M6-02.

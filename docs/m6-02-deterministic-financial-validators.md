@@ -1,8 +1,12 @@
 # M6-02 — Deterministic Financial Validators
 
-Status: **IN_PROGRESS**; Owner giao03/11/2026, baseline main/origin
+Status: **REVIEW**; chờ Tech Lead nghiệm thu. Owner giao03/11/2026, baseline main/origin
 `51292cf0317b8019bdeb6cb7610d5e33818a5d2d`. M6-01 đã DONE.
-Implementation chưa commit; CI exact-SHA chưa chạy. Không gọi Gemini/OCR.
+Implementation `58980d1abde246bfd6a8ec97a6fe34bd84919497` đã push main;
+[CI41641546537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41641546537)
+completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint tiếp theo chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
+Không gọi Gemini/OCR.
 
 ## API và ranh giới
 
@@ -122,7 +126,8 @@ Local:30 validator/numeric/context/conflict tests PASS;78 compatibility tests
 (M4 calculator, M6-01 contracts/serialization, M5 orchestrator) PASS; một warning
 có sẵn từ M4 test cố tình đưa invalid Decimal. Không chạy full M1–M5 benchmark.
 Initial12.683 và final12.753 protected hashes unchanged. Ruff file đã sửa,
-planning checker101tasks và git diff --check PASS. CI exact-SHA sẽ cập nhật sau
-commit/push được giao; không gán local results thành CI.
+planning checker101tasks và git diff --check PASS. Exact-SHA CI đã xác minh bằng
+run metadata và từng job/step: Python3.12 và Web smoke SUCCESS; full regression
+SKIPPED đúng workflow hiện hành. Không gán local evaluation thành CI benchmark.
 
-Next action: xác minh exact-SHA CI để bàn giao REVIEW.
+Next action: Tech Lead review M6-02.
