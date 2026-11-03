@@ -1,5 +1,6 @@
 """Public M5 planning contracts và bounded evidence execution."""
 
+from .adaptive_router import AdaptiveSpecialistRouter
 from .cash_flow_earnings_quality_specialist import (
     CashFlowEarningsQualityProposal,
     CashFlowEarningsQualitySpecialist,
@@ -38,6 +39,12 @@ from .profitability_specialist import (
     SpecialistResult,
 )
 from .query_planner import EvidenceAwareQueryPlanner
+from .routing_contracts import (
+    RoutingDecision,
+    RoutingRequirement,
+    RoutingTrace,
+    SpecialistRoute,
+)
 from .specialist_common import SpecialistCandidate, SpecialistEvidence, SpecialistTrace
 from .supervisor import (
     ExecutionEvidenceBundle,
@@ -47,6 +54,11 @@ from .supervisor import (
 )
 
 __all__ = [
+    "AdaptiveSpecialistRouter",
+    "RoutingDecision",
+    "RoutingRequirement",
+    "RoutingTrace",
+    "SpecialistRoute",
     "CashFlowEarningsQualityProposal",
     "CashFlowEarningsQualitySpecialist",
     "SPECIALIST_BOUNDARIES",

@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-07 — Adaptive Routing Rules
+
+Status: **REVIEW**, Owner giao03/11/2026; baseline main/origin86a8cc5.
+[Spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
+Router deterministic/read-only, typed references/trace;không execution/M5-08.
+Final42/42,precision/recall100%,partial9/9,risk20/20,determinism42/42;zero Gemini/tool.
+250 bounded+4 final focused PASS;9 compatibility assertions exact;
+18metrics/29queries/QA36/15contracts/19traces và4.725hashes unchanged.
+Implementation chưa commit;chờ exact-SHA CI và Tech Lead nghiệm thu.
+Giữ Web local/D03-B10,claims chưa verified. Initial36/41 reason scoring giữ riêng.
+Next action: hoàn tất exact-SHA CI để bàn giao REVIEW.
+
 ## M5-06 — Cash Flow and Earnings Quality Specialist
 
 Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.

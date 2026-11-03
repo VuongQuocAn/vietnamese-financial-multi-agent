@@ -1,0 +1,551 @@
+[
+  {
+    "id": "A01",
+    "group": "profitability",
+    "saved_planner": "M5-02-offline-final/response-P05.json",
+    "trace": "S03_gross_margin2025",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "A02",
+    "group": "profitability",
+    "saved_planner": "M5-02-offline-final/response-P02.json",
+    "trace": "S02_revenue2024",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "A03",
+    "group": "profitability",
+    "question": "Lợi nhuận trước thuế BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "A04",
+    "group": "profitability",
+    "question": "Lợi nhuận sau thuế BBS năm 2021?",
+    "year": 2021,
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "A05",
+    "group": "profitability",
+    "question": "Tăng trưởng doanh thu BBS năm 2022 snapshot recovery?",
+    "year": 2022,
+    "snapshot": "recovery",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "B01",
+    "group": "liquidity",
+    "saved_planner": "M5-02-offline-final/response-P01.json",
+    "trace": "S01_assets2025",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "B02",
+    "group": "liquidity",
+    "question": "Tỷ lệ nợ trên tổng tài sản BBS năm 2023?",
+    "year": 2023,
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "B03",
+    "group": "liquidity",
+    "question": "Vốn chủ sở hữu BBS năm 2024?",
+    "year": 2024,
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "B04",
+    "group": "liquidity",
+    "question": "Các khoản phải thu ngắn hạn BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "B05",
+    "group": "liquidity",
+    "question": "Tỷ lệ nợ trên tổng tài sản BBS năm 2022 snapshot recovery?",
+    "year": 2022,
+    "snapshot": "recovery",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "C01",
+    "group": "cash_flow",
+    "saved_planner": "M5-02-offline-final/response-P03.json",
+    "trace": "S17_cash2023",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "C02",
+    "group": "cash_flow",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2021?",
+    "year": 2021,
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "C03",
+    "group": "cash_flow",
+    "question": "Lưu chuyển tiền thuần từ hoạt động đầu tư BBS năm 2023?",
+    "year": 2023,
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "C04",
+    "group": "cash_flow",
+    "question": "Lưu chuyển tiền thuần từ hoạt động tài chính BBS năm 2024 và diễn giải dấu?",
+    "year": 2024,
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "C05",
+    "group": "cash_flow",
+    "question": "Tiền và tương đương tiền cuối năm BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "M01",
+    "group": "multi",
+    "question": "Phân tích doanh thu thuần và tổng nợ phải trả BBS năm 2025.",
+    "year": 2025,
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "M02",
+    "group": "multi",
+    "question": "Phân tích doanh thu thuần và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "year": 2025,
+    "expected_roles": [
+      "profitability",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "M03",
+    "group": "multi",
+    "question": "Tỷ lệ nợ trên tổng tài sản và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025?",
+    "year": 2025,
+    "reference_items": [
+      "b03.operating_cash_flow"
+    ],
+    "reference_formulas": [
+      "debt_to_assets"
+    ],
+    "expected_roles": [
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "M04",
+    "group": "multi",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "year": 2025,
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "M05",
+    "group": "overlap",
+    "saved_planner": "M5-02-offline-final/response-P11.json",
+    "trace": "S07_cash_profit2025",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "minimum_specialist_cover_cash_profit_priority"
+    ]
+  },
+  {
+    "id": "M06",
+    "group": "overlap",
+    "question": "Phân tích khả năng sinh lời qua lợi nhuận sau thuế riêng, đồng thời trình bày lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "year": 2025,
+    "expected_roles": [
+      "profitability",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "N01",
+    "group": "negative",
+    "base": "M04",
+    "injection": "missing_cash",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "missing_evidence"
+    ]
+  },
+  {
+    "id": "N02",
+    "group": "negative",
+    "base": "M04",
+    "injection": "conflict_cash",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "conflicting_fact_variants"
+    ]
+  },
+  {
+    "id": "N03",
+    "group": "negative",
+    "base": "M03",
+    "injection": "formula_risk",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "formula_not_approved"
+    ]
+  },
+  {
+    "id": "N04",
+    "group": "negative",
+    "base": "M03",
+    "injection": "missing_lineage",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "metric_trace_or_lineage_incomplete"
+    ]
+  },
+  {
+    "id": "N05",
+    "group": "negative",
+    "question": "Tính Current Ratio và CFO/Net Income BBS năm 2025.",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "unsupported",
+    "expected_reasons": [
+      "unsupported_analysis_capability"
+    ]
+  },
+  {
+    "id": "N06",
+    "group": "negative",
+    "question": "So sánh tổng tài sản BBS giữa báo cáo năm 2024 và 2025.",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "D03-B10:cross_document_execution_not_approved"
+    ]
+  },
+  {
+    "id": "N07",
+    "group": "negative",
+    "question": "Tổng tài sản BBS năm 2022?",
+    "year": 2022,
+    "unbound_snapshot": true,
+    "expected_roles": [],
+    "expected_status": "clarification_required",
+    "expected_reasons": [
+      "snapshot_selection_required"
+    ]
+  },
+  {
+    "id": "N08",
+    "group": "negative",
+    "question": "Tổng tài sản trên báo cáo hợp nhất BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "required_scope_unresolved_or_mismatched"
+    ]
+  },
+  {
+    "id": "N09",
+    "group": "negative",
+    "base": "M04",
+    "injection": "partial_supervisor",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "evidence_eligible"
+    ]
+  },
+  {
+    "id": "N10",
+    "group": "negative",
+    "base": "M04",
+    "injection": "blocked_supervisor",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "supervisor_blocked"
+    ]
+  },
+  {
+    "id": "N11",
+    "group": "negative",
+    "question": "Tổng tài sản năm 2025?",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "clarification_required",
+    "expected_reasons": [
+      "company_required"
+    ]
+  },
+  {
+    "id": "N12",
+    "group": "caveat",
+    "base": "C02",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "evidence_eligible"
+    ],
+    "expect_caveats": true
+  },
+  {
+    "id": "N13",
+    "group": "negative",
+    "base": "M04",
+    "injection": "citation_cash",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "fact_citations_missing_or_mismatched"
+    ]
+  },
+  {
+    "id": "N14",
+    "group": "negative",
+    "base": "M04",
+    "injection": "period_cash",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "requirement_context_mismatch"
+    ]
+  },
+  {
+    "id": "N15",
+    "group": "negative",
+    "base": "M04",
+    "injection": "global_compatibility",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "global_risk_blocker"
+    ]
+  },
+  {
+    "id": "N16",
+    "group": "negative",
+    "base": "M04",
+    "injection": "branch_scope",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "reporting_scope_unresolved"
+    ]
+  },
+  {
+    "id": "N17",
+    "group": "negative",
+    "question": "Lưu chuyển tiền thuần trong kỳ BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "missing_evidence"
+    ]
+  },
+  {
+    "id": "N18",
+    "group": "negative",
+    "question": "Tiền và tương đương tiền đầu kỳ BBS năm 2025?",
+    "year": 2025,
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "missing_evidence"
+    ]
+  },
+  {
+    "id": "N19",
+    "group": "negative",
+    "base": "A03",
+    "injection": "unsupported_with_fact",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "partial",
+    "expected_reasons": [
+      "unsupported_capability"
+    ]
+  },
+  {
+    "id": "N20",
+    "group": "negative",
+    "base": "M04",
+    "injection": "optional_cash",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "routed",
+    "expected_reasons": [
+      "eligible_evidence_missing"
+    ]
+  },
+  {
+    "id": "N21",
+    "group": "negative",
+    "base": "A01",
+    "injection": "approval_payload",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_reasons": [
+      "metric_formula_not_approved"
+    ]
+  }
+]

@@ -14,13 +14,13 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M5 | 8 | 6 | 0 | 0 | 2 | 0 | 0 |
+| M5 | 8 | 6 | 0 | 0 | 1 | 0 | 1 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 80 | 0 | 0 | 21 | 0 | 0 |
+| TOTAL | 101 | 80 | 0 | 0 | 20 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M5-07 **REVIEW**; [spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
+Router final42/42,zero Gemini/tool;250 bounded+4 final focused PASS,
+9 compatibility assertions exact,4.725hashes unchanged. Implementation chưa commit;
+chờ exact-SHA CI, giữ Web local/D03-B10/claims chưa verified.
+Next action: hoàn tất exact-SHA CI để bàn giao REVIEW.
+
+Checkpoint trước:
 
 M5-06 **DONE**, Tech Lead APPROVED ngày03/11/2026; [spec](tasks/M5/M5-06.md),
 [report](../docs/m5-06-cash-flow-earnings-quality-specialist.md).
