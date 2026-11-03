@@ -14,13 +14,13 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M2 | 11 | 11 | 0 | 0 | 0 | 0 | 0 |
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M5 | 8 | 7 | 0 | 0 | 0 | 0 | 1 |
+| M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
 | M6 | 6 | 0 | 0 | 0 | 6 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 81 | 0 | 0 | 19 | 0 | 1 |
+| TOTAL | 101 | 82 | 0 | 0 | 19 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -38,7 +38,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `accounting` | M2-01 DONE, Tech Lead APPROVED: Financial Normalization v1, Decimal/context/provenance, schema và quality signals; 8 focused PASS; M2-02 resolver context DONE, Tech Lead APPROVED 2026-10-28, 10 focused mới PASS, chưa mapping ô/chỉ tiêu; M2-03 DONE, Tech Lead APPROVED Research MVP 2026-10-28, 11 focused mới PASS và pilot8 đủ bốn loại; chưa chứng minh accuracy toàn dataset; M2-04 DONE, Tech Lead APPROVED Research MVP Lean v3:14 internal IDs,41 targeted PASS trước nghiệm thu,pilot20/14 mapped,0 real numeric links accepted tại checkpoint M2-04; M2-04a DONE: pilot40 slots 6 đúng,0 sai,12 rejected,22 unresolved; 6 links B02 trang7 manual image review, chưa xác minh B01/B03, chưa automatic glyph verification hoặc verified facts |
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
-| `agents` | M5-01–M5-07 DONE,Tech Lead APPROVED;Router deterministic/read-only và M5-08 REVIEW orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
+| `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
 | `verification` | Chỉ package/docstring; chưa có critics/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
@@ -48,7 +48,7 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M5-08 **REVIEW**; [spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
+M5-08 **DONE**, Tech Lead APPROVED ngày03/11/2026; cho phép đồng bộ planning; [spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
 Offline36/36 hợp nhất,8/8 post-fix reruns;live initial1/4,targeted partial-live2/2,
 saved replay2/2;15 actual calls/35.883tokens.339 bounded+85 final focused PASS;
 9 Specialist/42 Router replays exact,5.030hashes unchanged. Implementation1868928
@@ -56,7 +56,9 @@ saved replay2/2;15 actual calls/35.883tokens.339 bounded+85 final focused PASS;
 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 Checkpoint sau docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Giữ Web local/D03-B10/claims chưa verified.
-Next action: Tech Lead review M5-08; không bắt đầu M6.
+Phiên nghiệm thu chỉ planning/checker/diff; không chạy lại Gemini/OCR/tests/benchmark.
+Giữ nguyên các limitations đã báo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6.
 
 Checkpoint trước:
 

@@ -4,7 +4,8 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M5-08 — Agent and Tool Orchestration
 
-Status: **REVIEW**; Owner giao03/11/2026; baseline main/origin `745cf46`.
+Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.
+Owner giao03/11/2026; baseline main/origin `745cf46`.
 [Spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
 Typed sequential pipeline, role projections/metric closure, deterministic aggregation;
 Router metric-only operands và scoped prompts/coverage fixes từ actual live.
@@ -17,7 +18,10 @@ và5.030protected hashes giữ nguyên. Implementation `18689287aaecc1257762564a
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci]; không gán CI cho SHA checkpoint.
 Giữ Web local/D03-B10/claims chưa verified; không OCR/extraction/benchmark cũ.
-Next action: Tech Lead review M5-08; không bắt đầu M6.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning checker/diff check;
+không chạy lại Gemini/OCR/tests/benchmark hoặc sửa runtime/accepted artifacts.
+Giữ nguyên các limitations đã báo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6.
 
 ## M5-07 — Adaptive Routing Rules
 

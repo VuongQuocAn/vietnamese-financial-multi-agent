@@ -6,10 +6,11 @@ M5-08 — Agent and Tool Orchestration
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
+Tech Lead APPROVED — DONE ngày03/11/2026; cho phép đồng bộ planning.
 Baseline main/origin745cf46; Owner giao03/11/2026.
 [Spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
 36/36 offline evidence hợp nhất,8/8 post-fix representative reruns;15 actual Gemini
@@ -26,19 +27,19 @@ Evaluator/manifest37 entries (36offline+1live-only), report và private evidence
 
 ## Remaining Work
 
-Tech Lead review và nghiệm thu M5-08. Không bắt đầu M6.
+Không còn việc M5-08 sau nghiệm thu; chờ nhiệm vụ mới, không bắt đầu M6.
 
 ## Modified Files
 
-Task modules/exports/shared selector và Router fixes, focused tests/CI entry,
-evaluator/manifest/docs/planning. Giữ web/next-env.d.ts local ngoài stage;
-artifacts/dataset/secrets ignored,5.030protected hashes unchanged.
+Phiên nghiệm thu chỉ registry, spec, current-status, progress và handoff.
+Giữ web/next-env.d.ts local ngoài stage; không sửa runtime/accepted artifacts.
 
 ## Tests
 
 339 bounded PASS trước fixes;85 final focused PASS sau fixes.9 accepted Specialist
 outputs/42 accepted Router decisions exact.18metrics/29queries/QA36/15contracts/
-19traces giữ nguyên. Ruff/planning/diff local kiểm trước commit; không OCR/extraction.
+19traces giữ nguyên. Đây là bằng chứng implementation đã có; phiên nghiệm thu chỉ
+chạy planning checker/diff check, không chạy lại Gemini/OCR/tests/benchmark.
 
 ## Blockers
 
@@ -54,4 +55,4 @@ Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Exact Next Action
 
-Tech Lead review M5-08; không bắt đầu M6.
+Chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6.
