@@ -21,6 +21,7 @@ from .specialist_common import (
     _number,
     generate_candidates,
     select_evidence,
+    with_assignment,
 )
 
 # Legacy public names remain available after moving wire contracts to common.
@@ -247,7 +248,7 @@ class ProfitabilitySpecialist:
                 gateway=self._gateway,
                 model=self._model,
                 result=result,
-                prompt=self._prompt(result),
+                prompt=with_assignment(self._prompt(result), upstream),
                 proposal_type=ProfitabilityProposal,
                 render=_render,
                 prefix="profitability",

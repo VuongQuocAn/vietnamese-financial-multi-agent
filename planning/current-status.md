@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-08 — Agent and Tool Orchestration
+
+Status: **REVIEW**; Owner giao03/11/2026; baseline main/origin `745cf46`.
+[Spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
+Typed sequential pipeline, role projections/metric closure, deterministic aggregation;
+Router metric-only operands và scoped prompts/coverage fixes từ actual live.
+Offline36/36 hợp nhất (không fresh full rerun),8/8 post-fix representative;
+live initial1/4 (11calls),targeted partial-live2/2 (4calls),saved replay2/2;
+tổng15 actual calls/35.883tokens,không fresh4/4.339 bounded+85 final focused PASS;
+9 Specialist/42 Router replays exact;18metrics/29queries/QA36/15contracts/19traces
+và5.030protected hashes giữ nguyên. Chưa commit; CI pending.
+Giữ Web local/D03-B10/claims chưa verified; không OCR/extraction/benchmark cũ.
+Next action: Tech Lead review M5-08 sau exact-SHA CI; không bắt đầu M6.
+
 ## M5-07 — Adaptive Routing Rules
 
 Status: **DONE**; Tech Lead APPROVED ngày03/11/2026, cho phép đồng bộ planning.

@@ -147,3 +147,24 @@ def test_missing_metric_lineage_does_not_block_independently_requested_operand(m
     assert d.routes[0].assigned_items == ["b02.gross_profit"]
     assert d.routes[0].assigned_formulas == []
     assert next(r for r in d.requirements if r.kind == "fact").status == "covered"
+
+
+def test_explicit_operand_operations_do_not_create_workloads_for_metric_only_intent():
+    p, s = inputs()
+    # Gemini may propose explicit operand/source operations before calculation.
+    # Typed metric-only intent still has one independently requested target.
+    for index, item in enumerate(("b02.gross_profit", "b02.net_revenue")):
+        p.proposal.operations.insert(
+            index,
+            PlannerOperation(
+                operation_id=f"explicit_operand_{index}",
+                operation="find_financial_facts",
+                canonical_item_id=item,
+            ),
+        )
+    decision = AdaptiveSpecialistRouter().route(
+        question=p.question, planner_result=p, supervisor_result=s
+    )
+    assert decision.status == "routed"
+    assert [(r.kind, r.target_id) for r in decision.requirements] == [("metric", "gross_margin")]
+    assert decision.routes[0].assigned_items == []

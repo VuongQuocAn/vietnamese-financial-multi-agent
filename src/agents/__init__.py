@@ -24,6 +24,19 @@ from .contracts import (
     validate_plan,
 )
 from .liquidity_leverage_specialist import LiquidityLeverageSpecialist
+from .orchestration_contracts import (
+    AggregatedCandidate,
+    CandidateConflict,
+    CandidateOrigin,
+    EvidenceProjection,
+    GeminiUsageSummary,
+    OrchestrationError,
+    OrchestrationResult,
+    SpecialistExecution,
+    StageExecution,
+)
+from .orchestration_projection import build_specialist_context
+from .orchestrator import FinancialMultiAgentOrchestrator, aggregate_candidates
 from .planner_contracts import (
     PlannerContext,
     PlannerLLMMetadata,
@@ -54,6 +67,18 @@ from .supervisor import (
 )
 
 __all__ = [
+    "AggregatedCandidate",
+    "CandidateConflict",
+    "CandidateOrigin",
+    "EvidenceProjection",
+    "FinancialMultiAgentOrchestrator",
+    "GeminiUsageSummary",
+    "OrchestrationError",
+    "OrchestrationResult",
+    "SpecialistExecution",
+    "StageExecution",
+    "aggregate_candidates",
+    "build_specialist_context",
     "AdaptiveSpecialistRouter",
     "RoutingDecision",
     "RoutingRequirement",

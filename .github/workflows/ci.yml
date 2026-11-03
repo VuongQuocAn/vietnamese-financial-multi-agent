@@ -83,6 +83,7 @@ jobs:
           tests/unit/test_liquidity_evaluator.py
           tests/unit/test_cash_flow_earnings_quality_specialist.py
           tests/unit/test_adaptive_router.py
+          tests/unit/test_orchestrator.py
           tests/unit/test_reporting_scope.py
           tests/unit/test_financial_context_resolution.py
           tests/unit/test_web_documents.py::test_scan_upload_vision_review_confirm_ready

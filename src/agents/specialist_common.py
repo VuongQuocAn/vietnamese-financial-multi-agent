@@ -266,6 +266,11 @@ def select_evidence(
         record = fact.record
         if record.canonical_item_id not in item_labels:
             continue
+        if (
+            bundle.claim_fact_references is not None
+            and fact.reference not in bundle.claim_fact_references
+        ):
+            continue
         error = _fact_error(fact, bundle)
         if len(groups[key(fact)]) > 1:
             error = "conflicting_fact_variants"
@@ -352,6 +357,30 @@ def select_evidence(
         result.supporting_evidence = []
     for index, evidence in enumerate(result.supporting_evidence, 1):
         evidence.evidence_id = f"E{index:03d}"
+
+
+def with_assignment(prompt, upstream):
+    """Scope a projected call without rewriting the original user question."""
+    if upstream.evidence_bundle.claim_fact_references is None:
+        return prompt
+    query = upstream.final_plan_state.query
+    return dict(
+        prompt,
+        orchestration_assignment=dict(
+            roles=upstream.final_plan_state.specialist_roles,
+            assigned_fact_targets=query.required_indicators,
+            assigned_formula_targets=query.requested_formula_ids,
+        ),
+        instruction=prompt["instruction"]
+        + (
+            " CÂU HỎI GỐC được giữ đầy đủ cho context; bạn CHỈ thực hiện targets trong "
+            "orchestration_assignment bằng evidence digest được giao. Các targets thuộc "
+            "Specialist khác KHÔNG phải missing_information của bạn. Supporting operands "
+            "của metric không phải factual claims độc lập. Không báo thiếu dữ liệu cho "
+            "phân tích sâu, so sánh kỳ khác hoặc ratio không được giao. Giữ caveats nguồn "
+            "nhưng không tự mở rộng workload."
+        ),
+    )
 
 
 def generate_candidates(*, gateway, model, result, prompt, proposal_type, render, prefix):

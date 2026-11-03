@@ -2,56 +2,54 @@
 
 ## Active Task
 
-M5-07 — Adaptive Routing Rules
+M5-08 — Agent and Tool Orchestration
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Baseline main/origin86a8cc5, Owner giao03/11/2026.
-[Spec](tasks/M5/M5-07.md),[report](../docs/m5-07-adaptive-routing.md).
-Final42/42 routing,zero Gemini/tool;4.725 protected hashes unchanged.
-Tech Lead APPROVED — DONE ngày03/11/2026; cho phép đồng bộ planning.
+Baseline main/origin745cf46; Owner giao03/11/2026.
+[Spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
+36/36 offline evidence hợp nhất,8/8 post-fix representative reruns;15 actual Gemini
+calls (11initial+4targeted),35.883tokens. Initial fresh1/4,targeted partial-live2/2,
+saved replay2/2;không fresh4/4. Claims chưa verified, D03-B10 giữ blocked.
 
 ## Completed Work
 
-Pure Python Router, typed output/public exports, minimum coverage/overlap,
-global/branch/metric gates,evaluator/42-case reference và report.
-Evidence: artifacts/evidence/M5-07-final-v2;compatibility M5-07-final.
-Initial reason-scoring36/41 giữ riêng;expected roles/status không đổi.
+Typed Orchestrator/contracts/public exports; role-specific evidence closure và
+support-only operands; sequential execution/isolation; deterministic aggregation,
+dedup/conflicts. Live root fixes: metric-only Router targets, scoped prompts và
+completion dựa assigned coverage; giữ nguyên raw model annotations/status.
+Evaluator/manifest37 entries (36offline+1live-only), report và private evidence.
 
 ## Remaining Work
 
-Không còn việc M5-07 sau nghiệm thu; chờ giao nhiệm vụ mới, không tự bắt đầu M5-08.
+Exact-SHA CI pending commit; Tech Lead nghiệm thu sau CI. Không bắt đầu M6.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ registry, spec, current-status, progress và handoff.
-Giữ web/next-env.d.ts local ngoài stage;artifacts/dataset/secrets ignored.
+Task modules/exports/shared selector và Router fixes, focused tests/CI entry,
+evaluator/manifest/docs/planning. Giữ web/next-env.d.ts local ngoài stage;
+artifacts/dataset/secrets ignored,5.030protected hashes unchanged.
 
 ## Tests
 
-250 bounded+4 final focused PASS;9 saved-response assertions khớp accepted outputs.
-18metrics/29queries/QA36/15contracts/19traces giữ nguyên;Ruff417/planning101/diff PASS.
-Final42/42,precision/recall100%,partial9/9,risk20/20,determinism42/42.
-Không full regression/live Gemini/OCR/extraction;claims chưa verified.
-Phiên nghiệm thu chỉ chạy planning checker/diff check; không chạy lại tests/benchmark.
+339 bounded PASS trước fixes;85 final focused PASS sau fixes.9 accepted Specialist
+outputs/42 accepted Router decisions exact.18metrics/29queries/QA36/15contracts/
+19traces giữ nguyên. Ruff/planning/diff local kiểm trước commit; không OCR/extraction.
 
 ## Blockers
 
-Không blocker implementation sau nghiệm thu.
-D03-B10/snapshot/scope giữ gates;financial_fact_verified=False.
+Không external blocker. CI đang chờ commit; source quality/scope/page-level caveats
+còn nguyên; candidates chưa M6 verification. Không có thêm ngân sách targeted calls.
 
 ## Git Checkpoint
 
-Implementation `c40947687e1e9e62a21a7179a11ed2ef13447dcc` đã push main,remote khớp.
-CI41556677681 completed/SUCCESS đúng SHA;Python3.12/Web smoke SUCCESS,
-full regression SKIPPED. Proof tại artifacts/evidence/M5-07-handoff/ci-exact-sha.json.
-Checkpoint tiếp theo docs/planning [skip ci],không gán CI cho checkpoint SHA.
-Không branch/PR/worktree;giữ Web local.
+Chưa commit; baseline745cf46423631d9f2271e9a4caf9d8eda1694061.
+Được phép commit/push trực tiếp main, không branch/PR/worktree hoặc force push.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M5-08.
+Tech Lead review M5-08 sau exact-SHA CI; không bắt đầu M6.

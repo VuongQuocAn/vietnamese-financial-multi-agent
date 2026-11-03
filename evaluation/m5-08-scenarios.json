@@ -1,0 +1,498 @@
+[
+  {
+    "id": "E01",
+    "source": "A02",
+    "question": "Doanh thu thuần BBS năm 2024 là bao nhiêu?",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.net_revenue"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E02",
+    "source": "A01",
+    "question": "Tính biên lợi nhuận gộp BBS năm 2025.",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "completed",
+    "expected_items": [],
+    "expected_formulas": [
+      "gross_margin"
+    ],
+    "live": true
+  },
+  {
+    "id": "E03",
+    "source": "B02",
+    "question": "Tỷ lệ nợ trên tổng tài sản BBS năm 2023?",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "completed",
+    "expected_items": [],
+    "expected_formulas": [
+      "debt_to_assets"
+    ]
+  },
+  {
+    "id": "E04",
+    "source": "B01",
+    "question": "BBS năm 2025 có tổng tài sản bao nhiêu và lấy từ trang nào?",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b01.total_assets"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E05",
+    "source": "C01",
+    "question": "Dòng tiền thuần từ hoạt động kinh doanh BBS năm 2023?",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E06",
+    "source": "C04",
+    "question": "Lưu chuyển tiền thuần từ hoạt động tài chính BBS năm 2024 và diễn giải dấu?",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b03.financing_cash_flow"
+    ],
+    "expected_formulas": [],
+    "sign": true
+  },
+  {
+    "id": "E07",
+    "source": "M01",
+    "question": "Phân tích doanh thu thuần và tổng nợ phải trả BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.net_revenue",
+      "b01.total_liabilities"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E08",
+    "source": "M02",
+    "question": "Phân tích doanh thu thuần và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.net_revenue",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E09",
+    "source": "M03",
+    "question": "Tỷ lệ nợ trên tổng tài sản và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025?",
+    "expected_roles": [
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [
+      "debt_to_assets"
+    ]
+  },
+  {
+    "id": "E10",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.net_revenue",
+      "b01.total_liabilities",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "live": true
+  },
+  {
+    "id": "E11",
+    "source": "M05",
+    "question": "Phân tích dòng tiền thuần từ hoạt động kinh doanh và lợi nhuận trước thuế BBS năm 2025.",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b03.operating_cash_flow",
+      "b02.profit_before_tax"
+    ],
+    "expected_formulas": [],
+    "live": true
+  },
+  {
+    "id": "E12",
+    "source": "M06",
+    "question": "Phân tích khả năng sinh lời qua lợi nhuận sau thuế riêng, đồng thời trình bày lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.profit_after_tax",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E13",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b02.net_revenue",
+      "b01.total_liabilities"
+    ],
+    "expected_formulas": [],
+    "injection": "missing_cash"
+  },
+  {
+    "id": "E14",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b02.net_revenue",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "injection": "conflict_liabilities"
+  },
+  {
+    "id": "E15",
+    "source": "M03",
+    "question": "Tỷ lệ nợ trên tổng tài sản và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025?",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "injection": "approval_payload"
+  },
+  {
+    "id": "E16",
+    "source": "M03",
+    "question": "Tỷ lệ nợ trên tổng tài sản và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025?",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "injection": "missing_lineage"
+  },
+  {
+    "id": "E17",
+    "source": "N07",
+    "question": "Tổng tài sản BBS năm 2022?",
+    "expected_roles": [],
+    "expected_status": "clarification_required",
+    "expected_items": [],
+    "expected_formulas": []
+  },
+  {
+    "id": "E18",
+    "source": "N06",
+    "question": "So sánh tổng tài sản BBS giữa báo cáo năm 2024 và 2025.",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": []
+  },
+  {
+    "id": "E19",
+    "source": "N08",
+    "question": "Tổng tài sản trên báo cáo hợp nhất BBS năm 2025?",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": []
+  },
+  {
+    "id": "E20",
+    "source": "N05",
+    "question": "Tính Current Ratio và CFO/Net Income BBS năm 2025.",
+    "expected_roles": [],
+    "expected_status": "unsupported",
+    "expected_items": [],
+    "expected_formulas": []
+  },
+  {
+    "id": "E21",
+    "source": "N11",
+    "question": "Tổng tài sản năm 2025?",
+    "expected_roles": [],
+    "expected_status": "clarification_required",
+    "expected_items": [],
+    "expected_formulas": []
+  },
+  {
+    "id": "E22",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": [],
+    "injection": "blocked_supervisor"
+  },
+  {
+    "id": "E23",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b02.net_revenue",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "specialist_failure": "liquidity_and_leverage"
+  },
+  {
+    "id": "E24",
+    "source": "A04",
+    "question": "Lợi nhuận sau thuế BBS năm 2021?",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.profit_after_tax"
+    ],
+    "expected_formulas": []
+  },
+  {
+    "id": "E25",
+    "source": "A05",
+    "question": "Tăng trưởng doanh thu BBS năm 2022 snapshot recovery?",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "completed",
+    "expected_items": [],
+    "expected_formulas": [
+      "revenue_yoy"
+    ]
+  },
+  {
+    "id": "E26",
+    "source": "B05",
+    "question": "Tỷ lệ nợ trên tổng tài sản BBS năm 2022 snapshot recovery?",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "completed",
+    "expected_items": [],
+    "expected_formulas": [
+      "debt_to_assets"
+    ]
+  },
+  {
+    "id": "E27",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": [],
+    "injection": "global_compatibility"
+  },
+  {
+    "id": "E28",
+    "source": "A01",
+    "question": "Tính biên lợi nhuận gộp BBS năm 2025.",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": [],
+    "injection": "approval_payload"
+  },
+  {
+    "id": "E29",
+    "source": "A01",
+    "question": "Tính biên lợi nhuận gộp BBS năm 2025.",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "failed",
+    "expected_items": [],
+    "expected_formulas": [],
+    "projection_fault": "operand"
+  },
+  {
+    "id": "E30",
+    "source": "A01",
+    "question": "Tính biên lợi nhuận gộp BBS năm 2025.",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "failed",
+    "expected_items": [],
+    "expected_formulas": [],
+    "projection_fault": "citation"
+  },
+  {
+    "id": "E31",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần trong kỳ BBS năm 2025.",
+    "expected_roles": [],
+    "expected_status": "blocked",
+    "expected_items": [],
+    "expected_formulas": [],
+    "custom_items": [
+      "b02.net_revenue",
+      "b01.total_liabilities",
+      "b03.net_cash_flow"
+    ],
+    "reference_reason": "Planner preflight: no_matching_fact; stop before Supervisor per approved contract"
+  },
+  {
+    "id": "E32",
+    "source": "C01",
+    "question": "Lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2023 và diễn giải dấu?",
+    "expected_roles": [
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "sign": true
+  },
+  {
+    "id": "E33",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage",
+      "cash_flow_and_earnings_quality"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b01.total_liabilities",
+      "b03.operating_cash_flow"
+    ],
+    "expected_formulas": [],
+    "specialist_failure": "profitability"
+  },
+  {
+    "id": "E34",
+    "source": "A03",
+    "question": "Lợi nhuận trước thuế BBS năm 2025?",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "completed",
+    "expected_items": [
+      "b02.profit_before_tax"
+    ],
+    "expected_formulas": [],
+    "aggregation_control": "duplicate"
+  },
+  {
+    "id": "E35",
+    "source": "A03",
+    "question": "Lợi nhuận trước thuế BBS năm 2025?",
+    "expected_roles": [
+      "profitability"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b02.profit_before_tax"
+    ],
+    "expected_formulas": [],
+    "aggregation_control": "conflict"
+  },
+  {
+    "id": "E36",
+    "source": "B02",
+    "question": "Tỷ lệ nợ trên tổng tài sản BBS năm 2025?",
+    "expected_roles": [
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "completed",
+    "expected_items": [],
+    "expected_formulas": [
+      "debt_to_assets"
+    ],
+    "custom_year": 2025
+  },
+  {
+    "id": "E37",
+    "source": "M04",
+    "question": "Phân tích doanh thu thuần, tổng nợ phải trả và lưu chuyển tiền thuần từ hoạt động kinh doanh BBS năm 2025.",
+    "expected_roles": [
+      "profitability",
+      "liquidity_and_leverage"
+    ],
+    "expected_status": "partial",
+    "expected_items": [
+      "b02.net_revenue",
+      "b01.total_liabilities"
+    ],
+    "expected_formulas": [],
+    "injection": "missing_cash",
+    "live": true,
+    "live_only": true,
+    "reference_reason": "Fresh Gemini pipeline; synthetic missing CFO after shared Supervisor execution"
+  }
+]

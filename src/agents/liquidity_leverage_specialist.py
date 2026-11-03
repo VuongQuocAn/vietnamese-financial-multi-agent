@@ -21,6 +21,7 @@ from .specialist_common import (
     _number,
     generate_candidates,
     select_evidence,
+    with_assignment,
 )
 from .supervisor import SupervisorResult
 
@@ -347,7 +348,7 @@ class LiquidityLeverageSpecialist:
                 gateway=self._gateway,
                 model=self._model,
                 result=result,
-                prompt=self._prompt(result),
+                prompt=with_assignment(self._prompt(result), upstream),
                 proposal_type=LiquidityLeverageProposal,
                 render=_render,
                 prefix="liquidity-leverage",

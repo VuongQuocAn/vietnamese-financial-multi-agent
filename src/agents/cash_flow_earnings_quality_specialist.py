@@ -22,6 +22,7 @@ from .specialist_common import (
     _number,
     generate_candidates,
     select_evidence,
+    with_assignment,
 )
 from .supervisor import SupervisorResult
 
@@ -342,7 +343,7 @@ class CashFlowEarningsQualitySpecialist:
                 gateway=self._gateway,
                 model=self._model,
                 result=result,
-                prompt=self._prompt(result, upstream),
+                prompt=with_assignment(self._prompt(result, upstream), upstream),
                 proposal_type=CashFlowEarningsQualityProposal,
                 render=_render,
                 prefix="cash-flow-earnings-quality",

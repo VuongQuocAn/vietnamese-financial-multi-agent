@@ -40,6 +40,9 @@ SUPPORTED_TOOLS = frozenset(
 
 class ExecutionEvidenceBundle(FinancialModel):
     facts: list[FinancialFactMatch] = Field(default_factory=list)
+    # None preserves standalone M5-04/05/06 behavior. Projections explicitly
+    # distinguish requested facts from operands retained only for metric closure.
+    claim_fact_references: list[RetrievalReference] | None = None
     calculations: list[FinancialCalculationResponse] = Field(default_factory=list)
     sources_and_lineage: list[EvidenceToolResponse] = Field(default_factory=list)
     snapshots: list[SnapshotSelection] = Field(default_factory=list)

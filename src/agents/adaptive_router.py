@@ -70,7 +70,12 @@ def _targets(planner):
     metrics = [r for r in plan.requirements if r.evidence_type == "metric"]
     # Planner adds metric operands to query.required_indicators. They are inputs,
     # not independently requested factual workloads. Explicit fact operations win.
-    if planner.proposal:
+    if metrics and planner.query.intent in {"calculated_metric", "evidence_explanation"}:
+        # Single-metric intent has no independent factual workload. Gemini may
+        # explicitly retrieve/source operands before calculation; those operations
+        # are still supporting evidence. Mixed fact+metric intent remains multi-step.
+        facts = []
+    elif planner.proposal:
         explicit = {
             o.canonical_item_id
             for o in planner.proposal.operations
