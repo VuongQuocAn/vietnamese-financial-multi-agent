@@ -51,9 +51,12 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M5-08 **REVIEW**; [spec](tasks/M5/M5-08.md),[report](../docs/m5-08-agent-orchestration.md).
 Offline36/36 hợp nhất,8/8 post-fix reruns;live initial1/4,targeted partial-live2/2,
 saved replay2/2;15 actual calls/35.883tokens.339 bounded+85 final focused PASS;
-9 Specialist/42 Router replays exact,5.030hashes unchanged. Chưa commit/CI pending.
+9 Specialist/42 Router replays exact,5.030hashes unchanged. Implementation1868928
+đã push main;[CI41562965030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41562965030)
+SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Giữ Web local/D03-B10/claims chưa verified.
-Next action: Tech Lead review sau exact-SHA CI; không bắt đầu M6.
+Next action: Tech Lead review M5-08; không bắt đầu M6.
 
 Checkpoint trước:
 

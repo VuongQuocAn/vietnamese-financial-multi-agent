@@ -1,7 +1,13 @@
 # M5-08 — Agent and Tool Orchestration
 
-Status: REVIEW; implementation/CI sẽ ghi ở checkpoint sau commit. Claims là candidates,
+Status: REVIEW; chờ Tech Lead nghiệm thu. Claims là candidates,
 `financial_fact_verified=False`; M6 mới quyết định verification.
+
+Implementation [1868928](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/18689287aaecc1257762564a9693948b4b273b96) đã push trực tiếp main;
+[CI41562965030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41562965030)
+completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
+full regression thủ công SKIPPED. Checkpoint sau chỉ docs/planning [skip ci],
+không gán CI cho checkpoint SHA.
 
 ## Public API và ranh giới
 
@@ -136,7 +142,7 @@ sau Supervisor, không tự bypass Planner để tạo partial.
 Eight representative reruns sau runtime fixes: `M5-08-offline-final`, 8/8; bao gồm
 single/multi/partial/failure, natural missing fact và Debt-to-Assets2025. Final offline
 coverage hợp nhất 36 cases từ v3, corrected-UTF8 supplement và final reruns; không gọi
-lại toàn bộ cases đã PASS. Source map/metrics sẽ lưu ở `M5-08-review`.
+lại toàn bộ cases đã PASS. Source map/metrics lưu ở `M5-08-review`.
 
 | Offline metric | Evidence hợp nhất |
 | --- | ---: |
@@ -206,11 +212,10 @@ orchestration controls và Router regression. Bounded real regression giữ18 ap
 metrics/29 queries/QA36/15 M5-01 cases/19 Supervisor traces; M5-02 offline18/18 và
 prior Gemini evidence giữ nguyên, không rerun benchmark. Sau shared fixes,9 accepted
 Specialist outputs replay exact và42/42 accepted routing decisions exact;
-5.030 protected hashes unchanged (gồm Web local). Ruff/planning/diff và CI ghi ở
-checkpoint. Artifacts/traces/dataset/key không stage/commit.
+5.030 protected hashes unchanged (gồm Web local). Ruff424/planning101/diff PASS; exact-SHA CI SUCCESS như trên. Artifacts/traces/dataset/key không stage/commit.
 
 Bounded regression gồm accepted M4/M5 inputs và representative saved-output replay;
 không chạy lại Gemini benchmark cũ. Source-review unverified/unknown scope/page-level
 provenance còn là caveats, grounded candidate không đồng nghĩa financial fact verified.
 
-Next action: Tech Lead review M5-08 khi checkpoint exact-SHA CI hoàn tất; không bắt đầu M6.
+Next action: Tech Lead review M5-08; không bắt đầu M6.

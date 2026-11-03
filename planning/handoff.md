@@ -26,7 +26,7 @@ Evaluator/manifest37 entries (36offline+1live-only), report và private evidence
 
 ## Remaining Work
 
-Exact-SHA CI pending commit; Tech Lead nghiệm thu sau CI. Không bắt đầu M6.
+Tech Lead review và nghiệm thu M5-08. Không bắt đầu M6.
 
 ## Modified Files
 
@@ -42,14 +42,16 @@ outputs/42 accepted Router decisions exact.18metrics/29queries/QA36/15contracts/
 
 ## Blockers
 
-Không external blocker. CI đang chờ commit; source quality/scope/page-level caveats
+Không external blocker. Source quality/scope/page-level caveats
 còn nguyên; candidates chưa M6 verification. Không có thêm ngân sách targeted calls.
 
 ## Git Checkpoint
 
-Chưa commit; baseline745cf46423631d9f2271e9a4caf9d8eda1694061.
-Được phép commit/push trực tiếp main, không branch/PR/worktree hoặc force push.
+Implementation `18689287aaecc1257762564a9693948b4b273b96` đã push trực tiếp main;
+[CI41562965030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41562965030)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Exact Next Action
 
-Tech Lead review M5-08 sau exact-SHA CI; không bắt đầu M6.
+Tech Lead review M5-08; không bắt đầu M6.

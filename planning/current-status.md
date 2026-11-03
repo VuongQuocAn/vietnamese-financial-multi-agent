@@ -12,9 +12,12 @@ Offline36/36 hợp nhất (không fresh full rerun),8/8 post-fix representative;
 live initial1/4 (11calls),targeted partial-live2/2 (4calls),saved replay2/2;
 tổng15 actual calls/35.883tokens,không fresh4/4.339 bounded+85 final focused PASS;
 9 Specialist/42 Router replays exact;18metrics/29queries/QA36/15contracts/19traces
-và5.030protected hashes giữ nguyên. Chưa commit; CI pending.
+và5.030protected hashes giữ nguyên. Implementation `18689287aaecc1257762564a9693948b4b273b96`
+đã push main;[CI41562965030](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41562965030)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci]; không gán CI cho SHA checkpoint.
 Giữ Web local/D03-B10/claims chưa verified; không OCR/extraction/benchmark cũ.
-Next action: Tech Lead review M5-08 sau exact-SHA CI; không bắt đầu M6.
+Next action: Tech Lead review M5-08; không bắt đầu M6.
 
 ## M5-07 — Adaptive Routing Rules
 
