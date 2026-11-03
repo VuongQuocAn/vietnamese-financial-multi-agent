@@ -6,11 +6,13 @@ M6-02 — Deterministic Financial Validators
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Owner giao03/11/2026; baseline main/origin51292cf khớp, M6-01 DONE.
+Tech Lead nghiệm thu DONE ngày03/11/2026; cho phép đồng bộ planning.
+Main39d41ef đã xác minh chỉ thêm docs/planning sau implementation58980d1.
 [Spec](tasks/M6/M6-02.md), [report](../docs/m6-02-deterministic-financial-validators.md).
 
 ## Completed Work
@@ -20,23 +22,26 @@ replay, focused tests/evaluation script. Không decision/ledger/LLM hoặc sửa
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu phạm vi/finding policies M6-02; không tự DONE.
+Không còn việc M6-02 sau nghiệm thu; chờ nhiệm vụ mới.
 
 ## Modified Files
 
-Verification exports/new modules, focused test/evaluator, một CI test entry,
-M6-02 docs/spec và planning. Web local giữ ngoài stage.
+Phiên đồng bộ nghiệm thu chỉ registry/spec/current-status/progress/handoff/report.
+Web local giữ ngoài stage; không sửa runtime/accepted artifacts.
 
 ## Tests
 
 30 validator +78 compatibility PASS; final72claim rows/16controls đúng kỳ vọng;
 12.753 protected hashes unchanged. Ruff/planning101/diff PASS. Zero Gemini/OCR.
 Engineering và persisted-source agreement, không general financial accuracy.
+Đây là evidence implementation đã có; phiên này chỉ planning checker/diff check,
+không chạy lại tests/evaluation/Gemini/OCR.
 
 ## Blockers
 
 Không external blocker. Scope/source quality/page-level caveats và D03-B10 còn nguyên;
 semantic support/reasoning thuộc Critics sau. Không bắt đầu M6-03.
+Parser chỉ hỗ trợ mẫu đã xác định; chưa independent PDF hoặc interpretation accuracy.
 
 ## Git Checkpoint
 
@@ -48,4 +53,4 @@ Web local ngoài commit.
 
 ## Exact Next Action
 
-Tech Lead review M6-02.
+Chờ Owner/Tech Lead giao nhiệm vụ mới.

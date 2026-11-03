@@ -4,7 +4,8 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-02 — Deterministic Financial Validators
 
-Status: **REVIEW**, Owner giao03/11/2026; baseline main/origin51292cf khớp.
+Status: **DONE**, Tech Lead nghiệm thu ngày03/11/2026, cho phép đồng bộ planning.
+Owner giao03/11/2026; baseline main/origin51292cf khớp.
 [Spec](tasks/M6/M6-02.md), [report](../docs/m6-02-deterministic-financial-validators.md).
 Typed per-check results, bounded prose checks và independent canonical/M4 replay.
 30 validator +78 compatibility tests PASS; final72rows/16controls đúng kỳ vọng,
@@ -14,7 +15,11 @@ Implementation `58980d1abde246bfd6a8ec97a6fe34bd84919497` đã push main;
 completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Giữ accepted artifacts và Web local; chưa decision/ledger/financial accuracy tổng quát.
-Next action: Tech Lead review M6-02.
+Main39d41ef đã xác minh chỉ thêm checkpoint docs/planning sau implementation.
+Parser chỉ hỗ trợ mẫu đã xác định; chưa chứng minh accuracy độc lập trên PDF
+hoặc tính đúng đắn của diễn giải. Phiên nghiệm thu chỉ planning checker/diff check,
+không chạy lại tests/evaluation/Gemini/OCR hoặc sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.
 
 ## M6-01 — Candidate Claim Contracts
 
