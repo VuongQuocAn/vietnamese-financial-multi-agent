@@ -4,7 +4,9 @@ Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-01 — Candidate Claim Contracts
 
-Status: **REVIEW**; Owner giao03/11/2026, baseline main/origin8407897 khớp.
+Status: **DONE**; Tech Lead APPROVED ngày03/11/2026 sau review trực tiếp
+contracts/adapter/focused tests; không phát hiện P0/P1.
+Owner giao03/11/2026, baseline main/origin8407897 khớp.
 [Spec](tasks/M6/M6-01.md), [report](../docs/m6-01-candidate-claim-contracts.md).
 Typed pending claims và M5→M6 adapter;95 bounded +10 final focused PASS;
 21/21 final saved BBS conversions,26claims/5calculations/1conflict,zero live calls.
@@ -14,7 +16,11 @@ Implementation `f803ebfc8ca8f7c41ee83e09808da453299e53c5` đã push main;
 completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho SHA checkpoint.
 Giữ D03-B10/scope/source quality/page-level caveats; claims vẫn pending/null decision.
-Next action: Tech Lead review M6-01.
+21/21 conversions được ghi nhận từ report, chưa độc lập chạy lại.
+Tech Lead xác nhận main047891d chỉ thêm docs/planning sau implementation.
+Phiên đồng bộ nghiệm thu chỉ planning checker/diff check; không chạy lại tests,
+conversions/Gemini/OCR hoặc sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6-02.
 
 ## M5-08 — Agent and Tool Orchestration
 

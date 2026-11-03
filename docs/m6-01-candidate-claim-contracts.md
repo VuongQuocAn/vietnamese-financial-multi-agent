@@ -1,6 +1,9 @@
 # M6-01 — Candidate Claim Contracts
 
-Status: **REVIEW**, chờ Tech Lead nghiệm thu. Owner giao03/11/2026; baseline main/origin
+Status: **DONE**, Tech Lead APPROVED ngày03/11/2026 sau review trực tiếp contracts,
+adapter và focused tests; không phát hiện P0/P1. 21/21 conversions được ghi nhận từ
+báo cáo, chưa độc lập chạy lại. Phiên đồng bộ nghiệm thu chỉ planning/diff checks.
+Owner giao03/11/2026; baseline main/origin
 `8407897f7dff75fa4614b508f7a035a872666138`.
 Implementation `f803ebfc8ca8f7c41ee83e09808da453299e53c5` đã push trực tiếp main;
 remote khớp SHA. [CI41636974349](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41636974349)
@@ -109,4 +112,4 @@ Phân biệt persisted BBS + mock generation, synthetic controls trên persisted
 saved Gemini-response replay và replay có synthetic control. Đây là kiểm tra
 conversion/provenance integrity, chưa phải verification accuracy hay benchmark mới.
 
-Next action: Tech Lead review M6-01.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6-02.

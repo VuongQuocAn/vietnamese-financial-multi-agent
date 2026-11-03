@@ -6,12 +6,14 @@ M6-01 — Candidate Claim Contracts
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Owner giao03/11/2026; baseline main/origin
 `8407897f7dff75fa4614b508f7a035a872666138` đã xác minh.
+Tech Lead APPROVED — DONE ngày03/11/2026 sau review trực tiếp contracts,
+adapter và focused tests; không phát hiện P0/P1. Main047891d đã được xác nhận.
 [Spec](tasks/M6/M6-01.md), [report](../docs/m6-01-candidate-claim-contracts.md).
 
 ## Completed Work
@@ -21,11 +23,11 @@ public exports; focused tests/evaluator, CI entry. Giữ M5 API và accepted dat
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu M6-01; không triển khai M6-02.
+Không còn việc M6-01 sau nghiệm thu; không triển khai M6-02.
 
 ## Modified Files
 
-Verification module, focused tests, evaluator, CI, report và M6-01 planning.
+Phiên đồng bộ nghiệm thu chỉ registry/spec/current-status/progress/handoff/report.
 `web/next-env.d.ts` là local change có sẵn; giữ ngoài stage.
 
 ## Tests
@@ -33,6 +35,9 @@ Verification module, focused tests, evaluator, CI, report và M6-01 planning.
 95 bounded +10 final focused PASS;21/21 final saved conversions PASS,
 26claims/5calculations/1conflict,zero issues/LLM calls;12.635 protected hashes unchanged.
 Ruff/planning101/diff PASS. Không Gemini/OCR hoặc M5 benchmark mới.
+Đây là bằng chứng implementation đã có; Tech Lead ghi nhận21/21 từ report, chưa
+độc lập chạy lại. Phiên này chỉ planning checker/diff check, không chạy lại tests/
+conversions/Gemini/OCR hoặc sửa runtime/artifacts.
 
 ## Blockers
 
@@ -48,4 +53,4 @@ Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Exact Next Action
 
-Tech Lead review M6-01.
+Chờ Owner/Tech Lead giao nhiệm vụ mới; không bắt đầu M6-02.
