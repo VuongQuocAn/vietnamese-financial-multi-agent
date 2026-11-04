@@ -4,7 +4,8 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-04 — Financial Logic Critic
 
-Status: **REVIEW**, Owner giao04/11/2026; baseline main/origin94bf698 khớp.
+Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
+Owner giao04/11/2026; baseline main/origin94bf698 khớp.
 [Spec](tasks/M6/M6-04.md), [report](../docs/m6-04-financial-logic-critic.md).
 Typed per-assertion reasoning, deterministic-first và bounded Gemini qua Gateway;
 không decisions/ledger.155 focused/compatibility PASS,29 final logic PASS;
@@ -18,7 +19,10 @@ Initial live2/4, targeted1/2;3/4 unique scenarios có valid đúng oracle, khôn
 29logic PASS.13.077original protected hashes unchanged, giữ Web local/D03-B10.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA;
 claims pending, chưa full verification accuracy. Không thêm calls.
-Next action: Tech Lead review M6-04.
+Main e27b4fc đã xác minh chỉ thêm docs/planning sau implementation4a09238.
+Phiên đồng bộ nghiệm thu chỉ planning checker/diff check; không chạy lại tests,
+evaluation/Gemini/OCR hoặc sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-05.
 
 ## M6-03 — Evidence Critic
 

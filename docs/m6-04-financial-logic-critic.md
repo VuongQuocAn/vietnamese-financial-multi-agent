@@ -1,6 +1,7 @@
 # M6-04 — Financial Logic Critic
 
-Status: **REVIEW**, chờ Tech Lead nghiệm thu. Owner giao04/11/2026, baseline main/origin
+Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
+Owner giao04/11/2026, baseline main/origin
 `94bf6988b87096260c7569c4054252ecff1398c6`; M6-01–03 DONE.
 Implementation `4a09238d4d1bfe15b88e3090425e4319f947ab75` đã push trực tiếp main,
 origin/main khớp; evaluation đã hoàn tất trong ngân sách.
@@ -224,4 +225,9 @@ semantic coverage còn bounded sign paraphrase. Causal/industry/solvency conclus
 chưa có typed sufficient premises để xác nhận. Judge/ledger thuộc M6-05/M6-06,
 claims vẫn pending/decision=null/financial_fact_verified=false.
 
-Next action: Tech Lead review M6-04.
+Main e27b4fc đã xác minh chỉ thêm docs/planning sau implementation4a09238.
+Phiên đồng bộ nghiệm thu chỉ planning checker/diff check; không chạy lại tests,
+evaluation/Gemini/OCR hoặc sửa runtime/accepted artifacts. Giữ các giới hạn
+causal live coverage, provenance và financial verification accuracy đã báo.
+
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-05.
