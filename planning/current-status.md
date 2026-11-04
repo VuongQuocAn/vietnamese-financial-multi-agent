@@ -2,6 +2,15 @@
 
 Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M6-06 — Verified Claim Ledger
+
+Status: **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin
+`9b807f370c144181588818c46de70e3d5f0fe485`, M6-01–05 DONE.
+[Spec](tasks/M6/M6-06.md), [report](../docs/m6-06-verified-claim-ledger.md).
+Đang validation ledger admission/repository/retrieval; chưa commit hoặc CI.
+Giữ Web local/protected artifacts/D03-B10; không Gemini/OCR/M7.
+Next action: hoàn tất validation và bàn giao Tech Lead review M6-06.
+
 ## M6-05 — Verification Decisions
 
 Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.

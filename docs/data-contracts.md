@@ -455,6 +455,13 @@ confirmed_target vẫn là logical target.
 
 ## Các ràng buộc đã xác định
 
+M6-06 cụ thể hóa biên kiểm chứng → ledger → output bằng
+`VerificationHistory`, `VerificationProofContext`, `VerifiedClaim` và
+`VerifiedClaimQuery/VerifiedClaimMatches`; chi tiết wire schema, admission replay
+và local persistence tại [Verified Claim Ledger](m6-06-verified-claim-ledger.md).
+M7 chỉ lấy final content của admitted VerifiedClaim qua read-only facade.
+Các dòng TBD ở bảng trên là thiết kế ban đầu; không thay contracts M1–M6-05.
+
 - Dữ liệu tài chính phải giữ source provenance xuyên suốt pipeline; cần truy
   nguyên được đến tài liệu và vị trí nguồn phù hợp (trang, bảng, ô hoặc đoạn).
 - Phép tính phải truy được tới công thức và dữ liệu đầu vào để kiểm tra lại.
