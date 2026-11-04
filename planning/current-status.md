@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M6-04 — Financial Logic Critic
+
+Status: **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin94bf698 khớp.
+[Spec](tasks/M6/M6-04.md), [report](../docs/m6-04-financial-logic-critic.md).
+Typed per-assertion reasoning, deterministic-first và bounded Gemini qua Gateway;
+không decisions/ledger.155 focused/compatibility PASS,28 final logic PASS;
+71/71 offline final-v2 (20 new controls), chưa commit/CI.
+Initial live2/4, targeted1/2;3/4 unique scenarios có valid đúng oracle, không fresh4/4.
+Đủ6calls/122.842recorded tokens, haiHTTP503 usage unknown; causal chưa live-assessed.
+Đã rút prompt/làm rõ IDs,28logic+4post-prompt mock PASS. Chờ exact-SHA CI;
+giữ raw/processed/accepted artifacts/Web local/D03-B10, không thêm calls.
+Next action: hoàn tất validation M6-04 để Tech Lead review.
+
 ## M6-03 — Evidence Critic
 
 Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.

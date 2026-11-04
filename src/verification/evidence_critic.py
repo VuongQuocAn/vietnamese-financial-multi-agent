@@ -28,7 +28,11 @@ from .evidence_contracts import (
     SemanticEvidenceAssessment,
 )
 from .numeric import extract_assertion
-from .validation_contracts import ValidationResult, verification_input_digest
+from .validation_contracts import (
+    ValidationResult,
+    validation_result_digest,
+    verification_input_digest,
+)
 
 
 def _numeric_scope(content):
@@ -94,6 +98,7 @@ class EvidenceCritic:
     ) -> EvidenceCriticResult:
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         validation = ValidationResult.model_validate_json(validation.model_dump_json())
+        validation_digest = validation_result_digest(validation)
         if validation.verification_input_sha256 is None and validated_batch is not None:
             # Legacy M6-02 artifacts need their original paired input from caller;
             # never infer it from a result or silently stamp the current candidate.
@@ -101,6 +106,8 @@ class EvidenceCritic:
             validation.caveats.append("legacy_validation_input_binding_supplied_by_caller")
         result = EvidenceCriticResult(
             source_result_sha256=batch.source_result_sha256,
+            verification_input_sha256=verification_input_digest(batch),
+            validation_result_sha256=validation_digest,
             conflicts=batch.conflicts,
             caveats=sorted(set([*batch.caveats, *validation.caveats])),
         )

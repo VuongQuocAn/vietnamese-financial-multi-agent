@@ -1,0 +1,32 @@
+{
+  "version": "m6_04_reasoning_oracle_v1",
+  "basis": "Đặt trước execution từ canonical BBS, ba approved formulas và accepted comparability policy; không lấy expected từ Critic. Synthetic interpretations không phải natural Gemini claims hoặc independent PDF gold.",
+  "persisted_default": "not_applicable",
+  "saved_overrides": {
+    "saved-E06": ["not_applicable", "not_applicable", "consistent"],
+    "saved-replay-E11": ["not_applicable", "not_applicable", "consistent", "not_applicable"],
+    "saved-E35": ["not_applicable", "not_applicable", "insufficient_context"]
+  },
+  "scenarios": [
+    {"id":"positive_margin_improvement","base":"margin","tail":"Gross Margin dương chứng tỏ khả năng sinh lời chắc chắn đã cải thiện.","expected":["not_applicable","insufficient_context"],"rationale":"Mức margin dương không có baseline comparable để chứng minh cải thiện."},
+    {"id":"negative_cfo_implies_loss","base":"cfo","counterfactual":true,"tail":"Dòng tiền từ hoạt động kinh doanh âm nên doanh nghiệp chắc chắn thua lỗ.","expected":["not_applicable","inconsistent"],"rationale":"BBS canonical CFO2020–2025 không có giá trị âm. Đây là counterfactual sign injection trên CFO2025 dương, không phải real negative CFO. Hơn nữa CFO không phải profit_after_tax; âm không suy ra lỗ kế toán."},
+    {"id":"debt_implies_insolvency","base":"debt","tail":"Tỷ lệ nợ cao cho thấy doanh nghiệp chắc chắn mất khả năng thanh toán.","expected":["not_applicable","insufficient_context"],"rationale":"Debt/assets thiếu các premises về nghĩa vụ và nguồn thanh toán; không đặt threshold ngành."},
+    {"id":"negative_yoy_wrong_direction","base":"negative_yoy","tail":"Doanh thu tăng.","expected":["not_applicable","inconsistent"],"rationale":"Approved revenue_yoy âm, nên kết luận doanh thu tăng sai chiều."},
+    {"id":"negative_yoy_correct_direction","base":"negative_yoy","tail":"Doanh thu giảm.","expected":["not_applicable","consistent"],"rationale":"Approved same-filing YoY âm, context/operands có nguồn hợp lệ."},
+    {"id":"causal_without_evidence","base":"margin","tail":"Lợi nhuận tăng chủ yếu do quản lý chi phí tốt.","expected":["not_applicable","insufficient_context"],"rationale":"Không có causal attribution trong retrieved premises."},
+    {"id":"scope_mismatch","base":"separate_2024","tail":"Khả năng sinh lời đã cải thiện.","mutation":"scope","expected":["insufficient_context","insufficient_context"],"rationale":"Canonical2024 separate không khớp requested consolidated; không xác nhận comparison. Numeric span và conclusion đều giữ context gate, đánh giá riêng."},
+    {"id":"original_recovery_mix","base":"negative_yoy","tail":"Doanh thu giảm.","mutation":"snapshots","expected":["insufficient_context","insufficient_context"],"rationale":"Hai snapshot original/recovery2022 không được chọn/gộp; D03-B10 blocked. Numeric span và conclusion đều giữ context gate, đánh giá riêng."},
+    {"id":"numeric_pass_overreach","base":"margin","tail":"Doanh nghiệp vận hành hiệu quả vượt trội.","semantic":true,"required":["financial_context"],"expected":["not_applicable","insufficient_context"],"rationale":"Numeric PASS không chứng minh operational superiority."},
+    {"id":"mixed_assertions","base":"negative_yoy","tail":"Doanh thu giảm và doanh thu tăng.","expected":["not_applicable","consistent","inconsistent"],"rationale":"Tách cả conjunction và đánh giá riêng hai conclusions dựa approved negative YoY; không blanket accept claim."},
+    {"id":"stale_validation","base":"margin","tail":"Khả năng sinh lời đã cải thiện.","mutation":"stale_validation","expected":["insufficient_context"],"rationale":"Validation digest không khớp input đã đổi; structured consistency error."},
+    {"id":"stale_evidence","base":"margin","tail":"Khả năng sinh lời đã cải thiện.","mutation":"stale_evidence","expected":["insufficient_context"],"rationale":"Evidence content khác candidate; structured consistency error."},
+    {"id":"numeric_fail_no_override","base":"margin","tail":"Doanh nghiệp vận hành hiệu quả vượt trội.","mutation":"numeric","expected":["not_applicable","insufficient_context"],"rationale":"Numeric FAIL không được Gemini nâng thành premise đúng."},
+    {"id":"positive_cfo_sign","base":"cfo","tail":"Dòng tiền từ hoạt động kinh doanh dương.","expected":["not_applicable","consistent"],"rationale":"CFO2025 canonical >0, chỉ sign restatement."},
+    {"id":"wrong_cfo_sign","base":"cfo","tail":"Dòng tiền từ hoạt động kinh doanh âm.","expected":["not_applicable","inconsistent"],"rationale":"CFO2025 canonical >0 trái với sign âm."},
+    {"id":"investing_outflow_overreach","base":"negative_investing","tail":"Dòng tiền đầu tư âm chứng tỏ kinh doanh kém.","expected":["not_applicable","insufficient_context"],"rationale":"Investing outflow không chứng minh operational underperformance."},
+    {"id":"semantic_causal","base":"margin","tail":"Quản trị chi phí là động lực chính cho kết quả kinh doanh.","semantic":true,"live":true,"required":["causal_evidence"],"expected":["not_applicable","insufficient_context"],"rationale":"Margin level không chứa attribution đến cost management."},
+    {"id":"semantic_sign_inflow","base":"cfo","tail":"Tiền thu vào từ kinh doanh vượt tiền chi ra.","semantic":true,"live":true,"required":["sign_context"],"expected":["not_applicable","consistent"],"rationale":"CFO2025 >0 là inflow ròng trong giới hạn cùng chỉ tiêu/kỳ."},
+    {"id":"semantic_sign_outflow","base":"cfo","tail":"Tiền chi cho kinh doanh vượt tiền thu vào.","semantic":true,"live":true,"required":["sign_context"],"expected":["not_applicable","inconsistent"],"rationale":"CFO2025 >0 trái với outflow ròng được diễn giải."},
+    {"id":"semantic_comparison","base":"margin","tail":"Khả năng sinh lời tiến bộ.","semantic":true,"live":true,"required":["comparison"],"expected":["not_applicable","insufficient_context"],"rationale":"Chưa có baseline/comparable margin để kết luận tiến bộ."}
+  ]
+}

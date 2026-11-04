@@ -88,6 +88,9 @@ class ClaimEvidenceAssessment(FinancialModel):
 class EvidenceCriticResult(FinancialModel):
     version: Literal["evidence_critic_v1"] = "evidence_critic_v1"
     source_result_sha256: str
+    # Optional for accepted artifacts predating M6-04; never backfill those files.
+    verification_input_sha256: str | None = None
+    validation_result_sha256: str | None = None
     claims: list[ClaimEvidenceAssessment] = Field(default_factory=list)
     conflicts: list[CandidateConflict] = Field(default_factory=list)
     caveats: list[str] = Field(default_factory=list)

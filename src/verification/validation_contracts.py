@@ -18,6 +18,11 @@ def verification_input_digest(batch) -> str:
     return hashlib.sha256(wire.encode()).hexdigest()
 
 
+def validation_result_digest(result) -> str:
+    """Bind downstream assessments to the exact checks, including their statuses."""
+    return verification_input_digest(result)
+
+
 CheckStatus = Literal["pass", "fail", "undetermined", "not_applicable"]
 
 

@@ -22,6 +22,16 @@ from .evidence_contracts import (
     SupportStatus,
 )
 from .evidence_critic import EvidenceCritic
+from .financial_logic_critic import FinancialLogicCritic
+from .logic_contracts import (
+    ClaimLogicAssessment,
+    FinancialLogicCriticResult,
+    FinancialLogicError,
+    FinancialLogicTrace,
+    LogicFinding,
+    LogicStatus,
+    SemanticLogicAssessment,
+)
 from .validation_contracts import (
     CheckStatus,
     ClaimValidationResult,
@@ -31,6 +41,14 @@ from .validation_contracts import (
 from .validators import DeterministicFinancialValidator
 
 __all__ = [
+    "ClaimLogicAssessment",
+    "FinancialLogicCritic",
+    "FinancialLogicCriticResult",
+    "FinancialLogicError",
+    "FinancialLogicTrace",
+    "LogicFinding",
+    "LogicStatus",
+    "SemanticLogicAssessment",
     "CandidateClaim",
     "ClaimEvidenceAssessment",
     "EvidenceContext",
