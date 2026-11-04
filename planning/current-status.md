@@ -4,12 +4,20 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-06 — Verified Claim Ledger
 
-Status: **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin
+Status: **REVIEW**, Owner giao04/11/2026; baseline main/origin
 `9b807f370c144181588818c46de70e3d5f0fe485`, M6-01–05 DONE.
 [Spec](tasks/M6/M6-06.md), [report](../docs/m6-06-verified-claim-ledger.md).
-Đang validation ledger admission/repository/retrieval; chưa commit hoặc CI.
-Giữ Web local/protected artifacts/D03-B10; không Gemini/OCR/M7.
-Next action: hoàn tất validation và bàn giao Tech Lead review M6-06.
+Proof admission/atomic JSON repository/read-only M7 facade;119 M6 compatibility
+và22 final ledger tests PASS.109 replay cases:58stored/51rejected,27controls PASS,
+29representative BBS,2accepted revisions,unsafe0/false rejection0.
+Final-cache integrity57primary entries/27lineages/8filters PASS;
+full replay trước cache, không fresh full negative replay sau cache.
+Implementation `88ae91d40d5d4f0b4cf3f3526b96533b34a3d694` đã push main;
+[CI41823101329](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41823101329)
+completed/SUCCESS đúng SHA,Python3.12 SUCCESS;Web/full regression SKIPPED.
+14.569 protected hashes/Web unchanged;0Gemini/OCR,giữ D03-B10;chưa M7 hoặc
+independent PDF financial accuracy. Checkpoint sau chỉ docs/planning [skip ci].
+Next action: Tech Lead review M6-06 và điều kiện hoàn thành M6; không tự bắt đầu M7.
 
 ## M6-05 — Verification Decisions
 

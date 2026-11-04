@@ -2,57 +2,56 @@
 
 ## Active Task
 
-M6-05 — Verification Decisions
+M6-06 — Verified Claim Ledger
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
 Owner giao04/11/2026; baseline main/origin
-`ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`; M6-01–04 DONE.
-[Spec](tasks/M6/M6-05.md), [report](../docs/m6-05-verification-decisions.md).
-Tech Lead nghiệm thu DONE ngày04/11/2026, cho phép đồng bộ planning.
-Main e318461 đã xác minh chỉ thêm docs/planning sau implementation018798a.
+`9b807f370c144181588818c46de70e3d5f0fe485`; M6-01–05 DONE.
+[Spec](tasks/M6/M6-06.md), [report](../docs/m6-06-verified-claim-ledger.md).
 
 ## Completed Work
 
-Typed decision contracts, deterministic Judge và bounded caller-fed revision controller.
-Giữ full source/trace/caveats, original claims pending; không ledger hoặc Gemini/OCR.
+Typed proof admission qua Judge/bounded loop, atomic JSON/batch repository và
+M7 read-only facade. Giữ sources/caveats/lineage/parent history và pending contracts.
 
 ## Remaining Work
 
-Không còn việc M6-05 sau nghiệm thu; chờ nhiệm vụ mới.
+Chờ Tech Lead review M6-06 và điều kiện hoàn thành M6; chưa DONE hoặc M7.
 
 ## Modified Files
 
-src/verification contracts/Judge/controller/exports; focused tests/CI entry;
-evaluator/oracle, report và planning. Web local ngoài stage.
+src/verification ledger modules/exports; tests/CI entry;evaluator/oracle;
+docs/data-contracts,report và planning. Web local ngoài stage.
 
 ## Tests
 
-31 Judge/loop tests và156 M6-01–04/M4/M5 compatibility PASS.
-7 final bounded PASS sau chống old-history replay. Oracle pin trước execution;
-initial94/94 batches,6/6loops,targeted2/2 PASS;107decisions,zero unsafe ACCEPT/
-false abstention/unnecessary investigation.14.057 baseline hashes unchanged.
-Initial3 tests lỗi dấu câu proposal đã sửa,31/31 PASS sau fix.
-Đây là evidence implementation đã có; phiên nghiệm thu chỉ planning checker/diff
-check, không chạy lại tests/evaluation/Gemini/OCR.
+119 M6 compatibility và22 final ledger tests PASS;Ruff/planning/diff PASS.
+109 replay cases đúng oracle:58stored/51rejected,27controls PASS;
+29representative BBS,2accepted revisions,unsafe0/false rejection0.
+57/57 primary entries exact original proof integrity,27lineages,8filters PASS trên
+final-cache code. Full replay trước cache; không fresh full negative replay sau cache.
+14.569 protected hashes/Web unchanged;0Gemini/OCR.
+Evidence tại ignored `artifacts/evidence/M6-06-ledger-final-v2/summary.json` và
+`artifacts/evidence/M6-06-integrity-final/summary.json`.
 
 ## Blockers
 
-Không external blocker. Giữ D03-B10/source quality/scope/snapshot caveats.
-Engineering/source-bound agreement không phải independent PDF financial accuracy.
+Không external blocker; chờ Tech Lead nghiệm thu. Giữ D03-B10/source-bound limits;
+không independent PDF financial accuracy. Full proof JSON có chi phí cold read/RAM.
 
 ## Git Checkpoint
 
-Implementation `018798a25a8b232dfc5302ed17b12ed905d87dd8` đã push main;
-[CI41756388273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41756388273)
-completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
-Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
-Web local và protected artifacts giữ nguyên.
+Implementation tree `88ae91d40d5d4f0b4cf3f3526b96533b34a3d694` đã push main;
+runtime162e438,88ae91d sửa format docs fence sau CI đầu fail formatting.
+[CI41823101329](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41823101329)
+completed/SUCCESS đúng88ae91d:Python3.12 SUCCESS;Web/full regression SKIPPED.
+Checkpoint tiếp theo chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-06.
+Tech Lead review M6-06 và điều kiện hoàn thành M6; không tự bắt đầu M7.
