@@ -2,7 +2,11 @@
 
 Owner giao04/11/2026, baseline main/origin
 `ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`; M6-01–04 đã DONE.
-Implementation đang xác minh; chưa commit/CI. Chỉ task M6-05, chưa ledger M6-06.
+Status **REVIEW**; implementation `018798a25a8b232dfc5302ed17b12ed905d87dd8`
+đã push main. [CI41756388273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41756388273)
+completed/SUCCESS đúng SHA: Python3.12 và Web smoke SUCCESS, full regression
+SKIPPED. Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
+Chờ Tech Lead nghiệm thu; chưa ledger M6-06.
 
 ## API và contracts
 
@@ -165,4 +169,4 @@ Agreement theo policy oracle không phải independent PDF gold, full financial
 verification accuracy hoặc đánh giá lợi ích Multi-Agent end-to-end. ACCEPT chỉ
 xác nhận claim trong phạm vi nguồn/policy hiện tại, không phải kiểm toán độc lập.
 
-Next action: hoàn tất targeted validation và xác minh CI đúng implementation SHA.
+Next action: Tech Lead review M6-05.

@@ -6,7 +6,7 @@ M6-05 — Verification Decisions
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -21,7 +21,7 @@ Giữ full source/trace/caveats, original claims pending; không ledger hoặc G
 
 ## Remaining Work
 
-Commit/push main, exact-SHA CI và cập nhật REVIEW.
+Chờ Tech Lead nghiệm thu M6-05; không bắt đầu M6-06.
 
 ## Modified Files
 
@@ -43,9 +43,12 @@ Engineering/source-bound agreement không phải independent PDF financial accur
 
 ## Git Checkpoint
 
-Implementation chưa commit; CI chưa chạy. Git main/origin khớp baseline;
+Implementation `018798a25a8b232dfc5302ed17b12ed905d87dd8` đã push main;
+[CI41756388273](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41756388273)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Web local và protected artifacts giữ nguyên.
 
 ## Exact Next Action
 
-Commit/push main và xác minh CI đúng implementation SHA.
+Tech Lead review M6-05.
