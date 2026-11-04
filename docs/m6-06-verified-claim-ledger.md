@@ -48,9 +48,7 @@ Các returned models detached khỏi persistence; caller mutation không sửa l
 repository = VerifiedClaimRepository(configured_ledger_root)
 admission = repository.admit(history)  # exact saved contexts + M6-05 outcome
 ledger = VerifiedClaimLedger(repository)
-matches = ledger.find_claims(
-    VerifiedClaimQuery(company_id=company_id, document_id=document_id)
-)
+matches = ledger.find_claims(VerifiedClaimQuery(company_id=company_id, document_id=document_id))
 for entry in matches.claims:
     content, citations, caveats = entry.content, entry.citations, entry.caveats
     calculation = entry.accepted_claim.calculation
