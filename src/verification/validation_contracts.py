@@ -1,5 +1,7 @@
 """Check outcomes only; these contracts cannot accept claims or write a ledger."""
 
+import hashlib
+import json
 from typing import Literal
 
 from pydantic import Field, JsonValue
@@ -8,6 +10,13 @@ from ..accounting.contracts import FinancialModel
 from ..agents.orchestration_contracts import CandidateConflict
 from ..evidence.retrieval import EvidenceCitation
 from .contracts import VerificationFinding
+
+
+def verification_input_digest(batch) -> str:
+    """Bind new validator results to the complete M6 input, not only its M5 origin."""
+    wire = json.dumps(batch.model_dump(mode="json"), sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(wire.encode()).hexdigest()
+
 
 CheckStatus = Literal["pass", "fail", "undetermined", "not_applicable"]
 
@@ -36,6 +45,8 @@ class ValidationResult(FinancialModel):
         "deterministic_financial_validation_v1"
     )
     source_result_sha256: str
+    # Optional for accepted M6-02 artifacts written before M6-03.
+    verification_input_sha256: str | None = None
     claims: list[ClaimValidationResult] = Field(default_factory=list)
     conflicts: list[CandidateConflict] = Field(default_factory=list)
     caveats: list[str] = Field(default_factory=list)

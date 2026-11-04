@@ -11,6 +11,17 @@ from .contracts import (
     VerificationFinding,
     VerificationInput,
 )
+from .evidence_contracts import (
+    ClaimEvidenceAssessment,
+    EvidenceContext,
+    EvidenceCriticError,
+    EvidenceCriticResult,
+    EvidenceCriticTrace,
+    EvidenceSupportFinding,
+    SemanticEvidenceAssessment,
+    SupportStatus,
+)
+from .evidence_critic import EvidenceCritic
 from .validation_contracts import (
     CheckStatus,
     ClaimValidationResult,
@@ -21,6 +32,15 @@ from .validators import DeterministicFinancialValidator
 
 __all__ = [
     "CandidateClaim",
+    "ClaimEvidenceAssessment",
+    "EvidenceContext",
+    "EvidenceCritic",
+    "EvidenceCriticError",
+    "EvidenceCriticResult",
+    "EvidenceCriticTrace",
+    "EvidenceSupportFinding",
+    "SemanticEvidenceAssessment",
+    "SupportStatus",
     "CheckStatus",
     "ClaimValidationResult",
     "ClaimProvenance",

@@ -9,7 +9,12 @@ from ..tools.financial_calculator import CalculateFinancialMetricRequest, Financ
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
 from .contracts import CandidateClaim, VerificationInput
 from .numeric import extract_assertion, fold
-from .validation_contracts import ClaimValidationResult, ValidationCheck, ValidationResult
+from .validation_contracts import (
+    ClaimValidationResult,
+    ValidationCheck,
+    ValidationResult,
+    verification_input_digest,
+)
 
 APPROVED_FORMULAS = {"gross_margin", "debt_to_assets", "revenue_yoy"}
 PERIOD_ROLES = {
@@ -53,6 +58,7 @@ class DeterministicFinancialValidator:
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         output = ValidationResult(
             source_result_sha256=batch.source_result_sha256,
+            verification_input_sha256=verification_input_digest(batch),
             conflicts=batch.conflicts,
             caveats=batch.caveats,
         )

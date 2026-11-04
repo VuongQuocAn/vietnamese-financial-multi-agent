@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-11-03** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-04** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 2 | 0 | 0 | 4 | 0 | 0 |
+| M6 | 6 | 2 | 1 | 0 | 3 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 84 | 0 | 0 | 17 | 0 | 0 |
+| TOTAL | 101 | 84 | 1 | 0 | 16 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,16 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M6-03 **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin5346644 khớp.
+[Spec](tasks/M6/M6-03.md), [report](../docs/m6-03-evidence-critic.md).
+144 focused/compatibility +19 post-cache PASS;63/63offline sau annotation correction,
+68assessments/12newcontrols;fresh Gemini2/2semantic cases,2calls/8.992tokens;
+13.060protected hashes unchanged. Implementation chuẩn bị commit.
+Giữ Web local/accepted artifacts/claims pending/D03-B10.
+Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW.
+
+Checkpoint trước:
 
 M6-02 **DONE**, Tech Lead nghiệm thu ngày03/11/2026; cho phép đồng bộ planning.
 Owner giao03/11/2026; baseline51292cf, M6-01 DONE.

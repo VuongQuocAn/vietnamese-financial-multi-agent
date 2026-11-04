@@ -1,6 +1,17 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-03 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## M6-03 — Evidence Critic
+
+Status: **IN_PROGRESS**; Owner giao04/11/2026, baseline main/origin5346644 khớp.
+[Spec](tasks/M6/M6-03.md), [report](../docs/m6-03-evidence-critic.md).
+Typed evidence support/context/trace, deterministic-first, bounded Gemini qua Gateway.
+144 focused/compatibility +19 post-cache PASS;63/63 offline cases sau annotation
+correction E35,68 assessments/12controls;fresh Gemini2/2 semantic cases,
+2calls/8.992tokens;13.060protected hashes unchanged. Chi tiết/phân loại trong report.
+Implementation chuẩn bị commit; giữ Web local/accepted artifacts/D03-B10/claims pending.
+Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW.
 
 ## M6-02 — Deterministic Financial Validators
 

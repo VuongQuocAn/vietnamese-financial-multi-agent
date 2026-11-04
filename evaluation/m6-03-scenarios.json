@@ -1,0 +1,29 @@
+{
+  "annotation_policy": "Kỳ vọng gán trước khi chạy Critic từ nguồn canonical, quality/gates và nội dung candidates; không phải independent PDF gold.",
+  "persisted_source": {
+    "default": "supported",
+    "fact-02-b03": "insufficient_evidence"
+  },
+  "saved_semantic": {
+    "E06": {"status": "supported", "reason": "direct_support", "missing": []},
+    "replay-E11": {"status": "supported", "reason": "direct_support", "missing": []}
+  },
+  "saved_expected": {"E35": ["supported", "unsupported"]},
+  "annotation_corrections": {"E35": "Đối chiếu saved M6-02 result-saved-E35: supporting_fact FAIL do supporting copy khác canonical một đơn vị. Expected unsupported cho claim thứ hai; vẫn giữ cả hai phía conflict, không chọn winner."},
+  "controls": {
+    "value": "unsupported",
+    "document": "unsupported",
+    "snapshot": "unsupported",
+    "period": "unsupported",
+    "currency": "unsupported",
+    "scope": "unsupported",
+    "formula": "unsupported",
+    "citation": "unsupported",
+    "missing_source": "insufficient_evidence",
+    "cross_document": "insufficient_evidence",
+    "interpretation": "partially_supported",
+    "stale_validation": "insufficient_evidence"
+  },
+  "interpretation_control": {"status": "insufficient_evidence", "reason": "missing_evidence", "missing": ["comparison"]},
+  "live_cases": ["E06", "replay-E11"]
+}
