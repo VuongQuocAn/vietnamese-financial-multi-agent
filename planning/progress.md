@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 3 | 1 | 0 | 2 | 0 | 0 |
+| M6 | 6 | 3 | 0 | 0 | 2 | 0 | 1 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 85 | 1 | 0 | 15 | 0 | 0 |
+| TOTAL | 101 | 85 | 0 | 0 | 15 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -39,7 +39,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
-| `verification` | M6-01–M6-03 DONE, Tech Lead nghiệm thu: typed Evidence Critic deterministic-first/Gemini qua Gateway,144focused/compatibility+19post-cache PASS;63/63offline sau annotation correction,2/2fresh semantic cases/2calls;CI41745959202 SUCCESS đúng198234a. Giữ provenance/caveats/claims pending;chưa independent PDF/full verification accuracy,Financial Logic Critic/Judge/ledger |
+| `verification` | M6-01–M6-03 DONE;M6-04 REVIEW: per-assertion Financial Logic Critic,155focused/compatibility+29final logic PASS;71/71offline/20controls;6bounded live calls,3/4unique scenarios valid đúng oracle,causal HTTP503 chưa live-assessed. CI41751757736 SUCCESS đúng4a09238. Giữ provenance/caveats/claims pending;chưa independent PDF/full verification accuracy hoặc Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
@@ -47,6 +47,19 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M6-04 **REVIEW**, Owner giao04/11/2026; baseline94bf698.
+[Spec](tasks/M6/M6-04.md), [report](../docs/m6-04-financial-logic-critic.md).
+Implementation4a09238 đã push main;
+[CI41751757736](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41751757736)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+155focused/compatibility+29final logic PASS;71/71offline/20controls;
+initial live2/4,targeted1/2,3/4unique scenarios valid đúng oracle,không fresh4/4.
+Đủ6calls/122.842recorded tokens;hai503 usage unknown,causal chưa live-assessed.
+13.077original protected hashes/Web unchanged;giữ D03-B10/claims pending.
+Next action: Tech Lead review M6-04.
+
+Checkpoint trước:
 
 M6-03 **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
 Owner giao04/11/2026; baseline main/origin5346644 khớp.

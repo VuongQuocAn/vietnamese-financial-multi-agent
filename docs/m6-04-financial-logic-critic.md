@@ -1,8 +1,11 @@
 # M6-04 — Financial Logic Critic
 
-Status: **IN_PROGRESS** (chờ exact-SHA CI trước REVIEW), Owner giao04/11/2026, baseline main/origin
+Status: **REVIEW**, chờ Tech Lead nghiệm thu. Owner giao04/11/2026, baseline main/origin
 `94bf6988b87096260c7569c4054252ecff1398c6`; M6-01–03 DONE.
-Implementation chuẩn bị commit/push; evaluation đã hoàn tất trong ngân sách.
+Implementation `4a09238d4d1bfe15b88e3090425e4319f947ab75` đã push trực tiếp main,
+origin/main khớp; evaluation đã hoàn tất trong ngân sách.
+[CI41751757736](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41751757736)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
 
 ## API và boundaries
 
@@ -125,8 +128,9 @@ assessments, zero actual Gemini calls; không coi mock agreement là model accur
 30 persisted-source cases,13 saved BBS mock-generated M5 batches,6 saved synthetic
 controls,1 saved Gemini-response replay,1 replay kèm synthetic control và20 new
 reasoning controls (19 interpretations +1 counterfactual). Năm saved batches rỗng
-giữ nguyên zero claims, không đưa vào số findings. Hai saved natural sign paraphrases
-có kết quả consistent; các natural cases còn lại phần lớn chỉ là numeric assertions.
+giữ nguyên zero claims, không đưa vào số findings. Hai sign paraphrases đã lưu
+(một M5 mock, một saved Gemini replay) có kết quả consistent; các assertions đã lưu
+còn lại phần lớn chỉ là numeric assertions.
 
 20/20 controls bao phủ positive margin→improvement, CFO→loss, debt→insolvency,
 wrong/correct YoY direction, missing causal evidence, scope mismatch,
@@ -177,7 +181,8 @@ hai503 usage unknown nên tổng billing actual N/A. Requested model cả6 là
 gemini-3.5-flash-lite, provider-reported model của4responses thành công cùng tên;
 effective_model=null theo Gateway, cost unknown. Exact requests/responses/errors,
 token/model/latency trace ở ignored `M6-04-live` và `M6-04-live-targeted`;
-`M6-04-call-budget` giữ6 reserved attempts. Final targeted protected14.033 hashes
+`M6-04-call-budget` giữ6 reserved attempts; `M6-04-live-review/summary.json` tổng hợp
+coverage/tokens và bind hashes tới6 raw responses. Final targeted protected14.033 hashes
 unchanged. Causal live coverage là phần còn thiếu do provider, ghi rõ để Tech Lead
 review; không phải lý do tự vượt budget hoặc sửa oracle.
 
@@ -194,10 +199,22 @@ M4 calculator và M5 orchestrator. Sau direction/conjunction/global-caveat/promp
 changes:28 final logic PASS; một targeted test sau đó xác nhận malformed call vẫn
 tiêu quota và không làm mất independent candidates. Một warning có sẵn từ test
 M4 cố tình đưa invalid Decimal, không có runtime financial failure.
+Final review phát hiện `b03.*` quá rộng cho semantic sign premise: cash balances
+không phải net cash flow. Đã giới hạn vào operating/investing/financing/net_cash_flow;
+29 final logic tests PASS, gồm balance-versus-flow control. Fix chỉ thu hẹp premise
+availability; các BBS/live scenarios vẫn dùng đúng CFO nên không rerun dataset/Gemini.
+Initial implementationf8d1770, final fix4a09238; chỉ dùng CI của final fix SHA.
 Ruff lint/format, planning101 và diff check PASS; không full OCR/M1–M5 benchmark.
 Protected hashes trước/sau mọi evaluation khớp; initial preflight13.077 files,
 final-v2 kiểm13.674, post-prompt14.005; bao gồm raw/processed/accepted evidence/Web.
-Exact implementation SHA/CI sẽ ghi khi hoàn tất push và verification.
+Implementation `4a09238d4d1bfe15b88e3090425e4319f947ab75` đã push main;
+exact-SHA CI41751757736 completed/SUCCESS, đã kiểm run metadata và từng job/step:
+Python3.12 focused tests/lint/format/planning, Web typecheck/lint/build/browser smoke
+SUCCESS;full unit regression SKIPPED đúng workflow. Raw CI metadata ở ignored
+`artifacts/evidence/M6-04-ci-final.json`. Checkpoint tiếp theo chỉ docs/planning
+[skip ci], không gán CI implementation cho SHA checkpoint. Original preflight13.077 protected hashes đã đối
+chiếu lại sau toàn bộ implementation/evaluation:unchanged. Staged scope/key-pattern
+check PASS, không stage dataset/evaluation artifacts/secrets hoặc Web local.
 
 ## Giới hạn và nghiệm thu
 
@@ -207,4 +224,4 @@ semantic coverage còn bounded sign paraphrase. Causal/industry/solvency conclus
 chưa có typed sufficient premises để xác nhận. Judge/ledger thuộc M6-05/M6-06,
 claims vẫn pending/decision=null/financial_fact_verified=false.
 
-Next action: hoàn tất validation M6-04 để Tech Lead review.
+Next action: Tech Lead review M6-04.

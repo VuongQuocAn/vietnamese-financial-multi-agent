@@ -4,16 +4,21 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-04 — Financial Logic Critic
 
-Status: **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin94bf698 khớp.
+Status: **REVIEW**, Owner giao04/11/2026; baseline main/origin94bf698 khớp.
 [Spec](tasks/M6/M6-04.md), [report](../docs/m6-04-financial-logic-critic.md).
 Typed per-assertion reasoning, deterministic-first và bounded Gemini qua Gateway;
-không decisions/ledger.155 focused/compatibility PASS,28 final logic PASS;
-71/71 offline final-v2 (20 new controls), chưa commit/CI.
+không decisions/ledger.155 focused/compatibility PASS,29 final logic PASS;
+71/71 offline final-v2 (20 new controls). Implementation
+`4a09238d4d1bfe15b88e3090425e4319f947ab75` đã push main;
+[CI41751757736](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41751757736)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 Initial live2/4, targeted1/2;3/4 unique scenarios có valid đúng oracle, không fresh4/4.
 Đủ6calls/122.842recorded tokens, haiHTTP503 usage unknown; causal chưa live-assessed.
-Đã rút prompt/làm rõ IDs,28logic+4post-prompt mock PASS. Chờ exact-SHA CI;
-giữ raw/processed/accepted artifacts/Web local/D03-B10, không thêm calls.
-Next action: hoàn tất validation M6-04 để Tech Lead review.
+Đã rút prompt/làm rõ IDs,28logic+4post-prompt mock PASS;final balance-versus-flow fix
+29logic PASS.13.077original protected hashes unchanged, giữ Web local/D03-B10.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA;
+claims pending, chưa full verification accuracy. Không thêm calls.
+Next action: Tech Lead review M6-04.
 
 ## M6-03 — Evidence Critic
 
