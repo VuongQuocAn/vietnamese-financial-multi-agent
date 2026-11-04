@@ -4,14 +4,18 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-03 — Evidence Critic
 
-Status: **IN_PROGRESS**; Owner giao04/11/2026, baseline main/origin5346644 khớp.
+Status: **REVIEW**; Owner giao04/11/2026, baseline main/origin5346644 khớp.
 [Spec](tasks/M6/M6-03.md), [report](../docs/m6-03-evidence-critic.md).
 Typed evidence support/context/trace, deterministic-first, bounded Gemini qua Gateway.
 144 focused/compatibility +19 post-cache PASS;63/63 offline cases sau annotation
 correction E35,68 assessments/12controls;fresh Gemini2/2 semantic cases,
 2calls/8.992tokens;13.060protected hashes unchanged. Chi tiết/phân loại trong report.
-Implementation chuẩn bị commit; giữ Web local/accepted artifacts/D03-B10/claims pending.
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW.
+Implementation `198234a62d5cae8d4878eb249dac729b013c55c6` đã push main;
+[CI41745959202](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41745959202)
+completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS, full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
+Giữ Web local/accepted artifacts/D03-B10/claims pending; chưa full verification accuracy.
+Next action: Tech Lead review M6-03.
 
 ## M6-02 — Deterministic Financial Validators
 

@@ -1,6 +1,6 @@
 # M6-03 — Evidence Critic
 
-Status: **IN_PROGRESS**; implementation chuẩn bị commit, CI chưa chạy. Owner giao04/11/2026,
+Status: **REVIEW**; implementation đã push main và exact-SHA CI SUCCESS. Owner giao04/11/2026,
 baseline main/origin5346644; M6-01/M6-02 DONE. Brief cho phép commit/push main.
 
 ## API và phạm vi
@@ -153,6 +153,10 @@ Một warning có sẵn do M4 test cố tình đưa invalid Decimal. Ruff/planni
 Không chạy full OCR/extraction/M1–M5 benchmark. Root causes trong phạm vi là
 catalog hydration lặp (đã reuse cache trên immutable snapshot) và annotation E35
 sai (đã sửa theo saved independent validator). Live không phát hiện P0/P1 cần sửa.
-Implementation SHA/exact-SHA CI sẽ ghi sau commit và workflow hoàn tất.
+Implementation `198234a62d5cae8d4878eb249dac729b013c55c6` đã push trực tiếp main,
+origin/main khớp sau push. [CI41745959202](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41745959202)
+completed/SUCCESS đúng implementation SHA; Python3.12 và Web smoke SUCCESS,
+full regression SKIPPED. Đã xác minh run metadata và từng job/step.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW.
+Next action: Tech Lead review M6-03.

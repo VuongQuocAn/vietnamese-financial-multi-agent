@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 2 | 1 | 0 | 3 | 0 | 0 |
+| M6 | 6 | 2 | 0 | 0 | 3 | 0 | 1 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 84 | 1 | 0 | 16 | 0 | 0 |
+| TOTAL | 101 | 84 | 0 | 0 | 16 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -39,7 +39,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
-| `verification` | M6-01/M6-02 DONE, Tech Lead nghiệm thu: deterministic canonical/M4 validators,30 focused +78 compatibility PASS;72 BBS claim rows/16controls đúng kỳ vọng,12.753hashes unchanged;CI41641546537 SUCCESS đúng58980d1; parser giới hạn mẫu, chưa independent PDF/interpretation accuracy hoặc Critics/Judge/ledger |
+| `verification` | M6-01/M6-02 DONE;M6-03 REVIEW: typed Evidence Critic deterministic-first/Gemini qua Gateway,144focused/compatibility+19post-cache PASS;63/63offline sau annotation correction,2/2fresh semantic cases/2calls;CI41745959202 SUCCESS đúng198234a. Giữ provenance/caveats/claims pending;chưa independent PDF/full verification accuracy,Financial Logic Critic/Judge/ledger |
 | `outputs` | Chỉ package/docstring; chưa có QA/report generation |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
@@ -48,13 +48,15 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M6-03 **IN_PROGRESS**, Owner giao04/11/2026; baseline main/origin5346644 khớp.
+M6-03 **REVIEW**, Owner giao04/11/2026; baseline main/origin5346644 khớp.
 [Spec](tasks/M6/M6-03.md), [report](../docs/m6-03-evidence-critic.md).
 144 focused/compatibility +19 post-cache PASS;63/63offline sau annotation correction,
 68assessments/12newcontrols;fresh Gemini2/2semantic cases,2calls/8.992tokens;
-13.060protected hashes unchanged. Implementation chuẩn bị commit.
+13.060protected hashes unchanged. Implementation198234a đã push main;
+CI41745959202 SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Giữ Web local/accepted artifacts/claims pending/D03-B10.
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW.
+Next action: Tech Lead review M6-03.
 
 Checkpoint trước:
 
