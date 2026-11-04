@@ -164,7 +164,13 @@ def semantic_requirements(content, claim):
     prefix = extract_assertion(claim.content)
     if (
         prefix
-        and prefix.target.startswith("b03.")
+        and prefix.target
+        in {
+            "b03.operating_cash_flow",
+            "b03.investing_cash_flow",
+            "b03.financing_cash_flow",
+            "b03.net_cash_flow",
+        }
         and _has(
             text,
             r"(?:tien thu vao.*tien chi|tien chi.*tien thu vao|dong tien (?:vao|ra) thuan|chi rong|thu rong)",

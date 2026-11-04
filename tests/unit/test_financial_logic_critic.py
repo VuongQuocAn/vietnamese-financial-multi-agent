@@ -12,7 +12,10 @@ from vietnamese_financial_multi_agent.verification import (
     FinancialLogicCritic,
     FinancialLogicCriticResult,
 )
-from vietnamese_financial_multi_agent.verification.logic_rules import classify
+from vietnamese_financial_multi_agent.verification.logic_rules import (
+    classify,
+    semantic_requirements,
+)
 from vietnamese_financial_multi_agent.verification.validation_contracts import (
     validation_result_digest,
 )
@@ -313,3 +316,15 @@ def test_approved_yoy_and_financial_sign_are_bound_to_target():
     assert classify("Doanh thu âm.", claim, [check])[0] == "inconsistent"
     assert classify("Lợi nhuận dương.", claim, [check]) is None
     assert classify("Doanh thu dương, chứng tỏ doanh nghiệp hiệu quả.", claim, [check]) is None
+
+
+def test_cash_balance_cannot_supply_net_cash_flow_premise():
+    from types import SimpleNamespace
+
+    content = "Tiền thu vào từ kinh doanh vượt tiền chi ra."
+    balance = SimpleNamespace(content="Tiền và tương đương tiền cuối kỳ năm 2025 là 20 VND.")
+    flow = SimpleNamespace(
+        content="Lưu chuyển tiền thuần từ hoạt động kinh doanh năm 2025 là 20 VND."
+    )
+    assert semantic_requirements(content, balance) == {"financial_context"}
+    assert semantic_requirements(content, flow) == {"sign_context"}
