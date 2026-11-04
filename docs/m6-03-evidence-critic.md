@@ -1,6 +1,7 @@
 # M6-03 — Evidence Critic
 
-Status: **REVIEW**; implementation đã push main và exact-SHA CI SUCCESS. Owner giao04/11/2026,
+Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
+Implementation đã push main và exact-SHA CI SUCCESS. Owner giao04/11/2026,
 baseline main/origin5346644; M6-01/M6-02 DONE. Brief cho phép commit/push main.
 
 ## API và phạm vi
@@ -159,4 +160,8 @@ completed/SUCCESS đúng implementation SHA; Python3.12 và Web smoke SUCCESS,
 full regression SKIPPED. Đã xác minh run metadata và từng job/step.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
-Next action: Tech Lead review M6-03.
+Main d2a8746 đã xác minh chỉ thêm docs/planning sau implementation; phiên đồng bộ
+nghiệm thu chỉ planning checker/diff check, không chạy lại tests/evaluation/Gemini/OCR
+hoặc sửa runtime/accepted artifacts. Các giới hạn thực nghiệm nêu trên giữ nguyên.
+
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-04.

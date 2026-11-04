@@ -4,7 +4,8 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-03 — Evidence Critic
 
-Status: **REVIEW**; Owner giao04/11/2026, baseline main/origin5346644 khớp.
+Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
+Owner giao04/11/2026, baseline main/origin5346644 khớp.
 [Spec](tasks/M6/M6-03.md), [report](../docs/m6-03-evidence-critic.md).
 Typed evidence support/context/trace, deterministic-first, bounded Gemini qua Gateway.
 144 focused/compatibility +19 post-cache PASS;63/63 offline cases sau annotation
@@ -15,7 +16,9 @@ Implementation `198234a62d5cae8d4878eb249dac729b013c55c6` đã push main;
 completed/SUCCESS đúng SHA, Python3.12/Web smoke SUCCESS, full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Giữ Web local/accepted artifacts/D03-B10/claims pending; chưa full verification accuracy.
-Next action: Tech Lead review M6-03.
+Main d2a8746 đã xác minh chỉ thêm docs/planning sau implementation; phiên đồng bộ
+nghiệm thu chỉ planning checker/diff check, không chạy lại tests/evaluation/Gemini/OCR.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-04.
 
 ## M6-02 — Deterministic Financial Validators
 
