@@ -4,7 +4,8 @@ Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M6-05 — Verification Decisions
 
-Status: **REVIEW**. Owner giao04/11/2026; baseline main/origin
+Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
+Owner giao04/11/2026; baseline main/origin
 `ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`, M6-01–04 DONE.
 [Spec](tasks/M6/M6-05.md). Deterministic Judge và bounded revision controller;
 31 Judge/loop +156 compatibility +7 final bounded PASS; initial94/94 batches,
@@ -14,7 +15,10 @@ Implementation `018798a25a8b232dfc5302ed17b12ed905d87dd8` đã push main;
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 14.057 baseline hashes unchanged; giữ Web local/accepted artifacts/D03-B10.
 Checkpoint sau chỉ docs/planning [skip ci]; chưa ledger/independent financial accuracy.
-Next action: Tech Lead review M6-05.
+Main e318461 đã xác minh chỉ thêm docs/planning sau implementation018798a.
+Phiên đồng bộ nghiệm thu chỉ planning checker/diff check; không chạy lại tests,
+evaluation/Gemini/OCR hoặc sửa runtime/accepted artifacts.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-06.
 
 ## M6-04 — Financial Logic Critic
 

@@ -6,13 +6,15 @@ M6-05 — Verification Decisions
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Owner giao04/11/2026; baseline main/origin
 `ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`; M6-01–04 DONE.
 [Spec](tasks/M6/M6-05.md), [report](../docs/m6-05-verification-decisions.md).
+Tech Lead nghiệm thu DONE ngày04/11/2026, cho phép đồng bộ planning.
+Main e318461 đã xác minh chỉ thêm docs/planning sau implementation018798a.
 
 ## Completed Work
 
@@ -21,7 +23,7 @@ Giữ full source/trace/caveats, original claims pending; không ledger hoặc G
 
 ## Remaining Work
 
-Chờ Tech Lead nghiệm thu M6-05; không bắt đầu M6-06.
+Không còn việc M6-05 sau nghiệm thu; chờ nhiệm vụ mới.
 
 ## Modified Files
 
@@ -35,6 +37,8 @@ evaluator/oracle, report và planning. Web local ngoài stage.
 initial94/94 batches,6/6loops,targeted2/2 PASS;107decisions,zero unsafe ACCEPT/
 false abstention/unnecessary investigation.14.057 baseline hashes unchanged.
 Initial3 tests lỗi dấu câu proposal đã sửa,31/31 PASS sau fix.
+Đây là evidence implementation đã có; phiên nghiệm thu chỉ planning checker/diff
+check, không chạy lại tests/evaluation/Gemini/OCR.
 
 ## Blockers
 
@@ -51,4 +55,4 @@ Web local và protected artifacts giữ nguyên.
 
 ## Exact Next Action
 
-Tech Lead review M6-05.
+Chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M6-06.
