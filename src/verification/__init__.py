@@ -1,4 +1,4 @@
-"""M6 candidate contracts and deterministic M5 handoff; verification is pending."""
+"""M6 pending candidates, Critics and source-bound deterministic verification decisions."""
 
 from .adapter import to_verification_input
 from .contracts import (
@@ -10,6 +10,16 @@ from .contracts import (
     VerificationEvidence,
     VerificationFinding,
     VerificationInput,
+)
+from .decision_contracts import (
+    DecisionError,
+    InvestigationRequirement,
+    RevisionInput,
+    RevisionProposal,
+    VerificationDecisionRecord,
+    VerificationDecisionResult,
+    VerificationDecisionTrace,
+    VerificationLoopResult,
 )
 from .evidence_contracts import (
     ClaimEvidenceAssessment,
@@ -23,6 +33,7 @@ from .evidence_contracts import (
 )
 from .evidence_critic import EvidenceCritic
 from .financial_logic_critic import FinancialLogicCritic
+from .judge import VerificationJudge
 from .logic_contracts import (
     ClaimLogicAssessment,
     FinancialLogicCriticResult,
@@ -39,8 +50,19 @@ from .validation_contracts import (
     ValidationResult,
 )
 from .validators import DeterministicFinancialValidator
+from .verification_loop import BoundedVerificationLoop
 
 __all__ = [
+    "BoundedVerificationLoop",
+    "DecisionError",
+    "InvestigationRequirement",
+    "RevisionInput",
+    "RevisionProposal",
+    "VerificationDecisionRecord",
+    "VerificationDecisionResult",
+    "VerificationDecisionTrace",
+    "VerificationJudge",
+    "VerificationLoopResult",
     "ClaimLogicAssessment",
     "FinancialLogicCritic",
     "FinancialLogicCriticResult",

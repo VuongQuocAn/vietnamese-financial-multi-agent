@@ -2,6 +2,16 @@
 
 Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M6-05 — Verification Decisions
+
+Status: **IN_PROGRESS**. Owner giao04/11/2026; baseline main/origin
+`ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`, M6-01–04 DONE.
+[Spec](tasks/M6/M6-05.md). Deterministic Judge và bounded revision controller;
+31 Judge/loop +156 compatibility +7 final bounded PASS; initial94/94 batches,
+6/6loops và targeted2/2 PASS.107 decisions, zero unsafe ACCEPT/false abstention.
+Implementation chưa commit, CI chưa chạy; giữ Web local/accepted artifacts/D03-B10.
+Next action: commit/push main và xác minh CI đúng implementation SHA.
+
 ## M6-04 — Financial Logic Critic
 
 Status: **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.

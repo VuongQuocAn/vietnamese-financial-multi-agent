@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 4 | 0 | 0 | 2 | 0 | 0 |
+| M6 | 6 | 4 | 1 | 0 | 1 | 0 | 0 |
 | M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 86 | 0 | 0 | 15 | 0 | 0 |
+| TOTAL | 101 | 86 | 1 | 0 | 14 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,15 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M6-05 **IN_PROGRESS**, Owner giao04/11/2026, baseline ce7b9c3.
+[Spec](tasks/M6/M6-05.md), [report](../docs/m6-05-verification-decisions.md).
+Judge/bounded revision;31+156+7 focused/compatibility/targeted PASS;
+initial94/94 batches,6/6loops,targeted2/2;zero unsafe ACCEPT/false abstention.
+Implementation chưa commit/CI;14.057 baseline hashes/Web unchanged;không Gemini/OCR/ledger.
+Next action: commit/push main và xác minh CI đúng implementation SHA.
+
+Checkpoint trước:
 
 M6-04 **DONE**, Tech Lead nghiệm thu ngày04/11/2026, cho phép đồng bộ planning.
 Owner giao04/11/2026; baseline94bf698.

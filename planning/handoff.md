@@ -2,55 +2,50 @@
 
 ## Active Task
 
-M6-02 — Deterministic Financial Validators
+M6-05 — Verification Decisions
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Owner giao03/11/2026; baseline main/origin51292cf khớp, M6-01 DONE.
-Tech Lead nghiệm thu DONE ngày03/11/2026; cho phép đồng bộ planning.
-Main39d41ef đã xác minh chỉ thêm docs/planning sau implementation58980d1.
-[Spec](tasks/M6/M6-02.md), [report](../docs/m6-02-deterministic-financial-validators.md).
+Owner giao04/11/2026; baseline main/origin
+`ce7b9c32966d37dbd34d18c75f9c7d5145a31b44`; M6-01–04 DONE.
+[Spec](tasks/M6/M6-05.md), [report](../docs/m6-05-verification-decisions.md).
 
 ## Completed Work
 
-Typed per-check validation, bounded numeric grammar và independent canonical/M4
-replay, focused tests/evaluation script. Không decision/ledger/LLM hoặc sửa M5/Web.
+Typed decision contracts, deterministic Judge và bounded caller-fed revision controller.
+Giữ full source/trace/caveats, original claims pending; không ledger hoặc Gemini/OCR.
 
 ## Remaining Work
 
-Không còn việc M6-02 sau nghiệm thu; chờ nhiệm vụ mới.
+Commit/push main, exact-SHA CI và cập nhật REVIEW.
 
 ## Modified Files
 
-Phiên đồng bộ nghiệm thu chỉ registry/spec/current-status/progress/handoff/report.
-Web local giữ ngoài stage; không sửa runtime/accepted artifacts.
+src/verification contracts/Judge/controller/exports; focused tests/CI entry;
+evaluator/oracle, report và planning. Web local ngoài stage.
 
 ## Tests
 
-30 validator +78 compatibility PASS; final72claim rows/16controls đúng kỳ vọng;
-12.753 protected hashes unchanged. Ruff/planning101/diff PASS. Zero Gemini/OCR.
-Engineering và persisted-source agreement, không general financial accuracy.
-Đây là evidence implementation đã có; phiên này chỉ planning checker/diff check,
-không chạy lại tests/evaluation/Gemini/OCR.
+31 Judge/loop tests và156 M6-01–04/M4/M5 compatibility PASS.
+7 final bounded PASS sau chống old-history replay. Oracle pin trước execution;
+initial94/94 batches,6/6loops,targeted2/2 PASS;107decisions,zero unsafe ACCEPT/
+false abstention/unnecessary investigation.14.057 baseline hashes unchanged.
+Initial3 tests lỗi dấu câu proposal đã sửa,31/31 PASS sau fix.
 
 ## Blockers
 
-Không external blocker. Scope/source quality/page-level caveats và D03-B10 còn nguyên;
-semantic support/reasoning thuộc Critics sau. Không bắt đầu M6-03.
-Parser chỉ hỗ trợ mẫu đã xác định; chưa independent PDF hoặc interpretation accuracy.
+Không external blocker. Giữ D03-B10/source quality/scope/snapshot caveats.
+Engineering/source-bound agreement không phải independent PDF financial accuracy.
 
 ## Git Checkpoint
 
-Implementation `58980d1abde246bfd6a8ec97a6fe34bd84919497` đã push main;
-[CI41641546537](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41641546537)
-completed/SUCCESS đúng SHA; Python3.12/Web smoke SUCCESS, full regression SKIPPED.
-Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
-Web local ngoài commit.
+Implementation chưa commit; CI chưa chạy. Git main/origin khớp baseline;
+Web local và protected artifacts giữ nguyên.
 
 ## Exact Next Action
 
-Chờ Owner/Tech Lead giao nhiệm vụ mới.
+Commit/push main và xác minh CI đúng implementation SHA.
