@@ -12,7 +12,10 @@ không gọi LLM/OCR/extraction/calculator hoặc bắt đầu M8.
 64firewall/263compatibility PASS;130/130oracle,40QA BBS/42reports có support,
 8refusals/40attacks;false acceptance/rejection0/0;16.190protected hashes/Web unchanged.
 Cold57,842s;warm median QA191,15ms/report166,95ms;0external calls.
-Implementation chưa commit, exact-SHA CI chờ push.
+Implementation `b22d8319ee94c8f400cc7c12face24baacbb2b2e` đã push main;
+[CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
+completed/SUCCESS đúng SHA:977focused và9Web smoke PASS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci]; không gán CI cho checkpoint SHA.
 Next action: Tech Lead review M7-05 và đánh giá điều kiện hoàn thành milestone M7;
 không tự bắt đầu M8.
 

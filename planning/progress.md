@@ -40,7 +40,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
 | `verification` | M6-01–06 DONE; Tech Lead phê duyệt hoàn thành M6 trong task M7-01 ngày05/11/2026. Giữ source-bound limits/D03-B10 và evidence M6-06 tại88ae91d/CI41823101329; không independent PDF audit |
-| `outputs` | M7-01–04 DONE; M7-05 REVIEW: typed final gate QA/report,130/130oracle,64firewall/263compatibility PASS,0false acceptance/rejection; chờ exact-SHA CI và Tech Lead nghiệm thu. Chưa independent PDF accuracy; M7 chưa được tuyên bố hoàn thành |
+| `outputs` | M7-01–04 DONE; M7-05 REVIEW: typed final gate QA/report,130/130oracle,64firewall/263compatibility PASS,0false acceptance/rejection;implementation b22d831 đã push,CI41989606269 SUCCESS đúng SHA (977focused/9Web smoke PASS). Chờ Tech Lead nghiệm thu;chưa independent PDF accuracy hoặc tuyên bố hoàn thành M7 |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
@@ -51,7 +51,10 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 M7-05 **REVIEW**, Owner giao05/11/2026, cho phép commit/push main.
 64firewall/263compatibility PASS;130/130oracle gồm40QA BBS,42reports có support,
 8refusals và40attacks;false acceptance/rejection0/0;16.190protected hashes/Web giữ
-nguyên,0LLM/OCR/extraction/calculator. Chờ implementation push/exact-SHA CI.
+nguyên,0LLM/OCR/extraction/calculator. Implementation b22d831 đã push main;
+[CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
+completed/SUCCESS đúng SHA:977focused và9Web smoke PASS,full regression SKIPPED;
+checkpoint sau chỉ docs/planning [skip ci].
 [Spec](tasks/M7/M7-05.md), [report](../docs/m7-05-information-firewall.md).
 Next action: Tech Lead review M7-05 và đánh giá điều kiện hoàn thành milestone M7;
 không tự bắt đầu M8.

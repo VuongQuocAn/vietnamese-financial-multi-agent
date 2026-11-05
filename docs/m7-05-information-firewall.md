@@ -2,7 +2,13 @@
 
 Owner giao05/11/2026; baseline main/origin
 `6e33269ad8c812d057d202c1eecfd069c606d509`. Task dừng **REVIEW**, không nghiệm thu
-milestone M7 hoặc bắt đầu M8. Implementation chưa commit; CI chưa chạy.
+milestone M7 hoặc bắt đầu M8. Implementation
+`b22d8319ee94c8f400cc7c12face24baacbb2b2e` đã push main; HEAD/origin khớp.
+[CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
+completed/SUCCESS đúng implementation SHA:977focused tests và9Web smoke PASS;
+Python3.12 lint/format/planning, Web typecheck/lint/build đều SUCCESS; full unit
+regression manual SKIPPED. Checkpoint sau chỉ docs/planning [skip ci],
+không gán CI cho SHA checkpoint. Main-first, không tạo branch/PR mới.
 
 ## Architecture audit và trust boundary
 
