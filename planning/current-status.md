@@ -4,16 +4,22 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-04 — Unified Citation Rendering
 
-Status: **IN_PROGRESS**, Owner giao05/11/2026; cho phép implement/test/commit/push
+Status: **REVIEW**, Owner giao05/11/2026; cho phép implement/test/commit/push
 main và dừng REVIEW. Baseline HEAD/origin `3c2e9cd`; giữ Web local.
 [Spec](tasks/M7/M7-04.md), [report](../docs/m7-04-citation-rendering.md).
 Deterministic typed QA/report renderer, exact-source registry, inline markers,
 locators và original-bound validator; không sửa upstream outputs hoặc gọi LLM.
 Final source-bound replay43/43 (19QA BBS/18reports BBS/6empty controls),50/50
-adversarial rejected;15.611protected hashes/Web unchanged. Ba bộ rendered samples.
+adversarial rejected;16.051protected hashes/Web unchanged (15.611baseline+440inherited).
+Ba bộ rendered samples.
 80citation và185focused compatibility PASS;Ruff/format/planning/diff PASS.
-Core730807b đã push main; guard status-coverage bổ sung trước final exact-SHA CI.
-Next action: hoàn tất validation và exact-SHA CI để bàn giao Tech Lead.
+Implementation `731e28c2045b6e4a7d81e96bfeb305d4e1693651` đã push main,HEAD/origin khớp;
+[CI41983340107](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41983340107)
+completed/SUCCESS đúng SHA:913focused tests và9Web smoke PASS,full regression
+SKIPPED. Core CI cũ đã hủy khi thêm status-coverage guard. Checkpoint sau chỉ
+docs/planning [skip ci]. Không P0/P1 đã biết;P2 page-level uncertain/resource mapping
+và independent PDF accuracy chưa được chứng minh;không gọi LLM/OCR/extraction.
+Next action: Tech Lead review M7-04; không tự bắt đầu M7-05.
 
 ## M7-03 — Grounded Report Writer
 

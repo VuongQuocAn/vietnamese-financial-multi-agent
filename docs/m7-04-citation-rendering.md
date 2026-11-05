@@ -2,8 +2,11 @@
 
 Owner giao05/11/2026; baseline main/origin
 `3c2e9cd5d202f3abddc7437f4ef1db27dc611ba9`, Web local được giữ nguyên.
-Status **IN_PROGRESS**; core implementation `730807b38907fa59f74931588b74c78c53dfe935`
-đã push main; final status-coverage guard đang bổ sung trước CI cuối.
+Status **REVIEW**, chờ Tech Lead nghiệm thu; final implementation
+`731e28c2045b6e4a7d81e96bfeb305d4e1693651` đã push main, HEAD/origin khớp.
+[CI41983340107](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41983340107)
+completed/SUCCESS đúng SHA:913focused tests và9Web smoke PASS; chưa nghiệm thu DONE.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI này cho checkpoint SHA.
 
 ## Kiến trúc và public API
 
@@ -115,13 +118,14 @@ Byte hash file local lúc freeze:
 Source artifact pins và accepted M6/M7 oracles cũ không sửa.
 
 ```powershell
-.venv/Scripts/python.exe scripts/evaluate_m7_04_citations.py --output artifacts/evidence/M7-04-final-v2
+.venv/Scripts/python.exe scripts/evaluate_m7_04_citations.py --output artifacts/evidence/M7-04-report-final
 ```
 
 Mọi output dùng exclusive creation, không ghi đè accepted artifacts. Saved sources
 có sẵn từ M7-01-offline-v2 và M7-03-report-final/offline/replay/reports, bao phủ
 BBS2021–2025 và recovery2022. Không tái chạy verification/extraction. CI không cần
 private artifacts; chạy synthetic contracts/controls và pin test offline.
+Đường dẫn trên là lượt final đã chạy; replay mới cần thư mục --output mới.
 
 ## Kết quả
 
@@ -130,10 +134,14 @@ Lượt đầu: 43/43 oracle PASS, gồm19 QA BBS +18 reports BBS +6 empty/refus
 controls rejected. Precision/recall, binding, locator, page, provenance, reuse,
 caveats, identity/content, JSON round-trip/determinism và local validation đều
 43/43 case agreement;627/627 expected reference occurrences đúng identity/thứ tự.
-Final replay sau structural guard bổ sung cũng43/43 và50/50 PASS, cùng oracle pin.
+Final replay sau status-coverage guard cũng43/43 và50/50 PASS, cùng oracle pin.
 
 Protected baseline15.611 files gồm raw/processed, accepted evidence/oracles và Web
-local: cả hai lượt unchanged toàn bộ. Zero LLM/Gemini/OCR/extraction/calculation calls.
+local: final run unchanged toàn bộ. Zero LLM/Gemini/OCR/extraction/calculation calls.
+Bổ sung đối chiếu440 paths từ accepted M7-03 baseline (recovered crops và Web),
+toàn bộ unchanged;15.287 overlapping baseline hashes cũng khớp nhau.
+Tổng hợp16.051protected files unchanged, gồm toàn bộ15.727protected paths M7-03.
+Bằng chứng: `artifacts/evidence/M7-04-report-final/supplemental-protected-integrity.json`.
 Local:80 citation tests và185 focused compatibility tests PASS (M6-06/M7-01–03,
 evidence retrieval/canonical facts). Combined run đầu262PASS/1fixture failure;
 sau sửa shared-context fixture, citation module78/78PASS và targeted1/1PASS;
@@ -141,7 +149,9 @@ final module80/80PASS sau thêm2 status-coverage controls.
 Không chạy lại185 compatibility đã PASS vì không đổi runtime sau run đó.
 Ruff check/format toàn repo489 files, planning101tasks và diff check PASS.
 CI41983022766 của core730807b được hủy khi bổ sung status-coverage guard,
-không dùng làm bằng chứng nghiệm thu. Chờ CI đúng final implementation SHA.
+không dùng làm bằng chứng nghiệm thu. CI41983340107 completed/SUCCESS đúng731e28c:
+913focused PASS,Python3.12 lint/format/planning SUCCESS,Web typecheck/lint/build
+và9browser/proxy smoke PASS;full regression manual SKIPPED.
 
 ## Ví dụ đối chiếu đầy đủ một QA segment
 
@@ -268,4 +278,4 @@ Chưa có resource mapping/PDF viewer hoặc independent PDF citation/financial
 accuracy. Broad upstream citation lists và annotation tail có thể dài; giữ đủ
 nguồn thay vì tự thu hẹp financial attribution. Văn phong upstream giữ nguyên.
 
-Next action: hoàn tất focused validation và exact-SHA CI để bàn giao Tech Lead.
+Next action: Tech Lead review M7-04; không tự bắt đầu M7-05.
