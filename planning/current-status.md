@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-03 — Grounded Report Writer
+
+Status: **REVIEW**, Owner giao05/11/2026, cho phép commit/push main.
+Baseline HEAD/origin `b66919d`, giữ local `web/next-env.d.ts`.
+[Spec](tasks/M7/M7-03.md),[report](../docs/m7-03-grounded-report-writer.md).
+Implementation chưa commit; chờ push/exact-SHA CI. Typed protected narrative,
+dedup cùng typed assertion/source, paragraph citations vàlocal validator/fallback.
+48Writer controls (47suite+1targeted) và401compatibility PASS;86/86oracle
+(43BBS/43controls),zero safety violations. Fresh3calls/7.338tokens/3accepted;
+final saved replay3/3accepted,không thêm calls.15.727protected hashes/Web unchanged.
+Chờ Tech Lead đọc3báo cáo final;chưa independent financial accuracy.
+Next action: Tech Lead review M7-03; không tự bắt đầu M7-04.
+
 ## M7-02 — Report Outline Planner
 
 Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation

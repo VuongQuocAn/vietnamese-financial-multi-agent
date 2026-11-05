@@ -1,5 +1,6 @@
 """Grounded output from the verified claim ledger."""
 
+from .grounded_report_writer import GroundedReportWriter, validate_grounded_report
 from .qa_composer import VietnameseQAComposer, validate_qa_response
 from .qa_contracts import VietnameseQARequest, VietnameseQAResponse
 from .report_outline_contracts import (
@@ -10,6 +11,12 @@ from .report_outline_contracts import (
     ReportPeriodContext,
 )
 from .report_outline_planner import ReportOutlinePlanner, validate_report_outline
+from .report_writer_contracts import (
+    GroundedFinancialReport,
+    GroundedReportRequest,
+    ReportParagraph,
+    ReportSection,
+)
 
 __all__ = [
     "VietnameseQAComposer",
@@ -23,4 +30,10 @@ __all__ = [
     "ReportPeriodContext",
     "ReportOutlinePlanner",
     "validate_report_outline",
+    "GroundedReportWriter",
+    "GroundedReportRequest",
+    "GroundedFinancialReport",
+    "ReportParagraph",
+    "ReportSection",
+    "validate_grounded_report",
 ]

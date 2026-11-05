@@ -16,11 +16,11 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
 | M6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M7 | 5 | 2 | 0 | 0 | 3 | 0 | 0 |
+| M7 | 5 | 2 | 0 | 0 | 2 | 0 | 1 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 90 | 0 | 0 | 11 | 0 | 0 |
+| TOTAL | 101 | 90 | 0 | 0 | 10 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +47,16 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+M7-03 **REVIEW**, Owner giao05/11/2026,baseline main/origin b66919d.
+Typed protected Writer/dedup/paragraph gate;48Writer và401compatibility PASS,
+86/86oracle,zero safety violations.Fresh3calls/7.338tokens/3accepted;
+final saved replay3/3accepted,không thêm calls.15.727protected hashes/Web unchanged.
+Implementation chưa commit,chờ push/exact-SHA CI vàTech Lead đọc3mẫu final.
+[Spec](tasks/M7/M7-03.md),[report](../docs/m7-03-grounded-report-writer.md).
+Next action: Tech Lead review M7-03;không tự bắt đầu M7-04.
+
+Checkpoint M7-02 trước:
 
 M7-02 **DONE**, Tech Lead APPROVED ngày05/11/2026,chấp nhận implementation
 `eff170d406228181435b8d8b88a1c775db772b3a`. Owner giao05/11/2026.
