@@ -539,8 +539,11 @@ percentage-tampering test xác minh fail-closed ở engineering scope riêng.
 Baseline code SHA **34a3fec1171b23bc9c9c268aded4a2205ae68936**, branch main,
 fetch origin main xong và ahead/behind0/0. Accepted firewall implementation
 b22d8319ee94c8f400cc7c12face24baacbb2b2e nằm trong baseline. Runtime không đổi.
-Report/tooling SHA được ghi trong planning checkpoint sau commit; CI theo đúng SHA,
-không gán kết quả CI của baseline cho QA-Q01.
+Report/tooling implementation **6b245b53b4a17d94279717a214428b3638bb52a6** đã
+commit/push main, HEAD/origin khớp sau push. Checkpoint sau chỉ docs/planning.
+[CI42050329839](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42050329839)
+đúng implementation SHA, đang chạy tại lần đọc ban đầu; không gán kết quả CI
+của baseline cho QA-Q01.
 
 Environment Windows PowerShell, Python3.12.0 trong `.venv`, pypdfium2 5.14.0,
 pydantic2.14.1, google-genai2.33.0, pytest9.1.1. Không cài dependency mới.

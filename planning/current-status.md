@@ -11,7 +11,9 @@ Status: **REVIEW**, Owner giao05/11/2026; baseline main/origin
 1unsupported proposal). PDF review10cases:9references số liệu/premises, Q09chỉ
 operands.0P0/3P1/3P2;6targeted controls PASS;16.745protected hashes/Web unchanged.
 4Gemini calls/4.041known tokens/3unknown usage; không retry/OCR/extraction.
-SHA report/tooling được ghi ở checkpoint sau commit; chưa sửa runtime/M8/QA-Fix.
+Report/tooling `6b245b53b4a17d94279717a214428b3638bb52a6` đã push main, HEAD/origin
+khớp sau push;6focused/Ruff/format/planning102tasks/diff PASS. CI42050329839 đúng
+SHA đang chạy tại checkpoint ban đầu. Chưa sửa runtime/M8/QA-Fix.
 Next action: Tech Lead nghiệm thu QA-Q01 và quyết định nhóm QA-Fix ưu tiên.
 
 ## M7-05 — Information Firewall and Output Validation

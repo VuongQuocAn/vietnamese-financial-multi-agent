@@ -63,7 +63,7 @@ lại, không fake agents/tools, không triển khai QA-Fix/M8. Web local giữ 
       không tuyên bố fresh M6 verification khi M7 chỉ đọc saved ledger.
 - [x] Findings/root causes/backlog/retest và performance metadata đầy đủ, dễ đọc.
 - [x] Protected inputs/Web unchanged; targeted validation đạt.
-- [ ] Commit/push main, ghi SHA đã xác minh tại checkpoint.
+- [x] Commit/push main, ghi SHA đã xác minh tại checkpoint.
 - [x] REVIEW chờ Tech Lead; chưa tự nghiệm thu DONE.
 
 ## Required Tests
@@ -79,12 +79,15 @@ Traces chứa dữ liệu nguồn chỉ lưu local ignored; không commit datase
 
 ## Implementation Evidence
 
-- Implementation SHA: chuẩn bị commit report/tooling; baseline
-  `34a3fec1171b23bc9c9c268aded4a2205ae68936`.
+- Implementation SHA: `6b245b53b4a17d94279717a214428b3638bb52a6`, đã push main,
+  HEAD/origin khớp sau push; baseline `34a3fec1171b23bc9c9c268aded4a2205ae68936`.
 - Main Changes: [báo cáo](../../../docs/qa-q01-quick-qa-root-cause.md), QA-only public
   API capture, registry/checker nhận nhóm QA. Không runtime fixes.
 - Test Results: 6 focused engineering controls PASS;16.745protected files unchanged;
-  M7 actual10/10, M5 actual4attempts/0downstream. Không full regression.
+  M7 actual10/10, M5 actual4attempts/0downstream; independent output audit19entries/
+  10cases PASS; Ruff/format/planning102tasks/diff PASS. Không full regression local.
+- CI: [42050329839](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42050329839)
+  đúng implementation SHA; đang chạy tại checkpoint ban đầu, không suy từ CI cũ.
 - Review Notes: 0P0/3P1/3P2, chờ Tech Lead. Gemini503 chặn3cases; Q07unsupported.
 
 ## Handoff Notes
