@@ -4,8 +4,9 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-04 — Unified Citation Rendering
 
-Status: **REVIEW**, Owner giao05/11/2026; cho phép implement/test/commit/push
-main và dừng REVIEW. Baseline HEAD/origin `3c2e9cd`; giữ Web local.
+Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
+`731e28c2045b6e4a7d81e96bfeb305d4e1693651`; không yêu cầu sửa runtime hoặc chạy lại
+evaluation. Owner giao05/11/2026; baseline HEAD/origin `3c2e9cd`; giữ Web local.
 [Spec](tasks/M7/M7-04.md), [report](../docs/m7-04-citation-rendering.md).
 Deterministic typed QA/report renderer, exact-source registry, inline markers,
 locators và original-bound validator; không sửa upstream outputs hoặc gọi LLM.
@@ -19,7 +20,9 @@ completed/SUCCESS đúng SHA:913focused tests và9Web smoke PASS,full regression
 SKIPPED. Core CI cũ đã hủy khi thêm status-coverage guard. Checkpoint sau chỉ
 docs/planning [skip ci]. Không P0/P1 đã biết;P2 page-level uncertain/resource mapping
 và independent PDF accuracy chưa được chứng minh;không gọi LLM/OCR/extraction.
-Next action: Tech Lead review M7-04; không tự bắt đầu M7-05.
+Phiên nghiệm thu chỉ cập nhật docs/planning và chạy planning/diff checks;
+giữ nguyên runtime, accepted evidence, limitations và Web local.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M7-05.
 
 ## M7-03 — Grounded Report Writer
 

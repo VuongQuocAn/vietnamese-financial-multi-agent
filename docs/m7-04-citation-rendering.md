@@ -2,11 +2,13 @@
 
 Owner giao05/11/2026; baseline main/origin
 `3c2e9cd5d202f3abddc7437f4ef1db27dc611ba9`, Web local được giữ nguyên.
-Status **REVIEW**, chờ Tech Lead nghiệm thu; final implementation
+Status **DONE**, Tech Lead APPROVED ngày05/11/2026; accepted implementation
 `731e28c2045b6e4a7d81e96bfeb305d4e1693651` đã push main, HEAD/origin khớp.
 [CI41983340107](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41983340107)
-completed/SUCCESS đúng SHA:913focused tests và9Web smoke PASS; chưa nghiệm thu DONE.
+completed/SUCCESS đúng SHA:913focused tests và9Web smoke PASS.
 Checkpoint sau chỉ docs/planning [skip ci], không gán CI này cho checkpoint SHA.
+Tech Lead không yêu cầu sửa runtime hoặc chạy lại evaluation. Phiên nghiệm thu
+chỉ cập nhật docs/planning và chạy planning/diff checks; giữ evidence và limitations.
 
 ## Kiến trúc và public API
 
@@ -278,4 +280,4 @@ Chưa có resource mapping/PDF viewer hoặc independent PDF citation/financial
 accuracy. Broad upstream citation lists và annotation tail có thể dài; giữ đủ
 nguồn thay vì tự thu hẹp financial attribution. Văn phong upstream giữ nguyên.
 
-Next action: Tech Lead review M7-04; không tự bắt đầu M7-05.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M7-05.
