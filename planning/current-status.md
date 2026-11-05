@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-02 — Report Outline Planner
+
+Status: **REVIEW**, Owner giao05/11/2026; baseline HEAD/origin
+`445733426514cc0d8c3ce535c8b8fa931e93702f` đã xác minh. Cho phép commit/push main.
+[Spec](tasks/M7/M7-02.md),[report](../docs/m7-02-report-outline-planner.md).
+Typed verified-only outline/slots/local gate/bounded Gateway;48 engineering controls
+(47 suite+1 corrected targeted),327 compatibility PASS;64/64 oracle (36 BBS/28 controls),
+section/claim precision/recall1.0,zero safety leakage. Fresh3calls/4655tokens:
+0/3 proposals accepted,fallback3/3 đúng oracle,LIVE PARTIAL;không retry.
+15231 protected hashes/Web unchanged;Ruff/format/planning/diff PASS.
+Implementation chưa commit,CI chờ push;chưa independent financial accuracy.
+Next action: Tech Lead review M7-02 sau exact-SHA CI; không bắt đầu M7-03.
+
 ## M7-01 — Vietnamese QA Composer
 
 Status: **DONE**, Tech Lead APPROVED ngày05/11/2026; chấp nhận implementation16065fae
