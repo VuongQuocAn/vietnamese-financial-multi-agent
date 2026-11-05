@@ -7,7 +7,9 @@ from .citation_contracts import (
     RenderedCitationOutput,
 )
 from .citation_renderer import CitationRenderer, validate_rendered_citations
+from .firewall_contracts import FirewallCheckResult, FirewallDecision, ValidatedOutput
 from .grounded_report_writer import GroundedReportWriter, validate_grounded_report
+from .information_firewall import InformationFirewall
 from .qa_composer import VietnameseQAComposer, validate_qa_response
 from .qa_contracts import VietnameseQARequest, VietnameseQAResponse
 from .report_outline_contracts import (
@@ -26,6 +28,10 @@ from .report_writer_contracts import (
 )
 
 __all__ = [
+    "FirewallCheckResult",
+    "FirewallDecision",
+    "InformationFirewall",
+    "ValidatedOutput",
     "CitationBinding",
     "CitationLocator",
     "CitationReference",

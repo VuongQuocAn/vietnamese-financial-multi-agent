@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-05 — Information Firewall and Output Validation
+
+Status: **REVIEW**, Owner giao05/11/2026, cho phép implement/test/commit/push
+main, dừng REVIEW. Baseline HEAD/origin6e33269 khớp; giữ local Web.
+Typed final gate QA/report, request/ledger/citation bindings và safe release;
+không gọi LLM/OCR/extraction/calculator hoặc bắt đầu M8.
+[Spec](tasks/M7/M7-05.md), [report](../docs/m7-05-information-firewall.md).
+64firewall/263compatibility PASS;130/130oracle,40QA BBS/42reports có support,
+8refusals/40attacks;false acceptance/rejection0/0;16.190protected hashes/Web unchanged.
+Cold57,842s;warm median QA191,15ms/report166,95ms;0external calls.
+Implementation chưa commit, exact-SHA CI chờ push.
+Next action: Tech Lead review M7-05 và đánh giá điều kiện hoàn thành milestone M7;
+không tự bắt đầu M8.
+
 ## M7-04 — Unified Citation Rendering
 
 Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation

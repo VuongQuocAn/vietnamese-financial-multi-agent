@@ -94,6 +94,7 @@ jobs:
           tests/unit/test_report_outline_planner.py
           tests/unit/test_grounded_report_writer.py
           tests/unit/test_citation_renderer.py
+          tests/unit/test_information_firewall.py
           tests/unit/test_reporting_scope.py
           tests/unit/test_financial_context_resolution.py
           tests/unit/test_web_documents.py::test_scan_upload_vision_review_confirm_ready

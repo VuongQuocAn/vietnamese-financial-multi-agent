@@ -2,53 +2,47 @@
 
 ## Active Task
 
-M7-01 — Vietnamese QA Composer
+M7-05 ? Information Firewall and Output Validation
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED — DONE ngày05/11/2026; chấp nhận implementation16065fae
-và các giới hạn P2. Owner giao05/11/2026; baseline local/origin main
-`67700c3ff4e3aa170d9af8c0da872032dc2be1d0`. Tech Lead đã phê duyệt M6 theo task mới.
+Owner giao05/11/2026, cho ph?p commit/push main; baseline6e33269 HEAD/origin kh?p.
+M7-01?04 DONE. Gi? local web/next-env.d.ts, accepted evidence/oracles kh?ng ??i.
 
 ## Completed Work
 
-Typed QA contracts, read-only composer, protected slots, bounded Gateway/fallback,
-local QA gate;66/66 oracle (40 BBS/26 controls),35 QA/236 compatibility PASS.
-Fresh3/3calls/5.555tokens;15.118protected hashes/Web unchanged,zero safety violations.
-66/66 là agreement với source-bound oracle, không phải độ chính xác tài chính độc lập.
+Typed final QA/report gate, request inventory/ledger ACCEPT/protected validators,
+citation integrity v? safe release.130/130frozen oracle,0false acceptance/rejection,
+16.190protected hashes/Web unchanged;kh?ng LLM/OCR/extraction/calculator.
 
 ## Remaining Work
 
-Không còn việc triển khai trong M7-01; chờ nhiệm vụ mới, không bắt đầu M7-02.
+Tech Lead nghi?m thu M7-05; kh?ng t? nghi?m thu DONE/M7 ho?c b?t ??u M8.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ tài liệu/planning: registry, status, dashboard, spec, handoff
-và status report. Giữ runtime/evidence và web/next-env.d.ts local.
+Firewall modules/exports, unit test, evaluator/oracle, technical report/planning
+v? CI focused inclusion. Web local ngo?i stage.
 
 ## Tests
 
-35 QA (34 suite+1 targeted sau fixture fix),236 compatibility PASS;66/66 oracle,
-Gemini fresh3/3;Ruff/format/planning/diff PASS ở implementation.
-Phiên nghiệm thu chỉ planning checker/diff check; không chạy lại tests/evaluation/Gemini.
+64firewall controls (63suite+1percentage targeted),263M6/M7/context compatibility;
+130/130saved-source oracle;Ruff/format/planning/diff PASS. Kh?ng full regression.
 
 ## Blockers
 
-Không P0/P1 trong bounded checks. Tech Lead chấp nhận các P2: matcher/scope bảo thủ
-và cold ledger read chậm.
+Kh?ng P0/P1 ?? bi?t trong bounded checks. P2: template-only financial prose,
+page-level locations/resource mapping, cold ledger load;ch?a independent PDF audit.
 
 ## Git Checkpoint
 
-Implementation `16065fae004335ae224b7b4a6e2e74f5098b26f8` đã push main;
-[CI41948527583](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41948527583)
-completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
-Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
-Giữ web/next-env.d.ts local ngoài stage; không branch/PR/worktree.
+Implementation ch?a commit; exact-SHA CI ch? push. Kh?ng branch/PR/worktree m?i.
 
 ## Exact Next Action
 
-Next action: chờ nhiệm vụ mới từ Owner/Tech Lead; không tự bắt đầu M7-02.
+Next action: Tech Lead review M7-05 v? ??nh gi? ?i?u ki?n ho?n th?nh milestone M7;
+kh?ng t? b?t ??u M8.
