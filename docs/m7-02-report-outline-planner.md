@@ -2,7 +2,12 @@
 
 Owner giao05/11/2026; baseline main/origin
 `445733426514cc0d8c3ce535c8b8fa931e93702f` đã fetch/xác minh. M6 và M7-01 DONE.
-Status **REVIEW**; implementation chưa commit, exact-SHA CI chờ push.
+Status **REVIEW**; implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3`
+đã push main; HEAD/origin khớp sau push. Initial core4c6a612, final scope guardb5898cd.
+[CI41954306492](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41954306492)
+completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
+full regression manual SKIPPED.783 focused tests PASS, gồm toàn bộ49 planner cases.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 
 ## Architecture và API
 
@@ -139,7 +144,7 @@ Final offline sau scope guard: `artifacts/evidence/M7-02-scope-guard-final/`.
 
 | Bằng chứng | Kết quả |
 | --- | --- |
-| Synthetic engineering | 49 controls:47/48 initial; corrected fixture1/1 +scope guard1/1 PASS |
+| Synthetic engineering | Local47/48 initial +corrected fixture1/1 +scope guard1/1; CI toàn bộ49 PASS trong783 focused tests |
 | M4/M5/M6/QA compatibility | 327/327 PASS |
 | Saved BBS oracle | 36/36 PASS;22 ready/13 partial/1 abstained |
 | Negative/adversarial | 13/13 +15/15 PASS;14/14 deterministic fallback |
@@ -217,9 +222,10 @@ Không M7-03/04/05, Web/API/export, independent PDF audit hoặc thay accepted a
 
 Protected:14831 hashes mới +400 supplemental normalized/canonical/crop inputs đã
 đối chiếu khớp accepted M7-01 baseline. Final integrity15231/15231 unchanged,
-gồm local web/next-env.d.ts; `M7-02-integrity-final/summary.json`. Ruff toàn repo,
+gồm local web/next-env.d.ts; `M7-02-integrity-scope-final/summary.json`. Ruff toàn repo,
 format477files,planning/diff PASS. Oracle SHA256
 `ef281feef9705ac086431ec2d1092bf805ac73b19445c304fb0948064e944cf5`.
-Exact-SHA CI chờ implementation push; chưa gán local PASS cho CI.
+Exact-SHA CI đã xác minh SUCCESS như trên; không chạy lại real evaluation/live
+hoặc tests sau khi chỉ cập nhật checkpoint tài liệu.
 
 Next action: Tech Lead review M7-02. Không tự bắt đầu M7-03.
