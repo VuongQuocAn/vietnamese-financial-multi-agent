@@ -2,8 +2,10 @@
 
 Owner giao05/11/2026; baseline main/origin
 `445733426514cc0d8c3ce535c8b8fa931e93702f` đã fetch/xác minh. M6 và M7-01 DONE.
-Status **REVIEW**; implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3`
-đã push main; HEAD/origin khớp sau push. Initial core4c6a612, final scope guardb5898cd.
+Status **REVIEW — targeted fix P1/P2**, chưa DONE. Tech Lead yêu cầu sửa05/11/2026;
+baseline fix HEAD/origin `35ea6588dcda8dcaa4d7d97b3011e075939658c6` đã xác minh.
+Fix chưa commit; chờ CI mới. Bằng chứng dưới đây của lần đầu được giữ để đối chiếu:
+implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3` (core4c6a612 +scope guard).
 [CI41954306492](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41954306492)
 completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
 full regression manual SKIPPED.783 focused tests PASS, gồm toàn bộ49 planner cases.
@@ -18,7 +20,11 @@ Không import calculator, canonical retrieval hoặc M5 execution vào planner.
 Không sửa M6 persistence/policy hoặc QA behavior.
 
 ```python
-from vietnamese_financial_multi_agent.outputs import ReportOutlinePlanner, ReportOutlineRequest
+from vietnamese_financial_multi_agent.outputs import (
+    ReportOutlinePlanner,
+    ReportOutlineRequest,
+    ReportPeriodContext,
+)
 
 outline = ReportOutlinePlanner(ledger, gateway=shared_gateway).plan(
     ReportOutlineRequest(
@@ -27,6 +33,7 @@ outline = ReportOutlinePlanner(ledger, gateway=shared_gateway).plan(
         document_id=document_id,
         snapshot_id=snapshot_id,
         period="2025",
+        period_context=ReportPeriodContext(period_end="2025-12-31"),
         allow_gateway=False,
     )
 )
@@ -40,7 +47,8 @@ khi muốn thu hẹp/thay danh sách mặc định; focused_analysis cần danh 
 luôn lấy từ catalog trung tính. Guard chặn một số yêu cầu ngoài policy phổ biến;
 không có natural-language intent parser tổng quát. Fields có cấu trúc là nguồn
 quyết định phạm vi và chủ đề; yêu cầu scope trong title cần binding rõ ràng.
-Ngôn ngữ vi; model mặc định lấy DEFAULT_GEMINI_MODEL hiện hành.
+Ngôn ngữ vi; model mặc định lấy DEFAULT_GEMINI_MODEL hiện hành. Ngày cuối kỳ trong
+ví dụ là caller binding được khai báo rõ; planner không tự suy ngày31/12 từ năm.
 
 ## Taxonomy và IR cho M7-03
 
@@ -60,7 +68,10 @@ ClaimKind fact/approved_metric/supported_interpretation giữ nguyên; vai trò 
 bày chỉ key_fact/approved_metric/verified_interpretation. Không tạo financial prose.
 
 ReportClaimSlot giữ stable hash ID, mọi verified IDs, accepted content nguyên văn,
-context, citations, caveats, limitations và neutral suggested_role. Sections có
+context, citations, caveats, limitations và neutral suggested_role. `period_role`
+là exact_period hoặc closing_balance; native claim_context.period giữ nguyên.
+Scope giữ period_context và included_periods để Writer không phải đoán kỳ nguồn.
+Sections có
 purpose cố định, order/status/missing_information. Overview liên kết sections thay
 vì lặp financial slots. M7-03 đọc trực tiếp IR, có thể đối chiếu lại ledger IDs;
 không được tính metrics hoặc sinh facts mới. Full proof histories không nằm trong IR.
@@ -68,14 +79,19 @@ không được tính metrics hoặc sinh facts mới. Full proof histories khô
 ## Selection, scope và caveats
 
 Caller phải cung cấp đủ bốn identities; không chọn snapshot/period đầu tiên.
-Filters AND theo exact period. `2025` và `2025-12-31` không tự ghép; vì vậy general
-annual outline có thể partial dù ledger có B01 ở thời điểm cuối năm. Đây là giới
-hạn MVP một period; không làm comparability approval mới. Accepted revenue_yoy có
+Request không có period_context giữ exact-period behavior và oracle cũ. Request
+annual có ReportPeriodContext(fiscal_year, period_end) truy xuất hai exact periods
+trong cùng company/document/snapshot. Chỉ B01 tại đúng period_end được bổ sung:
+facts theo canonical item catalog B01/as_of; Debt-to-Assets theo typed trace operands
+B01/as_of đúng ngày và source identities. B02/B03 tại ngày đó không được đổi thành
+closing balance. Binding khác năm hoặc request as_of có annual context yêu cầu làm
+rõ. Không tự chọn filing/snapshot hoặc ghép chuỗi nhiều năm; D03-B10 giữ nguyên.
+Native periods, citations và caveats không bị đổi sang năm báo cáo. Accepted revenue_yoy có
 operands hai kỳ trong cùng nguồn vẫn được dùng như một claim đã ACCEPT; planner
 không dựng thêm so sánh. Cross-document/multi-year request giữ D03-B10 blocked.
 
 Reuse `_assertion_signature`, `_segments`, claim_scope và citation/caveat projection
-của M7-01, không tái dùng QA intent matcher. Group cùng typed target/kind trong
+của M7-01, không tái dùng QA intent matcher. Group cùng typed target/kind/native period trong
 nguồn đã bind; khác assertion signatures bị loại toàn nhóm, giữ lý do/conflict IDs.
 Cùng semantics nhưng khác wording giữ slot riêng nguyên văn. Cùng content/context
 thì union mọi IDs/citations/caveats/limitations, không chọn bản ít caveats hơn.
@@ -101,7 +117,11 @@ không chứng minh PDF không có dữ liệu.
 
 ## Gemini, fallback và local validation
 
-Proposal chỉ có ordered section IDs và slot IDs của từng section. Giữ scope đầu,
+Proposal chỉ có section_index và slot_order là các chỉ số nguyên từ0 trong chính
+section đó. Mapping ngược từ index sang protected section/slot deterministic;
+opaque IDs chỉ giữ trong IR, không bắt model sao chép. Dynamic schema dùng const
+cho từng section được chọn và enum cho chính inventory slots của section; không
+gửi enum toàn catalog. Prompt có example hợp lệ theo schema. Giữ scope đầu,
 limitations cuối. Title/purpose/content/context/citation/caveat không cho model sửa.
 Một call/request, temperature0, output1600tokens, timeout45s, prompt≤24000bytes;
 không full history, retry/key rotation hoặc chuyển API. Gateway metadata giữ model,
@@ -114,7 +134,7 @@ IDs, missing/duplicate/moved slots, extra prose/fields, invalid JSON hoặc prov
 failure → fallback deterministic với nguyên metadata. Bản deterministic fail gate
 không trả financial slots. Đây là local gate M7-02; chưa phải M7-05 Firewall.
 
-## Oracle, protocol và kết quả
+## Oracle, protocol và kết quả trước targeted fix
 
 `evaluation/m7-02-scenarios.json` chốt trước lần chạy planner: pin ledger SHA256,
 58 accepted claim projections bằng content/citation digests, context, required
@@ -159,7 +179,7 @@ Final offline sau scope guard: `artifacts/evidence/M7-02-scope-guard-final/`.
 Đây là saved-source oracle agreement và engineering; chưa independent financial
 accuracy, full-PDF audit hoặc bằng chứng lợi ích Multi-Agent end-to-end.
 
-## Fresh Gemini: PARTIAL
+## Fresh Gemini trước targeted fix: PARTIAL
 
 Task budget đã dùng3/3, provider-reported `gemini-3.5-flash-lite`;0 provider errors.
 Cả3 response JSON thành công nhưng structured proposal không hợp lệ. Model thêm
@@ -178,7 +198,7 @@ Fresh chạy trước guard mixed confirmed scopes cuối cùng; guard giữ ngu
 và ba requests thực tế không có mixed confirmed scopes. Không đổi prompt hoặc gọi
 thêm sau fresh; không còn ngân sách call.
 
-## Mẫu outline thực tế BBS2025
+## Mẫu outline BBS2025 trước targeted fix
 
 Nguồn document `sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1`,
 snapshot `D-01/normalized-v2`, period `2025`, reporting_scope unknown. Response đầy
@@ -204,7 +224,7 @@ Mỗi row là ví dụ một ID, slot tương đương giữ mọi IDs/caveats t
 citations đầy đủ còn anchor/source pointer/provenance; không nâng page-level thành
 cell-level. M7-03 chỉ dùng accepted_content nguyên văn hoặc xử lý theo policy riêng.
 
-## Root causes, fixes và limitations
+## Root causes, fixes và limitations trước targeted fix
 
 Fixture conflict đầu đổi numeric value nhưng chưa đồng bộ proof nên M6 reject đúng;
 đã chuyển control sang detached source-selector injection và giữ admission nguyên.
@@ -228,4 +248,57 @@ format477files,planning/diff PASS. Oracle SHA256
 Exact-SHA CI đã xác minh SUCCESS như trên; không chạy lại real evaluation/live
 hoặc tests sau khi chỉ cập nhật checkpoint tài liệu.
 
-Next action: Tech Lead review M7-02. Không tự bắt đầu M7-03.
+## Kết quả targeted fix P1/P2
+
+Giữ nguyên oracle cũ SHA256 ef281feef9705ac086431ec2d1092bf805ac73b19445c304fb0948064e944cf5
+và toàn bộ artifacts cũ. Oracle mới `evaluation/m7-02-review-fix-scenarios.json`
+pin lại original ledger/projections; labels chốt trước planner run từ accepted IDs,
+typed B01/as_of trace và explicit caller period_end. Không sửa nhãn oracle cũ.
+New oracle SHA256 `ec25110b8fc13eef86ac507c35cd98e53fd0f8c0f2dedac25193d8b938d5d11d`.
+
+```powershell
+.venv/Scripts/python.exe scripts/evaluate_m7_02_outline.py --review-fix --mode all --output artifacts/evidence/M7-02-review-fix-new
+.venv/Scripts/python.exe scripts/evaluate_m7_02_outline.py --review-fix --mode integrity --output artifacts/evidence/M7-02-review-fix-integrity-new
+```
+
+Session `artifacts/evidence/M7-02-review-fix-evaluation/` hydrate proof một lần,
+rồi replay legacy64 và new44 qua read-only view/public query. New44 gồm25 source-bound
+BBS scenarios (có6 ngày cuối kỳ không có support),4 negative và15 index/proposal
+controls. Kết quả64/64 cũ và44/44 mới PASS. Section/claim precision/recall1.0,
+citations/caveats retained100%, mọi safety violations0. Cold65,338s, warm new BBS
+2,598–47,534ms trong session chạy cùng compatibility tests; không kết luận tốc độ.
+
+P1 sample `offline/response-annual-general-2025.json`: request period2025,
+period_context fiscal_year/end2025-12-31; scope.included_periods=[2025,2025-12-31].
+Outline **ready**,27 verified IDs/11slots/66caveats. Financial_position có2slots,
+5IDs native2025-12-31, period_role=closing_balance:3fact IDs nợ phải trả (PDFpage6)
+và2metric IDs Debt-to-Assets (PDFpages5/6). Ví dụ hai ID mới:
+`verified:03854e8b6c52466e3a0a6ced4095851d03984b1d10903c66bd6a27ab4ad55b97`,
+`verified:657e77e01c3034d428c99ca30fed734b75c50d2fa87e7c13bfd94c738b553569`.
+Không đổi native periods thành2025 hoặc lấy B01 từ recovery/snapshot khác. Các
+ngày cuối kỳ không khớp vẫn abstain; scope unknown và limitations giữ nguyên.
+
+P2 thêm tối đa3 fresh calls theo quyền cấp lại của Owner trong phiên review,
+budget riêng M7-02-review-fix-call-budget; budget/evidence3calls cũ giữ nguyên.
+
+| Fresh case | Provider result | Proposal / final outline | Tokens đã báo |
+| --- | --- | --- | --- |
+| annual-general-2022 | HTTP503 | fallback / partial đúng oracle | unknown |
+| annual-general-2025 | HTTP503 | fallback / ready đúng oracle | unknown |
+| annual-profit-2025 | gemini-3.5-flash-lite | accepted / ready đúng oracle | 850input +64output =914 |
+
+Fresh structural acceptance **1/1 response thành công**,1/3 attempted calls;
+2/2 provider-error fallbacks đúng. LIVE PARTIAL do2 HTTP503; không có invalid
+proposal ở response thành công, không retry/key rotation/thêm calls.914 là known
+provider-reported tokens, hai calls lỗi không có usage. Chưa có fresh proposal
+evidence cho general/partial; deterministic/adversarial cases đã PASS riêng.
+
+50 planner tests local PASS, gồm typed annual/as_of mapping/read-only/native-period
+tamper và finite-index-schema assertions trong Gateway controls.327 focused
+compatibility regression PASS; Ruff/format477files PASS.15496 protected hashes unchanged (gồm oracle cũ,
+accepted artifacts và Web local) tại M7-02-review-fix-integrity/summary.json.
+Fix xử lý root causes P1/P2, không phát hiện P0; còn giới hạn caller phải bind
+period_end rõ ràng, conservative scope unknown và provider availability. Chưa
+independent financial accuracy. Implementation SHA/CI mới sẽ ghi sau push.
+
+Next action: Tech Lead review targeted fix M7-02. Không tự bắt đầu M7-03.

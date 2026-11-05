@@ -3,6 +3,7 @@
 import json
 
 import pytest
+from jsonschema import validate as validate_json_schema
 from pydantic import ValidationError
 from vietnamese_financial_multi_agent.core.fake_llm_transport import FakeLLMTransport
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
@@ -14,12 +15,17 @@ from vietnamese_financial_multi_agent.outputs import (
 )
 from vietnamese_financial_multi_agent.outputs.qa_composer import SCOPE_CAVEAT
 from vietnamese_financial_multi_agent.verification import (
+    BoundedVerificationLoop,
+    VerificationHistory,
+    VerificationProofContext,
     VerifiedClaimLedger,
     VerifiedClaimQuery,
     VerifiedClaimRepository,
 )
 
+from .test_financial_validators import batch_for
 from .test_m4_execution import fixture
+from .test_verification_judge import passes
 from .test_vietnamese_qa_composer import admitted_history
 from .test_vietnamese_qa_composer import qa as qa_fixture
 
@@ -120,11 +126,17 @@ def test_gateway_permutations_and_fallback(qa, mode):
         assert len(request.messages[0].content.encode()) <= 24000
         assert '"history"' not in request.messages[0].content
         payload = json.loads(request.messages[0].content)
+        validate_json_schema(payload["example"], payload["schema"])
+        assert '"slot:"' not in json.dumps(payload)
+        assert {
+            branch["properties"]["section_index"]["const"]
+            for branch in payload["schema"]["properties"]["sections"]["items"]["oneOf"]
+        } == set(range(len(payload["sections"])))
         wire = {
             "sections": [
                 dict(
-                    section_id=s["section_id"],
-                    slot_order=[slot["slot_id"] for slot in reversed(s["slots"])],
+                    section_index=s["section_index"],
+                    slot_order=[slot["slot_index"] for slot in reversed(s["slots"])],
                 )
                 for s in payload["sections"]
             ]
@@ -132,9 +144,9 @@ def test_gateway_permutations_and_fallback(qa, mode):
         sections = wire["sections"]
         populated = next(s for s in sections if s["slot_order"])
         if mode == "section":
-            sections[1]["section_id"] = "invented"
+            sections[1]["section_index"] = 999
         elif mode == "slot":
-            populated["slot_order"] = ["invented"]
+            populated["slot_order"] = [999]
         elif mode == "duplicate":
             populated["slot_order"] *= 2
         elif mode == "missing":
@@ -320,3 +332,53 @@ def test_distinct_confirmed_scopes_across_targets_require_clarification(qa, monk
     assert result.status == "clarification_required" and not result.used_verified_claim_ids
     assert result.reasons == ["conflicting_verified_reporting_scopes"]
     assert result.validation_result.valid
+
+
+def test_explicit_annual_context_adds_verified_closing_balance_without_rewriting_period(qa):
+    repository, ledger, context = qa
+    data = fixture("debt_to_assets")
+    batch = batch_for(data, metric=True)
+    validation, evidence, logic = passes(data, batch)
+    history = VerificationHistory(
+        contexts=[
+            VerificationProofContext(
+                batch=batch, validation=validation, evidence=evidence, logic=logic
+            )
+        ],
+        outcome=BoundedVerificationLoop().start(
+            batch, validation, evidence, logic, candidate_id=batch.claims[0].candidate_id
+        ),
+    )
+    stored = repository.admit(history)
+    assert stored.status == "stored"
+    before = (repository.root / "verified-claims.json").read_bytes()
+    planner = ReportOutlinePlanner(ledger)
+    legacy = planner.plan(ReportOutlineRequest(**context))
+    assert stored.verified_claim_id not in legacy.used_verified_claim_ids
+    request = ReportOutlineRequest(**context, period_context={"period_end": "2030-12-31"})
+    result = planner.plan(request)
+    assert result.validation_result.valid
+    assert stored.verified_claim_id in result.used_verified_claim_ids
+    position = next(s for s in result.sections if s.section_id == "financial_position")
+    assert position.status == "supported"
+    assert position.claim_slots[0].period_role == "closing_balance"
+    assert position.claim_slots[0].claim_context.period == "2030-12-31"
+    assert result.scope.period == "2030"
+    assert result.scope.included_periods == ["2030", "2030-12-31"]
+    assert result.scope.period_context == request.period_context
+    assert GroundedReportOutline.model_validate_json(result.model_dump_json()) == result
+    position.claim_slots[0].claim_context.period = "2030"
+    selected = ledger.find_claims(
+        VerifiedClaimQuery(**{k: v for k, v in context.items() if k != "period"})
+    ).claims
+    assert not validate_report_outline(result, selected, request).valid
+    for end, expected_status in (
+        ("2030-06-30", "partial"),
+        ("2031-12-31", "clarification_required"),
+    ):
+        other = planner.plan(ReportOutlineRequest(**context, period_context={"period_end": end}))
+        assert other.status == expected_status
+        assert stored.verified_claim_id not in other.used_verified_claim_ids
+    assert before == (repository.root / "verified-claims.json").read_bytes()
+    with pytest.raises(ValidationError):
+        ReportOutlineRequest(**context, period_context={"period_end": "2030-02-30"})

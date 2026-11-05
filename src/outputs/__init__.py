@@ -7,6 +7,7 @@ from .report_outline_contracts import (
     ReportClaimSlot,
     ReportOutlineRequest,
     ReportOutlineSection,
+    ReportPeriodContext,
 )
 from .report_outline_planner import ReportOutlinePlanner, validate_report_outline
 
@@ -19,6 +20,7 @@ __all__ = [
     "ReportClaimSlot",
     "ReportOutlineRequest",
     "ReportOutlineSection",
+    "ReportPeriodContext",
     "ReportOutlinePlanner",
     "validate_report_outline",
 ]

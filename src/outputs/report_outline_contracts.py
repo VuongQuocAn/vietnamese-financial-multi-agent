@@ -1,5 +1,6 @@
 """M7-02 outline IR: source-bound protected slots for the later report writer."""
 
+from datetime import date
 from typing import Literal
 
 from pydantic import Field, field_validator
@@ -38,6 +39,7 @@ class ReportOutlineRequest(FinancialModel):
     document_id: str | None = None
     snapshot_id: str | None = None
     period: str | None = None
+    period_context: "ReportPeriodContext | None" = None
     reporting_scope: Literal["separate", "consolidated"] | None = None
     requested_sections: list[SectionType] = Field(default_factory=list, max_length=7)
     language: str = "vi"
@@ -61,11 +63,27 @@ class ReportOutlineRequest(FinancialModel):
         return value
 
 
+class ReportPeriodContext(FinancialModel):
+    """Explicit caller binding, never inferred from the year or document name."""
+
+    period_type: Literal["fiscal_year"] = "fiscal_year"
+    period_end: str
+
+    @field_validator("period_end")
+    @classmethod
+    def iso_date(cls, value):
+        if date.fromisoformat(value).isoformat() != value:
+            raise ValueError("canonical_period_end_required")
+        return value
+
+
 class ReportOutlineScope(FinancialModel):
     company_id: str | None
     document_id: str | None
     snapshot_id: str | None
     period: str | None
+    period_context: ReportPeriodContext | None = None
+    included_periods: list[str] = Field(default_factory=list)
     requested_reporting_scope: Literal["separate", "consolidated"] | None = None
     reporting_scope: Literal["separate", "consolidated"] | None = None
 
@@ -76,6 +94,7 @@ class ReportClaimSlot(FinancialModel):
     accepted_content: str
     claim_kind: ClaimKind
     claim_context: QAClaimContext
+    period_role: Literal["exact_period", "closing_balance"] = "exact_period"
     citations: list[EvidenceCitation] = Field(min_length=1)
     caveats: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
@@ -99,8 +118,8 @@ class ReportOutlineSection(FinancialModel):
 
 
 class OutlineSectionOrder(FinancialModel):
-    section_id: SectionType
-    slot_order: list[str]
+    section_index: int = Field(ge=0)
+    slot_order: list[int]
 
 
 class ReportOutlineProposal(FinancialModel):

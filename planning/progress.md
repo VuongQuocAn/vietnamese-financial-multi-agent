@@ -40,7 +40,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
 | `verification` | M6-01–06 DONE; Tech Lead phê duyệt hoàn thành M6 trong task M7-01 ngày05/11/2026. Giữ source-bound limits/D03-B10 và evidence M6-06 tại88ae91d/CI41823101329; không independent PDF audit |
-| `outputs` | M7-01 DONE; M7-02 REVIEW: typed verified-only report outline/slots/local gate và bounded Gateway;64/64 oracle,49 planner cases trong CI783 focused PASS trênb5898cd/CI41954306492. Fresh3calls đều fallback đúng,LIVE PARTIAL. Chưa report writer/citation renderer/firewall tổng quát |
+| `outputs` | M7-01 DONE; M7-02 REVIEW,targeted P1/P2 fix: typed annual/end-date context và short-index Gateway.50planner/327compatibility,old64/new44 oracle PASS;fresh1accepted/2HTTP503,LIVE PARTIAL.Chờ fix CI mới;chưa report writer/citation renderer/firewall tổng quát |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
@@ -50,6 +50,13 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 M7-02 **REVIEW**, Owner giao05/11/2026.
 [Spec](tasks/M7/M7-02.md),[report](../docs/m7-02-report-outline-planner.md).
+Tech Lead NEEDS FIX P1/P2,đang bàn giao targeted fix chưa commit:50planner và
+327compatibility PASS;oracle cũ64/64 nguyên vẹn,new44/44 PASS. Annual2025 cóB01,
+native periods preserved. Fresh mới3calls:1accepted/2HTTP503 fallback,LIVE PARTIAL;
+15496protected hashes/Web/oracle cũ unchanged.Chờ fix CI mới.
+
+Bằng chứng trước targeted fix:
+
 Implementationb5898cd đã push main;CI41954306492 completed/SUCCESS đúng SHA,
 Python3.12/Web smoke SUCCESS;783 focused PASS gồm49 planner cases.
 Local327 compatibility PASS;64/64 oracle (36 BBS/28 controls),zero safety leakage.

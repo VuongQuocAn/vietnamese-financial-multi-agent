@@ -102,6 +102,7 @@ ITEM_SECTIONS = {
     }[item.statement_type]
     for item in ITEM_CATALOG
 }
+B01_ITEMS = {item.canonical_item_id for item in ITEM_CATALOG if item.statement_type == "B01"}
 WRITER_LIMIT = "Dàn ý chỉ cho phép sử dụng nội dung ACCEPT trong từng slot; không tạo nhận định hoặc phép tính mới."
 
 
@@ -185,9 +186,44 @@ def _request_problem(request):
         return "unsupported", ["single_exact_period_required"]
     if years and years != {request.period[:4]}:
         return "clarification_required", ["title_period_mismatch"]
+    if request.period_context and (
+        not re.fullmatch(r"[0-9]{4}", request.period)
+        or request.period_context.period_end[:4] != request.period
+    ):
+        return "clarification_required", ["annual_period_end_binding_mismatch"]
     if request.report_type == "focused_analysis" and not request.requested_sections:
         return "clarification_required", ["requested_sections"]
     return None
+
+
+def _closing_balance(entry, period_end):
+    """B01 only, exact date; require source-backed as_of contexts for metrics."""
+    if entry.identity.period != period_end:
+        return False
+    claim = entry.accepted_claim
+    if claim.calculation:
+        calc = claim.calculation
+        return bool(
+            calc.formula_id == "debt_to_assets"
+            and calc.trace
+            and calc.trace.operands
+            and all(
+                operand.context.statement_type == "B01"
+                and operand.context.period_type == "as_of"
+                and operand.context.period == period_end
+                and (operand.observation.document_id, operand.observation.snapshot_id)
+                == (entry.identity.document_id, entry.identity.snapshot_id)
+                for operand in calc.trace.operands
+            )
+        )
+    # SpecialistEvidence binds the canonical item and exact native period; the
+    # existing approved item catalog supplies statement/period-type semantics.
+    return bool(claim.supporting_evidence) and all(
+        evidence.kind == "fact"
+        and evidence.canonical_item_id in B01_ITEMS
+        and evidence.period == period_end
+        for evidence in claim.supporting_evidence
+    )
 
 
 def _retrieval_valid(request, entries):
@@ -201,11 +237,17 @@ def _retrieval_valid(request, entries):
         ):
             return False
         seen.add(identity.verified_claim_id)
-        for field in ("company_id", "document_id", "snapshot_id", "period"):
+        for field in ("company_id", "document_id", "snapshot_id"):
             if getattr(identity, field) != getattr(request, field) or getattr(
                 claim, field
             ) != getattr(identity, field):
                 return False
+        if claim.period != identity.period or not (
+            identity.period == request.period
+            or request.period_context
+            and _closing_balance(entry, request.period_context.period_end)
+        ):
+            return False
         if identity.kind != claim.kind or not entry.citations:
             return False
         if any(
@@ -216,7 +258,7 @@ def _retrieval_valid(request, entries):
             return False
         if any(
             (e.company_id, e.document_id, e.snapshot_id, e.period)
-            != (request.company_id, request.document_id, request.snapshot_id, request.period)
+            != (request.company_id, request.document_id, request.snapshot_id, identity.period)
             for e in claim.supporting_evidence
         ):
             return False
@@ -234,6 +276,7 @@ def _empty(request, status, reasons):
                 for k in ("company_id", "document_id", "snapshot_id", "period")
             },
             requested_reporting_scope=request.reporting_scope,
+            period_context=request.period_context,
         ),
         reasons=reasons,
         missing_information=reasons if status == "clarification_required" else [],
@@ -241,7 +284,7 @@ def _empty(request, status, reasons):
     )
 
 
-def _slots(entries):
+def _slots(entries, request):
     kind = entries[0].identity.kind
     return [
         ReportClaimSlot(
@@ -250,6 +293,7 @@ def _slots(entries):
             accepted_content=s.content,
             claim_kind=kind,
             claim_context=s.context,
+            period_role="exact_period" if s.context.period == request.period else "closing_balance",
             citations=s.citations,
             caveats=s.caveats,
             limitations=s.limitations,
@@ -281,7 +325,7 @@ def _deterministic(request, retrieved):
         if request.reporting_scope and claim_scope(entry) != request.reporting_scope:
             scope_missing = True
             continue
-        groups.setdefault(_target(entry), []).append(entry)
+        groups.setdefault((_target(entry), entry.identity.period), []).append(entry)
     confirmed_scopes = {claim_scope(entry) for entries in groups.values() for entry in entries} - {
         None
     }
@@ -294,7 +338,7 @@ def _deterministic(request, retrieved):
             continue
         category = classify_claim(entries[0])
         destination = category if category in buckets else "overview"
-        buckets[destination].extend(_slots(entries))
+        buckets[destination].extend(_slots(entries, request))
     # Overview is an index of the other sections via their IDs, not duplicate financial slots.
     if "overview" in buckets and not buckets["overview"] and any(buckets.values()):
         overview_supported = True
@@ -329,6 +373,7 @@ def _deterministic(request, retrieved):
     result.used_verified_claim_ids = sorted(
         key for slot in selected_slots for key in slot.verified_claim_ids
     )
+    result.scope.included_periods = sorted({slot.claim_context.period for slot in selected_slots})
     result.citations = _citations(
         c for slot in sorted(selected_slots, key=lambda s: s.slot_id) for c in slot.citations
     )
@@ -385,6 +430,45 @@ def _deterministic(request, retrieved):
     return result
 
 
+def _proposal_schema(sections):
+    """Finite schema for this request, with no full-catalog enums or opaque IDs."""
+    alternatives = []
+    for index, section in enumerate(sections):
+        count = len(section.claim_slots)
+        alternatives.append(
+            dict(
+                type="object",
+                additionalProperties=False,
+                required=["section_index", "slot_order"],
+                properties=dict(
+                    section_index=dict(type="integer", const=index),
+                    slot_order=dict(
+                        type="array",
+                        minItems=count,
+                        maxItems=count,
+                        uniqueItems=True,
+                        items=dict(type="integer", enum=list(range(count)))
+                        if count
+                        else dict(type="integer"),
+                    ),
+                ),
+            )
+        )
+    return dict(
+        type="object",
+        additionalProperties=False,
+        required=["sections"],
+        properties=dict(
+            sections=dict(
+                type="array",
+                minItems=len(sections),
+                maxItems=len(sections),
+                items=dict(oneOf=alternatives),
+            )
+        ),
+    )
+
+
 def _protected(response):
     wire = response.model_dump(mode="json", exclude={"llm_metadata", "validation_result"})
     for section in wire["sections"]:
@@ -431,6 +515,28 @@ class ReportOutlinePlanner:
                         }
                     )
                 ).claims
+                if request.period_context:
+                    closing = self._ledger.find_claims(
+                        VerifiedClaimQuery(
+                            company_id=request.company_id,
+                            document_id=request.document_id,
+                            snapshot_id=request.snapshot_id,
+                            period=request.period_context.period_end,
+                        )
+                    ).claims
+                    # Unrelated B02/B03 dates are not annual closing balances.
+                    # Keep malformed source identities visible to the fail-closed gate.
+                    retrieved += [
+                        entry
+                        for entry in closing
+                        if _closing_balance(entry, request.period_context.period_end)
+                        or (
+                            entry.identity.company_id,
+                            entry.identity.document_id,
+                            entry.identity.snapshot_id,
+                        )
+                        != (request.company_id, request.document_id, request.snapshot_id)
+                    ]
             except (ValueError, OSError):
                 result = _empty(request, "abstained", ["ledger_read_failed"])
                 result.validation_result = QAValidationResult(valid=True)
@@ -456,23 +562,29 @@ class ReportOutlinePlanner:
             return result
         prompt = json.dumps(
             dict(
-                instruction="Chỉ trả JSON theo schema. sections là hoán vị đầy đủ section_id; slot_order là hoán vị đầy đủ slot_id trong đúng mục. Giữ scope đầu, limitations cuối. Không thêm prose, claims, tiêu đề, citations, mục hoặc phép tính.",
-                schema=ReportOutlineProposal.model_json_schema(),
+                instruction="Chỉ trả JSON theo schema và example. section_index là chỉ số trong danh sách sections đã gửi; dùng đúng mỗi chỉ số một lần. slot_order là hoán vị đầy đủ các slot_index trong chính mục đó. Giữ mục scope đầu, limitations cuối. Không thêm mục, prose hoặc dữ kiện. Không sao chép IDs nào khác.",
+                schema=_proposal_schema(result.sections),
+                example={
+                    "sections": [
+                        dict(section_index=i, slot_order=list(range(len(s.claim_slots))))
+                        for i, s in enumerate(result.sections)
+                    ]
+                },
                 report_type=request.report_type,
                 sections=[
                     dict(
-                        section_id=s.section_id,
+                        section_index=section_index,
                         title_vi=s.title_vi,
                         slots=[
                             dict(
-                                slot_id=slot.slot_id,
+                                slot_index=slot_index,
                                 kind=slot.claim_kind,
                                 accepted_content=slot.accepted_content,
                             )
-                            for slot in s.claim_slots
+                            for slot_index, slot in enumerate(s.claim_slots)
                         ],
                     )
-                    for s in result.sections
+                    for section_index, s in enumerate(result.sections)
                 ],
             ),
             ensure_ascii=False,
@@ -498,15 +610,15 @@ class ReportOutlinePlanner:
             if response.status != "success" or not isinstance(response.output, JSONOutput):
                 raise ValueError("provider_or_structured_output_failure")
             proposal = ReportOutlineProposal.model_validate(response.output.payload)
-            sections = {s.section_id: s for s in result.sections}
+            sections = dict(enumerate(result.sections))
             if len(proposal.sections) != len(sections) or {
-                s.section_id for s in proposal.sections
+                s.section_index for s in proposal.sections
             } != set(sections):
                 raise ValueError("invalid_section_permutation")
             ordered = []
             for order, item in enumerate(proposal.sections, 1):
-                section = sections[item.section_id]
-                slots = {slot.slot_id: slot for slot in section.claim_slots}
+                section = sections[item.section_index]
+                slots = dict(enumerate(section.claim_slots))
                 if len(item.slot_order) != len(slots) or set(item.slot_order) != set(slots):
                     raise ValueError("invalid_slot_permutation")
                 section.claim_slots = [slots[key] for key in item.slot_order]

@@ -7,6 +7,16 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 Status: **REVIEW**, Owner giao05/11/2026; baseline HEAD/origin
 `445733426514cc0d8c3ce535c8b8fa931e93702f` đã xác minh. Cho phép commit/push main.
 [Spec](tasks/M7/M7-02.md),[report](../docs/m7-02-report-outline-planner.md).
+Tech Lead NEEDS FIX ngày05/11/2026,giữ REVIEW;baseline fix HEAD/origin35ea658.
+Đã sửa P1 bằng explicit typed annual/end-date context cùng document/snapshot,
+native periods giữ nguyên;BBS2025 ready27IDs,thêm5B01. P2 short indexes/dynamic schema.
+Fix chưa commit;50 planner/327 compatibility PASS,old64/64 vànew44/44 oracle PASS,
+zero safety violations;15496protected hashes/Web/oracle cũ unchanged.
+Fresh bổ sung3calls được Owner cấp:1successful response accepted,2HTTP503 fallback,
+914known tokens/2unknown usage;không retry,LIVE PARTIAL.Chờ fix CI mới.
+
+Bằng chứng trước targeted fix:
+
 Typed verified-only outline/slots/local gate/bounded Gateway;49 engineering controls
 (47 suite+2 targeted),327 compatibility PASS;final64/64 oracle (36 BBS/28 controls),
 section/claim precision/recall1.0,zero safety leakage. Fresh3calls/4655tokens:

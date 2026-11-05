@@ -40,8 +40,8 @@ def fake_response(request, mode):
     projection = json.loads(request.messages[0].content)
     sections = [
         dict(
-            section_id=s["section_id"],
-            slot_order=[slot["slot_id"] for slot in reversed(s["slots"])],
+            section_index=s["section_index"],
+            slot_order=[slot["slot_index"] for slot in reversed(s["slots"])],
         )
         for s in projection["sections"]
     ]
@@ -49,9 +49,9 @@ def fake_response(request, mode):
     populated = next(s for s in sections if s["slot_order"])
     wire = dict(sections=sections)
     if mode == "section":
-        sections[1]["section_id"] = "invented"
+        sections[1]["section_index"] = 999
     elif mode == "slot":
-        populated["slot_order"] = ["invented"]
+        populated["slot_order"] = [999]
     elif mode == "duplicate":
         populated["slot_order"] *= 2
     elif mode == "missing":
@@ -83,6 +83,14 @@ def assess(case, response, source, oracle):
     supported = {s.section_id for s in response.sections if s.status == "supported"}
     required_sections = set(case["supported_sections"])
     unsupported = fabricated = lost = violations = unverified = 0
+    closing_ids = set(case.get("required_closing_verified_claim_ids", []))
+    actual_closing_ids = set()
+    violations += response.scope.period != case["request"].get("period")
+    declared = response.scope.period_context.model_dump() if response.scope.period_context else None
+    violations += declared != case["request"].get("period_context")
+    violations += response.scope.included_periods != sorted(
+        {oracle["claims"][key]["context"]["period"] for key in expected}
+    )
     unsupported_objectives = sum(
         (s.title_vi, s.purpose) != SECTION_CATALOG[s.section_type] for s in response.sections
     )
@@ -106,8 +114,20 @@ def assess(case, response, source, oracle):
             violations += any(
                 case["request"].get(k) is not None and v != case["request"][k]
                 for k, v in context.items()
+                if k != "period"
             )
-            violations += any(getattr(response.scope, k) != v for k, v in context.items())
+            violations += any(
+                getattr(response.scope, k) != v for k, v in context.items() if k != "period"
+            )
+            expected_role = "closing_balance" if key in closing_ids else "exact_period"
+            violations += slot.period_role != expected_role
+            if slot.period_role == "closing_balance":
+                actual_closing_ids.add(key)
+                violations += context["period"] != (
+                    case["request"].get("period_context") or {}
+                ).get("period_end")
+            else:
+                violations += context["period"] != case["request"].get("period")
             violations += bool(
                 case["request"].get("reporting_scope")
                 and slot.claim_context.reporting_scope != case["request"]["reporting_scope"]
@@ -129,6 +149,7 @@ def assess(case, response, source, oracle):
             for k in slot.verified_claim_ids
         )
     fabricated += sum(not any(c in slot.citations for slot in slots) for c in response.citations)
+    violations += actual_closing_ids != closing_ids
     status_ok = response.status == case["expected_status"]
     sections_ok = (
         set(s.section_id for s in response.sections) == set(case["required_sections"])
@@ -174,13 +195,15 @@ def assess(case, response, source, oracle):
     )
 
 
-def integrity(root, output):
-    before = load(root / "artifacts/evidence/M7-02-preflight/hashes-before.json")
-    # Additional normalized/canonical/crop inputs pinned by the accepted M7-01 baseline.
-    # These were compared unchanged before inclusion; retain both manifests intact.
-    before.update(
-        load(root / "artifacts/evidence/M7-02-preflight/supplemental-accepted-hashes.json")
-    )
+def integrity(root, output, *, review_fix=False):
+    if review_fix:
+        before = load(root / "artifacts/evidence/M7-02-review-fix-preflight/hashes-before.json")
+    else:
+        before = load(root / "artifacts/evidence/M7-02-preflight/hashes-before.json")
+        # Additional normalized/canonical/crop inputs pinned by the accepted M7-01 baseline.
+        before.update(
+            load(root / "artifacts/evidence/M7-02-preflight/supplemental-accepted-hashes.json")
+        )
     after = {name: digest(root / name) if (root / name).is_file() else None for name in before}
     summary = dict(
         protected_hashes=len(before),
@@ -193,7 +216,7 @@ def integrity(root, output):
     return summary["unchanged"]
 
 
-def run_cases(root, output, cases, source, oracle, *, live=False, adapter=None):
+def run_cases(root, output, cases, source, oracle, *, live=False, adapter=None, review_fix=False):
     output.mkdir(exist_ok=False)
     ledger = VerifiedClaimLedger(SavedVerifiedView(source.values()))
     empty = VerifiedClaimLedger(SavedVerifiedView([]))
@@ -224,7 +247,11 @@ def run_cases(root, output, cases, source, oracle, *, live=False, adapter=None):
 
             def transport(request, scenario=case):
                 if live:
-                    budget = root / "artifacts/evidence/M7-02-call-budget"
+                    budget = root / (
+                        "artifacts/evidence/M7-02-review-fix-call-budget"
+                        if review_fix
+                        else "artifacts/evidence/M7-02-call-budget"
+                    )
                     budget.mkdir(exist_ok=True)
                     slot = next(
                         (i for i in range(1, 4) if not (budget / f"call-{i}.json").exists()), None
@@ -353,16 +380,25 @@ def run_cases(root, output, cases, source, oracle, *, live=False, adapter=None):
     return summary["all_passed"]
 
 
-def evaluate(root, output, ledger_root, mode):
+def evaluate(root, output, ledger_root, mode, *, review_fix=False):
     if not output.is_relative_to(root / "artifacts/evidence") or not output.name.startswith(
         "M7-02-"
     ):
         raise ValueError("new_M7_02_evidence_output_required")
     output.mkdir(exist_ok=False)
     if mode == "integrity":
-        return integrity(root, output)
-    oracle_path = root / "evaluation/m7-02-scenarios.json"
+        return integrity(root, output, review_fix=review_fix)
+    oracle_path = root / (
+        "evaluation/m7-02-review-fix-scenarios.json"
+        if review_fix
+        else "evaluation/m7-02-scenarios.json"
+    )
     oracle = load(oracle_path)
+    if (
+        review_fix
+        and digest(root / "evaluation/m7-02-scenarios.json") != oracle["legacy_oracle_sha256"]
+    ):
+        raise ValueError("legacy_oracle_changed")
     save_new(output / "expected-oracle.json", oracle)
     if digest(ledger_root / "verified-claims.json") != oracle["ledger_sha256"]:
         raise ValueError("ledger_missing_or_not_pinned")
@@ -388,8 +424,12 @@ def evaluate(root, output, ledger_root, mode):
     print(f"Hydrated {len(entries)} entries in {cold_seconds:.3f}s", flush=True)
     passed = True
     if mode in ("offline", "all"):
+        if review_fix:
+            legacy = load(root / "evaluation/m7-02-scenarios.json")
+            save_new(output / "legacy-oracle.json", legacy)
+            passed &= run_cases(root, output / "legacy", legacy["scenarios"], source, legacy)
         passed &= run_cases(root, output / "offline", oracle["scenarios"], source, oracle)
-    if mode in ("live", "all"):
+    if mode in ("live", "all") and passed:
         try:
             adapter, _ = create_qa_adapter(root)
         except QACredentialError:
@@ -408,6 +448,7 @@ def evaluate(root, output, ledger_root, mode):
                     oracle,
                     live=True,
                     adapter=adapter,
+                    review_fix=review_fix,
                 )
             finally:
                 adapter.close()
@@ -423,11 +464,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mode", choices=("offline", "live", "all", "integrity"), default="offline"
     )
+    parser.add_argument(
+        "--review-fix",
+        action="store_true",
+        help="Separate approved P1/P2 oracle and three-call review budget; keep original evidence immutable",
+    )
     args = parser.parse_args()
     raise SystemExit(
         0
         if evaluate(
-            Path.cwd().resolve(), args.output.resolve(), args.ledger_root.resolve(), args.mode
+            Path.cwd().resolve(),
+            args.output.resolve(),
+            args.ledger_root.resolve(),
+            args.mode,
+            review_fix=args.review_fix,
         )
         else 1
     )
