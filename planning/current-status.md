@@ -4,7 +4,9 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-03 — Grounded Report Writer
 
-Status: **REVIEW**, Owner giao05/11/2026, cho phép commit/push main.
+Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
+`c5c8d57b966819780ea0efc685676192e7b88355` với giới hạn P2 về chất lượng diễn đạt;
+không yêu cầu sửa văn phong ngay. Owner giao05/11/2026, cho phép commit/push main.
 Baseline HEAD/origin `b66919d`, giữ local `web/next-env.d.ts`.
 [Spec](tasks/M7/M7-03.md),[report](../docs/m7-03-grounded-report-writer.md).
 Implementation `c5c8d57b966819780ea0efc685676192e7b88355` đã push main,HEAD/origin khớp;
@@ -16,8 +18,10 @@ dedup cùng typed assertion/source, paragraph citations vàlocal validator/fallb
 48Writer controls (47suite+1targeted) và401compatibility PASS;86/86oracle
 (43BBS/43controls),zero safety violations. Fresh3calls/7.338tokens/3accepted;
 final saved replay3/3accepted,không thêm calls.15.727protected hashes/Web unchanged.
-Chờ Tech Lead đọc3báo cáo final;chưa independent financial accuracy.
-Next action: Tech Lead review M7-03; không tự bắt đầu M7-04.
+Giữ các giới hạn đã báo;chưa independent financial accuracy. Phiên nghiệm thu chỉ
+cập nhật docs/planning và chạy planning/diff checks; giữ runtime/evidence/Web local,
+không chạy lại tests/evaluation/Gemini.
+Next action: chờ nhiệm vụ mới từ Owner/Tech Lead; không tự bắt đầu M7-04.
 
 ## M7-02 — Report Outline Planner
 
