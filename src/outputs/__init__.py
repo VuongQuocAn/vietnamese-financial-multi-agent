@@ -1,5 +1,12 @@
 """Grounded output from the verified claim ledger."""
 
+from .citation_contracts import (
+    CitationBinding,
+    CitationLocator,
+    CitationReference,
+    RenderedCitationOutput,
+)
+from .citation_renderer import CitationRenderer, validate_rendered_citations
 from .grounded_report_writer import GroundedReportWriter, validate_grounded_report
 from .qa_composer import VietnameseQAComposer, validate_qa_response
 from .qa_contracts import VietnameseQARequest, VietnameseQAResponse
@@ -19,6 +26,12 @@ from .report_writer_contracts import (
 )
 
 __all__ = [
+    "CitationBinding",
+    "CitationLocator",
+    "CitationReference",
+    "RenderedCitationOutput",
+    "CitationRenderer",
+    "validate_rendered_citations",
     "VietnameseQAComposer",
     "VietnameseQARequest",
     "VietnameseQAResponse",

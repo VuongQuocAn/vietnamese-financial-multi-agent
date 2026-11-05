@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-04 — Unified Citation Rendering
+
+Status: **IN_PROGRESS**, Owner giao05/11/2026; cho phép implement/test/commit/push
+main và dừng REVIEW. Baseline HEAD/origin `3c2e9cd`; giữ Web local.
+[Spec](tasks/M7/M7-04.md), [report](../docs/m7-04-citation-rendering.md).
+Deterministic typed QA/report renderer, exact-source registry, inline markers,
+locators và original-bound validator; không sửa upstream outputs hoặc gọi LLM.
+Final source-bound replay43/43 (19QA BBS/18reports BBS/6empty controls),50/50
+adversarial rejected;15.611protected hashes/Web unchanged. Ba bộ rendered samples.
+78citation và185focused compatibility PASS;Ruff/format/planning/diff PASS.
+Implementation chưa commit/CI chưa chạy.
+Next action: hoàn tất validation và exact-SHA CI để bàn giao Tech Lead.
+
 ## M7-03 — Grounded Report Writer
 
 Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
