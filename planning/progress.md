@@ -20,7 +20,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 93 | 0 | 0 | 8 | 0 | 0 |
+| QA | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 102 | 93 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -47,6 +48,14 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+QA-Q01 **REVIEW**, Owner giao05/11/2026; [báo cáo](../docs/qa-q01-quick-qa-root-cause.md).
+M7 actual10/10:2correct/4partial/4expected abstention-clarification; M5 actual4attempts,
+0downstream (3HTTP503,1Planner unsupported). PDF review10cases:9reference số liệu/
+premises, Q09chỉ operands.0P0/3P1/3P2;6targeted controls PASS;16.745protected files
+unchanged. Không runtime fixes/M8; next action: Tech Lead nghiệm thu và quyết định QA-Fix.
+
+Checkpoint M7-05 trước:
 
 M7-05 **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
 `b22d8319ee94c8f400cc7c12face24baacbb2b2e`. **Milestone M7 — COMPLETE**,

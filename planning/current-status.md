@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## QA-Q01 — Quick QA Execution & Root-Cause Diagnosis
+
+Status: **REVIEW**, Owner giao05/11/2026; baseline main/origin
+`34a3fec1171b23bc9c9c268aded4a2205ae68936`. [Spec](tasks/QA/QA-Q01.md),
+[báo cáo](../docs/qa-q01-quick-qa-root-cause.md). M7 actual10/10:2correct/4partial/
+4expected abstention-clarification; M5 actual4attempts/0downstream (3HTTP503,
+1unsupported proposal). PDF review10cases:9references số liệu/premises, Q09chỉ
+operands.0P0/3P1/3P2;6targeted controls PASS;16.745protected hashes/Web unchanged.
+4Gemini calls/4.041known tokens/3unknown usage; không retry/OCR/extraction.
+SHA report/tooling được ghi ở checkpoint sau commit; chưa sửa runtime/M8/QA-Fix.
+Next action: Tech Lead nghiệm thu QA-Q01 và quyết định nhóm QA-Fix ưu tiên.
+
 ## M7-05 — Information Firewall and Output Validation
 
 Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation

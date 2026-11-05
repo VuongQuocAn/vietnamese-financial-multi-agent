@@ -2,52 +2,55 @@
 
 ## Active Task
 
-M7-05 — Information Firewall and Output Validation
+QA-Q01 ? Quick QA Execution & Root-Cause Diagnosis
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Tech Lead APPROVED M7-05 ngày05/11/2026, chấp nhận implementation
-`b22d8319ee94c8f400cc7c12face24baacbb2b2e`. Milestone M7 COMPLETE,
-M7-01–M7-05 đều DONE. Giữ local web/next-env.d.ts, accepted evidence/oracles.
+Owner giao05/11/2026, baseline main/origin
+`34a3fec1171b23bc9c9c268aded4a2205ae68936`. M7 actual10cases ho?n t?t;
+M5 actual4attempts, ch?a c? downstream completion. Kh?ng runtime changes.
 
 ## Completed Work
 
-Typed final QA/report gate, request inventory/ledger ACCEPT/protected validators,
-citation integrity và safe release.130/130frozen oracle,0false acceptance/rejection,
-16.190protected hashes/Web unchanged;không LLM/OCR/extraction/calculator.
+[B?o c?o A?I](../docs/qa-q01-quick-qa-root-cause.md), [spec](tasks/QA/QA-Q01.md),
+QA-only runner public APIs. M7:2correct/4partial/4expected abstention-clarification.
+10case PDF source reviews:9numeric/premise references, Q09ch? operands.
+0P0/3P1/3P2, confirmed mechanisms t?ch hypotheses; QA-Fix ch? ?? xu?t.
 
 ## Remaining Work
 
-Không còn việc triển khai trong M7-05; chờ nhiệm vụ mới, không tự bắt đầu M8.
+Tech Lead review k?t lu?n v? th? t? QA-Fix; ch?a tri?n khai fix ho?c M8.
 
 ## Modified Files
 
-Phiên nghiệm thu chỉ technical report/planning. Runtime/evidence/oracles giữ
-nguyên; Web local ngoài stage.
+Report, QA-only runner, planning v? planning checker h? tr? immutable QA-Q01 ID.
+Artifacts local ignored t?i `artifacts/evidence/QA-Q01/`; PDF/datasets/traces kh?ng
+commit. Local web/next-env.d.ts ngo?i stage, hash gi? nguy?n.
 
 ## Tests
 
-64firewall controls (63suite+1percentage targeted),263M6/M7/context compatibility;
-130/130saved-source oracle;Ruff/format/planning/diff PASS. Không full regression.
-Phiên chuyển DONE chỉ chạy planning checker/diff check; không chạy lại tests,
-evaluation hoặc LLM/OCR/extraction/calculator.
+6focused engineering controls PASS (Planner stops, empty-ledger no fallback,
+percentage tamper blocked).16.745protected files unchanged/added0. Ruff v?
+planning/diff ki?m tr??c commit; kh?ng full regression/frontend build.
 
 ## Blockers
 
-Không P0/P1 đã biết trong bounded checks. P2: template-only financial prose,
-page-level locations/resource mapping, cold ledger load;chưa independent PDF audit.
+M5 Q03/Q06/Q08:providerHTTP503; Q07successful Gemini response nh?ng proposal
+unsupported n?n skip Supervisor/Router/Specialists.4calls/4.041known tokens,
+3unknown usage,0retry; kh?ng tuy?n b? full multi-agent coverage ho?c quota h?t.
+M7 thi?u direct assets/LNST claims, interpretation/explanation understanding c?n
+h?n ch?; formal reporting scope unknown; true repository median46s/query.
 
 ## Git Checkpoint
 
-Implementation `b22d8319ee94c8f400cc7c12face24baacbb2b2e` đã push main;
-[CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
-completed/SUCCESS đúng SHA:977focused tests và9Web smoke PASS;full regression
-SKIPPED. Checkpoint sau chỉ docs/planning [skip ci]. Không branch/PR/worktree mới.
+Report/tooling SHA s? ghi sau commit/push main theo authorization task.
+Baseline `34a3fec1171b23bc9c9c268aded4a2205ae68936`; runtime/accepted artifacts
+gi? nguy?n. Kh?ng suy CI c? l? CI QA-Q01.
 
 ## Exact Next Action
 
-Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M8.
+Next action: Tech Lead nghi?m thu QA-Q01 v? quy?t ??nh nh?m QA-Fix ?u ti?n.
