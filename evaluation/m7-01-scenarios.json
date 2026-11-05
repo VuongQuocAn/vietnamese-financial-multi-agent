@@ -1,0 +1,1388 @@
+{
+  "version": "m7_01_oracle_v1",
+  "source": "M6-06-ledger-final-v2: accepted saved M6 histories; no Composer answers used as labels",
+  "ledger_sha256": "11b010d3b548c7e1957045e7a42649729a27093b56e46f206ea7a11b5bcb84e6",
+  "safety_gates": {
+    "unsupported_financial_claims": 0,
+    "fabricated_citations": 0,
+    "snapshot_scope_violations": 0,
+    "unverified_candidates_used": 0,
+    "unauthorized_metric_calculations": 0
+  },
+  "scenarios": [
+    {
+      "id": "revenue-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2021 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        }
+      ],
+      "live": true
+    },
+    {
+      "id": "margin-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2021 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2021 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:b1a72562f4c85a96c04c7c4d2b71aff611ae4b57ea57e3b67f1aadfafd578565"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoy-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2021 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:79c1c9fd8bd074c64ad657d4f16d36415c946f0b60b06a65a834511b4646ef10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "multi-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Cho biết doanh thu và biên lợi nhuận gộp năm 2021.",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "live": true
+    },
+    {
+      "id": "cfo-2021",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:05580c403c4012b2655965fb0ab58959422fee0f0c31ef66c04a2e452e44c032"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revenue-2022",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2022 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:738c332fe1eacc86c8b90f8ece3c8040a66569c24e8b1567e51eb600122e5cdd"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "margin-2022",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2022 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:15d67b687f83350958aeae1af943834b200aca61711ff352a539a8470577c6d1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-2022",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2022 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:3c53fd82357f6767b89409973fb500075407b13538432ab0b1820f865fe35c9f"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoy-2022",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2022 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:e2c2f2f0eb0e5984a3d90f191401002ed9553a91b6808624b4f6d0a86b4de54b"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "multi-2022",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Cho biết doanh thu và biên lợi nhuận gộp năm 2022.",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:738c332fe1eacc86c8b90f8ece3c8040a66569c24e8b1567e51eb600122e5cdd"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:15d67b687f83350958aeae1af943834b200aca61711ff352a539a8470577c6d1"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "revenue-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2023 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:f3428f0c9a4c4a8a81247b48bc88c54975479a32c63c05206ccc53d6b487b6a4"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "margin-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2023 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:0f7fca848eb85b2cc04859ebaf9010fe8fe3af06ec876c7fa550b235b9d15568"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2023 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:2e07de59b1c59f47480bca9e823144103ddbca572eb1703e4e3eb8ea5dcfff7c",
+            "verified:aa6a158cea648a2cffc6cadccf577b1ffca8d52fe2cbb24553251a015a8f050e"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoy-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2023 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:4d0893f47e4730ce46aab230f5ad070697c6b5864dfce166940fd455276c365d"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "multi-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Cho biết doanh thu và biên lợi nhuận gộp năm 2023.",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:f3428f0c9a4c4a8a81247b48bc88c54975479a32c63c05206ccc53d6b487b6a4"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:0f7fca848eb85b2cc04859ebaf9010fe8fe3af06ec876c7fa550b235b9d15568"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "cfo-2023",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2023?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:81d8035271a11a7421141dd8a4ce82c8280add30a8f75db35584c30b57d55a9a",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:0b62c9de1d4f0c9902dd9934f90b3b4c58cff9235e46ba6a86655e87c5de4e4c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revenue-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2024 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:6e9231bf8d12b5c731f78ca9fbe6c54b33822521fb871d86a0c23c86b383b646",
+            "verified:f912f467f46ebcfec9810aa3f80c14e1451d2065eb1bd90955e500ae71b1a71f"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "margin-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2024 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:8ae3a8953976b6d47aab8716068140c85b72cf3f40f4cb06c312177a523256d9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2024 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:75438127f0e8b9f52f6bfdf83c8fd91351a6584e0b1d4a43fa7d732dc797d724"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoy-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2024 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:a03998b94804403e02876ee10bff6451a3b4966a99e971e7fd3ceac60952feb0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "multi-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Cho biết doanh thu và biên lợi nhuận gộp năm 2024.",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:6e9231bf8d12b5c731f78ca9fbe6c54b33822521fb871d86a0c23c86b383b646",
+            "verified:f912f467f46ebcfec9810aa3f80c14e1451d2065eb1bd90955e500ae71b1a71f"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:8ae3a8953976b6d47aab8716068140c85b72cf3f40f4cb06c312177a523256d9"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "cfo-2024",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2024?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:a60baa281ed1d005d8e29d86128e86e514456198365167ac25af90465981d5dc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revenue-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2025 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:320b6eb2f9fced32bdec01f75fee42656ff0be015b7cb96dc0f72a612736f822",
+            "verified:80335af913cc26ff6ade60cdcd86642e7d7cb8e10ea8ff58b7a22cd8289da586",
+            "verified:9240e914d05dae67348c398ec4bb5e592a588fb2b50f8244b707d1d1336339f6",
+            "verified:99fe0917de9e2c5f58d8fc2ccadd2b748863812148ad0ccf8171edd3de6d0462",
+            "verified:ad037f7fa5b40ee76dbf621553da39c7d0d978795bd989f007e9739df1ed1309"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "margin-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2025 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:0c32cfcfc9f3b1c5e7de1966e2478f5a7f6bacb8b8bf6833ed40e70f109a267d",
+            "verified:3ef26b442f4251907a9e8e474337a2396940f200dc05b7de6ee340c541d5e0eb",
+            "verified:47caa8801b4a2a76d0e868ad9ece3096a6185d69dbb0b6e765256cfb3a6acc23",
+            "verified:4d7a3f9ff7bfb59552ddfa05687c5ca2e5dfeb6e5286979f8ba53be3b201d486",
+            "verified:7ebd9c53569631483da5b516883a07bcb91c4a1251da585c135df0a2f27dfee4",
+            "verified:8aa1545cf29eab1a8d1615f9afea50858c3bd6bf1d86278af22de8f25e0c5320",
+            "verified:a03d24f0f254f9655d7e51c4d307d78e9f42d2e212af0b8fde25676ab4d65b81"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2025 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:657e77e01c3034d428c99ca30fed734b75c50d2fa87e7c13bfd94c738b553569",
+            "verified:be43bc77faae5acef33d3a2b848898839dd8555ec9eac39a02df989ff2fb85b1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yoy-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2025 là bao nhiêu?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:462e26cccf50c27c67daa427d356b5b28a141ba17f4d9bf9394f334e19c1dc0a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "multi-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Cho biết doanh thu và biên lợi nhuận gộp năm 2025.",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:320b6eb2f9fced32bdec01f75fee42656ff0be015b7cb96dc0f72a612736f822",
+            "verified:80335af913cc26ff6ade60cdcd86642e7d7cb8e10ea8ff58b7a22cd8289da586",
+            "verified:9240e914d05dae67348c398ec4bb5e592a588fb2b50f8244b707d1d1336339f6",
+            "verified:99fe0917de9e2c5f58d8fc2ccadd2b748863812148ad0ccf8171edd3de6d0462",
+            "verified:ad037f7fa5b40ee76dbf621553da39c7d0d978795bd989f007e9739df1ed1309"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:0c32cfcfc9f3b1c5e7de1966e2478f5a7f6bacb8b8bf6833ed40e70f109a267d",
+            "verified:3ef26b442f4251907a9e8e474337a2396940f200dc05b7de6ee340c541d5e0eb",
+            "verified:47caa8801b4a2a76d0e868ad9ece3096a6185d69dbb0b6e765256cfb3a6acc23",
+            "verified:4d7a3f9ff7bfb59552ddfa05687c5ca2e5dfeb6e5286979f8ba53be3b201d486",
+            "verified:7ebd9c53569631483da5b516883a07bcb91c4a1251da585c135df0a2f27dfee4",
+            "verified:8aa1545cf29eab1a8d1615f9afea50858c3bd6bf1d86278af22de8f25e0c5320",
+            "verified:a03d24f0f254f9655d7e51c4d307d78e9f42d2e212af0b8fde25676ab4d65b81"
+          ]
+        }
+      ],
+      "live": false
+    },
+    {
+      "id": "cfo-2025",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2025?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:2c8f7d5a561f0e97352df9213caff9e2aede85201aeb335f812303e2285c8436",
+            "verified:794f6fa0ed11851a920c072def2599d637344e9d5bd8c684aa3b4235cbf3af74",
+            "verified:c79b5ad652f6f0a1a6a77edf7e7fcf74e9fb631996c15a7db2df3550bce2c2cb",
+            "verified:c94358748091971fa68717243732d5781af965385ddeb9126e6e4a05e0750653",
+            "verified:fa7500b50a00cd0a77ab9e9245d4026a2a936eb7daac75501fa895daaacec780"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery-revenue",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-02/recovery-2022-v1"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:08422cdbd9c831254e9b7c629968f770487aaab94220bf5b239d41bee1d13bf6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery-margin",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-02/recovery-2022-v1"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:2937dcd86d7470cf8d454d367fc361f33cd66753894b1b95c7d2577cf906988f"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery-debt",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tỷ lệ nợ trên tài sản năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-02/recovery-2022-v1"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "debt_to_assets",
+          "required_verified_claim_ids": [
+            "verified:46634f35f25716fad1a67619fd89524f7475cdc7dc0ca5efae06b76090eb8985",
+            "verified:4c79603657ed32ace3e1e431ac6edda49b452ecfc5e621ec4f94c506c8f674fa"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery-yoy",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Tăng trưởng doanh thu năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-02/recovery-2022-v1"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "revenue_yoy",
+          "required_verified_claim_ids": [
+            "verified:3a0ec325b4416e084df15d9ef8bf02ba2c070c7c907b010df2ec4e580b67969f",
+            "verified:ed2b891171e5f5373388a28b8fb63b1955a7b08ad8ab513e03235121eb093f09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery-cfo",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-02/recovery-2022-v1"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:bc75ed506ac26bc4b5c63d3701440e9ce06cb72367fb4a267865cba7d0ea45c2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interpretation-cfo",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Nhận định lưu chuyển tiền thuần từ hoạt động kinh doanh năm 2025?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:6c261d2a1328daa267976d615282f1841b8daaf64e8ab534c21e19a73a149ce1",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "supported_interpretation",
+          "target_id": "b03.operating_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:0095bde4055f1f3d0f750468a2e8b6d40c564b85cca602bf1ff15d0904bfcc86"
+          ]
+        }
+      ],
+      "live": true
+    },
+    {
+      "id": "interpretation-financing",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Nhận định lưu chuyển tiền thuần từ hoạt động tài chính năm 2024?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "supported_interpretation",
+          "target_id": "b03.financing_cash_flow",
+          "required_verified_claim_ids": [
+            "verified:c8923c4530f7b64a86cb4d1c6d5f4388962af179c126c36a4a6c73d84a3f2f8b"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "confirmed-separate",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Biên lợi nhuận gộp báo cáo riêng năm 2024?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:8ae3a8953976b6d47aab8716068140c85b72cf3f40f4cb06c312177a523256d9"
+          ]
+        }
+      ],
+      "expected_scope": "separate"
+    },
+    {
+      "id": "with-limitations",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu và những hạn chế của dữ liệu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        }
+      ],
+      "expected_answered_requirements": 2
+    },
+    {
+      "id": "partial-missing",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu và tổng tài sản năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "partial",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        }
+      ],
+      "expected_unanswered_requirements": 1
+    },
+    {
+      "id": "partial-unsupported",
+      "group": "saved_BBS_QA",
+      "request": {
+        "question": "Doanh thu và ROE năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "partial",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        }
+      ],
+      "expected_unanswered_requirements": 1
+    },
+    {
+      "id": "control-no-claim",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Tổng tài sản năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-original-cfo-gap",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Dòng tiền từ hoạt động kinh doanh năm 2022?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-missing-snapshot",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": null
+      },
+      "expected_status": "clarification_required",
+      "requirements": []
+    },
+    {
+      "id": "control-wrong-snapshot",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "missing-snapshot"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-wrong-document",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "missing-document",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-wrong-period",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "period": "2020"
+      },
+      "expected_status": "clarification_required",
+      "requirements": []
+    },
+    {
+      "id": "control-scope-unconfirmed",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu hợp nhất năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-scope-mismatch",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Biên lợi nhuận gộp hợp nhất năm 2024?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:f4e696a85c65f33cb1a1fa982dbfc6b3dccb5a227d14084d5f02b0d673f57c54",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": []
+    },
+    {
+      "id": "control-cross-document",
+      "group": "context_negative_control",
+      "request": {
+        "question": "So sánh doanh thu năm 2021 và 2022",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "unsupported",
+      "requirements": []
+    },
+    {
+      "id": "control-unknown-metric",
+      "group": "context_negative_control",
+      "request": {
+        "question": "ROE năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "unsupported",
+      "requirements": []
+    },
+    {
+      "id": "control-causal",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Vì sao doanh thu tăng năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "unsupported",
+      "requirements": []
+    },
+    {
+      "id": "control-ambiguous-profit",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Lợi nhuận năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "clarification_required",
+      "requirements": []
+    },
+    {
+      "id": "control-ambiguous-domains",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Phân tích khả năng sinh lời và cơ cấu nợ năm 2021",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "clarification_required",
+      "requirements": []
+    },
+    {
+      "id": "control-unsupported-nearby",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu tài chính năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "unsupported",
+      "requirements": []
+    },
+    {
+      "id": "control-original-recovery-request",
+      "group": "context_negative_control",
+      "request": {
+        "question": "So sánh bản gốc và recovery năm 2022",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:480854b56c27737c9327e3f7650f8f6fde84fbcaab552b83dbbe72431c9da0ee",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "unsupported",
+      "requirements": []
+    },
+    {
+      "id": "control-empty-ledger",
+      "group": "context_negative_control",
+      "request": {
+        "question": "Doanh thu năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2"
+      },
+      "expected_status": "abstained",
+      "requirements": [],
+      "empty_ledger": true
+    },
+    {
+      "id": "gateway-valid",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "valid",
+      "expected_gateway": "accepted"
+    },
+    {
+      "id": "gateway-malformed",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "malformed",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-new_value",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "new_value",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-new_citation",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "new_citation",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-new_claim",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "new_claim",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-reasoning",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "reasoning",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-drop_caveats",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "drop_caveats",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-duplicate",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "duplicate",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-timeout",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "timeout",
+      "expected_gateway": "fallback"
+    },
+    {
+      "id": "gateway-503",
+      "group": "synthetic_transport_on_saved_BBS",
+      "request": {
+        "question": "Doanh thu và biên lợi nhuận gộp năm 2021?",
+        "company_id": "vn-business-registration:0600312071",
+        "document_id": "sha256:bcf81efa8b41b7dc5221ce6cd12b7a62bdbf97ae52983c1e7ae58789e2740353",
+        "snapshot_id": "D-01/normalized-v2",
+        "allow_gateway": true
+      },
+      "expected_status": "answered",
+      "requirements": [
+        {
+          "kind": "fact",
+          "target_id": "b02.net_revenue",
+          "required_verified_claim_ids": [
+            "verified:3c1f1b8370e3a2812fce754451b6c99c0ee2e7da0af0f99daca84145b5952363"
+          ]
+        },
+        {
+          "kind": "approved_metric",
+          "target_id": "gross_margin",
+          "required_verified_claim_ids": [
+            "verified:e52cb20dfe757191e5a36bcd6c90cfb3b0c29529fe8420bcef9be750df861178"
+          ]
+        }
+      ],
+      "gateway_mode": "503",
+      "expected_gateway": "fallback"
+    }
+  ]
+}

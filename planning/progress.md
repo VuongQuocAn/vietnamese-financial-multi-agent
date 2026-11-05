@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-11-04** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-05** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -15,12 +15,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M3 | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
-| M6 | 6 | 5 | 0 | 0 | 0 | 0 | 1 |
-| M7 | 5 | 0 | 0 | 0 | 5 | 0 | 0 |
+| M6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
+| M7 | 5 | 0 | 1 | 0 | 4 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 87 | 0 | 0 | 13 | 0 | 1 |
+| TOTAL | 101 | 88 | 1 | 0 | 12 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -39,8 +39,8 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `evidence` | M3-01–07 DONE; M3-07 Tech Lead APPROVED unified retrieval ngày 30/10/2026, implementation e8f293d; 102 targeted PASS,356 exact lookups/18 queries PASS; CI41056561499 SUCCESS đúng SHA. Giữ M2 quality/provenance và limitations; chưa financial accuracy toàn PDF hoặc formula execution; [evidence](tasks/M3/M3-07.md) |
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
-| `verification` | M6-01–05 DONE;M6-06 REVIEW: proof-bound verified ledger/atomic JSON/read-only retrieval.22final ledger+119M6compatibility PASS;109replays/27controls đúng oracle,58entries/29representative BBS,unsafe0. CI41823101329 SUCCESS đúng88ae91d;14.569protected hashes unchanged. Giữ provenance/caveats/D03-B10;chưa independent PDF accuracy/M7 hoặc nghiệm thu toàn M6 |
-| `outputs` | Chỉ package/docstring; chưa có QA/report generation |
+| `verification` | M6-01–06 DONE; Tech Lead phê duyệt hoàn thành M6 trong task M7-01 ngày05/11/2026. Giữ source-bound limits/D03-B10 và evidence M6-06 tại88ae91d/CI41823101329; không independent PDF audit |
+| `outputs` | M7-01 IN_PROGRESS: typed/read-only Vietnamese QA, protected slots, bounded Gateway/local gate;66/66 oracle và3/3fresh Gemini PASS; chưa report writer/citation renderer/firewall tổng quát |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
@@ -48,15 +48,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M6-06 **REVIEW**; [spec](tasks/M6/M6-06.md),
-[report](../docs/m6-06-verified-claim-ledger.md). Implementation88ae91d đã push main,
-CI41823101329 SUCCESS đúng SHA;Python3.12 SUCCESS,Web/full regression SKIPPED.
-22 final ledger/119 M6 compatibility PASS;109replays:58stored/51rejected,
-27controls PASS,29representative BBS,unsafe0/false rejection0.
-57primary entries exact integrity,27lineages và8filters PASS trên final cache;
-full replay trước cache, không fresh full negative replay sau cache.
-14.569protected hashes/Web unchanged,0Gemini/OCR;source-bound,không PDF gold.
-Next action: Tech Lead review M6-06 và điều kiện hoàn thành M6; không tự bắt đầu M7.
+M7-01 **IN_PROGRESS**, [spec](tasks/M7/M7-01.md),
+[report](../docs/m7-01-vietnamese-qa-composer.md).35 QA/236 compatibility tests PASS;
+66/66 fixed oracle (40 BBS/26 controls),Gemini fresh3/3/5.555tokens,15.118 protected
+hashes/Web unchanged;zero leakage/fabrication/mixing. Chưa commit/CI.
+Next action: commit/push main và xác minh CI đúng SHA.
 
 Checkpoint trước:
 

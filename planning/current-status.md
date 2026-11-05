@@ -1,10 +1,22 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-04 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## M7-01 — Vietnamese QA Composer
+
+Status: **IN_PROGRESS**, Owner giao05/11/2026. Baseline local/origin main
+`67700c3ff4e3aa170d9af8c0da872032dc2be1d0` đã xác minh; Tech Lead phê duyệt M6.
+[Spec](tasks/M7/M7-01.md), [report](../docs/m7-01-vietnamese-qa-composer.md).
+Typed/read-only QA, protected slots, bounded Gateway/local gate;35 QA tests
+(34 suite+1 targeted sau fixture fix),236 M4/M5/M6 compatibility PASS.
+66/66 oracle (40 BBS/26 controls),fresh3/3calls/5.555tokens;zero unsupported claims,
+fabrication/mixing/lost caveats.15.118 protected hashes/Web unchanged. Chưa commit/CI.
+Source-bound QA, chưa independent PDF audit; giữ D03-B10/M7-02–05 ngoài scope.
+Next action: commit/push main và xác minh CI đúng SHA.
 
 ## M6-06 — Verified Claim Ledger
 
-Status: **REVIEW**, Owner giao04/11/2026; baseline main/origin
+Status: **DONE**, Tech Lead phê duyệt M6 theo task M7-01 ngày05/11/2026; Owner giao04/11/2026; baseline main/origin
 `9b807f370c144181588818c46de70e3d5f0fe485`, M6-01–05 DONE.
 [Spec](tasks/M6/M6-06.md), [report](../docs/m6-06-verified-claim-ledger.md).
 Proof admission/atomic JSON repository/read-only M7 facade;119 M6 compatibility
@@ -17,7 +29,7 @@ Implementation `88ae91d40d5d4f0b4cf3f3526b96533b34a3d694` đã push main;
 completed/SUCCESS đúng SHA,Python3.12 SUCCESS;Web/full regression SKIPPED.
 14.569 protected hashes/Web unchanged;0Gemini/OCR,giữ D03-B10;chưa M7 hoặc
 independent PDF financial accuracy. Checkpoint sau chỉ docs/planning [skip ci].
-Next action: Tech Lead review M6-06 và điều kiện hoàn thành M6; không tự bắt đầu M7.
+Next action: triển khai M7-01 đã được giao.
 
 ## M6-05 — Verification Decisions
 
