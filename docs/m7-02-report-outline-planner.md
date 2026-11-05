@@ -4,7 +4,10 @@ Owner giao05/11/2026; baseline main/origin
 `445733426514cc0d8c3ce535c8b8fa931e93702f` đã fetch/xác minh. M6 và M7-01 DONE.
 Status **REVIEW — targeted fix P1/P2**, chưa DONE. Tech Lead yêu cầu sửa05/11/2026;
 baseline fix HEAD/origin `35ea6588dcda8dcaa4d7d97b3011e075939658c6` đã xác minh.
-Fix chưa commit; chờ CI mới. Bằng chứng dưới đây của lần đầu được giữ để đối chiếu:
+Runtime fix `f5c9971c112ebcd38017e9bdf987b0156d87af30` đã push;
+[CI41957365549](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41957365549)
+SUCCESS:784 focused tests,Python3.12 và Web smoke PASS. Verifier pin cuối cùng
+chưa commit; chờ CI cho bản cuối. Bằng chứng lần đầu được giữ để đối chiếu:
 implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3` (core4c6a612 +scope guard).
 [CI41954306492](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41954306492)
 completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
@@ -297,6 +300,12 @@ evidence cho general/partial; deterministic/adversarial cases đã PASS riêng.
 tamper và finite-index-schema assertions trong Gateway controls.327 focused
 compatibility regression PASS; Ruff/format477files PASS.15496 protected hashes unchanged (gồm oracle cũ,
 accepted artifacts và Web local) tại M7-02-review-fix-integrity/summary.json.
+Audit cuối phát hiện Git chuyển CRLF/LF của oracle JSON; pin cũ vẫn giữ nguyên.
+Verifier chấp nhận duy nhất khác biệt line endings khi đối chiếu SHA, mọi byte khác
+vẫn phải khớp. Targeted test1/1 PASS với LF checkout và mutation label bị reject;
+không sửa label hoặc oracle file.51 cases trong planner test module (50planner +1pin).
+Không chạy lại BBS/live sau thay đổi verifier vì runtime/request/proposals không đổi.
+
 Fix xử lý root causes P1/P2, không phát hiện P0; còn giới hạn caller phải bind
 period_end rõ ràng, conservative scope unknown và provider availability. Chưa
 independent financial accuracy. Implementation SHA/CI mới sẽ ghi sau push.

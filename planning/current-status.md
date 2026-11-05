@@ -10,7 +10,9 @@ Status: **REVIEW**, Owner giao05/11/2026; baseline HEAD/origin
 Tech Lead NEEDS FIX ngày05/11/2026,giữ REVIEW;baseline fix HEAD/origin35ea658.
 Đã sửa P1 bằng explicit typed annual/end-date context cùng document/snapshot,
 native periods giữ nguyên;BBS2025 ready27IDs,thêm5B01. P2 short indexes/dynamic schema.
-Fix chưa commit;50 planner/327 compatibility PASS,old64/64 vànew44/44 oracle PASS,
+Runtime fixf5c9971 đã push;CI41957365549 SUCCESS,784tests vàWeb smoke PASS.
+Verifier pin oracle cuối (chỉ CRLF/LF-equivalent) chưa commit/CI;targeted1/1 PASS.
+50 planner/327 compatibility PASS,old64/64 vànew44/44 oracle PASS,
 zero safety violations;15496protected hashes/Web/oracle cũ unchanged.
 Fresh bổ sung3calls được Owner cấp:1successful response accepted,2HTTP503 fallback,
 914known tokens/2unknown usage;không retry,LIVE PARTIAL.Chờ fix CI mới.

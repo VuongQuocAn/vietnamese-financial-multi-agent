@@ -34,6 +34,16 @@ def wire_digest(value):
     ).hexdigest()
 
 
+def oracle_matches_digest(path, expected):
+    """Git may normalize tracked JSON line endings; all other bytes stay pinned."""
+    raw = path.read_bytes()
+    lf = raw.replace(b"\r\n", b"\n")
+    return any(
+        hashlib.sha256(wire).hexdigest() == expected
+        for wire in (raw, lf, lf.replace(b"\n", b"\r\n"))
+    )
+
+
 def fake_response(request, mode):
     if mode == "timeout":
         raise TimeoutError
@@ -394,9 +404,8 @@ def evaluate(root, output, ledger_root, mode, *, review_fix=False):
         else "evaluation/m7-02-scenarios.json"
     )
     oracle = load(oracle_path)
-    if (
-        review_fix
-        and digest(root / "evaluation/m7-02-scenarios.json") != oracle["legacy_oracle_sha256"]
+    if review_fix and not oracle_matches_digest(
+        root / "evaluation/m7-02-scenarios.json", oracle["legacy_oracle_sha256"]
     ):
         raise ValueError("legacy_oracle_changed")
     save_new(output / "expected-oracle.json", oracle)

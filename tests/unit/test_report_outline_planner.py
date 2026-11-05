@@ -1,6 +1,7 @@
 """Synthetic engineering checks; saved BBS oracle evaluation is separate."""
 
 import json
+from pathlib import Path
 
 import pytest
 from jsonschema import validate as validate_json_schema
@@ -382,3 +383,21 @@ def test_explicit_annual_context_adds_verified_closing_balance_without_rewriting
     assert before == (repository.root / "verified-claims.json").read_bytes()
     with pytest.raises(ValidationError):
         ReportOutlineRequest(**context, period_context={"period_end": "2030-02-30"})
+
+
+def test_saved_oracle_pin_allows_git_line_endings_but_rejects_label_changes(tmp_path, monkeypatch):
+    root = Path(__file__).resolve().parents[2]
+    monkeypatch.syspath_prepend(str(root / "scripts"))
+    from evaluate_m7_02_outline import load, oracle_matches_digest
+
+    pinned = load(root / "evaluation/m7-02-review-fix-scenarios.json")["legacy_oracle_sha256"]
+    raw = (root / "evaluation/m7-02-scenarios.json").read_bytes()
+    candidate = tmp_path / "oracle.json"
+    candidate.write_bytes(raw.replace(b"\r\n", b"\n"))
+    assert oracle_matches_digest(candidate, pinned)
+    candidate.write_bytes(
+        raw.replace(b"\r\n", b"\n")
+        .replace(b'"answered"', b'"fabricated"')
+        .replace(b'"ready"', b'"fabricated"')
+    )
+    assert not oracle_matches_digest(candidate, pinned)
