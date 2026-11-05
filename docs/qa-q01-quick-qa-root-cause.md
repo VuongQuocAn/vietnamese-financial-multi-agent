@@ -1,6 +1,7 @@
 # QA-Q01 — Quick QA Execution & Root-Cause Diagnosis
 
-Ngày 05/11/2026 (Asia/Bangkok). **REVIEW — chờ Tech Lead**, không phải M8,
+Ngày 05/11/2026 (Asia/Bangkok). **DONE — APPROVED theo quyết định nghiệm thu**,
+chấp nhận implementation `6b245b53b4a17d94279717a214428b3638bb52a6`; không phải M8,
 benchmark chính thức hoặc nghiệm thu chất lượng tài chính toàn hệ thống.
 [Task](../planning/tasks/QA/QA-Q01.md), [QA-only runner](../scripts/run_qa_q01.py).
 
@@ -542,8 +543,10 @@ b22d8319ee94c8f400cc7c12face24baacbb2b2e nằm trong baseline. Runtime không đ
 Report/tooling implementation **6b245b53b4a17d94279717a214428b3638bb52a6** đã
 commit/push main, HEAD/origin khớp sau push. Checkpoint sau chỉ docs/planning.
 [CI42050329839](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42050329839)
-đúng implementation SHA, đang chạy tại lần đọc ban đầu; không gán kết quả CI
-của baseline cho QA-Q01.
+completed/SUCCESS đúng implementation SHA: Python3.12 SUCCESS, Web smoke và
+full regression SKIPPED. Không gán CI implementation cho checkpoint docs sau.
+Phiên chuyển DONE chỉ cập nhật docs/planning và chạy planning/diff checks;
+không chạy lại QA/tests/Gemini/OCR hoặc sửa runtime/accepted artifacts/Web local.
 
 Environment Windows PowerShell, Python3.12.0 trong `.venv`, pypdfium2 5.14.0,
 pydantic2.14.1, google-genai2.33.0, pytest9.1.1. Không cài dependency mới.
@@ -633,5 +636,5 @@ scope unresolved; không independent annotation của người thứ hai; không
 benchmark cô lập vì các preflight/QA reads có phần chạy đồng thời. Không khẳng định
 Gemini/Multi-Agent accuracy từ synthetic engineering PASS hoặc frozen oracle agreement.
 
-**Next action duy nhất: Tech Lead nghiệm thu QA-Q01 và quyết định nhóm QA-Fix ưu tiên.**
+**Next action duy nhất: chờ Owner/Tech Lead giao task tiếp theo; không tự triển khai QA-Fix/M8.**
 Chưa sửa runtime/financial facts/accepted ledger, chưa triển khai M8 hoặc QA-Fix.

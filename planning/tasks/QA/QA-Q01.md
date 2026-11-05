@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-08, M6-06, M7-05
 - Estimated Complexity: M
@@ -18,7 +18,8 @@ Kiểm tra mười câu tài chính BBS do Owner cung cấp, đối chiếu đ�
 
 Owner giao ngày 05/11/2026; baseline main/origin
 `34a3fec1171b23bc9c9c268aded4a2205ae68936`, accepted M7-05 `b22d831`.
-M5 actual orchestration và M7 ledger QA phải đánh giá riêng. Dừng REVIEW.
+M5 actual orchestration và M7 ledger QA phải đánh giá riêng. Triển khai dừng REVIEW;
+quyết định nghiệm thu05/11/2026: QA-Q01 APPROVED / DONE.
 
 ## Inputs
 
@@ -64,7 +65,7 @@ lại, không fake agents/tools, không triển khai QA-Fix/M8. Web local giữ 
 - [x] Findings/root causes/backlog/retest và performance metadata đầy đủ, dễ đọc.
 - [x] Protected inputs/Web unchanged; targeted validation đạt.
 - [x] Commit/push main, ghi SHA đã xác minh tại checkpoint.
-- [x] REVIEW chờ Tech Lead; chưa tự nghiệm thu DONE.
+- [x] Triển khai dừng REVIEW; chuyển DONE theo quyết định nghiệm thu05/11/2026.
 
 ## Required Tests
 
@@ -87,9 +88,14 @@ Traces chứa dữ liệu nguồn chỉ lưu local ignored; không commit datase
   M7 actual10/10, M5 actual4attempts/0downstream; independent output audit19entries/
   10cases PASS; Ruff/format/planning102tasks/diff PASS. Không full regression local.
 - CI: [42050329839](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42050329839)
-  đúng implementation SHA; đang chạy tại checkpoint ban đầu, không suy từ CI cũ.
-- Review Notes: 0P0/3P1/3P2, chờ Tech Lead. Gemini503 chặn3cases; Q07unsupported.
+  completed/SUCCESS đúng implementation SHA; Python3.12 SUCCESS, Web/full
+  regression SKIPPED. Không gán CI implementation cho checkpoint docs sau.
+- Review Notes: APPROVED / DONE theo quyết định nghiệm thu05/11/2026. Giữ
+  0P0/3P1/3P2, Gemini503 chặn3cases và Q07unsupported; không nâng thành full
+  financial accuracy hoặc successful fresh multi-agent coverage.
+- Acceptance session: chỉ docs/planning và planning/diff checks; không chạy lại
+  QA/tests/Gemini/OCR, không sửa runtime/accepted artifacts/Web local.
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu QA-Q01 và quyết định nhóm QA-Fix ưu tiên.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự triển khai QA-Fix/M8.

@@ -20,8 +20,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| QA | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 102 | 93 | 0 | 0 | 8 | 0 | 1 |
+| QA | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 102 | 94 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -49,11 +49,15 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-QA-Q01 **REVIEW**, Owner giao05/11/2026; [báo cáo](../docs/qa-q01-quick-qa-root-cause.md).
+QA-Q01 **DONE**, APPROVED theo quyết định nghiệm thu05/11/2026;
+[báo cáo](../docs/qa-q01-quick-qa-root-cause.md).
 M7 actual10/10:2correct/4partial/4expected abstention-clarification; M5 actual4attempts,
 0downstream (3HTTP503,1Planner unsupported). PDF review10cases:9reference số liệu/
 premises, Q09chỉ operands.0P0/3P1/3P2;6targeted controls PASS;16.745protected files
-unchanged. Không runtime fixes/M8; next action: Tech Lead nghiệm thu và quyết định QA-Fix.
+unchanged. Implementation6b245b5; CI42050329839 completed/SUCCESS đúng SHA,
+Python3.12 SUCCESS, Web/full regression SKIPPED. Phiên nghiệm thu chỉ docs/planning,
+không chạy lại QA/Gemini hoặc sửa runtime. Next action: chờ Owner/Tech Lead giao
+task tiếp theo; không tự triển khai QA-Fix/M8.
 
 Checkpoint M7-05 trước:
 

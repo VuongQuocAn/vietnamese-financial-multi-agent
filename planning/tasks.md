@@ -56,7 +56,7 @@ Next action: chờ Tech Lead giao việc; không bắt đầu M3-01.
 
 | Task ID | Tên | Milestone | Status | Priority | Dependencies | Specification / phạm vi dự kiến | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| QA-Q01 | Quick QA Execution & Root-Cause Diagnosis | QA | REVIEW | P1 | M5-08, M6-06, M7-05 | [QA-Q01](tasks/QA/QA-Q01.md) | [6b245b5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6b245b53b4a17d94279717a214428b3638bb52a6); [báo cáo](../docs/qa-q01-quick-qa-root-cause.md); M7 10/10, M5 4 attempts/0 downstream; chờ Tech Lead |
+| QA-Q01 | Quick QA Execution & Root-Cause Diagnosis | QA | DONE | P1 | M5-08, M6-06, M7-05 | [QA-Q01](tasks/QA/QA-Q01.md) | [6b245b5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6b245b53b4a17d94279717a214428b3638bb52a6); [báo cáo](../docs/qa-q01-quick-qa-root-cause.md); APPROVED 05/11/2026; CI42050329839 SUCCESS; giữ limitations |
 | M0-01 | Initialize Project Repository | M0 | DONE | P0 | - | [M0-01](tasks.md#m0-01-history) | [9eb4483](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/9eb4483f4be4029c014a3a9552dfb5a1a91c8fea) |
 | M0-02 | Reorganize Financial Dataset & Commit to GitHub | M0 | DONE | P0 | M0-01 | [M0-02](tasks.md#m0-02-history) | [279e65a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/279e65a38c44feca385b305e32e34be2c30510db) |
 | M0-03 | Repository Housekeeping & Planning Synchronization | M0 | DONE | P0 | M0-02 | [M0-03](tasks.md#m0-03-history) | [c86b86e](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/c86b86eb95ef91251a53b3768ae5c52c2ed73514) |

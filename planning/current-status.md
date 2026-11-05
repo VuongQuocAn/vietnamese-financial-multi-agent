@@ -4,7 +4,7 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## QA-Q01 — Quick QA Execution & Root-Cause Diagnosis
 
-Status: **REVIEW**, Owner giao05/11/2026; baseline main/origin
+Status: **DONE**, APPROVED theo quyết định nghiệm thu05/11/2026; baseline main/origin
 `34a3fec1171b23bc9c9c268aded4a2205ae68936`. [Spec](tasks/QA/QA-Q01.md),
 [báo cáo](../docs/qa-q01-quick-qa-root-cause.md). M7 actual10/10:2correct/4partial/
 4expected abstention-clarification; M5 actual4attempts/0downstream (3HTTP503,
@@ -12,9 +12,13 @@ Status: **REVIEW**, Owner giao05/11/2026; baseline main/origin
 operands.0P0/3P1/3P2;6targeted controls PASS;16.745protected hashes/Web unchanged.
 4Gemini calls/4.041known tokens/3unknown usage; không retry/OCR/extraction.
 Report/tooling `6b245b53b4a17d94279717a214428b3638bb52a6` đã push main, HEAD/origin
-khớp sau push;6focused/Ruff/format/planning102tasks/diff PASS. CI42050329839 đúng
-SHA đang chạy tại checkpoint ban đầu. Chưa sửa runtime/M8/QA-Fix.
-Next action: Tech Lead nghiệm thu QA-Q01 và quyết định nhóm QA-Fix ưu tiên.
+khớp sau push;6focused/Ruff/format/planning102tasks/diff PASS.
+[CI42050329839](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42050329839)
+completed/SUCCESS đúng SHA; Python3.12 SUCCESS, Web/full regression SKIPPED.
+Phiên nghiệm thu chỉ cập nhật docs/planning và chạy planning/diff checks;
+giữ nguyên findings/limitations, runtime, accepted evidence và Web local.
+Không chạy lại QA/tests/Gemini/OCR hoặc triển khai M8/QA-Fix.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự triển khai QA-Fix/M8.
 
 ## M7-05 — Information Firewall and Output Validation
 
