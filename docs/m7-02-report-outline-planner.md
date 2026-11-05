@@ -78,7 +78,9 @@ thì union mọi IDs/citations/caveats/limitations, không chọn bản ít cave
 Scope chỉ confirmed khi accepted embedded resolution resolved/confirmed đúng nguồn.
 Fact-only thiếu resolution vẫn unknown; yêu cầu consolidated/separate chưa xác nhận
 sẽ clarification hoặc partial khi còn support khác. Scope top-level chỉ confirmed
-khi mọi selected slot đồng nhất; scope riêng vẫn có trong từng slot.
+khi mọi selected slot đồng nhất; scope riêng vẫn có trong từng slot. Nếu selected
+targets có cả separate và consolidated đã confirmed, yêu cầu clarification trước
+khi lập outline; không ghép hai phạm vi vào cùng một báo cáo.
 Caveats từ decision/claim/supporting evidence/citation limitations và unknown-scope
 note; limitations từ decision blockers/missing information. Giữ cả caveat codes lịch
 sử khó đọc, không diễn giải chúng thành kết luận mới.
@@ -86,7 +88,10 @@ sử khó đọc, không diễn giải chúng thành kết luận mới.
 `ready` là đủ support cho các section được chọn ở mức cấu trúc. `partial` có mục
 thiếu hoặc ambiguity/scope exclusions; `abstained` không có support; clarification
 cần binding/giải quyết ambiguity; unsupported vượt policy. Không đồng nghĩa đủ dữ
-liệu để kết luận mọi vấn đề trong tên nhóm tài chính. Thiếu claim trong ledger
+liệu để kết luận mọi vấn đề trong tên nhóm tài chính. `omitted_sections` liệt kê
+categories không có mục phân tích supported trong kết quả, kể cả placeholder
+insufficient_evidence của requested category; Writer phải giữ placeholder là thiếu
+bằng chứng. Thiếu claim trong ledger
 không chứng minh PDF không có dữ liệu.
 
 ## Gemini, fallback và local validation
@@ -114,7 +119,7 @@ không từ planner output. Hai scenario configs M6-06/M7-01 dùng để audit p
 
 36 unique BBS cases: sáu contexts (2021–2025 + recovery2022), mỗi context general,
 profitability, cash flow, leverage, missing-section và multi-section. Có6 general,
-24 focused,13 partial và1 abstained (original2022 thiếu accepted CFO). General2025
+30 focused,13 partial và1 abstained (original2022 thiếu accepted CFO). General2025
 có equivalent IDs khác caveats; 2024/2025 giữ supported interpretations. Thêm13
 negative controls và15 Gateway controls; conflict injection là detached adversarial
 source-selector mutation, không phải fact mới hoặc dữ liệu BBS thật.
@@ -128,12 +133,13 @@ calculator/canonical retrieval/orchestrator; zero calls. Artifacts mới, không
 .venv/Scripts/python.exe scripts/evaluate_m7_02_outline.py --mode integrity --output artifacts/evidence/M7-02-integrity-new
 ```
 
-Final source replay: local ignored `artifacts/evidence/M7-02-evaluation-final-v2/`.
+Source/live session: local ignored `artifacts/evidence/M7-02-evaluation-final-v2/`.
 Summary riêng `offline/summary.json`, `live/summary.json`, `preflight.json`.
+Final offline sau scope guard: `artifacts/evidence/M7-02-scope-guard-final/`.
 
 | Bằng chứng | Kết quả |
 | --- | --- |
-| Synthetic engineering | 48 controls:47/48 initial; corrected fixture targeted1/1 PASS |
+| Synthetic engineering | 49 controls:47/48 initial; corrected fixture1/1 +scope guard1/1 PASS |
 | M4/M5/M6/QA compatibility | 327/327 PASS |
 | Saved BBS oracle | 36/36 PASS;22 ready/13 partial/1 abstained |
 | Negative/adversarial | 13/13 +15/15 PASS;14/14 deterministic fallback |
@@ -142,8 +148,8 @@ Summary riêng `offline/summary.json`, `live/summary.json`, `preflight.json`.
 | Citation binding / required caveat retention | 100% /100% theo saved oracle |
 | Unsupported claims/objectives, unverified leakage | 0/0/0 |
 | Snapshot/scope violations, unauthorized calculations | 0/0 |
-| Cold proof read | 34,412s cho58 entries (28 facts/28 metrics/2 interpretations) |
-| Warm BBS deterministic planning | 0,968–13,862ms; all offline tối đa44,644ms |
+| Cold proof read | 35,426s cho58 entries (28 facts/28 metrics/2 interpretations); session fresh trước đó34,412s |
+| Warm BBS deterministic planning | 1,989–23,542ms; all offline tối đa49,687ms |
 
 Đây là saved-source oracle agreement và engineering; chưa independent financial
 accuracy, full-PDF audit hoặc bằng chứng lợi ích Multi-Agent end-to-end.
@@ -163,7 +169,9 @@ Không retry để lấy kết quả đẹp, không tính fallback là fresh pro
 | missing2025 | 637/313/950 | rejected → fallback | partial, oracle PASS | 2,028s |
 
 Tổng4655 provider-reported tokens. Fresh organization acceptance0/3, fallback3/3.
-Không có fresh evidence cho phiên bản prompt khác và không còn ngân sách call.
+Fresh chạy trước guard mixed confirmed scopes cuối cùng; guard giữ nguyên prompt
+và ba requests thực tế không có mixed confirmed scopes. Không đổi prompt hoặc gọi
+thêm sau fresh; không còn ngân sách call.
 
 ## Mẫu outline thực tế BBS2025
 
@@ -197,7 +205,9 @@ Fixture conflict đầu đổi numeric value nhưng chưa đồng bộ proof nê
 đã chuyển control sang detached source-selector injection và giữ admission nguyên.
 Evaluation initial dừng ở selector field sai observation_id; sửa thành frozen
 ObservationIdentity.model_copy(local_id), giữ partial artifacts; không đổi oracle.
-Final64/64 trên cùng frozen oracle. Lỗi fresh tổ chức đã được gate chặn/fallback;
+Final audit bổ sung guard cross-target mixed confirmed scopes và targeted test;
+hủy CI trung gian41953766131 để dành quota cho SHA cuối. Final replay64/64 giữ
+nguyên frozen oracle. Lỗi fresh tổ chức đã được gate chặn/fallback;
 chưa chứng minh model có thể tổ chức outline hợp lệ trên ba cases này.
 
 Không phát hiện remaining P0/P1 trong bounded checks. P2: fresh structural acceptance

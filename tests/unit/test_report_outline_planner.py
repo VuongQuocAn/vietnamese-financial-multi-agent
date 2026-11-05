@@ -306,3 +306,17 @@ def test_bad_retrieval_empty_ledger_and_budget(qa, tmp_path, monkeypatch):
     )
     assert large.llm_metadata.status == "fallback" and large.llm_metadata.calls == 0
     assert large.llm_metadata.reason == "projection_budget_exceeded"
+
+
+def test_distinct_confirmed_scopes_across_targets_require_clarification(qa, monkeypatch):
+    _, ledger, context = qa
+    monkeypatch.setattr(
+        "vietnamese_financial_multi_agent.outputs.report_outline_planner.claim_scope",
+        lambda entry: "separate" if entry.identity.kind == "fact" else "consolidated",
+    )
+    result = ReportOutlinePlanner(ledger).plan(
+        ReportOutlineRequest(report_type="profitability", **context)
+    )
+    assert result.status == "clarification_required" and not result.used_verified_claim_ids
+    assert result.reasons == ["conflicting_verified_reporting_scopes"]
+    assert result.validation_result.valid

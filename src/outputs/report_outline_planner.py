@@ -282,6 +282,11 @@ def _deterministic(request, retrieved):
             scope_missing = True
             continue
         groups.setdefault(_target(entry), []).append(entry)
+    confirmed_scopes = {claim_scope(entry) for entries in groups.values() for entry in entries} - {
+        None
+    }
+    if len(confirmed_scopes) > 1:
+        return _empty(request, "clarification_required", ["conflicting_verified_reporting_scopes"])
     buckets = {s: [] for s in content_types}
     for entries in groups.values():
         if len({_assertion_signature(e) for e in entries}) > 1:
