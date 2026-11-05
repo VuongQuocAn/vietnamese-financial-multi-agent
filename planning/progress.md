@@ -16,11 +16,11 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
 | M6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M7 | 5 | 1 | 0 | 0 | 3 | 0 | 1 |
+| M7 | 5 | 2 | 0 | 0 | 3 | 0 | 0 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 89 | 0 | 0 | 11 | 0 | 1 |
+| TOTAL | 101 | 90 | 0 | 0 | 11 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -40,7 +40,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
 | `verification` | M6-01–06 DONE; Tech Lead phê duyệt hoàn thành M6 trong task M7-01 ngày05/11/2026. Giữ source-bound limits/D03-B10 và evidence M6-06 tại88ae91d/CI41823101329; không independent PDF audit |
-| `outputs` | M7-01 DONE; M7-02 REVIEW,targeted P1/P2 fix: typed annual/end-date context và short-index Gateway.Old64/new44 oracle PASS;fresh1accepted/2HTTP503,LIVE PARTIAL.eff170d/CI41958482836 SUCCESS,785tests;runtimef5c9971/CI41957365549 Web PASS.Chưa report writer/citation renderer/firewall tổng quát |
+| `outputs` | M7-01–02 DONE; Tech Lead APPROVED M7-02 ngày05/11/2026,chấp nhận eff170d.Typed annual/end-date context và short-index Gateway;old64/new44 oracle PASS,fresh1accepted/2HTTP503,LIVE PARTIAL.CI41958482836 SUCCESS,785tests;runtimef5c9971/CI41957365549 Web PASS.Chưa report writer/citation renderer/firewall tổng quát |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
@@ -48,7 +48,8 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M7-02 **REVIEW**, Owner giao05/11/2026.
+M7-02 **DONE**, Tech Lead APPROVED ngày05/11/2026,chấp nhận implementation
+`eff170d406228181435b8d8b88a1c775db772b3a`. Owner giao05/11/2026.
 [Spec](tasks/M7/M7-02.md),[report](../docs/m7-02-report-outline-planner.md).
 Tech Lead yêu cầu P1/P2;đã bàn giao targeted fixeff170d,CI41958482836 SUCCESS,
 785focused PASS gồm51planner/evaluation cases.Web SKIPPED ở verifier-only fix;
@@ -65,7 +66,9 @@ Python3.12/Web smoke SUCCESS;783 focused PASS gồm49 planner cases.
 Local327 compatibility PASS;64/64 oracle (36 BBS/28 controls),zero safety leakage.
 Fresh3calls/4655tokens,0/3 accepted proposals,fallback3/3,LIVE PARTIAL;
 15231 protected hashes/Web unchanged. Chưa independent financial accuracy.
-Next action: Tech Lead review M7-02; không bắt đầu M7-03.
+Phiên nghiệm thu chỉ đồng bộ tài liệu/planning và chạy planning/diff checks;
+giữ runtime/accepted evidence/Web local,không chạy lại tests/BBS/Gemini.
+Next action: chờ nhiệm vụ mới từ Owner/Tech Lead; không tự bắt đầu M7-03.
 
 Checkpoint M7-01 trước:
 

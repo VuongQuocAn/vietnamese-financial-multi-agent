@@ -4,10 +4,11 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-02 — Report Outline Planner
 
-Status: **REVIEW**, Owner giao05/11/2026; baseline HEAD/origin
+Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
+`eff170d406228181435b8d8b88a1c775db772b3a`. Owner giao05/11/2026; baseline HEAD/origin
 `445733426514cc0d8c3ce535c8b8fa931e93702f` đã xác minh. Cho phép commit/push main.
 [Spec](tasks/M7/M7-02.md),[report](../docs/m7-02-report-outline-planner.md).
-Tech Lead NEEDS FIX ngày05/11/2026,giữ REVIEW;baseline fix HEAD/origin35ea658.
+Vòng review trước yêu cầu targeted fix P1/P2;baseline fix HEAD/origin35ea658.
 Đã sửa P1 bằng explicit typed annual/end-date context cùng document/snapshot,
 native periods giữ nguyên;BBS2025 ready27IDs,thêm5B01. P2 short indexes/dynamic schema.
 Runtime fixf5c9971 đã push;CI41957365549 SUCCESS,784tests vàWeb smoke PASS.
@@ -34,7 +35,9 @@ Implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3` đã push main;
 completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
 CI783 focused PASS gồm toàn bộ49 planner cases. Checkpoint sau chỉ docs/planning
 [skip ci];chưa independent financial accuracy.
-Next action: Tech Lead review M7-02; không bắt đầu M7-03.
+Phiên nghiệm thu chỉ đồng bộ tài liệu/planning và chạy planning/diff checks;
+giữ runtime, accepted evidence/oracles và Web local;không chạy lại tests/BBS/Gemini.
+Next action: chờ nhiệm vụ mới từ Owner/Tech Lead; không tự bắt đầu M7-03.
 
 ## M7-01 — Vietnamese QA Composer
 
