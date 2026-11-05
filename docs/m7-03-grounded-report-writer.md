@@ -1,8 +1,15 @@
 # M7-03 — Grounded Report Writer
 
 Owner giao05/11/2026; baseline HEAD/origin main
-`b66919da3b26c7f05a0feb33bfed50a58ad7397a`. Implementation chưa commit.
-Status **REVIEW**, chờ exact-SHA CI và Tech Lead nghiệm thu trước DONE.
+`b66919da3b26c7f05a0feb33bfed50a58ad7397a`. Implementation
+`c5c8d57b966819780ea0efc685676192e7b88355` đã push trực tiếp main; HEAD/origin khớp.
+Status **REVIEW**, chờ Tech Lead nghiệm thu trước DONE.
+
+[CI41978477605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41978477605)
+completed/SUCCESS đúng implementation SHA:833focused tests, Python3.12 và Web
+smoke SUCCESS (typecheck/lint/build/browser/proxy); full regression manual SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI implementation cho SHA
+checkpoint. Local Ruff/format/planning/diff PASS; Web local giữ ngoài stage.
 
 ## Luồng và API
 
@@ -106,7 +113,7 @@ không cộng cold read vào warm generation latency.
 | Unauthorized calculations/unverified retrieval | 0/0;guarded tool counters |
 | Warm saved-source generation min/mean/max | 3,24/36,49/97,31ms;43cases, không fake/live latency |
 | Final saved Gemini replay | 3/3 proposals accepted;zero fresh calls, source/structure gates PASS |
-| Engineering tests | 48Writer controls PASS (47suite+1targeted regression cuối);401focused compatibility PASS |
+| Engineering tests | 48Writer controls PASS (47suite+1targeted regression cuối);401focused compatibility PASS;CI833focused PASS gồm đủ48Writer |
 | Protected integrity | 15.727hashes unchanged, gồm accepted data/artifacts/oracles và Web local |
 
 ## Fresh Gemini và replay cuối

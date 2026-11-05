@@ -7,7 +7,11 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 Status: **REVIEW**, Owner giao05/11/2026, cho phép commit/push main.
 Baseline HEAD/origin `b66919d`, giữ local `web/next-env.d.ts`.
 [Spec](tasks/M7/M7-03.md),[report](../docs/m7-03-grounded-report-writer.md).
-Implementation chưa commit; chờ push/exact-SHA CI. Typed protected narrative,
+Implementation `c5c8d57b966819780ea0efc685676192e7b88355` đã push main,HEAD/origin khớp;
+[CI41978477605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41978477605)
+completed/SUCCESS đúng SHA:833focused tests,Python3.12/Web smoke SUCCESS,
+full regression manual SKIPPED. Checkpoint sau chỉ docs/planning [skip ci].
+Typed protected narrative,
 dedup cùng typed assertion/source, paragraph citations vàlocal validator/fallback.
 48Writer controls (47suite+1targeted) và401compatibility PASS;86/86oracle
 (43BBS/43controls),zero safety violations. Fresh3calls/7.338tokens/3accepted;

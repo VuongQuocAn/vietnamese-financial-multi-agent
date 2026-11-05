@@ -52,7 +52,11 @@ M7-03 **REVIEW**, Owner giao05/11/2026,baseline main/origin b66919d.
 Typed protected Writer/dedup/paragraph gate;48Writer và401compatibility PASS,
 86/86oracle,zero safety violations.Fresh3calls/7.338tokens/3accepted;
 final saved replay3/3accepted,không thêm calls.15.727protected hashes/Web unchanged.
-Implementation chưa commit,chờ push/exact-SHA CI vàTech Lead đọc3mẫu final.
+Implementation `c5c8d57b966819780ea0efc685676192e7b88355` đã push main;
+[CI41978477605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41978477605)
+completed/SUCCESS đúng SHA:833focused tests,Python3.12/Web smoke SUCCESS,
+full regression manual SKIPPED. Checkpoint sau chỉ docs/planning [skip ci];
+chờ Tech Lead đọc3mẫu final.
 [Spec](tasks/M7/M7-03.md),[report](../docs/m7-03-grounded-report-writer.md).
 Next action: Tech Lead review M7-03;không tự bắt đầu M7-04.
 
