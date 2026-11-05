@@ -6,8 +6,14 @@ Status **REVIEW — targeted fix P1/P2**, chưa DONE. Tech Lead yêu cầu sửa
 baseline fix HEAD/origin `35ea6588dcda8dcaa4d7d97b3011e075939658c6` đã xác minh.
 Runtime fix `f5c9971c112ebcd38017e9bdf987b0156d87af30` đã push;
 [CI41957365549](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41957365549)
-SUCCESS:784 focused tests,Python3.12 và Web smoke PASS. Verifier pin cuối cùng
-chưa commit; chờ CI cho bản cuối. Bằng chứng lần đầu được giữ để đối chiếu:
+SUCCESS:784 focused tests,Python3.12 và Web smoke PASS. Final implementation
+`eff170d406228181435b8d8b88a1c775db772b3a` đã push main;
+[CI41958482836](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41958482836)
+completed/SUCCESS đúng SHA,785 focused tests PASS, gồm51 cases trong planner test
+module (50planner +1oracle-pin). Web smoke SKIPPED ở lượt verifier cuối; đã xác
+minh src/Web/workflow không đổi từ runtimef5c9971 có Web smoke SUCCESS. Full unit
+regression manual SKIPPED. Checkpoint sau chỉ docs/planning [skip ci].
+Bằng chứng lần đầu được giữ để đối chiếu:
 implementation `b5898cd29b81d9f67c96b778ccf81fcd8800e8b3` (core4c6a612 +scope guard).
 [CI41954306492](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41954306492)
 completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
@@ -302,12 +308,14 @@ compatibility regression PASS; Ruff/format477files PASS.15496 protected hashes u
 accepted artifacts và Web local) tại M7-02-review-fix-integrity/summary.json.
 Audit cuối phát hiện Git chuyển CRLF/LF của oracle JSON; pin cũ vẫn giữ nguyên.
 Verifier chấp nhận duy nhất khác biệt line endings khi đối chiếu SHA, mọi byte khác
-vẫn phải khớp. Targeted test1/1 PASS với LF checkout và mutation label bị reject;
+vẫn phải khớp. SHA oracle trên là byte hashes của local frozen artifacts trước
+Git line-ending normalization. Targeted test1/1 PASS với LF checkout và mutation label bị reject;
 không sửa label hoặc oracle file.51 cases trong planner test module (50planner +1pin).
 Không chạy lại BBS/live sau thay đổi verifier vì runtime/request/proposals không đổi.
 
 Fix xử lý root causes P1/P2, không phát hiện P0; còn giới hạn caller phải bind
 period_end rõ ràng, conservative scope unknown và provider availability. Chưa
-independent financial accuracy. Implementation SHA/CI mới sẽ ghi sau push.
+independent financial accuracy. Implementation SHA/CI mới đã xác minh như trên;
+không gán CI implementation cho checkpoint docs tiếp theo.
 
 Next action: Tech Lead review targeted fix M7-02. Không tự bắt đầu M7-03.
