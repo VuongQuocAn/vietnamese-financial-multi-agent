@@ -16,11 +16,11 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M4 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
 | M5 | 8 | 8 | 0 | 0 | 0 | 0 | 0 |
 | M6 | 6 | 6 | 0 | 0 | 0 | 0 | 0 |
-| M7 | 5 | 0 | 1 | 0 | 4 | 0 | 0 |
+| M7 | 5 | 0 | 0 | 0 | 4 | 0 | 1 |
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 101 | 88 | 1 | 0 | 12 | 0 | 0 |
+| TOTAL | 101 | 88 | 0 | 0 | 12 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -40,7 +40,7 @@ M0-04 đã có task tracking, checkpoint/resume và validator chạy trong
 | `tools` | M4-01–05 và M4-05a DONE;Tech Lead APPROVED hai chế độ QA ngày02/11/2026:deterministic36 câu/28answers đúng có nguồn;Gemini live hiểu paraphrases,dispatch M4 tools và grounded answers (4positive+1negative đúng sau targeted fixes). Giữ history/limitations live và D03-B10 BLOCKED;chưa independent financial verification hoặc M5 agents |
 | `agents` | M5-01–M5-08 DONE,Tech Lead APPROVED;Router deterministic/read-only và orchestration/projection;36/36 offline hợp nhất,live initial1/4 và targeted partial-live2/2;claims chưa verified |
 | `verification` | M6-01–06 DONE; Tech Lead phê duyệt hoàn thành M6 trong task M7-01 ngày05/11/2026. Giữ source-bound limits/D03-B10 và evidence M6-06 tại88ae91d/CI41823101329; không independent PDF audit |
-| `outputs` | M7-01 IN_PROGRESS: typed/read-only Vietnamese QA, protected slots, bounded Gateway/local gate;66/66 oracle và3/3fresh Gemini PASS; chưa report writer/citation renderer/firewall tổng quát |
+| `outputs` | M7-01 REVIEW: typed/read-only Vietnamese QA, protected slots, bounded Gateway/local gate;66/66 oracle và3/3fresh Gemini PASS; chưa report writer/citation renderer/firewall tổng quát |
 | `api` | W-02 DONE: FastAPI GET /api/health và Next.js proxy; chưa nối M1–M2 |
 
 Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured query
@@ -48,11 +48,13 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-M7-01 **IN_PROGRESS**, [spec](tasks/M7/M7-01.md),
+M7-01 **REVIEW**, [spec](tasks/M7/M7-01.md),
 [report](../docs/m7-01-vietnamese-qa-composer.md).35 QA/236 compatibility tests PASS;
 66/66 fixed oracle (40 BBS/26 controls),Gemini fresh3/3/5.555tokens,15.118 protected
-hashes/Web unchanged;zero leakage/fabrication/mixing. Chưa commit/CI.
-Next action: commit/push main và xác minh CI đúng SHA.
+hashes/Web unchanged;zero leakage/fabrication/mixing.
+Implementation16065fa đã push main;CI41948527583 completed/SUCCESS đúng SHA,
+Python3.12/Web smoke SUCCESS,full regression SKIPPED;checkpoint sau chỉ docs/planning.
+Next action: Tech Lead review M7-01. Không tự bắt đầu M7-02.
 
 Checkpoint trước:
 

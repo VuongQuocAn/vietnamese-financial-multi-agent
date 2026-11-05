@@ -6,7 +6,7 @@ M7-01 — Vietnamese QA Composer
 
 ## Status
 
-IN_PROGRESS
+REVIEW
 
 ## Last Verified State
 
@@ -21,7 +21,7 @@ Fresh3/3calls/5.555tokens;15.118protected hashes/Web unchanged,zero safety viola
 
 ## Remaining Work
 
-Commit/push main và exact implementation SHA CI; kết thúc REVIEW.
+Chờ Tech Lead nghiệm thu M7-01; không bắt đầu M7-02.
 
 ## Modified Files
 
@@ -35,12 +35,16 @@ Gemini fresh3/3;Ruff/format/planning/diff PASS.
 
 ## Blockers
 
-Không external blocker. Cold proof ledger đọc chậm; Gemini phụ thuộc provider/quota.
+Không P0/P1 trong bounded checks. P2: matcher/scope bảo thủ và cold ledger read chậm.
 
 ## Git Checkpoint
 
-Chưa commit. Baseline67700c3 đã xác minh khớp remote; không branch/PR/worktree.
+Implementation `16065fae004335ae224b7b4a6e2e74f5098b26f8` đã push main;
+[CI41948527583](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41948527583)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS;full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
+Giữ web/next-env.d.ts local ngoài stage; không branch/PR/worktree.
 
 ## Exact Next Action
 
-Commit/push main và xác minh CI đúng SHA.
+Tech Lead review M7-01. Không tự bắt đầu M7-02.

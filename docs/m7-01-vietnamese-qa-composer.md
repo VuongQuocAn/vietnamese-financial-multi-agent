@@ -1,6 +1,6 @@
 # M7-01 — Vietnamese QA Composer
 
-Status **IN_PROGRESS**, Owner giao05/11/2026; baseline local/origin main
+Status **REVIEW**, Owner giao05/11/2026; baseline local/origin main
 `67700c3ff4e3aa170d9af8c0da872032dc2be1d0`. Tech Lead phê duyệt M6 trong task mới.
 
 ## Architecture và API
@@ -76,7 +76,8 @@ Không retry hoặc chuyển paid API; effective model/usage/error giữ từ Ga
 ## Validation và evidence
 
 33 QA engineering tests PASS ở vòng đầu sau sửa fixture; thêm2 targeted controls
-cho duplicate caveats và mixed periods. BBS evaluation có fixed
+cho duplicate caveats và mixed periods; tổng35 controls PASS (34 suite+1 targeted
+sau sửa fixture mixed-period để loại revenue cùng kỳ đã tồn tại). BBS evaluation có fixed
 oracle66 ca,40 saved-source và26 controls; SHA256
 `8c44c0a85610aaae2d5c1e79ef1d9f8d58ffb5790726e2d0ac15ae002dbd3778`.
 Oracle IDs/expected status được chốt từ accepted M6 histories trước Composer run.
@@ -134,7 +135,13 @@ Fresh provider-reported model `gemini-3.5-flash-lite` (không suy từ tên cấ
 Mỗi fresh response giữ citations/caveats đúng source oracle. Task-wide call budget
 đã dùng đủ3/3; không retry hoặc gọi thêm. Token usage provider_reported, không
 có pricing estimate. Local Ruff toàn repo/format PASS; planning/diff PASS.
-Implementation và exact-SHA CI sẽ ghi sau commit/push.
+Implementation `16065fae004335ae224b7b4a6e2e74f5098b26f8` đã push trực tiếp main;
+HEAD/origin đã xác minh khớp.
+[CI41948527583](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41948527583)
+completed/SUCCESS đúng implementation SHA: Python3.12 và Web smoke SUCCESS,
+full regression manual SKIPPED. CI đã chạy35 QA cases cùng focused suite hiện hành;
+Web typecheck/lint/build/browser/proxy smoke đạt. Checkpoint sau chỉ docs/planning
+[skip ci], không gán CI implementation cho SHA checkpoint.
 
 ## Root causes và limitations
 
@@ -150,6 +157,8 @@ discovery, financial calculation hoặc cross-document comparison. Scope project
 fact-only bảo thủ; full proof cold read tốn thời gian/RAM. Quality/caveats upstream
 vẫn giữ, kể cả các nhãn lịch sử như formula_policy_not_approved trong ACCEPT.
 Saved-policy QA/engineering PASS không là independent PDF financial accuracy hoặc
-bằng chứng lợi ích Multi-Agent end-to-end. Implementation chưa commit.
+bằng chứng lợi ích Multi-Agent end-to-end. Không phát hiện remaining P0/P1 trong
+bounded checks; P2: matcher hữu hạn, fact-only scope projection bảo thủ, cold-read
+ledger chậm và caveat codes kế thừa có thể khó đọc. Chưa M7-02–05.
 
-Next action: hoàn tất evaluation và xác minh M7-01.
+Next action: Tech Lead review M7-01. Không tự bắt đầu M7-02.

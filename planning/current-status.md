@@ -4,15 +4,19 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-01 — Vietnamese QA Composer
 
-Status: **IN_PROGRESS**, Owner giao05/11/2026. Baseline local/origin main
+Status: **REVIEW**, Owner giao05/11/2026. Baseline local/origin main
 `67700c3ff4e3aa170d9af8c0da872032dc2be1d0` đã xác minh; Tech Lead phê duyệt M6.
 [Spec](tasks/M7/M7-01.md), [report](../docs/m7-01-vietnamese-qa-composer.md).
 Typed/read-only QA, protected slots, bounded Gateway/local gate;35 QA tests
 (34 suite+1 targeted sau fixture fix),236 M4/M5/M6 compatibility PASS.
 66/66 oracle (40 BBS/26 controls),fresh3/3calls/5.555tokens;zero unsupported claims,
-fabrication/mixing/lost caveats.15.118 protected hashes/Web unchanged. Chưa commit/CI.
+fabrication/mixing/lost caveats.15.118 protected hashes/Web unchanged.
+Implementation `16065fae004335ae224b7b4a6e2e74f5098b26f8` đã push main;
+[CI41948527583](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41948527583)
+completed/SUCCESS đúng SHA,Python3.12/Web smoke SUCCESS,full regression SKIPPED.
+Checkpoint sau chỉ docs/planning [skip ci], không gán CI cho checkpoint SHA.
 Source-bound QA, chưa independent PDF audit; giữ D03-B10/M7-02–05 ngoài scope.
-Next action: commit/push main và xác minh CI đúng SHA.
+Next action: Tech Lead review M7-01. Không tự bắt đầu M7-02.
 
 ## M6-06 — Verified Claim Ledger
 
