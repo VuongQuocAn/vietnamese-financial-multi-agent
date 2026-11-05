@@ -2,7 +2,8 @@
 
 Owner giao05/11/2026; baseline main/origin
 `3c2e9cd5d202f3abddc7437f4ef1db27dc611ba9`, Web local được giữ nguyên.
-Status **IN_PROGRESS**; implementation chưa commit, CI chưa chạy.
+Status **IN_PROGRESS**; core implementation `730807b38907fa59f74931588b74c78c53dfe935`
+đã push main; final status-coverage guard đang bổ sung trước CI cuối.
 
 ## Kiến trúc và public API
 
@@ -133,12 +134,14 @@ Final replay sau structural guard bổ sung cũng43/43 và50/50 PASS, cùng orac
 
 Protected baseline15.611 files gồm raw/processed, accepted evidence/oracles và Web
 local: cả hai lượt unchanged toàn bộ. Zero LLM/Gemini/OCR/extraction/calculation calls.
-Local:78 citation tests và185 focused compatibility tests PASS (M6-06/M7-01–03,
+Local:80 citation tests và185 focused compatibility tests PASS (M6-06/M7-01–03,
 evidence retrieval/canonical facts). Combined run đầu262PASS/1fixture failure;
-sau sửa shared-context fixture, final citation module78/78PASS và targeted1/1PASS.
+sau sửa shared-context fixture, citation module78/78PASS và targeted1/1PASS;
+final module80/80PASS sau thêm2 status-coverage controls.
 Không chạy lại185 compatibility đã PASS vì không đổi runtime sau run đó.
 Ruff check/format toàn repo489 files, planning101tasks và diff check PASS.
-Exact-SHA CI: chưa chạy.
+CI41983022766 của core730807b được hủy khi bổ sung status-coverage guard,
+không dùng làm bằng chứng nghiệm thu. Chờ CI đúng final implementation SHA.
 
 ## Ví dụ đối chiếu đầy đủ một QA segment
 
@@ -241,7 +244,7 @@ Report sample annual-general-2025 giữ5 financial paragraphs, bao gồm B01 t�
 2025-12-31 và B02/B03 kỳ2025; paragraphs cash_flow:p2/p3 cùng nguồn tái dùng số38–48.
 Sample partial-2025 giữ missing sections/limitations và original_status partial.
 
-Ba bộ samples tại `artifacts/evidence/M7-04-final-v2/samples/`: qa-multi-2025,
+Ba bộ samples tại `artifacts/evidence/M7-04-report-final/samples/`: qa-multi-2025,
 annual-general-2025, partial-2025. Mỗi bộ có Markdown, rendered typed JSON với
 original source_citations, locator JSON và validation summary JSON; không commit
 private evidence/artifacts.
@@ -252,6 +255,8 @@ private evidence/artifacts.
   tra exact source inventory theo tập, đánh số theo paragraph traversal.
 - Trùng paragraph ID có thể làm suffix lan sang scope paragraph: chặn duplicate
   IDs trên toàn report, kể cả đoạn không có citations.
+- Source rỗng khai báo answered/generated hoặc nguồn có claims nhưng khai báo
+  refusal tự mâu thuẫn: kiểm tra status phải phù hợp với required bindings.
 - Fixture ban đầu dùng sai ClaimKind và chia sẻ mutable context giữa paragraphs:
   sửa fixture theo typed contract; không thay upstream behavior.
 - Oracle pin theo bytes phụ thuộc CRLF/LF: pin chuẩn hóa newline, label mutation

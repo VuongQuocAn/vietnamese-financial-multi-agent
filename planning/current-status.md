@@ -11,8 +11,8 @@ Deterministic typed QA/report renderer, exact-source registry, inline markers,
 locators và original-bound validator; không sửa upstream outputs hoặc gọi LLM.
 Final source-bound replay43/43 (19QA BBS/18reports BBS/6empty controls),50/50
 adversarial rejected;15.611protected hashes/Web unchanged. Ba bộ rendered samples.
-78citation và185focused compatibility PASS;Ruff/format/planning/diff PASS.
-Implementation chưa commit/CI chưa chạy.
+80citation và185focused compatibility PASS;Ruff/format/planning/diff PASS.
+Core730807b đã push main; guard status-coverage bổ sung trước final exact-SHA CI.
 Next action: hoàn tất validation và exact-SHA CI để bàn giao Tech Lead.
 
 ## M7-03 — Grounded Report Writer

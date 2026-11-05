@@ -421,3 +421,15 @@ def test_frozen_citation_oracle_pin_accepts_only_newline_equivalence(tmp_path):
     assert functions["oracle_hash"](alternate) == functions["ORACLE_SHA256"]
     alternate.write_bytes(alternate.read_bytes().replace(b'"page": 7', b'"page": 8', 1))
     assert functions["oracle_hash"](alternate) != functions["ORACLE_SHA256"]
+
+
+@pytest.mark.parametrize("mode", ["qa", "report"])
+def test_empty_source_cannot_claim_a_complete_grounded_status(mode):
+    source = qa_source(count=0) if mode == "qa" else report_source()
+    if mode == "report":
+        source.sections = []
+        source.citations = []
+        source.used_verified_claim_ids = []
+        source.status = "generated"
+    with pytest.raises(ValueError, match="source_status_coverage_mismatch"):
+        getattr(CitationRenderer(), "render_" + mode)(source)

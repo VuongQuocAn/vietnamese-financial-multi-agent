@@ -168,6 +168,13 @@ def _source_parts(source):
         raise ValueError("source_citation_projection_mismatch")
     if set(source.used_verified_claim_ids) != {k for _, ids, *_ in parts for k in ids}:
         raise ValueError("source_claim_projection_mismatch")
+    grounded_statuses = (
+        {"answered", "partial"}
+        if isinstance(source, VietnameseQAResponse)
+        else {"generated", "partial"}
+    )
+    if bool(parts) != (source.status in grounded_statuses):
+        raise ValueError("source_status_coverage_mismatch")
     for _, ids, citations, contexts, *_ in parts:
         if not ids or not citations or not contexts:
             raise ValueError("missing_required_source_binding")
