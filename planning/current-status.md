@@ -4,8 +4,10 @@ Cập nhật 2026-11-05 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## M7-05 — Information Firewall and Output Validation
 
-Status: **REVIEW**, Owner giao05/11/2026, cho phép implement/test/commit/push
-main, dừng REVIEW. Baseline HEAD/origin6e33269 khớp; giữ local Web.
+Status: **DONE**, Tech Lead APPROVED ngày05/11/2026, chấp nhận implementation
+`b22d8319ee94c8f400cc7c12face24baacbb2b2e`. **Milestone M7 — COMPLETE**:
+M7-01–M7-05 đều DONE theo quyết định Tech Lead. Owner giao05/11/2026, cho phép
+implement/test/commit/push main; baseline HEAD/origin6e33269 khớp; giữ local Web.
 Typed final gate QA/report, request/ledger/citation bindings và safe release;
 không gọi LLM/OCR/extraction/calculator hoặc bắt đầu M8.
 [Spec](tasks/M7/M7-05.md), [report](../docs/m7-05-information-firewall.md).
@@ -16,8 +18,10 @@ Implementation `b22d8319ee94c8f400cc7c12face24baacbb2b2e` đã push main;
 [CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
 completed/SUCCESS đúng SHA:977focused và9Web smoke PASS,full regression SKIPPED.
 Checkpoint sau chỉ docs/planning [skip ci]; không gán CI cho checkpoint SHA.
-Next action: Tech Lead review M7-05 và đánh giá điều kiện hoàn thành milestone M7;
-không tự bắt đầu M8.
+Phiên nghiệm thu chỉ cập nhật docs/planning và chạy planning/diff checks;
+giữ runtime, accepted artifacts/oracles và các giới hạn đã báo; không chạy lại
+tests/evaluation hoặc gọi LLM/OCR/extraction/calculator.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M8.
 
 ## M7-04 — Unified Citation Rendering
 

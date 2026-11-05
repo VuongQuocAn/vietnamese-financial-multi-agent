@@ -1,14 +1,18 @@
 # M7-05 — Information Firewall & Unified Output Validation
 
 Owner giao05/11/2026; baseline main/origin
-`6e33269ad8c812d057d202c1eecfd069c606d509`. Task dừng **REVIEW**, không nghiệm thu
-milestone M7 hoặc bắt đầu M8. Implementation
+`6e33269ad8c812d057d202c1eecfd069c606d509`. **DONE**, Tech Lead APPROVED
+ngày05/11/2026, chấp nhận implementation bên dưới. **Milestone M7 — COMPLETE**,
+M7-01–M7-05 đều DONE theo quyết định Tech Lead. Implementation
 `b22d8319ee94c8f400cc7c12face24baacbb2b2e` đã push main; HEAD/origin khớp.
 [CI41989606269](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41989606269)
 completed/SUCCESS đúng implementation SHA:977focused tests và9Web smoke PASS;
 Python3.12 lint/format/planning, Web typecheck/lint/build đều SUCCESS; full unit
 regression manual SKIPPED. Checkpoint sau chỉ docs/planning [skip ci],
 không gán CI cho SHA checkpoint. Main-first, không tạo branch/PR mới.
+Phiên nghiệm thu chỉ đồng bộ docs/planning và chạy planning/diff checks;
+giữ runtime, accepted evidence/oracles, Web local và các giới hạn bên dưới.
+Không chạy lại tests/evaluation hoặc gọi LLM/OCR/extraction/calculator.
 
 ## Architecture audit và trust boundary
 
@@ -266,5 +270,4 @@ free financial prose từ LLM; chưa chứng minh mở đúng PDF khi resource m
 tồn tại; không chứng minh caller toàn quyền sửa trusted inputs là đáng tin; không
 đánh đồng oracle agreement, engineering smoke và chất lượng tài chính end-to-end.
 
-Next action: Tech Lead review M7-05 và đánh giá điều kiện hoàn thành milestone M7;
-không tự bắt đầu M8.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới; không tự bắt đầu M8.
