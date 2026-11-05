@@ -1,6 +1,9 @@
 # M7-01 — Vietnamese QA Composer
 
-Status **REVIEW**, Owner giao05/11/2026; baseline local/origin main
+Status **DONE**, Tech Lead APPROVED ngày05/11/2026; chấp nhận implementation
+`16065fae004335ae224b7b4a6e2e74f5098b26f8` và các giới hạn P2.
+66/66 là agreement với source-bound oracle, không phải độ chính xác tài chính độc lập.
+Owner giao05/11/2026; baseline local/origin main
 `67700c3ff4e3aa170d9af8c0da872032dc2be1d0`. Tech Lead phê duyệt M6 trong task mới.
 
 ## Architecture và API
@@ -161,4 +164,4 @@ bằng chứng lợi ích Multi-Agent end-to-end. Không phát hiện remaining 
 bounded checks; P2: matcher hữu hạn, fact-only scope projection bảo thủ, cold-read
 ledger chậm và caveat codes kế thừa có thể khó đọc. Chưa M7-02–05.
 
-Next action: Tech Lead review M7-01. Không tự bắt đầu M7-02.
+Next action: chờ nhiệm vụ mới từ Owner/Tech Lead; không tự bắt đầu M7-02.
