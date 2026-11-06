@@ -66,24 +66,189 @@ M7 dùng deterministic protected-slot composition; cache không gọi model reor
 
 ## C. Actual results
 
-E01 đã có actual fresh PASS và cache rerun0calls. E02/E03 cũng đã release từ
-fresh verification; E04/E05 đang chạy. Chi tiết cuối cùng cập nhật sau audit.
+E01–E05 chạy actual application pipeline trên catalog persisted, ledger riêng ban
+đầu trống. Không replay M6 historical proof, không OCR/extraction. Tổng19 candidate
+verification occurrences: **17 ACCEPT, 2 INVESTIGATE, 0 ABSTAIN**; **10 mới lưu**,
+7 ACCEPT idempotent. Hai INVESTIGATE không admission là cùng một interpretation
+lặp ở E03/E04. Không nhầm số ACCEPT với số ledger entries mới.
+
+| Case | Mode | Specialists thực thi | Tool calls | ACCEPT / INVESTIGATE | New / reused trong answer | M7 / citations / Firewall |
+| --- | --- | --- | ---: | --- | --- | --- |
+| E01 | fresh | profitability | 6 | 2 / 0 | 2 / 0 | answered / 13 / ALLOW_WITH_CAVEAT |
+| E02 | fresh | profitability | 4 | 2 / 0 | 2 / 0 | answered / 13 / ALLOW_WITH_CAVEAT |
+| E03 | fresh | liquidity_and_leverage | 6 | 3 / 1 | 3 / 0 | answered / 19 / ALLOW_WITH_CAVEAT |
+| E04 | partial reuse + refresh | cả ba Specialists | 14 | 9 / 1 | 3 / 2 | answered / 43 / ALLOW_WITH_CAVEAT |
+| E05 | partial reuse + refresh | profitability, cash_flow_and_earnings_quality | 4 | 1 / 0 | 0 / 2 | partial / 21 / ALLOW_WITH_CAVEAT |
+
+Tổng8 Specialist invocations (7generated/partial,1provider failure),34 M4 tool
+calls. E05 M5 partial vì cash-flow Specialist failed. E03/E04 interpretation về
+debt có numeric/content_period undetermined và logic insufficient_context →
+INVESTIGATE. Metric59,06% có ACCEPT riêng; không bỏ gates để nhận interpretation.
+Actual không có revision; synthetic control xác minh one-child revision chạy lại
+đầy đủ validator/evidence/logic trước admission.
+
+Planner planned/Supervisor completed ở cả5 câu. Planner intent E01 là
+evidence_explanation; E02–E05 multi_step_analysis. Router routed E01–E04,
+partial E05. Trace JSON giữ từng tool name/status/duration và Specialist stages.
+
+Các trích đoạn sau giữ nội dung thực, lược inline markers/registry để đọc. JSON
+E01–E05 giữ đầy đủ answer_vi, citations và mọi caveat/limitation nguyên văn.
+
+### E01
+
+> Kỳ 2025 — Biên lợi nhuận gộp kỳ 2025 đạt 7,21%.
+> Công thức: (5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ / 3. Doanh thu thuần về bán hàng và cung cấp dịch vụ) × 100%.
+> Số liệu sử dụng trong phép tính đã xác minh:
+> 5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ (gross_profit): 32482519668 VND; hệ số đơn vị 1; kỳ 2025.
+> 3. Doanh thu thuần về bán hàng và cung cấp dịch vụ (revenue): 450474531227 VND; hệ số đơn vị 1; kỳ 2025.
+
+### E02
+
+> Kỳ 2025 — Doanh thu thuần kỳ 2025 là 450.474.531.227 VND.
+> Kỳ 2025 — Lợi nhuận sau thuế kỳ 2025 là 7.249.557.946 VND.
+
+### E03
+
+> Kỳ 2025-12-31 — Tổng tài sản tại ngày 2025-12-31 là 266.086.680.765 VND.
+> Kỳ 2025-12-31 — Tỷ lệ nợ phải trả trên tổng tài sản tại ngày 2025-12-31 là 59,06%.
+
+### E04
+
+> Kỳ 2025 — Biên lợi nhuận gộp kỳ 2025 đạt 7,21%.
+> Kỳ 2025-12-31 — Tỷ lệ nợ phải trả trên tổng tài sản tại ngày 2025-12-31 là 59,06%.
+> Kỳ 2025 — Lưu chuyển tiền thuần từ hoạt động kinh doanh của kỳ 2025 là 14.319.681.754 VND.
+
+### E05
+
+> Kỳ 2025 — Doanh thu thuần kỳ 2025 là 450.474.531.227 VND.
+> Kỳ 2025 — Lưu chuyển tiền thuần từ hoạt động kinh doanh của kỳ 2025 là 14.319.681.754 VND.
+> Chỉ trả lời được một phần; các ý còn lại chưa có đủ claim đã xác minh.
+> Các yêu cầu chưa đáp ứng: r3 (nhận định về 3. Doanh thu thuần về bán hàng và cung cấp dịch vụ: chưa có nhận định ACCEPT phù hợp), r4 (nhận định về Lưu chuyển tiền thuần từ hoạt động kinh doanh: chưa có nhận định ACCEPT phù hợp).
+
+E05 không kết luận “chất lượng lợi nhuận tốt”; hai facts doanh thu/CFO giữ từ
+ledger. Một ACCEPT duplicate mới không trở thành authority cho quality verdict.
+E03/E04 có partial verification thực; E05 có provider failure thực. Synthetic
+controls bổ sung mixed ACCEPT/ABSTAIN/INVESTIGATE, all-nonaccept, source mismatch,
+wrong identity/year/scope, duplicate, conflict, revision và Firewall BLOCK.
 
 ## D. Financial correctness
 
-Synthetic tests chỉ là bằng chứng engineering. Reference BBS chỉ dùng sau runtime.
+Post-runtime audit tách khỏi pipeline: đọc lại repository đã admitted và so sánh
+10 selected-claim occurrences với số đọc PDF độc lập ở QA-Q01 và reference Owner
+cung cấp. **10/10 match**, gồm company/document/snapshot/year, ACCEPT authority,
+operand value/unit/scale và PDF page. Runtime không đọc reference file. Không có
+visual PDF audit mới; kết quả không chứng minh accuracy toàn báo cáo.
 
-## E. Performance và provider budget
+| Target | Reference và actual | PDF page |
+| --- | --- | --- |
+| Gross margin | 7,21% | 7 |
+| Debt-to-assets | 59,06% | 5–6 |
+| Revenue | 450.474.531.227 VND | 7 |
+| Gross profit (operand) | 32.482.519.668 VND | 7 |
+| Total assets | 266.086.680.765 VND | 5 |
+| Total liabilities (operand) | 157.146.559.558 VND | 6 |
+| CFO | 14.319.681.754 VND | 8 |
+| Net profit after tax | 7.249.557.946 VND | 7 |
 
-Tối đa 25 actual provider attempts cho validation của E2E-01, model hiện có.
-Không OCR/extraction, không thay accepted artifacts. Đo riêng lookup/M5/M6/M7.
+Citations giữ page-level/uncertain/source scope caveats; không nâng thành
+cell-level independent audit. Scope separate/consolidated chưa confirmed, giữ
+unknown. M7 chỉ hiển thị operands trong explanation admitted, không tự tính số.
 
-## F. Remaining issues
+## E. Performance và provider usage
 
-Focused compatibility399 PASS, cộng2conflict controls PASS. Bộ integration có24
-cases (gồm parameterized controls); synthetic/replayed provider không phải accuracy.
-Chờ hoàn tất actual suite và CI.
+Đơn vị giây; wall gồm copy/serialization/admission/reload ngoài các bước chính.
+M7 là tổng Composer + CitationRenderer + Firewall. Không suy một lượt thành
+benchmark toàn hệ thống; E01 chạy đồng thời focused tests.
 
-## G. Handoff
+| Case | Lookup | M5 | M6 | M7 | Wall | Rerun wall / mode |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| E01 | 0.001 | 44.857 | 9.519 | 1.274 | 80.745 | 5.465 / CACHE_HIT |
+| E02 | 2.988 | 37.077 | 4.441 | 2.392 | 68.938 | 5.564 / CACHE_HIT |
+| E03 | 1.740 | 53.423 | 14.192 | 4.194 | 113.884 | 11.326 / CACHE_HIT |
+| E04 | 4.630 | 74.343 | 28.250 | 10.642 | 188.340 | 21.289 / CACHE_HIT |
+| E05 | 9.480 | 71.007 | 12.088 | 25.570 | 183.466 | 23.186 / PARTIAL_REUSE_ONLY |
 
-Implementation chưa commit; chưa có CI E2E-01. Dừng tại REVIEW sau bàn giao.
+E01–E04 rerun CACHE_HIT; E05 PARTIAL_REUSE_ONLY. Cả5 reruns giữ nguyên selected
+IDs và answer, M5/M6 NOT_EXECUTED,0provider calls. E05 không báo cache đầy đủ khi
+còn thiếu verdict. Ledger task10 entries khoảng60,22MB; không load lại JSON cho
+từng M7 consumer trong cùng request, nhưng parse/proof payload vẫn đáng kể.
+
+Final-code cache check trên đúng implementation9811a44 sau commit, repository
+instance mới và ledger10entries: CACHE_HIT,0calls,74,525s wall/44,145s lookup;
+answer/IDs giữ nguyên E01. Lượt này chạy đồng thời read-only financial audit,
+không phải isolated latency benchmark. Cold JSON/proof replay vẫn là blocker
+cho demo tương tác; warm5,46s không che limitation này.
+Actual fresh E01–E05 capture trước commit implementation; hai final guards
+(unsupported formula/conflict refresh) không bị kích hoạt ở những câu này.
+Final-code cache/admission-proof replay và CI xác minh implementation đã commit;
+không gọi lại Gemini chỉ để đổi nhãn evidence SHA.
+
+**18/25 provider attempts**,64.847 known tokens;3provider errors/3attempts unknown
+usage. Hai Planner HTTP503 (E04/E05) retry đúng một lần và thành công; một
+cash-flow Specialist E05 provider_unavailable không retry. Model giữ
+`gemini-3.5-flash-lite`, không rotation/model switch, mọi call qua Shared Gateway.
+Chi phí tiền chưa có metadata, không suy ra0. Durable budget dùng chung mọi
+output subdirectories, giữ started attempts khi resume; không reset budget.
+
+Integrity checks mỗi invocation:8selected hashes (Web +7accepted M5 run traces)
+và hydrated facts/metrics/source reviews unchanged. Git chỉ đổi task files;
+không hash toàn protected dataset, không ghi raw/processed/accepted artifacts.
+
+## F. Remaining issues và validation
+
+- P0 integration: chưa phát hiện trong phạm vi đã kiểm tra.
+- P1 performance blocker cho demo tương tác → đề xuất QA-Fix-04: whole JSON/proof
+  payload60MB và cold/warm parse/copy/revalidation gây latency đáng kể. Functional
+  flow PASS; chưa đạt interactive latency. Nên khảo sát shared proof contexts và
+  storage/query có giới hạn, giữ nguyên admission replay authority.
+- P1 external availability:3provider failures thực; nguyên nhân503 bên ngoài chưa
+  xác định. Recovery bounded/fail-closed đã chạy, không che usage unknown.
+- E05 thiếu supported earnings-quality verdict; partial đúng coverage, không tự
+  thêm threshold/agent/formula hoặc bắt đầu GEN/M8.
+- P2: chưa có incremental missing-target contract an toàn; full-request fallback
+  lặp verification (7duplicate ACCEPT); M7 legacy caveats/citation registry dài.
+  CLI dùng composition root catalog nghiên cứu persisted hiện có; class pipeline
+  nhận catalog/documents bất kỳ, không hardcode company/financial values.
+
+Local:399 focused M5/M6/M7/planning PASS +2conflict controls PASS (401distinct
+cases;24integration cases). Initial collection fail trước implementation; vòng
+đầu12fail/6pass, sau sửa18pass; mở rộng21pass/1fixture bookkeeping fail rồi test
+correction PASS; final compatibility399pass/conflict2pass. Không sửa frozen
+M6/M7 expected outputs. Ruff changed files/format/planning105tasks/diff PASS;
+không full local regression/frontend build/M8. CI được ghi riêng bên dưới.
+
+## G. Handoff / reproduce
+
+Implementation `9811a4443f24a8b8083491f1968ab641ee69b63a` đã push main.
+[CI42145875699](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42145875699)
+completed/SUCCESS đúng SHA:1068Python tests/9Web smoke PASS; lint/format/planning,
+frontend typecheck/lint/build PASS; full regression SKIPPED.
+Evidence checkpoint sau chỉ docs/planning;
+không gán CI implementation cho SHA docs khác.
+
+Actual commands từ root (Python trong `.venv`):
+
+```powershell
+python scripts/run_e2e_financial_qa.py --case E01 --allow-gateway
+python scripts/run_e2e_financial_qa.py --case E02 E03 E04 E05 --allow-gateway
+python scripts/audit_e2e_financial_qa.py
+```
+
+Cache review trên ledger đã tạo, không credentials/provider calls:
+
+```powershell
+python scripts/run_e2e_financial_qa.py --question "Biên lợi nhuận gộp của BBS năm 2025 là bao nhiêu? Hãy nêu công thức và các số liệu sử dụng." --label review-e01
+```
+
+CLI hỗ trợ `--document`, `--snapshot`, `--company`, `--period`, `--reporting-scope`,
+`--force-refresh`, `--allow-gateway`, `--output`. Không cần sửa proof JSON hoặc
+truyền hàng chục source paths. Output exclusive; chọn label mới khi review, không
+ghi đè E01–E05. Fresh demo riêng dùng output subfolder mới nhưng vẫn chia sẻ tổng
+25attempt budget E2E-01.
+
+Local ignored artifacts tại `artifacts/evidence/E2E-01/`: `E01.json`–`E05.json`,
+các `*-rerun.json`, `ledger/verified-claims.json`, `financial-audit.json`,
+`provider-attempts.jsonl`, `integrity-*.json`, `final-code-cache-e01.json` và console
+captures. Không commit full ledgers/source citations/datasets/secrets.
+
+Next action: Tech Lead review E2E-01; dừng REVIEW, không tự DONE/task tiếp theo.
