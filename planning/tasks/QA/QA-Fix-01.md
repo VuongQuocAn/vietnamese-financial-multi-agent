@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: QA-Q01, M7-05
 - Estimated Complexity: M
@@ -58,7 +58,7 @@ không QA-Fix-02–05 hoặc M8; giữ frozen oracles.
 - [x] Explanation tampering bị BLOCK, citation identity/caveats và fail-closed giữ nguyên.
 - [x] Actual10 BBS trước/sau, claims/formula/operands/firewall và PDF reference audit.
 - [x] Targeted/compatibility controls PASS; protected hashes/Web local unchanged.
-- [ ] Commit/push main và CI SUCCESS đúng implementation SHA; chờ Tech Lead REVIEW.
+- [x] Commit/push main và CI SUCCESS đúng implementation SHA; chờ Tech Lead REVIEW.
 
 ## Required Tests
 
@@ -73,15 +73,19 @@ chưa approved; D03-B10 giữ nguyên. Engineering PASS không chứng minh fina
 
 ## Implementation Evidence
 
-- Implementation SHA: chưa commit.
+- Implementation SHA: `310459d137105e8a155fc23c939a64331663dcad`, đã push main,
+  HEAD/origin khớp sau push;
+  [CI42135935859](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42135935859)
+  completed/SUCCESS đúng SHA:1.017Python/9Web smoke PASS;full regression SKIPPED.
 - Before:13 regression cases FAIL, saved `plans-before.json`/`failing-tests.txt`.
 - Main Changes: [báo cáo](../../../docs/qa-fix-01-grounded-requirement-coverage.md);
   typed dependent requirements/explanation, shared inventory, original request revalidation.
 - Test Results:254final PASS (40new/211compatibility-boundary/3planning);
  10/10actual BBS, final-policy audit PASS;Q03formula+operands,Q08revenue+CFO/no verdict;
  16.849protected hashes/Web unchanged;Ruff changed files/planning/diff PASS.
-- Review Notes: chưa nghiệm thu; chỉ Tech Lead chuyển DONE.
+- Review Notes: REVIEW, chưa nghiệm thu; chỉ Tech Lead chuyển DONE.
+  Checkpoint sau implementation chỉ docs/planning `[skip ci]`; không gán CI cho SHA khác.
 
 ## Handoff Notes
 
-Next action: hoàn tất implementation và validation trong QA-Fix-01; dừng REVIEW.
+Next action: Tech Lead review QA-Fix-01 và quyết định nghiệm thu; không bắt đầu QA-Fix-02.

@@ -1,7 +1,12 @@
 # QA-Fix-01 — Grounded Requirement Coverage & Safe Financial Explanation
 
-Ngày06/11/2026 (Asia/Bangkok). Đang chốt evidence/CI, chưa nghiệm thu DONE.
-Baseline main/origin `2432bec`; implementation SHA sẽ ghi sau commit.
+Ngày06/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu; chưa DONE.
+Baseline main/origin `2432bec`; implementation
+`310459d137105e8a155fc23c939a64331663dcad` đã push main, origin khớp sau push.
+[CI42135935859](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42135935859)
+completed/SUCCESS đúng SHA: **1.017Python tests +9Web smoke PASS**;
+lint/format/planning/typecheck/build đều SUCCESS, full regression manual SKIPPED.
+Checkpoint sau implementation chỉ docs/planning `[skip ci]`, không gán CI cho SHA khác.
 
 ## A. Kết quả chính
 
@@ -211,6 +216,9 @@ Không lấy frozen oracle làm ground truth; không OCR, tính ratio mới ho�
   configs/prompts/evaluation/frozen oracles và local `web/next-env.d.ts`.
 - Không local frontend build/full regression; CI hiện hành chạy focused Python
   và Web smoke do thay đổi `src`. Không gọi Gemini/M5/OCR/extraction;0paid switch.
+- CI42135935859 đã xác minh completed/SUCCESS đúng implementation SHA:
+  1.017focused Python PASS (251,35s),9browser smoke PASS (7,2s);
+  cả Python3.12/Web smoke jobs SUCCESS, full regression manual SKIPPED.
 
 Engineering PASS chỉ chứng minh boundaries/pipeline. Mười BBS outputs là bounded
 real-source QA, không chứng minh accuracy toàn PDF hoặc lợi ích fresh Multi-Agent.
@@ -231,7 +239,7 @@ Explanation yêu cầu đủ approved formula+operand evidence; chỉ có result
 ## G. Bàn giao
 
 Không còn P0/P1 đã xác định trong phạm vi F01 sau các controls/audit nêu trên;
-CI và SHA đang chờ chốt. F02/F03 thuộc backlog riêng vẫn còn nguyên.
+implementation SHA/CI đã xác minh. F02/F03 thuộc backlog riêng vẫn còn nguyên.
 QA-Fix-02 chưa được đăng ký/giao/READY trong task này; fresh M5 cần spec/budget riêng.
 
 **Next action duy nhất khi đạt REVIEW: Tech Lead review QA-Fix-01 và quyết định
@@ -240,6 +248,7 @@ nghiệm thu; không tự bắt đầu QA-Fix-02.**
 Appendix local ignored: `hashes-before.json`, `integrity.json`,
 `plans-before.json`, `failing-tests.txt`, `validation-complete.txt`,
 `lnst-target-test.txt`, `before-after-audit.json`, `before-after-verbatim.md`,
+`ci-result.json`, `ci-log.txt`, `execution-metadata.json`,
 `final/m7-summary.json`, `final/m7-Q01..Q10-{request,composer,rendered,firewall}.json`,
 `final/m7-Q01..Q10-final.txt`. Full claim IDs/formula digests/locators ở các JSON;
 không commit source datasets, ledger proofs hoặc financial trace artifacts.
