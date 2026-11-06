@@ -53,10 +53,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-INT-01a **REVIEW**, implementation chưa commit:151source-bound records/17pages,
-34real acceptance checks,193targeted+30post-loader PASS;0Gemini/OCR.
+INT-01a **REVIEW**, implementation d531c76 đã push main:151source-bound records/17pages,
+34real acceptance checks,36closure tests PASS;3substantive samples và14legacy
+probes blocked;CI42213961131 SUCCESS đúng SHA:1093Python/9Web PASS;0Gemini/OCR.
 [Report](../docs/int-01a-existing-evidence-binding-materialization.md).
-Next action: Tech Lead review INT-01a và CI implementation SHA còn chờ.
+Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
 
 Checkpoint trước:
 

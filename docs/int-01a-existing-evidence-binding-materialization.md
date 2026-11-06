@@ -3,7 +3,13 @@
 Ngày 06/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu.
 Baseline main `2c389296bdeedb965c1eeeb53dc55ef2bf274b00`. Theo vòng review tiếp theo,
 Owner cho phép commit/push riêng INT-01a và yêu cầu CI đúng implementation SHA.
-SHA/kết quả CI được ghi ở checkpoint sau khi run hoàn tất; không dùng CI task trước.
+Implementation [d531c766d2d56ec66511edc0734716e196f24a62](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d531c766d2d56ec66511edc0734716e196f24a62)
+đã push main. CI run [42213961131](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42213961131)
+đã **completed/SUCCESS**, xác minh `headSha` đúng implementation trên:
+**1.093 Python focused tests + 9 Web smoke PASS**, lint/format/planning108tasks,
+frontend typecheck/lint/build và browser/proxy smoke SUCCESS; full regression
+SKIPPED. Checkpoint sau implementation chỉ docs/planning `[skip ci]`, không gán
+CI này cho SHA checkpoint hoặc dùng CI task trước.
 
 ## 1. Executive Summary
 
@@ -112,6 +118,11 @@ Vòng chốt Tech Lead bổ sung ba mẫu **nội dung thực chất** tại
 
 Các quotes/số liệu riêng tư giữ local theo AGENTS; phản hồi bàn giao nêu trực tiếp
 ba mẫu để Tech Lead đối chiếu. Public report không chỉ dựa vào headings.
+Vòng chốt gọi lại public M4 từ repository mới mở: composition BBS2025 trả 68
+records đúng document/snapshots; bảy legacy records vẫn missing identity ở
+quarantine. 14 probes dùng legacy snapshot và forced native snapshot đều
+`not_found`. `review-closure/substantive-evidence.json` giữ các responses/citations
+thật. Chạy lại 34 real acceptance checks PASS, không gọi Gemini/OCR.
 
 Bảng actual đọc được ở **`artifacts/evidence/INT-01a/final/real-pdf-checks.md`**:
 có 18 mẫu Source PDF, trang PDF one-based, evidence type, quote/cell thật, Binding,
@@ -153,7 +164,12 @@ hash trong `coverage-summary.json`; acceptance xác minh **72 inputs + 8 inherit
 files unchanged**. Không đọc/ghi real Verified Claim Ledger; tests dùng fixtures.
 Không chạy lại full E2E Gemini, benchmark hoặc full suite.
 Ruff lint/format năm file Python đã sửa, planning checker **109 tasks** và
-`git diff --check` PASS. `final/implementation-files.json` pin bytes code chưa commit.
+`git diff --check` PASS. `final/implementation-files.json` pin bytes code tại local run ban đầu.
+Vòng chốt local: 36 composition/M4/planning tests PASS; lint/format PASS. Index
+export đã chạy planning checker **108 tasks**, workspace109 gồm GEN-01a pending.
+Commit implementation chỉ có11file; CI chỉ thêm test composition, hai pending
+GEN-01a CI entries không commit. Bảy inherited files giữ nguyên byte; file CI giữ
+nguyên byte sau khi bỏ đúng một dòng test INT-01a mới. Không stage data/artifacts/Web.
 
 ## 10. Root Causes & Remaining Blockers
 
@@ -168,8 +184,8 @@ Ruff lint/format năm file Python đã sửa, planning checker **109 tasks** và
 - Legacy PDF/image binding thiếu: vẫn excluded, cần source chứng minh được nếu
   muốn dùng sau này. BCC B09/audit narrative ngoài primary pages chưa có output
   được kiểm chứng trong phạm vi này; không báo PASS cho coverage thiếu.
-- CI đúng implementation SHA đang được chốt theo chỉ đạo review; kết quả được ghi
-  ở checkpoint CI sau khi xác minh run. Task giữ REVIEW, Tech Lead quyết định DONE.
+- CI đúng implementation SHA đã SUCCESS như đầu report. Task giữ REVIEW để Tech
+  Lead nghiệm thu ba mẫu nội dung thực chất và source/retrieval behavior.
 
 ## 11. Handoff INT-01b
 
@@ -183,5 +199,5 @@ Reproduce offline: `.venv/Scripts/python.exe scripts/materialize_existing_eviden
 Reload/negative acceptance: thêm `--verify-only` với output đã hoàn tất. Cả hai
 không khởi tạo Gateway/provider, không đọc credentials.
 
-**Next action duy nhất:** Tech Lead review INT-01a, gồm real local evidence và
-phần CI implementation SHA còn chờ khi được phép commit/push.
+**Next action duy nhất:** Tech Lead nghiệm thu INT-01a dựa trên implementation,
+CI đúng SHA và ba mẫu nội dung thực chất; chưa tự DONE hoặc bắt đầu INT-01b.

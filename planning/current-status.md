@@ -4,17 +4,22 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## INT-01a — Existing Evidence Binding & Materialization
 
-Status: **REVIEW**, Owner giao06/11/2026. Implementation **chưa commit**, baseline
-`2c389296bdeedb965c1eeeb53dc55ef2bf274b00`; CI exact SHA chưa có.
+Status: **REVIEW**, Owner giao06/11/2026. Implementation đã push main
+`d531c766d2d56ec66511edc0734716e196f24a62`; baseline `2c389296bdeedb965c1eeeb53dc55ef2bf274b00`.
+[CI42213961131](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42213961131)
+completed/SUCCESS đúng implementation SHA:1093Python/9Web PASS;full regression SKIPPED.
 [Spec](tasks/INT/INT-01a.md), [report](../docs/int-01a-existing-evidence-binding-materialization.md).
 151records/17pages/5PDF source-bound qua existing M4 APIs;127text/24tables và
 1.805cells/headers fidelity exact;7legacy records thiếu binding bị loại.
 BBS2025 footer/B09, BBS2022/2024 saved B09 và BCC2024/2025 load được;
-34real acceptance checks,193targeted+30post-loader PASS;0Gemini/OCR.
-72inputs+8inherited runtime/CI/Web files unchanged;không sửa GEN-01a pending.
+34real acceptance checks,193targeted+30post-loader PASS; vòng chốt36focused PASS;
+3substantive samples,68BBS2025records sau restart và14legacy probes not_found;0Gemini/OCR.
+72inputs+8inherited files unchanged tại run ban đầu;vòng chốt giữ7files nguyên byte,
+CI chỉ thêm testINT-01a,hai pending GEN-01a CI entries giữ ngoài commit.
 Artifacts local `artifacts/evidence/INT-01a/final/`,18actual samples trong
 `real-pdf-checks.md`;giữ source identities và quality caveats,không claim verified.
-Next action: Tech Lead review INT-01a và phần CI implementation SHA còn chờ.
+Ba mẫu bổ sung: `artifacts/evidence/INT-01a/review-closure/substantive-evidence.md`.
+Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
 
 ## ARCH-01 — Audit & Integration Plan for Full-Document Grounded QA
 

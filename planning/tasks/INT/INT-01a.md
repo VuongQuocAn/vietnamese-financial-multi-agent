@@ -60,19 +60,25 @@ planning checker, Ruff file sửa, git diff check. Không benchmark/full Gemini 
 ## Risks and Blockers
 
 Financial context không là full prose. BCC narrative ngoài accepted primary pages
-chưa có extraction. CI exact SHA chưa có khi chưa commit/push.
+chưa có extraction. CI đúng implementation SHA đã SUCCESS; chờ Tech Lead nghiệm thu.
 
 ## Implementation Evidence
 
-Implementation chưa commit; baseline `2c389296bdeedb965c1eeeb53dc55ef2bf274b00`.
+Implementation `d531c766d2d56ec66511edc0734716e196f24a62` đã push main;
+baseline `2c389296bdeedb965c1eeeb53dc55ef2bf274b00`.
 151 records verified source binding/retrievable trên17trang;127text/24tables,
 1.805cells/headers fidelity exact.34real acceptance checks;193targeted PASS,
 sau loader batch read30composition/M4 PASS;0Gemini/OCR.72source hashes và8inherited
-files unchanged. CI exact SHA chưa có, chờ commit/push được giao.
+files unchanged tại run ban đầu.
+[CI42213961131](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42213961131)
+completed/SUCCESS đúng implementation SHA:1093Python/9Web PASS;full regression
+SKIPPED. Checkpoint sau chỉ docs/planning, không gán CI cho SHA checkpoint.
 Artifacts `artifacts/evidence/INT-01a/final/`;18mẫu actual trong local report.
 Ruff lint/format, planning109tasks và diff check PASS. Chờ Tech Lead nghiệm thu;
-không coi CI exact SHA hoặc financial accuracy toàn PDF đã đạt.
+không coi financial accuracy toàn PDF đã đạt. Vòng chốt36focused PASS,34real
+acceptance PASS;3substantive samples,68BBS2025records sau restart và14legacy
+probes not_found. Index108tasks không chứa GEN-01a pending;11file implementation.
 
 ## Handoff Notes
 
-Next action: Tech Lead review INT-01a và phần CI implementation SHA còn chờ.
+Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
