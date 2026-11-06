@@ -20,8 +20,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| QA | 3 | 2 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 104 | 95 | 0 | 0 | 8 | 0 | 1 |
+| QA | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 104 | 96 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -49,10 +49,12 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-QA-Fix-02 **REVIEW**, [report](../docs/qa-fix-02-m5-planner-downstream-recovery.md).
+QA-Fix-02 **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026;
+[report](../docs/qa-fix-02-m5-planner-downstream-recovery.md).
 15/20Gemini calls,4/7fresh downstream trên6questions;8Specialists/21candidates,
-Q07/Q08clarify đúng policy.305consumer/133final M5 PASS; chưa tự nghiệm thu DONE.
-Next action: Tech Lead review QA-Fix-02 trước khi giao nhiệm vụ tiếp theo.
+Q07/Q08clarify đúng policy.305consumer/133final M5 PASS;accepted implementation3f55629,
+CI42141578624 SUCCESS đúng SHA:1.044Python/9Web PASS. Giữ mọi limitations đã báo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-Fix-03/M8.
 
 Checkpoint QA-Q01 trước:
 

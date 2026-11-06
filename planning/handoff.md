@@ -6,12 +6,13 @@ QA-Fix-02 — M5 Planner & Downstream Recovery
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
 Owner giao06/11/2026, cho phép implement/test/live tối đa20attempts/commit/push
-main. Baseline main/origin0451b37; giữ local Web. Dừng REVIEW để Tech Lead nghiệm thu.
+main. Baseline main/origin0451b37; giữ local Web.
+APPROVED/DONE theo quyết định nghiệm thu06/11/2026; giữ implementation và limitations.
 
 ## Completed Work
 
@@ -23,7 +24,7 @@ Actual6questions/7runs:4full downstream,8Specialists/21candidates;15Gemini attem
 
 ## Remaining Work
 
-Chờ Tech Lead review; không tự nghiệm thu DONE hoặc triển khai QA-Fix-03/M8.
+Không còn việc trong QA-Fix-02; chờ giao nhiệm vụ mới, không tự bắt đầu QA-Fix-03/M8.
 
 ## Modified Files
 
@@ -35,10 +36,13 @@ artifacts/evidence/QA-Fix-02/; không commit dataset hoặc Web local.
 
 19+2+1failing trước từng fix;305focused/consumer PASS trước alias/reason correction,
 133final M5/Gateway PASS sau correction (27new).15selected input hashes và hydrated
-facts/metrics/source reviews unchanged. Ruff changed files/planning/diff kiểm ở
+facts/metrics/source reviews unchanged. Ruff changed files/planning/diff PASS ở
 delivery checkpoint; không full local regression hoặc frontend build.
 Full local format gặp baseline CRLF ở docs/m7-05-information-firewall.md,
-normalized đúng Git HEAD; không sửa ngoài scope, CI checkout LF cần xác minh.
+normalized đúng Git HEAD; không sửa ngoài scope. CI checkout LF đã PASS.
+CI42141578624 SUCCESS đúng implementation SHA:1.044Python/9Web PASS;
+full regression SKIPPED. Phiên nghiệm thu chỉ planning/diff checks, không chạy lại
+tests/Gemini/OCR/extraction hoặc sửa runtime/accepted artifacts.
 
 ## Blockers
 
@@ -48,10 +52,11 @@ source uncertainty/reporting scope caveats giữ nguyên; candidates chưa M6 ve
 
 ## Git Checkpoint
 
-Implementation là commit chứa report này; exact SHA và exact-SHA CI được ghi ở
-artifacts/evidence/QA-Fix-02/delivery-checkpoint.json và final handoff trực tiếp.
-Không tạo checkpoint commit chỉ để ghi SHA của chính nó; giữ Web local ngoài stage.
+Accepted implementation `3f55629aa6a7a6ff14ad0464db6123bb7f255e6b` đã push main,
+CI42141578624 completed/SUCCESS đúng SHA. HEAD/origin khớp trước cập nhật nghiệm thu.
+Commit nghiệm thu chỉ docs/planning, không gán CI implementation cho SHA mới;
+giữ Web local ngoài stage.
 
 ## Exact Next Action
 
-Next action: Tech Lead review QA-Fix-02 và quyết định nghiệm thu.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-Fix-03/M8.

@@ -1,8 +1,13 @@
 # QA-Fix-02 — M5 Planner & Downstream Recovery
 
-Ngày06/11/2026 (Asia/Bangkok). **REVIEW — chờ Tech Lead nghiệm thu**.
+Ngày06/11/2026 (Asia/Bangkok). **DONE — APPROVED theo quyết định nghiệm thu**.
 [Spec](../planning/tasks/QA/QA-Fix-02.md). Baseline main/origin `0451b37`;
-implementation là commit chứa báo cáo này; CI đối chiếu đúng SHA qua commit checks.
+Accepted implementation `3f55629aa6a7a6ff14ad0464db6123bb7f255e6b` đã push main;
+[CI42141578624](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42141578624)
+completed/SUCCESS đúng SHA:1.044Python/9Web PASS,full regression SKIPPED.
+Phiên nghiệm thu chỉ cập nhật docs/planning và chạy planning/diff checks;
+giữ implementation,accepted artifacts,Web local và mọi limitations đã báo.
+Không chạy lại tests/Gemini/OCR/extraction; không gán CI cũ cho commit docs nghiệm thu.
 
 ## A. Executive Summary
 
@@ -453,5 +458,5 @@ SHA/CI cuối được bàn giao trực tiếp cho Tech Lead, không tạo check
 
 ## H. Next Action
 
-Tech Lead review QA-Fix-02 và quyết định nghiệm thu trước khi giao QA-Fix-03.
-**Dừng REVIEW; không tự triển khai task tiếp theo.**
+Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-Fix-03/M8.
+**QA-Fix-02 DONE theo quyết định nghiệm thu06/11/2026.**

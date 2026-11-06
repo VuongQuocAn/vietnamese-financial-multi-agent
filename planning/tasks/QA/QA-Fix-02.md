@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: QA-Fix-01, QA-Q01
 - Estimated Complexity: M
@@ -11,7 +11,8 @@
 ## Objective
 
 Sửa F02 Planner từ chối sai domains đã hỗ trợ; bounded HTTP503 recovery và fresh
-Planner → Supervisor → Router → Specialists → Aggregation trên BBS. Dừng REVIEW.
+Planner → Supervisor → Router → Specialists → Aggregation trên BBS. Đã dừng REVIEW;
+được nghiệm thu DONE theo quyết định06/11/2026.
 
 ## Context
 
@@ -64,7 +65,8 @@ dataset. Không triển khai task tiếp theo.
 - [x] Gross margin≈7,21%; debt/assets≈59,06%; revenue450.474.531.227/CFO14.319.681.754 VND đúng independent reference.
 - [x] Không financial-policy bypass/verified claims/M6-M7 release từ candidates.
 - [x] Focused M5/consumer boundary tests, Ruff/planning/diff PASS.
-- [ ] Commit/push main, CI SUCCESS đúng SHA; dừng REVIEW.
+- [x] Commit/push main, CI SUCCESS đúng SHA; đã dừng REVIEW trước nghiệm thu.
+- [x] Chuyển DONE theo quyết định nghiệm thu06/11/2026.
 
 ## Required Tests
 
@@ -82,13 +84,17 @@ failure; engineering PASS không chứng minh accuracy toàn PDF.
 
 ## Implementation Evidence
 
-Implementation là commit chứa report; exact SHA/CI ghi local delivery checkpoint
-và final handoff.19failed/3passed trước sửa;305focused/consumer PASS; Q08 alias gap
+Accepted implementation `3f55629aa6a7a6ff14ad0464db6123bb7f255e6b` đã push main;
+[CI42141578624](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42141578624)
+completed/SUCCESS đúng SHA:1.044Python/9Web PASS,full regression SKIPPED.
+19failed/3passed trước sửa;305focused/consumer PASS; Q08 alias gap
 2failing trước correction/66focused PASS; clarification-reason1failing trước sửa.
 Final27new/133M5-Gateway PASS.15Gemini attempts/50.598tokens/0HTTP503/429,
 4completed downstream/7fresh runs/6questions;8Specialists/21candidates.
 Independent financial/provenance audit PASS;15selected hashes/Web unchanged.
+Phiên nghiệm thu chỉ docs/planning và planning/diff checks; không chạy lại
+tests/Gemini/OCR/extraction hoặc thay runtime/accepted artifacts/limitations.
 
 ## Handoff Notes
 
-Next action: Tech Lead review QA-Fix-02 và quyết định nghiệm thu.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-Fix-03/M8.
