@@ -1,11 +1,14 @@
 # ARCH-01 — Audit & Integration Plan for Full-Document Grounded QA
 
-Ngày 06/11/2026, Asia/Bangkok. **REVIEW — chờ Tech Lead phê duyệt kiến trúc**.
+Ngày 06/11/2026, Asia/Bangkok. **DONE — Tech Lead APPROVED** theo quyết định cuối
+cùng của người dùng. Accepted audit:
+`4107a20424f312e8348368f47d8403376f67b127`, đã xác minh trên main/origin/main.
 Baseline đã xác minh: `main`, HEAD/origin/main
 `713c20e762fa6bb6fc560e2582821ae556cc9d99`. Audit không sửa runtime, không gọi
 Gateway/Gemini/OCR, không tiếp tục GEN-01a hoặc chạy M8. Mọi roadmap dưới đây là
-đề xuất, chưa được cấp phép triển khai. SHA bàn giao là commit chứa báo cáo này,
-được ghi trong thông báo cuối; không dùng CI GEN-01 cho ARCH-01.
+đề xuất, chưa được giao triển khai. Phiên nghiệm thu chỉ đồng bộ trạng thái và
+chạy planning/diff checks; giữ nguyên kết quả audit, không chạy lại probes/tests/
+Gemini/OCR hoặc M8. Không dùng CI GEN-01 cho ARCH-01.
 
 ## 1. Executive Summary
 
@@ -454,8 +457,8 @@ citations, completeness/abstention; không gộp synthetic PASS thành accuracy 
 | Extraction bổ sung | Duyệt từng PDF/pages và call budget sau inventory | BBS B09 đã có nhiều caches; BCC narrative còn thiếu; discovery complete không cấp phép OCR full PDF |
 | GEN-01a | Giữ tạm dừng; quyết định riêng có dùng/duyệt local discovery hay không | Local71/71 chỉ evidence chưa commit, không được tự DONE hoặc tiếp tục task |
 
-**Next action duy nhất:** Tech Lead review báo cáo ARCH-01 và quyết định phạm vi
-giao INT-01a cùng chính sách source/snapshot binding; Codex dừng REVIEW.
+**Next action duy nhất:** Chờ Owner/Tech Lead giao task triển khai tiếp theo;
+không tự bắt đầu INT-01a hoặc tiếp tục GEN-01a.
 
 ## 11. Validation và Git handoff
 

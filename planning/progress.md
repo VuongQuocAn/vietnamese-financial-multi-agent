@@ -23,8 +23,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | QA | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| ARCH | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 107 | 98 | 0 | 0 | 8 | 0 | 1 |
+| ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 107 | 99 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -52,10 +52,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-ARCH-01 **REVIEW** — [audit](../docs/arch-01-existing-evidence-qa-integration-audit.md),
-192 exact lookups và 7 requirement probes read-only; không sửa runtime/gọi Gemini.
+ARCH-01 **DONE**, Tech Lead APPROVED06/11/2026, accepted audit4107a20 —
+[báo cáo](../docs/arch-01-existing-evidence-qa-integration-audit.md).
+Giữ kết quả/limitations; phiên nghiệm thu chỉ docs/planning checks, không chạy lại probes.
 GEN-01a BLOCKED: tạm dừng theo Owner; giữ pending code và local discovery71/71,
-chưa nghiệm thu. Next action: Tech Lead review ARCH-01 và source/snapshot binding.
+chưa nghiệm thu. Next action: chờ Owner/Tech Lead giao task tiếp theo.
 
 Checkpoint trước:
 
