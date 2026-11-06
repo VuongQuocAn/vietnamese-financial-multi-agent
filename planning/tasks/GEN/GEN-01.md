@@ -14,7 +14,7 @@ bên dưới để truy nguyên, áp dụng tên đã được xác nhận khi t
 
 ## Context
 
-Repository: `VuongQuocAn/vietnamese-financial-multi-agent`  
+Repository: `VuongQuocAn/vietnamese-financial-multi-agent`
 Branch: `main`
 
 Vai trò:
@@ -267,19 +267,19 @@ Không thay thế kết quả thực tế bằng SHA hoặc JSON hashes.
 
 ## Acceptance Criteria
 
-- [ ] Hai PDF được nhận diện và xử lý thực tế.
-- [ ] Có discovery/extraction results của từng báo cáo.
-- [ ] Có Canonical Facts và EF-EG được xây từ dữ liệu mới.
-- [ ] Có ít nhất một tập financial facts usable cho mỗi PDF, hoặc blocker rõ ràng kèm bằng chứng.
-- [ ] M4 tools được thử trên cả hai tài liệu.
-- [ ] Independent PDF audit được thực hiện.
-- [ ] Không lẫn dữ liệu BBS/BCC/BBC.
-- [ ] Lỗi hardcode được xác định và sửa tổng quát nếu có.
-- [ ] BBS regression PASS.
-- [ ] CI SUCCESS đúng SHA.
-- [ ] Báo cáo có số liệu thực, không chỉ thống kê engineering.
-- [ ] Không bắt đầu GEN-02/M8.
-- [ ] Dừng REVIEW.
+- [x] Hai PDF được nhận diện và xử lý thực tế.
+- [x] Có discovery/extraction results của từng báo cáo.
+- [x] Có Canonical Facts và EF-EG được xây từ dữ liệu mới.
+- [x] Có ít nhất một tập financial facts usable cho mỗi PDF, hoặc blocker rõ ràng kèm bằng chứng.
+- [x] M4 tools được thử trên cả hai tài liệu.
+- [x] Independent PDF audit được thực hiện.
+- [x] Không lẫn dữ liệu BBS/BCC/BBC.
+- [x] Lỗi hardcode được xác định và sửa tổng quát nếu có.
+- [x] BBS regression PASS.
+- [x] CI SUCCESS đúng SHA.
+- [x] Báo cáo có số liệu thực, không chỉ thống kê engineering.
+- [x] Không bắt đầu GEN-02/M8.
+- [x] Dừng REVIEW.
 
 Nếu một hoặc cả hai PDF chưa thể hoàn tất do thiếu evidence, API/provider hoặc quality constraints, báo cáo chính xác phần đã chạy, earliest failing stage và root cause. Không tuyên bố PASS giả.
 
@@ -319,11 +319,14 @@ Ruff, planning checker, diff check và CI đúng implementation SHA.
 
 2024 metrics bị chặn accounting basis; giữ các mapping gaps ngoài sáu chỉ tiêu.
 Discovery partial trong ngân sách, provenance page-level; chưa accuracy toàn PDF.
-REVIEW chờ CI và Tech Lead, không tự nghiệm thu DONE.
+REVIEW chờ Tech Lead, không tự nghiệm thu DONE.
 
 ## Implementation Evidence
 
-Baseline `041146688c9d3db1c3c0a82b6ab14a9718ab241d`; implementation chưa commit.
+Baseline `041146688c9d3db1c3c0a82b6ab14a9718ab241d`; implementation
+`0a0d94041696e3210a073e28c789d0113b7b16e0` đã push main.
+[CI42169755054](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42169755054)
+completed/SUCCESS đúng SHA:1078Python/9Web PASS,full regression SKIPPED.
 40/60 attempts, 105.149 known tokens,2 HTTP503;204 observations mỗi PDF.
-24/24 PDF observations khớp;176 focused PASS;BBS32 links/18 metrics PASS.
+24/24 PDF observations khớp;176 focused +4 planning PASS;BBS32 links/18 metrics PASS.
 Chi tiết và giới hạn: [report](../../../docs/gen-01-cross-company-ingestion-generalization.md).

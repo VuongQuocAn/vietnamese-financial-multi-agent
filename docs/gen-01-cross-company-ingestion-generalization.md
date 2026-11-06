@@ -1,8 +1,11 @@
 # GEN-01 — Cross-Company Ingestion & EF-EG Generalization
 
 Ngày 06/11/2026 (Asia/Bangkok). **REVIEW**, chưa nghiệm thu DONE.
-Baseline `041146688c9d3db1c3c0a82b6ab14a9718ab241d`; implementation chưa commit,
-CI chờ push. Owner cho phép commit/push main và xác nhận dùng `BCC_2024.pdf`
+Baseline `041146688c9d3db1c3c0a82b6ab14a9718ab241d`; implementation
+`0a0d94041696e3210a073e28c789d0113b7b16e0` đã push main;
+[CI42169755054](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42169755054)
+completed/SUCCESS đúng SHA:1.078 Python/9 Web PASS; full regression SKIPPED.
+Owner cho phép commit/push main và xác nhận dùng `BCC_2024.pdf`
 thay tên `BBC_2024.pdf` trong đề bài. Không có bằng chứng đã xử lý một doanh nghiệp BBC.
 
 Kết quả chính: hai PDF scan được discovery/extraction thực tế, mỗi PDF có204
@@ -169,8 +172,10 @@ snapshot, source page và separate/consolidated context vẫn độc lập.
   kết quả khớp accepted `M4-03-final`,0 LLM calls; không ghi accepted inputs.
 - Integration thực tế: hai scan, fresh Discovery/Extraction, final cache revalidation
   →Canonical→EF-EG→M4,24 PDF comparisons; boundary/isolation và null checks PASS.
-- Ruff/lint/format, planning106 tasks và diff check: ghi kết quả cuối sau validation.
-  CI: chờ đúng implementation SHA sau push; không gán local PASS thành CI PASS.
+- Ruff/lint/format, planning106 tasks và diff check PASS. CI42169755054
+  completed/SUCCESS đúng implementation SHA:1.078 Python tests/9 Web smoke PASS,
+  gồm typecheck/lint/build; full regression SKIPPED. Commit sau chỉ docs/planning
+  và sửa trailing whitespace trong spec; không gán CI implementation cho SHA docs.
 - Không chạy full local suite hoặc browser suite. Web không sửa; CI thực hiện
   nhóm kiểm tra hiện hành. Planning checker được mở rộng GEN ID/milestone, giữ
   nguyên dependency/status/spec/link validations.

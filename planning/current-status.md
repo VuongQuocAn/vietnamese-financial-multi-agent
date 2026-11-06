@@ -5,14 +5,18 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 ## GEN-01 — Cross-Company Ingestion & EF-EG Generalization
 
 Status: **REVIEW**; Owner giao 06/11/2026, cho phép commit/push main.
-Baseline `0411466`; chưa commit, giữ local Web. [Spec](tasks/GEN/GEN-01.md),
+Baseline `0411466`; giữ local Web. [Spec](tasks/GEN/GEN-01.md),
 [report](../docs/gen-01-cross-company-ingestion-generalization.md).
 Owner xác nhận BCC_2024 thay BBC_2024; cùng Xi măng Bỉm Sơn/BCC,
 2025 riêng 30 trang/2024 hợp nhất 41 trang. 40/60 attempts, 105.149 known tokens,
 2 HTTP503; 4 primary pages/PDF, 204 canonical observations/PDF; audit24/24.
 M4 sáu chỉ tiêu/PDF; 2025 gross margin10,01%/debt-to-assets42,07%; 2024 metrics
 blocked accounting basis, không bỏ gate. BBS32 mapped links/18 saved metrics PASS;
-176 focused PASS. Không M5–M8, không đổi accepted artifacts; chờ CI đúng SHA.
+176 focused +4 planning PASS. Implementation `0a0d94041696e3210a073e28c789d0113b7b16e0`
+đã push main;[CI42169755054](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42169755054)
+completed/SUCCESS đúng SHA:1078Python/9Web PASS,full regression SKIPPED.
+Không M5–M8, không đổi accepted artifacts. Commit sau chỉ docs/planning;
+không gán CI implementation cho SHA docs, chờ Tech Lead nghiệm thu.
 Next action: Tech Lead review GEN-01 và quyết định readiness GEN-02.
 
 ## E2E-01 — End-to-End Financial QA Pipeline Integration
