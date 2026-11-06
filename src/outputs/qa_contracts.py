@@ -8,6 +8,7 @@ from ..accounting.contracts import FinancialModel
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
 from ..core.llm_contracts import Cost, GatewayError, ModelIdentity, ResponseProvenance, Usage
 from ..evidence.retrieval import EvidenceCitation
+from ..tools.financial_calculator import CalculationOperand
 
 QAStatus = Literal["answered", "partial", "clarification_required", "abstained", "unsupported"]
 
@@ -35,9 +36,12 @@ class VietnameseQARequest(FinancialModel):
 class QARequirement(FinancialModel):
     requirement_id: str
     text: str
-    kind: Literal["fact", "metric", "limitations", "unsupported", "ambiguous"]
+    kind: Literal["fact", "metric", "explanation", "limitations", "unsupported", "ambiguous"]
     target_id: str | None = None
     interpretation: bool = False
+    aspect: Literal["value", "formula", "operands"] = "value"
+    depends_on: list[str] = Field(default_factory=list)
+    interpretation_topic: Literal["metric_meaning", "earnings_quality", "unbounded"] | None = None
     verified_claim_ids: list[str] = Field(default_factory=list)
     reason: str | None = None
 
@@ -57,6 +61,25 @@ class QAClaimContext(FinancialModel):
     reporting_scope: Literal["separate", "consolidated"] | None = None
 
 
+class QAExplanationOperand(FinancialModel):
+    label: str
+    operand: CalculationOperand
+    citations: list[EvidenceCitation] = Field(min_length=1)
+
+
+class QAMetricExplanation(FinancialModel):
+    """Display projection of an ACCEPT calculation, never an independent fact."""
+
+    metric_id: str
+    formula_id: str
+    formula_version: str
+    formula_digest: str
+    result: str
+    output_unit: str
+    formula: str | None = None
+    operands: list[QAExplanationOperand] = Field(default_factory=list)
+
+
 class GroundedSegment(FinancialModel):
     segment_id: str
     content: str
@@ -65,6 +88,7 @@ class GroundedSegment(FinancialModel):
     context: QAClaimContext
     caveats: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
+    explanation: QAMetricExplanation | None = None
 
 
 class QACompositionProposal(FinancialModel):

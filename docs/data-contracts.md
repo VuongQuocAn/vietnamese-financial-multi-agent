@@ -462,6 +462,19 @@ và local persistence tại [Verified Claim Ledger](m6-06-verified-claim-ledger.
 M7 chỉ lấy final content của admitted VerifiedClaim qua read-only facade.
 Các dòng TBD ở bảng trên là thiết kế ban đầu; không thay contracts M1–M6-05.
 
+QA-Fix-01 mở rộng tương thích `QARequirement` với `aspect`, `depends_on` và
+`interpretation_topic`; `GroundedSegment.explanation` là optional typed projection
+của **calculation nằm trong final ACCEPT claim**. Được trình bày formula/operands
+sau khi khớp approved policy/digest, typed operand facts và exact admitted citations.
+Đây là explanation của metric đã verified, không cấp quyền standalone fact cho
+operands, không dùng proof context/lineage bên ngoài claim, không gọi calculator.
+Thiếu metadata giữ metric result và trả partial cho explanation. Alias QA ngắn
+LNST trỏ vào `b02.profit_after_tax` đã có trong catalog; không mở rộng catalog hoặc
+ledger admission. Saved BBS ledger thiếu claim ACCEPT cho item này.
+Composer và Firewall cùng gọi `request_inventory`; Firewall tự lập lại inventory
+từ original trusted request + admitted ledger và kiểm tra protected segments.
+Renderer giữ nguyên source identity/limitations ở cấp segment, không dựng nguồn mới.
+
 - Dữ liệu tài chính phải giữ source provenance xuyên suốt pipeline; cần truy
   nguyên được đến tài liệu và vị trí nguồn phù hợp (trang, bảng, ô hoặc đoạn).
 - Phép tính phải truy được tới công thức và dữ liệu đầu vào để kiểm tra lại.

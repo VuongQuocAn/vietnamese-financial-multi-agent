@@ -8,7 +8,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
-TASK_ID = re.compile(r"(?:(?:M[0-8]|W|D)-\d{2}[a-z]?|QA-Q\d{2})")
+TASK_ID = re.compile(r"(?:(?:M[0-8]|W|D)-\d{2}[a-z]?|QA-Q\d{2}|QA-Fix-\d{2})")
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
 

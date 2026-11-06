@@ -91,6 +91,7 @@ jobs:
           tests/unit/test_verification_judge.py
           tests/unit/test_verified_claim_ledger.py
           tests/unit/test_vietnamese_qa_composer.py
+          tests/unit/test_qa_requirement_coverage.py
           tests/unit/test_report_outline_planner.py
           tests/unit/test_grounded_report_writer.py
           tests/unit/test_citation_renderer.py

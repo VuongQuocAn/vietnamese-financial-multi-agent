@@ -15,6 +15,7 @@ from .qa_composer import (
     understand_requirements,
 )
 from .qa_contracts import GroundedAnswerPlan
+from .qa_explanation import metric_explanation
 
 
 def request_inventory(request, entries):
@@ -50,6 +51,10 @@ def request_inventory(request, entries):
             else "unsupported"
         )
         return plan, status
+    if any(
+        r.kind == "ambiguous" and r.reason == "specify_catalog_target" for r in plan.requirements
+    ):
+        return plan, "clarification_required"
     if not request.snapshot_id or not (request.document_id or request.company_id):
         plan.missing_information = [
             k
@@ -96,7 +101,42 @@ def request_inventory(request, entries):
                 e.identity.verified_claim_id for e in candidates
             )
         else:
-            requirement.reason = "requested_scope_unconfirmed" if scope else "no_verified_claim"
+            requirement.reason = (
+                "no_supported_interpretation"
+                if requirement.interpretation
+                else "requested_scope_unconfirmed"
+                if scope
+                else "no_verified_claim"
+            )
+    # Explanation is authorized only by the selected value requirement, never
+    # by arbitrary operands or another admitted calculation with a nearby label.
+    for requirement in plan.requirements:
+        if requirement.kind != "explanation":
+            continue
+        parent_ids = {
+            key
+            for parent in plan.requirements
+            if parent.requirement_id in requirement.depends_on
+            for key in parent.verified_claim_ids
+        }
+        candidates = [
+            e
+            for e in entries
+            if e.identity.verified_claim_id in parent_ids and _matches_target(e, requirement)
+        ]
+        signatures = {
+            metric_explanation(e, [requirement.aspect]).model_dump_json() for e in candidates
+        }
+        if len(signatures) == 1:
+            requirement.verified_claim_ids = sorted(
+                e.identity.verified_claim_id for e in candidates
+            )
+        else:
+            requirement.reason = (
+                "ambiguous_calculation_metadata"
+                if signatures
+                else "insufficient_admitted_calculation_metadata"
+            )
     ids = _unique(k for r in plan.requirements for k in r.verified_claim_ids)
     years = {e.identity.period[:4] for e in entries if e.identity.verified_claim_id in ids}
     if len(years) > 1 or len(ids) > 12:

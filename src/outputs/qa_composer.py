@@ -29,7 +29,6 @@ from ..tools.question_understanding import (
 from ..verification.ledger import VerifiedClaimLedger
 from ..verification.ledger_contracts import VerifiedClaim, VerifiedClaimQuery
 from .qa_contracts import (
-    GroundedAnswerPlan,
     GroundedSegment,
     QAClaimContext,
     QACompositionProposal,
@@ -38,6 +37,7 @@ from .qa_contracts import (
     VietnameseQARequest,
     VietnameseQAResponse,
 )
+from .qa_explanation import explanation_text, metric_explanation
 
 INTRODUCTIONS = {
     "verified": "Theo các nội dung đã được xác minh trong ledger:",
@@ -110,11 +110,20 @@ def _segment(entry):
     )
 
 
-def _segments(entries):
+def _segments(entries, requirements=()):
     """Coalesce identical display text; retain every selected identity and caveat."""
     grouped = {}
     for entry in entries:
         slot = _segment(entry)
+        aspects = [
+            r.aspect
+            for r in requirements
+            if r.kind == "explanation" and entry.identity.verified_claim_id in r.verified_claim_ids
+        ]
+        if aspects:
+            slot.explanation = metric_explanation(entry, aspects)
+            if slot.explanation:
+                slot.content += "\n" + explanation_text(slot.explanation)
         key = (slot.content, slot.context.model_dump_json())
         if key not in grouped:
             grouped[key] = slot
@@ -176,6 +185,7 @@ def _targets(text):
         ("fact", key, (*rule.aliases, key, *EXTRA_ALIASES.get(key, ())))
         for key, rule in ITEM_RULES.items()
     ]
+    aliases += [("fact", key, names) for key, names in QA_ALIASES.items()]
     spans = []
     for kind, key, names in aliases:
         for name in names:
@@ -188,80 +198,189 @@ def _targets(text):
     )
 
 
+# QA paraphrases of existing catalog items, not new financial definitions.
+QA_ALIASES = {
+    "b02.profit_after_tax": ("lợi nhuận sau thuế", "lnst"),
+    "b03.operating_cash_flow": ("dòng tiền kinh doanh", "cfo"),
+}
+INTERPRETATION_TERMS = (
+    "nhan dinh",
+    "dien giai",
+    "phan tich",
+    "noi len dieu gi",
+    "cho thay dieu gi",
+    "phan anh dieu gi",
+    "nhan xet",
+    "danh gia",
+    "y nghia",
+    "chat luong loi nhuan",
+    "tot khong",
+    "tot hay xau",
+    "an toan",
+    "lanh manh",
+)
+CAUSAL_TERMS = (
+    "vi sao",
+    "tai sao",
+    "nguyen nhan",
+    "do dau",
+    "chung to",
+    "nen dau tu",
+    "du bao",
+    "du doan",
+    "tang bao nhieu",
+    "giam bao nhieu",
+    "gap doi",
+    "gap ba",
+    "cao hon",
+    "thap hon",
+)
+
+
 def understand_requirements(question):
-    requirements = []
-    # Split only requests, not evidence or numeric values from claims.
-    for clause in re.split(r"\s+và\s+|[,;\n]+|\s+đồng thời\s+", question, flags=re.I):
-        if not clause.strip():
+    """Catalog requests plus dependent explanation/interpretation obligations.
+
+    Sentence intent is shared by its conjuncts. A targetless follow-up inherits
+    explicit prior targets; explanation requires one uniquely identified metric.
+    Unknown expressions stay bounded, never become computed metrics.
+    """
+    requirements, values = [], {}
+    recent_metrics = []
+    question_metrics = [
+        target for kind, target in _targets(normalize(question)) if kind == "metric"
+    ]
+
+    def append(**kwargs):
+        requirement = QARequirement(requirement_id=f"r{len(requirements) + 1}", **kwargs)
+        requirements.append(requirement)
+        return requirement
+
+    for sentence in re.split(r"[.!?;\n]+", question):
+        if not sentence.strip():
             continue
-        text = normalize(clause)
-        parsed, issues = understand(clause)
-        interpretation = any(w in text for w in ("nhan dinh", "dien giai", "phan tich"))
-        targets = _targets(text)
-        if any(w in text for w in ("han che", "gioi han", "caveat")):
-            requirements.append(QARequirement(requirement_id="", text=clause, kind="limitations"))
-        # Guard unsupported questions before mapping a mentioned operand/nearby metric.
-        unsafe = any(
-            w in text
-            for w in (
-                "vi sao",
-                "tai sao",
-                "nguyen nhan",
-                "do dau",
-                "chung to",
-                "nen dau tu",
-                "tot hay xau",
-                "du bao",
-                "du doan",
-                "tang bao nhieu",
-                "giam bao nhieu",
-                "gap doi",
-                "gap ba",
-                "cao hon",
-                "thap hon",
-                "tot khong",
-                "an toan",
-                "lanh manh",
-            )
-        )
-        if unsafe or (issues and issues != ["multiple_or_ambiguous_targets"]):
-            requirements.append(
-                QARequirement(
-                    requirement_id="",
-                    text=clause,
-                    kind="unsupported",
-                    reason=issues[0] if issues else "unsupported_inference",
+        text = normalize(sentence)
+        sentence_interpretation = any(w in text for w in INTERPRETATION_TERMS)
+        sentence_values = []
+        fragments = re.split(r"\s+và\s+|,|\s*đồng thời\s+", sentence, flags=re.I)
+        explanation_fragments = []
+        for fragment in fragments:
+            if not fragment.strip():
+                continue
+            t = normalize(fragment)
+            targets = _targets(t)
+            _, issues = understand(fragment)
+            formula = any(w in t for w in ("cong thuc", "cach tinh"))
+            operands = any(
+                w in t
+                for w in (
+                    "so lieu su dung",
+                    "so lieu nao",
+                    "nhung so lieu",
+                    "du lieu dau vao",
+                    "dau vao",
+                    "toan hang",
+                    "tu so",
+                    "mau so",
+                    "cach tinh",
                 )
             )
-        elif targets:
-            for kind, key in targets:
-                requirements.append(
-                    QARequirement(
-                        requirement_id="",
-                        text=clause,
-                        kind=kind,
-                        target_id=key,
-                        interpretation=interpretation,
+            limitations = any(w in t for w in ("han che", "gioi han", "caveat"))
+            # A causal question alone is outside the accepted bounded QA contract.
+            causal = any(w in t for w in CAUSAL_TERMS)
+            invalid = [i for i in issues if i != "multiple_or_ambiguous_targets"]
+            if invalid or causal:
+                append(
+                    text=fragment,
+                    kind="unsupported",
+                    reason=invalid[0] if invalid else "unsupported_inference",
+                )
+                continue
+            for kind, target in targets:
+                key = (kind, target)
+                if key not in values:
+                    values[key] = append(text=fragment, kind=kind, target_id=target)
+                if values[key] not in sentence_values:
+                    sentence_values.append(values[key])
+            if formula or operands:
+                explanation_fragments.append((fragment, targets, formula, operands))
+            if limitations:
+                append(text=fragment, kind="limitations")
+            if not targets and not (formula or operands or limitations):
+                broad = any(
+                    w in t
+                    for w in (
+                        "loi nhuan",
+                        "sinh loi",
+                        "co cau no",
+                        "tinh hinh no",
+                        "hieu qua kinh doanh",
                     )
                 )
-        elif not any(w in text for w in ("han che", "gioi han", "caveat")):
-            requirements.append(
-                QARequirement(
-                    requirement_id="",
-                    text=clause,
-                    kind="ambiguous"
-                    if any(w in text for w in ("loi nhuan", "sinh loi", "co cau no"))
-                    else "unsupported",
-                    reason="specify_catalog_target"
-                    if parsed.intent != "unsupported"
-                    or "loi nhuan" in text
-                    or "sinh loi" in text
-                    or "co cau no" in text
-                    else "unsupported_question",
+                followup = sentence_interpretation or "giai thich" in t
+                if broad or not followup:
+                    append(
+                        text=fragment,
+                        kind="ambiguous" if broad else "unsupported",
+                        reason="specify_catalog_target" if broad else "unsupported_question",
+                    )
+        metric_values = [v for v in sentence_values if v.kind == "metric"]
+        for fragment, targets, formula, operands in explanation_fragments:
+            explicit = [values[(kind, target)] for kind, target in targets if kind == "metric"]
+            parents = explicit or metric_values or recent_metrics
+            if not parents and len(question_metrics) == 1:
+                target = question_metrics[0]
+                key = ("metric", target)
+                if key not in values:
+                    values[key] = append(text=question, kind="metric", target_id=target)
+                parents = [values[key]]
+            if len(parents) != 1:
+                append(text=fragment, kind="ambiguous", reason="specify_explanation_target")
+                continue
+            parent = parents[0]
+            for aspect, requested in (("formula", formula), ("operands", operands)):
+                if requested and not any(
+                    r.kind == "explanation"
+                    and r.target_id == parent.target_id
+                    and r.aspect == aspect
+                    for r in requirements
+                ):
+                    append(
+                        text=fragment,
+                        kind="explanation",
+                        target_id=parent.target_id,
+                        aspect=aspect,
+                        depends_on=[parent.requirement_id],
+                    )
+        if metric_values:
+            recent_metrics = metric_values
+        # A generic explanation follow-up continues the preceding request;
+        # it does not introduce another independent unknown target.
+        if sentence_interpretation:
+            parents = sentence_values or list(values.values())
+            topic = (
+                "earnings_quality"
+                if "chat luong loi nhuan" in text
+                else (
+                    "unbounded"
+                    if any(w in text for w in ("tot khong", "tot hay xau", "an toan", "lanh manh"))
+                    else "metric_meaning"
                 )
             )
-    for index, requirement in enumerate(requirements):
-        requirement.requirement_id = f"r{index + 1}"
+            for parent in parents:
+                if not any(
+                    r.interpretation
+                    and r.target_id == parent.target_id
+                    and r.interpretation_topic == topic
+                    for r in requirements
+                ):
+                    append(
+                        text=sentence,
+                        kind=parent.kind,
+                        target_id=parent.target_id,
+                        interpretation=True,
+                        interpretation_topic=topic,
+                        depends_on=[parent.requirement_id],
+                    )
     return requirements
 
 
@@ -272,6 +391,23 @@ def _matches_target(entry, requirement):
         if requirement.interpretation
         else ("fact" if requirement.kind == "fact" else "approved_metric")
     )
+    if entry.verification_status != "verified" or entry.decision.decision != "ACCEPT":
+        return False
+    if requirement.kind == "explanation":
+        return bool(
+            entry.identity.kind == "approved_metric"
+            and claim.calculation
+            and claim.calculation.formula_id == requirement.target_id
+            and metric_explanation(entry, [requirement.aspect])
+        )
+    if requirement.interpretation:
+        if requirement.interpretation_topic == "unbounded":
+            return False
+        if (
+            requirement.interpretation_topic == "earnings_quality"
+            and "chat luong loi nhuan" not in normalize(entry.content)
+        ):
+            return False
     if entry.identity.kind != expected_kind:
         return False
     if requirement.kind == "fact":
@@ -294,7 +430,7 @@ def _answer_text(response):
         # Reflect requirement labels only; never echo untrusted financial assertions.
         parts.append(
             "Các yêu cầu chưa đáp ứng: "
-            + ", ".join(r.requirement_id for r in response.unanswered_requirements)
+            + ", ".join(_requirement_label(r) for r in response.unanswered_requirements)
             + "."
         )
     if response.caveats:
@@ -302,6 +438,28 @@ def _answer_text(response):
     if response.limitations:
         parts.append("Giới hạn: " + "; ".join(response.limitations))
     return "\n".join(parts)
+
+
+def _requirement_label(requirement):
+    """Only bounded catalog labels and reason templates, never the user prose."""
+    from ..tools.question_understanding import FORMULA_LABELS
+
+    if requirement.target_id is None and requirement.reason is None:
+        return requirement.requirement_id
+    target = requirement.target_id
+    name = FORMULA_LABELS.get(target) or (
+        ITEM_RULES[target].aliases[0] if target in ITEM_RULES else "yêu cầu chưa xác định"
+    )
+    if requirement.interpretation:
+        name = "nhận định về " + name
+    elif requirement.kind == "explanation":
+        name = ("công thức của " if requirement.aspect == "formula" else "toán hạng của ") + name
+    reason = {
+        "no_verified_claim": "chưa có claim ACCEPT",
+        "no_supported_interpretation": "chưa có nhận định ACCEPT phù hợp",
+        "insufficient_admitted_calculation_metadata": "metadata ACCEPT chưa đủ để giải thích",
+    }.get(requirement.reason, "chưa đủ căn cứ hoặc cần làm rõ")
+    return f"{requirement.requirement_id} ({name}: {reason})"
 
 
 def validate_qa_response(response, retrieved):
@@ -314,7 +472,9 @@ def validate_qa_response(response, retrieved):
     if [key for s in response.grounded_segments for key in s.verified_claim_ids] != ids:
         errors.append("segment_selection_mismatch")
     if all(key in entries for key in ids):
-        if response.grounded_segments != _segments([entries[key] for key in ids]):
+        if response.grounded_segments != _segments(
+            [entries[key] for key in ids], response.plan.requirements
+        ):
             errors.append("protected_slot_mismatch")
     for segment in response.grounded_segments:
         ctx = segment.context
@@ -383,60 +543,17 @@ class VietnameseQAComposer:
 
     def compose(self, request: VietnameseQARequest) -> VietnameseQAResponse:
         request = VietnameseQARequest.model_validate_json(request.model_dump_json())
-        parsed, issues = understand(request.question)
-        plan = GroundedAnswerPlan(requirements=understand_requirements(request.question))
+        # Local import avoids a module cycle; both consumers recompute the same
+        # inventory from their own trusted request and admitted retrieval.
+        from .firewall_qa_binding import request_inventory
+
+        plan, status = request_inventory(request, [])
         response = VietnameseQAResponse(
             question=request.question, status="abstained", answer_vi="", plan=plan
         )
-        # Comparisons cannot be decomposed to circumvent D03-B10.
-        if "cross_document_comparison_blocked_D03_B10" in issues:
-            plan.reasons.append("cross_document_comparison_blocked_D03_B10")
-            return self._finish(response, [], "unsupported")
-        if "ambiguous_reporting_scope" in issues:
-            plan.reasons.append("ambiguous_reporting_scope")
-            return self._finish(response, [], "clarification_required")
-        if parsed.period and request.period and parsed.period != request.period:
-            plan.missing_information.append("period")
-            return self._finish(response, [], "clarification_required")
-        if (
-            parsed.reporting_year
-            and request.period
-            and (request.period[:4] != str(parsed.reporting_year))
-        ):
-            plan.missing_information.append("period")
-            return self._finish(response, [], "clarification_required")
-        if (
-            parsed.reporting_scope
-            and request.reporting_scope
-            and (parsed.reporting_scope != request.reporting_scope)
-        ):
-            plan.missing_information.append("reporting_scope")
-            return self._finish(response, [], "clarification_required")
-        if not any(r.kind in ("fact", "metric", "limitations") for r in plan.requirements):
-            return self._finish(
-                response,
-                [],
-                "clarification_required"
-                if any(r.kind == "ambiguous" for r in plan.requirements)
-                else "unsupported",
-            )
-        if not request.snapshot_id or not (request.document_id or request.company_id):
-            plan.missing_information.extend(
-                [
-                    field
-                    for field, bound in (
-                        ("snapshot_id", request.snapshot_id),
-                        ("company_id_or_document_id", request.company_id or request.document_id),
-                    )
-                    if not bound
-                ]
-            )
-            return self._finish(response, [], "clarification_required")
-        # Descriptions of origin without a caller binding must never override exact IDs.
-        text = normalize(request.question)
-        if re.search(r"\bsnapshot\b|\brecovery\b|\bban goc\b|\boriginal\b", text):
-            plan.missing_information.append("snapshot_origin_binding")
-            return self._finish(response, [], "clarification_required")
+        if status in ("unsupported", "clarification_required"):
+            return self._finish(response, [], status)
+        parsed, _ = understand(request.question)
         try:
             retrieved = self._ledger.find_claims(
                 VerifiedClaimQuery(
@@ -449,7 +566,6 @@ class VietnameseQAComposer:
         except (ValueError, OSError):
             plan.reasons.append("ledger_read_failed")
             return self._finish(response, [], "abstained")
-        # Defend the consumer boundary even if a malformed facade ignores its AND query.
         if any(
             any(
                 value is not None and getattr(e.identity, field) != value
@@ -466,66 +582,16 @@ class VietnameseQAComposer:
         ):
             plan.reasons.append("retrieval_context_mismatch")
             return self._finish(response, [], "abstained")
-        if (
-            len(
-                {
-                    (e.identity.company_id, e.identity.document_id, e.identity.snapshot_id)
-                    for e in retrieved
-                }
-            )
-            > 1
-        ):
-            plan.missing_information.append("document_id")
-            return self._finish(response, [], "clarification_required")
-        scope = request.reporting_scope or parsed.reporting_scope
-        year = parsed.reporting_year
-        for requirement in plan.requirements:
-            if requirement.kind not in ("fact", "metric"):
-                continue
-            candidates = [
-                e
-                for e in retrieved
-                if _matches_target(e, requirement)
-                and (year is None or e.identity.period[:4] == str(year))
-                and (scope is None or claim_scope(e) == scope)
-            ]
-            signatures = {_assertion_signature(e) for e in candidates}
-            if len(signatures) > 1:
-                requirement.reason = "ambiguous_verified_claims"
-            elif candidates:
-                requirement.verified_claim_ids = sorted(
-                    e.identity.verified_claim_id for e in candidates
-                )
-            else:
-                requirement.reason = "requested_scope_unconfirmed" if scope else "no_verified_claim"
-        selected_ids = _unique(key for r in plan.requirements for key in r.verified_claim_ids)
-        # No implicit joining of claims from different reporting years.
-        years = {
-            e.identity.period[:4] for e in retrieved if e.identity.verified_claim_id in selected_ids
-        }
-        if len(years) > 1 or len(selected_ids) > 12:
-            for requirement in plan.requirements:
-                requirement.verified_claim_ids = []
-            plan.missing_information.append("period" if len(years) > 1 else "narrower_question")
-            return self._finish(response, [], "clarification_required")
-        for requirement in plan.requirements:
-            if requirement.kind == "limitations":
-                requirement.verified_claim_ids = selected_ids.copy()
-                if not selected_ids:
-                    requirement.reason = "select_claims_for_limitations"
-        plan.selected_verified_claim_ids = selected_ids
-        if not selected_ids:
-            ambiguous = any(r.reason == "ambiguous_verified_claims" for r in plan.requirements)
-            return self._finish(
-                response, retrieved, "clarification_required" if ambiguous else "abstained"
-            )
-        order = selected_ids
-        if request.allow_gateway:
-            order = self._propose(request, response, retrieved)
+        response.plan, status = request_inventory(request, retrieved)
+        ids = response.plan.selected_verified_claim_ids
+        if not ids:
+            return self._finish(response, retrieved, status)
+        order = self._propose(request, response, retrieved) if request.allow_gateway else ids
+        by_id = {e.identity.verified_claim_id: e for e in retrieved}
         response.grounded_segments = _segments(
-            [next(e for e in retrieved if e.identity.verified_claim_id == key) for key in order]
+            [by_id[key] for key in order], response.plan.requirements
         )
-        return self._finish(response, retrieved)
+        return self._finish(response, retrieved, status)
 
     def _propose(self, request, response, retrieved):
         metadata, ids = response.llm_metadata, response.plan.selected_verified_claim_ids
