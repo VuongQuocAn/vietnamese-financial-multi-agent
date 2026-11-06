@@ -32,6 +32,8 @@ from .financial_retrieval import (
 )
 
 __all__ = [
+    "DocumentSearchResponse",
+    "SearchDocumentEvidenceRequest",
     "FinancialQABaseline",
     "QAContext",
     "QADocument",
@@ -61,3 +63,5 @@ __all__ = [
     "GetFinancialMetricRequest",
     "ListFinancialMetricsRequest",
 ]
+
+from ..evidence.search import DocumentSearchResponse, SearchDocumentEvidenceRequest

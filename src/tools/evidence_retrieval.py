@@ -10,6 +10,11 @@ from ..evidence.contracts import Identity
 from ..evidence.document_evidence import EvidenceIdentity
 from ..evidence.reporting_scope import ReportingScopeResolution
 from ..evidence.retrieval import EvidenceQuery, RetrievalReference, RetrievalResult
+from ..evidence.search import (
+    DocumentSearchResponse,
+    EvidenceSearchIndex,
+    SearchDocumentEvidenceRequest,
+)
 from ..evidence.snapshots import SnapshotCatalog, SnapshotDescriptor
 from ..evidence.source_reviews import SourceReviewLookup
 from .financial_retrieval import (
@@ -93,6 +98,30 @@ class EvidenceRetrievalTools:
         self._api = self._catalog.api
         self._financial = FinancialRetrievalTools(self._catalog)
         self._selections = {}
+        self._search = None
+
+    @classmethod
+    def from_composition(cls, manifest, repository, *, document_id, composition_id):
+        index = EvidenceSearchIndex(
+            manifest, repository, document_id=document_id, composition_id=composition_id
+        )
+        tools = cls(index.catalog)
+        tools._search = index
+        return tools
+
+    def search_document_evidence(
+        self, request: SearchDocumentEvidenceRequest
+    ) -> DocumentSearchResponse:
+        if self._search is None:
+            return DocumentSearchResponse(
+                request=request, status="unavailable", reasons=["explicit_composition_required"]
+            )
+        return self._search.search(request)
+
+    def close_search(self):
+        if self._search is not None:
+            self._search.close()
+            self._search = None
 
     def _select(self, response, document_id, snapshot_id):
         key = document_id, snapshot_id

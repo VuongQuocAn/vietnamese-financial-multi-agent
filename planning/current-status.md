@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## INT-01b — Evidence-Aware BM25 Retrieval
+
+Status: **REVIEW**, Owner giao06/11/2026 và cho phép commit/push main.
+Baseline `8324d0e`; [spec](tasks/INT/INT-01b.md),
+[report](../docs/int-01b-evidence-aware-bm25-retrieval.md).
+SQLite FTS5/BM25,151units=127text/24tables từ năm approved compositions;
+public typed search, Vietnamese normalization, source-bound context/cells/citations.
+30real probes:Recall@1/3/5=85,42%/100%/100%,MRR1,no-answer6/6,tablehit11/11,
+leakage0;8selection/rebuild controls PASS;0Gemini/OCR,không M8/verified claims.
+Before/after và substantive samples giữ local `artifacts/evidence/INT-01b/`.
+Implementation SHA/CI exact và regression tổng ghi ở checkpoint bàn giao.
+Giữ GEN-01a/Web pending; không bắt đầu QA-01a.
+Next action: Tech Lead review INT-01b.
+
 ## INT-01a — Existing Evidence Binding & Materialization
 
 Status: **DONE**, Tech Lead APPROVED theo quyết định nghiệm thu06/11/2026.

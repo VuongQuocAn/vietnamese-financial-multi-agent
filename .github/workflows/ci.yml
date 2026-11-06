@@ -61,6 +61,7 @@ jobs:
           tests/unit/test_extraction_sessions.py
           tests/unit/test_canonical_facts.py
           tests/unit/test_document_evidence.py
+          tests/unit/test_evidence_search.py
           tests/unit/test_evidence_composition.py
           tests/unit/test_evidence_graph.py
           tests/unit/test_derived_metrics.py
