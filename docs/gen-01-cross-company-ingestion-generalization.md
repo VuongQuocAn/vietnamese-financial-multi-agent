@@ -1,6 +1,8 @@
 # GEN-01 — Cross-Company Ingestion & EF-EG Generalization
 
-Ngày 06/11/2026 (Asia/Bangkok). **REVIEW**, chưa nghiệm thu DONE.
+Ngày 06/11/2026 (Asia/Bangkok). **DONE**, APPROVED theo quyết định nghiệm thu.
+Phiên đóng task chỉ cập nhật docs/planning và chạy planning/diff checks; không
+chạy lại Gemini, tests hoặc benchmark. Giữ nguyên kết quả và limitations bên dưới.
 Baseline `041146688c9d3db1c3c0a82b6ab14a9718ab241d`; implementation
 `0a0d94041696e3210a073e28c789d0113b7b16e0` đã push main;
 [CI42169755054](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42169755054)
@@ -217,5 +219,4 @@ replay. Live continuation chỉ reuse durable budget, không reset cap hoặc xo
 
 ## G. Next Action
 
-Tech Lead review GEN-01, đặc biệt blocker basis2024, rồi quyết định readiness
-GEN-02; giữ GEN-01 tại REVIEW và chưa bắt đầu GEN-02/M8.
+Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu GEN-02/M8.

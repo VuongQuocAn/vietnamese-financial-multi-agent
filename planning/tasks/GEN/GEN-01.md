@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: E2E-01
 - Estimated Complexity: M
@@ -11,6 +11,7 @@
 Owner giao 06/11/2026 và cho phép commit/push main. Owner xác nhận dùng
 `BCC_2024.pdf` thay tên `BBC_2024.pdf` trong đề bài; giữ nguyên nội dung giao việc
 bên dưới để truy nguyên, áp dụng tên đã được xác nhận khi thực thi.
+Nghiệm thu **DONE**, APPROVED ngày06/11/2026; giữ nguyên evidence và limitations.
 
 ## Context
 
@@ -285,7 +286,7 @@ Nếu một hoặc cả hai PDF chưa thể hoàn tất do thiếu evidence, API
 
 ## Handoff Notes
 
-**GEN-01 — REVIEW**
+Bàn giao implementation trước nghiệm thu (lịch sử): **GEN-01 — REVIEW**.
 
 1. Implementation SHA + CI.
 2. Metadata BCC/BBC.
@@ -302,7 +303,7 @@ Nếu một hoặc cả hai PDF chưa thể hoàn tất do thiếu evidence, API
 
 **DỪNG Ở REVIEW.** Tech Lead nghiệm thu trước khi triển khai GEN-02.
 
-Next action: Tech Lead review GEN-01 và quyết định readiness GEN-02.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu GEN-02/M8.
 
 ## Out of Scope
 
@@ -319,7 +320,7 @@ Ruff, planning checker, diff check và CI đúng implementation SHA.
 
 2024 metrics bị chặn accounting basis; giữ các mapping gaps ngoài sáu chỉ tiêu.
 Discovery partial trong ngân sách, provenance page-level; chưa accuracy toàn PDF.
-REVIEW chờ Tech Lead, không tự nghiệm thu DONE.
+Đã nghiệm thu DONE theo quyết định06/11/2026; các giới hạn trên giữ nguyên.
 
 ## Implementation Evidence
 
@@ -330,3 +331,6 @@ completed/SUCCESS đúng SHA:1078Python/9Web PASS,full regression SKIPPED.
 40/60 attempts, 105.149 known tokens,2 HTTP503;204 observations mỗi PDF.
 24/24 PDF observations khớp;176 focused +4 planning PASS;BBS32 links/18 metrics PASS.
 Chi tiết và giới hạn: [report](../../../docs/gen-01-cross-company-ingestion-generalization.md).
+Phiên đóng task chỉ docs/planning, planning checker và diff check; không chạy lại
+Gemini, tests, benchmark hoặc đổi runtime/accepted artifacts. Không gán CI
+implementation cho commit nghiệm thu docs-only.
