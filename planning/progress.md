@@ -24,7 +24,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 107 | 99 | 0 | 0 | 8 | 0 | 0 |
+| INT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 108 | 99 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -51,6 +52,13 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+INT-01a **REVIEW**, implementation chưa commit:151source-bound records/17pages,
+34real acceptance checks,193targeted+30post-loader PASS;0Gemini/OCR.
+[Report](../docs/int-01a-existing-evidence-binding-materialization.md).
+Next action: Tech Lead review INT-01a và CI implementation SHA còn chờ.
+
+Checkpoint trước:
 
 ARCH-01 **DONE**, Tech Lead APPROVED06/11/2026, accepted audit4107a20 —
 [báo cáo](../docs/arch-01-existing-evidence-qa-integration-audit.md).

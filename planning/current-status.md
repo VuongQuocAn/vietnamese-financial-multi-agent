@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## INT-01a — Existing Evidence Binding & Materialization
+
+Status: **REVIEW**, Owner giao06/11/2026. Implementation **chưa commit**, baseline
+`2c389296bdeedb965c1eeeb53dc55ef2bf274b00`; CI exact SHA chưa có.
+[Spec](tasks/INT/INT-01a.md), [report](../docs/int-01a-existing-evidence-binding-materialization.md).
+151records/17pages/5PDF source-bound qua existing M4 APIs;127text/24tables và
+1.805cells/headers fidelity exact;7legacy records thiếu binding bị loại.
+BBS2025 footer/B09, BBS2022/2024 saved B09 và BCC2024/2025 load được;
+34real acceptance checks,193targeted+30post-loader PASS;0Gemini/OCR.
+72inputs+8inherited runtime/CI/Web files unchanged;không sửa GEN-01a pending.
+Artifacts local `artifacts/evidence/INT-01a/final/`,18actual samples trong
+`real-pdf-checks.md`;giữ source identities và quality caveats,không claim verified.
+Next action: Tech Lead review INT-01a và phần CI implementation SHA còn chờ.
+
 ## ARCH-01 — Audit & Integration Plan for Full-Document Grounded QA
 
 Status: **DONE**, Tech Lead APPROVED theo quyết định cuối06/11/2026.

@@ -81,7 +81,7 @@ def test_web_branch_is_counted_and_validated(planning_root):
     assert CHECKER["check"](planning_root) == 2
 
 
-@pytest.mark.parametrize("milestone", ["GEN", "ARCH"])
+@pytest.mark.parametrize("milestone", ["GEN", "ARCH", "INT"])
 def test_additional_branch_uses_existing_registry_checks(planning_root, milestone):
     planning = planning_root / "planning"
     for name in ("tasks.md", "progress.md", "handoff.md"):
