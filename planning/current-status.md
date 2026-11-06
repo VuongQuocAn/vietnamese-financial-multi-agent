@@ -4,7 +4,7 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## QA-Fix-01 — Grounded Requirement Coverage & Safe Financial Explanation
 
-Status: **REVIEW**; chờ Tech Lead nghiệm thu, không tự chuyển DONE.
+Status: **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026.
 [Spec](tasks/QA/QA-Fix-01.md), [báo cáo](../docs/qa-fix-01-grounded-requirement-coverage.md).
 Owner giao06/11/2026, cho phép commit/push main;baseline2432bec/origin khớp.
 13failing trước sửa;254final PASS (40new/211compatibility-boundary/3planning).
@@ -15,7 +15,10 @@ Implementation `310459d137105e8a155fc23c939a64331663dcad` đã push main/origin 
 [CI42135935859](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42135935859)
 completed/SUCCESS đúng SHA:1.017Python/9Web smoke PASS,full regression SKIPPED.
 Checkpoint sau chỉ docs/planning `[skip ci]`, không gán CI cho SHA khác.
-Next action: Tech Lead review QA-Fix-01 và quyết định nghiệm thu; không bắt đầu QA-Fix-02.
+Phiên nghiệm thu chỉ cập nhật docs/planning và chạy planning/diff checks;
+giữ implementation, accepted artifacts, Web local và mọi limitations đã báo.
+Không chạy lại QA/tests/Gemini/OCR/extraction.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu QA-Fix-02.
 
 ## QA-Q01 — Quick QA Execution & Root-Cause Diagnosis
 

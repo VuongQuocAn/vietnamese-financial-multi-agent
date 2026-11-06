@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: QA-Q01, M7-05
 - Estimated Complexity: M
@@ -58,7 +58,8 @@ không QA-Fix-02–05 hoặc M8; giữ frozen oracles.
 - [x] Explanation tampering bị BLOCK, citation identity/caveats và fail-closed giữ nguyên.
 - [x] Actual10 BBS trước/sau, claims/formula/operands/firewall và PDF reference audit.
 - [x] Targeted/compatibility controls PASS; protected hashes/Web local unchanged.
-- [x] Commit/push main và CI SUCCESS đúng implementation SHA; chờ Tech Lead REVIEW.
+- [x] Commit/push main và CI SUCCESS đúng implementation SHA.
+- [x] Chuyển DONE theo quyết định nghiệm thu06/11/2026.
 
 ## Required Tests
 
@@ -83,9 +84,11 @@ chưa approved; D03-B10 giữ nguyên. Engineering PASS không chứng minh fina
 - Test Results:254final PASS (40new/211compatibility-boundary/3planning);
  10/10actual BBS, final-policy audit PASS;Q03formula+operands,Q08revenue+CFO/no verdict;
  16.849protected hashes/Web unchanged;Ruff changed files/planning/diff PASS.
-- Review Notes: REVIEW, chưa nghiệm thu; chỉ Tech Lead chuyển DONE.
+- Review Notes: APPROVED / DONE theo quyết định nghiệm thu06/11/2026.
   Checkpoint sau implementation chỉ docs/planning `[skip ci]`; không gán CI cho SHA khác.
+  Phiên nghiệm thu chỉ docs/planning và planning/diff checks; không chạy lại
+  tests/QA/Gemini/OCR/extraction, giữ accepted evidence/Web local và limitations.
 
 ## Handoff Notes
 
-Next action: Tech Lead review QA-Fix-01 và quyết định nghiệm thu; không bắt đầu QA-Fix-02.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu QA-Fix-02.

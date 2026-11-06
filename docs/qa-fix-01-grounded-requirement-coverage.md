@@ -1,6 +1,6 @@
 # QA-Fix-01 — Grounded Requirement Coverage & Safe Financial Explanation
 
-Ngày06/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu; chưa DONE.
+Ngày06/11/2026 (Asia/Bangkok). **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026.
 Baseline main/origin `2432bec`; implementation
 `310459d137105e8a155fc23c939a64331663dcad` đã push main, origin khớp sau push.
 [CI42135935859](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42135935859)
@@ -242,8 +242,12 @@ Không còn P0/P1 đã xác định trong phạm vi F01 sau các controls/audit 
 implementation SHA/CI đã xác minh. F02/F03 thuộc backlog riêng vẫn còn nguyên.
 QA-Fix-02 chưa được đăng ký/giao/READY trong task này; fresh M5 cần spec/budget riêng.
 
-**Next action duy nhất khi đạt REVIEW: Tech Lead review QA-Fix-01 và quyết định
-nghiệm thu; không tự bắt đầu QA-Fix-02.**
+Phiên chuyển DONE chỉ cập nhật docs/planning và chạy planning/diff checks;
+không chạy lại QA/tests/Gemini/OCR/extraction hoặc sửa accepted evidence/Web local.
+Giữ nguyên kết quả và các limitations nêu trên.
+
+**Next action duy nhất: chờ Owner/Tech Lead giao task tiếp theo;
+không tự bắt đầu QA-Fix-02.**
 
 Appendix local ignored: `hashes-before.json`, `integrity.json`,
 `plans-before.json`, `failing-tests.txt`, `validation-complete.txt`,
