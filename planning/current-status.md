@@ -4,7 +4,8 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## E2E-01 — End-to-End Financial QA Pipeline Integration
 
-Status: **REVIEW**, Owner giao06/11/2026.
+Status: **DONE** theo review06/11/2026, chấp nhận kiến trúc và hoàn tất đồng bộ
+docs/planning; đối chiếu saved results không phát hiện sai lệch mới.
 [Spec](tasks/E2E/E2E-01.md), [audit/report](../docs/e2e-01-financial-qa-integration.md).
 Implementation `9811a4443f24a8b8083491f1968ab641ee69b63a` đã push main;
 CI42145875699 SUCCESS đúng SHA:1068Python/9Web PASS. Local399focused+2conflict PASS.
@@ -12,7 +13,10 @@ BBS E01–E05:4answered/1partial;17ACCEPT/2INVESTIGATE,10new/7idempotent;
 cache0calls,10/10reference comparisons.18/25attempts,64847known tokens,3errors.
 P1cold ledger60MB/cache74,525s (lookup44,145s), đề xuất QA-Fix-04; availability
 và E05quality verdict còn hạn chế. Giữ Web local/raw/accepted artifacts; không OCR.
-Next action: Tech Lead review E2E-01.
+Checkpoint5826f33 trên GitHub đã có kết quả cuối; phiên này bổ sung bảng tổng hợp
+và chốt trạng thái, chỉ chạy planning/diff checks. Không chạy lại Gemini/runtime,
+tests/benchmark hoặc hash dataset. P1cold lookup được giữ ngoài phạm vi E2E-01.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu QA-Fix-04.
 
 ## QA-Fix-02 — M5 Planner & Downstream Recovery
 

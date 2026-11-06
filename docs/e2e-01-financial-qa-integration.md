@@ -1,5 +1,10 @@
 # E2E-01 — Tích hợp Financial QA
 
+Status: **DONE** theo quyết định review06/11/2026: chấp nhận implementation về
+kiến trúc, đóng task sau khi đồng bộ docs/planning bằng kết quả đã lưu và không
+phát hiện sai lệch mới. Phiên chốt này chỉ sửa tài liệu; không chạy lại Gemini,
+runtime, tests/benchmark hoặc hash dataset. P1 cold lookup giữ ngoài E2E-01.
+
 ## A. Architecture audit (trước implementation)
 
 Trước: M5 dừng ở candidates; M7 đọc ledger đã lưu. Chưa có application service
@@ -71,6 +76,18 @@ E01–E05 chạy actual application pipeline trên catalog persisted, ledger ri�
 verification occurrences: **17 ACCEPT, 2 INVESTIGATE, 0 ABSTAIN**; **10 mới lưu**,
 7 ACCEPT idempotent. Hai INVESTIGATE không admission là cùng một interpretation
 lặp ở E03/E04. Không nhầm số ACCEPT với số ledger entries mới.
+
+| Kết quả cuối E01–E05 | Số lượng |
+| --- | ---: |
+| Candidate verification occurrences | 19 |
+| M6 ACCEPT | 17 |
+| M6 INVESTIGATE, không admission | 2 |
+| M6 ABSTAIN | 0 |
+| Ledger newly stored | 10 |
+| ACCEPT idempotent, không lưu trùng | 7 |
+
+Nguồn đối chiếu: `financial-audit.json` và admission outcomes trong các JSON
+E01–E05 đã lưu. Đây là tổng lượt verification/admission, không phải19claims unique.
 
 | Case | Mode | Specialists thực thi | Tool calls | ACCEPT / INVESTIGATE | New / reused trong answer | M7 / citations / Firewall |
 | --- | --- | --- | ---: | --- | --- | --- |
@@ -201,6 +218,7 @@ không hash toàn protected dataset, không ghi raw/processed/accepted artifacts
   payload60MB và cold/warm parse/copy/revalidation gây latency đáng kể. Functional
   flow PASS; chưa đạt interactive latency. Nên khảo sát shared proof contexts và
   storage/query có giới hạn, giữ nguyên admission replay authority.
+  Tech Lead xác nhận cold lookup44,1s không cần sửa trong E2E-01; giữ follow-up riêng.
 - P1 external availability:3provider failures thực; nguyên nhân503 bên ngoài chưa
   xác định. Recovery bounded/fail-closed đã chạy, không che usage unknown.
 - E05 thiếu supported earnings-quality verdict; partial đúng coverage, không tự
@@ -225,6 +243,12 @@ completed/SUCCESS đúng SHA:1068Python tests/9Web smoke PASS; lint/format/plann
 frontend typecheck/lint/build PASS; full regression SKIPPED.
 Evidence checkpoint sau chỉ docs/planning;
 không gán CI implementation cho SHA docs khác.
+
+Checkpoint tài liệu `5826f33d1162034b260553d700510be3b46935fb` đã có kết quả cuối
+trên GitHub `main`; phiên review này kiểm tra trực tiếp ba file report/spec/current
+status trên remote và đối chiếu summary/admission outcomes đã lưu, không thấy
+sai lệch mới. Bổ sung bảng tổng hợp rõ ràng và đồng bộ trạng thái DONE theo quyết
+định Tech Lead. Chỉ chạy planning checker và diff check cho thay đổi tài liệu.
 
 Actual commands từ root (Python trong `.venv`):
 
@@ -251,4 +275,4 @@ các `*-rerun.json`, `ledger/verified-claims.json`, `financial-audit.json`,
 `provider-attempts.jsonl`, `integrity-*.json`, `final-code-cache-e01.json` và console
 captures. Không commit full ledgers/source citations/datasets/secrets.
 
-Next action: Tech Lead review E2E-01; dừng REVIEW, không tự DONE/task tiếp theo.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu QA-Fix-04.
