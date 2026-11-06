@@ -22,7 +22,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | QA | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 105 | 97 | 0 | 0 | 8 | 0 | 0 |
+| GEN | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 106 | 97 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 

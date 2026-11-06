@@ -81,6 +81,26 @@ def test_web_branch_is_counted_and_validated(planning_root):
     assert CHECKER["check"](planning_root) == 2
 
 
+def test_generalization_branch_uses_existing_registry_checks(planning_root):
+    planning = planning_root / "planning"
+    for name in ("tasks.md", "progress.md", "handoff.md"):
+        path = planning / name
+        text = path.read_text(encoding="utf-8").replace("W-01", "GEN-01")
+        text = text.replace("tasks/W/", "tasks/GEN/").replace("| W |", "| GEN |")
+        path.write_text(text, encoding="utf-8")
+    original = planning / "tasks/W/W-01.md"
+    destination = planning / "tasks/GEN/GEN-01.md"
+    destination.parent.mkdir()
+    destination.write_text(
+        original.read_text(encoding="utf-8")
+        .replace("W-01", "GEN-01")
+        .replace("Milestone: W", "Milestone: GEN"),
+        encoding="utf-8",
+    )
+    original.unlink()
+    assert CHECKER["check"](planning_root) == 2
+
+
 def test_web_dependency_must_be_done(planning_root):
     path = planning_root / "planning" / "tasks.md"
     path.write_text(

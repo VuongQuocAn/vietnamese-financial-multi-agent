@@ -78,14 +78,20 @@ ITEM_CATALOG = (
         "source-backed:DN/monetary-v1",
     ),
     ItemRule(
-        "b01.total_assets", "B01", "270", ("TỔNG CỘNG TÀI SẢN",), "source-backed:DN/monetary-v1"
+        "b01.total_assets",
+        "B01",
+        "270",
+        ("TỔNG CỘNG TÀI SẢN", "TỔNG CỘNG TÀI SẢN (270=100+200)"),
+        "source-backed:DN/monetary-v1;GEN-01/PDF-B01",
+        "assets",
     ),
     ItemRule(
         "b01.total_liabilities",
         "B01",
         "300",
-        ("C - NỢ PHẢI TRẢ", "C- NỢ PHẢI TRẢ", "C - Nợ phải trả", "NỢ PHẢI TRẢ"),
+        ("C - NỢ PHẢI TRẢ", "C- NỢ PHẢI TRẢ", "C - Nợ phải trả", "NỢ PHẢI TRẢ", "C. NỢ PHẢI TRẢ"),
         "source-backed:DN/monetary-v1",
+        "liabilities",
     ),
     ItemRule(
         "b01.total_equity",
@@ -101,8 +107,10 @@ ITEM_CATALOG = (
         (
             "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ",
             "Doanh thu thuần về bán hàng và cung cấp dịch vụ",
+            "Doanh thu thuần về bán hàng (10=01)",
         ),
         "source-backed:DN/monetary-v1",
+        "revenue",
     ),
     ItemRule(
         "b02.cost_of_sales",
@@ -118,8 +126,10 @@ ITEM_CATALOG = (
         (
             "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
             "Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
+            "Lợi nhuận gộp về bán hàng (20=10-11)",
         ),
         "source-backed:DN/monetary-v1",
+        "gross_profit",
     ),
     ItemRule(
         "b02.profit_before_tax",
@@ -136,6 +146,7 @@ ITEM_CATALOG = (
             "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "16. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "Lợi nhuận sau thuế thu nhập doanh nghiệp",
+            "(Lỗ) sau thuế thu nhập doanh nghiệp (60=50-51)",
         ),
         "source-backed:DN/monetary-v1",
     ),
@@ -164,7 +175,7 @@ ITEM_CATALOG = (
         "b03.closing_cash",
         "B03",
         "70",
-        ("Tiền và tương đương tiền cuối năm",),
+        ("Tiền và tương đương tiền cuối năm", "Tiền cuối năm (70=50+60+61)"),
         "source-backed:DN/monetary-v1",
     ),
     ItemRule(
@@ -273,11 +284,13 @@ def _text(value: str) -> str:
     return " ".join(unicodedata.normalize("NFC", value).casefold().split())
 
 
-def _label(value: str, *, strip_ordinal: bool = False) -> str:
+def _label(value: str, *, strip_ordinal: bool = False, strip_numeric_ordinal: bool = False) -> str:
     # Bounded punctuation/ordinal normalization; no fuzzy match, dropped words or accents.
     value = _text(value).replace("–", "-").replace("—", "-")
     if strip_ordinal:
         value = re.sub(r"^(?:[a-d]\s*-\s*|[ivxlcdm]+\.\s*|\d+\.\s*)", "", value)
+    elif strip_numeric_ordinal:
+        value = re.sub(r"^\d+\.\s*", "", value)
     return value.rstrip(" .:")
 
 
@@ -297,8 +310,14 @@ def map_item_label(
             continue
         for index, alias in enumerate(rule.aliases):
             label_matches = (
-                _label(evidence.raw_text, strip_ordinal=rule.requires_source_code)
-                == _label(alias, strip_ordinal=rule.requires_source_code)
+                _label(
+                    evidence.raw_text,
+                    strip_ordinal=rule.requires_source_code,
+                    strip_numeric_ordinal=True,
+                )
+                == _label(
+                    alias, strip_ordinal=rule.requires_source_code, strip_numeric_ordinal=True
+                )
                 if source_code is not None
                 else _text(evidence.raw_text) == _text(alias)
             )

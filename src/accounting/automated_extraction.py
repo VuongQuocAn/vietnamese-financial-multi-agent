@@ -102,6 +102,56 @@ def parse_vietnamese_number(raw: str) -> Decimal | None:
     return value.copy_negate() if negative else value
 
 
+def column_period_evidence(header, context, statement_type):
+    """Resolve exact relative column labels only from one explicit annual page period.
+
+    Retain original raw_header in the link; the derived normalization includes both
+    header and page-period provenance. Never use the filename/RawPageIdentity year.
+    Non-calendar years, missing/conflicting periods stay unresolved.
+    """
+    text = " ".join(header.raw_text.casefold().split())
+    if statement_type == "B01" and re.fullmatch(r"\d{2}/\d{2}/\d{4}", text):
+        return header.model_copy(update={"raw_text": f"Tại ngày {text}"})
+    allowed = (
+        {"số cuối năm", "số đầu năm"}
+        if statement_type == "B01"
+        else {"năm nay", "năm trước"}
+        if statement_type in {"B02", "B03"}
+        else set()
+    )
+    if text not in allowed:
+        return header
+    resolved = resolve_financial_context(context)
+    period = resolved.context
+    if resolved.period.status != "resolved" or not period.period:
+        return header
+    if statement_type == "B01":
+        if period.period_type != "as_of" or not period.period.endswith("-12-31"):
+            return header
+        year = period.period[:4]
+        raw = f"Tại ngày {'31/12' if text == 'số cuối năm' else '01/01'}/{year}"
+    else:
+        if period.period_type == "fiscal_year_end" and period.period.endswith("-12-31"):
+            year = int(period.period[:4])
+        elif period.period_type == "fiscal_year":
+            year = int(period.period)
+        else:
+            return header
+        year -= text == "năm trước"
+        if year < 1:
+            return header
+        raw = f"Năm {year:04d}"
+    return header.model_copy(
+        update={
+            "raw_text": raw,
+            "provenance": [
+                *header.provenance,
+                *(ref for c in resolved.period.candidates for ref in c.evidence.provenance),
+            ],
+        }
+    )
+
+
 def validate_automated_extraction(image, record: dict, *, source_inventory=None) -> dict:
     """Validate semantic associations in one image-bound Gateway response.
 
@@ -164,6 +214,8 @@ def validate_automated_extraction(image, record: dict, *, source_inventory=None)
         structure.extend(dict(table=ti, column=col, role=role) for col, role in roles.items())
         positions = Counter((c.row, c.column) for c in [*table.headers, *table.cells])
         table_issues = []
+        if any(count > 1 for count in positions.values()):
+            table_issues.append("duplicate_cell_position")
         if (
             table.label_column == table.code_column
             or max(table.label_column, table.code_column) >= table.columns
@@ -242,12 +294,9 @@ def validate_automated_extraction(image, record: dict, *, source_inventory=None)
                     if decision.source_item_code is None:
                         decision.issues.append("source_code_conflict")
                 period_evidence = evidence(header.text, f"{prefix}/headers/{hi}")
-                # Bare dates printed in B01 column headers have as-of semantics.
-                period_text = header.text or ""
-                if page.statement_type == "B01" and re.fullmatch(r"\d{2}/\d{2}/\d{4}", period_text):
-                    period_evidence = period_evidence.model_copy(
-                        update={"raw_text": f"Tại ngày {period_text}"}
-                    )
+                period_evidence = column_period_evidence(
+                    period_evidence, context, page.statement_type
+                )
                 period = resolve_financial_context([period_evidence])
                 if period.period.status != "resolved":
                     decision.issues.append("period_unresolved")
@@ -283,6 +332,7 @@ def validate_automated_extraction(image, record: dict, *, source_inventory=None)
                                 "currency": unit.context.currency,
                                 "scale": semantic_scale,
                                 "statement_type": page.statement_type,
+                                "reporting_scope": unit.context.reporting_scope,
                                 "raw_item_label": decision.raw_label,
                                 "mapped_item_code": item.canonical_item_id,
                             }
@@ -335,6 +385,9 @@ def extract_financial_page(
         "Start the header at row 0 and number each subsequent physical row once. "
         "numeric period headers in headers, once each; put all body cells in cells, once "
         "each. Combine wrapped text within a cell. Columns for different periods MUST be "
+        "distinct. Each (row, column) position MUST occur once across headers and cells. "
+        "A printed row ordinal and its label belong in ONE label cell, never two cells "
+        "at the same position. Preserve the ordinal in that combined label text. Columns MUST be "
         "distinct. Mark uncertain cells unknown/inferred, use null text/position if unreadable. "
         "Do not map accounting items or calculate values. Include limitations."
         " Check coverage through the last physical table row before signatures/footer; "

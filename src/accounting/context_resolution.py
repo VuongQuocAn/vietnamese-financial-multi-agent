@@ -66,6 +66,10 @@ _PERIOD_RULES = (
 )
 _SCOPE = r"báo cáo tài chính (hợp nhất|riêng)"
 _SCOPE_OPTION = r"(?:báo cáo tài chính|bctc) (riêng|hợp nhất|tổng hợp)(?:\s*\([^)]*\))?"
+_STATEMENT_SCOPE_TITLE = (
+    r"(?:bảng cân đối kế toán|báo cáo kết quả hoạt động kinh doanh|báo cáo lưu chuyển tiền tệ) "
+    r"(hợp nhất|riêng)(?:\s*\(tiếp theo\)?)?"
+)
 
 
 def _iso(parts: tuple[str, ...]) -> str:
@@ -169,6 +173,9 @@ def resolve_financial_context(evidence: Iterable[ContextEvidence]) -> ContextRes
                 issues = [] if match.group() == text else ["scope_mention_not_title"]
                 scope = "consolidated" if match[1] == "hợp nhất" else "separate"
                 scopes.append(_candidate(FinancialContext(reporting_scope=scope), item, issues))
+            if match := re.fullmatch(_STATEMENT_SCOPE_TITLE, text):
+                scope = "consolidated" if match[1] == "hợp nhất" else "separate"
+                scopes.append(_candidate(FinancialContext(reporting_scope=scope), item, []))
     period, unit, scope = map(_resolve, (periods, units, scopes))
     context = FinancialContext()
     for field in (period, unit, scope):

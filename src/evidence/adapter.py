@@ -4,6 +4,7 @@ import json
 from collections.abc import Sequence
 from copy import deepcopy
 
+from ..accounting.item_mapping import ITEM_CATALOG
 from ..accounting.quality import AssessableEvidence, QualityAssessment, QualityIssue
 from .contracts import CanonicalFinancialFact, EvidenceAnchor, TaskQualityContext
 
@@ -18,6 +19,14 @@ def fact_from_m2(
 ) -> CanonicalFinancialFact:
     """IDs document/attempt do caller bind, local ID giữ nguyên evidence_id M2."""
     result = evidence.extraction
+    # Copy an approved role for the existing source-coded M2 mapping; no remapping.
+    roles = {
+        rule.semantic_role
+        for rule in ITEM_CATALOG
+        if (rule.canonical_item_id, rule.statement_type, rule.observed_source_code)
+        == (evidence.canonical_item_id, result.context.statement_type, evidence.source_item_code)
+        and rule.semantic_role is not None
+    }
     identifiers = dict(
         document_id=document_id,
         snapshot_id=snapshot_id,
@@ -46,6 +55,7 @@ def fact_from_m2(
     return CanonicalFinancialFact(
         **identifiers,
         canonical_item_id=evidence.canonical_item_id,
+        semantic_role=next(iter(roles)) if len(roles) == 1 else None,
         source_item_code=evidence.source_item_code,
         raw_header=evidence.raw_header,
         source_metadata=deepcopy(evidence.source_metadata),

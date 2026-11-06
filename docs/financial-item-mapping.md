@@ -1,5 +1,11 @@
 # Financial item mapping — M2-04
 
+GEN-01 thêm6 exact aliases có nguồn B01/B02/B03 scan, gồm nhãn rút gọn/lỗ và
+nhãn có công thức in kèm; không evaluate công thức trong label. Khi có source code,
+numeric ordinal được normalize; Roman subtotal của core mappings không bị loại
+prefix để tránh lẫn400/410. Statement/code gates giữ nguyên.
+Evidence và giới hạn tại [audit GEN-01](gen-01-cross-company-ingestion-generalization.md).
+
 API public qua `vietnamese_financial_multi_agent.accounting`:
 
 ```python

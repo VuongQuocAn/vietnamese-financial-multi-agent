@@ -14,6 +14,9 @@ company_id=None, quality_context=())` trả `CanonicalFinancialFact` M3-01.
 Giữ evidence_id M2 làm local_observation_id trong document/attempt; caller cung cấp
 document/snapshot thật. Không lấy company từ symbol hoặc kỳ từ filename/page.year.
 Canonical item chỉ copy mapping có sẵn, không map bằng raw label/code mới.
+GEN-01 bổ sung copy semantic role đã có trong approved catalog khi canonical item,
+statement và source code của M2 khớp; thiếu/không khớp thì giữ null. Không đổi
+canonical mapping hoặc financial verification; xem [audit GEN-01](gen-01-cross-company-ingestion-generalization.md).
 Giữ FinancialValue/status/issues, FinancialContext, raw code, source references,
 provenance level, extraction issues và quality annotations đã được caller cung cấp.
 Không có annotations thì giữ list rỗng, không tạo decision mới.

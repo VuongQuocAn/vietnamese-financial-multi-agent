@@ -4,6 +4,12 @@ Import qua `vietnamese_financial_multi_agent.accounting`. Resolver deterministic
 không đọc file/gọi API, parse số tiền, áp dụng scale hoặc xác minh financial fact.
 Không thay schema `financial_normalization_v1` hoặc contracts M1.
 
+GEN-01: nhận exact primary statement titles có `hợp nhất`/`riêng`. Nhánh automated
+extraction dùng `column_period_evidence` cho `Năm nay/Năm trước`, `Số cuối năm/Số đầu năm`
+chỉ khi cùng trang có một explicit calendar-year period phù hợp; missing/conflicting
+context không resolve, không dùng filename year. Raw quality projection dùng cùng
+helper; giữ raw header/provenance. [Audit](gen-01-cross-company-ingestion-generalization.md).
+
 ```python
 from vietnamese_financial_multi_agent.accounting import (
     evidence_from_unified_page,

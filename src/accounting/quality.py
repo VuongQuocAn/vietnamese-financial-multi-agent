@@ -1,7 +1,6 @@
 """Task-aware usage annotations; source extraction is never filtered or modified."""
 
 import json
-import re
 from collections import Counter, defaultdict
 from collections.abc import Iterable
 from copy import deepcopy
@@ -14,7 +13,12 @@ from vietnamese_financial_multi_agent.document_processing.contracts.document_und
 )
 
 from .arithmetic import ArithmeticCheck
-from .automated_extraction import AutomatedLink, ExtractedPage, parse_vietnamese_number
+from .automated_extraction import (
+    AutomatedLink,
+    ExtractedPage,
+    column_period_evidence,
+    parse_vietnamese_number,
+)
 from .context_resolution import ContextEvidence, resolve_financial_context
 from .contracts import (
     FinancialModel,
@@ -266,21 +270,22 @@ def evidence_from_automated_records(records: Iterable[dict]) -> list[AssessableE
         def ref(pointer, anchor=anchor):
             return FinancialSourceReference(anchor=anchor, source_pointer=pointer)
 
-        context = resolve_financial_context(
-            [
-                ContextEvidence(raw_text=t, provenance=[ref(f"/context/{i}")])
-                for i, t in enumerate(payload.context)
-            ]
-        )
+        context_evidence = [
+            ContextEvidence(raw_text=t, provenance=[ref(f"/context/{i}")])
+            for i, t in enumerate(payload.context)
+        ]
+        context = resolve_financial_context(context_evidence)
         for index, raw in enumerate(record["extraction"]["links"]):
             link = AutomatedLink.model_validate_json(json.dumps(raw))
-            period_text = link.raw_header or ""
-            if payload.statement_type == "B01" and re.fullmatch(r"\d{2}/\d{2}/\d{4}", period_text):
-                period_text = f"Tại ngày {period_text}"
             period = resolve_financial_context(
                 [
-                    ContextEvidence(
-                        raw_text=period_text, provenance=[ref(f"/tables/{link.table}/headers")]
+                    column_period_evidence(
+                        ContextEvidence(
+                            raw_text=link.raw_header or "",
+                            provenance=[ref(f"/tables/{link.table}/headers")],
+                        ),
+                        context_evidence,
+                        payload.statement_type,
                     )
                 ]
             )
