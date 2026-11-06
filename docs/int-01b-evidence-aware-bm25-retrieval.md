@@ -1,7 +1,14 @@
 # INT-01b — Evidence-Aware BM25 Retrieval
 
 Ngày 06/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu.
-Baseline main `8324d0e`; implementation SHA và CI ghi trong checkpoint bàn giao.
+Baseline main `8324d0e`; implementation
+[`35258282ff7eed4b413c713510cadc7dff4f149b`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/35258282ff7eed4b413c713510cadc7dff4f149b)
+đã push main. [CI42219245983](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42219245983)
+đã **completed/SUCCESS**, xác minh đúng implementation SHA: **1.107 Python tests
++ 9 Web smoke PASS**, Ruff lint/format, planning109tasks, frontend typecheck/lint/
+production build và browser/proxy checks SUCCESS; full regression SKIPPED.
+Checkpoint sau implementation chỉ docs/planning `[skip ci]`, không gán CI này
+cho SHA checkpoint. Local planning110tasks gồm GEN-01a pending ngoài commit.
 
 ## 1. Executive Summary
 

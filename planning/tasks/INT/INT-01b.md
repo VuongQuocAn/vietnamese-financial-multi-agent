@@ -74,8 +74,13 @@ Section hint lexical; source array order không spatial reading order đã xác 
 151units (127text/24tables);30probes,31expected occurrences đối chiếu original JSON.
 Recall@1/3/5=85,42%/100%/100%,MRR1,00,no-answer6/6,tablehit11/11,leakage0.
 8/8real selection/rebuild controls;14search controls PASS.
-Implementation SHA/CI và regression tổng ghi ở checkpoint bàn giao; không gán
-CI INT-01a hoặc local tests thành CI INT-01b.
+Implementation `35258282ff7eed4b413c713510cadc7dff4f149b` đã push main.
+[CI42219245983](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42219245983)
+completed/SUCCESS đúng SHA:1107Python/9Web PASS,lint/format/planning109tasks,
+typecheck/build/browser/proxy SUCCESS;full regression SKIPPED.
+Local241PASS=227compatibility+14search;Ruff/planning110tasks/diff PASS.
+Checkpoint sau chỉ docs/planning, không gán CI implementation cho SHA checkpoint.
+Không gán CI INT-01a hoặc local tests thành CI INT-01b.
 
 ## Handoff Notes
 

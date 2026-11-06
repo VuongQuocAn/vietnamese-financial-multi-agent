@@ -12,7 +12,11 @@ public typed search, Vietnamese normalization, source-bound context/cells/citati
 30real probes:Recall@1/3/5=85,42%/100%/100%,MRR1,no-answer6/6,tablehit11/11,
 leakage0;8selection/rebuild controls PASS;0Gemini/OCR,không M8/verified claims.
 Before/after và substantive samples giữ local `artifacts/evidence/INT-01b/`.
-Implementation SHA/CI exact và regression tổng ghi ở checkpoint bàn giao.
+Implementation `35258282ff7eed4b413c713510cadc7dff4f149b` đã push main;
+[CI42219245983](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42219245983)
+completed/SUCCESS đúng SHA:1107Python/9Web PASS;full regression SKIPPED.
+Local241PASS=227compatibility+14search;Ruff/planning110tasks/diff PASS.
+Checkpoint sau chỉ docs/planning, không gán CI implementation cho SHA checkpoint.
 Giữ GEN-01a/Web pending; không bắt đầu QA-01a.
 Next action: Tech Lead review INT-01b.
 
