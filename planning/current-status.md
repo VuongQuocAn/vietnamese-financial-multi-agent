@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## ARCH-01 — Audit & Integration Plan for Full-Document Grounded QA
+
+Status: **REVIEW**, Owner giao06/11/2026; baseline HEAD/origin/main
+`713c20e762fa6bb6fc560e2582821ae556cc9d99`. SHA bàn giao là commit chứa báo cáo.
+[Report/spec](../docs/arch-01-existing-evidence-qa-integration-audit.md).
+192 exact lookups/7 requirement probes read-only; M1 footer/B09 và BBS B09 caches
+chưa nối QA, M4 thiếu content search, M5 dispatch và M6/M7 typed claims/requirements
+cần extension. Local GEN-01a có discovery71/71 nhưng không full extraction hoặc
+nghiệm thu; OCR cũ PDF binding NOT VERIFIED. Không sửa runtime/gọi Gemini/M8.
+5 planning tests/Ruff/planning108tasks/diff PASS; 91 inputs và 8 inherited files
+giữ hash. Commit audit không gồm phần GEN-01a pending; staged planning107tasks.
+Next action: Tech Lead review ARCH-01 và quyết định INT-01a/source-snapshot binding.
+
 ## GEN-01 — Cross-Company Ingestion & EF-EG Generalization
 
 Status: **DONE**, APPROVED theo quyết định nghiệm thu 06/11/2026.

@@ -23,7 +23,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | QA | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 106 | 98 | 0 | 0 | 8 | 0 | 0 |
+| ARCH | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 107 | 98 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -50,6 +51,13 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+ARCH-01 **REVIEW** — [audit](../docs/arch-01-existing-evidence-qa-integration-audit.md),
+192 exact lookups và 7 requirement probes read-only; không sửa runtime/gọi Gemini.
+GEN-01a BLOCKED: tạm dừng theo Owner; giữ pending code và local discovery71/71,
+chưa nghiệm thu. Next action: Tech Lead review ARCH-01 và source/snapshot binding.
+
+Checkpoint trước:
 
 E2E-01 **DONE** theo review06/11/2026 sau đồng bộ docs; implementation9811a44,
 CI42145875699 SUCCESS đúng SHA,1068Python/9Web PASS. BBS4answered/1partial,
