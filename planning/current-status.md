@@ -2,6 +2,20 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## QA-Fix-02 — M5 Planner & Downstream Recovery
+
+Status: **REVIEW**; Owner giao06/11/2026, baseline main/origin0451b37.
+[Spec](tasks/QA/QA-Fix-02.md), [report](../docs/qa-fix-02-m5-planner-downstream-recovery.md).
+Implementation là commit chứa report này; exact SHA/CI ghi trong local delivery
+checkpoint và final handoff, không tạo checkpoint commit chỉ để tự ghi SHA.
+Semantic policy/raw-effective proposal,partial support,503one-retry/total timeout.
+19+2+1failing trước từng fix;305consumer/133final M5 PASS.15actual Gemini calls,
+50.598tokens/0HTTP503/429;4/7fresh full downstream trên6questions,8Specialists,
+21candidates;Q07/Q08clarify. Source/financial audit PASS;15selected hashes và
+hydrated facts/metrics/reviews unchanged;không hash toàn dataset/OCR/extraction.
+Giữ Web local và accepted artifacts;chưa DONE,provider503 root cause unresolved.
+Next action: Tech Lead review QA-Fix-02 và quyết định nghiệm thu.
+
 ## QA-Fix-01 — Grounded Requirement Coverage & Safe Financial Explanation
 
 Status: **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026.

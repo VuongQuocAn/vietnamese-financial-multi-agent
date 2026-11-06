@@ -1,5 +1,12 @@
 # M5-02 — Evidence-Aware Query Planner
 
+QA-Fix-02 cập nhật behavior so với baseline bên dưới: semantic policy kiểm tra
+registered domains/explicit catalog targets, broad-domain cần clarify; hỗ trợ
+partial targets qua Router và giữ `raw_proposal`/`proposal` cùng additive
+`effective_proposal`. Planner dùng Gateway opt-in tối đa2HTTP attempts cho503,
+total timeout≤60s; metadata ghi từng attempt. Scope/snapshot/accounting gates giữ
+nguyên. [Báo cáo và bằng chứng mới](qa-fix-02-m5-planner-downstream-recovery.md).
+
 Trạng thái **REVIEW**, chưa nghiệm thu. Baseline `33a1f4e`; implementation
 `b5c7a02da82ed38378fbacd370b0a8734dd7fbf3` đã push main; [CI41414639830](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/41414639830) SUCCESS đúng SHA (Python3.12/Web smoke SUCCESS; full regression SKIPPED). Không bắt đầu M5-03.
 

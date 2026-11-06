@@ -77,6 +77,7 @@ jobs:
           tests/unit/test_qa_gateway.py
           tests/unit/test_agent_contracts.py
           tests/unit/test_query_planner.py
+          tests/unit/test_qa_fix_02.py
           tests/unit/test_supervisor.py
           tests/unit/test_profitability_specialist.py
           tests/unit/test_liquidity_leverage_specialist.py

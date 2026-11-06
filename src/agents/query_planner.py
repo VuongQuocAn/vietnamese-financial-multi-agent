@@ -61,7 +61,34 @@ STOP_CONDITIONS = [
 PLANNER_ALIASES = {
     "b02.profit_before_tax": ("lợi nhuận trước thuế",),
     "b02.profit_after_tax": ("lợi nhuận sau thuế",),
+    "b03.operating_cash_flow": ("dòng tiền kinh doanh", "CFO"),
 }
+
+DOMAIN_ALIASES = {
+    "profitability": ("khả năng sinh lời", "sinh lời"),
+    "liquidity_and_leverage": ("tình hình nợ", "đòn bẩy", "thanh khoản"),
+    "cash_flow_and_earnings_quality": ("dòng tiền", "chất lượng lợi nhuận"),
+}
+UNSUPPORTED_ALIASES = {
+    "roe": ("roe", "return on equity"),
+    "roa": ("roa", "return on assets"),
+    "ebitda": ("ebitda",),
+    "forecast": ("dự báo", "dự đoán"),
+    "current_ratio": ("thanh toán hiện hành",),
+    "quick_ratio": ("thanh toán nhanh",),
+}
+
+
+def _question_targets(question):
+    # Match facts and formulas together: a metric phrase must not turn its
+    # embedded operand names into additional independent factual requests.
+    aliases = {
+        key: (*rule.aliases, key, *EXTRA_ALIASES.get(key, ()), *PLANNER_ALIASES.get(key, ()))
+        for key, rule in ITEM_RULES.items()
+    }
+    aliases.update(FORMULA_ALIASES)
+    targets = _matches(normalize(question), aliases)
+    return sorted(targets & FORMULA_ALIASES.keys()), sorted(targets & ITEM_RULES.keys())
 
 
 def _explicit_constraints(question):
@@ -142,7 +169,14 @@ class EvidenceAwareQueryPlanner:
                 "D03-B10 chặn so sánh liên tài liệu, không được chia nhỏ để lách gate. "
                 "revenue_yoy dùng hai kỳ đã bind trong cùng filing, không cần hai filing. "
                 "Không giới hạn nhận diện nhu cầu vào ba metrics: ROE/ROA và capability khác phải "
-                "ghi unsupported_capabilities, intent=unsupported; không chọn metric gần giống. "
+                "ghi unsupported_capabilities; chỉ intent=unsupported nếu không có phần supported. "
+                "Giữ targets/operations supported khi yêu cầu chỉ được hỗ trợ một phần. "
+                "Không chọn metric gần giống. Ba specialist_boundaries đều có sẵn; hai/ba lĩnh vực "
+                "đồng thời được hỗ trợ, không ghi role/capability đã đăng ký vào unsupported_capabilities. "
+                "Phân biệt domain với target: phân tích sinh lời/nợ/dòng tiền chung chưa xác định đủ "
+                "chỉ tiêu thì intent=ambiguous, missing_information nêu chỉ tiêu cần làm rõ. "
+                "Không tự chọn ROA/ROE/EBITDA hoặc một ratio đại diện cho domain. "
+                "Thiếu evidence không phải unsupported capability; backend kiểm tra readiness. "
                 "Mọi direct fact dùng find_financial_facts và get_evidence_sources phụ thuộc fact đó. "
                 "QUY TẮC INTENT: direct_fact chỉ có MỘT chỉ tiêu độc lập. Hai hoặc nhiều chỉ tiêu "
                 "độc lập trong câu hỏi phải là multi_step_analysis, kể cả chỉ truy xuất/đối chiếu "
@@ -167,7 +201,13 @@ class EvidenceAwareQueryPlanner:
             "schema": PlannerProposal.model_json_schema(),
             "canonical_indicators": {
                 key: dict(
-                    aliases=list(r.aliases), statement=r.statement_type, period_types=r.period_types
+                    aliases=list(
+                        dict.fromkeys(
+                            (*r.aliases, *EXTRA_ALIASES.get(key, ()), *PLANNER_ALIASES.get(key, ()))
+                        )
+                    ),
+                    statement=r.statement_type,
+                    period_types=r.period_types,
                 )
                 for key, r in ITEM_RULES.items()
             },
@@ -197,43 +237,35 @@ class EvidenceAwareQueryPlanner:
             ],
             generation=GenerationParameters(temperature=0.0, max_output_tokens=3000),
             output_spec=OutputSpec(format="json"),
-            constraints=RequestConstraints(timeout_seconds=60.0),
+            constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
         )
         start = perf_counter()
-        response = self._gateway.generate(request)
+        attempts = self._gateway.generate_with_recovery(
+            request, max_attempts=context.provider_attempt_limit
+        )
+        if not attempts:
+            raise ValueError("provider_timeout_budget_exhausted")
+        response = attempts[-1].response
         meta = result.llm
-        meta.calls, meta.model = 1, context.model
+        meta.attempts = attempts
+        meta.calls, meta.model = len(attempts), context.model
         meta.latency_ms = (perf_counter() - start) * 1000
         meta.status, meta.usage, meta.cost = response.status, response.usage, response.cost
         meta.provenance, meta.error = response.provenance, response.error
         if isinstance(response.output, JSONOutput):
             result.raw_proposal = response.output.payload
         if response.status != "success" or not isinstance(response.output, JSONOutput):
-            raise ValueError("gateway_response_failed")
+            raise ValueError(
+                response.error.category if response.error else "gateway_response_failed"
+            )
         return result.raw_proposal
 
     def _deterministic(self, question):
         """Catalog alias mode để tiết kiệm quota; không dùng single-target M4 parser."""
         text = normalize(question)
         years, scopes, origins, periods = _explicit_constraints(question)
-        formulas = sorted(_matches(text, FORMULA_ALIASES))
-        items = sorted(
-            _matches(
-                text,
-                {
-                    key: (
-                        *r.aliases,
-                        key,
-                        *EXTRA_ALIASES.get(key, ()),
-                        *PLANNER_ALIASES.get(key, ()),
-                    )
-                    for key, r in ITEM_RULES.items()
-                },
-            )
-        )
-        unsupported = [
-            p for p in ("roe", "roa", "ebitda", "du bao", "thanh toan hien hanh") if p in text
-        ]
+        formulas, items = _question_targets(question)
+        unsupported = sorted(_matches(text, UNSUPPORTED_ALIASES))
         company = next(
             (
                 a
@@ -254,10 +286,10 @@ class EvidenceAwareQueryPlanner:
                 "bang chung",
             )
         )
-        multiple = len(items) + len(formulas) > 1 if not formulas else len(formulas) > 1
+        multiple = len(items) + len(formulas) > 1
         intent = (
             "unsupported"
-            if unsupported or not (formulas or items)
+            if not (formulas or items)
             else (
                 "multi_step_analysis"
                 if multiple
@@ -283,7 +315,7 @@ class EvidenceAwareQueryPlanner:
         if intent == "unsupported":
             return proposal.model_dump(mode="json")
         terminals = []
-        for i, item in enumerate(items if not formulas else []):
+        for i, item in enumerate(items):
             key = f"fact_{i}"
             proposal.operations.extend(
                 [
@@ -325,6 +357,96 @@ class EvidenceAwareQueryPlanner:
             proposal.evidence_needs.append("analysis_bundle")
         return proposal.model_dump(mode="json")
 
+    def _semantic_policy(self, question, proposal, result):
+        """Bounded alias checks; never choose a representative domain metric."""
+        effective = proposal.model_copy(deep=True)
+        lexical = PlannerProposal.model_validate(self._deterministic(question))
+        formulas, items = set(lexical.formula_ids), set(lexical.required_indicators)
+        registered = {
+            normalize(name)
+            for boundary in SPECIALIST_BOUNDARIES
+            for name in (
+                boundary.role,
+                boundary.responsibility,
+                *boundary.capabilities,
+                *DOMAIN_ALIASES[boundary.role],
+            )
+        }
+        removed = [
+            name for name in proposal.unsupported_capabilities if normalize(name) in registered
+        ]
+        effective.unsupported_capabilities = [
+            name for name in proposal.unsupported_capabilities if name not in removed
+        ]
+        for name in lexical.unsupported_capabilities:
+            if normalize(name) not in {normalize(n) for n in effective.unsupported_capabilities}:
+                effective.unsupported_capabilities.append(name)
+        reasons = ["registered_capability_misclassified:" + name for name in removed]
+        domains = _matches(normalize(question), DOMAIN_ALIASES)
+        target_roles = set()
+        for prefix, role in (
+            ("b02.", "profitability"),
+            ("b01.", "liquidity_and_leverage"),
+            ("b03.", "cash_flow_and_earnings_quality"),
+        ):
+            if any(i.startswith(prefix) for i in items):
+                target_roles.add(role)
+        if formulas & {"gross_margin", "revenue_yoy"}:
+            target_roles.add("profitability")
+        if "debt_to_assets" in formulas:
+            target_roles.add("liquidity_and_leverage")
+        unclear = domains - target_roles
+        if unclear or (
+            removed and not (formulas or items) and not effective.unsupported_capabilities
+        ):
+            effective.intent = "ambiguous"
+            effective.missing_information = [
+                "explicit_target_for:" + role for role in sorted(unclear)
+            ] or ["analysis_target"]
+            effective.operations = []
+            effective.formula_ids = sorted(formulas)
+            effective.required_indicators = sorted(items)
+            reasons.append("supported_domain_requires_explicit_targets")
+        elif lexical.unsupported_capabilities and not (formulas or items):
+            effective.intent = "unsupported"
+            effective.formula_ids, effective.required_indicators, effective.operations = [], [], []
+            reasons.append("unsupported_target_cannot_be_substituted")
+        elif proposal.intent == "ambiguous" or proposal.missing_information:
+            # An intentionally empty DAG awaiting clarification is not an omitted
+            # target. Preserve the model's question instead of inventing a plan.
+            reasons.append("proposal_clarification_preserved")
+        elif (
+            (formulas or items)
+            and (proposal.intent == "unsupported" or not proposal.operations)
+            and not proposal.missing_information
+        ):
+            # Only exact catalog aliases. All original metadata/constraints remain
+            # on effective; materialization and accounting gates still run below.
+            for field in (
+                "intent",
+                "formula_ids",
+                "required_indicators",
+                "operations",
+                "evidence_needs",
+            ):
+                setattr(effective, field, getattr(lexical, field))
+            reasons.append("explicit_catalog_targets_recovered")
+        elif formulas - set(proposal.formula_ids) or items - {
+            op.canonical_item_id
+            for op in proposal.operations
+            if op.operation == "find_financial_facts"
+        }:
+            effective.intent = "ambiguous"
+            effective.missing_information = ["proposal_omits_explicit_target"]
+            reasons.append("explicit_targets_not_covered_by_proposal")
+        if reasons:
+            result.trace.append(
+                PlannerTrace(stage="semantic_policy", outcome=effective.intent, reasons=reasons)
+            )
+        else:
+            result.trace.append(PlannerTrace(stage="semantic_policy", outcome="consistent"))
+        return effective
+
     def plan(self, question: str, context: PlannerContext | None = None) -> PlannerResult:
         context = PlannerContext.model_validate_json(
             (context or PlannerContext()).model_dump_json()
@@ -348,6 +470,10 @@ class EvidenceAwareQueryPlanner:
             stage = "proposal_schema"
             proposal = PlannerProposal.model_validate(payload)
             result.proposal = proposal
+            result.trace.append(PlannerTrace(stage=stage, outcome="validated"))
+            stage = "semantic_policy"
+            proposal = self._semantic_policy(question, proposal, result)
+            result.effective_proposal = proposal
             result.query = QuerySpecification(
                 original_question=question,
                 intent=proposal.intent,
@@ -363,7 +489,6 @@ class EvidenceAwareQueryPlanner:
                 cross_document_comparison=proposal.cross_document_comparison,
                 missing_information=proposal.missing_information,
             )
-            result.trace.append(PlannerTrace(stage=stage, outcome="validated"))
             # Chuẩn hóa nhãn route cho yêu cầu evidence tường minh. Targets và DAG
             # vẫn từ Gemini; raw/validated proposal giữ nguyên để chấm understanding.
             if proposal.intent == "calculated_metric" and any(
@@ -419,7 +544,8 @@ class EvidenceAwareQueryPlanner:
             result.reasons.append(reason)
             if missing:
                 result.missing_information.append(missing)
-                query.missing_information.append(missing)
+                if missing not in query.missing_information:
+                    query.missing_information.append(missing)
             if risk:
                 result.risks.append(RiskSignal(code=risk, reason=reason))
             result.trace.append(
@@ -446,6 +572,16 @@ class EvidenceAwareQueryPlanner:
             return None
         if proposal.reporting_scope not in (None, explicit_scope):
             raise ValueError("proposal_invented_or_changed_scope")
+        if (
+            years
+            and context.reporting_year
+            and len(years) == 1
+            and years[0] != context.reporting_year
+        ):
+            stop(
+                "clarification_required", "question_context_year_conflict", missing="reporting_year"
+            )
+            return None
         query.reporting_scope = explicit_scope
         if proposal.snapshot_origin and proposal.snapshot_origin not in origins:
             raise ValueError("proposal_invented_snapshot_origin")
@@ -495,12 +631,18 @@ class EvidenceAwareQueryPlanner:
         if re.search(r"\b(quy|thang|ban nien)\b", normalize(question)):
             stop("unsupported", "non_annual_period_unsupported")
             return None
-        if proposal.intent == "unsupported" or proposal.unsupported_capabilities:
+        if proposal.intent == "unsupported" or (
+            proposal.unsupported_capabilities and not proposal.operations
+        ):
             stop(
                 "unsupported",
                 ";".join(proposal.unsupported_capabilities) or "unsupported_analysis_capability",
             )
             return None
+        if proposal.unsupported_capabilities:
+            result.caveats.extend(
+                "unsupported_portion:" + name for name in proposal.unsupported_capabilities
+            )
         if proposal.intent == "ambiguous" or proposal.missing_information:
             stop(
                 "clarification_required",

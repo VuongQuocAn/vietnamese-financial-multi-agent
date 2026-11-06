@@ -2,55 +2,56 @@
 
 ## Active Task
 
-QA-Fix-01 — Grounded Requirement Coverage & Safe Financial Explanation
+QA-Fix-02 — M5 Planner & Downstream Recovery
 
 ## Status
 
-DONE
+REVIEW
 
 ## Last Verified State
 
-Owner giao06/11/2026, cho phép implement/test/commit/push main, dừng REVIEW.
-Baseline main/origin2432bec; chỉ local web/next-env.d.ts trước sửa và giữ nguyên.
-APPROVED / DONE theo quyết định nghiệm thu06/11/2026; giữ nguyên implementation/evidence.
+Owner giao06/11/2026, cho phép implement/test/live tối đa20attempts/commit/push
+main. Baseline main/origin0451b37; giữ local Web. Dừng REVIEW để Tech Lead nghiệm thu.
 
 ## Completed Work
 
-[Báo cáo](../docs/qa-fix-01-grounded-requirement-coverage.md),
-[spec](tasks/QA/QA-Fix-01.md). Dependent requirements/shared inventory;
-protected explanation từ ACCEPT metadata. Q03formula+operands;Q08revenue+CFO/no verdict.
+[Report](../docs/qa-fix-02-m5-planner-downstream-recovery.md),
+[spec](tasks/QA/QA-Fix-02.md). Raw/effective semantic policy, broad clarify,
+explicit/partial targets,503opt-in retry tối đa1lần trong total timeout.
+Actual6questions/7runs:4full downstream,8Specialists/21candidates;15Gemini attempts,
+50.598tokens,0HTTP503/429. Independent financial/provenance audit PASS.
 
 ## Remaining Work
 
-Không còn việc trong QA-Fix-01; giữ limitations và chờ giao nhiệm vụ mới.
+Chờ Tech Lead review; không tự nghiệm thu DONE hoặc triển khai QA-Fix-03/M8.
 
 ## Modified Files
 
-QA contracts/composer/binding/explanation,40new tests,QA-only runner/docs/planning/CI.
-Artifacts local ignored tại `artifacts/evidence/QA-Fix-01/`; không commit dữ liệu.
-Local web/next-env.d.ts ngoài stage, hash giữ nguyên.
+Planner/contracts,Gateway,Router proposal consumer,Orchestrator usage,27new controls,
+2scripts,docs/planning/CI test entry. Artifacts ignored tại
+artifacts/evidence/QA-Fix-02/; không commit dataset hoặc Web local.
 
 ## Tests
 
-13failing trước sửa;254final PASS;14attacks blocked;10actual BBS+final-policy audit PASS.
-16.849protected hashes unchanged/added0;Ruff changed files/planning103tasks/diff PASS.
-Không full local regression/frontend build/Gemini/M5/OCR/extraction.
-CI42135935859 completed/SUCCESS đúng implementation SHA:1.017Python/9Web smoke PASS;
-full regression manual SKIPPED.
-Phiên nghiệm thu chỉ chạy planning checker/diff check; không chạy lại tests/QA/Gemini.
+19+2+1failing trước từng fix;305focused/consumer PASS trước alias/reason correction,
+133final M5/Gateway PASS sau correction (27new).15selected input hashes và hydrated
+facts/metrics/source reviews unchanged. Ruff changed files/planning/diff kiểm ở
+delivery checkpoint; không full local regression hoặc frontend build.
+Full local format gặp baseline CRLF ở docs/m7-05-information-firewall.md,
+normalized đúng Git HEAD; không sửa ngoài scope, CI checkout LF cần xác minh.
 
 ## Blockers
 
-Không blocker implementation đã biết. Giữ data limitations assets/LNST ACCEPT,
-supported interpretations,quick-ratio,D03-B10. M5/provider503 ngoài phạm vi.
+Không P0/P1 implementation còn biết trong scope. Provider503 root cause unresolved;
+fresh task không gặp503. Q07 broad/Q08 quality criteria clarification đúng policy;
+source uncertainty/reporting scope caveats giữ nguyên; candidates chưa M6 verified.
 
 ## Git Checkpoint
 
-Implementation `310459d137105e8a155fc23c939a64331663dcad` đã push main,
-HEAD/origin khớp sau push;CI42135935859 SUCCESS đúng SHA.
-Checkpoint REVIEW `aba60bc`; phiên nghiệm thu tiếp theo chỉ docs/planning `[skip ci]`,
-không gán CI cho SHA khác; main/origin khớp trước cập nhật trạng thái.
+Implementation là commit chứa report này; exact SHA và exact-SHA CI được ghi ở
+artifacts/evidence/QA-Fix-02/delivery-checkpoint.json và final handoff trực tiếp.
+Không tạo checkpoint commit chỉ để ghi SHA của chính nó; giữ Web local ngoài stage.
 
 ## Exact Next Action
 
-Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự bắt đầu QA-Fix-02.
+Next action: Tech Lead review QA-Fix-02 và quyết định nghiệm thu.

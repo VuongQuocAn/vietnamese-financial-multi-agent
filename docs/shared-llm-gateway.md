@@ -5,6 +5,13 @@ Caller → SharedLLMGateway → transport inject theo provider → revalidate/bi
 Core không import nghiệp vụ. Gateway không tự đọc environment/network/ghi log;
 [Gemini adapter M1-07](gemini-adapter.md) là transport live được inject tường minh.
 
+QA-Fix-02 bổ sung opt-in `generate_with_recovery(request, max_attempts=2)` trả
+`list[GatewayAttempt]` chứa response/provenance/usage và latency từng attempt.
+`generate()` giữ nguyên one-attempt semantics. Chỉ provider HTTP503/category
+provider_unavailable được retry tối đa một lần, backoff0,25s trong total timeout
+request ban đầu. Không retry429/auth/timeout/invalid JSON/schema hoặc đổi model/key.
+Planner dùng opt-in; Specialists hiện vẫn one-attempt. [Báo cáo QA-Fix-02](qa-fix-02-m5-planner-downstream-recovery.md).
+
 ## API và ví dụ chạy offline
 
 `LLMTransport` là callable Protocol: `(LLMRequest) -> LLMResponse`.

@@ -196,9 +196,11 @@ class FinancialMultiAgentOrchestrator:
                 metadata[execution.role] = execution.llm
             output.usage.calls = sum(m.calls for m in metadata.values())
             output.usage.calls_with_unknown_tokens = sum(
-                m.calls
+                sum(a.response.usage.total_tokens is None for a in m.attempts)
+                if m.attempts
+                else m.calls
                 for m in metadata.values()
-                if m.calls and (not m.usage or m.usage.total_tokens is None)
+                if m.attempts or (m.calls and (not m.usage or m.usage.total_tokens is None))
             )
             output.usage.executions_with_unknown_usage = sum(
                 e.usage_unknown for e in output.specialist_executions

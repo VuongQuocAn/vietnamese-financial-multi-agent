@@ -13,6 +13,7 @@ from ..core.llm_contracts import (
     ResponseProvenance,
     Usage,
 )
+from ..core.llm_gateway import GatewayAttempt
 from ..evidence.contracts import Identity
 from ..evidence.snapshots import SnapshotDescriptor
 from .contracts import EvidencePlan, PlanValidation, QuerySpecification, RiskSignal
@@ -69,6 +70,8 @@ class PlannerContext(FinancialModel):
     reporting_scope: Literal["separate", "consolidated"] | None = None
     period: Identity | None = None
     mode: Literal["gemini", "deterministic"] = "gemini"
+    provider_attempt_limit: int = Field(default=2, ge=1, le=2)
+    provider_timeout_seconds: float = Field(default=60.0, gt=0, le=60)
     model: ModelIdentity = Field(
         default_factory=lambda: ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
     )
@@ -83,11 +86,17 @@ class PlannerLLMMetadata(FinancialModel):
     cost: Cost | None = None
     latency_ms: float | None = None
     error: GatewayError | None = None
+    attempts: list[GatewayAttempt] = Field(default_factory=list)
 
 
 class PlannerTrace(FinancialModel):
     stage: Literal[
-        "understanding", "proposal_schema", "catalog_resolution", "materialization", "validation"
+        "understanding",
+        "proposal_schema",
+        "semantic_policy",
+        "catalog_resolution",
+        "materialization",
+        "validation",
     ]
     outcome: Identity
     reasons: list[str] = Field(default_factory=list)
@@ -99,6 +108,8 @@ class PlannerResult(FinancialModel):
     query: QuerySpecification
     raw_proposal: Any = None
     proposal: PlannerProposal | None = None
+    # Original proposal stays intact; consumers use this only after semantic policy.
+    effective_proposal: PlannerProposal | None = None
     plan: EvidencePlan | None = None
     validation: PlanValidation | None = None
     status: Literal["planned", "blocked", "clarification_required", "unsupported", "failed"]

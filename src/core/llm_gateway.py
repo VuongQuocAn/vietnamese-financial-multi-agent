@@ -1,9 +1,11 @@
 """Gateway đồng bộ, provider-neutral; transport được inject, không retry/I/O ngầm."""
 
 from collections.abc import Mapping
+from time import perf_counter, sleep
 from typing import Protocol
 
 from .llm_contracts import (
+    ContractModel,
     Cost,
     ErrorCategory,
     GatewayError,
@@ -23,6 +25,11 @@ class LLMTransport(Protocol):
     def __call__(self, request: LLMRequest) -> LLMResponse:
         """Adapter chịu trách nhiệm timeout/capabilities; trả contract v1."""
         ...
+
+
+class GatewayAttempt(ContractModel):
+    response: LLMResponse
+    latency_ms: float
 
 
 def _failure(request: LLMRequest, category: ErrorCategory) -> LLMResponse:
@@ -76,6 +83,44 @@ class SharedLLMGateway:
     ) -> None:
         self._transports = dict(transports)
         self._schema_registry = schema_registry
+
+    def generate_with_recovery(
+        self, request: LLMRequest, *, max_attempts: int = 2
+    ) -> list[GatewayAttempt]:
+        """Opt-in recovery: one HTTP503 retry within the original total timeout."""
+        if max_attempts not in (1, 2):
+            raise ValueError("invalid_provider_attempt_limit")
+        bound = parse_llm_request(request).model_copy(deep=True)
+        timeout = bound.constraints.timeout_seconds if bound.constraints else None
+        if timeout is None:
+            raise ValueError("recovery_requires_total_timeout")
+        deadline = perf_counter() + timeout
+        attempts = []
+        for number in range(max_attempts):
+            if number:
+                if deadline - perf_counter() <= 0.25:
+                    break
+                sleep(0.25)
+            remaining = deadline - perf_counter()
+            if remaining <= 0:
+                break
+            bound.constraints.timeout_seconds = remaining
+            started = perf_counter()
+            response = self.generate(bound)
+            attempts.append(
+                GatewayAttempt(response=response, latency_ms=(perf_counter() - started) * 1000)
+            )
+            failure = response.error
+            if not (
+                response.status == "error"
+                and failure
+                and failure.category == "provider_unavailable"
+                and failure.origin == "provider"
+                and failure.provider_error_code == "http_503"
+                and failure.retryability != "not_retryable"
+            ):
+                break
+        return attempts
 
     def generate(self, request: LLMRequest) -> LLMResponse:
         """Invalid request ném safe LLMContractError; lỗi runtime trả safe response."""

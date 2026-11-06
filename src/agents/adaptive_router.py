@@ -66,6 +66,7 @@ def _related(key, requirements):
 
 def _targets(planner):
     plan = planner.plan
+    proposal = planner.effective_proposal or planner.proposal
     facts = [r for r in plan.requirements if r.evidence_type == "fact"]
     metrics = [r for r in plan.requirements if r.evidence_type == "metric"]
     # Planner adds metric operands to query.required_indicators. They are inputs,
@@ -75,10 +76,10 @@ def _targets(planner):
         # explicitly retrieve/source operands before calculation; those operations
         # are still supporting evidence. Mixed fact+metric intent remains multi-step.
         facts = []
-    elif planner.proposal:
+    elif proposal:
         explicit = {
             o.canonical_item_id
-            for o in planner.proposal.operations
+            for o in proposal.operations
             if o.operation == "find_financial_facts"
         }
         facts = [r for r in facts if r.canonical_item_id in explicit]
@@ -87,7 +88,7 @@ def _targets(planner):
         operands = {k for m in metrics for k in _ancestors(m.requirement_id, requirements)}
         facts = [r for r in facts if r.requirement_id not in operands]
     targets = sorted([*facts, *metrics], key=lambda r: r.requirement_id)
-    unsupported = set(planner.proposal.unsupported_capabilities if planner.proposal else [])
+    unsupported = set(proposal.unsupported_capabilities if proposal else [])
     unsupported.update(set(planner.query.requested_formula_ids) - {r.formula_id for r in metrics})
     return targets, sorted(unsupported)
 
