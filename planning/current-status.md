@@ -2,6 +2,14 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## E2E-01 — End-to-End Financial QA Pipeline Integration
+
+Status: **IN_PROGRESS**, Owner giao06/11/2026.
+[Spec](tasks/E2E/E2E-01.md), [audit/report](../docs/e2e-01-financial-qa-integration.md).
+Baseline main6bbb1fd; giữ local Web. Tái sử dụng M5/M6/M7, ledger task riêng;
+tối đa25 provider attempts, không OCR/extraction/accepted artifacts changes.
+Next action: hoàn tất targeted tests và BBS actual validation.
+
 ## QA-Fix-02 — M5 Planner & Downstream Recovery
 
 Status: **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026.

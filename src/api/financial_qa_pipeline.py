@@ -1,0 +1,463 @@
+"""Application coordination of M5 → actual M6 → admitted ledger → M7 release."""
+
+import re
+from collections import Counter
+from time import perf_counter
+
+from ..agents import (
+    AdaptiveSpecialistRouter,
+    CashFlowEarningsQualitySpecialist,
+    EvidenceAwareQueryPlanner,
+    FinancialMultiAgentOrchestrator,
+    LiquidityLeverageSpecialist,
+    PlannerContext,
+    ProfitabilitySpecialist,
+    RiskAwareSupervisor,
+)
+from ..outputs.citation_renderer import CitationRenderer
+from ..outputs.firewall_qa_binding import request_inventory
+from ..outputs.information_firewall import InformationFirewall
+from ..outputs.qa_composer import VietnameseQAComposer, _assertion_signature
+from ..outputs.qa_contracts import VietnameseQARequest
+from ..tools.question_understanding import normalize, understand
+from ..verification.adapter import to_verification_input
+from ..verification.ledger import VerifiedClaimLedger, build_verified_claim
+from ..verification.ledger_contracts import VerifiedClaimQuery
+from ..verification.runtime import VerificationRuntime
+from .qa_pipeline_contracts import (
+    CandidateOutcome,
+    FinancialQARequest,
+    FinancialQAResponse,
+    PipelineStage,
+    PipelineTrace,
+)
+
+
+class _RequestLedger:
+    """Cache exact query results only for this synchronous request; invalidate on write."""
+
+    def __init__(self, repository):
+        self.ledger = VerifiedClaimLedger(repository)
+        self.cache = {}
+
+    def find_claims(self, query):
+        key = query.model_dump_json()
+        if key not in self.cache:
+            self.cache[key] = self.ledger.find_claims(query)
+        return self.cache[key].model_copy(deep=True)
+
+
+class FinancialQAPipeline:
+    def __init__(self, *, catalog, documents, repository, gateway=None, orchestrator=None):
+        self.catalog, self.documents, self.repository = catalog, list(documents), repository
+        self.gateway, self.orchestrator = gateway, orchestrator
+        self.renderer = CitationRenderer()
+
+    def _m5(self, request):
+        gateway = self.gateway if request.allow_gateway else None
+        return self.orchestrator or FinancialMultiAgentOrchestrator(
+            planner=EvidenceAwareQueryPlanner(self.catalog, self.documents, gateway),
+            supervisor=RiskAwareSupervisor(self.catalog),
+            router=AdaptiveSpecialistRouter(),
+            specialists={
+                "profitability": ProfitabilitySpecialist(gateway),
+                "liquidity_and_leverage": LiquidityLeverageSpecialist(gateway),
+                "cash_flow_and_earnings_quality": CashFlowEarningsQualitySpecialist(gateway),
+            },
+        )
+
+    def _context(self, request):
+        parsed, issues = understand(request.question)
+        blocked = {
+            "cross_document_comparison_blocked_D03_B10",
+            "unsupported_question_or_formula",
+            "unsupported_formula",
+            "non_annual_period_unsupported",
+            "invalid_period",
+            "multiple_periods_unsupported",
+        } & set(issues)
+        if blocked:
+            return None, "unsupported", sorted(blocked)
+        year = parsed.reporting_year or (int(request.period[:4]) if request.period else None)
+        documents = [
+            d
+            for d in self.documents
+            if (
+                (request.document_id is None or d.document_id == request.document_id)
+                and (request.company_id is None or d.company_id == request.company_id)
+                and (request.document_id is not None or year is None or d.reporting_year == year)
+            )
+        ]
+        # Use declared aliases as constraints, never filenames or text similarity.
+        text = normalize(request.question)
+        mentioned = {
+            d.company_id
+            for d in self.documents
+            if any(
+                re.search(r"(?<!\w)" + re.escape(normalize(a)) + r"(?!\w)", text)
+                for a in d.company_aliases
+            )
+        }
+        if mentioned:
+            documents = [d for d in documents if mentioned == {d.company_id}]
+        identities = {(d.document_id, d.company_id) for d in documents}
+        if len(identities) != 1:
+            return None, "clarification_required", ["document_company_binding_unresolved"]
+        document, company = next(iter(identities))
+        selection = self.catalog.select(document, request.snapshot_id)
+        if selection.status != "selected":
+            return None, "clarification_required", ["snapshot_" + selection.status]
+        snapshot = selection.candidates[0].descriptor.snapshot_id
+        bound = request.model_copy(
+            update=dict(
+                document_id=document,
+                company_id=company,
+                snapshot_id=snapshot,
+            )
+        )
+        if year is None:
+            return None, "clarification_required", ["period_required"]
+        plan, status = request_inventory(bound, [])
+        if status in {"unsupported", "clarification_required"}:
+            return None, status, plan.reasons + plan.missing_information
+        scope = request.reporting_scope or parsed.reporting_scope
+        if scope:
+            resolution = self.catalog.get_reporting_scope(document, snapshot)
+            if (
+                resolution.status != "resolved"
+                or resolution.evidence_status != "confirmed"
+                or resolution.reporting_scope != scope
+            ):
+                return None, "clarification_required", ["requested_scope_unconfirmed"]
+        if not any(
+            (f.document_id, f.snapshot_id, f.company_id) == (document, snapshot, company)
+            and f.context.period[:4] == str(year)
+            for f in self.catalog.facts
+        ):
+            return None, "verification_blocked", ["no_usable_context_evidence"]
+        return bound, None, []
+
+    def run(self, request: FinancialQARequest) -> FinancialQAResponse:
+        request = FinancialQARequest.model_validate_json(request.model_dump_json())
+        started = perf_counter()
+        trace = PipelineTrace(request_id=request.request_id)
+        response = FinancialQAResponse(trace=trace)
+        current = "context"
+
+        def stage(name, call):
+            nonlocal current
+            current = name
+            start = perf_counter()
+            try:
+                value = call()
+            except Exception:
+                trace.stages[name] = PipelineStage(
+                    status="FAILED", latency_ms=(perf_counter() - start) * 1000
+                )
+                raise
+            trace.stages[name] = PipelineStage(
+                status="COMPLETED", latency_ms=(perf_counter() - start) * 1000
+            )
+            return value
+
+        def stop(status, reasons=()):
+            response.status = status
+            trace.errors.extend(reasons)
+            if status == "clarification_required":
+                response.mode = "CLARIFICATION_REQUIRED"
+                response.answer_vi = (
+                    "Cần làm rõ tài liệu, snapshot, kỳ, chỉ tiêu hoặc phạm vi báo cáo."
+                )
+            elif status == "unsupported":
+                response.answer_vi = "Yêu cầu vượt quá khả năng QA đã được hỗ trợ."
+            elif status == "provider_unavailable":
+                response.mode = "PROVIDER_FAILURE"
+                response.answer_vi = "Nhà cung cấp chưa khả dụng; chưa có đủ claim đã xác minh."
+            return response
+
+        def usage(name, metadata):
+            if not metadata.calls:
+                return
+            trace.provider_calls += metadata.calls
+            tokens = metadata.usage.total_tokens if metadata.usage else None
+            trace.known_total_tokens += tokens or 0
+            trace.calls_with_unknown_tokens += (
+                sum(a.response.usage.total_tokens is None for a in metadata.attempts)
+                if metadata.attempts
+                else (metadata.calls if tokens is None else 0)
+            )
+            errors = [a.response.error.code for a in metadata.attempts if a.response.error]
+            if metadata.error and not errors:
+                errors = [metadata.error.code]
+            trace.provider_errors.extend(errors)
+            trace.provider_stages.append(
+                dict(
+                    stage=name,
+                    calls=metadata.calls,
+                    known_total_tokens=tokens,
+                    errors=errors,
+                    model=metadata.model.model_dump(mode="json") if metadata.model else None,
+                    usage=metadata.usage.model_dump(mode="json") if metadata.usage else None,
+                    cost=metadata.cost.model_dump(mode="json") if metadata.cost else None,
+                    provider_error_codes=[
+                        a.response.error.provider_error_code
+                        for a in metadata.attempts
+                        if a.response.error
+                    ],
+                )
+            )
+
+        try:
+            bound, blocked, reasons = stage("context", lambda: self._context(request))
+            if blocked:
+                trace.stages["context"].status = blocked
+                return stop(blocked, reasons)
+            trace.document_id, trace.snapshot_id, trace.company_id = (
+                bound.document_id,
+                bound.snapshot_id,
+                bound.company_id,
+            )
+            parsed, _ = understand(bound.question)
+            qa_request = VietnameseQARequest(
+                **bound.model_dump(include=set(VietnameseQARequest.model_fields)),
+            )
+            # M7 protected deterministic composition is sufficient; no reorder call
+            # on cache hits. All optional semantic calls belong to M5/M6 here.
+            qa_request.allow_gateway = False
+            ledger = _RequestLedger(self.repository)
+            query = VerifiedClaimQuery(
+                company_id=bound.company_id,
+                document_id=bound.document_id,
+                snapshot_id=bound.snapshot_id,
+                period=bound.period or parsed.period,
+            )
+            entries = stage("ledger_lookup", lambda: ledger.find_claims(query).claims)
+            plan, coverage = request_inventory(qa_request, entries)
+            existing_ids = set(plan.selected_verified_claim_ids)
+            response.reused_claims = len(existing_ids)
+            if coverage == "clarification_required":
+                return stop("clarification_required", plan.missing_information)
+            if coverage == "answered" and not bound.force_refresh:
+                response.mode = "CACHE_HIT"
+            elif not bound.allow_gateway:
+                if not existing_ids:
+                    return stop("verification_blocked", ["refresh_requires_allow_gateway"])
+                response.mode = "PARTIAL_REUSE_ONLY"
+                trace.limitations.append("refresh_disabled_missing_verified_coverage")
+            else:
+
+                def refresh():
+                    if existing_ids:
+                        trace.limitations.append("full_request_refresh_fallback")
+                    output = stage(
+                        "m5",
+                        lambda: self._m5(bound).run(
+                            question=bound.question,
+                            context=PlannerContext(
+                                company_id=bound.company_id,
+                                document_id=bound.document_id,
+                                snapshot_id=bound.snapshot_id,
+                                period=bound.period or parsed.period,
+                                reporting_year=parsed.reporting_year or int(bound.period[:4]),
+                                reporting_scope=bound.reporting_scope or parsed.reporting_scope,
+                                model=bound.model,
+                            ),
+                        ),
+                    )
+                    trace.stages["m5"].status = output.status
+                    if output.question != bound.question or any(
+                        getattr(output.context, field) != getattr(bound, field)
+                        for field in ("company_id", "document_id", "snapshot_id")
+                    ):
+                        return stop("verification_blocked", ["m5_request_context_mismatch"])
+                    trace.planner_status = (
+                        output.planner_result.status if output.planner_result else None
+                    )
+                    proposal = (
+                        output.planner_result.effective_proposal if output.planner_result else None
+                    )
+                    trace.planner_intent = proposal.intent if proposal else None
+                    trace.selected_agents = (
+                        output.routing_decision.selected_roles if output.routing_decision else []
+                    )
+                    trace.agent_stages = [e.model_dump(mode="json") for e in output.trace]
+                    trace.executed_agents = list(
+                        dict.fromkeys(
+                            e.role
+                            for e in output.trace
+                            if e.stage == "specialist_execution"
+                            and e.outcome != "skipped"
+                            and any(x.role == e.role for x in output.specialist_executions)
+                        )
+                    )
+                    if output.supervisor_result:
+                        trace.tool_calls = [
+                            dict(
+                                tool=e.operation,
+                                status=e.final_state,
+                                latency_ms=e.latency_ms,
+                                reasons=e.reasons,
+                            )
+                            for e in output.supervisor_result.tool_trace
+                        ]
+                    for name, metadata in output.usage.stages.items():
+                        usage(name, metadata)
+                    if output.status not in {"completed", "partial"}:
+                        status = {
+                            "failed": "provider_unavailable"
+                            if trace.provider_errors
+                            else "internal_error",
+                            "clarification_required": "clarification_required",
+                            "unsupported": "unsupported",
+                        }.get(output.status, "verification_blocked")
+                        return stop(status, output.stop_conditions)
+                    batch = to_verification_input(output)
+                    # Exact duplicates from one upstream result are one candidate.
+                    unique = {}
+                    for claim in batch.claims:
+                        old = unique.get(claim.candidate_id)
+                        if old is not None and old != claim:
+                            return stop("verification_blocked", ["conflicting_duplicate_candidate"])
+                        unique[claim.candidate_id] = claim
+                    batch.claims = list(unique.values())
+                    if len(unique) == len(set(c.candidate_id for c in output.candidates)):
+                        batch.issues = [
+                            i for i in batch.issues if i.code != "duplicate_candidate_id"
+                        ]
+                    trace.candidate_count = len(batch.claims)
+                    # Reject foreign identities/citations before semantic calls or writes.
+                    if any(
+                        (c.company_id, c.document_id, c.snapshot_id)
+                        != (bound.company_id, bound.document_id, bound.snapshot_id)
+                        or any(
+                            (
+                                x.document_id,
+                                x.snapshot_id,
+                                x.source.document_id,
+                                x.source.snapshot_id,
+                            )
+                            != (bound.document_id, bound.snapshot_id) * 2
+                            for x in c.citations
+                        )
+                        for c in batch.claims
+                    ):
+                        return stop("verification_blocked", ["candidate_source_context_mismatch"])
+                    if batch.claims:
+                        runtime = VerificationRuntime(self.catalog, self.gateway, model=bound.model)
+                        histories = stage("m6", lambda: runtime.verify(batch))
+                        for name, metadata in runtime.provider_metadata:
+                            usage("m6_" + name, metadata)
+                        for name, latency in runtime.stage_latency_ms.items():
+                            trace.stages["m6_" + name] = PipelineStage(
+                                status="COMPLETED", latency_ms=latency
+                            )
+                        admitted = []
+                        signatures = {
+                            _assertion_signature(e): e.identity.verified_claim_id for e in entries
+                        }
+                        for history in histories:
+                            final = history.outcome.final
+                            outcome = CandidateOutcome(
+                                candidate_id=history.outcome.parent_candidate_id,
+                                initial_decision=history.outcome.attempts[0].decision,
+                                final_decision=final.decision,
+                                reasons=final.reason_codes,
+                                validation={c.check_id: c.status for c in final.validation.checks}
+                                if final.validation
+                                else {},
+                                evidence_status=final.evidence.status if final.evidence else None,
+                                logic_statuses=[a.status for a in final.logic.assertions]
+                                if final.logic
+                                else [],
+                            )
+                            trace.outcomes.append(outcome)
+                            if final.decision == "ACCEPT":
+                                entry = build_verified_claim(history)
+                                signature = _assertion_signature(entry)
+                                if signature in signatures:
+                                    outcome.admission_status = "idempotent"
+                                    outcome.verified_claim_id = signatures[signature]
+                                else:
+                                    signatures[signature] = entry.identity.verified_claim_id
+                                    admitted.append((history, outcome))
+                        if admitted:
+                            results = stage(
+                                "admission",
+                                lambda: self.repository.admit_many([h for h, _ in admitted]),
+                            )
+                            for (_, outcome), result in zip(admitted, results, strict=True):
+                                outcome.admission_status, outcome.verified_claim_id = (
+                                    result.status,
+                                    result.verified_claim_id,
+                                )
+                                if result.status == "stored":
+                                    response.newly_accepted_claims += 1
+                                if result.reason:
+                                    trace.errors.append(result.reason)
+                        trace.native_decisions = dict(
+                            Counter(o.final_decision for o in trace.outcomes)
+                        )
+                        # Native policy has ABSTAIN/INVESTIGATE, no fabricated REJECT threshold.
+                        response.rejected_claims = trace.native_decisions.get("ABSTAIN", 0)
+                        response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
+                        ledger.cache.clear()
+                        stage("ledger_reload", lambda: ledger.find_claims(query))
+                    if output.conflicts:
+                        return stop("verification_blocked", ["unresolved_candidate_conflicts"])
+                    response.mode = "PARTIAL_REUSE_AND_REFRESH" if existing_ids else "BLOCKED"
+
+                stopped = refresh()
+                if stopped is not None:
+                    if not existing_ids or stopped.status not in {
+                        "clarification_required",
+                        "provider_unavailable",
+                        "unsupported",
+                    }:
+                        return stopped
+                    response.mode = "PARTIAL_REUSE_AND_REFRESH"
+                    trace.limitations.append("refresh_stopped_preserved_verified_partial")
+
+            source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa_request))
+            trace.m7_status = source.status
+            trace.unanswered_requirements = source.unanswered_requirements
+            rendered = stage("citations", lambda: self.renderer.render_qa(source))
+            decision = stage(
+                "firewall",
+                lambda: InformationFirewall(ledger).evaluate_qa(
+                    request=qa_request,
+                    response=source,
+                    rendered=rendered,
+                ),
+            )
+            trace.firewall_decision = decision.decision
+            view = decision.validated_output
+            if decision.release_status != "released":
+                response.answer_vi = view.message_vi
+                return stop(
+                    "firewall_blocked"
+                    if decision.decision == "BLOCK"
+                    else "clarification_required",
+                    decision.blockers,
+                )
+            response.answer_vi, response.citations = view.rendered_text, view.references
+            response.used_verified_claim_ids = view.verified_claim_ids
+            response.caveats, response.limitations = view.caveats, view.limitations
+            response.status = {
+                "answered": "completed_with_caveats" if view.caveats else "completed",
+                "partial": "partial_verified_coverage",
+                "unsupported": "unsupported",
+            }.get(source.status, "verification_blocked")
+            if not view.verified_claim_ids and trace.provider_errors:
+                return stop("provider_unavailable", trace.provider_errors)
+            if (
+                response.mode == "BLOCKED"
+                and response.newly_accepted_claims
+                and view.verified_claim_ids
+            ):
+                response.mode = "FRESH_M5_M6_M7"
+            response.reused_claims = len(set(view.verified_claim_ids) & existing_ids)
+            return response
+        except Exception as error:
+            return stop("internal_error", [current + ":" + type(error).__name__])
+        finally:
+            trace.total_latency_ms = (perf_counter() - started) * 1000

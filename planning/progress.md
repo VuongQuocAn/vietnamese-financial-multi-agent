@@ -21,7 +21,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | QA | 3 | 3 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 104 | 96 | 0 | 0 | 8 | 0 | 0 |
+| E2E | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
+| TOTAL | 105 | 96 | 1 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -48,6 +49,12 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+E2E-01 **IN_PROGRESS**, Owner giao06/11/2026; integration application M5→M6→M7.
+[Spec](tasks/E2E/E2E-01.md), [audit/report](../docs/e2e-01-financial-qa-integration.md).
+Next action: targeted tests và actual BBS validation, tối đa25 provider attempts.
+
+Checkpoint trước:
 
 QA-Fix-02 **DONE**, APPROVED theo quyết định nghiệm thu06/11/2026;
 [report](../docs/qa-fix-02-m5-planner-downstream-recovery.md).

@@ -2,61 +2,46 @@
 
 ## Active Task
 
-QA-Fix-02 — M5 Planner & Downstream Recovery
+E2E-01 ? End-to-End Financial QA Pipeline Integration
 
 ## Status
 
-DONE
+IN_PROGRESS
 
 ## Last Verified State
 
-Owner giao06/11/2026, cho phép implement/test/live tối đa20attempts/commit/push
-main. Baseline main/origin0451b37; giữ local Web.
-APPROVED/DONE theo quyết định nghiệm thu06/11/2026; giữ implementation và limitations.
+Owner giao06/11/2026; baseline main6bbb1fd. Gi? local Web v? accepted artifacts.
+[Spec](tasks/E2E/E2E-01.md), [report](../docs/e2e-01-financial-qa-integration.md).
 
 ## Completed Work
 
-[Report](../docs/qa-fix-02-m5-planner-downstream-recovery.md),
-[spec](tasks/QA/QA-Fix-02.md). Raw/effective semantic policy, broad clarify,
-explicit/partial targets,503opt-in retry tối đa1lần trong total timeout.
-Actual6questions/7runs:4full downstream,8Specialists/21candidates;15Gemini attempts,
-50.598tokens,0HTTP503/429. Independent financial/provenance audit PASS.
+Typed application API, actual M6 proof/revision coordinator, repository admission,
+M7/citations/Firewall; request-scoped query cache; runner/budget v? focused controls.
+E01?E03 fresh release; E01 cache hit0calls.
 
 ## Remaining Work
 
-Không còn việc trong QA-Fix-02; chờ giao nhiệm vụ mới, không tự bắt đầu QA-Fix-03/M8.
+Ho?n t?t E04/E05, independent-reference audit, report, implementation commit v? CI.
 
 ## Modified Files
 
-Planner/contracts,Gateway,Router proposal consumer,Orchestrator usage,27new controls,
-2scripts,docs/planning/CI test entry. Artifacts ignored tại
-artifacts/evidence/QA-Fix-02/; không commit dataset hoặc Web local.
+Application service/contracts, verification runtime, two runners, focused tests,
+CI test entry, planning checker/docs. Kh?ng stage Web ho?c artifacts/dataset/secrets.
 
 ## Tests
 
-19+2+1failing trước từng fix;305focused/consumer PASS trước alias/reason correction,
-133final M5/Gateway PASS sau correction (27new).15selected input hashes và hydrated
-facts/metrics/source reviews unchanged. Ruff changed files/planning/diff PASS ở
-delivery checkpoint; không full local regression hoặc frontend build.
-Full local format gặp baseline CRLF ở docs/m7-05-information-firewall.md,
-normalized đúng Git HEAD; không sửa ngoài scope. CI checkout LF đã PASS.
-CI42141578624 SUCCESS đúng implementation SHA:1.044Python/9Web PASS;
-full regression SKIPPED. Phiên nghiệm thu chỉ planning/diff checks, không chạy lại
-tests/Gemini/OCR/extraction hoặc sửa runtime/accepted artifacts.
+399 focused M5/M6/M7/planning PASS, c?ng2conflict controls PASS; Ruff/planning/diff PASS.
 
 ## Blockers
 
-Không P0/P1 implementation còn biết trong scope. Provider503 root cause unresolved;
-fresh task không gặp503. Q07 broad/Q08 quality criteria clarification đúng policy;
-source uncertainty/reporting scope caveats giữ nguyên; candidates chưa M6 verified.
+Ch?a c? P0 integration; ledger/proof JSON latency c?n ghi nh?n, kh?ng ??i authority.
 
 ## Git Checkpoint
 
-Accepted implementation `3f55629aa6a7a6ff14ad0464db6123bb7f255e6b` đã push main,
-CI42141578624 completed/SUCCESS đúng SHA. HEAD/origin khớp trước cập nhật nghiệm thu.
-Commit nghiệm thu chỉ docs/planning, không gán CI implementation cho SHA mới;
-giữ Web local ngoài stage.
+Ch?a commit; baseline6bbb1fd; raw artifacts E2E ? artifacts/evidence/E2E-01/ (ignored).
+Provider budget durable t?i provider-attempts.jsonl, t?ng t?i ?a25attempts to?n task.
+Kh?ng t? ch?y l?i case ?? c? output ho?c reset budget khi resume.
 
 ## Exact Next Action
 
-Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-Fix-03/M8.
+Next action: ho?n t?t BBS validation v? handoff REVIEW v?i implementation SHA/CI.
