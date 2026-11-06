@@ -4,7 +4,8 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## INT-01a — Existing Evidence Binding & Materialization
 
-Status: **REVIEW**, Owner giao06/11/2026. Implementation đã push main
+Status: **DONE**, Tech Lead APPROVED theo quyết định nghiệm thu06/11/2026.
+Implementation đã push main
 `d531c766d2d56ec66511edc0734716e196f24a62`; baseline `2c389296bdeedb965c1eeeb53dc55ef2bf274b00`.
 [CI42213961131](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42213961131)
 completed/SUCCESS đúng implementation SHA:1093Python/9Web PASS;full regression SKIPPED.
@@ -19,7 +20,9 @@ CI chỉ thêm testINT-01a,hai pending GEN-01a CI entries giữ ngoài commit.
 Artifacts local `artifacts/evidence/INT-01a/final/`,18actual samples trong
 `real-pdf-checks.md`;giữ source identities và quality caveats,không claim verified.
 Ba mẫu bổ sung: `artifacts/evidence/INT-01a/review-closure/substantive-evidence.md`.
-Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
+Phiên chốt DONE chỉ cập nhật planning và chạy planning/diff checks; giữ nguyên
+runtime, artifacts, limitations và pending GEN-01a/Web; không chạy lại Gemini/tests.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu INT-01b.
 
 ## ARCH-01 — Audit & Integration Plan for Full-Document Grounded QA
 

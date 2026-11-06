@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: INT
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: ARCH-01, GEN-01, E2E-01
 - Estimated Complexity: S
@@ -18,6 +18,8 @@ composition pin nguồn/snapshot gốc. Không cần QA cuối.
 Owner giao 06/11/2026. Baseline main `2c38929`; ARCH-01 đã DONE.
 GEN-01a BLOCKED và Web pending giữ nguyên. Vòng chốt Tech Lead cho phép
 commit/push riêng INT-01a và yêu cầu CI trên implementation SHA.
+Tech Lead APPROVED và cho chuyển DONE theo quyết định nghiệm thu06/11/2026;
+phiên chốt chỉ planning, giữ nguyên implementation/evidence và limitations.
 
 ## Inputs
 
@@ -50,7 +52,7 @@ composition preflight → M4 ID/page/text/cells/sources → real PDF spot checks
 - BBS2025 footer/p14/15, BBS2022 p11/18, BBS2024 p21/24 và BCC có real results.
 - Unverified legacy không vào approved catalog; conflict/missing không fallback.
 - Fidelity, idempotence/reload, negative cases và financial compatibility đạt.
-- Artifacts riêng, report có mẫu thật local; dừng REVIEW chờ Tech Lead.
+- Artifacts riêng, report có mẫu thật local; đã qua REVIEW và được Tech Lead nghiệm thu.
 
 ## Required Tests
 
@@ -60,7 +62,8 @@ planning checker, Ruff file sửa, git diff check. Không benchmark/full Gemini 
 ## Risks and Blockers
 
 Financial context không là full prose. BCC narrative ngoài accepted primary pages
-chưa có extraction. CI đúng implementation SHA đã SUCCESS; chờ Tech Lead nghiệm thu.
+chưa có extraction. CI đúng implementation SHA đã SUCCESS; Tech Lead đã nghiệm thu
+phạm vi INT-01a, giữ nguyên các giới hạn coverage và chất lượng đã báo.
 
 ## Implementation Evidence
 
@@ -74,11 +77,13 @@ files unchanged tại run ban đầu.
 completed/SUCCESS đúng implementation SHA:1093Python/9Web PASS;full regression
 SKIPPED. Checkpoint sau chỉ docs/planning, không gán CI cho SHA checkpoint.
 Artifacts `artifacts/evidence/INT-01a/final/`;18mẫu actual trong local report.
-Ruff lint/format, planning109tasks và diff check PASS. Chờ Tech Lead nghiệm thu;
+Ruff lint/format, planning109tasks và diff check PASS tại implementation/review;
 không coi financial accuracy toàn PDF đã đạt. Vòng chốt36focused PASS,34real
 acceptance PASS;3substantive samples,68BBS2025records sau restart và14legacy
 probes not_found. Index108tasks không chứa GEN-01a pending;11file implementation.
+Phiên chuyển DONE chỉ cập nhật planning và chạy planning/diff checks; không chạy
+lại runtime tests, Gemini/OCR hoặc benchmark. Không gán CI cũ cho checkpoint mới.
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu INT-01b.

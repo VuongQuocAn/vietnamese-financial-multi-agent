@@ -24,8 +24,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| INT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 108 | 99 | 0 | 0 | 8 | 0 | 1 |
+| INT | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 108 | 100 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -53,11 +53,13 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-INT-01a **REVIEW**, implementation d531c76 đã push main:151source-bound records/17pages,
+INT-01a **DONE**, Tech Lead APPROVED06/11/2026; implementation d531c76 đã push main:
+151source-bound records/17pages,
 34real acceptance checks,36closure tests PASS;3substantive samples và14legacy
 probes blocked;CI42213961131 SUCCESS đúng SHA:1093Python/9Web PASS;0Gemini/OCR.
 [Report](../docs/int-01a-existing-evidence-binding-materialization.md).
-Next action: Tech Lead nghiệm thu INT-01a trên implementation, CI và ba mẫu thực chất.
+Phiên chốt chỉ planning/diff checks, không chạy lại runtime/Gemini; giữ pending GEN-01a/Web.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu INT-01b.
 
 Checkpoint trước:
 
