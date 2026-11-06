@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: INT
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: INT-01a
 - Estimated Complexity: S
@@ -18,6 +18,9 @@ source/snapshot identity, citations và typed context cho QA-01a sau này.
 Owner giao task đầy đủ ngày06/11/2026, cho phép commit/push main và kiểm tra CI
 đúng implementation SHA. Baseline main `8324d0e`; INT-01a DONE tại `d531c76`.
 GEN-01a BLOCKED; bảo toàn mọi pending runtime/tests/CI/planning và Web local.
+Tech Lead APPROVED, cho chuyển REVIEW → DONE ngày06/11/2026.
+Phiên chốt chỉ đồng bộ docs/planning; không chạy lại Gemini/tests/probes,
+không Vector Database hoặc mở task retrieval mới.
 
 ## Inputs
 
@@ -56,7 +59,8 @@ real source-derived probes → failure fixes/re-evaluation → regression/CI →
 - 20–30 probes thật năm PDF; Recall@1/3/5, MRR, no-answer, tables và latency.
 - Retrieval misses/false positives quan trọng được phân tích và sửa, before/after.
 - Regression liên quan, CI SUCCESS exact implementation SHA; không Gemini/OCR.
-- Không commit private corpus hoặc pending GEN-01a/Web; dừng REVIEW.
+- Không commit private corpus hoặc pending GEN-01a/Web; đã qua REVIEW và được
+  Tech Lead nghiệm thu DONE, giữ nguyên các giới hạn chất lượng/coverage.
 
 ## Required Tests
 
@@ -84,4 +88,4 @@ Không gán CI INT-01a hoặc local tests thành CI INT-01b.
 
 ## Handoff Notes
 
-Next action: Tech Lead review INT-01b; không tự DONE hoặc bắt đầu QA-01a.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu QA-01a.

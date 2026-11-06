@@ -1,6 +1,8 @@
 # INT-01b — Evidence-Aware BM25 Retrieval
 
-Ngày 06/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead nghiệm thu.
+Ngày 06/11/2026 (Asia/Bangkok). **DONE**, Tech Lead APPROVED theo quyết định nghiệm thu.
+Phiên chốt chỉ đồng bộ docs/planning và chạy planning/diff checks; không chạy lại
+Gemini/OCR/tests/probes, không Vector Database hoặc mở task retrieval mới.
 Baseline main `8324d0e`; implementation
 [`35258282ff7eed4b413c713510cadc7dff4f149b`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/35258282ff7eed4b413c713510cadc7dff4f149b)
 đã push main. [CI42219245983](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42219245983)
@@ -197,4 +199,4 @@ boundaries, phân biệt relevance/source binding với semantic claim support;
 không gán tên–chức vụ từ context và không coi table cell là verified fact mới.
 Không bắt đầu QA-01a trong phiên này.
 
-Next action: Tech Lead review INT-01b.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

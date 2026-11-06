@@ -24,8 +24,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| INT | 2 | 1 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 109 | 100 | 0 | 0 | 8 | 0 | 1 |
+| INT | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 109 | 101 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -52,6 +52,16 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+INT-01b **DONE**, Tech Lead APPROVED06/11/2026; accepted implementation3525828
+đã push main, CI42219245983 SUCCESS đúng SHA:1107Python/9Web PASS.
+151units/30real probes;Recall@1/3/5=85,42%/100%/100%,MRR1,no-answer6/6,leakage0.
+[Report](../docs/int-01b-evidence-aware-bm25-retrieval.md).
+Phiên chốt chỉ docs/planning và planning/diff checks; giữ evidence/limitations,
+GEN-01a/Web pending; không chạy lại Gemini/tests hoặc mở task retrieval mới.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
+
+Checkpoint trước:
 
 INT-01a **DONE**, Tech Lead APPROVED06/11/2026; implementation d531c76 đã push main:
 151source-bound records/17pages,
