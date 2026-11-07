@@ -82,12 +82,6 @@ def document_intent(question):
         add("Khoản mục trong bảng tiền", "table_labels", "tiền mặt")
     if "y kien kiem toan" in text:
         add("Ý kiến kiểm toán", "exact_text", "ý kiến kiểm toán")
-    quotes = re.findall(r'["“]([^"”]{3,180})["”]', question)
-    for quote in quotes[:8]:
-        if normalize_search(quote) and not any(r.target == normalize_search(quote) for r in specs):
-            add(quote, "exact_text", quote)
-    if not specs:
-        return "other", specs
     outside_quotes = normalize_search(re.sub(r'["“][^"”]*["”]', "", question))
     mixed = bool(
         re.search(
@@ -95,6 +89,16 @@ def document_intent(question):
             outside_quotes,
         )
     )
+    exact_lookup = re.search(r"\b(o dau|xuat hien|trich nguyen van|tim cum)\b", outside_quotes)
+    if exact_lookup or (not mixed and re.search(r"\bghi\b", outside_quotes)):
+        quotes = re.findall(r'["“]([^"”]{3,180})["”]', question)
+        for quote in quotes[:8]:
+            if normalize_search(quote) and not any(
+                r.target == normalize_search(quote) for r in specs
+            ):
+                add(quote, "exact_text", quote)
+    if not specs:
+        return "other", specs
     if not mixed:
         from ..tools.question_understanding import understand
 

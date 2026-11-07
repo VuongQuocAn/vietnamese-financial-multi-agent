@@ -1,6 +1,9 @@
 """Document proof and release controls with separate logical/original identities."""
 
-from vietnamese_financial_multi_agent.agents.document_qa_contracts import DocumentCandidate
+from vietnamese_financial_multi_agent.agents.document_qa_contracts import (
+    DocumentCandidate,
+    document_intent,
+)
 from vietnamese_financial_multi_agent.api.financial_qa_pipeline import FinancialQAPipeline
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.evidence.composition import EvidencePin, payload_sha256
@@ -151,6 +154,8 @@ def test_document_proof_rejects_tampered_relationship_and_source(tmp_path):
 
 
 def test_document_path_is_offline_even_when_gateway_fails(tmp_path):
+    assert document_intent('BBS 2025 ghi "lợi nhuận sau thuế" là bao nhiêu?')[0] == "other"
+    assert document_intent('BBS 2025 ghi "lợi nhuận sau thuế" ở đâu?')[0] == "document"
     pipeline, _, _ = setup(tmp_path)
 
     class UnavailableGateway:
