@@ -26,8 +26,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | INT | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
 | EXT | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| EF | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 112 | 103 | 0 | 0 | 8 | 0 | 1 |
+| EF | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 112 | 104 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 

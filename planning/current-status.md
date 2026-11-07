@@ -4,7 +4,7 @@ Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EF-01 — Evidence Graph Enrichment & Cross-Snapshot Evidence Linking
 
-Status: **REVIEW**, implementation `b0016c2a12582b17a80f93bb1ce534f2f40b3399` đã push main; baseline `fbda889`.
+Status: **DONE**, Tech Lead APPROVED ngày07/11/2026; implementation `b0016c2a12582b17a80f93bb1ce534f2f40b3399` đã push main; baseline `fbda889`.
 [CI42348988163](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42348988163) completed/SUCCESS đúng SHA:1.131Python/9Web smoke PASS,
 lint/format/planning/typecheck/build đạt;full regression manual SKIPPED.
 [Spec](tasks/EF/EF-01.md), [report](../docs/ef-01-evidence-graph-enrichment.md).
@@ -13,7 +13,9 @@ EF-EG v1 + approved composition overlay, typed bounded M4 graph retrieval;
 284compatibility/29post-source/13graph/8planning PASS;M6 defect INVESTIGATE,
 0claims/citations,old proof rejected. Giữ original sources/caveats,GEN-01a/Web pending;
 không Gemini/OCR hoặc QA-01b. Artifacts local `artifacts/evidence/EF-01/`.
-Next action: chờ Tech Lead nghiệm thu EF-01 ở REVIEW.
+Phiên nghiệm thu chỉ cập nhật planning và checkpoint; chạy planning/diff checks,
+không chạy lại tests/evaluation/Gemini/OCR hoặc bắt đầu QA-01b.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## EXT-01 — Full-Document Evidence Coverage & Extraction Completion
 
