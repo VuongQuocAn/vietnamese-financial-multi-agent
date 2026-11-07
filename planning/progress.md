@@ -25,8 +25,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | INT | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
-| EXT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 111 | 102 | 0 | 0 | 8 | 0 | 1 |
+| EXT | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 111 | 103 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -54,7 +54,11 @@ trên một PDF, công bố riêng trong audit và không suy thành chatbot acc
 
 ## Active task và việc tiếp theo
 
-EXT-01 **REVIEW**, chờ Tech Lead nghiệm thu.
+EXT-01 **DONE**, Tech Lead APPROVED ngày 07/11/2026 sau closure P1/P2.
+Accepted closure `faa662db8bc4008f6fd5c3374e55c7dff1a7df04`,
+[CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
+SUCCESS đúng SHA: 1.117 Python/9 Web smoke PASS. Checkpoint nghiệm thu chỉ
+cập nhật planning và chạy planning/diff checks.
 99 source-bound pages, 18 QA before/after và20source/scope controls;
 [report](../docs/ext-01-full-document-evidence-coverage.md).
 Giữ GEN-01a/Web pending và các OCR/policy limitations; không bắt đầu task khác.

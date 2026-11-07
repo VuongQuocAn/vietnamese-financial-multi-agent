@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EXT
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: QA-01a, INT-01a, INT-01b
 - Estimated Complexity: L
@@ -101,4 +101,8 @@ planning và diff check PASS.
 [CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
 completed/SUCCESS đúng SHA closure: 1.117 Python/9 Web smoke PASS;
 lint/format/planning/typecheck/build đạt; full regression manual SKIPPED.
-Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.
+Tech Lead APPROVED ngày 07/11/2026, cho phép REVIEW → DONE sau closure P1/P2.
+Accepted implementation closure `faa662db8bc4008f6fd5c3374e55c7dff1a7df04`,
+CI42345964918 SUCCESS đúng SHA nêu trên; checkpoint evidence `00dec8d`.
+Phiên nghiệm thu chỉ cập nhật planning và chạy planning/diff checks.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

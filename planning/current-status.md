@@ -4,7 +4,8 @@ Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EXT-01 — Full-Document Evidence Coverage & Extraction Completion
 
-Status: **REVIEW**; implementation `34209fc02c065557cb9b1596c511f4d4feb22471` đã push main.
+Status: **DONE**, Tech Lead APPROVED ngày 07/11/2026;
+implementation `34209fc02c065557cb9b1596c511f4d4feb22471` đã push main.
 [CI42343884351](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42343884351)
 completed/SUCCESS đúng implementation SHA: 1.115 Python và9Web smoke PASS;
 lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
@@ -23,8 +24,9 @@ Q29 tái hiện trên baseline `7187075`: output giống EXT-01, chỉ lệch fi
 [CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
 completed/SUCCESS đúng SHA closure: 1.117 Python/9 Web smoke PASS;
 lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
-Local closure 91 tests PASS; giữ REVIEW theo CONDITIONAL APPROVAL.
-Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.
+Local closure 91 tests PASS; Tech Lead đã nghiệm thu hai điểm closure và cho phép DONE.
+Checkpoint nghiệm thu chỉ cập nhật planning, chạy planning/diff checks.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## QA-01a — Document Claim Verification & End-to-End Integration
 
