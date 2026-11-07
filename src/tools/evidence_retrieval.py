@@ -1,7 +1,7 @@
 """Typed read-only evidence tools trên M3-07 và M4-02; không suy financial claims."""
 
 from copy import deepcopy
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
 
@@ -22,6 +22,9 @@ from .financial_retrieval import (
     FinancialRetrievalTools,
     GetFinancialMetricRequest,
 )
+
+if TYPE_CHECKING:
+    from .graph_retrieval import GetGraphContextRequest, GraphContextResponse
 
 
 class _EvidenceRequest(FinancialModel):
@@ -99,15 +102,40 @@ class EvidenceRetrievalTools:
         self._financial = FinancialRetrievalTools(self._catalog)
         self._selections = {}
         self._search = None
+        self._graph_tools = None
 
     @classmethod
-    def from_composition(cls, manifest, repository, *, document_id, composition_id):
+    def from_composition(
+        cls, manifest, repository, *, document_id, composition_id, financial_catalog=None
+    ):
         index = EvidenceSearchIndex(
             manifest, repository, document_id=document_id, composition_id=composition_id
         )
         tools = cls(index.catalog)
         tools._search = index
+        if financial_catalog is not None:
+            from ..evidence.composition_graph import CompositionGraphView
+            from .graph_retrieval import GraphRetrievalTools
+
+            tools._graph_tools = GraphRetrievalTools(
+                CompositionGraphView(
+                    manifest,
+                    repository,
+                    financial_catalog,
+                    document_id=document_id,
+                    composition_id=composition_id,
+                )
+            )
         return tools
+
+    def get_graph_context(self, request: "GetGraphContextRequest") -> "GraphContextResponse":
+        from .graph_retrieval import GraphContextResponse
+
+        if self._graph_tools is None:
+            return GraphContextResponse(
+                request=request, status="unavailable", reasons=["approved_financial_graph_required"]
+            )
+        return self._graph_tools.get_graph_context(request)
 
     def search_document_evidence(
         self, request: SearchDocumentEvidenceRequest
