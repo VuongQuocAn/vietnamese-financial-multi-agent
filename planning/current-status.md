@@ -2,17 +2,18 @@
 
 Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## QA-01b ? Multi-Agent Financial & Document Evidence Fusion
+## QA-01b — Multi-Agent Financial & Document Evidence Fusion
 
-Status: **REVIEW**, ch?a commit; baseline `0e985d2`.
+Status: **REVIEW**; implementation `808bc77ebd9d7e9cf80f4b116b717ecc312e7630` đã push main; baseline `0e985d2`.
 [Spec](tasks/QA/QA-01b.md), [report](../docs/qa-01b-multi-agent-evidence-fusion.md).
 20/20 real QA:8full/5partial/7refused-clarified; audit216citations,0leakage.
-Financial/document coverage12/14m?i lane; M6ACCEPT35/INVESTIGATE3;
+Financial/document coverage12/14mỗi lane; M6ACCEPT35/INVESTIGATE3;
 Ledger17stored/18idempotent/3rejected. Latest live BBS/BCC full;
-9transport attempts/26506known tokens/1HTTP503 (bounded recovery).
-593broad/138post-fix/20topic/66specialist tests PASS (c? overlap); planning/Ruff/diff ??t.
-CI ch? push ??ng SHA; artifacts local `artifacts/evidence/QA-01b/`.
-Gi? GEN-01a/Web pending; kh?ng b?t ??u GEN-02.
+9transport attempts/26506known tokens/1HTTP503, bounded recovery.
+593broad/138post-fix/20topic/66specialist tests PASS (có overlap).
+[CI42380771375](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42380771375) completed/SUCCESS đúng SHA:1147Python/9Web PASS;
+lint/format/planning/typecheck/build đạt; full regression manual SKIPPED.
+Artifacts local `artifacts/evidence/QA-01b/`; giữ GEN-01a/Web pending.
 Next action: Tech Lead review QA-01b.
 
 ## EF-01 — Evidence Graph Enrichment & Cross-Snapshot Evidence Linking

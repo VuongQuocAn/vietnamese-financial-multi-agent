@@ -67,9 +67,13 @@ hệ nhân quả. Source-quality/accounting restrictions giữ nguyên.
 
 ## Implementation Evidence
 
-Chưa commit; đang chạy targeted validation và real Quick QA.
+Implementation `808bc77ebd9d7e9cf80f4b116b717ecc312e7630` đã push main; [CI42380771375](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42380771375) completed/SUCCESS đúng SHA:
+1147Python/9Web PASS; lint/format/planning/typecheck/build đạt, manual full regression SKIPPED.
+Real QA20/20:8full/5partial/7abstain; audit216citations/0leakage, coverage12/14mỗi lane.
+Latest live BBS/BCC full;9transport attempts/26506known tokens/1HTTP503 có bounded recovery.
+593broad/138post-fix/20topic/66specialist tests PASS (overlap), thêm D03/stale-caveat controls PASS.
 
 ## Handoff Notes
 
 Giữ GEN-01a/Web local ngoài commit. Owner đã cho phép commit/push main.
-Next action: hoàn thành integration và real Quick QA.
+Next action: Tech Lead review QA-01b.
