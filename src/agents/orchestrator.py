@@ -156,6 +156,18 @@ class FinancialMultiAgentOrchestrator:
         self._router = router
         self._specialists = dict(specialists)
 
+    def run_document(self, requirements, manifest, company_id, snapshot_id, tools):
+        from .document_qa import document_candidates
+
+        operations = self._planner.plan_document(requirements, manifest, snapshot_id)
+        bundles = [self._supervisor.execute_document(op, tools) for op in operations]
+        candidates = [
+            candidate
+            for bundle in bundles
+            for candidate in document_candidates(bundle, company_id, manifest)
+        ]
+        return bundles, candidates
+
     def run(self, *, question: str, context: PlannerContext) -> OrchestrationResult:
         started = perf_counter()
         output = OrchestrationResult(question=question, context=context.model_copy(deep=True))

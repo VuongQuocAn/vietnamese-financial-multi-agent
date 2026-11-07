@@ -157,6 +157,12 @@ class EvidenceAwareQueryPlanner:
             raise ValueError("invalid_planner_document_metadata")
         self._gateway = gateway
 
+    @staticmethod
+    def plan_document(requirements, manifest, snapshot_id):
+        from .document_qa import document_operations
+
+        return document_operations(requirements, manifest, snapshot_id)
+
     def _prompt(self, context):
         return {
             "instruction": (

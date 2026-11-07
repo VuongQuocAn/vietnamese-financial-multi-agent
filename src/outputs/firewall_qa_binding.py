@@ -6,6 +6,7 @@ request using the accepted catalog, ambiguity, scope and D03-B10 policies.
 
 import re
 
+from ..agents.document_qa_contracts import document_intent
 from ..tools.question_understanding import normalize, understand
 from .qa_composer import (
     _assertion_signature,
@@ -14,11 +15,84 @@ from .qa_composer import (
     claim_scope,
     understand_requirements,
 )
-from .qa_contracts import GroundedAnswerPlan
+from .qa_contracts import GroundedAnswerPlan, QARequirement
 from .qa_explanation import metric_explanation
 
 
+def _document_inventory(request, entries, intent, specs):
+    plan = GroundedAnswerPlan(
+        requirements=[
+            QARequirement(
+                requirement_id=f"R{i}", kind="document", text=spec.label, target_id=spec.target
+            )
+            for i, spec in enumerate(specs, 1)
+        ]
+    )
+    if intent == "mixed":
+        plan.reasons.append("mixed_financial_document_unsupported")
+        return plan, "unsupported"
+    if not all(
+        (
+            request.document_id,
+            request.company_id,
+            request.composition_id,
+            request.composition_sha256,
+        )
+    ):
+        plan.missing_information.append("approved_document_composition_required")
+        return plan, "clarification_required"
+    parsed, issues = understand(request.question)
+    if (
+        request.period
+        or parsed.period
+        or request.reporting_scope
+        or parsed.reporting_scope
+        or set(issues)
+        & {
+            "invalid_period",
+            "multiple_periods_unsupported",
+            "non_annual_period_unsupported",
+            "cross_document_comparison_blocked_D03_B10",
+            "semantic_intent_requires_gateway",
+        }
+    ):
+        plan.missing_information.append("document_reporting_context_unconfirmed")
+        return plan, "clarification_required"
+    for requirement in plan.requirements:
+        matching = [
+            e
+            for e in entries
+            if e.identity.kind == "document"
+            and e.identity.document_id == request.document_id
+            and e.identity.company_id == request.company_id
+            and e.identity.composition_id == request.composition_id
+            and e.identity.composition_sha256 == request.composition_sha256
+            and (request.snapshot_id is None or e.identity.snapshot_id == request.snapshot_id)
+            and e.accepted_claim.requirement in specs
+            and _matches_target(e, requirement)
+        ]
+        if not matching:
+            requirement.reason = "no_verified_document_claim"
+        elif len({_assertion_signature(e) for e in matching}) > 1:
+            requirement.reason = "ambiguous_verified_claims"
+        else:
+            requirement.verified_claim_ids = [min(e.identity.verified_claim_id for e in matching)]
+    plan.selected_verified_claim_ids = [
+        key for r in plan.requirements for key in r.verified_claim_ids
+    ]
+    if not plan.selected_verified_claim_ids:
+        return plan, "abstained"
+    return plan, "partial" if any(
+        not r.verified_claim_ids for r in plan.requirements
+    ) else "answered"
+
+
 def request_inventory(request, entries):
+    intent, specs = document_intent(request.question)
+    if intent != "other":
+        return _document_inventory(request, entries, intent, specs)
+    if request.composition_id is not None or request.composition_sha256 is not None:
+        return GroundedAnswerPlan(reasons=["composition_requires_document_question"]), "unsupported"
     parsed, issues = understand(request.question)
     plan = GroundedAnswerPlan(requirements=understand_requirements(request.question))
     if "cross_document_comparison_blocked_D03_B10" in issues:

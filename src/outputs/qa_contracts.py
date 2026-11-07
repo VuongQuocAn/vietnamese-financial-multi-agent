@@ -19,6 +19,8 @@ class VietnameseQARequest(FinancialModel):
     document_id: str | None = None
     snapshot_id: str | None = None
     period: str | None = None
+    composition_id: str | None = None
+    composition_sha256: str | None = None
     reporting_scope: Literal["separate", "consolidated"] | None = None
     allow_gateway: bool = False
     model: ModelIdentity = Field(
@@ -36,7 +38,9 @@ class VietnameseQARequest(FinancialModel):
 class QARequirement(FinancialModel):
     requirement_id: str
     text: str
-    kind: Literal["fact", "metric", "explanation", "limitations", "unsupported", "ambiguous"]
+    kind: Literal[
+        "fact", "metric", "explanation", "limitations", "unsupported", "ambiguous", "document"
+    ]
     target_id: str | None = None
     interpretation: bool = False
     aspect: Literal["value", "formula", "operands"] = "value"
@@ -57,7 +61,7 @@ class QAClaimContext(FinancialModel):
     company_id: str
     document_id: str
     snapshot_id: str
-    period: str
+    period: str | None
     reporting_scope: Literal["separate", "consolidated"] | None = None
 
 

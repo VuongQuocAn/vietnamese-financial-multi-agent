@@ -13,9 +13,12 @@ from .evidence_contracts import EvidenceContext
 
 
 class EvidenceContextBuilder:
-    def __init__(self, catalog):
-        self._tools = EvidenceRetrievalTools(catalog)
+    def __init__(self, catalog=None, *, tools=None):
+        self._tools = tools if tools is not None else EvidenceRetrievalTools(catalog)
         self._resolved = {}
+
+    def build_document(self, claim):
+        return [self._resolve(ref, i, document=True) for i, ref in enumerate(claim.references)]
 
     def build(self, claim):
         references = []
@@ -39,7 +42,7 @@ class EvidenceContextBuilder:
             )
         return contexts
 
-    def _resolve(self, ref, index):
+    def _resolve(self, ref, index, *, document=False):
         if ref.kind in {"metric", "lineage"}:
             result = self._tools.get_metric_evidence_lineage(
                 GetMetricEvidenceLineageRequest(metric_id=ref.record_id)
@@ -80,7 +83,15 @@ class EvidenceContextBuilder:
                     context.caveats.extend(
                         "source_review_" + view.status for view in lookup.matches
                     )
-        if ref.kind == "fact":
+        if document and isinstance(record, (TextEvidence, TableEvidence)):
+            from ..evidence.document_claim_support import document_citations, document_projection
+
+            context.content = document_projection(record)
+            context.citations = document_citations(record, context.citations)
+            if context.content:
+                context.content["request_id"] = record.source_metadata.get("request_id")
+            context.available = bool(context.content)
+        elif ref.kind == "fact":
             context.period = record.context.period
             context.content = dict(
                 company_id=record.company_id,
@@ -126,7 +137,7 @@ class EvidenceContextBuilder:
             or c.source.reference is None
             or c.pdf_page != c.source.reference.anchor.page.page
             or c.provenance_level != c.source.reference.provenance_level
-            or c.anchor_id is None
+            or (c.anchor_id is None and not document)
             for c in context.citations
         ):
             context.available = False

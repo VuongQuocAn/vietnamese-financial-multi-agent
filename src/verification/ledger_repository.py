@@ -6,9 +6,10 @@ from threading import RLock
 from ..core.persistence import atomic_json
 from .ledger import LedgerAdmissionError, build_verified_claim, validate_entry
 from .ledger_contracts import (
+    DocumentVerificationHistory,
     LedgerAdmissionResult,
+    LedgerEntry,
     VerificationHistory,
-    VerifiedClaim,
     VerifiedClaimLedgerSnapshot,
     VerifiedClaimQuery,
 )
@@ -56,10 +57,14 @@ class VerifiedClaimRepository:
         snapshot.entries.sort(key=lambda e: e.identity.verified_claim_id)
         return snapshot
 
-    def admit(self, history: VerificationHistory) -> LedgerAdmissionResult:
+    def admit(
+        self, history: VerificationHistory | DocumentVerificationHistory
+    ) -> LedgerAdmissionResult:
         return self.admit_many([history])[0]
 
-    def admit_many(self, histories: list[VerificationHistory]) -> list[LedgerAdmissionResult]:
+    def admit_many(
+        self, histories: list[VerificationHistory | DocumentVerificationHistory]
+    ) -> list[LedgerAdmissionResult]:
         """One atomic snapshot for a batch; each claim still needs its own exact proof.
 
         A payload conflict aborts the write, preserving the existing snapshot.
@@ -96,24 +101,34 @@ class VerifiedClaimRepository:
                 atomic_json(self._path(), snapshot.model_dump(mode="json"))
         return results
 
-    def list_all(self) -> list[VerifiedClaim]:
+    def list_all(self) -> list[LedgerEntry]:
         with self.lock:
             return self._read().entries
 
-    def get(self, verified_claim_id: str) -> VerifiedClaim | None:
+    def get(self, verified_claim_id: str) -> LedgerEntry | None:
         return next(
             (e for e in self.list_all() if e.identity.verified_claim_id == verified_claim_id), None
         )
 
     def list_by_document(
         self, document_id: str, snapshot_id: str | None = None
-    ) -> list[VerifiedClaim]:
+    ) -> list[LedgerEntry]:
         return self.query(VerifiedClaimQuery(document_id=document_id, snapshot_id=snapshot_id))
 
-    def query(self, query: VerifiedClaimQuery) -> list[VerifiedClaim]:
+    def query(self, query: VerifiedClaimQuery) -> list[LedgerEntry]:
         query = VerifiedClaimQuery.model_validate_json(query.model_dump_json())
         matches = []
         for entry in self.list_all():
+            document = entry.identity.kind == "document"
+            if document != (query.kind == "document"):
+                continue
+            if document and (
+                query.composition_id != entry.identity.composition_id
+                or query.composition_sha256 != entry.identity.composition_sha256
+                or query.metric_id is not None
+                or query.canonical_item_id is not None
+            ):
+                continue
             claim = entry.accepted_claim
             if any(
                 value is not None and getattr(entry.identity, field) != value

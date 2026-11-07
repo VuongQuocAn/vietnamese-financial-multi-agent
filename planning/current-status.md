@@ -2,6 +2,13 @@
 
 Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## QA-01a — Document Claim Verification & End-to-End Integration
+
+Status: **IN_PROGRESS**. [Spec](tasks/QA/QA-01a.md),
+[báo cáo](../docs/qa-01a-document-claim-verification.md). Quick QA 10/10 trên
+evidence đã lưu, B09 và bảng tiền ACCEPT, phần ký thiếu proof quan hệ.
+Next action: xác minh CI để bàn giao Tech Lead.
+
 ## INT-01b — Evidence-Aware BM25 Retrieval
 
 Status: **DONE**, Tech Lead APPROVED theo quyết định nghiệm thu06/11/2026.

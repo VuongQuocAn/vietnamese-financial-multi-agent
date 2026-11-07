@@ -18,6 +18,14 @@ class VerificationRuntime:
         self.provider_metadata = []
         self.stage_latency_ms = {}
 
+    @staticmethod
+    def verify_document(candidates, builder, manifest, company_id, snapshot_id):
+        from .document_verification import verify_document_claim
+
+        return [
+            verify_document_claim(c, builder, manifest, company_id, snapshot_id) for c in candidates
+        ]
+
     def _checks(self, batch):
         def timed(name, call):
             start = perf_counter()

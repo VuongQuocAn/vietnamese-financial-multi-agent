@@ -10,14 +10,13 @@ from pydantic import ValidationError
 
 from ..tools.question_understanding import understand
 from ..verification.ledger import VerifiedClaimLedger
-from ..verification.ledger_contracts import VerifiedClaimQuery
 from ..verification.validation_contracts import verification_input_digest
 from .citation_contracts import RenderedCitationOutput
 from .citation_renderer import _digest, validate_rendered_citations
 from .firewall_contracts import FirewallCheckResult, FirewallDecision, ValidatedOutput
 from .firewall_qa_binding import validate_qa_request_binding
 from .grounded_report_writer import _retrieve, validate_grounded_report
-from .qa_composer import _unique, claim_scope, validate_qa_response
+from .qa_composer import _unique, claim_scope, qa_claim_query, validate_qa_response
 from .qa_contracts import QAValidationResult, VietnameseQARequest, VietnameseQAResponse
 from .report_outline_planner import validate_report_outline
 from .report_writer_contracts import GroundedFinancialReport, GroundedReportRequest
@@ -48,6 +47,12 @@ class _BoundedLookup:
         self.queries += 1
         matches = self.ledger.find_claims(query)
         for entry in matches.claims:
+            if query.kind == "document" and (
+                entry.identity.kind != "document"
+                or entry.identity.composition_id != query.composition_id
+                or entry.identity.composition_sha256 != query.composition_sha256
+            ):
+                self.errors.append("ledger_composition_context_mismatch")
             if any(
                 getattr(query, field) is not None
                 and getattr(entry.identity, field) != getattr(query, field)
@@ -73,16 +78,19 @@ def _entry_errors(entries):
             or identity.final_decision_sha256 != verification_input_digest(entry.decision)
         ):
             integrity.append("ledger_identity_content_or_kind_mismatch")
+        source_document = (
+            claim.source_document_id if identity.kind == "document" else identity.document_id
+        )
         if not entry.citations or any(
             (c.document_id, c.snapshot_id, c.source.document_id, c.source.snapshot_id)
-            != (identity.document_id, identity.snapshot_id) * 2
+            != (source_document, identity.snapshot_id) * 2
             for c in entry.citations
         ):
             integrity.append("ledger_citation_source_conflict")
         if any(
             (e.company_id, e.document_id, e.snapshot_id, e.period)
             != (identity.company_id, identity.document_id, identity.snapshot_id, identity.period)
-            for e in claim.supporting_evidence
+            for e in (claim.supporting_evidence if identity.kind != "document" else [])
         ):
             integrity.append("ledger_evidence_context_mismatch")
     return _unique(authority), _unique(integrity)
@@ -167,15 +175,9 @@ class InformationFirewall:
             if mode == "qa":
                 parsed, _ = understand(request.question)
                 entries = (
-                    lookup.find_claims(
-                        VerifiedClaimQuery(
-                            company_id=request.company_id,
-                            document_id=request.document_id,
-                            snapshot_id=request.snapshot_id,
-                            period=request.period or parsed.period,
-                        )
-                    ).claims
-                    if request.snapshot_id and (request.company_id or request.document_id)
+                    lookup.find_claims(qa_claim_query(request, parsed)).claims
+                    if (request.snapshot_id or request.composition_id)
+                    and (request.company_id or request.document_id)
                     else []
                 )
             else:
@@ -241,7 +243,12 @@ class InformationFirewall:
             warnings.append("required_caveats_disclosed")
         if source.status == "partial":
             warnings.append("partial_coverage_disclosed")
-        if any(e.identity.verified_claim_id in ids and claim_scope(e) is None for e in entries):
+        if any(
+            e.identity.kind != "document"
+            and e.identity.verified_claim_id in ids
+            and claim_scope(e) is None
+            for e in entries
+        ):
             warnings.append("reporting_scope_unknown")
         if any(r.provenance_level == "page" for r in rendered.references):
             warnings.append("page_level_location")

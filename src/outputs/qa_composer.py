@@ -51,6 +51,7 @@ STATUS_TEXT = {
     "unsupported": "Yêu cầu vượt quá khả năng QA đã được hỗ trợ.",
 }
 SCOPE_CAVEAT = "Phạm vi báo cáo chưa được xác nhận trong claim đã chọn."
+DOCUMENT_LEDGER_LIMIT = "Nguồn đã đối chiếu chỉ bao phủ các phần có bằng chứng được lưu."
 LEDGER_LIMIT = "Thiếu claim trong ledger không có nghĩa là số liệu không tồn tại trong PDF."
 
 
@@ -68,6 +69,8 @@ def claim_scope(entry: VerifiedClaim):
     Caller intent/batch context and a document year do not confirm filing scope.
     Fact-only claims without an embedded resolution retain unknown scope.
     """
+    if entry.identity.kind == "document":
+        return None
     calc = entry.accepted_claim.calculation
     scope = calc.evidence.reporting_scope if calc and calc.evidence else None
     if (
@@ -84,6 +87,23 @@ def claim_scope(entry: VerifiedClaim):
 def _segment(entry):
     claim, decision = entry.accepted_claim, entry.decision
     scope = claim_scope(entry)
+    if entry.identity.kind == "document":
+        from ..evidence.document_claim_support import OCR_CAVEAT, SOURCE_LIMIT
+
+        return GroundedSegment(
+            segment_id=entry.identity.verified_claim_id,
+            content=entry.content,
+            verified_claim_ids=[entry.identity.verified_claim_id],
+            citations=entry.citations,
+            context=QAClaimContext(
+                company_id=entry.identity.company_id,
+                document_id=claim.source_document_id,
+                snapshot_id=entry.identity.snapshot_id,
+                period=None,
+            ),
+            caveats=_unique([OCR_CAVEAT, *entry.caveats]),
+            limitations=[SOURCE_LIMIT],
+        )
     caveats = _unique(
         entry.caveats
         + claim.caveats
@@ -144,6 +164,8 @@ def _assertion_signature(entry):
     Interpretations still require verbatim content equality.
     """
     claim = entry.accepted_claim
+    if entry.identity.kind == "document":
+        return (claim.claim_type, claim.requirement.target, entry.content)
     calc = claim.calculation
     return json.dumps(
         dict(
@@ -385,6 +407,13 @@ def understand_requirements(question):
 
 
 def _matches_target(entry, requirement):
+    if requirement.kind == "document":
+        return (
+            entry.identity.kind == "document"
+            and entry.accepted_claim.requirement.target == requirement.target_id
+        )
+    if entry.identity.kind == "document":
+        return False
     claim = entry.accepted_claim
     expected_kind = (
         "supported_interpretation"
@@ -423,7 +452,7 @@ def _answer_text(response):
     for segment in response.grounded_segments:
         # Separate context and text: no rewriting or numerical formatting of accepted content.
         ctx = segment.context
-        parts.append(f"Kỳ {ctx.period} — {segment.content}")
+        parts.append(f"Kỳ {ctx.period} — {segment.content}" if ctx.period else segment.content)
     if STATUS_TEXT[response.status]:
         parts.append(STATUS_TEXT[response.status])
     if response.unanswered_requirements:
@@ -446,6 +475,8 @@ def _requirement_label(requirement):
 
     if requirement.target_id is None and requirement.reason is None:
         return requirement.requirement_id
+    if requirement.kind == "document":
+        return f"{requirement.text} (chưa có nguồn đủ căn cứ)"
     target = requirement.target_id
     name = FORMULA_LABELS.get(target) or (
         ITEM_RULES[target].aliases[0] if target in ITEM_RULES else "yêu cầu chưa xác định"
@@ -460,6 +491,12 @@ def _requirement_label(requirement):
         "insufficient_admitted_calculation_metadata": "metadata ACCEPT chưa đủ để giải thích",
     }.get(requirement.reason, "chưa đủ căn cứ hoặc cần làm rõ")
     return f"{requirement.requirement_id} ({name}: {reason})"
+
+
+def _ledger_limit(requirements):
+    return (
+        DOCUMENT_LEDGER_LIMIT if any(r.kind == "document" for r in requirements) else LEDGER_LIMIT
+    )
 
 
 def validate_qa_response(response, retrieved):
@@ -490,7 +527,9 @@ def validate_qa_response(response, retrieved):
         errors.append("caveat_projection_mismatch")
     expected_limits = _unique(c for s in response.grounded_segments for c in s.limitations)
     if response.unanswered_requirements:
-        expected_limits = _unique(expected_limits + [LEDGER_LIMIT])
+        expected_limits = _unique(
+            expected_limits + [_ledger_limit(response.unanswered_requirements)]
+        )
     if response.limitations != expected_limits:
         errors.append("limitation_projection_mismatch")
     answered = [r for r in response.plan.requirements if r.verified_claim_ids]
@@ -525,16 +564,33 @@ def validate_qa_response(response, retrieved):
     if not ids and response.status in ("answered", "partial"):
         errors.append("empty_answer")
     contexts = {
-        (s.context.company_id, s.context.document_id, s.context.snapshot_id)
+        (
+            s.context.company_id,
+            s.context.document_id if s.context.period else None,
+            s.context.snapshot_id if s.context.period else None,
+        )
         for s in response.grounded_segments
     }
     if len(contexts) > 1:
         errors.append("mixed_contexts")
-    if len({s.context.period[:4] for s in response.grounded_segments}) > 1:
+    if len({s.context.period[:4] for s in response.grounded_segments if s.context.period}) > 1:
         errors.append("mixed_reporting_years")
     if response.answer_vi != _answer_text(response):
         errors.append("unapproved_display_text")
     return QAValidationResult(valid=not errors, errors=_unique(errors))
+
+
+def qa_claim_query(request, parsed):
+    document = request.composition_id is not None
+    return VerifiedClaimQuery(
+        company_id=request.company_id,
+        document_id=request.document_id,
+        snapshot_id=request.snapshot_id,
+        period=None if document else request.period or parsed.period,
+        kind="document" if document else None,
+        composition_id=request.composition_id,
+        composition_sha256=request.composition_sha256,
+    )
 
 
 class VietnameseQAComposer:
@@ -555,14 +611,7 @@ class VietnameseQAComposer:
             return self._finish(response, [], status)
         parsed, _ = understand(request.question)
         try:
-            retrieved = self._ledger.find_claims(
-                VerifiedClaimQuery(
-                    company_id=request.company_id,
-                    document_id=request.document_id,
-                    snapshot_id=request.snapshot_id,
-                    period=request.period or parsed.period,
-                )
-            ).claims
+            retrieved = self._ledger.find_claims(qa_claim_query(request, parsed)).claims
         except (ValueError, OSError):
             plan.reasons.append("ledger_read_failed")
             return self._finish(response, [], "abstained")
@@ -573,7 +622,7 @@ class VietnameseQAComposer:
                     ("company_id", request.company_id),
                     ("document_id", request.document_id),
                     ("snapshot_id", request.snapshot_id),
-                    ("period", request.period or parsed.period),
+                    ("period", None if request.composition_id else request.period or parsed.period),
                 )
             )
             or e.verification_status != "verified"
@@ -667,7 +716,9 @@ class VietnameseQAComposer:
         response.caveats = _unique(c for s in response.grounded_segments for c in s.caveats)
         response.limitations = _unique(c for s in response.grounded_segments for c in s.limitations)
         if response.unanswered_requirements:
-            response.limitations = _unique(response.limitations + [LEDGER_LIMIT])
+            response.limitations = _unique(
+                response.limitations + [_ledger_limit(response.unanswered_requirements)]
+            )
         response.missing_information = response.plan.missing_information.copy()
         response.reasons = _unique(
             response.plan.reasons + [r.reason for r in response.unanswered_requirements if r.reason]

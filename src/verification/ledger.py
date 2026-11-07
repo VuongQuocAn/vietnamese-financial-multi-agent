@@ -2,12 +2,16 @@
 
 import hashlib
 
+from ..evidence.composition import payload_sha256
+from .document_verification import DocumentVerificationHistory, judge_document
 from .ledger_contracts import (
     VerificationHistory,
     VerifiedClaim,
     VerifiedClaimIdentity,
     VerifiedClaimMatches,
     VerifiedClaimQuery,
+    VerifiedDocumentClaim,
+    VerifiedDocumentIdentity,
 )
 from .validation_contracts import verification_input_digest
 from .verification_loop import BoundedVerificationLoop
@@ -54,7 +58,36 @@ def replay_history(history: VerificationHistory):
     return history
 
 
-def build_verified_claim(history: VerificationHistory) -> VerifiedClaim:
+def build_verified_claim(history: VerificationHistory | DocumentVerificationHistory):
+    if isinstance(history, DocumentVerificationHistory):
+        history = DocumentVerificationHistory.model_validate_json(history.model_dump_json())
+        decision = history.final
+        claim = decision.original_claim
+        if decision != judge_document(claim, decision.evidence) or decision.decision != "ACCEPT":
+            raise LedgerAdmissionError("document_proof_not_accepted_on_replay")
+        seed = VerifiedDocumentIdentity(
+            verified_claim_id="",
+            source_result_sha256=payload_sha256(
+                [source.model_dump(mode="json") for source in decision.evidence]
+            ),
+            original_candidate_id=claim.candidate_id,
+            accepted_candidate_id=claim.candidate_id,
+            parent_candidate_id=None,
+            company_id=claim.company_id,
+            document_id=claim.document_id,
+            snapshot_id=claim.snapshot_id,
+            composition_id=claim.composition_id,
+            composition_sha256=claim.composition_sha256,
+            content_sha256=hashlib.sha256(claim.content.encode()).hexdigest(),
+            final_decision_sha256=verification_input_digest(decision),
+            policy_version=decision.policy_version,
+        )
+        identity = seed.model_copy(
+            update={"verified_claim_id": "verified:" + verification_input_digest(seed)}
+        )
+        entry = VerifiedDocumentClaim(identity=identity, history=history, payload_sha256="")
+        entry.payload_sha256 = verification_input_digest(entry)
+        return entry
     history = replay_history(history)
     outcome = history.outcome
     final, original = outcome.final, outcome.attempts[0]

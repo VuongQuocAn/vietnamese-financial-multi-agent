@@ -14,13 +14,17 @@ from ..agents import (
     ProfitabilitySpecialist,
     RiskAwareSupervisor,
 )
+from ..agents.document_qa_contracts import document_intent
+from ..evidence.composition import payload_sha256
 from ..outputs.citation_renderer import CitationRenderer
 from ..outputs.firewall_qa_binding import request_inventory
 from ..outputs.information_firewall import InformationFirewall
-from ..outputs.qa_composer import VietnameseQAComposer, _assertion_signature
+from ..outputs.qa_composer import VietnameseQAComposer, _assertion_signature, qa_claim_query
 from ..outputs.qa_contracts import VietnameseQARequest
+from ..tools.evidence_retrieval import EvidenceRetrievalTools
 from ..tools.question_understanding import normalize, understand
 from ..verification.adapter import to_verification_input
+from ..verification.evidence_context import EvidenceContextBuilder
 from ..verification.ledger import VerifiedClaimLedger, build_verified_claim
 from ..verification.ledger_contracts import VerifiedClaimQuery
 from ..verification.runtime import VerificationRuntime
@@ -48,15 +52,29 @@ class _RequestLedger:
 
 
 class FinancialQAPipeline:
-    def __init__(self, *, catalog, documents, repository, gateway=None, orchestrator=None):
+    def __init__(
+        self,
+        *,
+        catalog,
+        documents,
+        repository,
+        gateway=None,
+        orchestrator=None,
+        compositions=(),
+        document_repository=None,
+    ):
         self.catalog, self.documents, self.repository = catalog, list(documents), repository
         self.gateway, self.orchestrator = gateway, orchestrator
         self.renderer = CitationRenderer()
+        self.compositions = tuple(compositions)
+        self.document_repository = document_repository
 
-    def _m5(self, request):
-        gateway = self.gateway if request.allow_gateway else None
+    def _m5(self, request, *, document=False):
+        gateway = self.gateway if request.allow_gateway and not document else None
         return self.orchestrator or FinancialMultiAgentOrchestrator(
-            planner=EvidenceAwareQueryPlanner(self.catalog, self.documents, gateway),
+            planner=EvidenceAwareQueryPlanner(
+                self.catalog, () if document else self.documents, gateway
+            ),
             supervisor=RiskAwareSupervisor(self.catalog),
             router=AdaptiveSpecialistRouter(),
             specialists={
@@ -66,26 +84,18 @@ class FinancialQAPipeline:
             },
         )
 
-    def _context(self, request):
-        parsed, issues = understand(request.question)
-        blocked = {
-            "cross_document_comparison_blocked_D03_B10",
-            "unsupported_question_or_formula",
-            "unsupported_formula",
-            "non_annual_period_unsupported",
-            "invalid_period",
-            "multiple_periods_unsupported",
-        } & set(issues)
-        if blocked:
-            return None, "unsupported", sorted(blocked)
-        year = parsed.reporting_year or (int(request.period[:4]) if request.period else None)
+    def _document_identities(self, request, year, *, strict_year=False):
         documents = [
             d
             for d in self.documents
             if (
                 (request.document_id is None or d.document_id == request.document_id)
                 and (request.company_id is None or d.company_id == request.company_id)
-                and (request.document_id is not None or year is None or d.reporting_year == year)
+                and (
+                    year is None
+                    or (request.document_id is not None and not strict_year)
+                    or d.reporting_year == year
+                )
             )
         ]
         # Use declared aliases as constraints, never filenames or text similarity.
@@ -100,7 +110,22 @@ class FinancialQAPipeline:
         }
         if mentioned:
             documents = [d for d in documents if mentioned == {d.company_id}]
-        identities = {(d.document_id, d.company_id) for d in documents}
+        return {(d.document_id, d.company_id) for d in documents}
+
+    def _context(self, request):
+        parsed, issues = understand(request.question)
+        blocked = {
+            "cross_document_comparison_blocked_D03_B10",
+            "unsupported_question_or_formula",
+            "unsupported_formula",
+            "non_annual_period_unsupported",
+            "invalid_period",
+            "multiple_periods_unsupported",
+        } & set(issues)
+        if blocked:
+            return None, "unsupported", sorted(blocked)
+        year = parsed.reporting_year or (int(request.period[:4]) if request.period else None)
+        identities = self._document_identities(request, year)
         if len(identities) != 1:
             return None, "clarification_required", ["document_company_binding_unresolved"]
         document, company = next(iter(identities))
@@ -136,6 +161,218 @@ class FinancialQAPipeline:
         ):
             return None, "verification_blocked", ["no_usable_context_evidence"]
         return bound, None, []
+
+    def _document_context(self, request):
+        parsed, issues = understand(request.question)
+        if set(issues) & {
+            "cross_document_comparison_blocked_D03_B10",
+            "non_annual_period_unsupported",
+            "invalid_period",
+            "multiple_periods_unsupported",
+            "semantic_intent_requires_gateway",
+        }:
+            return None, None, issues
+        if parsed.period or request.period or request.reporting_scope or parsed.reporting_scope:
+            return None, None, ["document_reporting_context_unconfirmed"]
+        identities = self._document_identities(request, parsed.reporting_year, strict_year=True)
+        if len(identities) != 1:
+            return None, None, ["document_company_binding_unresolved"]
+        document, company = next(iter(identities))
+        manifests = [
+            m
+            for m in self.compositions
+            if m.logical_document_id == document
+            and (request.composition_id is None or m.composition_id == request.composition_id)
+        ]
+        if len(manifests) != 1 or self.document_repository is None:
+            return None, None, ["approved_document_composition_required"]
+        manifest = manifests[0]
+        snapshots = {
+            source.descriptor.snapshot_id
+            for source in manifest.sources
+            if source.status == "verified"
+        }
+        if request.snapshot_id and request.snapshot_id not in snapshots:
+            return None, None, ["document_snapshot_not_in_composition"]
+        digest = payload_sha256(manifest.model_dump(mode="json"))
+        if request.composition_sha256 and request.composition_sha256 != digest:
+            return None, None, ["document_composition_fingerprint_mismatch"]
+        bound = request.model_copy(
+            update=dict(
+                document_id=document,
+                company_id=company,
+                composition_id=manifest.composition_id,
+                composition_sha256=digest,
+            )
+        )
+        return bound, manifest, []
+
+    def _run_document(self, request, requirements, response, stage, stop):
+        trace = response.trace
+        bound, manifest, reasons = stage("context", lambda: self._document_context(request))
+        if reasons:
+            return stop("clarification_required", reasons)
+        trace.document_id = bound.document_id
+        trace.company_id = bound.company_id
+        trace.snapshot_id = bound.snapshot_id
+        trace.composition_id = bound.composition_id
+        trace.planner_intent = "document"
+        trace.limitations.append("document_deterministic_no_gateway")
+        qa_request = VietnameseQARequest(
+            **bound.model_dump(include=set(VietnameseQARequest.model_fields))
+        )
+        qa_request.allow_gateway = False
+        ledger = _RequestLedger(self.repository)
+        query = qa_claim_query(qa_request, None)
+        # Validate current composition pins before a cache hit or fresh retrieval.
+        tools = stage(
+            "composition",
+            lambda: EvidenceRetrievalTools.from_composition(
+                manifest,
+                self.document_repository,
+                document_id=bound.document_id,
+                composition_id=bound.composition_id,
+            ),
+        )
+        try:
+            entries = stage("ledger_lookup", lambda: ledger.find_claims(query).claims)
+            plan, coverage = request_inventory(qa_request, entries)
+            existing_ids = set(plan.selected_verified_claim_ids)
+            if coverage == "answered" and not bound.force_refresh:
+                response.mode = "CACHE_HIT"
+            else:
+                bundles, candidates = stage(
+                    "m5",
+                    lambda: self._m5(bound, document=True).run_document(
+                        requirements, manifest, bound.company_id, bound.snapshot_id, tools
+                    ),
+                )
+                trace.planner_status = "planned"
+                trace.agent_stages = [
+                    {"component": "EvidenceAwareQueryPlanner", "stage": "document_planning"},
+                    {"component": "RiskAwareSupervisor", "stage": "document_search"},
+                    {
+                        "component": "FinancialMultiAgentOrchestrator",
+                        "stage": "document_candidate_generation",
+                    },
+                ]
+                trace.tool_calls = [
+                    dict(
+                        component="RiskAwareSupervisor",
+                        tool=b.operation.operation,
+                        operation_id=b.operation.operation_id,
+                        request=b.operation.request.model_dump(mode="json"),
+                        requirement=b.operation.requirement.target,
+                        status=b.result.status,
+                        reasons=b.result.reasons,
+                        matches=[
+                            dict(
+                                evidence_ids=[e.model_dump(mode="json") for e in m.evidence_ids],
+                                snapshot_id=m.snapshot_id,
+                                pdf_page=m.pdf_page,
+                                reasons=m.ranking_reasons,
+                                limitations=m.limitations,
+                            )
+                            for m in b.result.matches
+                        ],
+                    )
+                    for b in bundles
+                ]
+                trace.document_candidates = [c.model_dump(mode="json") for c in candidates]
+                trace.candidate_count = len(candidates)
+                if any(b.result.status == "unavailable" for b in bundles) and not existing_ids:
+                    return stop("verification_blocked", ["document_search_unavailable"])
+                if candidates:
+                    histories = stage(
+                        "m6",
+                        lambda: VerificationRuntime.verify_document(
+                            candidates,
+                            EvidenceContextBuilder(tools=tools),
+                            manifest,
+                            bound.company_id,
+                            bound.snapshot_id,
+                        ),
+                    )
+                    trace.tool_calls.extend(
+                        dict(
+                            component="EvidenceContextBuilder",
+                            tool="get_evidence_sources",
+                            request={"reference": e.reference.model_dump(mode="json")},
+                            status="resolved" if e.available else "unavailable",
+                            reasons=e.caveats,
+                            snapshot_id=e.snapshot_id,
+                            pages=sorted(
+                                {c.pdf_page for c in e.citations if c.pdf_page is not None}
+                            ),
+                        )
+                        for history in histories
+                        for e in history.final.evidence
+                    )
+                    results = stage("admission", lambda: self.repository.admit_many(histories))
+                    for history, result in zip(histories, results, strict=True):
+                        decision = history.final
+                        trace.outcomes.append(
+                            CandidateOutcome(
+                                candidate_id=decision.original_claim.candidate_id,
+                                initial_decision=decision.decision,
+                                final_decision=decision.decision,
+                                reasons=decision.reasons,
+                                validation={
+                                    k: "pass" if passed else "fail"
+                                    for k, passed in decision.checks.items()
+                                },
+                                evidence_status="supported"
+                                if decision.checks["content_fidelity"]
+                                else "insufficient_evidence",
+                                logic_statuses=[
+                                    "consistent"
+                                    if decision.checks["relationship_support"]
+                                    else "insufficient_context"
+                                ],
+                                admission_status=result.status,
+                                verified_claim_id=result.verified_claim_id,
+                            )
+                        )
+                        if result.status == "stored":
+                            response.newly_accepted_claims += 1
+                    trace.native_decisions = dict(Counter(o.final_decision for o in trace.outcomes))
+                    response.rejected_claims = sum(r.status == "rejected" for r in results)
+                    response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
+                    ledger.cache.clear()
+            source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa_request))
+            trace.m7_status = source.status
+            trace.unanswered_requirements = source.unanswered_requirements
+            rendered = stage("citations", lambda: self.renderer.render_qa(source))
+            firewall = stage(
+                "firewall",
+                lambda: InformationFirewall(ledger).evaluate_qa(
+                    request=qa_request,
+                    response=source,
+                    rendered=rendered,
+                ),
+            )
+            trace.firewall_decision = firewall.decision
+            trace.document_release = dict(
+                requirements=source.plan.model_dump(mode="json"),
+                firewall=firewall.model_dump(mode="json"),
+            )
+            view = firewall.validated_output
+            if firewall.release_status != "released":
+                response.answer_vi = view.message_vi
+                return stop("firewall_blocked", firewall.blockers)
+            response.answer_vi, response.citations = view.rendered_text, view.references
+            response.used_verified_claim_ids = view.verified_claim_ids
+            response.caveats, response.limitations = view.caveats, view.limitations
+            response.reused_claims = len(set(view.verified_claim_ids) & existing_ids)
+            response.status = {
+                "answered": "completed_with_caveats" if view.caveats else "completed",
+                "partial": "partial_verified_coverage",
+            }.get(source.status, "verification_blocked")
+            if response.used_verified_claim_ids and response.mode != "CACHE_HIT":
+                response.mode = "PARTIAL_REUSE_AND_REFRESH" if existing_ids else "FRESH_M5_M6_M7"
+            return response
+        finally:
+            tools.close_search()
 
     def run(self, request: FinancialQARequest) -> FinancialQAResponse:
         request = FinancialQARequest.model_validate_json(request.model_dump_json())
@@ -208,6 +445,16 @@ class FinancialQAPipeline:
             )
 
         try:
+            intent, requirements = document_intent(request.question)
+            if intent == "mixed":
+                trace.planner_intent = intent
+                response = stop("unsupported", ["mixed_financial_document_unsupported"])
+                response.answer_vi = (
+                    "Chưa hỗ trợ câu hỏi kết hợp chỉ tiêu tài chính và nội dung tài liệu."
+                )
+                return response
+            if intent == "document":
+                return self._run_document(request, requirements, response, stage, stop)
             bound, blocked, reasons = stage("context", lambda: self._context(request))
             if blocked:
                 trace.stages["context"].status = blocked

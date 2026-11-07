@@ -9,6 +9,7 @@ from ..agents.specialist_common import ClaimKind
 from ..evidence.retrieval import RetrievalReference
 from .contracts import VerificationInput
 from .decision_contracts import VerificationLoopResult
+from .document_verification import DocumentVerificationHistory
 from .evidence_contracts import EvidenceCriticResult
 from .logic_contracts import FinancialLogicCriticResult
 from .validation_contracts import ValidationResult
@@ -83,6 +84,26 @@ class VerifiedClaim(FinancialModel):
         return self.decision.caveats
 
 
+class VerifiedDocumentIdentity(VerifiedClaimIdentity):
+    period: None = None
+    kind: Literal["document"] = "document"
+    composition_id: str
+    composition_sha256: str
+
+
+class VerifiedDocumentClaim(VerifiedClaim):
+    version: Literal["verified_document_claim_v1"] = "verified_document_claim_v1"
+    identity: VerifiedDocumentIdentity
+    history: DocumentVerificationHistory
+
+    @property
+    def decision(self):
+        return self.history.final
+
+
+LedgerEntry = VerifiedDocumentClaim | VerifiedClaim
+
+
 class LedgerAdmissionResult(FinancialModel):
     status: Literal["stored", "idempotent", "rejected"]
     verified_claim_id: str | None = None
@@ -91,7 +112,7 @@ class LedgerAdmissionResult(FinancialModel):
 
 class VerifiedClaimLedgerSnapshot(FinancialModel):
     version: Literal["verified_claim_ledger_v1"] = "verified_claim_ledger_v1"
-    entries: list[VerifiedClaim] = Field(default_factory=list)
+    entries: list[LedgerEntry] = Field(default_factory=list)
 
 
 class VerifiedClaimQuery(FinancialModel):
@@ -99,7 +120,9 @@ class VerifiedClaimQuery(FinancialModel):
     document_id: str | None = None
     snapshot_id: str | None = None
     period: str | None = None
-    kind: ClaimKind | None = None
+    kind: ClaimKind | Literal["document"] | None = None
+    composition_id: str | None = None
+    composition_sha256: str | None = None
     canonical_item_id: str | None = None
     reference: RetrievalReference | None = None
     metric_id: str | None = None
@@ -107,4 +130,4 @@ class VerifiedClaimQuery(FinancialModel):
 
 class VerifiedClaimMatches(FinancialModel):
     status: Literal["matched", "empty"]
-    claims: list[VerifiedClaim] = Field(default_factory=list)
+    claims: list[LedgerEntry] = Field(default_factory=list)

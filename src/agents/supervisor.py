@@ -193,6 +193,14 @@ class RiskAwareSupervisor:
         self._calculator = FinancialCalculator(self._catalog)
         self._evidence = EvidenceRetrievalTools(self._catalog)
 
+    @staticmethod
+    def execute_document(operation, tools):
+        from .document_qa_contracts import DocumentEvidenceBundle
+
+        return DocumentEvidenceBundle(
+            operation=operation, result=tools.search_document_evidence(operation.request)
+        )
+
     def _dispatch(self, operation, request):
         # Explicit capability list; never arbitrary getattr on an LLM tool name.
         dispatch = {

@@ -103,7 +103,11 @@ def _source_parts(source):
         if (
             len(
                 {
-                    (s.context.company_id, s.context.document_id, s.context.snapshot_id)
+                    (
+                        s.context.company_id,
+                        s.context.document_id if s.context.period else None,
+                        s.context.snapshot_id if s.context.period else None,
+                    )
                     for s in segments
                 }
             )

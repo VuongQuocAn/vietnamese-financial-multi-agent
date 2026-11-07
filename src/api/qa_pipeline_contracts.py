@@ -64,6 +64,9 @@ class PipelineTrace(FinancialModel):
     executed_agents: list[str] = Field(default_factory=list)
     agent_stages: list[dict] = Field(default_factory=list)
     tool_calls: list[dict] = Field(default_factory=list)
+    composition_id: str | None = None
+    document_candidates: list[dict] = Field(default_factory=list)
+    document_release: dict = Field(default_factory=dict)
     candidate_count: int = 0
     outcomes: list[CandidateOutcome] = Field(default_factory=list)
     native_decisions: dict[str, int] = Field(default_factory=dict)
