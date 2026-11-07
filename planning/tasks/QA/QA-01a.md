@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: INT-01b
 - Estimated Complexity: M
@@ -57,8 +57,9 @@ opinion. Luồng document chạy xác định với saved evidence.
 
 ## Implementation Evidence
 
-Xem báo cáo và artifacts local tại `artifacts/evidence/QA-01a/final-run/`.
+Implementation `d2b28634adc6a24b0d019de00897cbf3ce26a781`, [CI42318884258](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42318884258) SUCCESS.
+Quick QA 10/10, 67 targeted PASS sau bản sửa định tuyến. Xem báo cáo và artifacts local tại `artifacts/evidence/QA-01a/verified-run/`.
 
 ## Handoff Notes
 
-Next action: kiểm tra hồi quy và CI để bàn giao Tech Lead.
+Next action: Tech Lead nghiệm thu QA-01a.

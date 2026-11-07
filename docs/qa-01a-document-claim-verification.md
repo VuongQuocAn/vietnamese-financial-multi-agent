@@ -85,12 +85,16 @@ opinion, chọn PDF mơ hồ, câu mixed, truy vấn nhầm công ty và câu ba
   tra lại để chặn việc trả lời phần document rồi bỏ phần còn lại.
 
 Trace đầy đủ, expected và actual answers nằm trong
-`artifacts/evidence/QA-01a/final-run/quick-qa.json` (local). Median end-to-end
-khoảng 0,96 giây trên máy local, kể cả hai ca dừng ở context/routing. 0 Gemini
+`artifacts/evidence/QA-01a/verified-run/quick-qa.json` (local). Median end-to-end
+khoảng 0,79 giây trên máy local, kể cả hai ca dừng ở context/routing. 0 Gemini
 calls, 0 tokens, 0 OCR. Luồng xác định chạy được với Gateway giả lập lỗi; chưa
 xác minh provider live hay semantic planner/critic bằng task này.
 
 ## 11. Hồi quy
+
+426 test local đạt trước bản sửa định tuyến. Sau sửa, 67 test liên quan
+đạt và Quick QA đạt lại 10/10. Sáu test planning đạt. Implementation `d2b28634adc6a24b0d019de00897cbf3ce26a781`
+đã push main. CI trên đúng SHA đạt SUCCESS ở Python 3.12 và Web smoke. [CI42318884258](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42318884258)
 
 Hồi quy local bao phủ planner, supervisor, orchestrator, validators, critics,
 Judge, Ledger, Composer, Firewall, citation và financial pipeline. Ba test
@@ -100,6 +104,6 @@ candidate chưa ACCEPT, request khác, partial và cache khi Gateway lỗi.
 ## 12. Giới hạn
 
 Nguồn ký BBS có nhãn và tên tách rời, chưa có liên kết vị trí được xác minh.
-Approved catalog của ca kiểm toán chưa có đoạn opinion đủ để xác định cả ý
-kiến và ngoại trừ. QA hiện hỗ trợ các mẫu ý định document xác định và tìm cụm
+Đoạn ý kiến kiểm toán nằm ở BBS 2025 trang PDF 4 (trang in 3), ngoài phạm vi
+composition của ca kiểm thử. Vị trí được đối chiếu qua ảnh render từ PDF. QA hỗ trợ mẫu định tuyến xác định và tìm cụm
 trích dẫn, chưa hiểu mọi cách hỏi tự do. Hybrid QA thuộc QA-01b.

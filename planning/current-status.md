@@ -4,10 +4,12 @@ Cập nhật 2026-11-06 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## QA-01a — Document Claim Verification & End-to-End Integration
 
-Status: **IN_PROGRESS**. [Spec](tasks/QA/QA-01a.md),
+Status: **REVIEW**. [Spec](tasks/QA/QA-01a.md),
 [báo cáo](../docs/qa-01a-document-claim-verification.md). Quick QA 10/10 trên
 evidence đã lưu, B09 và bảng tiền ACCEPT, phần ký thiếu proof quan hệ.
-Next action: xác minh CI để bàn giao Tech Lead.
+Implementation `d2b28634adc6a24b0d019de00897cbf3ce26a781` đã push main.
+[CI42318884258](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42318884258) SUCCESS đúng SHA. Local 426 PASS trước bản sửa định tuyến, 67 PASS sau sửa và planning 6 PASS.
+Next action: Tech Lead nghiệm thu QA-01a.
 
 ## INT-01b — Evidence-Aware BM25 Retrieval
 
