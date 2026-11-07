@@ -14,7 +14,12 @@ lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
 M6ACCEPT3→12claims, M7cited3→10câu;20controls PASS.62targeted và25post-resume PASS.
 Financial36/36 đạt; extended Q29 gold role stale được ghi riêng. Giữ OCR caveats,
 M6 gates, financial artifacts và GEN-01a/Web pending; không tuyên bố full accuracy.
-Next action: Tech Lead review code/source coverage/QA và limitations.
+Closure theo CONDITIONAL APPROVAL chưa commit: negative thực tế BBS 2025 trang 13
+tái hiện ACCEPT sai; source-quality gate `pdf_review:*` đưa về INVESTIGATE,
+0 claim/citation, proof cũ bị chặn admission/replay. Gate bảo thủ theo trang review.
+Q29 tái hiện trên baseline `7187075`: output giống EXT-01, chỉ lệch fixture cũ
+`semantic_role=null` so với `revenue`; không phải hồi quy EXT-01.
+Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.
 
 ## QA-01a — Document Claim Verification & End-to-End Integration
 

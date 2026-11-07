@@ -37,8 +37,10 @@ integration; targeted tests và planning. Owner yêu cầu commit/push main và 
 
 ## Out of Scope
 
-Không sửa M6 gates, financial facts, EF-EG, accepted artifacts, GEN-01a/Web;
+Không sửa financial facts, EF-EG, accepted artifacts, GEN-01a/Web;
 không M8/EF-01/QA-01b, agent mới hoặc RAG mới.
+Tech Lead cho phép ngoại lệ closure ngắn: negative QA trên OCR sai trang 13,
+source-quality gate M6 nếu cần và xác minh Q29 trên baseline trước EXT-01.
 
 ## Implementation Steps
 
@@ -53,6 +55,8 @@ materialization/composition → BM25/QA before-after → regression → commit/p
 - [x] Composition giữ accepted evidence; BM25 scope đúng.
 - [x] Có 18 real QA cases, negative controls, financial regression và CI đúng SHA; extended Q29 limitation được ghi riêng.
 - [x] Báo usage/coverage trung thực; dừng REVIEW, không còn missing page bắt buộc.
+- [x] Closure P1: đoạn OCR sai BBS 2025 trang 13 không được M6 ACCEPT hoặc M7 xuất citation; proof cũ bị chặn admission/replay.
+- [x] Closure P2: tái hiện Q29 bằng code baseline `7187075`, chỉ lệch fixture ở `semantic_role` như EXT-01.
 
 ## Required Tests
 
@@ -84,4 +88,13 @@ parser limitations; không tuyên bố full financial/OCR accuracy.
 
 ## Handoff Notes
 
-Next action: Tech Lead review source coverage, code, QA traces và limitations; không bắt đầu task khác.
+Closure chưa commit: source-quality gate theo cờ `pdf_review:*`, không sửa OCR;
+review hiện gắn cờ theo trang nên gate chặn toàn bộ records có cờ trên trang đó.
+Negative thực tế trước sửa ACCEPT 1/citation 1; sau sửa INVESTIGATE `source_quality`,
+ACCEPT 0/citation 0; admission/replay proof cũ đều rejected. Q29 baseline
+`718707503a55fccc023d465645506954ea0df26b` giống hệt kết quả EXT-01, chỉ lệch
+fixture `semantic_role=null` so với `revenue`; giữ nguyên fixture lịch sử.
+Traces local: `artifacts/evidence/EXT-01/closure/`.
+Local closure 91 tests PASS (document QA/ledger/firewall); Ruff lint/format,
+planning và diff check PASS. CI closure chờ implementation commit.
+Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.

@@ -197,4 +197,40 @@ Không tuyên bố full OCR fidelity hoặc QA accuracy tăng chỉ từ page co
 
 Không triển khai EF-01/QA-01b/M8. Bàn giao source-bound compositions, review caveats
 và trace để Tech Lead nghiệm thu. GEN-01a/Web pending giữ riêng ngoài commit.
-Next action: Tech Lead review code, source samples, coverage và các limitations trên.
+Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.
+
+## 15. Closure theo CONDITIONAL APPROVAL
+
+Tech Lead giữ EXT-01 ở REVIEW, cho phép source-quality gate M6 và đối chiếu Q29.
+Closure chưa commit; không gọi Gemini, chạy lại extraction hoặc hash audit.
+
+P1 dùng chính `BBS_2025/responses/page-13.json`, `/text_elements/9`, truy vấn
+`BBS 2025 ghi “thuế thu nhập lại phải trả” ở đâu?`. Đây là đoạn thiếu “hoãn”
+đã đối chiếu PDF trang 13, không phải passage synthetic. Trước sửa M6 ACCEPT 1,
+M7 xuất một citation; caveat chưa đủ để chặn lỗi. Sau sửa M6 INVESTIGATE với
+`source_quality`, không admission, claim được dùng hoặc citation xuất ra.
+Proof ACCEPT cũ bị rejected cả admission và đọc lại ledger
+(`document_proof_not_accepted_on_replay`). Trace trước/sau và nguyên văn nguồn
+giữ local tại `artifacts/evidence/EXT-01/closure/{before,after}/negative-qa.json`.
+
+Gate dùng cờ lỗi `pdf_review:*` lấy từ evidence đã resolve, không phụ thuộc việc
+candidate có lặp lại caveat. Review hiện gắn cờ theo trang, nên mọi record mang cờ
+trên trang lỗi đều không được ACCEPT, kể cả phần khác có thể đọc đúng. Đây là
+giới hạn bảo thủ có chủ đích; chưa triển khai phân vùng review. Các caveat thông
+thường không mang cờ lỗi PDF không tự động bị chặn. Không thay raw OCR,
+repository, composition hoặc bản recovery đã bị loại. Proof v1 sạch giữ nguyên
+để ledger cũ hợp lệ vẫn replay. Các số QA ở phần trước là kết quả trước closure,
+không dùng làm kết quả sau gate.
+
+P2 xuất riêng code baseline trước EXT-01
+`718707503a55fccc023d465645506954ea0df26b`, import package/adapter từ bản xuất đó,
+chạy duy nhất Q29 với cùng persisted inputs. Toàn bộ output baseline bằng output
+EXT-01; so fixture lịch sử chỉ khác `/matches/0/record/semantic_role`:
+expected `null`, baseline và EXT-01 đều `revenue`. Bằng chứng tại
+`artifacts/evidence/EXT-01/closure/Q29-baseline.json`; không sửa fixture và không
+báo extended suite PASS. Không phải hồi quy do EXT-01.
+
+Local closure: 91 tests PASS trong `test_document_qa_pipeline.py`,
+`test_verified_claim_ledger.py`, `test_information_firewall.py`, gồm hai cases mới
+cho known PDF defect và caveat thông thường. Ruff lint/format, planning và
+`git diff --check` PASS. CI closure sẽ được ghi theo đúng implementation SHA.

@@ -85,6 +85,11 @@ def judge_document(claim, contexts):
         "relationship_support": relationship_ok,
         "source_caveats": set(claim.caveats) <= source_caveats,
     }
+    # Matching saved OCR is insufficient when PDF review has identified a defect.
+    # Reviews currently flag whole-page projections; fail closed for those records.
+    # Leave clean v1 proofs unchanged so existing valid ledger entries still replay.
+    if any(caveat.startswith("pdf_review:") for caveat in source_caveats):
+        checks["source_quality"] = False
     reasons = [key for key, passed in checks.items() if not passed]
     return DocumentDecision(
         original_claim=claim,

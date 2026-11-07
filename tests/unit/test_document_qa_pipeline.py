@@ -1,5 +1,6 @@
 """Document proof and release controls with separate logical/original identities."""
 
+import pytest
 from vietnamese_financial_multi_agent.agents.document_qa_contracts import (
     DocumentCandidate,
     document_intent,
@@ -26,13 +27,14 @@ from .test_evidence_composition import sample
 SOURCE_DOC = "sha256:" + "a" * 64
 
 
-def setup(tmp_path):
+def setup(tmp_path, *, source_issues=()):
     manifest, sources, role = sample(tmp_path / "evidence")
     role.document_id = SOURCE_DOC
     role.sources[0].document_id = SOURCE_DOC
     manifest.sources[0].descriptor.document_id = SOURCE_DOC
     manifest.financial_snapshot.document_id = SOURCE_DOC
     role.raw_text = "Kế toán trưởng: Nguyễn Văn An"
+    role.resolution_issues.extend(source_issues)
     nearby_role = role.model_copy(
         deep=True, update={"local_evidence_id": "text/1", "raw_text": "Giám đốc"}
     )
@@ -171,3 +173,40 @@ def test_document_path_is_offline_even_when_gateway_fails(tmp_path):
     assert cached.mode == "CACHE_HIT"
     assert cached.citations == fresh.citations
     assert cached.used_verified_claim_ids == fresh.used_verified_claim_ids
+
+
+@pytest.mark.parametrize("known_defect", [False, True])
+def test_document_source_quality_gate_and_ledger_replay(tmp_path, known_defect):
+    # A source review flag is independent of whether the candidate repeats it.
+    issue = "pdf_review:word_omitted" if known_defect else "geometry_not_independently_verified"
+    pipeline, manifest, _ = setup(tmp_path, source_issues=[issue])
+    answer = pipeline.run(FinancialQARequest(question="Ai là kế toán trưởng?"))
+    assert answer.trace.candidate_count == 1, answer.trace.errors
+    if not known_defect:
+        assert answer.newly_accepted_claims == 1
+        assert VerifiedClaimRepository(pipeline.repository.root).list_all()
+        return
+    assert answer.trace.native_decisions == {"INVESTIGATE": 1}
+    assert answer.newly_accepted_claims == 0
+    assert not answer.citations
+    assert not answer.used_verified_claim_ids
+    candidate = DocumentCandidate.model_validate(answer.trace.document_candidates[0])
+    candidate.caveats = []
+    tools = EvidenceRetrievalTools.from_composition(
+        manifest, pipeline.document_repository, document_id="logical", composition_id="approved"
+    )
+    try:
+        history = verify_document_claim(
+            candidate, EvidenceContextBuilder(tools=tools), manifest, "test", None
+        )
+        assert history.final.checks["source_quality"] is False
+        assert history.final.reasons == ["source_quality"]
+        # Reconstruct the formerly accepted proof: its missing quality check must
+        # fail admission/replay, even with an exact quotation and valid citations.
+        old = history.model_copy(deep=True)
+        old.final.checks.pop("source_quality")
+        old.final.decision = "ACCEPT"
+        old.final.reasons = ["exact_source_support"]
+        assert VerifiedClaimRepository(tmp_path / "restart").admit(old).status == "rejected"
+    finally:
+        tools.close_search()
