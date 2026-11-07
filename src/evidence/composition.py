@@ -131,7 +131,7 @@ def load_composition(manifest, repository, *, document_id, composition_id):
         descriptors[key] = descriptor
 
     add(manifest.financial_snapshot)
-    rows, seen = [], set()
+    rows, seen, persisted_documents = [], set(), {}
     for source in manifest.sources:
         if source.status != "verified":
             continue
@@ -140,12 +140,13 @@ def load_composition(manifest, repository, *, document_id, composition_id):
         if not source.pages or not source.artifact_sha256:
             raise ValueError("missing_source_fingerprint")
         add(source.descriptor)
-        persisted = {
-            e.evidence_identity().model_dump_json(): e
-            for e in repository.list_by_document(
-                source.descriptor.document_id, source.descriptor.snapshot_id
-            )
-        }
+        source_document = source.descriptor.document_id
+        if source_document not in persisted_documents:
+            persisted_documents[source_document] = {
+                e.evidence_identity().model_dump_json(): e
+                for e in repository.list_by_document(source_document)
+            }
+        persisted = persisted_documents[source_document]
         for pin in source.evidence:
             key = pin.identity.model_dump_json()
             if key in seen:

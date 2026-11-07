@@ -164,13 +164,15 @@ def adapt_to_m1(components, image):
     )
 
 
-def ingest_page(service, page, *, credential_ref):
+def ingest_page(service, page, *, credential_ref, document_mode=False, document_focus=None):
     record = extract_structured(
         service,
         page.image,
         credential_ref=credential_ref,
         model=MODEL,
         component_mode=True,
+        document_mode=document_mode,
+        document_focus=document_focus,
     )
     components = record.get("output")
     response = record.get("response", {})

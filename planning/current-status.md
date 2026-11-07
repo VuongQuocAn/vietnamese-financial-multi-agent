@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## EXT-01 — Full-Document Evidence Coverage & Extraction Completion
+
+Status: **REVIEW**; implementation chưa commit, chờ push/CI đúng SHA.
+[Spec](tasks/EXT/EXT-01.md), [report](../docs/ext-01-full-document-evidence-coverage.md).
+99 source-bound pages/1.787 records, giữ151records cũ; 89 trang mới/18cachepages;
+107attempts/648.845known tokens/7HTTP503, mandatory gaps0. 18QA: retrieval4/16→16/16,
+M6ACCEPT3→12claims, M7cited3→10câu;20controls PASS.62targeted và25post-resume PASS.
+Financial36/36 đạt; extended Q29 gold role stale được ghi riêng. Giữ OCR caveats,
+M6 gates, financial artifacts và GEN-01a/Web pending; không tuyên bố full accuracy.
+Next action: Tech Lead review code/source coverage/QA và limitations.
+
 ## QA-01a — Document Claim Verification & End-to-End Integration
 
 Status: **DONE**, Tech Lead APPROVED ngày 07/11/2026. [Spec](tasks/QA/QA-01a.md),

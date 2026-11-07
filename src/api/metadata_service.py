@@ -285,7 +285,7 @@ class MetadataLLMService(CachedLLMService):
             return result
 
 
-def compose_metadata_service(store):
+def compose_metadata_service(store, *, extra_schemas=()):
     """Only a key file (or existing single-key env) is needed; no manual project/scope."""
     adapters = []
     try:
@@ -308,6 +308,7 @@ def compose_metadata_service(store):
                 (METADATA_REF, metadata.schema_for(METADATA_REF)),
                 (DISCOVERY_REF, PagePrediction.model_json_schema()),
                 (EXTRACTION_REF, ExtractedPage.model_json_schema()),
+                *extra_schemas,
             ]
         )
         for key in keys:

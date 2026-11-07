@@ -83,6 +83,34 @@ class DocumentEvidenceRepository:
                 (e for e in self._read().records if e.evidence_identity() == identity), None
             )
 
+    def put_many(self, records: list[DocumentEvidence]) -> list[str]:
+        """Validate a page batch before one atomic write; preserve conflict semantics."""
+        incoming = [_adapter.validate_json(row.model_dump_json()) for row in records]
+        with self.lock:
+            snapshot = self._read()
+            indexed = {row.evidence_identity(): row for row in snapshot.records}
+            statuses = []
+            changed = False
+            for row in incoming:
+                identity = row.evidence_identity()
+                if identity is None:
+                    if row not in snapshot.quarantine:
+                        snapshot.quarantine.append(row)
+                        changed = True
+                    statuses.append("quarantined")
+                elif identity in indexed:
+                    if indexed[identity] != row:
+                        raise EvidenceConflict(indexed[identity], row)
+                    statuses.append("idempotent")
+                else:
+                    snapshot.records.append(row)
+                    changed = True
+                    indexed[identity] = row
+                    statuses.append("stored")
+            if changed:
+                atomic_json(self._path(), snapshot.model_dump(mode="json"))
+            return statuses
+
     def list_by_document(
         self, document_id: str, snapshot_id: str | None = None
     ) -> list[DocumentEvidence]:

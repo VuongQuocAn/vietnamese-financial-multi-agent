@@ -1,6 +1,6 @@
 # Master Task Registry
 
-Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-11-06**
+Nguồn trạng thái nhiệm vụ chính của repository. Cập nhật: **2026-11-07**
 (Asia/Bangkok). Một dòng duy nhất cho mỗi Task ID; lịch sử bên dưới là bằng
 chứng, không phải registry thứ hai. [Dashboard](progress.md),
 [roadmap](roadmap.md), [handoff](handoff.md), [mẫu task](task-template.md).
@@ -56,6 +56,7 @@ Next action: chờ Tech Lead giao việc; không bắt đầu M3-01.
 
 | Task ID | Tên | Milestone | Status | Priority | Dependencies | Specification / phạm vi dự kiến | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| EXT-01 | Full-Document Evidence Coverage & Extraction Completion | EXT | REVIEW | P1 | QA-01a, INT-01a, INT-01b | [EXT-01](tasks/EXT/EXT-01.md) | Chưa commit/CI;99pages/1787records,151old exact;89newpages/107attempts/648845tokens;18QA retrieval4/16→16/16,M7cited3→10;20controls PASS;[report](../docs/ext-01-full-document-evidence-coverage.md);giữ OCR/M6/Q29 limitations và GEN-01a/Web;next: Tech Lead review |
 | QA-01a | Document Claim Verification & End-to-End Integration | QA | DONE | P1 | INT-01b | [QA-01a](tasks/QA/QA-01a.md) | Tech Lead APPROVED ngày 07/11/2026. Accepted [d2b2863](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d2b28634adc6a24b0d019de00897cbf3ce26a781), [CI42318884258](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42318884258) SUCCESS đúng SHA. Quick QA 10/10, 67 targeted PASS sau bản sửa định tuyến. Phiên nghiệm thu chạy planning/diff checks. Next action chờ giao nhiệm vụ tiếp theo. |
 | INT-01b | Evidence-Aware BM25 Retrieval | INT | DONE | P1 | INT-01a | [INT-01b](tasks/INT/INT-01b.md) | Tech Lead APPROVED06/11/2026; accepted [3525828](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/35258282ff7eed4b413c713510cadc7dff4f149b) đã push main;[CI42219245983](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42219245983) SUCCESS đúng SHA:1107Python/9Web PASS;151units/30real probes;Recall@1/3/5=85,42%/100%/100%,MRR1,no-answer6/6,leakage0;local241PASS;[report](../docs/int-01b-evidence-aware-bm25-retrieval.md);phiên chốt chỉ planning/diff;next: chờ giao nhiệm vụ tiếp theo |
 | INT-01a | Existing Evidence Binding & Materialization | INT | DONE | P1 | ARCH-01, GEN-01, E2E-01 | [INT-01a](tasks/INT/INT-01a.md) | Tech Lead APPROVED06/11/2026; accepted [d531c76](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d531c766d2d56ec66511edc0734716e196f24a62) đã push main;151records/17pages;34real checks,36closure tests PASS;3substantive samples,14legacy probes blocked;[report](../docs/int-01a-existing-evidence-binding-materialization.md);[CI42213961131](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42213961131) SUCCESS đúng SHA:1093Python/9Web PASS;phiên chốt chỉ planning/diff checks;next: chờ giao nhiệm vụ tiếp theo |

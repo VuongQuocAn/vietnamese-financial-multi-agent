@@ -25,7 +25,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | INT | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 110 | 102 | 0 | 0 | 8 | 0 | 0 |
+| EXT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 111 | 102 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 
@@ -52,6 +53,13 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+EXT-01 **REVIEW**, chờ Tech Lead nghiệm thu.
+99 source-bound pages, 18 QA before/after và20source/scope controls;
+[report](../docs/ext-01-full-document-evidence-coverage.md).
+Giữ GEN-01a/Web pending và các OCR/policy limitations; không bắt đầu task khác.
+
+Checkpoint trước:
 
 QA-01a **DONE**, Tech Lead APPROVED ngày 07/11/2026. Accepted implementation
 `d2b28634adc6a24b0d019de00897cbf3ce26a781` đã push main.
