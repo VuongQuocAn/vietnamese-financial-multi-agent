@@ -4,7 +4,7 @@ Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## QA-01b — Multi-Agent Financial & Document Evidence Fusion
 
-Status: **REVIEW**; implementation `808bc77ebd9d7e9cf80f4b116b717ecc312e7630` đã push main; baseline `0e985d2`.
+Status: **DONE**, Tech Lead APPROVED ngày 07/11/2026; implementation `808bc77ebd9d7e9cf80f4b116b717ecc312e7630` đã push main; baseline `0e985d2`.
 [Spec](tasks/QA/QA-01b.md), [report](../docs/qa-01b-multi-agent-evidence-fusion.md).
 20/20 real QA:8full/5partial/7refused-clarified; audit216citations,0leakage.
 Financial/document coverage12/14mỗi lane; M6ACCEPT35/INVESTIGATE3;
@@ -14,7 +14,9 @@ Ledger17stored/18idempotent/3rejected. Latest live BBS/BCC full;
 [CI42380771375](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42380771375) completed/SUCCESS đúng SHA:1147Python/9Web PASS;
 lint/format/planning/typecheck/build đạt; full regression manual SKIPPED.
 Artifacts local `artifacts/evidence/QA-01b/`; giữ GEN-01a/Web pending.
-Next action: Tech Lead review QA-01b.
+Phiên chốt DONE chỉ cập nhật planning/checkpoint, kiểm tra planning và diff;
+không sửa runtime, chạy lại tests/pipeline hoặc gọi Gemini. Giữ các limitations đã báo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không bắt đầu GEN-02.
 
 ## EF-01 — Evidence Graph Enrichment & Cross-Snapshot Evidence Linking
 

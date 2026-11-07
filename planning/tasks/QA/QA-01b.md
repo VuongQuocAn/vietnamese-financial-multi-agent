@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: EF-01, EXT-01, QA-01a
 - Estimated Complexity: L
@@ -15,7 +15,8 @@ approved filing qua M5 → M4/BM25/EF-EG → M6 → Ledger → M7/Firewall.
 
 ## Context
 
-EF-01/EXT-01/QA-01a đã DONE. Owner giao trực tiếp QA-01b, yêu cầu dừng REVIEW;
+EF-01/EXT-01/QA-01a đã DONE. Đề bài ban đầu yêu cầu dừng REVIEW;
+Tech Lead đã APPROVED ngày 07/11/2026 và cho phép chuyển QA-01b sang DONE.
 GEN-01a/Web đang pending được bảo toàn. Phạm vi L được chia thành planning,
 binding/execution, verification/output và evaluation trong cùng task được giao.
 
@@ -53,7 +54,7 @@ Mixed QA có cả financial/document ACCEPT trên PDF thật, citations hai lo�
 Firewall ALLOW hoặc ALLOW_WITH_CAVEAT. Partial không completed; causal inference
 không có proof bị giữ là unmet. OCR defect INVESTIGATE, D03-B10/source/scope gates
 giữ nguyên. Financial-only/document-only không hồi quy. Có trace/QA/oracles,
-bounded live Gemini khi khả dụng, CI đúng SHA; dừng REVIEW.
+bounded live Gemini khi khả dụng, CI đúng SHA; Tech Lead đã nghiệm thu DONE.
 
 ## Required Tests
 
@@ -76,4 +77,6 @@ Latest live BBS/BCC full;9transport attempts/26506known tokens/1HTTP503 có boun
 ## Handoff Notes
 
 Giữ GEN-01a/Web local ngoài commit. Owner đã cho phép commit/push main.
-Next action: Tech Lead review QA-01b.
+Phiên chốt DONE chỉ cập nhật planning/checkpoint, kiểm tra planning và diff;
+không sửa runtime, chạy lại tests/pipeline hoặc gọi Gemini.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không bắt đầu GEN-02.
