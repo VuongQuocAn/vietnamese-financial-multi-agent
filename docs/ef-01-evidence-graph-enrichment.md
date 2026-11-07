@@ -1,7 +1,8 @@
 # EF-01 — Evidence Graph Enrichment & Cross-Snapshot Evidence Linking
 
 Ngày 07/11/2026, Asia/Bangkok. Baseline `fbda889`.
-Implementation/CI: đang chuẩn bị commit; bằng chứng local bên dưới, chưa suy diễn CI.
+Implementation `b0016c2a12582b17a80f93bb1ce534f2f40b3399` đã push main; [CI42348988163](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42348988163) completed/SUCCESS đúng SHA.
+CI: 1.131 Python tests và 9 Web smoke PASS; lint/format/planning/typecheck/build đạt; full regression manual SKIPPED.
 
 ## 1. Executive Summary
 
@@ -167,7 +168,7 @@ Planning checker chưa biết EF: thêm branch EF và một fixture regression.
 
 Local: 284 targeted compatibility tests PASS; sau bổ sung structural citations,
 29 graph/M4 tests PASS và 13 graph tests PASS với UUID gate control mới.
-Không chạy lại full regression; CI sẽ chạy focused suite trên implementation SHA.
+Không chạy lại full regression local; CI focused suite đạt trên đúng implementation SHA (1.131 Python tests/9 Web smoke).
 Ruff, planning và diff checks được ghi tại registry khi chốt. M6 replay nguồn thật
 đạt như mục7; GEN-01a/Web pending được giữ ngoài commit.
 
