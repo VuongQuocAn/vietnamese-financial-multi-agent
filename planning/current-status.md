@@ -4,7 +4,10 @@ Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EXT-01 — Full-Document Evidence Coverage & Extraction Completion
 
-Status: **REVIEW**; implementation chưa commit, chờ push/CI đúng SHA.
+Status: **REVIEW**; implementation `34209fc02c065557cb9b1596c511f4d4feb22471` đã push main.
+[CI42343884351](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42343884351)
+completed/SUCCESS đúng implementation SHA: 1.115 Python và9Web smoke PASS;
+lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
 [Spec](tasks/EXT/EXT-01.md), [report](../docs/ext-01-full-document-evidence-coverage.md).
 99 source-bound pages/1.787 records, giữ151records cũ; 89 trang mới/18cachepages;
 107attempts/648.845known tokens/7HTTP503, mandatory gaps0. 18QA: retrieval4/16→16/16,

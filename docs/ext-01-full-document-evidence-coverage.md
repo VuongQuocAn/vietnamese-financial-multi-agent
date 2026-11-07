@@ -2,7 +2,11 @@
 
 ## 1. Executive Summary
 
-Trạng thái: **REVIEW**, chờ Tech Lead nghiệm thu; implementation SHA/CI bổ sung sau push.
+Trạng thái: **REVIEW**, chờ Tech Lead nghiệm thu.
+Implementation `34209fc02c065557cb9b1596c511f4d4feb22471` đã push main;
+[CI42343884351](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42343884351)
+completed/SUCCESS đúng SHA: 1.115 Python/9 Web smoke PASS, cùng
+lint/format/planning/typecheck/build; full unit regression manual SKIPPED.
 Baseline main `7187075`;
 QA-01a accepted `d2b28634adc6a24b0d019de00897cbf3ce26a781`.
 EXT-01 mở rộng coverage qua Gemini-native → UnifiedPage → existing repository →
