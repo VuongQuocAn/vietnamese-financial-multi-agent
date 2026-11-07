@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QA
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: INT-01b
 - Estimated Complexity: M
@@ -16,6 +16,7 @@ Trả lời câu hỏi về tài liệu qua M5, M6, Verified Claim Ledger và M7
 ## Context
 
 INT-01a đã materialize nguồn gốc. INT-01b đã có BM25 và neighboring evidence.
+Tech Lead APPROVED ngày 07/11/2026 và cho phép chuyển QA-01a từ REVIEW sang DONE.
 
 ## Inputs
 
@@ -62,4 +63,5 @@ Quick QA 10/10, 67 targeted PASS sau bản sửa định tuyến. Xem báo cáo 
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu QA-01a.
+Phiên nghiệm thu cập nhật planning và chạy planning/diff checks.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

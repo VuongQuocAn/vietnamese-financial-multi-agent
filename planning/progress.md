@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-11-06** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-07** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -20,12 +20,12 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | M8 | 8 | 0 | 0 | 0 | 8 | 0 | 0 |
 | W | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
 | D | 7 | 7 | 0 | 0 | 0 | 0 | 0 |
-| QA | 4 | 3 | 0 | 0 | 0 | 0 | 1 |
+| QA | 4 | 4 | 0 | 0 | 0 | 0 | 0 |
 | E2E | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | GEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | ARCH | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | INT | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 110 | 101 | 0 | 0 | 8 | 0 | 1 |
+| TOTAL | 110 | 102 | 0 | 0 | 8 | 0 | 0 |
 
 ## Implementation thực tế
 
@@ -52,6 +52,17 @@ Full chatbot QA/report accuracy vẫn **N/A**; M2-08 có benchmark structured qu
 trên một PDF, công bố riêng trong audit và không suy thành chatbot accuracy.
 
 ## Active task và việc tiếp theo
+
+QA-01a **DONE**, Tech Lead APPROVED ngày 07/11/2026. Accepted implementation
+`d2b28634adc6a24b0d019de00897cbf3ce26a781` đã push main.
+[CI42318884258](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42318884258)
+completed/SUCCESS đúng SHA. Quick QA 10/10 và 67 targeted PASS sau bản sửa định tuyến.
+Các giới hạn về proof quan hệ chức vụ, OCR và semantic review ghi tại
+[báo cáo](../docs/qa-01a-document-claim-verification.md).
+Phiên nghiệm thu cập nhật planning và chạy planning/diff checks.
+Next action chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
+
+Checkpoint trước:
 
 INT-01b **DONE**, Tech Lead APPROVED06/11/2026; accepted implementation3525828
 đã push main, CI42219245983 SUCCESS đúng SHA:1107Python/9Web PASS.
