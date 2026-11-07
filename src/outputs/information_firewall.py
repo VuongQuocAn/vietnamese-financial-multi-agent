@@ -16,7 +16,7 @@ from .citation_renderer import _digest, validate_rendered_citations
 from .firewall_contracts import FirewallCheckResult, FirewallDecision, ValidatedOutput
 from .firewall_qa_binding import validate_qa_request_binding
 from .grounded_report_writer import _retrieve, validate_grounded_report
-from .qa_composer import _unique, claim_scope, qa_claim_query, validate_qa_response
+from .qa_composer import _unique, claim_scope, retrieve_qa_claims, validate_qa_response
 from .qa_contracts import QAValidationResult, VietnameseQARequest, VietnameseQAResponse
 from .report_outline_planner import validate_report_outline
 from .report_writer_contracts import GroundedFinancialReport, GroundedReportRequest
@@ -175,7 +175,7 @@ class InformationFirewall:
             if mode == "qa":
                 parsed, _ = understand(request.question)
                 entries = (
-                    lookup.find_claims(qa_claim_query(request, parsed)).claims
+                    retrieve_qa_claims(lookup, request, parsed)
                     if (request.snapshot_id or request.composition_id)
                     and (request.company_id or request.document_id)
                     else []
@@ -218,6 +218,9 @@ class InformationFirewall:
                 claim_scope(e) != wanted_scope
                 for e in entries
                 if e.identity.verified_claim_id in ids
+                and not (
+                    mode == "qa" and request.document_snapshots and e.identity.kind == "document"
+                )
             )
             else [],
         )

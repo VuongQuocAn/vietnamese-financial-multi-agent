@@ -21,6 +21,8 @@ class VietnameseQARequest(FinancialModel):
     period: str | None = None
     composition_id: str | None = None
     composition_sha256: str | None = None
+    # Approved original document snapshots for a mixed request, not renamed IDs.
+    document_snapshots: list[str] = Field(default_factory=list)
     reporting_scope: Literal["separate", "consolidated"] | None = None
     allow_gateway: bool = False
     model: ModelIdentity = Field(
@@ -39,7 +41,14 @@ class QARequirement(FinancialModel):
     requirement_id: str
     text: str
     kind: Literal[
-        "fact", "metric", "explanation", "limitations", "unsupported", "ambiguous", "document"
+        "fact",
+        "metric",
+        "explanation",
+        "limitations",
+        "unsupported",
+        "ambiguous",
+        "document",
+        "source_context",
     ]
     target_id: str | None = None
     interpretation: bool = False

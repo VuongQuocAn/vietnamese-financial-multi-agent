@@ -16,6 +16,7 @@ from ..agents import (
 )
 from ..agents.document_qa_contracts import document_intent
 from ..evidence.composition import payload_sha256
+from ..evidence.snapshots import SnapshotCatalog
 from ..outputs.citation_renderer import CitationRenderer
 from ..outputs.firewall_qa_binding import request_inventory
 from ..outputs.information_firewall import InformationFirewall
@@ -71,16 +72,23 @@ class FinancialQAPipeline:
 
     def _m5(self, request, *, document=False):
         gateway = self.gateway if request.allow_gateway and not document else None
+        deterministic = request.execution_mode == "deterministic"
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
-                self.catalog, () if document else self.documents, gateway
+                SnapshotCatalog([]) if document else self.catalog,
+                () if document else self.documents,
+                gateway,
             ),
             supervisor=RiskAwareSupervisor(self.catalog),
             router=AdaptiveSpecialistRouter(),
             specialists={
-                "profitability": ProfitabilitySpecialist(gateway),
-                "liquidity_and_leverage": LiquidityLeverageSpecialist(gateway),
-                "cash_flow_and_earnings_quality": CashFlowEarningsQualitySpecialist(gateway),
+                "profitability": ProfitabilitySpecialist(gateway, deterministic=deterministic),
+                "liquidity_and_leverage": LiquidityLeverageSpecialist(
+                    gateway, deterministic=deterministic
+                ),
+                "cash_flow_and_earnings_quality": CashFlowEarningsQualitySpecialist(
+                    gateway, deterministic=deterministic
+                ),
             },
         )
 
@@ -256,6 +264,12 @@ class FinancialQAPipeline:
                         "stage": "document_candidate_generation",
                     },
                 ]
+                trace.selected_agents = [
+                    "EvidenceAwareQueryPlanner",
+                    "RiskAwareSupervisor",
+                    "FinancialMultiAgentOrchestrator",
+                ]
+                trace.executed_agents = trace.selected_agents.copy()
                 trace.tool_calls = [
                     dict(
                         component="RiskAwareSupervisor",
@@ -446,13 +460,16 @@ class FinancialQAPipeline:
 
         try:
             intent, requirements = document_intent(request.question)
+            from ..agents.fusion_contracts import is_mixed
+            from .fusion_pipeline import run_fusion
+
+            if is_mixed(request.question):
+                return run_fusion(self, request, response, stage, stop)
             if intent == "mixed":
-                trace.planner_intent = intent
-                response = stop("unsupported", ["mixed_financial_document_unsupported"])
-                response.answer_vi = (
-                    "Chưa hỗ trợ câu hỏi kết hợp chỉ tiêu tài chính và nội dung tài liệu."
-                )
-                return response
+                _, issues = understand(request.question)
+                if "cross_document_comparison_blocked_D03_B10" in issues:
+                    return stop("unsupported", ["cross_document_comparison_blocked_D03_B10"])
+                return stop("unsupported", ["mixed_decomposition_unresolved"])
             if intent == "document":
                 return self._run_document(request, requirements, response, stage, stop)
             bound, blocked, reasons = stage("context", lambda: self._context(request))
@@ -486,7 +503,7 @@ class FinancialQAPipeline:
                 return stop("clarification_required", plan.missing_information)
             if coverage == "answered" and not bound.force_refresh:
                 response.mode = "CACHE_HIT"
-            elif not bound.allow_gateway:
+            elif not bound.allow_gateway and bound.execution_mode != "deterministic":
                 if not existing_ids:
                     return stop("verification_blocked", ["refresh_requires_allow_gateway"])
                 response.mode = "PARTIAL_REUSE_ONLY"
@@ -507,6 +524,7 @@ class FinancialQAPipeline:
                                 period=bound.period or parsed.period,
                                 reporting_year=parsed.reporting_year or int(bound.period[:4]),
                                 reporting_scope=bound.reporting_scope or parsed.reporting_scope,
+                                mode=bound.execution_mode,
                                 model=bound.model,
                             ),
                         ),
@@ -537,9 +555,12 @@ class FinancialQAPipeline:
                             and any(x.role == e.role for x in output.specialist_executions)
                         )
                     )
+                    trace.financial_execution = output.model_dump(mode="json")
                     if output.supervisor_result:
                         trace.tool_calls = [
                             dict(
+                                request=e.bound_request,
+                                result=e.response.model_dump(mode="json") if e.response else None,
                                 tool=e.operation,
                                 status=e.final_state,
                                 latency_ms=e.latency_ms,
@@ -590,7 +611,11 @@ class FinancialQAPipeline:
                     ):
                         return stop("verification_blocked", ["candidate_source_context_mismatch"])
                     if batch.claims:
-                        runtime = VerificationRuntime(self.catalog, self.gateway, model=bound.model)
+                        runtime = VerificationRuntime(
+                            self.catalog,
+                            self.gateway if bound.allow_gateway else None,
+                            model=bound.model,
+                        )
                         histories = stage("m6", lambda: runtime.verify(batch))
                         for name, metadata in runtime.provider_metadata:
                             usage("m6_" + name, metadata)

@@ -73,10 +73,14 @@ def _document_inventory(request, entries, intent, specs):
         ]
         if not matching:
             requirement.reason = "no_verified_document_claim"
-        elif len({_assertion_signature(e) for e in matching}) > 1:
+        elif len({_assertion_signature(e) for e in matching}) > 1 and not any(
+            s.target == requirement.target_id and s.kind == "source_excerpt" for s in specs
+        ):
             requirement.reason = "ambiguous_verified_claims"
         else:
-            requirement.verified_claim_ids = [min(e.identity.verified_claim_id for e in matching)]
+            requirement.verified_claim_ids = sorted(e.identity.verified_claim_id for e in matching)[
+                :3
+            ]
     plan.selected_verified_claim_ids = [
         key for r in plan.requirements for key in r.verified_claim_ids
     ]
@@ -88,6 +92,10 @@ def _document_inventory(request, entries, intent, specs):
 
 
 def request_inventory(request, entries):
+    from ..agents.fusion_contracts import is_mixed
+
+    if is_mixed(request.question):
+        return _fusion_inventory(request, entries)
     intent, specs = document_intent(request.question)
     if intent != "other":
         return _document_inventory(request, entries, intent, specs)
@@ -232,6 +240,106 @@ def request_inventory(request, entries):
         else "abstained"
     )
     return plan, status
+
+
+def _fusion_inventory(request, entries):
+    from ..agents.fusion_contracts import decompose
+
+    parsed, issues = understand(request.question)
+    plan = GroundedAnswerPlan()
+    if "cross_document_comparison_blocked_D03_B10" in issues:
+        return GroundedAnswerPlan(
+            reasons=["cross_document_comparison_blocked_D03_B10"]
+        ), "unsupported"
+    if not all(
+        (
+            request.document_id,
+            request.company_id,
+            request.snapshot_id,
+            request.composition_id,
+            request.composition_sha256,
+            request.document_snapshots,
+        )
+    ):
+        return GroundedAnswerPlan(
+            missing_information=["approved_fusion_context_required"]
+        ), "clarification_required"
+    for part in decompose(request.question).requirements:
+        if part.lane == "financial":
+            financial_question = part.execution_question or part.original_span
+            if parsed.reporting_year:
+                financial_question += f" năm {parsed.reporting_year}"
+            sub = request.model_copy(
+                update={
+                    "question": financial_question,
+                    "composition_id": None,
+                    "composition_sha256": None,
+                    "document_snapshots": [],
+                }
+            )
+            child, _ = request_inventory(sub, [e for e in entries if e.identity.kind != "document"])
+        elif part.lane == "document":
+            sub = request.model_copy(
+                update={
+                    "question": part.original_span,
+                    "snapshot_id": None,
+                    "period": None,
+                    "reporting_scope": None,
+                }
+            )
+            child, _ = _document_inventory(
+                sub,
+                [
+                    e
+                    for e in entries
+                    if e.identity.kind == "document"
+                    and e.identity.snapshot_id in request.document_snapshots
+                ],
+                "document",
+                [part.document_requirement],
+            )
+        elif part.kind == "source_context":
+            child = GroundedAnswerPlan(
+                requirements=[
+                    QARequirement(
+                        requirement_id=part.requirement_id,
+                        kind="source_context",
+                        text=part.original_span,
+                        verified_claim_ids=plan.selected_verified_claim_ids.copy(),
+                    )
+                ]
+            )
+        else:
+            child = GroundedAnswerPlan(
+                requirements=[
+                    QARequirement(
+                        requirement_id=part.requirement_id,
+                        kind="unsupported",
+                        text=part.original_span,
+                        reason=part.reason or "unsupported_inference",
+                    )
+                ]
+            )
+        for requirement in child.requirements:
+            requirement.requirement_id = f"{part.requirement_id}:{requirement.requirement_id}"
+            plan.requirements.append(requirement)
+        plan.reasons.extend(child.reasons)
+        plan.missing_information.extend(child.missing_information)
+        plan.selected_verified_claim_ids = _unique(
+            k for r in plan.requirements for k in r.verified_claim_ids
+        )
+    for requirement in plan.requirements:
+        if requirement.kind == "source_context":
+            requirement.verified_claim_ids = plan.selected_verified_claim_ids.copy()
+            requirement.reason = (
+                None if requirement.verified_claim_ids else "no_verified_source_context"
+            )
+    plan.selected_verified_claim_ids = _unique(
+        k for r in plan.requirements for k in r.verified_claim_ids
+    )
+    return plan, (
+        "partial" if any(not r.verified_claim_ids for r in plan.requirements) else "answered"
+    ) if plan.selected_verified_claim_ids else "abstained"
 
 
 def validate_qa_request_binding(request, response, entries):

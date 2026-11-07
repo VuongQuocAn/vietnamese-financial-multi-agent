@@ -156,6 +156,12 @@ class FinancialMultiAgentOrchestrator:
         self._router = router
         self._specialists = dict(specialists)
 
+    @staticmethod
+    def plan_fusion(question):
+        from .fusion_contracts import decompose
+
+        return decompose(question)
+
     def run_document(self, requirements, manifest, company_id, snapshot_id, tools):
         from .document_qa import document_candidates
 

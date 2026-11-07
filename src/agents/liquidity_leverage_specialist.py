@@ -154,7 +154,10 @@ def _debt_semantics_error(calc, bundle):
 class LiquidityLeverageSpecialist:
     boundary = next(b for b in SPECIALIST_BOUNDARIES if b.role == "liquidity_and_leverage")
 
-    def __init__(self, gateway: SharedLLMGateway, *, model: ModelIdentity | None = None):
+    def __init__(
+        self, gateway: SharedLLMGateway, *, model: ModelIdentity | None = None, deterministic=False
+    ):
+        self._deterministic = deterministic
         self._gateway = gateway
         self._model = model or ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
 
@@ -346,6 +349,7 @@ class LiquidityLeverageSpecialist:
                 result.missing_evidence.append("no_usable_liquidity_leverage_evidence")
             generate_candidates(
                 gateway=self._gateway,
+                deterministic=self._deterministic,
                 model=self._model,
                 result=result,
                 prompt=with_assignment(self._prompt(result), upstream),

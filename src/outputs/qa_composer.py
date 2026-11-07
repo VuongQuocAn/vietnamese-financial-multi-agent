@@ -102,7 +102,12 @@ def _segment(entry):
                 period=None,
             ),
             caveats=_unique([OCR_CAVEAT, *entry.caveats]),
-            limitations=[SOURCE_LIMIT],
+            limitations=[SOURCE_LIMIT]
+            + (
+                ["Trích đoạn liên quan; chưa bao phủ toàn bộ thuyết minh."]
+                if claim.requirement.kind == "source_excerpt"
+                else []
+            ),
         )
     caveats = _unique(
         entry.caveats
@@ -407,6 +412,12 @@ def understand_requirements(question):
 
 
 def _matches_target(entry, requirement):
+    if requirement.kind == "source_context":
+        return (
+            entry.verification_status == "verified"
+            and entry.decision.decision == "ACCEPT"
+            and bool(entry.citations)
+        )
     if requirement.kind == "document":
         return (
             entry.identity.kind == "document"
@@ -477,6 +488,8 @@ def _requirement_label(requirement):
         return requirement.requirement_id
     if requirement.kind == "document":
         return f"{requirement.text} (chưa có nguồn đủ căn cứ)"
+    if requirement.reason == "unsupported_causal_inference":
+        return "nguyên nhân biến động (chưa đủ bằng chứng để xác định quan hệ nhân quả)"
     target = requirement.target_id
     name = FORMULA_LABELS.get(target) or (
         ITEM_RULES[target].aliases[0] if target in ITEM_RULES else "yêu cầu chưa xác định"
@@ -551,7 +564,15 @@ def validate_qa_response(response, retrieved):
                 }
             )
             > 1
-            and requirement.kind != "limitations"
+            and requirement.kind not in {"limitations", "source_context"}
+            and not (
+                requirement.kind == "document"
+                and all(
+                    entries[key].accepted_claim.requirement.kind == "source_excerpt"
+                    for key in requirement.verified_claim_ids
+                    if key in entries
+                )
+            )
         ):
             errors.append("conflicting_requirement_assertions")
         for key in requirement.verified_claim_ids:
@@ -571,8 +592,15 @@ def validate_qa_response(response, retrieved):
         )
         for s in response.grounded_segments
     }
-    if len(contexts) > 1:
+    from ..agents.fusion_contracts import is_mixed
+
+    if len(contexts) > 1 and not is_mixed(response.question):
         errors.append("mixed_contexts")
+    if (
+        is_mixed(response.question)
+        and len({s.context.company_id for s in response.grounded_segments}) > 1
+    ):
+        errors.append("mixed_companies")
     if len({s.context.period[:4] for s in response.grounded_segments if s.context.period}) > 1:
         errors.append("mixed_reporting_years")
     if response.answer_vi != _answer_text(response):
@@ -581,6 +609,10 @@ def validate_qa_response(response, retrieved):
 
 
 def qa_claim_query(request, parsed):
+    from ..agents.fusion_contracts import is_mixed
+
+    if is_mixed(request.question):
+        return VerifiedClaimQuery(company_id=request.company_id, document_id=request.document_id)
     document = request.composition_id is not None
     return VerifiedClaimQuery(
         company_id=request.company_id,
@@ -591,6 +623,45 @@ def qa_claim_query(request, parsed):
         composition_id=request.composition_id,
         composition_sha256=request.composition_sha256,
     )
+
+
+def retrieve_qa_claims(ledger, request, parsed):
+    from ..agents.fusion_contracts import is_mixed
+
+    if not is_mixed(request.question):
+        return ledger.find_claims(qa_claim_query(request, parsed)).claims
+    entries = ledger.find_claims(
+        VerifiedClaimQuery(
+            company_id=request.company_id,
+            document_id=request.document_id,
+            snapshot_id=request.snapshot_id,
+            period=request.period or parsed.period,
+        )
+    ).claims
+    entries += ledger.find_claims(
+        VerifiedClaimQuery(
+            company_id=request.company_id,
+            document_id=request.document_id,
+            kind="document",
+            composition_id=request.composition_id,
+            composition_sha256=request.composition_sha256,
+        )
+    ).claims
+    return [
+        e
+        for e in entries
+        if (
+            e.identity.kind == "document"
+            and e.identity.composition_id == request.composition_id
+            and e.identity.composition_sha256 == request.composition_sha256
+            and e.identity.snapshot_id in request.document_snapshots
+        )
+        or (
+            e.identity.kind != "document"
+            and e.identity.snapshot_id == request.snapshot_id
+            and (request.period is None or e.identity.period == request.period)
+        )
+    ]
 
 
 class VietnameseQAComposer:
@@ -611,7 +682,7 @@ class VietnameseQAComposer:
             return self._finish(response, [], status)
         parsed, _ = understand(request.question)
         try:
-            retrieved = self._ledger.find_claims(qa_claim_query(request, parsed)).claims
+            retrieved = retrieve_qa_claims(self._ledger, request, parsed)
         except (ValueError, OSError):
             plan.reasons.append("ledger_read_failed")
             return self._finish(response, [], "abstained")
@@ -621,7 +692,7 @@ class VietnameseQAComposer:
                 for field, value in (
                     ("company_id", request.company_id),
                     ("document_id", request.document_id),
-                    ("snapshot_id", request.snapshot_id),
+                    ("snapshot_id", None if request.document_snapshots else request.snapshot_id),
                     ("period", None if request.composition_id else request.period or parsed.period),
                 )
             )

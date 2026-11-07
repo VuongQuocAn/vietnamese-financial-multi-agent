@@ -37,7 +37,10 @@ def document_candidates(bundle, company_id, manifest):
         if not match.evidence.citations:
             continue
         groups = [[match.evidence]]
-        if requirement.target == "nhan vien quan ly chu chot":
+        if (
+            requirement.target == "nhan vien quan ly chu chot"
+            or requirement.kind == "source_excerpt"
+        ):
             neighbors = {n.order: n.evidence for n in match.neighbors}
             # Only the forward neighbors following the primary in the saved source.
             pointer = match.evidence.citations[0].source.reference.source_pointer or ""
@@ -104,4 +107,15 @@ def document_candidates(bundle, company_id, manifest):
                     candidates.append(candidate)
             elif unresolved is None:
                 unresolved = candidate
+    if requirement.kind == "source_excerpt":
+
+        def references(candidate):
+            return {r.model_dump_json() for r in candidate.references}
+
+        # Prefer the complete contiguous excerpt over its own shorter prefixes.
+        return [
+            c
+            for c in candidates
+            if not any(references(c) < references(other) for other in candidates)
+        ][:3]
     return candidates or ([unresolved] if unresolved else [])

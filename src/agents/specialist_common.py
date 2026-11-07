@@ -383,40 +383,85 @@ def with_assignment(prompt, upstream):
     )
 
 
-def generate_candidates(*, gateway, model, result, prompt, proposal_type, render, prefix):
-    request = LLMRequest(
-        contract_version="llm_gateway_v1",
-        request_id=prefix + "-" + uuid4().hex,
-        model=model,
-        messages=[
-            Message(role="system", content=json.dumps(prompt, ensure_ascii=False)),
-            Message(role="user", content=result.question),
-        ],
-        generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),
-        output_spec=OutputSpec(format="json"),
-        constraints=RequestConstraints(timeout_seconds=60.0),
-    )
-    result.llm.calls, result.llm.model = 1, model
-    call_start = perf_counter()
-    response = gateway.generate(request)
-    result.llm.latency_ms = (perf_counter() - call_start) * 1000
-    result.llm.status, result.llm.usage, result.llm.cost = (
-        response.status,
-        response.usage,
-        response.cost,
-    )
-    result.llm.provenance, result.llm.error = response.provenance, response.error
-    if isinstance(response.output, JSONOutput):
-        result.raw_output = response.output.payload
-    if response.status != "success" or not isinstance(result.raw_output, dict):
-        result.status = "failed"
-        result.trace.append(
-            SpecialistTrace(
-                stage="generation", outcome="failed", reasons=["gateway_response_failed"]
+def generate_candidates(
+    *, gateway, model, result, prompt, proposal_type, render, prefix, deterministic=False
+):
+    if deterministic:
+        # Existing typed numeric renderers; no model, interpretation or new calculation.
+        result.llm.status = "deterministic"
+        payload = {
+            "claims": [
+                dict(
+                    evidence_id=e.evidence_id,
+                    kind="approved_metric" if e.calculation else "fact",
+                    meaning="metric_value" if e.calculation else "fact_value",
+                    period=e.period,
+                )
+                for e in result.supporting_evidence
+            ],
+            "missing_information": [],
+        }
+    else:
+        executions = [
+            dict(
+                evidence_id=e.evidence_id,
+                status=e.calculation.status,
+                formula_id=e.calculation.formula_id,
+                calculation_eligible=e.calculation.evidence.closure.calculation_eligible,
+                formula_approval=e.calculation.trace.approval.model_dump(mode="json"),
+                verification_status="candidate_pending_M6",
             )
+            for e in result.supporting_evidence
+            if e.calculation
+        ]
+        if executions:
+            prompt = dict(
+                prompt,
+                current_metric_executions=executions,
+                instruction=prompt["instruction"]
+                + (
+                    " current_metric_executions là trạng thái M4 hiện tại của evidence đã được "
+                    "kiểm tra và giao. status=computed cùng calculation_eligible=true cho phép "
+                    "đề xuất numeric metric_value, chưa phải claim ACCEPT. Các caveats nguồn "
+                    "được giữ nguyên, có thể là annotations lịch sử; không suy lại rằng metric "
+                    "chưa approved chỉ từ annotation cũ khi current execution đã computed. "
+                    "Không bỏ numeric candidate hợp lệ vì thiếu điều kiện diễn giải. "
+                    "M6 vẫn kiểm chứng độc lập mọi candidate."
+                ),
+            )
+        request = LLMRequest(
+            contract_version="llm_gateway_v1",
+            request_id=prefix + "-" + uuid4().hex,
+            model=model,
+            messages=[
+                Message(role="system", content=json.dumps(prompt, ensure_ascii=False)),
+                Message(role="user", content=result.question),
+            ],
+            generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),
+            output_spec=OutputSpec(format="json"),
+            constraints=RequestConstraints(timeout_seconds=60.0),
         )
-        return result
-    payload = result.raw_output
+        result.llm.calls, result.llm.model = 1, model
+        call_start = perf_counter()
+        response = gateway.generate(request)
+        result.llm.latency_ms = (perf_counter() - call_start) * 1000
+        result.llm.status, result.llm.usage, result.llm.cost = (
+            response.status,
+            response.usage,
+            response.cost,
+        )
+        result.llm.provenance, result.llm.error = response.provenance, response.error
+        if isinstance(response.output, JSONOutput):
+            result.raw_output = response.output.payload
+        if response.status != "success" or not isinstance(result.raw_output, dict):
+            result.status = "failed"
+            result.trace.append(
+                SpecialistTrace(
+                    stage="generation", outcome="failed", reasons=["gateway_response_failed"]
+                )
+            )
+            return result
+        payload = result.raw_output
     if (
         set(payload) != {"claims", "missing_information"}
         or not isinstance(payload["claims"], list)

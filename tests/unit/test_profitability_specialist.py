@@ -42,6 +42,7 @@ def run(result, claims):
 
 def test_metric_interpretation_exact_lineage_one_call_and_roundtrip():
     source = upstream()
+    source.evidence_bundle.calculations[0].caveats.append("formula_policy_not_approved")
     before = deepcopy(source)
     result, seen = run(source, [proposal()])
     assert result.status == "generated", result.model_dump()
@@ -57,6 +58,11 @@ def test_metric_interpretation_exact_lineage_one_call_and_roundtrip():
     assert SpecialistResult.model_validate_json(result.model_dump_json()) == result
     prompt = json.loads(seen[0].messages[0].content)
     assert "citations" not in prompt["evidence"][0]  # Digest, not full catalog/PDF.
+    current = prompt["current_metric_executions"][0]
+    assert current["status"] == "computed" and current["calculation_eligible"] is True
+    assert current["verification_status"] == "candidate_pending_M6"
+    assert current["formula_approval"] == calc.trace.approval.model_dump(mode="json")
+    assert any("formula_policy_not_approved" in e["caveats"] for e in prompt["evidence"])
 
 
 @pytest.mark.parametrize(

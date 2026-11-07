@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## QA-01b ? Multi-Agent Financial & Document Evidence Fusion
+
+Status: **REVIEW**, ch?a commit; baseline `0e985d2`.
+[Spec](tasks/QA/QA-01b.md), [report](../docs/qa-01b-multi-agent-evidence-fusion.md).
+20/20 real QA:8full/5partial/7refused-clarified; audit216citations,0leakage.
+Financial/document coverage12/14m?i lane; M6ACCEPT35/INVESTIGATE3;
+Ledger17stored/18idempotent/3rejected. Latest live BBS/BCC full;
+9transport attempts/26506known tokens/1HTTP503 (bounded recovery).
+593broad/138post-fix/20topic/66specialist tests PASS (c? overlap); planning/Ruff/diff ??t.
+CI ch? push ??ng SHA; artifacts local `artifacts/evidence/QA-01b/`.
+Gi? GEN-01a/Web pending; kh?ng b?t ??u GEN-02.
+Next action: Tech Lead review QA-01b.
+
 ## EF-01 — Evidence Graph Enrichment & Cross-Snapshot Evidence Linking
 
 Status: **DONE**, Tech Lead APPROVED ngày07/11/2026; implementation `b0016c2a12582b17a80f93bb1ce534f2f40b3399` đã push main; baseline `fbda889`.

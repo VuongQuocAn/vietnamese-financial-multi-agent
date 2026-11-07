@@ -124,7 +124,10 @@ def _render(proposal: CashFlowEarningsQualityProposal, evidence: SpecialistEvide
 class CashFlowEarningsQualitySpecialist:
     boundary = next(b for b in SPECIALIST_BOUNDARIES if b.role == "cash_flow_and_earnings_quality")
 
-    def __init__(self, gateway: SharedLLMGateway, *, model: ModelIdentity | None = None):
+    def __init__(
+        self, gateway: SharedLLMGateway, *, model: ModelIdentity | None = None, deterministic=False
+    ):
+        self._deterministic = deterministic
         self._gateway = gateway
         self._model = model or ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
 
@@ -341,6 +344,7 @@ class CashFlowEarningsQualitySpecialist:
                 return result
             generate_candidates(
                 gateway=self._gateway,
+                deterministic=self._deterministic,
                 model=self._model,
                 result=result,
                 prompt=with_assignment(self._prompt(result, upstream), upstream),

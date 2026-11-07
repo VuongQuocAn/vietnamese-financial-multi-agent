@@ -10,6 +10,7 @@ import json
 
 from pydantic import ValidationError
 
+from ..agents.fusion_contracts import is_mixed
 from .citation_contracts import (
     CitationBinding,
     CitationLocator,
@@ -113,7 +114,14 @@ def _source_parts(source):
             )
             > 1
         ):
-            raise ValueError("mixed_qa_contexts")
+            financial = {
+                (s.context.company_id, s.context.document_id, s.context.snapshot_id)
+                for s in segments
+                if s.context.period
+            }
+            companies = {s.context.company_id for s in segments}
+            if not is_mixed(source.question) or len(financial) > 1 or len(companies) > 1:
+                raise ValueError("mixed_qa_contexts")
         parts = [
             (
                 s.segment_id,

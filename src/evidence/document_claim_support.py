@@ -81,11 +81,23 @@ def source_assertion(requirement, projections):
         return None
     # Opinion needs the complete qualified opinion section. Search alone cannot
     # certify its boundaries or any omitted qualifications.
-    if requirement.target == "y kien kiem toan" or not _contains(texts[0], requirement.query):
+    topic_matches = (
+        _contains(" ".join(texts), requirement.query)
+        if requirement.kind == "source_excerpt"
+        else _contains(texts[0], requirement.query)
+    )
+    if requirement.target == "y kien kiem toan" or not topic_matches:
         return None
     if requirement.target == "nhan vien quan ly chu chot":
         if not texts[-1].rstrip().endswith(".") or any(
             t.rstrip().endswith(".") for t in texts[:-1]
+        ):
+            return None
+    elif requirement.kind == "source_excerpt":
+        # A heading alone does not answer what a note says. Keep complete,
+        # contiguous verbatim source text; no synthesized financial relation.
+        if len(" ".join(texts)) < len(requirement.query) + 30 or not texts[-1].rstrip().endswith(
+            (".", ";")
         ):
             return None
     elif len(texts) != 1:
