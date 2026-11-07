@@ -88,7 +88,8 @@ parser limitations; không tuyên bố full financial/OCR accuracy.
 
 ## Handoff Notes
 
-Closure chưa commit: source-quality gate theo cờ `pdf_review:*`, không sửa OCR;
+Closure `faa662db8bc4008f6fd5c3374e55c7dff1a7df04` đã push main:
+source-quality gate theo cờ `pdf_review:*`, không sửa OCR;
 review hiện gắn cờ theo trang nên gate chặn toàn bộ records có cờ trên trang đó.
 Negative thực tế trước sửa ACCEPT 1/citation 1; sau sửa INVESTIGATE `source_quality`,
 ACCEPT 0/citation 0; admission/replay proof cũ đều rejected. Q29 baseline
@@ -96,5 +97,8 @@ ACCEPT 0/citation 0; admission/replay proof cũ đều rejected. Q29 baseline
 fixture `semantic_role=null` so với `revenue`; giữ nguyên fixture lịch sử.
 Traces local: `artifacts/evidence/EXT-01/closure/`.
 Local closure 91 tests PASS (document QA/ledger/firewall); Ruff lint/format,
-planning và diff check PASS. CI closure chờ implementation commit.
+planning và diff check PASS.
+[CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
+completed/SUCCESS đúng SHA closure: 1.117 Python/9 Web smoke PASS;
+lint/format/planning/typecheck/build đạt; full regression manual SKIPPED.
 Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.

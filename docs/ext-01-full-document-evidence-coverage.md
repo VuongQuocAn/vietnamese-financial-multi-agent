@@ -202,7 +202,8 @@ Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DO
 ## 15. Closure theo CONDITIONAL APPROVAL
 
 Tech Lead giữ EXT-01 ở REVIEW, cho phép source-quality gate M6 và đối chiếu Q29.
-Closure chưa commit; không gọi Gemini, chạy lại extraction hoặc hash audit.
+Implementation closure `faa662db8bc4008f6fd5c3374e55c7dff1a7df04` đã push main;
+không gọi Gemini, chạy lại extraction hoặc hash audit.
 
 P1 dùng chính `BBS_2025/responses/page-13.json`, `/text_elements/9`, truy vấn
 `BBS 2025 ghi “thuế thu nhập lại phải trả” ở đâu?`. Đây là đoạn thiếu “hoãn”
@@ -233,4 +234,8 @@ báo extended suite PASS. Không phải hồi quy do EXT-01.
 Local closure: 91 tests PASS trong `test_document_qa_pipeline.py`,
 `test_verified_claim_ledger.py`, `test_information_firewall.py`, gồm hai cases mới
 cho known PDF defect và caveat thông thường. Ruff lint/format, planning và
-`git diff --check` PASS. CI closure sẽ được ghi theo đúng implementation SHA.
+`git diff --check` PASS.
+[CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
+completed/SUCCESS đúng SHA closure `faa662db8bc4008f6fd5c3374e55c7dff1a7df04`:
+1.117 Python/9 Web smoke PASS; lint/format/planning/typecheck/build đạt;
+full unit regression manual SKIPPED. Giữ REVIEW, chờ Tech Lead quyết định DONE.

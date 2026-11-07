@@ -14,11 +14,16 @@ lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
 M6ACCEPT3→12claims, M7cited3→10câu;20controls PASS.62targeted và25post-resume PASS.
 Financial36/36 đạt; extended Q29 gold role stale được ghi riêng. Giữ OCR caveats,
 M6 gates, financial artifacts và GEN-01a/Web pending; không tuyên bố full accuracy.
-Closure theo CONDITIONAL APPROVAL chưa commit: negative thực tế BBS 2025 trang 13
+Closure theo CONDITIONAL APPROVAL `faa662db8bc4008f6fd5c3374e55c7dff1a7df04`
+đã push main: negative thực tế BBS 2025 trang 13
 tái hiện ACCEPT sai; source-quality gate `pdf_review:*` đưa về INVESTIGATE,
 0 claim/citation, proof cũ bị chặn admission/replay. Gate bảo thủ theo trang review.
 Q29 tái hiện trên baseline `7187075`: output giống EXT-01, chỉ lệch fixture cũ
 `semantic_role=null` so với `revenue`; không phải hồi quy EXT-01.
+[CI42345964918](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42345964918)
+completed/SUCCESS đúng SHA closure: 1.117 Python/9 Web smoke PASS;
+lint/format/planning/typecheck/build đạt, full regression manual SKIPPED.
+Local closure 91 tests PASS; giữ REVIEW theo CONDITIONAL APPROVAL.
 Next action: Tech Lead nghiệm thu hai điểm closure để quyết định DONE.
 
 ## QA-01a — Document Claim Verification & End-to-End Integration
