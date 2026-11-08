@@ -23,6 +23,7 @@ from ..tools.question_understanding import (
     EXTRA_ALIASES,
     FORMULA_ALIASES,
     ITEM_RULES,
+    natural_formula,
     normalize,
     understand,
 )
@@ -64,10 +65,10 @@ def _citations(values):
 
 
 def claim_scope(entry: VerifiedClaim):
-    """Only use the accepted calculation's source-backed scope resolution.
+    """Use source-backed scope from an admitted calculation or exact fact context.
 
     Caller intent/batch context and a document year do not confirm filing scope.
-    Fact-only claims without an embedded resolution retain unknown scope.
+    Fact proofs without a resolved, available M6 source context retain unknown scope.
     """
     if entry.identity.kind == "document":
         return None
@@ -81,6 +82,26 @@ def claim_scope(entry: VerifiedClaim):
         == (entry.identity.document_id, entry.identity.snapshot_id)
     ):
         return scope.reporting_scope
+    if entry.identity.kind == "fact" and entry.decision.evidence:
+        contexts = [
+            ctx
+            for ctx in entry.decision.evidence.evidence
+            if ctx.reference in entry.accepted_claim.fact_references
+            and ctx.reference.kind == "fact"
+        ]
+        if (
+            contexts
+            and all(
+                ctx.available
+                and ctx.reporting_scope_status == "resolved"
+                and (ctx.document_id, ctx.snapshot_id)
+                == (entry.identity.document_id, entry.identity.snapshot_id)
+                and ctx.reporting_scope in {"separate", "consolidated"}
+                for ctx in contexts
+            )
+            and len({ctx.reporting_scope for ctx in contexts}) == 1
+        ):
+            return contexts[0].reporting_scope
     return None
 
 
@@ -218,11 +239,16 @@ def _targets(text):
         for name in names:
             for match in re.finditer(r"(?<!\w)" + re.escape(normalize(name)) + r"(?!\w)", text):
                 spans.append((match.start(), match.end(), kind, key))
-    return _unique(
+    targets = _unique(
         (kind, key)
         for start, end, kind, key in sorted(spans)
         if not any(a <= start and end <= b and b - a > end - start for a, b, _, _ in spans)
     )
+    if inferred := natural_formula(text):
+        targets = [(kind, key) for kind, key in targets if key != "b02.net_revenue"]
+        if ("metric", inferred) not in targets:
+            targets.append(("metric", inferred))
+    return targets
 
 
 # QA paraphrases of existing catalog items, not new financial definitions.
@@ -301,6 +327,7 @@ def understand_requirements(question):
                 w in t
                 for w in (
                     "so lieu su dung",
+                    "so lieu dung",
                     "so lieu nao",
                     "nhung so lieu",
                     "du lieu dau vao",

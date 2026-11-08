@@ -12,6 +12,7 @@ from ..evidence.search import (
     SearchDocumentEvidenceRequest,
     normalize_search,
 )
+from .document_topics import source_topics
 from .planner_contracts import PlannerOperation
 
 DocumentKind = Literal["exact_text", "entity_role", "table_labels", "source_excerpt"]
@@ -54,7 +55,7 @@ class DocumentCandidate(FinancialModel):
     composition_id: str
     composition_sha256: str
     period: None = None
-    references: list[RetrievalReference] = Field(min_length=1, max_length=3)
+    references: list[RetrievalReference] = Field(min_length=1, max_length=12)
     citations: list[EvidenceCitation] = Field(min_length=1)
     quotations: list[str] = Field(min_length=1)
     person: str | None = None
@@ -82,14 +83,9 @@ def document_intent(question):
         add("Khoản mục trong bảng tiền", "table_labels", "tiền mặt")
     if "y kien kiem toan" in text:
         add("Ý kiến kiểm toán", "exact_text", "ý kiến kiểm toán")
-    if not specs and re.search(r"\b(thuyet minh|chinh sach|noi dung b09)\b", text):
-        topic = re.split(r"\bvề\s+", question, flags=re.I)[-1].strip(" .?")
-        topic = re.sub(r"^(?:các\s+)?khoản\s+", "", topic, flags=re.I)
-        topic = re.sub(r"\s+(?:không|như thế nào|thế nào|ra sao).*$", "", topic, flags=re.I)
-        if topic == question.strip(" .?"):
-            topic = re.sub(r"^.*?chính sách\s+", "", topic, flags=re.I)
-            topic = re.sub(r"\s+được thuyết minh.*$", "", topic, flags=re.I)
-        add(topic, "source_excerpt", re.sub(r"^chính sách\s+", "", topic, flags=re.I))
+    for topic in source_topics(question):
+        if not any(r.target == normalize_search(topic) for r in specs):
+            add(topic, "source_excerpt", topic)
     outside_quotes = normalize_search(re.sub(r'["“][^"”]*["”]', "", question))
     mixed = bool(
         re.search(

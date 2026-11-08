@@ -73,6 +73,13 @@ def _matches(text, aliases):
     }
 
 
+def natural_formula(text):
+    """Recognize growth intent independent of company/year words between its terms."""
+    if re.search(r"\bdoanh thu\b.*\b(tang hay giam|tang hoac giam)\b.*\bnam truoc\b", text):
+        return "revenue_yoy"
+    return None
+
+
 def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     text = normalize(question)
     years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
@@ -85,7 +92,7 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
         if "rieng" in text
         else None,
     )
-    if re.search(r"\b(quy|thang|ban nien)\b", text):
+    if re.search(r"\b(quy|thang|ban nien)\b", re.sub(r"\bquy dinh\b", "", text)):
         return parsed, ["non_annual_period_unsupported"]
     dates = re.findall(r"\b(\d{1,2})/(\d{1,2})/((?:19|20|21)\d{2})\b", question)
     iso_dates = re.findall(r"\b((?:19|20|21)\d{2})-(\d{2})-(\d{2})\b", question)
@@ -146,6 +153,8 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
         )
     )
     formulas = _matches(text, FORMULA_ALIASES)
+    if inferred := natural_formula(text):
+        formulas.add(inferred)
     if not formulas and any(
         p in text
         for p in (

@@ -1,5 +1,14 @@
 # Data contracts
 
+GEN-02 mở rộng tùy chọn `SearchDocumentEvidenceRequest.context_radius` (0–12,
+mặc định3): chỉ điều khiển neighbors trả về, giữ ranking context BM25 radius3.
+Document source-excerpt dùng12, dừng theo heading và cùng page/request/snapshot;
+`DocumentCandidate.references` tăng giới hạn3→12. M6 vẫn replay từng selector,
+exact quotations, citations, source continuity và source-quality gate. Neighbors
+không tự là semantic proof. Nếu nguồn khai báo số điều kiện, builder/M7 selection
+không coi trích đoạn thiếu bullet là đủ coverage. M6 literal-quotation replay giữ
+nguyên để không vô hiệu hóa accepted partial quotes; không migrate/rewrite history.
+
 W-03 refinement dùng metadata_v2 riêng cho PDF preflight trong
 `document_processing.metadata_preflight`: năm fields có status/candidates/raw_text,
 nguồn PDF page/content_id; accepted/acceptance_origin/acceptance_history phân biệt

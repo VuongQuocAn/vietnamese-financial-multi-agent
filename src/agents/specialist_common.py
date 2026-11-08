@@ -383,6 +383,18 @@ def with_assignment(prompt, upstream):
     )
 
 
+def _numeric_proposals(evidence):
+    return [
+        dict(
+            evidence_id=e.evidence_id,
+            kind="approved_metric" if e.calculation else "fact",
+            meaning="metric_value" if e.calculation else "fact_value",
+            period=e.period,
+        )
+        for e in evidence
+    ]
+
+
 def generate_candidates(
     *, gateway, model, result, prompt, proposal_type, render, prefix, deterministic=False
 ):
@@ -390,15 +402,7 @@ def generate_candidates(
         # Existing typed numeric renderers; no model, interpretation or new calculation.
         result.llm.status = "deterministic"
         payload = {
-            "claims": [
-                dict(
-                    evidence_id=e.evidence_id,
-                    kind="approved_metric" if e.calculation else "fact",
-                    meaning="metric_value" if e.calculation else "fact_value",
-                    period=e.period,
-                )
-                for e in result.supporting_evidence
-            ],
+            "claims": _numeric_proposals(result.supporting_evidence),
             "missing_information": [],
         }
     else:
@@ -471,6 +475,18 @@ def generate_candidates(
     missing = payload["missing_information"]
     if not isinstance(missing, list) or any(not isinstance(m, str) for m in missing):
         raise ValueError("invalid_missing_information")
+    if not deterministic and not payload["claims"] and not missing and result.supporting_evidence:
+        # An unexplained empty model response supplies no rejection reason. Reuse
+        # the existing numeric pathway only after source/metric selection gates;
+        # keep the original model payload and send all candidates through M6.
+        payload = dict(payload, claims=_numeric_proposals(result.supporting_evidence))
+        result.trace.append(
+            SpecialistTrace(
+                stage="generation",
+                outcome="deterministic_numeric_fallback",
+                reasons=["empty_model_claims_without_missing_information"],
+            )
+        )
     # Model limitations are untrusted annotations, never financial claims.
     result.missing_evidence.extend(missing)
     evidence_by_id = {e.evidence_id: e for e in result.supporting_evidence}

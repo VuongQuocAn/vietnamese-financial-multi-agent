@@ -1,14 +1,88 @@
 """Document branch of M5. Keep the search and candidate trace source-bound."""
 
+import re
+from types import SimpleNamespace
+
 from ..evidence.composition import payload_sha256
 from ..evidence.document_claim_support import (
+    complete_declared_list,
     consecutive,
+    declared_list_count,
     document_citations,
     document_projection,
+    is_list_item,
     source_assertion,
 )
 from ..evidence.search import SearchDocumentEvidenceRequest, normalize_search
 from .document_qa_contracts import DocumentCandidate, DocumentSearchOperation
+
+
+def _heading(text):
+    text = text.strip()
+    if is_list_item(text):
+        return False
+    return bool(text) and (
+        bool(re.match(r"^\d+(?:\.\d+)*\.?\s+\S", text))
+        or len(text) <= 180
+        and not text.endswith((".", ";"))
+    )
+
+
+def _excerpt_groups(bundle):
+    """Join only retrieved contiguous selectors, stopping before the next heading.
+
+    The bounded pool includes original neighbors; it never crosses page, extraction,
+    snapshot or pointer family. Every selector is still individually replayed by M6.
+    """
+    pools, primaries = {}, []
+    for match in bundle.result.matches:
+        for evidence in [match.evidence, *(n.evidence for n in match.neighbors)]:
+            if not evidence.citations:
+                continue
+            ref = evidence.citations[0].source.reference
+            pointer = re.fullmatch(r"(/(?:text_elements|context)/)(\d+)", ref.source_pointer or "")
+            if pointer is None:
+                continue
+            key = (
+                evidence.record.document_id,
+                evidence.record.snapshot_id,
+                evidence.record.source_metadata.get("request_id"),
+                ref.anchor.page.model_dump_json(),
+                pointer[1],
+            )
+            order = int(pointer[2])
+            pools.setdefault(key, {})[order] = evidence
+            if evidence is match.evidence:
+                primaries.append((key, order))
+    query = normalize_search(bundle.operation.requirement.query)
+    heading_query = re.sub(r"^ghi nhan ", "", query)
+    groups, seen = [], set()
+    for key, order in primaries:
+        pool = pools[key]
+        start = order
+        while start - 1 in pool and not _heading(pool[start].record.raw_text or ""):
+            start -= 1
+        first = pool[start].record.raw_text or ""
+        if _heading(first) and f" {heading_query} " not in f" {normalize_search(first)} ":
+            continue
+        group = []
+        for i in range(start, start + 12):
+            if i not in pool or (i > start and _heading(pool[i].record.raw_text or "")):
+                break
+            group.append(pool[i])
+            texts = [e.record.raw_text or "" for e in group]
+            declared = declared_list_count(texts)
+            if declared is not None and sum(is_list_item(t) for t in texts) == declared:
+                break
+        signature = tuple(e.reference.model_dump_json() for e in group)
+        if (
+            signature
+            and signature not in seen
+            and complete_declared_list([e.record.raw_text or "" for e in group])
+        ):
+            seen.add(signature)
+            groups.append(group)
+    return groups
 
 
 def document_operations(requirements, manifest, snapshot_id):
@@ -23,6 +97,7 @@ def document_operations(requirements, manifest, snapshot_id):
                 query=r.query,
                 evidence_type="table" if r.kind == "table_labels" else "text",
                 top_k=5,
+                context_radius=12 if r.kind == "source_excerpt" else 3,
             ),
         )
         for i, r in enumerate(requirements, 1)
@@ -33,14 +108,25 @@ def document_candidates(bundle, company_id, manifest):
     requirement = bundle.operation.requirement
     candidates = []
     unresolved = None
-    for match in bundle.result.matches:
+    excerpts = _excerpt_groups(bundle) if requirement.kind == "source_excerpt" else None
+    matches = bundle.result.matches
+    if excerpts is not None:
+        # The existing candidate/verification path below remains identical for
+        # section-shaped excerpts; no shorter accepted prefix can hide a defect.
+        matches = [(group[0], group) for group in excerpts]
+    for match in matches:
+        excerpt = None
+        if isinstance(match, tuple):
+            evidence, excerpt = match
+            match = SimpleNamespace(
+                evidence=evidence,
+                document_id=evidence.record.document_id,
+                snapshot_id=evidence.record.snapshot_id,
+            )
         if not match.evidence.citations:
             continue
-        groups = [[match.evidence]]
-        if (
-            requirement.target == "nhan vien quan ly chu chot"
-            or requirement.kind == "source_excerpt"
-        ):
+        groups = [excerpt] if excerpt is not None else [[match.evidence]]
+        if requirement.target == "nhan vien quan ly chu chot":
             neighbors = {n.order: n.evidence for n in match.neighbors}
             # Only the forward neighbors following the primary in the saved source.
             pointer = match.evidence.citations[0].source.reference.source_pointer or ""

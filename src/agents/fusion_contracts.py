@@ -8,6 +8,7 @@ from pydantic import Field
 from ..accounting.contracts import FinancialModel
 from ..tools.question_understanding import normalize
 from .document_qa_contracts import DocumentRequirement, document_intent
+from .document_topics import requirement_spans
 
 
 class FusionRequirement(FinancialModel):
@@ -49,7 +50,7 @@ def decompose(question):
     from ..outputs.qa_composer import understand_requirements
 
     result = []
-    for span in re.split(r"[.?;!\n]+|\s+(?:và|đồng thời|kèm theo)\s+", question, flags=re.I):
+    for span in requirement_spans(question):
         if not span.strip():
             continue
         text = normalize(span)

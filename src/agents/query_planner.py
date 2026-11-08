@@ -25,6 +25,7 @@ from ..tools.question_understanding import (
     FORMULA_ALIASES,
     ITEM_RULES,
     _matches,
+    natural_formula,
     normalize,
 )
 from .contracts import (
@@ -88,6 +89,9 @@ def _question_targets(question):
     }
     aliases.update(FORMULA_ALIASES)
     targets = _matches(normalize(question), aliases)
+    if inferred := natural_formula(normalize(question)):
+        targets.add(inferred)
+        targets.discard("b02.net_revenue")
     return sorted(targets & FORMULA_ALIASES.keys()), sorted(targets & ITEM_RULES.keys())
 
 

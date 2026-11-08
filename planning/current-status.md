@@ -1,6 +1,21 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-07 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-08 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
+
+Status: **REVIEW có P1 blockers**, Owner giao08/11/2026; baseline `02a160f`.
+[Spec](tasks/GEN/GEN-02.md), [report](../docs/gen-02-cross-company-generalization.md).
+Chưa commit/CI remote.25development Full Answer Rate10/22→22/22; final22full/
+1partial/2abstain.15blind holdout7full/1partial/7abstain,5source-answerable gaps,
+0incorrect/unsupported releases;249/249dev và84/84holdout citations support audit.
+H03 thiếu prepared metric; H06/H07/H12 selection/boundaries; H11 mất requirement;
+H12 tái hiện useful-partial C1→abstain regression. Không tune runtime sau holdout.
+4new/25compatibility và các nhóm138/70/43/35 PASS (overlap);17legacy claims replay;
+7real binding controls PASS; live6calls/19742known tokens/0provider errors.
+38approved inputs/frozen dataset/runtime sau seal nguyên hash; giữ GEN-01a/Web.
+Artifacts local `artifacts/evidence/GEN-02/`; chưa M8-ready, chờ quyết định P1/fresh set.
+Next action: xác minh CI đúng implementation SHA trước khi bàn giao Tech Lead.
 
 ## QA-01b — Multi-Agent Financial & Document Evidence Fusion
 

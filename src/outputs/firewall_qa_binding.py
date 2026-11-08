@@ -7,6 +7,7 @@ request using the accepted catalog, ambiguity, scope and D03-B10 policies.
 import re
 
 from ..agents.document_qa_contracts import document_intent
+from ..evidence.document_claim_support import complete_declared_list
 from ..tools.question_understanding import normalize, understand
 from .qa_composer import (
     _assertion_signature,
@@ -69,6 +70,10 @@ def _document_inventory(request, entries, intent, specs):
             and e.identity.composition_sha256 == request.composition_sha256
             and (request.snapshot_id is None or e.identity.snapshot_id == request.snapshot_id)
             and e.accepted_claim.requirement in specs
+            and (
+                e.accepted_claim.claim_type != "source_excerpt"
+                or complete_declared_list(e.accepted_claim.quotations)
+            )
             and _matches_target(e, requirement)
         ]
         if not matching:

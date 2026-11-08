@@ -8,6 +8,23 @@ OCR_CAVEAT = "Trích từ bản nhận dạng đã lưu, với vị trí chứng
 SOURCE_LIMIT = "Nội dung phản ánh tài liệu đã lưu."
 
 
+def declared_list_count(texts):
+    for text in texts:
+        match = re.search(r"\((\d{1,2})\)\s+điều kiện", text, flags=re.I)
+        if match:
+            return int(match[1])
+    return None
+
+
+def is_list_item(text):
+    return bool(re.match(r"^\s*(?:[-–•]\s*|\([a-z0-9]+\)\s*)", text, flags=re.I))
+
+
+def complete_declared_list(texts):
+    declared = declared_list_count(texts)
+    return declared is None or sum(is_list_item(t) for t in texts) == declared
+
+
 def document_projection(record):
     if record.kind == "text":
         return {"text": record.raw_text} if record.raw_text and len(record.raw_text) <= 6000 else {}

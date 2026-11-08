@@ -34,6 +34,7 @@ class SearchDocumentEvidenceRequest(FinancialModel):
     section_hint: str | None = Field(default=None, max_length=200)
     exact_phrase: bool = False
     top_k: int = Field(default=5, ge=1, le=20)
+    context_radius: int = Field(default=3, ge=0, le=12)
 
 
 class SearchCell(FinancialModel):
@@ -118,7 +119,7 @@ def _cells(record):
 
 
 class EvidenceSearchIndex:
-    """Một unit/record; context chỉ từ indices liên tiếp cùng source, radius=3.
+    """Một unit/record; ranking context radius=3, returned neighbors bounded 0–12.
 
     Constructor luôn chạy loader pin toàn bộ payload; không nhận catalog tùy ý.
     FTS index chỉ chứa normalized projection trong memory, không persist corpus.
@@ -137,6 +138,7 @@ class EvidenceSearchIndex:
         for record in self.catalog.evidence:
             if record.kind == "text" and (order := _order(record)):
                 groups[order[0]][order[1]] = record
+        self._groups = groups
         for record in self.catalog.evidence:
             neighbors = []
             if record.kind == "text":
@@ -242,6 +244,16 @@ class EvidenceSearchIndex:
         for _, rowid, score, terms, phrase, hint in ranked[: request.top_k]:
             record, body, cells, neighbors = self._units[rowid - 1]
             primary = self.catalog.api.get_evidence(record.evidence_identity()).matches[0]
+            if record.kind == "text" and request.context_radius != 3 and (order := _order(record)):
+                neighbors = []
+                group, number = order
+                for step in (-1, 1):
+                    for distance in range(1, request.context_radius + 1):
+                        adjacent = self._groups[group].get(number + step * distance)
+                        if adjacent is None:
+                            break
+                        neighbors.append((number + step * distance, adjacent))
+                neighbors.sort(key=lambda x: x[0])
             context = [
                 SearchNeighbor(
                     order=order,
