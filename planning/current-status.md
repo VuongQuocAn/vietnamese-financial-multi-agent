@@ -6,8 +6,9 @@ Cập nhật 2026-11-08 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 Status: **REVIEW có P1 blockers**, Owner giao08/11/2026; baseline `02a160f`.
 [Spec](tasks/GEN/GEN-02.md), [report](../docs/gen-02-cross-company-generalization.md).
-Chưa commit/CI remote.25development Full Answer Rate10/22→22/22; final22full/
-1partial/2abstain.15blind holdout7full/1partial/7abstain,5source-answerable gaps,
+Implementation `fcba4ff64ae0e5958300e6eeb408601cd62f4d20` đã push main; [CI42494041844](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42494041844) completed/SUCCESS; 1151 Python/9 Web PASS; full regression manual SKIPPED đúng implementation SHA.
+25development: Full Answer10/22→22/22; sau sửa22full/1partial/2abstain.
+15blind holdout7full/1partial/7abstain,5source-answerable gaps,
 0incorrect/unsupported releases;249/249dev và84/84holdout citations support audit.
 H03 thiếu prepared metric; H06/H07/H12 selection/boundaries; H11 mất requirement;
 H12 tái hiện useful-partial C1→abstain regression. Không tune runtime sau holdout.
@@ -15,7 +16,7 @@ H12 tái hiện useful-partial C1→abstain regression. Không tune runtime sau 
 7real binding controls PASS; live6calls/19742known tokens/0provider errors.
 38approved inputs/frozen dataset/runtime sau seal nguyên hash; giữ GEN-01a/Web.
 Artifacts local `artifacts/evidence/GEN-02/`; chưa M8-ready, chờ quyết định P1/fresh set.
-Next action: xác minh CI đúng implementation SHA trước khi bàn giao Tech Lead.
+Next action: Tech Lead review các P1 blockers và quyết định follow-up/fresh blind set.
 
 ## QA-01b — Multi-Agent Financial & Document Evidence Fusion
 

@@ -61,7 +61,7 @@ Audit → freeze → development → RCA/fixes → retest → holdout → report
 - [x] 40 questions/oracles cố định trước execution, holdout không dùng tuning.
 - [x] Actual E2E 25 development before/after và15holdout, requirement/citation audit.
 - [x] P0/P1 có RCA, fixes hoặc technical blocker; safety controls không regression.
-- [ ] Report có metrics/IDs, latency, limitations; CI đối chiếu đúng SHA.
+- [x] Report có metrics/IDs, latency, limitations; CI đối chiếu đúng SHA.
 
 ## Required Tests
 
@@ -73,8 +73,9 @@ Quota/provider availability, source quality và approved capability gaps cần b
 
 ## Implementation Evidence
 
-Implementation: chưa commit; local runtime đã seal trước holdout và giữ nguyên sau
-evaluation. Development10full/4partial/10abstain/1sai mục tiêu →22full/1partial/2abstain;
+Implementation: `fcba4ff64ae0e5958300e6eeb408601cd62f4d20` đã push main; [CI42494041844](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42494041844) completed/SUCCESS; 1151 Python/9 Web PASS; full regression manual SKIPPED đúng implementation SHA.
+Runtime seal/oracle bất biến sau holdout; clean staged-tree smoke D03/D18 full,
+khớp exact implementation tree, không gồm3GEN-01a source edits. Development10full/4partial/10abstain/1sai mục tiêu →22full/1partial/2abstain;
 Full Answer Rate10/22→22/22. Holdout7full/1partial/7abstain, Full Answer Rate7/12,
 5/13source-answerable abstentions;0incorrect/unsupported releases. Citations191/191,
 249/249 và84/84 theo từng phase. H03 pipeline-capability oracle clarification giữ
@@ -91,7 +92,7 @@ orchestrator/35search-document groups PASS (overlap). Real7binding controls PASS
 live6Gateway invocations/19742known tokens/0reported provider errors, BBS full nhờ
 numeric fallback, BCC full qua model.38approved input hashes/original frozen dataset
 vàruntime sau seal không đổi; inherited GEN-01a/Web giữ ngoài implementation.
-Next action: xác minh CI đúng implementation SHA trước khi bàn giao Tech Lead.
+Next action: Tech Lead review các P1 blockers và quyết định follow-up/fresh blind set.
 
 ## Handoff Notes
 

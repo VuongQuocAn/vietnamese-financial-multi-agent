@@ -1,8 +1,8 @@
 # GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
 
 Ngày 08/11/2026 (Asia/Bangkok). Status **REVIEW**, chờ Tech Lead; không tự DONE.
-Baseline `02a160fdca013ac55972949c9002622dc643de01`; implementation `chưa commit`.
-CI: chưa chạy remote. Giữ pending GEN-01a/Web ngoài implementation.
+Baseline `02a160fdca013ac55972949c9002622dc643de01`; implementation `fcba4ff64ae0e5958300e6eeb408601cd62f4d20`.
+CI: [CI42494041844](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42494041844) completed/SUCCESS; 1151 Python/9 Web PASS; full regression manual SKIPPED đúng implementation SHA. Giữ pending GEN-01a/Web ngoài implementation.
 
 ## 1. Executive Summary
 
@@ -24,7 +24,10 @@ follow-up/fresh blind set; runtime không được tune theo holdout trong vòng
 | Partially answered | 4 | 1 | 1 |
 | Abstained (tất cả lý do) | 10 | 2 | 7 |
 | False abstentions (source-answerable) | 9 | 1 | 5 |
+| False Abstention Rate / source-answerable | 9/25 | 1/25 | 5/13 |
+| Correct Abstention Rate / natural controls | 1/1 | 1/1 | 2/2 |
 | Incorrect answers | 1 | 0 | 0 |
+| Incorrect Answer Rate / answering cases | 1/15 | 0/23 | 0/8 |
 | Full Answer Rate | 10/22 | 22/22 | 7/12 |
 | Useful Answer Rate / source-answerable | 14/25 | 23/25 | 8/13 |
 | Citation correctness / source support | 191/191 | 249/249 | 84/84 |
@@ -47,6 +50,9 @@ unsupported ROE requirement vào denominator: audit gốc operation-only giữ n
 để bảo toàn seal; supplementary denominator làm coverage thấp hơn, không tăng điểm.
 Có cả source keys, coverage/retrieval/verification,
 actual answers, citations, trace paths và unsupported claim IDs; không chỉ PASS/FAIL.
+Final RCA nằm trong `reviewed-audit.json` và `manual-root-causes.json`; auto-stage
+labels trong audit gốc là tentative, không dùng internal_error để quy H03 thành
+provider failure. Sealed audit và classification/metrics không bị sửa bởi RCA review.
 
 **development-before:** full=D01,D04,D05,D06,D09,D14,D17,D19,D20,D21; partial=D08,D18,D22,D23; abstain=D02,D03,D10,D11,D12,D13,D15,D16,D24,D25; incorrect=D07.
 False abstention IDs: D02,D03,D10,D11,D12,D13,D15,D16,D24.
@@ -86,6 +92,12 @@ Freeze UTC `2026-11-08T13:18:54.630896+00:00`; development seal UTC `2026-11-08T
 hashes final development audit và toàn bộ runtime. Runner từ chối holdout trước seal
 hoặc khi runtime thay đổi sau seal. Không có actual holdout output trước seal;
 không dùng holdout chọn fix/prompt/threshold. Runtime giữ nguyên sau holdout.
+
+`final-integrity.json` xác minh4frozen files,38approved input files và runtime sau
+seal nguyên hash. Full evaluation chạy trên workingtree có3GEN-01a source edits
+được giữ nguyên. Smoke D03/D18 chạy thêm từ exact staged tree loại3edits đó,2/2full,
+0provider calls; tree hash khớp implementation commit. `clean-code-smoke/source-manifest.json`
+ghi module paths/tree/differences; không gán CI cho pending GEN-01a/Web hoặc raw data.
 
 | Frozen file | SHA256 |
 | --- | --- |
@@ -143,11 +155,11 @@ ledger admission, claim-level citations hay Firewall. Graph association không l
 
 Targeted validation:4GEN-02 tests;138related regression trước fallback;70specialist/
 GEN-02 sau fallback;43orchestrator/router/pipeline;35search/document/fusion sau final
-boundary fix. Các nhóm có overlap, không cộng thành số tests độc lập. Real baseline
+boundary fix. Các nhóm có overlap, không cộng thành số tests độc lập.
 Sau compatibility correction:25GEN-02/document/fusion PASS;4GEN-02 final assertions
 PASS;17accepted legacy claims replay nguyên file. Các kết quả trước guard thử không
 được gán là final-policy evidence; `legacy-ledger-compatibility.json` xác minh riêng.
-smoke8/8; final binding controls C3/D1–D6 đạt7/7. A7 real source-quality control giữ
+Real baseline smoke8/8; final binding controls C3/D1–D6 đạt7/7. A7 real source-quality control giữ
 ACCEPT1/INVESTIGATE1, không phát hành defective document. `regression.json` ghi lệnh/
 thời điểm tương ứng. Lint/format, planning và diff checks là engineering evidence,
 không chứng minh financial accuracy toàn PDF.
