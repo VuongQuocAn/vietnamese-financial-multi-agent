@@ -69,6 +69,11 @@ class FinancialQAPipeline:
         self.renderer = CitationRenderer()
         self.compositions = tuple(compositions)
         self.document_repository = document_repository
+        from ..evidence.release_activation import select_active_releases
+
+        self.compositions, self.document_repository = select_active_releases(
+            self.compositions, self.document_repository
+        )
 
     def _m5(self, request, *, document=False):
         gateway = self.gateway if request.allow_gateway and not document else None
@@ -248,7 +253,7 @@ class FinancialQAPipeline:
         )
         return bound, manifest, []
 
-    def _run_document(self, request, requirements, response, stage, stop):
+    def _run_document(self, request, requirements, response, stage, stop, recovery_seen):
         trace = response.trace
         bound, manifest, reasons = stage("context", lambda: self._document_context(request))
         if reasons:
@@ -355,6 +360,23 @@ class FinancialQAPipeline:
                         for history in histories
                         for e in history.final.evidence
                     )
+                    from ..evidence.conditional_recovery import recover_histories
+
+                    recovery = stage(
+                        "ocr_recovery_detection",
+                        lambda: recover_histories(
+                            histories, manifest, self.document_repository, seen=recovery_seen
+                        ),
+                    )
+                    if recovery:
+                        trace.document_release["ocr_recovery"] = recovery
+                        trace.provider_calls += sum(r.get("calls", 0) for r in recovery)
+                        trace.known_total_tokens += sum(
+                            (r.get("usage", {}).get("total_tokens") or 0) for r in recovery
+                        )
+                        trace.provider_errors.extend(
+                            r["error_code"] for r in recovery if "error_code" in r
+                        )
                     results = stage("admission", lambda: self.repository.admit_many(histories))
                     for history, result in zip(histories, results, strict=True):
                         decision = history.final
@@ -400,6 +422,7 @@ class FinancialQAPipeline:
             )
             trace.firewall_decision = firewall.decision
             trace.document_release = dict(
+                **trace.document_release,
                 requirements=source.plan.model_dump(mode="json"),
                 firewall=firewall.model_dump(mode="json"),
             )
@@ -421,7 +444,8 @@ class FinancialQAPipeline:
         finally:
             tools.close_search()
 
-    def run(self, request: FinancialQARequest) -> FinancialQAResponse:
+    def run(self, request: FinancialQARequest, *, recovery_seen=None) -> FinancialQAResponse:
+        recovery_seen = set() if recovery_seen is None else recovery_seen
         request = FinancialQARequest.model_validate_json(request.model_dump_json())
         started = perf_counter()
         trace = PipelineTrace(request_id=request.request_id)
@@ -504,14 +528,16 @@ class FinancialQAPipeline:
             from .fusion_pipeline import run_fusion
 
             if is_mixed(request.question):
-                return run_fusion(self, request, response, stage, stop)
+                return run_fusion(self, request, response, stage, stop, recovery_seen=recovery_seen)
             if intent == "mixed":
                 _, issues = understand(request.question)
                 if "cross_document_comparison_blocked_D03_B10" in issues:
                     return stop("unsupported", ["cross_document_comparison_blocked_D03_B10"])
                 return stop("unsupported", ["mixed_decomposition_unresolved"])
             if intent == "document":
-                return self._run_document(request, requirements, response, stage, stop)
+                return self._run_document(
+                    request, requirements, response, stage, stop, recovery_seen
+                )
             bound, blocked, reasons = stage("context", lambda: self._context(request))
             if blocked:
                 trace.stages["context"].status = blocked

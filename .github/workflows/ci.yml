@@ -68,6 +68,7 @@ jobs:
           tests/unit/test_generalization_regressions.py
           tests/unit/test_qa_coverage_recovery.py
           tests/unit/test_document_corrections.py
+          tests/unit/test_conditional_recovery.py
           tests/unit/test_evidence_composition.py
           tests/unit/test_evidence_graph.py
           tests/unit/test_composition_graph.py

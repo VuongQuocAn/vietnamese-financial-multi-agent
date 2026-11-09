@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: PERF
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: GEN-02, GEN-02-Fix-A, GEN-02-Fix-B
 - Estimated Complexity: S
@@ -57,6 +57,8 @@ Focused changed modules, source-quality/snapshot/cache/ledger controls, planning
 ## Risks and Blockers
 
 Mẫu nhỏ offline không đại diện provider latency hoặc M8 financial accuracy.
+Nghiệm thu có giới hạn: latency chưa được giải quyết; refresh median35,828s và
+mixed QA78,349s trong phép đo này. Không mở PERF-01-Fix hoặc vòng tối ưu thứ ba.
 
 ## Implementation Evidence
 
@@ -68,6 +70,11 @@ Source load giảm75,2%, document refresh giảm23,7%, cache-hit giảm23,2%; re
 nhóm chậm4,5%, ledger query chậm3,5%. Hai baseline lỗi được loại minh bạch; final
 policy digest đúng như after. [Report](../../../docs/perf-01-fast-path-optimization.md).
 
+Tech Lead APPROVED ngày09/11/2026, cho phép DONE với giới hạn trên: hai tối ưu đúng
+phạm vi, cải thiện source loading/document QA và giữ các kiểm soát quan trọng;
+không bắt buộc đạt chỉ tiêu tốc độ bằng mọi giá. Phiên nghiệm thu chỉ cập nhật
+planning và chạy planning/diff checks; không chạy lại CI/tests/QA.
+
 ## Handoff Notes
 
-Next action: Tech Lead review.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

@@ -9,7 +9,7 @@ from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
 TASK_ID = re.compile(
-    r"(?:(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|QA-Q\d{2}|QA-Fix-\d{2})"
+    r"(?:(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|QA-Q\d{2}|QA-Fix-\d{2})"
 )
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
@@ -112,6 +112,8 @@ def check(root: Path) -> int:
         milestones.append("EF")
     if any(task[2] == "PERF" for task in tasks.values()):
         milestones.append("PERF")
+    if any(task[2] == "REC" for task in tasks.values()):
+        milestones.append("REC")
     require(len(counts) == len(milestones) + 1, "Dashboard must contain milestones and TOTAL")
     for row, milestone in zip(counts, [*milestones, "TOTAL"], strict=True):
         subset = [task for task in tasks.values() if milestone == "TOTAL" or task[2] == milestone]

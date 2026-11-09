@@ -2,9 +2,27 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## REC-01 — Conditional OCR Recovery & Approved Release Activation
+
+Status: **REVIEW**; Owner giao 09/11/2026; baseline `0a66240`.
+[Spec](tasks/REC/REC-01.md), [report](../docs/rec-01-conditional-ocr-recovery.md).
+Persistent exact selection/preflight và lazy M6-quality recovery hook đã triển khai;
+proposal không tự PDFTextReview/approval/release. Local final99 focused PASS.
+Một H08 E2E:2ACCEPT/stored, M7 answered, Firewall ALLOW_WITH_CAVEAT;
+hai citations PDF16:selector7 corrected và selector6 original hợp lệ. Restart đúng release.
+PDF30/9 quarantine,old defective proofs/retrieval blocked;clean selector12 vẫn release được.
+Live1Gemini call trả invalid_request,usage/tokens unknown,không retry;
+recorded proposal/uncertainty fixtures tách riêng,không thay live OCR evaluation.
+38approved inputs/4frozen/policy/pending GEN-01a/Web giữ hash.
+Clean detection0–0,0062ms; D01+7,17%latency,D17−1,45%,D18−4,73%; một sample/case.
+Answer/source citations/M6/M7/Firewall tương đương; financial proof IDs khác do
+timing/random origin/plan, không byte-exact ledger. Chưa commit/CI, không M8-ready.
+Next action: Tech Lead review.
+
 ## PERF-01 — Fast Path Optimization
 
-Status: **REVIEW**; Owner giao09/11/2026, baseline `8478c98`.
+Status: **DONE — Tech Lead APPROVED, nghiệm thu có giới hạn ngày09/11/2026**;
+Owner giao09/11/2026, baseline `8478c98`.
 [Spec](tasks/PERF/PERF-01.md), [report](../docs/perf-01-fast-path-optimization.md).
 Hai bottlenecks: exact-byte parsed ledger/source snapshot reuse, dynamic policy giữ
 nguyên.99focused PASS,12payloads tương đương,13ledger entries byte-exact; H08/PDF30
@@ -15,7 +33,11 @@ SUCCESS đúng SHA, Python3.12/Web; manual full regression SKIPPED.
 Refresh median34,269→35,828s (chậm4,5%); cache-hit8,663→6,655s (nhanh23,2%);
 document refresh nhanh23,7%, source load giảm75,2%, ledger query chậm3,5%.
 Hai baseline lỗi loại minh bạch; final policy digest khớp after. Giữ GEN-01a/Web.
-Next action: Tech Lead review.
+Nghiệm thu hai tối ưu đúng phạm vi và giữ các kiểm soát quan trọng; không xác nhận
+đã giải quyết latency: refresh median35,828s, mixed QA78,349s trong phép đo này.
+Phiên nghiệm thu chỉ cập nhật planning; không chạy lại CI/tests/QA, không mở
+PERF-01-Fix hoặc vòng tối ưu thứ ba.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 

@@ -1,5 +1,14 @@
 # Data contracts
 
+REC-01 thêm operator selection `active-releases.json` tại DOCUMENT_RELEASE_ROOT:
+logical document/composition/release/policy đều ghim exact digest; startup gọi
+check_correction_promotion và không fallback khi config/pins/PDF thiếu hoặc sai.
+Accepted inputs và source policy không đổi bởi activation. Recovery source mapping
+ghim evidence payload/composition/page/selector; candidate riêng giữ transcription,
+uncertainty, provenance và provider metadata, không giả PDFTextReview/approval.
+Chỉ M6 source-quality failures có nguồn cụ thể mới vào nhánh này; clean/missing
+evidence không gọi OCR. [REC-01](rec-01-conditional-ocr-recovery.md).
+
 Fix-B closure: policy root tương đối được neo vào project root, không theo cwd;
 bản cài ngoài checkout cần root tuyệt đối. Store được cấu hình nhưng thiếu file phải
 fail closed. DOCUMENT_SOURCE_POLICY_SHA256 pin canonical typed-policy digest, kiểm

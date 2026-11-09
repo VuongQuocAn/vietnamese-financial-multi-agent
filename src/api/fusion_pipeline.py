@@ -16,7 +16,8 @@ from ..tools.question_understanding import understand
 from ..verification.ledger import VerifiedClaimLedger
 
 
-def run_fusion(pipeline, request, response, stage, stop):
+def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
+    recovery_seen = set() if recovery_seen is None else recovery_seen
     trace = response.trace
     parsed, issues = understand(request.question)
     forbidden = set(issues) & {
@@ -152,7 +153,9 @@ def run_fusion(pipeline, request, response, stage, stop):
             updates.update(snapshot_id=None, period=None, reporting_scope=None)
         child = stage(
             part.requirement_id,
-            lambda updates=updates: scoped.run(bound.model_copy(update=updates)),
+            lambda updates=updates: scoped.run(
+                bound.model_copy(update=updates), recovery_seen=recovery_seen
+            ),
         )
         bundle.lane_results.append(
             dict(
