@@ -50,6 +50,10 @@ class VerifiedClaimRepository:
             if key in seen:
                 raise ValueError("Duplicate identity in verified ledger")
             seen.add(key)
+            # Retain revoked entries in storage, but never expose them as current
+            # trusted output. One affected claim must not hide unrelated entries.
+            if not self._source_eligible(entry):
+                continue
             digest = verification_input_digest(entry)
             if digest not in self._validated_payloads:
                 validate_entry(entry)
@@ -103,7 +107,15 @@ class VerifiedClaimRepository:
 
     def list_all(self) -> list[LedgerEntry]:
         with self.lock:
-            return self._read().entries
+            return [e for e in self._read().entries if self._source_eligible(e)]
+
+    @staticmethod
+    def _source_eligible(entry):
+        if entry.identity.kind != "document":
+            return True
+        from ..evidence.document_corrections import document_source_issues
+
+        return not document_source_issues(entry.accepted_claim, entry.decision.evidence)
 
     def get(self, verified_claim_id: str) -> LedgerEntry | None:
         return next(

@@ -90,6 +90,12 @@ def judge_document(claim, contexts):
     # Leave clean v1 proofs unchanged so existing valid ledger entries still replay.
     if any(caveat.startswith("pdf_review:") for caveat in source_caveats):
         checks["source_quality"] = False
+    from ..evidence.document_corrections import document_source_issues
+
+    current_issues = document_source_issues(claim, contexts)
+    if current_issues:
+        checks["source_quality"] = False
+        source_caveats.update(current_issues)
     reasons = [key for key, passed in checks.items() if not passed]
     return DocumentDecision(
         original_claim=claim,

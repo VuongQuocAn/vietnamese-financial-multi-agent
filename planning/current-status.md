@@ -2,6 +2,19 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
+
+Status **IN_PROGRESS**, Owner giao09/11/2026; baseline `46aa45f`.
+[Spec](tasks/GEN/GEN-02-Fix-B.md). PDF16 BCC2024 ghi “khó có khả năng”, OCR bỏ “khó”;
+RCA “không” trước đây cần đính chính, giữ original/frozen inputs bất biến.
+Correction engineering VALIDATED; chưa có Tech Lead approval để promote release.
+Không Gemini/OCR/full40/Fix-A fresh; giữ GEN-01a/Web pending.
+66focused tests PASS; H08 original/pending blocked, approved-state fixture đúng PDF;
+actual0approvals. A7 giữ gate;17legacy unchanged. Audit5additional excerpts phát hiện
+PDF30/9 P1, đã quarantine/revoke1extra control claim;2P2lexical chưa sửa.
+[Report](../docs/gen-02-fix-b-ocr-source-quality.md). Chờ CI đúng implementation SHA.
+Next action: xác minh CI và bàn giao REVIEW.
+
 ## GEN-02-Fix-A — QA Coverage & False Abstention Recovery
 
 Status **DONE**, Tech Lead APPROVED ngày09/11/2026; Owner giao09/11/2026; baseline `6f682c3`.

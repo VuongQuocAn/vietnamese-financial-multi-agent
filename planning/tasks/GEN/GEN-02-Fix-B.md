@@ -1,0 +1,81 @@
+# TASK GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
+
+## Metadata
+
+- Milestone: GEN
+- Status: IN_PROGRESS
+- Priority: P1
+- Dependencies: GEN-02-Fix-A, QA-01b, EXT-01
+- Estimated Complexity: M
+
+## Objective
+
+Owner giao09/11/2026; baseline `46aa45f`. Xác minh H08 bằng PDF, chặn source sai,
+chuẩn bị correction/version có provenance và approval riêng. Dừng REVIEW.
+
+## Context
+
+[GEN-02](../../../docs/gen-02-cross-company-generalization.md),
+[Fix-A](../../../docs/gen-02-fix-a-qa-coverage.md),
+[EXT-01](../../../docs/ext-01-full-document-evidence-coverage.md).
+GEN-02 REVIEW là nguồn findings; Fix-A đã DONE. Không chạy lại Fix-A QA.
+
+## Inputs
+
+Accepted composition/repository, BCC2024 PDF16/selector7, saved response/render và
+GEN-02 discrepancy/oracle read-only. Request đầy đủ local
+`artifacts/evidence/GEN-02-Fix-B/task-request.md`. Giữ GEN-01a/Web pending.
+
+## Outputs
+
+[Report](../../../docs/gen-02-fix-b-ocr-source-quality.md); local artifacts
+`artifacts/evidence/GEN-02-Fix-B/`: PDF review, correction/validation, candidate
+manifest, H08 states, negative controls, compatibility, CI.
+
+## Allowed Changes
+
+Text correction records, versioned composition, current source-quality policy;
+M6/admission/replay và focused tests. Commit/push main, đối chiếu CI đúng SHA.
+
+## Out of Scope
+
+Accepted source/ledger mutation, OCR/Gemini live, full40QA, Fix-A fresh rerun,
+Web, PERF-01, M8, fake approval hoặc semantic OCR detector.
+
+## Implementation Steps
+
+PDF/source audit và tối đa5 additional excerpts → tối đa2vòng fixes/tests →
+final targeted H08/control/compatibility → report/CI → REVIEW.
+
+## Acceptance Criteria
+
+- [x] PDF discrepancy xác minh; original inputs/ledger bất biến.
+- [x] Correction provenance, validation, versioning và approval tách biệt.
+- [x] Original confirmed defect và unapproved correction không phát hành.
+- [x] Wrong bindings/content, old proof và flag removal bị chặn.
+- [x] Real H08 và A7, ledger/verification/search compatibility đạt.
+- [ ] CI đúng SHA; báo rõ actual release với isolated fixture.
+
+## Required Tests
+
+Focused correction/M6/replay/search tests và real H08/A7; một final pass.
+Không Gemini/OCR/full40QA hoặc lặp full suite local. Ruff/planning/diff checks.
+
+## Risks and Blockers
+
+PDF thực tế ghi “khó có khả năng thanh toán”, không phải “không có” như RCA cũ.
+Giữ RCA/oracle cũ bất biến, lập record mới đúng PDF. Chưa có phê duyệt Tech Lead
+cho text correction release; chỉ engineering validation, candidate chưa accepted.
+
+## Implementation Evidence
+
+Chưa commit.66final focused tests PASS (12correction/10negative controls); A7 PASS;
+H08 original/pending INVESTIGATE, isolated approved-state fixture ACCEPT đúng PDF;
+17legacy claims replay nguyên file. Independent audit phát hiện1extra material claim
+PDF30/9, đã quarantine và filter warm cache;2P2lexical giữ ngoài scope.5additional
+excerpts;0actual approvals/accepted corrected releases.38inputs/4frozen/runtime
+và inherited changes nguyên hash. Chờ CI đúng implementation SHA.
+
+## Handoff Notes
+
+Next action: hoàn tất controlled correction và targeted validation để bàn giao REVIEW.

@@ -1,5 +1,11 @@
 # GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
 
+Đính chính source review09/11/2026 tại [GEN-02-Fix-B](gen-02-fix-b-ocr-source-quality.md):
+BCC2024 PDF16/selector7 thực tế ghi “khó có khả năng thanh toán”; OCR bỏ “khó”.
+Supplemental reading “không có khả năng thanh toán” trước đây không đúng chữ in.
+Giữ nguyên frozen oracles/traces/metrics lịch sử; correction mới phải theo đúng PDF,
+không dùng diễn giải cũ để thay nguồn. Đây là đính chính source text, không nâng QA score.
+
 Ngày 08/11/2026 (Asia/Bangkok). Status **REVIEW**, chờ Tech Lead; không tự DONE.
 Baseline `02a160fdca013ac55972949c9002622dc643de01`; implementation `fcba4ff64ae0e5958300e6eeb408601cd62f4d20`.
 CI: [CI42494041844](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42494041844) completed/SUCCESS; 1151 Python/9 Web PASS; full regression manual SKIPPED đúng implementation SHA. Giữ pending GEN-01a/Web ngoài implementation.

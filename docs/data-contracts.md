@@ -1,5 +1,21 @@
 # Data contracts
 
+GEN-02-Fix-B: `DocumentCorrection` tái sử dụng `EvidenceIdentity`, original payload
+digest, composition/page/image/selector bindings và visual-review provenance.
+PROPOSED/VALIDATED là engineering states; `CorrectionApproval` riêng cần authority
+Tech Lead, purpose document_correction_release và exact release digest. Caller/model
+không cấp approval bằng candidate metadata. Local policy store là operator-controlled
+input tại DOCUMENT_SOURCE_POLICY_ROOT; không là semantic OCR detector hoặc chữ ký số.
+
+Chỉ selector đã review có snapshot `correction:<digest>` mới; original selector được
+giữ trong repository cũ và loại khỏi candidate composition mới. Các selector khác
+giữ identity/pin/flags. Candidate vẫn pending nếu thiếu approval. M6 đối chiếu current
+policy, exact composition/release pin/content/page/image/selector; context correction
+thêm evidence_payload_sha256. V1 contexts sạch không đổi. Ledger giữ historical entries
+trên đĩa nhưng loại confirmed material defect/pending correction khỏi current retrieval,
+kể cả payload đã cache; unrelated entries tiếp tục replay. Current trust không cache
+theo payload. Không dùng old proof chứng minh corrected text hoặc bỏ pdf_review flags.
+
 GEN-02 mở rộng tùy chọn `SearchDocumentEvidenceRequest.context_radius` (0–12,
 mặc định3): chỉ điều khiển neighbors trả về, giữ ranking context BM25 radius3.
 Document source-excerpt dùng12, dừng theo heading và cùng page/request/snapshot;

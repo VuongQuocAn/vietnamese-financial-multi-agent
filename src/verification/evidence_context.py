@@ -90,6 +90,12 @@ class EvidenceContextBuilder:
             context.citations = document_citations(record, context.citations)
             if context.content:
                 context.content["request_id"] = record.source_metadata.get("request_id")
+                if record.snapshot_id.startswith("correction:"):
+                    from ..evidence.composition import payload_sha256
+
+                    context.content["evidence_payload_sha256"] = payload_sha256(
+                        record.model_dump(mode="json")
+                    )
             context.available = bool(context.content)
         elif ref.kind == "fact":
             context.period = record.context.period
