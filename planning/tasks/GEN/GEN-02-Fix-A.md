@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: GEN-01, QA-01b, EF-01, EXT-01
 - Estimated Complexity: S
@@ -58,7 +58,7 @@ Ruff/planning/diff. Không Gemini/OCR hoặc full40 regression.
 ## Risks and Blockers
 
 Các P1 Fix-A đã đạt targeted behavior. H08/Fix-B ngoài scope; còn giới hạn12selectors
-cùng trang và exact-phrase predicates. CI đúng implementation đã SUCCESS; chờ Tech Lead nghiệm thu.
+cùng trang và exact-phrase predicates. CI đúng implementation đã SUCCESS; Tech Lead APPROVED ngày09/11/2026.
 
 ## Implementation Evidence
 
@@ -73,4 +73,6 @@ RCA/traces/summary local trong artifacts; [report](../../../docs/gen-02-fix-a-qa
 
 ## Handoff Notes
 
-Next action: dừng REVIEW, chờ Tech Lead nghiệm thu.
+Tech Lead APPROVED ngày09/11/2026; GEN-02-Fix-A DONE. Phiên closure chỉ cập nhật planning, chạy planning/diff checks;
+không chạy lại CI/QA hoặc sửa runtime.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự bắt đầu Fix-B hoặc task khác.
