@@ -1,6 +1,8 @@
 # GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 
-Ngày09/11/2026, baseline `46aa45f`; status IN_PROGRESS, chưa commit.
+Ngày09/11/2026, baseline `46aa45f`; status **REVIEW có P1 release blockers**.
+Implementation `d78f1159517de6437bd039d5030040f2d05013b6` đã push main,14files.
+[CI42549793493](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42549793493) completed/SUCCESS đúng implementation SHA; 1169 Python/9 Web PASS; full regression manual SKIPPED.
 
 ## Source audit
 
@@ -95,7 +97,7 @@ không cộng thành số tests độc lập. Ruff lint/format5Python files PASS
 Actual final E2E chạy một lần; additional review chỉ thay trust state, không tune runtime.
 Original38approved input files,4GEN-02 frozen files và inherited GEN-01a/Web phải
 giữ nguyên; runtime lock ghi trước actual final execution. Không OCR/Gemini/full40
-hoặc Fix-A fresh rerun. CI đúng implementation SHA chờ sau commit/push.
+hoặc Fix-A fresh rerun. CI đã SUCCESS đúng implementation SHA; full regression manual SKIPPED.
 
 Artifacts local `artifacts/evidence/GEN-02-Fix-B/`: `source-discrepancy.json`,
 `correction-{proposal,validated}.json`, `candidate/{composition,release}.json`,
@@ -121,4 +123,4 @@ P2 lexical và overbroad extra excerpts ghi nhận, không sửa ngoài scope. S
 text-only/selector-level, không tự clear inherited pdf_review flags. Chưa có actual
 accepted corrected release, không tự DONE hoặc bắt đầu task tiếp theo.
 
-Next action: xác minh CI đúng SHA, bàn giao REVIEW để Tech Lead quyết định release.
+Next action: dừng REVIEW; Tech Lead nghiệm thu và quyết định H08 release/PDF30 follow-up.

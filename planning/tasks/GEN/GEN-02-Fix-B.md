@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: GEN-02-Fix-A, QA-01b, EXT-01
 - Estimated Complexity: M
@@ -54,7 +54,7 @@ final targeted H08/control/compatibility → report/CI → REVIEW.
 - [x] Original confirmed defect và unapproved correction không phát hành.
 - [x] Wrong bindings/content, old proof và flag removal bị chặn.
 - [x] Real H08 và A7, ledger/verification/search compatibility đạt.
-- [ ] CI đúng SHA; báo rõ actual release với isolated fixture.
+- [x] CI đúng SHA; báo rõ actual release với isolated fixture.
 
 ## Required Tests
 
@@ -69,13 +69,15 @@ cho text correction release; chỉ engineering validation, candidate chưa accep
 
 ## Implementation Evidence
 
-Chưa commit.66final focused tests PASS (12correction/10negative controls); A7 PASS;
+Implementation `d78f1159517de6437bd039d5030040f2d05013b6` đã push main,14files.
+[CI42549793493](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42549793493) completed/SUCCESS đúng implementation SHA; 1169 Python/9 Web PASS; full regression manual SKIPPED.
+66final focused tests PASS (12correction/10negative controls); A7 PASS;
 H08 original/pending INVESTIGATE, isolated approved-state fixture ACCEPT đúng PDF;
 17legacy claims replay nguyên file. Independent audit phát hiện1extra material claim
 PDF30/9, đã quarantine và filter warm cache;2P2lexical giữ ngoài scope.5additional
 excerpts;0actual approvals/accepted corrected releases.38inputs/4frozen/runtime
-và inherited changes nguyên hash. Chờ CI đúng implementation SHA.
+và inherited changes nguyên hash. CI đã đối chiếu đúng implementation SHA; chưa actual release approval.
 
 ## Handoff Notes
 
-Next action: hoàn tất controlled correction và targeted validation để bàn giao REVIEW.
+Next action: dừng REVIEW; Tech Lead nghiệm thu và quyết định H08 release/PDF30 follow-up.
