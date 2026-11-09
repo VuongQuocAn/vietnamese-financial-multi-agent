@@ -155,13 +155,30 @@ def test_policy_reload_after_cwd_change_and_environment_transfer(
         "approvals": 1,
     }  # Synthetic authority only; persisted without recreation.
     monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_ROOT", "artifacts/source-quality")
-    from vietnamese_financial_multi_agent.core.data_config import default_project_root
+    from pathlib import Path
 
+    from vietnamese_financial_multi_agent.evidence import document_corrections
+
+    checkout = Path(__file__).resolve().parents[2]
+    monkeypatch.setattr(document_corrections, "default_project_root", lambda: checkout)
     monkeypatch.chdir(tmp_path)
-    assert (
-        policy_path()
-        == default_project_root() / "artifacts/source-quality/document-source-policy.json"
-    )
+    assert policy_path() == checkout / "artifacts/source-quality/document-source-policy.json"
+
+
+def test_unconfigured_wheel_is_empty_but_configured_relative_root_cannot_use_cwd(monkeypatch):
+    from vietnamese_financial_multi_agent.core.data_config import DataConfigError
+    from vietnamese_financial_multi_agent.evidence import document_corrections
+
+    def unavailable_root():
+        raise DataConfigError("wheel has no checkout")
+
+    monkeypatch.setattr(document_corrections, "default_project_root", unavailable_root)
+    monkeypatch.delenv("DOCUMENT_SOURCE_POLICY_ROOT", raising=False)
+    monkeypatch.delenv("DOCUMENT_SOURCE_POLICY_SHA256", raising=False)
+    assert document_corrections.load_source_policy() == DocumentSourcePolicy()
+    monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_ROOT", "artifacts/source-quality")
+    with pytest.raises(DataConfigError):
+        document_corrections.load_source_policy()
 
 
 def test_api_startup_rejects_missing_or_mismatched_policy(tmp_path, monkeypatch):

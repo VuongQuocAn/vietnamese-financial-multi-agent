@@ -14,7 +14,7 @@ from typing import Literal
 from pydantic import Field
 
 from ..accounting.contracts import FinancialModel
-from ..core.data_config import default_project_root
+from ..core.data_config import DataConfigError, default_project_root
 from ..core.persistence import atomic_json
 from .composition import EvidencePin, payload_sha256, verify_saved_pages
 from .document_evidence import EvidenceIdentity
@@ -94,8 +94,15 @@ def policy_path():
 
 
 def load_source_policy():
-    path = policy_path()
     expected = os.environ.get("DOCUMENT_SOURCE_POLICY_SHA256", "").strip()
+    try:
+        path = policy_path()
+    except DataConfigError:
+        # An unconfigured wheel has no checkout-relative store. Reviewed deployments
+        # must supply an absolute root; never infer their trust store from cwd.
+        if "DOCUMENT_SOURCE_POLICY_ROOT" not in os.environ and not expected:
+            return DocumentSourcePolicy()
+        raise
     if not path.exists():
         if "DOCUMENT_SOURCE_POLICY_ROOT" in os.environ or expected:
             raise ValueError("source_policy_required")
