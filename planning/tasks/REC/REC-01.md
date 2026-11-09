@@ -83,4 +83,9 @@ timing/random origins, source citations/accepted content/decisions tương đư�
 [Report](../../../docs/rec-01-conditional-ocr-recovery.md).
 
 ## Handoff Notes
-Next action: Tech Lead review; không tự DONE hoặc bắt đầu task khác.
+Tech Lead giao sửa invalid_request trong REC-01, không CHAT-01. HTTP400 thực tế:
+deadline8s dưới minimum10s; default10s và local block<10 đã sửa. Một live xác nhận
+provider success/STOP1701tokens/6,553s nhưng JSON thừa additionalProperties bị
+schema chặn; chưa transcription hợp lệ đầu-cuối.22focused PASS, không1193/fullCI.
+Bản sửa deadline có Git checkpoint riêng; xem report/provider-fix artifacts; PDF30 quarantine nguyên.
+Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.

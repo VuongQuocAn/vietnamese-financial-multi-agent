@@ -37,7 +37,8 @@ full-page image, không suy đoán crop. Clean M6 chỉ kiểm tra boolean, khô
 credential/adapter, không đọc ảnh/PDF hoặc gửi network request.
 
 Gemini qua `SharedLLMGateway` và adapter hiện có, một generate, không retry;
-`OCR_RECOVERY_TIMEOUT_SECONDS=8` mặc định, model qua `OCR_RECOVERY_MODEL`.
+`OCR_RECOVERY_TIMEOUT_SECONDS=10` mặc định sau bản sửa provider bên dưới,
+model qua `OCR_RECOVERY_MODEL`.
 Prompt yêu cầu transcription nguyên văn, đặc biệt phủ định/ngày/số/đơn vị;
 JSON được local-validate theo `Transcription`, gồm page/selector/readability/spans.
 Result giữ provider/usage/cost/latency/error và exact provenance trong
@@ -144,4 +145,51 @@ khỏi operator store sang `recorded-fixture-candidates/`, giữ bytes/hash và 
 provenance labels; không giả thành successful Gemini output. Private inputs/proposals/PDF/key
 không commit. Pending GEN-01a/Web và approved/frozen inputs được đối chiếu hash.
 
-Next action: Tech Lead review.
+## Sửa invalid_request theo quyết định Tech Lead
+
+REC-01 giữ REVIEW, chưa DONE; không CHAT-01. Bản sửa deadline được ghi trong Git checkpoint riêng;
+CI1193/9 phía trên chỉ xác minh implementation cũ, không là CI của bản sửa này.
+
+Replay diagnostic đúng request BCC2024 PDF30/selector9 nhận **HTTP400 INVALID_ARGUMENT**:
+`Manually set deadline 8s is too short. Minimum allowed deadline is 10s.`
+SDK config gốc: model gemini-3.5-flash-lite, temperature0, max_output_tokens2048,
+application/json, không schema_ref, timeout8000ms, attempts1; một PNG1719579bytes,
+đúng persisted PDF/page/image binding. Offline `_config` hợp lệ. Đây là lỗi deadline
+được provider chỉ rõ, không phải quota/rate-limit/model/image/schema hoặc lỗi định
+tuyến gateway. Không gọi thêm để thử các giả thuyết đó.
+
+Lỗi cũ không lưu provider body nên cần một diagnostic network call có kiểm soát.
+Script capture ban đầu truy cập nhầm `response_json` sau khi SDK đã trả ClientError;
+exact body được giữ từ exception thực tế trong transcript và artifact, không gọi lại
+diagnostic. Request JSON serialize đầy đủ có optional null không dùng trực tiếp để
+replay: lọc omitted generation fields, giữ temperature/max tokens nguyên bản.
+
+Sửa nhỏ: default10s trong recovery và env example; deadline cấu hình dưới10s bị
+chặn locally trước render/network, `recovery_timeout_below_provider_minimum`,
+không tự vượt budget. Kiến trúc/binding/quarantine/approval không đổi. Lỗi output
+schema/identity được phân biệt bằng mã riêng, vẫn fail closed.
+
+Đúng **một lượt live xác nhận sau sửa**, không retry: provider **success/STOP**,
+requested/reported model gemini-3.5-flash-lite; input1495/output206/total1701tokens;
+call6553,324ms, branch8204,205ms, deadline10s. HTTP400 đã hết với thay đổi duy nhất
+trong request là timeout8→10s; image/prompt/generation/schema giữ nguyên.
+
+**Chưa xác nhận transcription thành công đầu-cuối**: JSON live có thêm field
+`additionalProperties:false`; local `Transcription` với extra=forbid từ chối.
+Text provider trả lại trùng OCR cũ, không giải quyết discrepancy đã review; không
+coi provider success hoặc text copy là corrected transcription đáng tin cậy.
+Giữ raw response/error/result, không strip field để ép PASS hoặc gọi live lần hai.
+Live artifact ban đầu còn mã generic; local replay response đã lưu kiểm tra mã mới
+`recovery_output_schema_invalid`, không thay lịch sử live. PDF30/9 vẫn quarantine,
+không candidate hợp lệ/approval/release/activation; policy/selection/repository hashes nguyên.
+
+Focused local **22PASS** (19conditional recovery +3adapter), gồm deadline10s,
+deadline8s blocked không ảnh/network, timeout, schema echo rejected và no retry.
+Không chạy1193tests/full CI/H08/clean benchmark. Hai network calls mới:1diagnostic
+HTTP400 và1validation provider success/schema fail; tổng lịch sử REC-01 là3calls,
+1701known tokens cho validation; hai error calls usage unknown. Quyết định mới của
+Owner cho phép diagnostic/fix/validation trong chính REC-01; không mở task mới.
+Artifacts local `provider-fix/`: offline-root-cause, provider-original-error,
+live-provider-response, live-confirmation, private request snapshots và focused-tests.
+
+Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.

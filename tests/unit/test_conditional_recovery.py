@@ -43,6 +43,21 @@ def test_clean_and_missing_do_not_initialize_recovery(monkeypatch):
     assert recover_histories([clean], None, None, seen=set()) == []
 
 
+def test_short_deadline_is_blocked_before_image_or_network(correction_case, tmp_path, monkeypatch):
+    _, manifest, original, _, _, _, _, _, _, _, policy, _ = correction_case
+    save_source_policy(policy)
+    monkeypatch.setattr(
+        "vietnamese_financial_multi_agent.document_processing.gemini_ingestion.load_pages",
+        lambda *a, **kw: pytest.fail("invalid deadline rendered an image"),
+    )
+    result = recover_record(
+        original, manifest, {}, root=tmp_path, gateway=None, seen=set(), timeout=8
+    )
+    assert result["status"] == "blocked"
+    assert result["calls"] == 0
+    assert result["error_code"] == "recovery_timeout_below_provider_minimum"
+
+
 @pytest.mark.parametrize(
     "mode",
     [
@@ -51,6 +66,7 @@ def test_clean_and_missing_do_not_initialize_recovery(monkeypatch):
         "ambiguous",
         "unchanged",
         "timeout",
+        "schema_echo",
         "wrong_page",
         "wrong_selector",
         "wrong_image",
@@ -104,7 +120,7 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
 
     def transport(request):
         calls.append(request)
-        assert request.constraints.timeout_seconds == 8
+        assert request.constraints.timeout_seconds == 10
         assert len(request.messages[0].images) == 1
         if mode == "timeout":
             raise TimeoutError()
@@ -115,6 +131,8 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
             page=identity.page,
             selector=binding["selector"],
         )
+        if mode == "schema_echo":
+            value["additionalProperties"] = False
         return LLMResponse(
             **_base(request),
             status="success",
@@ -125,9 +143,12 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
     gateway = SharedLLMGateway({"gemini": transport})
     seen = set()
     result = recover_record(original, manifest, binding, root=tmp_path, gateway=gateway, seen=seen)
-    expected = {"ambiguous": "pending_review", "unchanged": "unchanged", "timeout": "failed"}.get(
-        mode, "blocked" if mode.startswith("wrong_") else "proposal_pending_review"
-    )
+    expected = {
+        "ambiguous": "pending_review",
+        "unchanged": "unchanged",
+        "timeout": "failed",
+        "schema_echo": "failed",
+    }.get(mode, "blocked" if mode.startswith("wrong_") else "proposal_pending_review")
     assert result["status"] == expected
     assert len(calls) == (0 if mode.startswith("wrong_") else 1)
     if calls:

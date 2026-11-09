@@ -45,7 +45,7 @@ def recovery_reason(record, policy):
     return next((f for f in record.resolution_issues if f.startswith("pdf_review:")), None)
 
 
-def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=8.0):
+def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=10.0):
     """Single attempt per evidence/version/request. Never mutates accepted evidence."""
     from ..core.llm_contracts import JSONOutput, parse_llm_request
     from ..document_processing.gemini_ingestion import load_pages
@@ -73,6 +73,11 @@ def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=8.
     )
     started = perf_counter()
     try:
+        # Gemini rejects a manually supplied deadline below 10 seconds (HTTP400).
+        # Reject locally rather than silently exceeding the configured budget.
+        if timeout < 10:
+            result["error_code"] = "recovery_timeout_below_provider_minimum"
+            raise ValueError("recovery_timeout_below_provider_minimum")
         pins = [
             p
             for s in manifest.sources
@@ -166,8 +171,13 @@ def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=8.
                 provider_error_code=response.error.provider_error_code if response.error else None,
             )
         else:
-            value = Transcription.model_validate(response.output.payload)
+            try:
+                value = Transcription.model_validate(response.output.payload)
+            except ValueError:
+                result["error_code"] = "recovery_output_schema_invalid"
+                raise
             if (value.page, value.selector) != (source["page"], ref.source_pointer):
+                result["error_code"] = "recovery_output_identity_mismatch"
                 raise ValueError("recovery_output_identity_mismatch")
             result["transcription"] = value.model_dump(mode="json")
             result["status"] = (
@@ -180,7 +190,7 @@ def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=8.
     except (ValueError, KeyError, OSError, TimeoutError):
         result.update(
             status="failed" if result["calls"] else "blocked",
-            error_code="recovery_unavailable_or_invalid_binding",
+            error_code=result.get("error_code", "recovery_unavailable_or_invalid_binding"),
         )
     result["latency_ms"] = (perf_counter() - started) * 1000
     directory = storage_path(root, "recovery-candidates")
@@ -227,7 +237,7 @@ def recover_histories(histories, manifest, repository, *, seen):
                         root=root,
                         gateway=SharedLLMGateway({"gemini": adapter}),
                         seen=seen,
-                        timeout=float(os.environ.get("OCR_RECOVERY_TIMEOUT_SECONDS", "8")),
+                        timeout=float(os.environ.get("OCR_RECOVERY_TIMEOUT_SECONDS", "10")),
                     )
                 ]
         return [dict(status="ineligible", calls=0)]

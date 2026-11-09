@@ -20,7 +20,12 @@ timing/random origin/plan, không byte-exact ledger. Không M8-ready.
 Implementation `81ce0f67cf2b800ddae074b95825e41cc4be4d64` đã push main;
 [CI42571562562](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42571562562)
 SUCCESS đúng SHA:1193Python/9Web PASS; full regression manual SKIPPED.
-Next action: Tech Lead review.
+Tech Lead yêu cầu sửa invalid_request trong REC-01: diagnostic xác nhận HTTP400
+deadline8s dưới minimum10s. Đã sửa default10s/chặn config<10 trước ảnh/network.
+Một validation live:provider success/STOP,1701tokens,6,553s; JSON thừa
+additionalProperties nên schema reject, chưa transcription đầu-cuối thành công.
+22focused PASS; không rerun1193/CI/H08; bản sửa deadline có Git checkpoint riêng. PDF30 quarantine nguyên.
+Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.
 
 ## PERF-01 — Fast Path Optimization
 
