@@ -13,9 +13,9 @@ median 11,499s/P90 39,624s; fresh financial median 37,274s; max 85,312s.
 9 issues OPEN_FOR_FIX_02 (1 Critical/3 High/4 Medium/1 Low), root cause NOT_ANALYZED.
 Lỗi đáng chú ý: mất từ “khó” trong điều kiện dự phòng; so sánh cùng PDF bị chặn;
 follow-up hỏi trang thất bại; fresh/mixed latency cao. Không sửa lỗi.
-Runtime snapshot39d796a; 572 protected files và manifests giữ hash;
-code GEN-01a/planning local được giữ riêng. Implementation chưa commit tại validation.
-Checks: smoke hai lượt giữ trong40; PDF/Decimal/binding audit; Ruff, planning, diff.
+Runtime snapshot 39d796a; 572 protected files và manifests giữ hash;
+code GEN-01a/planning local được giữ riêng. Implementation `c61e15882b47e9dd8ed6852b0023ed3397aeb3c3` đã xác minh; commit/push được Owner yêu cầu.
+Checks: smoke hai lượt giữ trong 40; PDF/Decimal/binding audit; Ruff, planning, diff.
 Next action: Tech Lead nghiệm thu E2E-02; không bắt đầu FIX-02/Web/M8.
 
 ## CHAT-01 — Multi-turn Conversational QA

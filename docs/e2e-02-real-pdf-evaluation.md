@@ -313,18 +313,18 @@ Reference đầy đủ đã đóng băng trong reference.json. Dưới đây gi�
 
 Nhóm cần Tech Lead xem xét cho FIX-02: tính trung thực của source/quotation và source-bound release; coverage truy vấn cơ bản/so sánh cùng PDF; completeness của phân tích giới hạn; follow-up theo chủ đề; độ trễfresh/mixed và phần trả lời dài. Không đề xuất patch theo từng câu hỏi, không mở FIX-02.
 
-Những phần đang hoạt động tốt trong mẫu: direct values vàapproved metrics đã phát hành khớpPDF;formula/operand follow-up C1 đúng; mixed QA kết hợp hai loại evidence; negative controls không phát hành claim; chuyển company/year không lẫn nguồn. Giới hạn lớn nhất là quotation sai nghĩa vẫn có claim verified, một số câu cùng báo cáo bị chặn và fresh latency cao.
+Những phần đang hoạt động tốt trong mẫu: direct values và approved metrics đã phát hành khớp PDF;formula/operand follow-up C1 đúng; mixed QA kết hợp hai loại evidence; negative controls không phát hành claim; chuyển company/year không lẫn nguồn. Giới hạn lớn nhất là quotation sai nghĩa vẫn có claim verified, một số câu cùng báo cáo bị chặn và fresh latency cao.
 
 ## Giới hạn và validation
 
-Mẫu chẩn đoán có chủ đích, chỉ4 PDF / 2 doanh nghiệp, không random/không benchmark M8; không full-PDF accuracy, không independent human gold. Chấm bởiCodex dựa trên PDF trước run; borderline completeness được ghi rõ (Q06/Q26). Reporting scope/cell provenance chưa hoàn thiện; BBS 2024 catalog thiếu facts và BCC 2024 basis hạn chế được giữ. Không OCR mới/Gemini/retry để chọn answer. Timing local một vòng, không HTTP/Web, không matched fresh-vs-reuse test; các timers còn thiếu được công bố.
+Mẫu chẩn đoán có chủ đích, chỉ 4 PDF / 2 doanh nghiệp, không random/không benchmark M8; không full-PDF accuracy, không independent human gold. Chấm bởi Codex dựa trên PDF trước run; borderline completeness được ghi rõ (Q06/Q26). Reporting scope/cell provenance chưa hoàn thiện; BBS 2024 catalog thiếu facts và BCC 2024 basis hạn chế được giữ. Không OCR mới/Gemini/retry để chọn answer. Timing local một vòng, không HTTP/Web, không matched fresh-vs-reuse test; các timers còn thiếu được công bố.
 
-Integrity:572 protected files (EXT-01,GEN-01 accepted releases,source-quality,PDF và local runtime) giữ hash; questions/reference hashes không đổi. Code production local từ trước được giữ, runtime chạy từ Git snapshot. Không stage PDF/dataset/keys/fullartifacts.
+Integrity: 572 protected files (EXT-01,GEN-01 accepted releases,source-quality,PDF và local runtime) giữ hash; questions/reference hashes không đổi. Code production local từ trước được giữ, runtime chạy từ Git snapshot. Không stage PDF/dataset/keys/full artifacts.
 
-Checks bàn giao: smoke 2 lượt chính thức giữ trong 40; independentPDF/Decimal/binding audit40 lượt; Ruff 2 scripts, planning checker vàgit diff --check. Không chạy unit M1–M7/full regression / full CI / live provider. Audit runner từng gặp lỗi duplicate id khi ghép annotation; chỉ sửa audit và chạy lại audit trên raw outputs, không chạy lại QA.
+Checks bàn giao: smoke 2 lượt chính thức giữ trong 40; independent PDF/Decimal/binding audit 40 lượt; Ruff 2 scripts, planning checker và git diff --check. Không chạy unit M1–M7/full regression / full CI / live provider. Audit runner từng gặp lỗi duplicate id khi ghép annotation; chỉ sửa audit và chạy lại audit trên raw outputs, không chạy lại QA.
 
 Freeze hashes: questions `2d754c51dd245fa7508b520a5a5c5bc4f971b8ffc40a18c3bf6f2905ffda8d01`; reference `bbe33a6f05e710636458804944c655790986895192f41e373011d4d5389a0018`.
 
-Implementation SHA: commit chứa hai scripts và báo cáo này (tra `git log -1 -- scripts/evaluate_real_pdf.py`); evaluated runtime `39d796acba7c9eebc9ca74c6c6f564238910d3b5`.
+Implementation SHA: `c61e15882b47e9dd8ed6852b0023ed3397aeb3c3`; evaluated runtime `39d796acba7c9eebc9ca74c6c6f564238910d3b5`.
 
 **Status: REVIEW. Next action: Tech Lead nghiệm thu E2E-02 và quyết định phạm vi FIX-02.**
