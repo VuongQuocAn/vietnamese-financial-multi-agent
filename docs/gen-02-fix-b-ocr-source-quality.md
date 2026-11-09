@@ -171,3 +171,43 @@ wheel có reviewed data phải truyền root tuyệt đối và pin. Kiểm tra 
 preflight/restart trên candidate/PDF thật cũng PASS binding, vẫn pending_approval.
 [CI42554771165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42554771165) completed/SUCCESS đúng SHA28bfb6d:1173 Python/9 Web PASS; full regression manual SKIPPED. Log local ở closure/ci-final.log.
 Status REVIEW. Next action: Tech Lead review closure và quyết định approval H08 theo exact release digest; PDF30 tiếp tục quarantine.
+
+## Approved promotion operation — 09/11/2026
+
+Status **REVIEW, promotion blocked**. Owner giao quyết định Tech Lead cho đúng H08
+release `082d30e483d2a0133d696e923c90a1a555aaf993e49da6bb9a200a5cfd6625bc`.
+Approval reference: `Tech Lead decision — 2026-11-09 — GEN-02-Fix-B H08 exact release digest`.
+Các trạng thái0approvals/pending_approval phía trên là lịch sử trước operation này.
+
+Preflight thật khớp correction `9c5e9844bfb584c4747625435c22f1082148246208844d31559f6041570d5229`,
+composition `a7ba94c8ac7ca3dd039971008ee7cd841da93af6b93f5e1cb3d98e3c0b73a920`
+và PDF `866d6c9e212079c47974bddb2bdf0305ecf40008950a23fa5af856d50ee4ab5b`.
+Existing save_source_policy API đã ghi1actual CorrectionApproval, không phải fixture
+hoặc chữ ký số;2validated review/quarantine records và release history giữ nguyên.
+Canonical policy pin mới `4682f615df2fd70ec470b001f67eda74ab2b6a1d6f1aff4a8b351d8c79bb26e7`.
+DOCUMENT_SOURCE_POLICY_ROOT tuyệt đối và DOCUMENT_SOURCE_POLICY_SHA256 đã lưu trong
+Windows current-user Environment; đã đọc lại cấu hình bền vững và nạp trong process
+mới. Terminal/process đang mở cần nạp lại hai biến này; không tự cập nhật environment
+của process cũ. API startup đúng pin; preflight sau approval **ready**.
+
+**Blocker bước C:** chưa có persistent accepted-release activation/selection.
+Contract nói rõ check_correction_promotion không activate release. Policy save API
+chỉ ghi trust; FinancialQAPipeline nhận compositions do caller truyền vào;
+build_pipeline chỉ đọc manifests từ input_path, default accepted EXT-01 vẫn nguyên.
+API lifespan nạp policy nhưng không chọn QA composition. Gán candidate vào một runner
+tạm thời không chứng minh accepted release đã promote và tự nạp lại sau restart.
+Theo điều kiện dừng của task, không tạo cơ chế mới, không sửa runtime hoặc đổi default
+accepted inputs; **không chạy H08 E2E ở bước D**. M5/M6 ACCEPT, new ledger, M7/Firewall
+và corrected citations sau promotion chưa được xác nhận trong operation này.
+
+Focused assertions sau restart: original bad H08 claims visible0, PDF30 bad claims
+visible0;2unaffected control claims vẫn truy xuất được. PDF30 giữ quarantine, không có
+approval cho PDF30/P2.38accepted inputs,2old ledger files, correction/release history
+và inherited GEN-01a/Web giữ nguyên hash. Không chạy CI/QA/OCR/Gemini hoặc full suite.
+
+Evidence local `artifacts/evidence/GEN-02-Fix-B/closure/promotion/`:
+`preflight.json`, `approval-record.json`, `restart-check.json`,
+`integrity-and-blocker.json`, `restart.log`; source-policy và records private không commit.
+Implementation vẫn `28bfb6d8d5a9a071061444f26745454c0066e4aa`, CI đã PASS trước đó.
+Next action: Tech Lead quyết định follow-up cho persistent accepted-release activation;
+giữ Fix-B REVIEW và PDF30 quarantine, không bắt đầu task khác.
