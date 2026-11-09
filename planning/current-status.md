@@ -2,6 +2,13 @@
 
 Cập nhật 2026-11-08 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## GEN-02-Fix-A — QA Coverage & False Abstention Recovery
+
+Status **IN_PROGRESS**, Owner giao09/11/2026; baseline `6f682c3`.
+[Spec](tasks/GEN/GEN-02-Fix-A.md). Tối đa hai vòng focused fixes/test; không Gemini/OCR,
+không chạy lại40câu; H03/H06/H07/H11/H12 là regression đã biết. Giữ GEN-01a/Web.
+Next action: hoàn tất fixes và focused validation.
+
 ## GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
 
 Status: **REVIEW có P1 blockers**, Owner giao08/11/2026; baseline `02a160f`.

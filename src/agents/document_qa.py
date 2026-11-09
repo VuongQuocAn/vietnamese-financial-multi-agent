@@ -10,6 +10,7 @@ from ..evidence.document_claim_support import (
     declared_list_count,
     document_citations,
     document_projection,
+    excerpt_topic_matches,
     is_list_item,
     source_assertion,
 )
@@ -24,7 +25,7 @@ def _heading(text):
     return bool(text) and (
         bool(re.match(r"^\d+(?:\.\d+)*\.?\s+\S", text))
         or len(text) <= 180
-        and not text.endswith((".", ";"))
+        and not text.endswith((".", ";", ":"))
     )
 
 
@@ -57,13 +58,26 @@ def _excerpt_groups(bundle):
     query = normalize_search(bundle.operation.requirement.query)
     heading_query = re.sub(r"^ghi nhan ", "", query)
     groups, seen = [], set()
+    # Neighbors already belong to the bounded retrieved pool. A continuation
+    # paragraph can be more relevant than the primary heading on another page.
+    for key, pool in pools.items():
+        for order, evidence in pool.items():
+            text = evidence.record.raw_text or ""
+            if not _heading(text) and excerpt_topic_matches(
+                text, bundle.operation.requirement.query
+            ):
+                primaries.append((key, order))
     for key, order in primaries:
         pool = pools[key]
         start = order
-        while start - 1 in pool and not _heading(pool[start].record.raw_text or ""):
-            start -= 1
+        direct = excerpt_topic_matches(
+            pool[start].record.raw_text or "", bundle.operation.requirement.query
+        )
+        if not direct:
+            while start - 1 in pool and not _heading(pool[start].record.raw_text or ""):
+                start -= 1
         first = pool[start].record.raw_text or ""
-        if _heading(first) and f" {heading_query} " not in f" {normalize_search(first)} ":
+        if _heading(first) and not excerpt_topic_matches(first, heading_query):
             continue
         group = []
         for i in range(start, start + 12):
@@ -199,9 +213,14 @@ def document_candidates(bundle, company_id, manifest):
             return {r.model_dump_json() for r in candidate.references}
 
         # Prefer the complete contiguous excerpt over its own shorter prefixes.
-        return [
+        selected = [
             c
             for c in candidates
             if not any(references(c) < references(other) for other in candidates)
-        ][:3]
+        ]
+        # Prefer eligible source text without deleting flags or overriding M6.
+        selected.sort(
+            key=lambda c: (any(x.startswith("pdf_review:") for x in c.caveats), len(c.references))
+        )
+        return selected[:3]
     return candidates or ([unresolved] if unresolved else [])

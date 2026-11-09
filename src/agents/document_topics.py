@@ -38,8 +38,14 @@ def source_topics(question):
     """Extract the subject, retaining unknown subjects rather than inventing one."""
     parts = requirement_spans(question)
     topics = []
+    document_context = False
     for part in parts:
-        if not re.search(r"\b(thuyet minh|chinh sach|noi dung b09)\b", normalize_search(part)):
+        explicit = bool(
+            re.search(r"\b(thuyet minh|chinh sach|noi dung b09)\b", normalize_search(part))
+        )
+        inherited = document_context and bool(re.match(r"^về\s+", part, flags=re.I))
+        document_context = explicit or inherited
+        if not document_context:
             continue
         topic = re.split(r"\bvề\s+", part, flags=re.I)[-1].strip(" .?")
         text = normalize_search(topic)

@@ -50,6 +50,7 @@ def decompose(question):
     from ..outputs.qa_composer import understand_requirements
 
     result = []
+    document_context = False
     for span in requirement_spans(question):
         if not span.strip():
             continue
@@ -59,7 +60,9 @@ def decompose(question):
             execution = "Tăng trưởng doanh thu"
         elif re.search(r"\bno phai tra\b.*\bchiem\b.*\bphan tram\b.*\btong tai san\b", text):
             execution = "Tỷ lệ nợ phải trả trên tổng tài sản"
-        intent, specs = document_intent(span)
+        inherited = document_context and bool(re.match(r"^về\s+", span, flags=re.I))
+        intent, specs = document_intent("Thuyết minh " + span if inherited else span)
+        document_context = bool(specs) and intent == "document"
         causal = bool(
             re.search(
                 r"\b(nguyen nhan|vi sao|tai sao|do dau|la do|dan den|chung to|"
@@ -101,6 +104,11 @@ def decompose(question):
                 for r in understand_requirements(execution)
             ]
         for lane, kind, target, spec, reason in parts:
+            if lane == "document" and any(
+                r.lane == lane and r.target == target and r.document_requirement == spec
+                for r in result
+            ):
+                continue
             result.append(
                 FusionRequirement(
                     requirement_id=f"U{len(result) + 1}",

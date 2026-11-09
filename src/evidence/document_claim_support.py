@@ -62,6 +62,24 @@ def _contains(text, query):
     return f" {normalize_search(query)} " in f" {normalize_search(text)} "
 
 
+def excerpt_topic_matches(text, query):
+    """Keep noun phrases intact; permit an explicit predicate before its subject.
+
+    This establishes relevance of a verbatim quotation, never an inferred claim.
+    Reordered predicates must occur in the same sentence as the exact subject.
+    """
+    if _contains(text, query):
+        return True
+    parts = re.split(r"\s+và\s+", query, flags=re.I)
+    if len(parts) > 1:
+        return all(_contains(text, part) for part in parts)
+    match = re.match(r"^(khấu hao|phân bổ|ghi nhận)\s+(.+)$", query, flags=re.I)
+    return bool(match) and any(
+        _contains(sentence, match[1]) and _contains(sentence, match[2])
+        for sentence in re.split(r"[.;\n]", text)
+    )
+
+
 def source_assertion(requirement, projections):
     """Return exact quotations, protected display and optional explicit relationship."""
     if not projections or any(not value for value in projections):
@@ -99,7 +117,7 @@ def source_assertion(requirement, projections):
     # Opinion needs the complete qualified opinion section. Search alone cannot
     # certify its boundaries or any omitted qualifications.
     topic_matches = (
-        _contains(" ".join(texts), requirement.query)
+        excerpt_topic_matches(" ".join(texts), requirement.query)
         if requirement.kind == "source_excerpt"
         else _contains(texts[0], requirement.query)
     )
@@ -114,7 +132,7 @@ def source_assertion(requirement, projections):
         # A heading alone does not answer what a note says. Keep complete,
         # contiguous verbatim source text; no synthesized financial relation.
         if len(" ".join(texts)) < len(requirement.query) + 30 or not texts[-1].rstrip().endswith(
-            (".", ";")
+            (".", ";", ":")
         ):
             return None
     elif len(texts) != 1:

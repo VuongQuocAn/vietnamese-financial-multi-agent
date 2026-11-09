@@ -150,6 +150,39 @@ class FinancialQAPipeline:
         )
         if year is None:
             return None, "clarification_required", ["period_required"]
+        from ..evidence.metric_preparation import prepare_missing_metric
+
+        # Request-bound metadata preparation uses existing formula authority only.
+        # Computation, compatibility, M6 and ledger admission still run normally.
+        self.catalog = prepare_missing_metric(
+            self.catalog, document, snapshot, year, parsed.formula_id
+        )
+        if parsed.formula_id and not any(
+            m.definition.name == parsed.formula_id
+            and (m.request.document_id, m.request.snapshot_id) == (document, snapshot)
+            for m in self.catalog.metrics
+        ):
+            policies = [p for p in self.catalog.policies if p.formula_id == parsed.formula_id]
+            reason = "approved_metric_preparation_unavailable"
+            if len(policies) == 1:
+                comparative = policies[0].period_relation == "consecutive_fiscal_years_descending"
+                counts = [
+                    sum(
+                        (f.document_id, f.snapshot_id, f.canonical_item_id, f.context.period)
+                        == (
+                            document,
+                            snapshot,
+                            operand.canonical_item_id,
+                            str(year - int(comparative and i == 1))
+                            + ("-12-31" if operand.statement_type == "B01" else ""),
+                        )
+                        for f in self.catalog.facts
+                    )
+                    for i, operand in enumerate(policies[0].operands)
+                ]
+                if any(count != 1 for count in counts):
+                    reason = "metric_operands_missing_or_ambiguous"
+            return None, "unsupported", [reason]
         plan, status = request_inventory(bound, [])
         if status in {"unsupported", "clarification_required"}:
             return None, status, plan.reasons + plan.missing_information
@@ -421,6 +454,13 @@ class FinancialQAPipeline:
                 )
             elif status == "unsupported":
                 response.answer_vi = "Yêu cầu vượt quá khả năng QA đã được hỗ trợ."
+                if "metric_operands_missing_or_ambiguous" in reasons:
+                    response.answer_vi = "Chưa có đủ toán hạng duy nhất trong tài liệu và snapshot đã chọn để tính chỉ số."
+                elif (
+                    "approved_metric_preparation_unavailable" in reasons
+                    or "metric_missing_or_ambiguous_in_selected_filing" in reasons
+                ):
+                    response.answer_vi = "Chưa có metric được chuẩn bị hợp lệ và duy nhất cho kỳ, tài liệu và snapshot đã chọn."
             elif status == "provider_unavailable":
                 response.mode = "PROVIDER_FAILURE"
                 response.answer_vi = "Nhà cung cấp chưa khả dụng; chưa có đủ claim đã xác minh."

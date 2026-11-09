@@ -498,3 +498,22 @@ trạng thái lỗi và backward compatibility đều là `TBD`.
 
 Contract cụ thể phải được làm rõ và cập nhật cùng tài liệu liên quan trước khi
 triển khai module sử dụng; không suy ra schema từ tên biến trong `.env.example`.
+
+## GEN-02-Fix-A — bounded metric preparation và document coverage
+
+Sau binding duy nhất document/snapshot/năm, application có thể yêu cầu chuẩn bị
+metadata cho một formula đang được hỏi nhưng chưa materialize. Chỉ dùng policy và
+execution approval hiện có (đúng version/digest), operands cùng filing/snapshot,
+kỳ năm được bind tường minh; không chọn latest hay ghép ancestor. Metadata mới và
+graph bổ sung nằm trong catalog bộ nhớ riêng, không ghi accepted evidence/ledger cũ.
+Không có đủ operands duy nhất thì báo capability gap. Metadata preparation không
+là verification: M4 vẫn tính Decimal/check accounting/scope/lineage, M6 quyết định,
+Ledger admission và M7/Firewall giữ nguyên. Không đổi schema wire hoặc policy authority.
+
+Document intent có thể kế thừa qua conjunct bắt đầu bằng “về”; giữ subject và noun
+conjunction, bỏ requirements tương đương. M7/Firewall tiếp tục tự tạo inventory từ
+original request, không dùng inventory M5 làm authority. Excerpt là quotation liên tục
+trong một trang; relevance cho phép đảo predicate/subject chính xác trong cùng câu,
+không tạo quan hệ tài chính mới. Câu dẫn kết thúc dấu hai chấm không tự là heading;
+declared lists vẫn cần đủ mục. Quotation phương pháp trước bảng giữ giới hạn excerpt,
+không suy ra các số trong bảng. Source-quality flags luôn giữ và M6 kiểm tra từng nguồn.

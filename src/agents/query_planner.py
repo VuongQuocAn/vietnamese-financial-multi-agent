@@ -540,7 +540,11 @@ class EvidenceAwareQueryPlanner:
                 )
             )
         except ValueError as error:
-            result.status = "failed"
+            result.status = (
+                "unsupported"
+                if str(error) == "metric_missing_or_ambiguous_in_selected_filing"
+                else "failed"
+            )
             result.reasons.append(str(error))
             result.trace.append(PlannerTrace(stage=stage, outcome="failed", reasons=[str(error)]))
         result.latency_ms = (perf_counter() - start) * 1000
