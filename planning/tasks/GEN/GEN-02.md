@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: GEN-01, QA-01b, EF-01, EXT-01
 - Estimated Complexity: L
@@ -92,8 +92,14 @@ orchestrator/35search-document groups PASS (overlap). Real7binding controls PASS
 live6Gateway invocations/19742known tokens/0reported provider errors, BBS full nhờ
 numeric fallback, BCC full qua model.38approved input hashes/original frozen dataset
 vàruntime sau seal không đổi; inherited GEN-01a/Web giữ ngoài implementation.
-Next action: Tech Lead review các P1 blockers và quyết định follow-up/fresh blind set.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.
 
 ## Handoff Notes
 
-Giữ toàn bộ inherited pending. Chỉ stage phần GEN-02, không tự chuyển DONE.
+Giữ toàn bộ inherited pending. Chỉ stage phần GEN-02; DONE theo quyết định nghiệm thu ngày09/11/2026.
+
+## Nghiệm thu có giới hạn09/11/2026
+
+Owner/Tech Lead chấp nhận GEN-02 và GEN-02-Fix-B DONE ngày09/11/2026 với các giới hạn đã ghi nhận. Đây là nghiệm thu có giới hạn, không xác nhận H08 đã promote hoặc M8-ready. H08 actual approval đã lưu nhưng accepted-release activation còn thiếu; E2E sau promotion chưa chạy; PDF30 tiếp tục quarantine; các hạn chế research/QA còn nguyên. Checkpoint chỉ cập nhật planning, không sửa runtime hoặc chạy lại CI/QA.
+Implementation và bằng chứng CI giữ nguyên; documentation checkpoint trước nghiệm thu `1b19d82f4bff228a59e481385af7c715147c8693`.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.

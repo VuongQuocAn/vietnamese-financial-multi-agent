@@ -4,12 +4,13 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 
-Status **REVIEW — approved H08, promotion blocked**, Owner giao09/11/2026.
+Status: **DONE — nghiệm thu có giới hạn ngày09/11/2026**.
 [Spec](tasks/GEN/GEN-02-Fix-B.md), [report](../docs/gen-02-fix-b-ocr-source-quality.md).
 Implementation `28bfb6d8d5a9a071061444f26745454c0066e4aa`; [CI42554771165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42554771165)
 SUCCESS đúng SHA,1173 Python/9 Web;86packaged closure tests đã PASS.
 Tech Lead APPROVED exact H08 release082d30e483d2a0133d696e923c90a1a555aaf993e49da6bb9a200a5cfd6625bc ngày09/11/2026; actual1approval đã lưu; policy pin4682f615df2fd70ec470b001f67eda74ab2b6a1d6f1aff4a8b351d8c79bb26e7 nạp đúng sau restart/API;2quarantines/2unaffected controls giữ nguyên; preflight ready. Promotion BLOCKED vì chưa có persistent accepted-release activation; dừng bước C, H08 E2E chưa chạy; M6/new ledger/M7/Firewall/citations sau promotion chưa xác nhận; accepted sources/old ledgers nguyên. Không sửa runtime/CI/QA/OCR/Gemini. Evidence local artifacts/evidence/GEN-02-Fix-B/closure/promotion/.
-Next action: Tech Lead quyết định follow-up cho persistent accepted-release activation; giữ REVIEW/PDF30 quarantine, không tự triển khai.
+Owner/Tech Lead chấp nhận GEN-02 và GEN-02-Fix-B DONE ngày09/11/2026 với các giới hạn đã ghi nhận. Đây là nghiệm thu có giới hạn, không xác nhận H08 đã promote hoặc M8-ready. H08 actual approval đã lưu nhưng accepted-release activation còn thiếu; E2E sau promotion chưa chạy; PDF30 tiếp tục quarantine; các hạn chế research/QA còn nguyên. Checkpoint chỉ cập nhật planning, không sửa runtime hoặc chạy lại CI/QA.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.
 
 ## GEN-02-Fix-A — QA Coverage & False Abstention Recovery
 
@@ -28,7 +29,7 @@ Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự b�
 
 ## GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
 
-Status: **REVIEW có P1 blockers**, Owner giao08/11/2026; baseline `02a160f`.
+Status: **DONE — nghiệm thu có giới hạn ngày09/11/2026**.
 [Spec](tasks/GEN/GEN-02.md), [report](../docs/gen-02-cross-company-generalization.md).
 Implementation `fcba4ff64ae0e5958300e6eeb408601cd62f4d20` đã push main; [CI42494041844](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42494041844) completed/SUCCESS; 1151 Python/9 Web PASS; full regression manual SKIPPED đúng implementation SHA.
 25development: Full Answer10/22→22/22; sau sửa22full/1partial/2abstain.
@@ -40,7 +41,8 @@ H12 tái hiện useful-partial C1→abstain regression. Không tune runtime sau 
 7real binding controls PASS; live6calls/19742known tokens/0provider errors.
 38approved inputs/frozen dataset/runtime sau seal nguyên hash; giữ GEN-01a/Web.
 Artifacts local `artifacts/evidence/GEN-02/`; chưa M8-ready, chờ quyết định P1/fresh set.
-Next action: Tech Lead review các P1 blockers và quyết định follow-up/fresh blind set.
+Owner/Tech Lead chấp nhận GEN-02 và GEN-02-Fix-B DONE ngày09/11/2026 với các giới hạn đã ghi nhận. Đây là nghiệm thu có giới hạn, không xác nhận H08 đã promote hoặc M8-ready. H08 actual approval đã lưu nhưng accepted-release activation còn thiếu; E2E sau promotion chưa chạy; PDF30 tiếp tục quarantine; các hạn chế research/QA còn nguyên. Checkpoint chỉ cập nhật planning, không sửa runtime hoặc chạy lại CI/QA.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.
 
 ## QA-01b — Multi-Agent Financial & Document Evidence Fusion
 

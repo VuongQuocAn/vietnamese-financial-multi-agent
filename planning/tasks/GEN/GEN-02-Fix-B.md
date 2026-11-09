@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: GEN-02-Fix-A, QA-01b, EXT-01
 - Estimated Complexity: M
@@ -90,7 +90,7 @@ pending_approval; wrong digest blocked; old bad claims không visible, ledger/so
 bytes giữ nguyên. Không tạo approval thật hoặc accepted promotion.
 Closure `28bfb6d8d5a9a071061444f26745454c0066e4aa`; [CI42554771165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42554771165) SUCCESS đúng SHA;86packaged tests PASS,18correction/API trong nhóm này; real H08 preflight đúng digest/PDF, pending_approval;2quarantines/0actual approvals. PDF30 giữ quarantine; accepted release không đổi.
 
-Next action: Tech Lead quyết định follow-up cho persistent accepted-release activation; giữ REVIEW/PDF30 quarantine, không tự triển khai.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.
 
 ## Approved promotion operation09/11/2026
 
@@ -104,4 +104,10 @@ Tech Lead APPROVED exact H08 release082d30e483d2a0133d696e923c90a1a555aaf993e49d
 - [ ] Real H08 E2E, corrected citations, M6/new ledger/M7/Firewall sau promotion.
 
 Dừng bước C theo task; không thay bằng temporary composition injection, không tạo
-module/cơ chế mới. DONE chưa đủ điều kiện; GEN-02 tổng thể giữ REVIEW.
+module/cơ chế mới. Tại checkpoint promotion, DONE chưa đủ điều kiện; quyết định nghiệm thu bên dưới chấp nhận giới hạn này.
+
+## Nghiệm thu có giới hạn09/11/2026
+
+Owner/Tech Lead chấp nhận GEN-02 và GEN-02-Fix-B DONE ngày09/11/2026 với các giới hạn đã ghi nhận. Đây là nghiệm thu có giới hạn, không xác nhận H08 đã promote hoặc M8-ready. H08 actual approval đã lưu nhưng accepted-release activation còn thiếu; E2E sau promotion chưa chạy; PDF30 tiếp tục quarantine; các hạn chế research/QA còn nguyên. Checkpoint chỉ cập nhật planning, không sửa runtime hoặc chạy lại CI/QA.
+Implementation và bằng chứng CI giữ nguyên; documentation checkpoint trước nghiệm thu `1b19d82f4bff228a59e481385af7c715147c8693`.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; không tự triển khai follow-up hoặc bắt đầu task khác.
