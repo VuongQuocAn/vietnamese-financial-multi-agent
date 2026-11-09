@@ -66,6 +66,13 @@ def test_resolution_switches_relative_year_scope_and_isolation(tmp_path):
     assert "Tăng trưởng doanh thu" in bound.question and "2030" in bound.question
     assert ctx.period == "2030"
     assert bound.composition_id is None and not bound.document_snapshots
+    state.topics = ["Nhân viên quản lý chủ chốt"]
+    state.reference_question = "Thuyết minh TEST 2030 nói gì về nhân viên quản lý chủ chốt?"
+    bound, *_ = service._resolve(state, FinancialQARequest(question="Nội dung đó ở trang nào?"))
+    from vietnamese_financial_multi_agent.tools.question_understanding import understand
+
+    assert bound.period is None and understand(bound.question)[0].period is None
+    state.topics = ["doanh thu thuần"]
     bound, *_ = service._resolve(state, FinancialQARequest(question="Còn UNKNOWN năm 2029?"))
     assert bound is None
     bound, ctx, *_ = service._resolve(state, FinancialQARequest(question="Còn OTHER năm 2029?"))

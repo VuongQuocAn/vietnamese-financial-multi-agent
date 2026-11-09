@@ -143,6 +143,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=Path("artifacts/evidence/CHAT-01/run1"))
     parser.add_argument("--seed-ledger", type=Path)
+    parser.add_argument("--scenarios", type=int, nargs="+")
     args = parser.parse_args()
     if args.output.exists():
         parser.error("choose_fresh_output")
@@ -164,6 +165,8 @@ def main():
     results = []
     sessions = []
     for index, questions in enumerate(SCENARIOS, 1):
+        if args.scenarios and index not in args.scenarios:
+            continue
         session = service.create()
         sessions.append(session)
         for question in questions:
@@ -194,6 +197,18 @@ def main():
                 errors,
                 flush=True,
             )
+    if args.scenarios:
+        save(
+            args.output / "summary.json",
+            dict(
+                results=results,
+                source_hashes_unchanged=before == hashes(),
+                protected_files=len(before),
+                gemini_calls=0,
+            ),
+        )
+        assert before == hashes() and not any(r["errors"] for r in results)
+        return
     # Interleave an earlier conversation after other sessions changed company/year.
     turn = service.send(
         sessions[0].conversation_id,

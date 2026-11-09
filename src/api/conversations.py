@@ -247,7 +247,8 @@ class ConversationService:
             question = re.sub(r"năm trước", "", question, flags=re.I)
         question = question.rstrip(" ?.!;\n")
         if not parsed.reporting_year or comparison or expanded:
-            question += f" năm {context.period[:4]}"
+            # "ở đâu năm ..." would be misread by the existing parser as "đầu năm".
+            question += f" cho năm {context.period[:4]}"
         if not companies or expanded:
             question += f" {context.company_id}"
         if context.reporting_scope and not parsed.reporting_scope:
