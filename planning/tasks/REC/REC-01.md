@@ -72,7 +72,10 @@ giữ pending GEN-01a/Web. PERF-01 đã APPROVED, đồng bộ DONE nếu còn R
 Không reset/clean/force-push. Dừng REVIEW, không tự nghiệm thu DONE.
 
 ## Implementation Evidence
-Implementation chưa commit/CI. Local vòng2:99focused PASS; H08 actual activation/
+Implementation `81ce0f67cf2b800ddae074b95825e41cc4be4d64` đã push main;
+[CI42571562562](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42571562562)
+SUCCESS đúng SHA:1193Python/9Web PASS; full regression manual SKIPPED.
+Local vòng2:99focused PASS; H08 actual activation/
 restart/2ACCEPT/stored/M7answered/2PDF16citations; PDF30/9 giữ quarantine.
 Live1call invalid_request,usage/tokens unknown; recorded proposal/uncertainty riêng.
 Clean3cases không OCR/PDF; detection0–0,0062ms; raw financial proof IDs khác do

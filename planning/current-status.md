@@ -16,7 +16,10 @@ recorded proposal/uncertainty fixtures tách riêng,không thay live OCR evaluat
 38approved inputs/4frozen/policy/pending GEN-01a/Web giữ hash.
 Clean detection0–0,0062ms; D01+7,17%latency,D17−1,45%,D18−4,73%; một sample/case.
 Answer/source citations/M6/M7/Firewall tương đương; financial proof IDs khác do
-timing/random origin/plan, không byte-exact ledger. Chưa commit/CI, không M8-ready.
+timing/random origin/plan, không byte-exact ledger. Không M8-ready.
+Implementation `81ce0f67cf2b800ddae074b95825e41cc4be4d64` đã push main;
+[CI42571562562](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42571562562)
+SUCCESS đúng SHA:1193Python/9Web PASS; full regression manual SKIPPED.
 Next action: Tech Lead review.
 
 ## PERF-01 — Fast Path Optimization

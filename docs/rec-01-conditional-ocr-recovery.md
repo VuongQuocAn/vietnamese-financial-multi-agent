@@ -1,7 +1,10 @@
 # REC-01 — Conditional OCR Recovery & Approved Release Activation
 
 Ngày 09/11/2026 (Asia/Bangkok). Status **REVIEW**; baseline `0a66240`.
-Implementation đang chuẩn bị commit; CI chờ exact implementation SHA.
+Implementation `81ce0f67cf2b800ddae074b95825e41cc4be4d64` đã push main;
+[CI42571562562](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42571562562)
+SUCCESS đúng SHA: **1193 Python/9 Web PASS**; lint/format/planning/typecheck/build
+và browser/proxy smoke đạt; full regression manual SKIPPED. Chỉ một CI run.
 Giữ pending GEN-01a/Web, accepted EXT-01, frozen GEN-02 và source policy.
 
 ## Kiến trúc và cấu hình
@@ -67,7 +70,7 @@ usage/cost unknown, provider trả invalid_request; không suy nguyên nhân HTT
 khi không có evidence. Không có live transcription thành công để đánh giá accuracy.
 Trace live đo tổng recovery branch 5,315s, chưa tách provider-call latency; final
 instrumentation thêm `call_latency_ms`/safe provider error code cho các lượt sau,
-không gọi live lần hai để bổ sung số đo. Assertion timing này được giao CI kiểm tra.
+không gọi live lần hai để bổ sung số đo. Assertion timing này đã PASS trong CI.
 
 H08 chạy đúng một QA E2E sau persistent selection. M5 lấy corrected selector 7;
 M6 ACCEPT hai claims, ledger stored hai, M7 answered. Hai citations đều trang 16:
@@ -98,7 +101,7 @@ Approval dương trong unit tests là synthetic; H08 E2E dùng actual approval �
 Existing tests kiểm tra source quarantine, warm ledger/revocation/replay, immutable
 history, cross-snapshot proof và citations. Vòng 1:54 PASS; vòng 2:99 PASS
 (overlap, không cộng thành153). Thêm call-timing metadata/assertion sau local vòng2;
-CI sẽ kiểm tra exact final SHA. Không mở vòng focused sửa thuật toán thứ ba.
+CI đã PASS exact final SHA, gồm timing assertion mới. Không mở vòng focused sửa thuật toán thứ ba.
 
 Real old H08/PDF30 histories được đọc read-only, current retrieval loại defective
 claims và `build_verified_claim` từ old histories bị reject; unrelated controls còn
