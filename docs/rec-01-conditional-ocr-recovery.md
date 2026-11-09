@@ -231,4 +231,49 @@ payload có sẵn; **visual-audit.json mới là kết luận cuối: recovered=
 Một call mới/1609known tokens; lịch sử REC-01 tổng4calls,3310known tokens ở hai
 responses success,usage của hai HTTP400 unknown. Không suy accuracy toàn corpus.
 
-Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.
+## Kiểm tra vùng ảnh theo chỉ đạo Tech Lead sau `a229b5e`
+
+REC-01 giữ REVIEW. Một lượt audit có mục tiêu, read-only; không sửa prompt/runtime,
+M5–M7 hoặc H08 activation. **Không có trusted region, không Gemini call/proposal mới.**
+
+Đã truy vết PDF30/selector9 qua saved Gemini → M1 understanding → unified region →
+canonical source anchor, rồi kiểm tra raw OCR page30 và ảnh raw tương ứng:
+
+| Nguồn định vị | Dữ liệu thực tế | Kết luận |
+| --- | --- | --- |
+| Saved `/text_elements/9` | candidate_bbox `[899,172,946,894]`, status unresolved, issue not_independently_verified, bounds_valid=true | Kiểm tra trên đúng ảnh200DPI cắt bảng số; không phải đoạn(i). In-bounds không chứng minh đúng vùng. |
+| M1 anchor | Chỉ page identity, status unresolved; không observed_bbox hoặc element/line ID | Không có tọa độ observed đã xác minh. |
+| Unified region | bbox=null, geometry_verified=false, raw_element_id=null, provenance_level=page | Không có selector→raw element binding. |
+| Canonical anchor | observed_bbox/proposed_bbox và element/line IDs đều null, status uncertain | Chỉ bảo đảm vị trí cấp trang. |
+| Raw OCR text_0018/0019 | Có text gần đoạn(i), boxes `[1480,2772,2421,2824]` / `[1480,2828,2419,2873]` trên ảnh2484×3509/300DPI | Inspection union đúng các box có sẵn cắt ngang nhiều đoạn xoay dọc; không bao trọn đoạn(i), không dùng làm crop OCR. |
+
+Nguồn files: `artifacts/evidence/EXT-01/BCC_2024/responses/page-30.json`,
+`unified/page-30.json`; raw `data/processed/Financial_Report_OCR/BCC/2024/ocr_json/page_30.json`
+và `data/raw/Financial_Report/BCC/2024/page_30.png`. Không sửa các files này.
+Recovery image200DPI1656×2339, hash `156ee899…`; raw image300DPI2484×3509,
+hash `49248da2…`. So render PDF gốc ở300DPI: cùng dimensions nhưng PNG bytes và
+decoded RGB pixels đều khác; không thể xác nhận raw binding chỉ bằng tên trang/DPI.
+Không suy đoán nguyên nhân khác pixels hoặc tự suy rotate/rescale để ghép tọa độ.
+
+**Dữ liệu còn thiếu chính xác:**
+
+1. Ánh xạ đã kiểm tra từ selector9 tới raw element/line IDs; không dùng text similarity
+   để cấp binding, đặc biệt OCR selector9 đang ghép collateral sai.
+2. `observed_bbox` đã review cho riêng đoạn(i), gắn exact image hash, kích thước,
+   hệ tọa độ pixel và provenance/reviewer; box phải bao trọn hai dòng, loại collateral.
+3. Verified binding PDF/page→raw PNG và phép biến đổi rotation/resize/coordinate frame
+   nếu dùng hệ ảnh khác. Không dùng tỷ lệ200/300 như chứng minh mapping.
+4. Ranh giới đã xác minh giữa đoạn(i) và heading/bullet collateral để chừa lề nhỏ
+   mà không lấy nội dung đoạn kế tiếp.
+
+Hai ảnh cắt trong artifact chỉ dùng **inspection các tọa độ có sẵn**, không là trusted
+crop hoặc provider input, không đoán vùng mới. Không có eligible crop nên dừng trước
+live, không gửi full page/current_text và không tạo correction proposal. Ba lỗi nội
+dung đã biết giữ kết luận visual FAIL của lượt trước; không có kết quả OCR mới để
+đối chiếu lại hoặc kết luận phục hồi. Giữ PDF30 quarantine và exact H08 selection.
+
+Artifacts local `artifacts/evidence/REC-01/region-audit/`: region-audit.json,
+image-binding-check.json, hai unverified inspection PNGs và protected-hashes.json.
+Docs-only checkpoint; planning/diff checks, không unit suite/CI lớn hoặc calls trả phí.
+
+Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.

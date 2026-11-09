@@ -30,7 +30,11 @@ giữ strict validation;19offline PASS. Một live:JSON strict PASS,1609tokens,
 call6,083s/branch8,553s; visual audit FAIL:thiếu đáo hạn25/03/2021,ghép collateral,
 sai ngày hợp đồng2011→2021. Chưa phục hồi OCR; PDF30quarantine/H08activation nguyên.
 Không CI lớn/M5–M7/task mới. [Report](../docs/rec-01-conditional-ocr-recovery.md).
-Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.
+Audit vùng saua229b5e:không trusted bbox;candidate selector9 cắt bảng số,
+unified bbox=null/geometry_verified=false/raw_element_id=null;raw text18/19 boxes
+cắt sai vùng,ảnh300DPI không khớp PDF render pixels/chưa có transform xác minh.
+Không crop cho provider/không live/proposal mới; không runtime/M5–M7/H08 changes.
+Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.
 
 ## PERF-01 — Fast Path Optimization
 

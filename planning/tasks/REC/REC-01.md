@@ -93,4 +93,10 @@ locator; giữ extra=forbid.19offline PASS trước một live1609tokens/6,083s.
 JSON strict PASS nhưng visual source-fidelity FAIL:missing maturity25/03/2021,
 collateral merge/mortgage date2011→2021. Chưa recovered; PDF30quarantine/H08 nguyên.
 Không CI lớn/M5–M7/task mới; evidence local REC-01/prompt-fix/visual-audit.json.
-Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.
+Một audit vùng saua229b5e:không trusted bbox;candidate selector9 cắt bảng số;
+unified geometry_verified=false,bbox=null,không raw ID mapping. Raw18/19 có boxes
+nhưng visual crop sai vùng;300DPIraw không khớp render pixels,không verified transform.
+0live/0proposal mới;docs-only,giữ runtime/H08/PDF30quarantine.
+Thiếu observed_bbox gắn image hash/frame,selector→raw IDs,PDF→raw binding/transform,
+và ranh giới paragraph/collateral. Evidence local REC-01/region-audit/.
+Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.
