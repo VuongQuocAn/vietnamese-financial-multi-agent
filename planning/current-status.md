@@ -2,6 +2,22 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
+
+Status: **REVIEW**, Owner giao 09/11/2026. [Spec](tasks/E2E/E2E-02.md),
+[report](../docs/e2e-02-real-pdf-evaluation.md), [issues](../docs/e2e-02-issue-log.md).
+40 lượt/4 PDF, L1/L2/L3/L4=10/10/8/12; deterministic, 0 Gemini.
+24 CORRECT/3 PARTIAL/1 INCORRECT/4 JUSTIFIED_ABSTAIN/7 UNJUSTIFIED_ABSTAIN/
+1 CLARIFICATION hợp lý/0 RUNTIME_FAILURE. Citations 292/293 hỗ trợ PDF;
+median 11,499s/P90 39,624s; fresh financial median 37,274s; max 85,312s.
+9 issues OPEN_FOR_FIX_02 (1 Critical/3 High/4 Medium/1 Low), root cause NOT_ANALYZED.
+Lỗi đáng chú ý: mất từ “khó” trong điều kiện dự phòng; so sánh cùng PDF bị chặn;
+follow-up hỏi trang thất bại; fresh/mixed latency cao. Không sửa lỗi.
+Runtime snapshot39d796a; 572 protected files và manifests giữ hash;
+code GEN-01a/planning local được giữ riêng. Implementation chưa commit tại validation.
+Checks: smoke hai lượt giữ trong40; PDF/Decimal/binding audit; Ruff, planning, diff.
+Next action: Tech Lead nghiệm thu E2E-02; không bắt đầu FIX-02/Web/M8.
+
 ## CHAT-01 — Multi-turn Conversational QA
 
 Status: **REVIEW**, Owner giao ngày09/11/2026; baseline `423514b`.
