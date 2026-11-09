@@ -2,9 +2,18 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## CHAT-01 — Multi-turn Conversational QA
+
+Status: **IN_PROGRESS**, Owner giao ngày09/11/2026; baseline `423514b`.
+[Spec](tasks/CHAT/CHAT-01.md). REC-01 DONE có giới hạn đã đồng bộ; không sửa REC.
+Thin deterministic resolver → FinancialQARequest → pipeline hiện hữu M5/M6/M7.
+Giữ pending GEN-01a/Web, không full regression/M8; tối đa2 live calls nếu cần.
+Next action: triển khai và kiểm chứng CHAT-01.
+
 ## REC-01 — Conditional OCR Recovery & Approved Release Activation
 
-Status: **REVIEW**; Owner giao 09/11/2026; baseline `0a66240`.
+Status: **DONE — Tech Lead APPROVED, nghiệm thu có giới hạn ngày09/11/2026**;
+Owner giao 09/11/2026; baseline `0a66240`.
 [Spec](tasks/REC/REC-01.md), [report](../docs/rec-01-conditional-ocr-recovery.md).
 Persistent exact selection/preflight và lazy M6-quality recovery hook đã triển khai;
 proposal không tự PDFTextReview/approval/release. Local final99 focused PASS.
@@ -40,7 +49,14 @@ giữ metadata qua unified/DocumentEvidence;41focused PASS,smoke PDF30blocked0ca
 Hai scan thật BCC2024PDF30/BBS2025PDF14 đều unresolved(raw hash/frame thiếu),
 0crop/0live;synthetic new-PDF crops144DPI/0°,216DPI/90°đạt,không là research PASS.
 Chưa đạt acceptance localization trên scan thật;không CI lớn/H08/M5–M7 thay đổi.
-Next action: Tech Lead review phạm vi đã chạy và gap binding trên PDF scan thật.
+Implementation cuối `423514b387816c2c5198ed991cca50906867a5eb` đã push main.
+Owner/Tech Lead nghiệm thu có giới hạn: H08 activation, conditional recovery,
+geometry resolver và kiểm thử liên quan đã đạt trong phạm vi ghi nhận.
+Chưa đạt tự động định vị và phục hồi OCR thành công trên PDF scan thật;
+PDF30 tiếp tục quarantine, không tuyên bố OCR Recovery hoàn thiện đầy đủ.
+Dừng toàn bộ công việc OCR-Recovery tại đây; không mở thêm task sửa lỗi.
+Phiên nghiệm thu chỉ cập nhật planning, không sửa code hoặc chạy tests/CI.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## PERF-01 — Fast Path Optimization
 

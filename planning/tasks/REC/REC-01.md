@@ -2,7 +2,7 @@
 
 ## Metadata
 - Milestone: REC
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: PERF-01, GEN-02-Fix-B
 - Estimated Complexity: M
@@ -72,6 +72,13 @@ giữ pending GEN-01a/Web. PERF-01 đã APPROVED, đồng bộ DONE nếu còn R
 Không reset/clean/force-push. Dừng REVIEW, không tự nghiệm thu DONE.
 
 ## Implementation Evidence
+Implementation cuối `423514b387816c2c5198ed991cca50906867a5eb` đã push main;
+Owner/Tech Lead APPROVED ngày09/11/2026, nghiệm thu có giới hạn.
+Đạt: H08 activation, conditional recovery, geometry resolver và kiểm thử liên quan.
+Chưa đạt: tự động định vị và phục hồi OCR thành công trên PDF scan thật.
+Giữ PDF30 quarantine; không tuyên bố OCR Recovery hoàn thiện đầy đủ.
+Kết quả tests/CI bên dưới là bằng chứng lịch sử, không chạy lại khi nghiệm thu.
+
 Implementation `81ce0f67cf2b800ddae074b95825e41cc4be4d64` đã push main;
 [CI42571562562](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42571562562)
 SUCCESS đúng SHA:1193Python/9Web PASS; full regression manual SKIPPED.
@@ -106,4 +113,6 @@ hai PDF thật cùng thuật toán,crop review trước tối đa1live khi geome
 blocked0calls. BCC2024PDF30/BBS2025PDF14 unresolved raw hash/frame,0real crops/live.
 Synthetic text-layer new PDFs crop đúng144DPI/0°và216DPI/90°;chưa đạt real-scan
 acceptance;H08/PDF30quarantine nguyên;report nêu rõ limitations/artifacts.
-Next action: Tech Lead review phạm vi đã chạy và gap binding trên PDF scan thật.
+Dừng toàn bộ OCR-Recovery tại đây theo Owner; không mở thêm task sửa lỗi.
+Phiên nghiệm thu chỉ cập nhật planning, không sửa code hoặc chạy tests/CI.
+Next action: Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

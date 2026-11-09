@@ -88,6 +88,7 @@ def create_app(
     max_upload_bytes=None,
     max_pages=None,
     job_options=None,
+    conversation_service=None,
 ):
     upload_limit = max_upload_bytes or int(os.environ.get("WEB_MAX_UPLOAD_BYTES", 50 * 1024 * 1024))
     page_limit = max_pages or int(os.environ.get("WEB_MAX_PAGES", 200))
@@ -136,6 +137,9 @@ def create_app(
                     adapter.close()
 
     app = FastAPI(title="Financial AI API", version="0.1.0", lifespan=lifespan)
+    from .conversation_routes import conversation_router
+
+    app.include_router(conversation_router(conversation_service))
     app.add_middleware(BodyLimit, limit=upload_limit)
 
     @app.exception_handler(DocumentError)
