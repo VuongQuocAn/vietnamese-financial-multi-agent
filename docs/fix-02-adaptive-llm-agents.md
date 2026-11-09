@@ -1,7 +1,11 @@
 # FIX-02 — Adaptive LLM Agents và bounded Judge feedback
 
 Ngày09/11/2026; baseline `20694b2`. **REVIEW, chưa đủ điều kiện DONE.**
-Commit implementation sẽ ghi trong registry/handoff sau khi xác minh Git.
+Implementation [`b7eb2bf838c6c194cb7a55910a4937bfc043e731`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b7eb2bf838c6c194cb7a55910a4937bfc043e731) đã push main, SHA đã xác minh.
+[CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
+completed/SUCCESS đúng implementation SHA:27Python/9Web PASS, lint/format/planning/
+typecheck/build đạt; full regression SKIPPED. Checkpoint sau chỉ docs, không gán CI
+implementation cho SHA checkpoint.
 Không nghiệm thu financial accuracy từ engineering tests hoặc từ status completed.
 
 ## Thay đổi kiến trúc

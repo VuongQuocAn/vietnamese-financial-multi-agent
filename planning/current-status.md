@@ -4,7 +4,10 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**. Owner giao09/11/2026; baseline `20694b2`; chưa commit.
+Status: **REVIEW**. Owner giao09/11/2026; baseline `20694b2`.
+Implementation `b7eb2bf838c6c194cb7a55910a4937bfc043e731` đã push main, SHA xác minh;
+[CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
+completed/SUCCESS đúng implementation SHA:27Python/9Web PASS, full regression SKIPPED.
 [Spec](tasks/FIX/FIX-02.md), [report](../docs/fix-02-adaptive-llm-agents.md).
 Planner assignments/analyses/Judge feedback, request caps và M6/M7 gates đã nối.
 Live Q21:2feedback/replans,13actual calls/133034known tokens/114,672s;partial,

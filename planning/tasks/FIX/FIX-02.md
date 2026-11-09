@@ -71,7 +71,10 @@ evidence hoặc approval để đóng issues. Giữ toàn bộ kết quả lỗi
 
 ## Implementation Evidence
 
-Chưa commit. [Báo cáo](../../../docs/fix-02-adaptive-llm-agents.md);
+Implementation `b7eb2bf838c6c194cb7a55910a4937bfc043e731` đã push main, SHA xác minh.
+[CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
+completed/SUCCESS đúng SHA:27Python/9Web PASS, full regression SKIPPED.
+[Báo cáo](../../../docs/fix-02-adaptive-llm-agents.md);
 evidence local artifacts/evidence/FIX-02/ giữ toàn bộ lượt lỗi và bổ sung Q21.
 Live loop có2feedback/replans,13calls/133034known tokens,partial do provider failure;
 I001 corrected và I009 source replay được kiểm chứng trên đường đã chạy.
