@@ -85,7 +85,19 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
         }
         return
     # Fixture image input; actual PDF binding is exercised separately by REC-01 real runs.
-    content = b"\x89PNG\r\n\x1a\nunit-only"
+    import io
+
+    from PIL import Image, ImageDraw
+    from vietnamese_financial_multi_agent.document_processing.region_geometry import (
+        bind_selectors,
+        geometry_header,
+    )
+
+    buffer = io.BytesIO()
+    fixture_image = Image.new("RGB", (10, 10), "white")
+    ImageDraw.Draw(fixture_image).line((3, 4, 6, 4), fill="black")
+    fixture_image.save(buffer, format="PNG")
+    content = buffer.getvalue()
     digest = hashlib.sha256(content).hexdigest()
     original.sources[0].reference.anchor.page.image = "sha256:" + digest
     key = payload_sha256(original.model_dump(mode="json"))
@@ -94,11 +106,29 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
             pin.payload_sha256 = key
     identity = original.sources[0].reference.anchor.page
     image = VerifiedPageImage(identity, digest, 10, 10, content)
+    geometry = bind_selectors(
+        geometry_header(
+            image,
+            method="raw_ocr_same_image",
+            regions=[
+                dict(
+                    id="raw-line-1",
+                    kind="text",
+                    reading_order=0,
+                    bbox=[1, 1, 9, 9],
+                    text=original.raw_text,
+                )
+            ],
+        ),
+        [(original.sources[0].reference.source_pointer, original.raw_text, None)],
+    )
     saved = {"source": image_source(image), "provenance": {"render_dpi": 200}}
     write(tmp_path / "page.json", saved)
     monkeypatch.setattr(
         "vietnamese_financial_multi_agent.document_processing.gemini_ingestion.load_pages",
-        lambda *a, **kw: [SimpleNamespace(image=image, source=saved["provenance"])],
+        lambda *a, **kw: [
+            SimpleNamespace(image=image, source=saved["provenance"], geometry=geometry)
+        ],
     )
     binding = dict(
         composition_sha256=payload_sha256(manifest.model_dump(mode="json")),
@@ -124,9 +154,8 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
         assert len(request.messages[0].images) == 1
         prompt = request.messages[0].content
         instructions, locator_json = prompt.split("\n", 1)
-        assert "Read the image first" in instructions
-        assert "not a sample answer" in instructions
-        assert "do not copy current_text or merge adjacent paragraphs" in instructions
+        assert "Read only the supplied crop" in instructions
+        assert "current_text" not in prompt and original.raw_text not in prompt
         assert "exactly five fields and no other fields" in instructions
         for field in ("text", "readability", "ambiguous_spans", "page", "selector"):
             assert field in instructions
@@ -135,7 +164,6 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
         assert json.loads(locator_json) == {
             "page": identity.page,
             "selector": binding["selector"],
-            "current_text": original.raw_text,
         }
         if mode == "timeout":
             raise TimeoutError()

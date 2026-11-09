@@ -99,4 +99,11 @@ nhưng visual crop sai vùng;300DPIraw không khớp render pixels,không verifi
 0live/0proposal mới;docs-only,giữ runtime/H08/PDF30quarantine.
 Thiếu observed_bbox gắn image hash/frame,selector→raw IDs,PDF→raw binding/transform,
 và ranh giới paragraph/collateral. Evidence local REC-01/region-audit/.
-Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.
+Owner giao Automatic Evidence Region Binding trong REC-01:generic ingest geometry/
+selector resolver/crop-only recovery,không hardcode/OCR engine mới/M5–M7/CI lớn;
+hai PDF thật cùng thuật toán,crop review trước tối đa1live khi geometry đạt.
+Đã thêm binding/resolver+preservation+offline runner;41focused PASS,PDF30 smoke
+blocked0calls. BCC2024PDF30/BBS2025PDF14 unresolved raw hash/frame,0real crops/live.
+Synthetic text-layer new PDFs crop đúng144DPI/0°và216DPI/90°;chưa đạt real-scan
+acceptance;H08/PDF30quarantine nguyên;report nêu rõ limitations/artifacts.
+Next action: Tech Lead review phạm vi đã chạy và gap binding trên PDF scan thật.

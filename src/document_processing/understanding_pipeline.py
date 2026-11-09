@@ -32,6 +32,7 @@ class UnderstandingOptions:
     dpi: int = 200
     # M1-15 records, keyed by ORIGINAL page number; never retry an existing record.
     persisted_results: dict[int, dict[str, Any]] = field(default_factory=dict)
+    raw_ocr_pages: dict[int, dict[str, Any]] = field(default_factory=dict)
     allow_live_ocr: bool = False
     service: Any = None
     credential_ref: str | None = None
@@ -71,7 +72,12 @@ def run_document_understanding(
     ):
         raise ValueError("persisted_result_required_live_ocr_disabled")
     pages = load_pages(
-        source, symbol=options.symbol, year=options.year, pages=list(options.pages), dpi=options.dpi
+        source,
+        symbol=options.symbol,
+        year=options.year,
+        pages=list(options.pages),
+        dpi=options.dpi,
+        **({"raw_ocr": options.raw_ocr_pages} if options.raw_ocr_pages else {}),
     )
     # Kiểm tra cả replay batch trước khi cho phép bất kỳ live request nào.
     replayed = {
@@ -226,6 +232,23 @@ def _existing_page(loaded):
             source_metadata=raw.page.model_dump(mode="json"),
             raw_provenance=raw.provenance.model_dump(mode="json", exclude_unset=True),
             identity_checked=loaded.identity_checked,
+            region_geometry_candidates=dict(
+                coordinate_space="unverified_raw_image_pixels",
+                width=raw.page.width,
+                height=raw.page.height,
+                image=raw.page.image,
+                reason="raw_image_hash_and_coordinate_frame_required",
+                regions=[
+                    dict(
+                        selector=f"/elements/{i}",
+                        raw_element_id=e.id,
+                        bbox=e.bbox,
+                        reading_order=i,
+                        kind=e.type,
+                    )
+                    for i, e in enumerate(raw.elements)
+                ],
+            ),
         ),
         schema_valid=True,
         text_regions=texts,
@@ -292,7 +315,7 @@ def _native_page(page, record, replay):
         identity=page.image.identity,
         source_type=page.source["source_type"],
         source_sha256=page.source["source_sha256"],
-        source_references=page.source,
+        source_references=dict(page.source),
         schema_valid=bool(schema_valid),
         text_regions=texts,
         tables=tables,
@@ -308,6 +331,13 @@ def _native_page(page, record, replay):
             "quality_router",
         ],
     )
+    from .region_geometry import bind_selectors
+
+    geometry = getattr(page, "geometry", None) or record.get("geometry")
+    if geometry is not None:
+        result.source_references["region_geometry"] = bind_selectors(
+            geometry, [(r.source_pointer, r.text, None) for r in result.text_regions]
+        )
     return _route(result)
 
 

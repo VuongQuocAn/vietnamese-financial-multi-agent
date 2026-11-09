@@ -22,9 +22,10 @@ MODEL = "gemini-3.5-flash-lite"
 class IngestionPage:
     image: VerifiedPageImage
     source: dict
+    geometry: dict | None = None
 
 
-def load_pages(path: Path, *, symbol: str, year: str, pages: list[int], dpi=200):
+def load_pages(path: Path, *, symbol: str, year: str, pages: list[int], dpi=200, raw_ocr=None):
     """One-based PDF pages, or caller-supplied original page number for one PNG.
 
     Hash the same PDF bytes used by PDFium. Do not rotate, deskew or infer identity.
@@ -57,18 +58,22 @@ def load_pages(path: Path, *, symbol: str, year: str, pages: list[int], dpi=200)
                         with bitmap.to_pil() as decoded:
                             buffer = io.BytesIO()
                             decoded.save(buffer, format="PNG")
-                            result.append(
-                                _page(
-                                    buffer.getvalue(),
-                                    digest,
-                                    "pdf",
-                                    count,
-                                    number,
-                                    symbol,
-                                    year,
-                                    dpi,
-                                )
+                            rendered = _page(
+                                buffer.getvalue(),
+                                digest,
+                                "pdf",
+                                count,
+                                number,
+                                symbol,
+                                year,
+                                dpi,
                             )
+                            from .region_geometry import pdf_text_geometry, raw_ocr_geometry
+
+                            geometry = pdf_text_geometry(page, bitmap, rendered.image)
+                            if not geometry["regions"] and raw_ocr and number in raw_ocr:
+                                geometry = raw_ocr_geometry(raw_ocr[number], rendered.image)
+                            result.append(IngestionPage(rendered.image, rendered.source, geometry))
                     finally:
                         bitmap.close()
                 finally:
@@ -177,6 +182,17 @@ def ingest_page(service, page, *, credential_ref, document_mode=False, document_
     components = record.get("output")
     response = record.get("response", {})
     record["provenance"] = page.source
+    from .region_geometry import bind_selectors
+
+    geometry = getattr(page, "geometry", None)
+    if geometry is not None:
+        record["geometry"] = bind_selectors(
+            geometry,
+            [
+                (f"/text_elements/{i}", item.get("text"), None)
+                for i, item in enumerate((components or {}).get("text_elements", []))
+            ],
+        )
     record["assessment"] = dict(
         schema_valid=(response.get("output") or {}).get("validation_status") == "schema_valid",
         structure_accepted=components is not None and components["status"] == "accepted",

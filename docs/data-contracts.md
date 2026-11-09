@@ -1,5 +1,15 @@
 # Data contracts
 
+REC-01 automatic region binding: ingest giữ `region_geometry_v1` sidecar trong
+record.geometry và unified source_references.region_geometry; DocumentEvidence
+giữ nguyên metadata này qua adapter, không nâng thành M6 financial authority.
+Header ghim PDF/page/image hash/dimensions/original-image pixel frame, regions có
+source IDs/reading order/kind/bbox; selectors ghim exact text digest và unique IDs.
+PDF text layer dùng PDFium render converter; raw OCR cần exact same-image hash,
+page/frame/dimensions. Thiếu binding trả unresolved; không đoán scale/rotation.
+Recovery hiện chỉ gửi crop đã resolve, không fallback full page/OCR cũ. Đây không
+phải approval cho correction. [Giới hạn scan thật](rec-01-conditional-ocr-recovery.md).
+
 REC-01 thêm operator selection `active-releases.json` tại DOCUMENT_RELEASE_ROOT:
 logical document/composition/release/policy đều ghim exact digest; startup gọi
 check_correction_promotion và không fallback khi config/pins/PDF thiếu hoặc sai.

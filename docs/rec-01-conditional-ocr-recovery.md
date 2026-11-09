@@ -276,4 +276,105 @@ Artifacts local `artifacts/evidence/REC-01/region-audit/`: region-audit.json,
 image-binding-check.json, hai unverified inspection PNGs và protected-hashes.json.
 Docs-only checkpoint; planning/diff checks, không unit suite/CI lớn hoặc calls trả phí.
 
-Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.
+## Automatic Evidence Region Binding — tiếp tục REC-01
+
+Baseline `182b288`; REC-01 giữ **REVIEW**, không mở task hoặc vòng tối ưu khác.
+Đã triển khai binding/resolver dùng chung và tích hợp recovery; **chưa đạt acceptance
+tạo crop đúng trên hai PDF scan thật**. Không gọi Gemini khi geometry chưa đạt.
+
+### Nguyên nhân và code thay đổi
+
+Nhánh raw `_existing_page` đã giữ raw element IDs, nhưng geometry chỉ candidate;
+nhánh Gemini `_native_page` tạo `/text_elements/N` độc lập, không có raw IDs.
+`adapt_to_m1` cố ý chỉ tạo page anchor vì bbox do model chưa verified. Unified
+và DocumentEvidence không nên nâng candidate thành observed bbox. Không có mapping
+giữa hai nhánh/ảnh render nên text selector mất đường tới vùng thực tế; đây không
+phải lỗi chỉ cần copy bbox từ raw JSON sang anchor là sửa được.
+
+- `region_geometry.py`: sidecar versioned ghim page identity, image hash, dimensions,
+  hệ original-image pixels; region IDs, loại, bbox, reading order và selector mapping
+  theo unique exact complete-line run/text digest, không fuzzy match/OCR mới/hardcode.
+- `gemini_ingestion.py`: khi render PDF mới, lấy vị trí glyph từ PDF text layer
+  (nếu có), qua chính PDFium render position converter để xử lý DPI/rotation;
+  ingest tự lưu record.geometry. Có thể truyền raw_ocr theo page; chỉ sử dụng nếu
+  raw có image_sha256/page/dimensions/coordinate_space đúng chính ảnh render.
+- `understanding_pipeline.py`: truyền raw_ocr_pages tới ingest, giữ geometry qua
+  persisted replay/unified.source_references; nhánh raw giữ candidate index với
+  selector→raw IDs/reading order/bbox/dimensions và lý do chưa verified.
+  `document_adapter` hiện hữu đã copy source_references nên không cần sửa M3/M5–M7.
+- Resolver kiểm tra exact image/page/frame/text-version, IDs duy nhất, chỉ text,
+  thứ tự liên tiếp, khoảng cách dòng/cột, không overlap unselected table/heading,
+  có ink và không cắt ink ở viền crop. Margin nhỏ suy ra từ chiều cao dòng, không
+  có tọa độ PDF-specific. Bounds hợp lệ đơn lẻ không đủ. Chỉ hỗ trợ paragraph runs
+  có layout xác định; text dọc/nhiều cột hoặc ranh giới không rõ bị từ chối.
+- `conditional_recovery.py`: sau source-quality trigger và source pins hiện có,
+  lấy geometry metadata hoặc dựng lại từ PDF/raw được cấu hình trong storage,
+  resolve rồi crop. Chỉ gửi crop + page/selector, **không gửi full page/current_text**.
+  Unresolved lưu failure record calls0, không transcription/correction proposal;
+  strict schema/approval/quarantine giữ nguyên. Clean decisions không vào resolver,
+  không đọc ảnh; không thêm detection vào đường QA sạch.
+- `evaluate_region_geometry.py`: runner offline chung nhận danh sách case từ local
+  JSON, không hardcode công ty/selector/bbox, không gọi LLM; lưu geometry/resolution
+  và chỉ ghi crop khi resolved.
+
+Region IDs `pdf_text_line:*` là vị trí text layer, không giả là raw OCR IDs.
+PDF/bitmap transform dựa API renderer; không tự áp tỷ lệ200/300 hoặc swap axes lên
+legacy OCR. Text layer/geometry chỉ hỗ trợ source localization, không chứng minh
+OCR transcription hoặc claim tài chính đúng.
+
+### Hai PDF thật — cùng thuật toán
+
+| Case và layout | Selector/reference | Kết quả thực tế | Crop/live |
+| --- | --- | --- | --- |
+| BCC2024 PDF30, trang scan xoay có bảng và đoạn(i)/collateral | /text_elements/9; độc lập đã thấy đáo hạn25/03/2021,collateral riêng và hợp đồng2011 | unresolved:raw_image_hash_or_coordinate_frame_unverified; text layer0chars | Không crop,0calls |
+| BBS2025 PDF14, trang portrait gồm thuyết minh và bảng tiền | /text_elements/4, đoạn nhân viên quản lý chủ chốt đã dùng trong QA-01a source audit | cùng reason; text layer0chars | Không crop,0calls |
+
+Input BBS dùng saved M1-15 page14 được composition EXT-01 ghim; không có file đó
+trong EXT-01/responses. Lượt runner đầu dừng do sai đường dẫn này sau BCC; giữ
+artifacts partial, sửa đúng source path rồi chạy hai case chung, không tuning dữ liệu.
+Legacy raw hai trang không có hash ảnh/coordinate frame và kích thước300DPI khác
+recovery200DPI. Không tự xác nhận binding từ symbol/year/page hoặc text similarity.
+Không có crop thật đủ điều kiện nên **không có live Gemini**, không đánh giá lại
+ba lỗi bằng output mới; PDF30 vẫn source-fidelity FAIL ở evidence trước.
+
+### Kiểm thử và ví dụ crop
+
+Final **41focused PASS**:4geometry checks +19conditional +gemini ingestion/
+understanding compatibility. Vòng đầu35PASS/6fail do page fixtures dạng
+SimpleNamespace chưa có optional geometry; sửa getattr compatibility, không nới
+validation. Ruff lint/format PASS; planning/diff checks. Không full1193/CI lớn,
+benchmark GEN-02 hoặc rerun H08. Smoke thật `recover_record` PDF30:
+blocked/recovery_region_unresolved,0calls, không proposal/approval.
+
+Ví dụ **synthetic, không phải PDF tài chính thật**: fixture PDF text layer mới tự
+map và crop dòng “Loan matures 25 March 2021.”, loại heading “Collateral heading”.
+Hai render144DPI/0° và216DPI/90° đều giữ đúng dòng qua crop; đã xem PNG độc lập.
+File local `automatic-regions/test-output/test_pdf_text_layer_automatic_0/crop-144-0.png`
+và `..._1/crop-216-90.png`. Test mới còn kiểm tra ingest→unified→DocumentEvidence
+giữ binding, sai hash/text version, thiếu raw-frame, table overlap, paragraph gap;
+conditional tests giữ strict output, crop-only/no old OCR và clean-path early exit.
+Không dùng synthetic crops như bằng chứng hai scan thật đã đạt.
+
+### Giới hạn còn lại
+
+PDF mới có text layer có thể tự tạo binding/crop trong phạm vi exact, unambiguous
+line runs đã test. PDF scan cần raw OCR từ **đúng ảnh render** và coordinate frame
+có provenance; mới giữ candidates nếu không đủ điều kiện. Không tự sửa producer
+legacy có box/rotation sai, không đọc lại chữ từ pixels bằng OCR engine mới, không
+thể phục hồi geometry chỉ bằng text. Reading order raw hiện giữ thứ tự producer;
+nếu sai hoặc paragraph nhiều cột, resolver từ chối, không tự suy reorder.
+So khớp exact bảo thủ có thể bỏ lỡ source OCR đã sai, thay vì chọn nhầm đoạn.
+Layout/ink checks là engineering guards, không detector semantic boundaries hoàn hảo.
+
+Chưa chứng minh tự định vị thành công trên scan mới hoặc hai case thật được yêu cầu;
+không báo toàn bộ acceptance đạt. Chưa có crop/live thực tế mới. Fast path giữ early
+exit/no ảnh/no resolver theo focused test; chưa đo định lượng overhead E2E mới.
+Ingest/startup có thêm text-layer extraction, không tính đó là QA clean request.
+H08 activation/policy/accepted repositories/PDF30 quarantine/pending GEN-01a/Web
+được đối chiếu hash, không sửa. Private geometry/proposals/images không commit.
+
+Artifacts `artifacts/evidence/REC-01/automatic-regions/`: real-final/results.json,
+hai .geometry.json, real-recovery-smoke.json, focused-final.log, test-output PNG/PDF,
+protected-before.json. Trạng thái vẫn REVIEW, không tự triển khai producer OCR tiếp.
+
+Next action: Tech Lead review phạm vi đã chạy và gap binding trên PDF scan thật.

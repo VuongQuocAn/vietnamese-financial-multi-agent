@@ -34,7 +34,13 @@ Audit vùng saua229b5e:không trusted bbox;candidate selector9 cắt bảng số
 unified bbox=null/geometry_verified=false/raw_element_id=null;raw text18/19 boxes
 cắt sai vùng,ảnh300DPI không khớp PDF render pixels/chưa có transform xác minh.
 Không crop cho provider/không live/proposal mới; không runtime/M5–M7/H08 changes.
-Next action: Tech Lead cung cấp region metadata đã xác minh, gắn đúng ảnh nguồn.
+Automatic region binding/resolver đã thêm tại ingest/recovery (baseline182b288):
+text-layer PDFium transform hoặc same-image raw contract;crop-only,no oldOCR;
+giữ metadata qua unified/DocumentEvidence;41focused PASS,smoke PDF30blocked0calls.
+Hai scan thật BCC2024PDF30/BBS2025PDF14 đều unresolved(raw hash/frame thiếu),
+0crop/0live;synthetic new-PDF crops144DPI/0°,216DPI/90°đạt,không là research PASS.
+Chưa đạt acceptance localization trên scan thật;không CI lớn/H08/M5–M7 thay đổi.
+Next action: Tech Lead review phạm vi đã chạy và gap binding trên PDF scan thật.
 
 ## PERF-01 — Fast Path Optimization
 
