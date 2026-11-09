@@ -500,6 +500,40 @@ class AdaptiveSpecialistRouter:
             if available and choices:
                 chosen = choices[0]
                 break
+        proposal = planner.effective_proposal or planner.proposal
+        assignments = {a.role: a for a in proposal.assignments} if proposal else {}
+        if proposal and proposal.reasoning_required:
+            if not assignments or len(assignments) != len(proposal.assignments):
+                return stop("blocked", "reasoning_requires_unique_planner_assignments")
+            ordered, visiting = [], set()
+
+            def visit(role):
+                if role in visiting or role not in assignments:
+                    raise ValueError("invalid_specialist_dependency")
+                if role in ordered:
+                    return
+                visiting.add(role)
+                for dependency in assignments[role].depends_on:
+                    if dependency in {op.operation_id for op in proposal.operations}:
+                        # Tool dependencies precede routing and are checked by
+                        # the Supervisor's evidence closure below.
+                        continue
+                    visit(dependency)
+                visiting.remove(role)
+                ordered.append(role)
+
+            for role in assignments:
+                visit(role)
+            for role, assignment in assignments.items():
+                items, formulas = _CAPABILITIES[role]
+                if set(assignment.indicators) - items or set(assignment.formulas) - formulas:
+                    return stop("blocked", "assignment_outside_specialist_boundary")
+                coverage[role] &= {
+                    r.requirement_id
+                    for r in decision.requirements
+                    if r.target_id in (*assignment.indicators, *assignment.formulas)
+                }
+            chosen = tuple(role for role in ordered if coverage[role])
         assigned = set()
         for role in chosen:
             assigned.update(coverage[role])
@@ -531,7 +565,11 @@ class AdaptiveSpecialistRouter:
             route.execution_eligible = route.role in chosen
             if route.execution_eligible:
                 # Assign overlaps exactly once in deterministic preferred-role order.
-                prior = set().union(*(coverage[r] for r in chosen[: chosen.index(route.role)]))
+                prior = (
+                    set()
+                    if assignments
+                    else set().union(*(coverage[r] for r in chosen[: chosen.index(route.role)]))
+                )
                 owned = [r for r in relevant if r.requirement_id in coverage[route.role] - prior]
                 route.covered_requirement_ids = [r.requirement_id for r in owned]
                 route.assigned_items = sorted({r.target_id for r in owned if r.kind == "fact"})
@@ -544,7 +582,9 @@ class AdaptiveSpecialistRouter:
                     set(decision.caveats + [c for r in owned for c in r.caveats])
                 )
                 route.selection_reason = (
-                    "minimum_specialist_cover_cash_profit_priority"
+                    assignments[route.role].task
+                    if route.role in assignments
+                    else "minimum_specialist_cover_cash_profit_priority"
                     if prefer_cash and route.role == _ROLES[2]
                     else "minimum_specialist_cover"
                 )
@@ -564,7 +604,7 @@ class AdaptiveSpecialistRouter:
                     reasons=[route.selection_reason],
                 )
             )
-        decision.selected_roles = [r for r in _ROLES if r in chosen]
+        decision.selected_roles = list(chosen)
         decision.skipped_roles = [r for r in _ROLES if r not in chosen]
         decision.covered_requirement_ids = sorted(assigned)
         decision.uncovered_requirement_ids = sorted(

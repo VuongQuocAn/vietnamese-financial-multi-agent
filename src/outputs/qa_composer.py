@@ -439,6 +439,8 @@ def understand_requirements(question):
 
 
 def _matches_target(entry, requirement):
+    if requirement.period and entry.identity.period != requirement.period:
+        return False
     if requirement.kind == "source_context":
         return (
             entry.verification_status == "verified"

@@ -30,7 +30,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | PERF | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | REC | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | CHAT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 120 | 110 | 0 | 0 | 8 | 0 | 2 |
+| FIX | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 121 | 110 | 0 | 0 | 8 | 0 | 3 |
 
 ## Implementation thực tế
 

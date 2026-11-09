@@ -64,12 +64,11 @@ def test_fusion_actual_tools_verification_release_restart_and_firewall(tmp_path)
     assert result.trace.firewall_decision == "ALLOW_WITH_CAVEAT"
     assert len(result.used_verified_claim_ids) == 2
     assert result.trace.provider_calls == 0
-    assert result.trace.executed_agents == [
-        "profitability",
-        "EvidenceAwareQueryPlanner",
-        "RiskAwareSupervisor",
-        "FinancialMultiAgentOrchestrator",
-    ]
+    assert result.trace.executed_agents == []  # Baseline Python components are not LLM agents.
+    assert (
+        any(e["event"] == "TOOL_EXECUTED" for e in result.trace.execution_events)
+        or result.trace.tool_calls
+    )
     assert {"calculate_financial_metric", "search_document_evidence", "get_graph_context"} <= {
         call["tool"] for call in result.trace.tool_calls
     }

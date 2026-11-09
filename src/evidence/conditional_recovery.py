@@ -229,11 +229,13 @@ def recover_record(record, manifest, binding, *, root, gateway, seen, timeout=10
     return result
 
 
-def recover_histories(histories, manifest, repository, *, seen):
+def recover_histories(histories, manifest, repository, *, seen, gateway=None, allow_gateway=True):
     """Lazy QA hook: clean decisions perform only the failed-quality boolean check."""
     failed = [h.final for h in histories if h.final.checks.get("source_quality") is False]
     if not failed:
         return []
+    if not allow_gateway:
+        return [dict(status="deferred_gateway_disabled", calls=0)]
     from ..api.qa_gateway import create_qa_adapter
     from ..core.data_config import default_project_root
     from ..core.llm_gateway import SharedLLMGateway
@@ -258,14 +260,16 @@ def recover_histories(histories, manifest, repository, *, seen):
                 binding = bindings.get(payload_sha256(record.model_dump(mode="json")))
                 if binding is None:
                     continue
-                adapter, _ = create_qa_adapter(default_project_root())
+                if gateway is None:
+                    adapter, _ = create_qa_adapter(default_project_root())
+                    gateway = SharedLLMGateway({"gemini": adapter})
                 return [
                     recover_record(
                         record,
                         manifest,
                         binding,
                         root=root,
-                        gateway=SharedLLMGateway({"gemini": adapter}),
+                        gateway=gateway,
                         seen=seen,
                         timeout=float(os.environ.get("OCR_RECOVERY_TIMEOUT_SECONDS", "10")),
                     )

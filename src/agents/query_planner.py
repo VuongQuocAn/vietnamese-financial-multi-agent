@@ -183,8 +183,8 @@ class EvidenceAwareQueryPlanner:
                 "Giữ targets/operations supported khi yêu cầu chỉ được hỗ trợ một phần. "
                 "Không chọn metric gần giống. Ba specialist_boundaries đều có sẵn; hai/ba lĩnh vực "
                 "đồng thời được hỗ trợ, không ghi role/capability đã đăng ký vào unsupported_capabilities. "
-                "Phân biệt domain với target: phân tích sinh lời/nợ/dòng tiền chung chưa xác định đủ "
-                "chỉ tiêu thì intent=ambiguous, missing_information nêu chỉ tiêu cần làm rõ. "
+                "Với mục tiêu phân tích tổng quát, tự chọn các chỉ tiêu đã đăng ký phù hợp mục tiêu; "
+                "chỉ hỏi lại khi company/filing hoặc yêu cầu thực sự mơ hồ. "
                 "Không tự chọn ROA/ROE/EBITDA hoặc một ratio đại diện cho domain. "
                 "Thiếu evidence không phải unsupported capability; backend kiểm tra readiness. "
                 "Mọi direct fact dùng find_financial_facts và get_evidence_sources phụ thuộc fact đó. "
@@ -206,7 +206,19 @@ class EvidenceAwareQueryPlanner:
                 "calculation; các operation khác hai field null. "
                 "evidence_needs: fact/citations cho facts; fact/formula/compatibility/metric/lineage/"
                 "citations cho metrics; analysis_bundle cho multi-step. Unknown scope cho phép direct "
-                "facts và approved same-filing calculation với caveats; usable_with_caveat không là verified."
+                "facts và approved same-filing calculation với caveats; usable_with_caveat không là verified. "
+                "ADAPTIVE: reasoning_required=false cho truy xuất/công thức đơn giản; assignments=[] "
+                "để tool-only. Phân tích quan hệ/đánh giá cần reasoning_required=true và assignments "
+                "chọn đúng specialists, task cụ thể, indicators/formulas và depends_on theo role hoặc operation_id đã khai báo. "
+                "Chất lượng lợi nhuận cần PAT/CFO và ít nhất profitability cùng cash_flow_and_earnings_quality. "
+                "Không gọi mọi specialist mặc định. selection_reason giải thích lựa chọn; completion_conditions "
+                "nêu khi đủ evidence, không suy nguyên nhân không có nguồn. "
+                "Nếu feedback có mặt: chỉ sửa operations/assignments bị ảnh hưởng; giữ phần còn hợp lệ "
+                "trong previous_proposal/reusable_results. Bổ sung evidence thiếu hoặc bỏ claim vượt nguồn; "
+                "nếu không có hướng mới đặt stop_reason. Không đổi company, filing, snapshot hay scope."
+                " So sánh trong cùng filing dùng reporting_years=[năm filing], cross_document_comparison=false; "
+                "mỗi find_financial_facts có period riêng (YYYY cho B02/B03, YYYY-12-31 cho B01). "
+                "Chỉ dùng những kỳ được nêu hoặc có trong filing đã chọn; không lấy từ tài liệu khác."
             ),
             "schema": PlannerProposal.model_json_schema(),
             "canonical_indicators": {
@@ -472,7 +484,7 @@ class EvidenceAwareQueryPlanner:
         try:
             payload = (
                 self._gemini(question, context, result)
-                if context.mode == "gemini"
+                if context.mode != "deterministic"
                 else self._deterministic(question)
             )
             result.raw_proposal = payload
@@ -482,7 +494,12 @@ class EvidenceAwareQueryPlanner:
             result.proposal = proposal
             result.trace.append(PlannerTrace(stage=stage, outcome="validated"))
             stage = "semantic_policy"
-            proposal = self._semantic_policy(question, proposal, result)
+            # LLM owns semantic planning in auto. Catalog/typed plan validation below
+            # still controls IDs, accounting capabilities and exact source binding.
+            if context.mode != "auto":
+                proposal = self._semantic_policy(question, proposal, result)
+            else:
+                proposal = proposal.model_copy(deep=True)
             result.effective_proposal = proposal
             result.query = QuerySpecification(
                 original_question=question,
@@ -600,6 +617,15 @@ class EvidenceAwareQueryPlanner:
         if proposal.snapshot_origin and proposal.snapshot_origin not in origins:
             raise ValueError("proposal_invented_snapshot_origin")
         period = periods[0] if periods else context.period
+        # A provider may echo the explicitly requested filing year into period.
+        # Preserve the raw proposal, but let statement types materialize their own
+        # annual/as-of periods rather than treating the same year as invented.
+        if (
+            period is None
+            and proposal.period
+            and proposal.period in {str(y) for y in (*years, context.reporting_year)}
+        ):
+            proposal.period = None
         if proposal.period not in (None, period):
             raise ValueError("proposal_invented_period")
         proposal.period = period
@@ -613,8 +639,15 @@ class EvidenceAwareQueryPlanner:
         # Hai operand years trong cùng filing không phải hai documents. Chỉ mở
         # đường cho approved YoY, có filing year explicit/context; periods còn
         # phải khớp chính xác persisted bindings ở materializer.
-        same_filing = any(p in normalize(question) for p in ("cung bao cao", "chinh bao cao"))
-        if len(years) > 1 and same_filing and proposal.formula_ids == ["revenue_yoy"]:
+        same_filing = any(
+            p in normalize(question)
+            for p in ("cung bao cao", "chinh bao cao", "theo bao cao", "bao cao nam")
+        )
+        if (
+            len(years) > 1
+            and same_filing
+            and (proposal.formula_ids == ["revenue_yoy"] or context.mode == "auto")
+        ):
             filing_years = set(
                 re.findall(r"\bbao cao(?: nam)? ((?:19|20|21)\d{2})\b", normalize(question))
             )
@@ -675,7 +708,15 @@ class EvidenceAwareQueryPlanner:
             for a in d.company_aliases
             if re.search(r"\b" + re.escape(normalize(a)) + r"\b", normalize(question))
         }
-        if proposal.company_alias and normalize(proposal.company_alias) not in aliases:
+        bound_aliases = {
+            normalize(a)
+            for d in self._documents
+            if context.company_id and d.company_id == context.company_id
+            for a in d.company_aliases
+        }
+        if proposal.company_alias and normalize(proposal.company_alias) not in (
+            aliases or bound_aliases
+        ):
             raise ValueError("proposal_invented_company")
         year = years[0] if years else context.reporting_year
         if years and context.reporting_year and year != context.reporting_year:
@@ -863,7 +904,8 @@ class EvidenceAwareQueryPlanner:
                 if item not in ITEM_RULES or operation.dependencies:
                     raise ValueError("fact_operation_requires_known_independent_target")
                 period = (
-                    proposal.period
+                    operation.period
+                    or proposal.period
                     or context.period
                     or (
                         f"{query.reporting_year}-12-31"
@@ -871,6 +913,11 @@ class EvidenceAwareQueryPlanner:
                         else str(query.reporting_year)
                     )
                 )
+                if operation.period and operation.period[:4] not in {
+                    str(y)
+                    for y in (*_explicit_constraints(result.question)[0], query.reporting_year)
+                }:
+                    raise ValueError("operation_period_not_requested")
                 key = fact(item, period, key)
                 types[operation.operation_id] = "fact"
             elif kind == "calculate_financial_metric":

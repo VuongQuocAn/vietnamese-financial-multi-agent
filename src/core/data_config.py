@@ -43,7 +43,14 @@ def _local_path(value: str | Path, key: str) -> Path:
 
 def default_project_root() -> Path:
     """Chỉ suy ra root từ source checkout; bản cài wheel cần truyền root tường minh."""
-    root = Path(__file__).resolve().parents[2]
+    configured = os.environ.get("FINANCIAL_PROJECT_ROOT")
+    root = (
+        _local_path(configured, "FINANCIAL_PROJECT_ROOT")
+        if configured
+        else Path(__file__).resolve().parents[2]
+    )
+    if not root.is_absolute():
+        raise DataConfigError("project_root: configured base must be absolute")
     if not (root / "pyproject.toml").is_file() or not (root / "src/core/data_config.py").is_file():
         raise DataConfigError("project_root: supply an absolute base outside a source checkout")
     return root

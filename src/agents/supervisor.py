@@ -60,6 +60,7 @@ StepResponse = ToolResponse | SnapshotSelection | MetricSnapshotClosure | Execut
 
 
 class StepExecutionResult(FinancialModel):
+    execution_kind: str = "DETERMINISTIC_COMPONENT_EXECUTED"
     step_id: str
     operation: str
     initial_state: ExecutionState = "pending"
@@ -192,6 +193,12 @@ class RiskAwareSupervisor:
         self._financial = FinancialRetrievalTools(self._catalog)
         self._calculator = FinancialCalculator(self._catalog)
         self._evidence = EvidenceRetrievalTools(self._catalog)
+        self._request_cache = {}
+        self.cache_hits = 0
+
+    def reset_request(self):
+        self._request_cache.clear()
+        self.cache_hits = 0
 
     @staticmethod
     def execute_document(operation, tools):
@@ -209,7 +216,13 @@ class RiskAwareSupervisor:
             "calculate_financial_metric": self._calculator.calculate_financial_metric,
             "get_metric_evidence_lineage": self._evidence.get_metric_evidence_lineage,
         }
-        return dispatch[operation](request)
+        key = operation, request.model_dump_json()
+        if key in self._request_cache:
+            self.cache_hits += 1
+            return self._request_cache[key].model_copy(deep=True)
+        result = dispatch[operation](request)
+        self._request_cache[key] = result.model_copy(deep=True)
+        return result
 
     def _compatibility(self, step, requirements):
         selected = self._catalog.select(step.selector.document_id, step.selector.snapshot_id)
@@ -472,7 +485,11 @@ class RiskAwareSupervisor:
                     else:
                         request = bind_step_request(current, step.step_id, outputs)
                         trace.bound_request = request.model_dump(mode="json")
+                        previous_hits = self.cache_hits
                         response = self._dispatch(step.tool, request)
+                        trace.execution_kind = (
+                            "CACHE_HIT" if self.cache_hits > previous_hits else "TOOL_EXECUTED"
+                        )
                         response = TOOL_CONTRACTS[step.tool][1].model_validate_json(
                             response.model_dump_json()
                         )

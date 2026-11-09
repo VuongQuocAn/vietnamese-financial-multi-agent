@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import Field, field_validator
 
 from ..accounting.contracts import FinancialModel
+from ..agents.fusion_contracts import FusionPlan
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
 from ..core.llm_contracts import Cost, GatewayError, ModelIdentity, ResponseProvenance, Usage
 from ..evidence.retrieval import EvidenceCitation
@@ -24,6 +25,11 @@ class VietnameseQARequest(FinancialModel):
     # Approved original document snapshots for a mixed request, not renamed IDs.
     document_snapshots: list[str] = Field(default_factory=list)
     reporting_scope: Literal["separate", "consolidated"] | None = None
+    # Request obligations materialized from a validated adaptive Planner proposal.
+    # These select admitted claims only; never carry values or approval authority.
+    answer_requirements: list["QARequirement"] = Field(default_factory=list, max_length=40)
+    adaptive_fusion_plan: FusionPlan | None = None
+    fusion_answer_requirements: dict[str, list["QARequirement"]] = Field(default_factory=dict)
     allow_gateway: bool = False
     model: ModelIdentity = Field(
         default_factory=lambda: ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
@@ -51,6 +57,7 @@ class QARequirement(FinancialModel):
         "source_context",
     ]
     target_id: str | None = None
+    period: str | None = None
     interpretation: bool = False
     aspect: Literal["value", "formula", "operands"] = "value"
     depends_on: list[str] = Field(default_factory=list)

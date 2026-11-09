@@ -166,7 +166,9 @@ def test_document_path_is_offline_even_when_gateway_fails(tmp_path):
 
     pipeline.gateway = UnavailableGateway()
     question = "Ai là kế toán trưởng?"
-    fresh = pipeline.run(FinancialQARequest(question=question, allow_gateway=True))
+    fresh = pipeline.run(
+        FinancialQARequest(question=question, allow_gateway=True, execution_mode="deterministic")
+    )
     assert fresh.status == "completed_with_caveats", fresh.trace.errors
     assert fresh.trace.provider_calls == 0
     cached = pipeline.run(FinancialQARequest(question=question))

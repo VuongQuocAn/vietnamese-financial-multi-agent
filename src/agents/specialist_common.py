@@ -10,7 +10,7 @@ from time import perf_counter
 from typing import Any, Literal
 from uuid import uuid4
 
-from pydantic import Field, ValidationError
+from pydantic import Field, ValidationError, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..core.llm_contracts import (
@@ -67,8 +67,22 @@ class SpecialistCandidate(FinancialModel):
     calculation: FinancialCalculationResponse | None = None
     caveats: list[str] = Field(default_factory=list)
     missing_information: list[str] = Field(default_factory=list)
+    analysis_premises: list[str] = Field(default_factory=list, max_length=16)
     status: Literal["candidate", "insufficient_evidence"] = "candidate"
     financial_fact_verified: Literal[False] = False
+
+    @model_serializer(mode="wrap")
+    def serialize_candidate(self, handler):
+        wire = handler(self)
+        if not wire.get("analysis_premises"):
+            wire.pop("analysis_premises", None)
+        return wire
+
+
+class AnalysisProposal(FinancialModel):
+    statement: str = Field(min_length=1, max_length=1500)
+    evidence_ids: list[str] = Field(min_length=1, max_length=16)
+    limitations: list[str] = Field(default_factory=list, max_length=8)
 
 
 class SpecialistTrace(FinancialModel):
@@ -364,6 +378,25 @@ def with_assignment(prompt, upstream):
     if upstream.evidence_bundle.claim_fact_references is None:
         return prompt
     query = upstream.final_plan_state.query
+    reasoning = any(c.startswith("PLANNER_TASK:") for c in upstream.evidence_bundle.limitations)
+    if reasoning:
+        prompt = dict(
+            prompt,
+            analysis_schema=AnalysisProposal.model_json_schema(),
+            instruction=prompt["instruction"]
+            + (
+                " NHIỆM VỤ PHÂN TÍCH: đọc PLANNER_TASK và PRIOR_AGENT_RESULTS trong limitations. "
+                "Ngoài claims số liệu theo schema cũ, thêm analyses:[{statement,evidence_ids,limitations}] "
+                "để diễn giải quan hệ giữa evidence được giao, trả lời mục tiêu thực tế. "
+                "Statement do bạn suy luận, không bị giới hạn vào grammar mẫu số học cũ; "
+                "mọi tiền đề phải có evidence_ids, không tính ratio mới hoặc đoán nguyên nhân. "
+                "analyses.statement chỉ là diễn giải KHÔNG chứa chữ số hoặc tỷ lệ; số và kỳ đã có "
+                "trong numeric claims, dùng 'trong kỳ này' khi cần. "
+                "Ưu tiên một analysis ngắn trực tiếp đáp ứng task; không lặp các giới hạn thành nhiều claims. "
+                "Nhận định là candidate_pending_M6, không tự phê duyệt. Thiếu evidence nêu missing_information. "
+                "Không dùng prior agent claim làm nguồn thay cho evidence gốc."
+            ),
+        )
     return dict(
         prompt,
         orchestration_assignment=dict(
@@ -446,8 +479,12 @@ def generate_candidates(
             constraints=RequestConstraints(timeout_seconds=60.0),
         )
         result.llm.calls, result.llm.model = 1, model
+        actual_events = getattr(gateway, "events", None)
+        events_before = len(actual_events) if isinstance(actual_events, list) else None
         call_start = perf_counter()
         response = gateway.generate(request)
+        if events_before is not None:
+            result.llm.calls = len(actual_events) - events_before
         result.llm.latency_ms = (perf_counter() - call_start) * 1000
         result.llm.status, result.llm.usage, result.llm.cost = (
             response.status,
@@ -467,7 +504,8 @@ def generate_candidates(
             return result
         payload = result.raw_output
     if (
-        set(payload) != {"claims", "missing_information"}
+        set(payload)
+        not in ({"claims", "missing_information"}, {"claims", "missing_information", "analyses"})
         or not isinstance(payload["claims"], list)
         or len(payload["claims"]) > 32
     ):
@@ -490,6 +528,52 @@ def generate_candidates(
     # Model limitations are untrusted annotations, never financial claims.
     result.missing_evidence.extend(missing)
     evidence_by_id = {e.evidence_id: e for e in result.supporting_evidence}
+    analyses = payload.get("analyses", [])
+    if not isinstance(analyses, list) or len(analyses) > 8:
+        raise ValueError("invalid_analysis_envelope")
+    for raw in analyses:
+        analysis = AnalysisProposal.model_validate(raw)
+        if set(analysis.evidence_ids) - evidence_by_id.keys():
+            raise ValueError("analysis_unknown_evidence")
+        sources = [evidence_by_id[key] for key in dict.fromkeys(analysis.evidence_ids)]
+        if re.search(r"\d|%", analysis.statement) or any(s.calculation for s in sources):
+            result.trace.append(
+                SpecialistTrace(
+                    stage="grounding",
+                    outcome="excluded",
+                    reasons=["analysis_requires_number_free_fact_premises"],
+                )
+            )
+            continue
+        owner = sources[0]
+        if any(
+            (s.company_id, s.document_id, s.snapshot_id, s.period)
+            != (owner.company_id, owner.document_id, owner.snapshot_id, owner.period)
+            for s in sources
+        ):
+            raise ValueError("analysis_context_mismatch")
+        result.candidates.append(
+            SpecialistCandidate(
+                candidate_id=prefix + "-analysis-" + uuid4().hex,
+                kind="supported_interpretation",
+                content=analysis.statement,
+                company_id=owner.company_id,
+                document_id=owner.document_id,
+                snapshot_id=owner.snapshot_id,
+                period=owner.period,
+                fact_references=_unique([s.reference for s in sources if not s.calculation]),
+                metric_ids=[s.calculation.metric_id for s in sources if s.calculation],
+                supporting_evidence_ids=analysis.evidence_ids,
+                analysis_premises=[
+                    f"{s.label} kỳ {s.period} là {_number(s.value)} {s.unit}"
+                    + (f" (hệ số đơn vị {s.scale})" if s.scale != "1" else "")
+                    + "."
+                    for s in sources
+                ],
+                citations=_unique([c for s in sources for c in s.citations]),
+                caveats=sorted(set(analysis.limitations + [c for s in sources for c in s.caveats])),
+            )
+        )
     seen = set()
     for index, raw in enumerate(payload["claims"]):
         try:

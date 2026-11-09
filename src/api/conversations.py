@@ -22,7 +22,7 @@ from .qa_pipeline_contracts import FinancialQARequest, FinancialQAResponse, Pipe
 
 
 class ConversationMessage(FinancialQARequest):
-    execution_mode: Literal["gemini", "deterministic"] = "deterministic"
+    execution_mode: Literal["auto", "gemini", "deterministic"] = "auto"
 
 
 class ConversationContext(FinancialModel):
@@ -195,6 +195,38 @@ class ConversationService:
                 changed.append("period")
         question = request.question
         expanded = False
+        if (
+            request.execution_mode == "auto"
+            and not topics
+            and not switched
+            and state.reference_question
+            and state.verified_claim_ids
+            and re.fullmatch(
+                r"(?:noi dung do |doan do |nguon cua noi dung do |nguon |no )?(?:o dau|o trang nao|trang nao)(?:\?)?",
+                text,
+            )
+        ):
+            document = document_intent(state.reference_question)[0] == "document"
+            bound = request.model_copy(
+                update={
+                    **context.model_dump(),
+                    "question": state.reference_question,
+                    "force_refresh": False,
+                    "allow_gateway": False,
+                    "period": None if document else context.period,
+                }
+            )
+            if not document:
+                bound.composition_id = bound.composition_sha256 = None
+                bound.document_snapshots = []
+            return (
+                bound,
+                context,
+                inherited + ["exact_verified_source_lookup"],
+                changed,
+                list(state.topics),
+                None,
+            )
         if comparison:
             target = parsed.canonical_item_id
             if target == "b02.net_revenue" or (
@@ -212,6 +244,43 @@ class ConversationService:
                     "Bạn muốn so sánh chỉ tiêu nào? Hiện chỉ hỗ trợ tăng trưởng doanh thu qua công thức đã duyệt.",
                 )
         elif not topics:
+            if (
+                request.execution_mode != "deterministic"
+                and request.allow_gateway
+                and self.pipeline.gateway
+                and context.company_id
+                and context.period
+            ):
+                # Keep the actual analytical follow-up for the LLM Planner.
+                # Only exact declared metadata is inherited; prior prose is context,
+                # never new financial evidence.
+                bound = request.model_copy(
+                    update={
+                        **context.model_dump(),
+                        "question": request.question + f" cho năm {context.period[:4]}",
+                        "period": context.period,
+                        "composition_id": None,
+                        "composition_sha256": None,
+                        "document_snapshots": [],
+                        "conversation_context": [
+                            dict(
+                                question=t.original_question,
+                                resolved_question=t.resolved_question,
+                                answer=t.response.answer_vi[:1600],
+                                verified_claim_ids=t.response.used_verified_claim_ids,
+                            )
+                            for t in state.turns[-2:]
+                        ],
+                    }
+                )
+                return (
+                    bound,
+                    context,
+                    inherited + ["conversation_context"],
+                    changed,
+                    list(state.topics),
+                    None,
+                )
             followup = bool(
                 re.search(
                     r"\b(no|chi so nay|khoan muc do|nam do|nam truoc|con|cong thuc|o dau|trang nao|nguon|noi dung do|thuyet minh do)\b",

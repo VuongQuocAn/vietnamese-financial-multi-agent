@@ -41,6 +41,10 @@ def test_clean_and_missing_do_not_initialize_recovery(monkeypatch):
     assert recover_histories([], None, None, seen=set()) == []
     clean = SimpleNamespace(final=SimpleNamespace(checks={"content_fidelity": False}))
     assert recover_histories([clean], None, None, seen=set()) == []
+    failed = SimpleNamespace(final=SimpleNamespace(checks={"source_quality": False}))
+    assert recover_histories([failed], None, None, seen=set(), allow_gateway=False) == [
+        dict(status="deferred_gateway_disabled", calls=0)
+    ]
 
 
 def test_short_deadline_is_blocked_before_image_or_network(correction_case, tmp_path, monkeypatch):

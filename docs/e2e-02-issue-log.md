@@ -1,6 +1,6 @@
 # E2E-02 — Issue Log
 
-Ngày 09/11/2026. **REVIEW; discovery only.** 9 issues: 1 Critical / 3 High / 4 Medium / 1 Low. Tất cả root_cause=`NOT_ANALYZED`, status=`OPEN_FOR_FIX_02`. Không sửa lỗi hoặc xác nhận nguyên nhân. [Báo cáo](e2e-02-real-pdf-evaluation.md). Dữ liệu có cấu trúc: artifacts/evidence/E2E-02/issues.json.
+Checkpoint E2E-02 ngày09/11/2026: **REVIEW; discovery only.** 9 issues: 1 Critical / 3 High / 4 Medium / 1 Low. Tại discovery, root_cause=`NOT_ANALYZED`, status=`OPEN_FOR_FIX_02`; không sửa lỗi. Phân tích tiếp theo trong FIX-02 ghi ở cuối tài liệu, không sửa artifacts đóng băng. [Báo cáo](e2e-02-real-pdf-evaluation.md). Dữ liệu có cấu trúc: artifacts/evidence/E2E-02/issues.json.
 
 ## Tái hiện chung
 
@@ -232,3 +232,21 @@ E2E-02 không chạy lại issues để chọn kết quả.
 ## Bàn giao
 
 Next action: Tech Lead nghiệm thu E2E-02 và quyết định phạm vi FIX-02. Không issue nào được đóng trong task này.
+
+## Phân tích FIX-02 — 09/11/2026
+
+Các mô tả `NOT_ANALYZED` phía trên giữ lịch sử discovery. Bảng này là phân tích
+tiếp theo từ code và traces; **không tự đóng issue**. Chi tiết và giới hạn trong
+[báo cáo FIX-02](fix-02-adaptive-llm-agents.md).
+
+| Issue | Nguyên nhân xác định | Thay đổi/bằng chứng và trạng thái |
+| --- | --- | --- |
+| I001 | Runner import source archive ngoài checkout; `default_project_root()` thất bại, policy/release loaders fallback empty khi không cấu hình. Q08 dùng composition không corrected; M6 chỉ replay OCR cũ nên fidelity không chứng minh PDF đúng. | Runner truyền storage roots tường minh; project root có cấu hình. Live Q08 dùng approved corrected composition,2ACCEPT,1citation correction +1original,PDF16; giữ từ “khó”. OPEN chờ Tech Lead xác nhận phạm vi; không tuyên bố sửa mọi lỗi OCR. |
+| I002 | `source_assertion(entity_role)` yêu cầu một text projection dạng `Vai trò: Họ tên`; layout tách vai trò/tên không đủ relationship proof. Q05 có3candidates nhưng không được M6 chấp nhận. | Adaptive BM25 không tạo được relationship provenance còn thiếu. OPEN; không hardcode tên hoặc đoán liên kết. |
+| I003 | Loader BBS2024 chỉ có descriptor/document evidence, không có canonical financial facts. | OPEN, thiếu accepted financial coverage; không mượn cột2024 của filing2025 làm tài liệu2024. |
+| I004 | Parser single-target coi nhiều năm/“so sánh” là cross-document trước Planner; inventory M7 cũng chặn. | Auto chuyển quyết định sang validated Planner; period riêng từng fact operation và answer obligation trong cùng filing. Synthetic2030/2029 có cùng snapshot PASS; chưa rerun Q15/Q20/Q23/Q24 thật. OPEN; D03-B10 liên filing giữ nguyên. |
+| I005 | Definition route/exact-text và `source_assertion` cho “nhân viên quản lý chủ chốt” dừng tại đơn vị kết thúc câu; đoạn doanh nghiệp liên quan là nghĩa vụ chưa được biểu diễn đầy đủ. | OPEN; LLM retrieval không tự nâng excerpt thiếu thành câu trả lời đầy đủ. |
+| I006 | Baseline tắt Gemini; specialist grammar chỉ fact/sign; validator cũ yêu cầu một fact reference cho interpretation. | Có assignments, analysis premises kiểm tra độc lập và semantic critics/Judge. Q21 live có2specialists và2feedback/replans; vẫn partial/provider failure, chưa đạt Judge PASS sau revision. OPEN cải thiện một phần. |
+| I007 | Trace baseline có0provider nhưng M5/M6 lớn; constructors deepcopy catalog và proof/context serialization lặp. Live replan còn gửi context quá lớn. | Giữ stage timings; live Q21 bổ sung114,672s/13calls/133034known tokens. Đã rút gọn context sau lượt đo, chưa live đo lại. OPEN, không gọi fast failure là tối ưu thành công. |
+| I008 | Composer/citation renderer giữ từng protected source reference và đưa nhiều caveats/reason codes vào prose. | OPEN; chưa thay presentation hoặc gộp citations mất identity. |
+| I009 | Resolver biến câu hỏi vị trí thành truy vấn thuyết minh mới, mất exact source topic của lượt trước. | Auto exact verified-source lookup replay câu gốc với binding hiện tại. Live Q33→Q34:Q34 completed_with_caveats,0calls,PDF21,165ms; OPEN chờ review, chưa khẳng định mọi follow-up đã đạt. |

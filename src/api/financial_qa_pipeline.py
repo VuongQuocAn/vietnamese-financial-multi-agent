@@ -76,7 +76,11 @@ class FinancialQAPipeline:
         )
 
     def _m5(self, request, *, document=False):
-        gateway = self.gateway if request.allow_gateway and not document else None
+        gateway = (
+            self.gateway
+            if request.allow_gateway and request.execution_mode != "deterministic"
+            else None
+        )
         deterministic = request.execution_mode == "deterministic"
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
@@ -87,12 +91,14 @@ class FinancialQAPipeline:
             supervisor=RiskAwareSupervisor(self.catalog),
             router=AdaptiveSpecialistRouter(),
             specialists={
-                "profitability": ProfitabilitySpecialist(gateway, deterministic=deterministic),
+                "profitability": ProfitabilitySpecialist(
+                    gateway, model=request.model, deterministic=deterministic
+                ),
                 "liquidity_and_leverage": LiquidityLeverageSpecialist(
-                    gateway, deterministic=deterministic
+                    gateway, model=request.model, deterministic=deterministic
                 ),
                 "cash_flow_and_earnings_quality": CashFlowEarningsQualitySpecialist(
-                    gateway, deterministic=deterministic
+                    gateway, model=request.model, deterministic=deterministic
                 ),
             },
         )
@@ -135,9 +141,18 @@ class FinancialQAPipeline:
             "invalid_period",
             "multiple_periods_unsupported",
         } & set(issues)
-        if blocked:
+        if blocked and not (
+            request.execution_mode == "auto"
+            and blocked == {"cross_document_comparison_blocked_D03_B10"}
+        ):
             return None, "unsupported", sorted(blocked)
         year = parsed.reporting_year or (int(request.period[:4]) if request.period else None)
+        if year is None and request.execution_mode == "auto":
+            filing = re.findall(
+                r"bao cao(?: nam)? ((?:19|20|21)\d{2})", normalize(request.question)
+            )
+            if len(set(filing)) == 1:
+                year = int(filing[0])
         identities = self._document_identities(request, year)
         if len(identities) != 1:
             return None, "clarification_required", ["document_company_binding_unresolved"]
@@ -189,7 +204,7 @@ class FinancialQAPipeline:
                     reason = "metric_operands_missing_or_ambiguous"
             return None, "unsupported", [reason]
         plan, status = request_inventory(bound, [])
-        if status in {"unsupported", "clarification_required"}:
+        if status in {"unsupported", "clarification_required"} and request.execution_mode != "auto":
             return None, status, plan.reasons + plan.missing_information
         scope = request.reporting_scope or parsed.reporting_scope
         if scope:
@@ -263,7 +278,9 @@ class FinancialQAPipeline:
         trace.snapshot_id = bound.snapshot_id
         trace.composition_id = bound.composition_id
         trace.planner_intent = "document"
-        trace.limitations.append("document_deterministic_no_gateway")
+        adaptive_document = bound.execution_mode != "deterministic" and bound.allow_gateway
+        if not adaptive_document:
+            trace.limitations.append("document_deterministic_no_gateway")
         qa_request = VietnameseQARequest(
             **bound.model_dump(include=set(VietnameseQARequest.model_fields))
         )
@@ -287,11 +304,37 @@ class FinancialQAPipeline:
             if coverage == "answered" and not bound.force_refresh:
                 response.mode = "CACHE_HIT"
             else:
+                document_histories = None
+
+                def execute_document():
+                    nonlocal document_histories
+                    if adaptive_document:
+                        from ..agents.document_controller import run_document_adaptive
+
+                        try:
+                            bundles, candidates, document_histories, rounds = run_document_adaptive(
+                                self.gateway,
+                                bound,
+                                requirements,
+                                manifest,
+                                tools,
+                            )
+                            trace.adaptive_rounds.extend(rounds)
+                            return bundles, candidates
+                        except ValueError:
+                            trace.limitations.append(
+                                "document_planner_failed_exact_source_fallback"
+                            )
+                            trace.execution_events.append(
+                                dict(event="PROVIDER_DEGRADED", component="DocumentPlanner")
+                            )
+                    return self._m5(bound, document=True).run_document(
+                        requirements, manifest, bound.company_id, bound.snapshot_id, tools
+                    )
+
                 bundles, candidates = stage(
                     "m5",
-                    lambda: self._m5(bound, document=True).run_document(
-                        requirements, manifest, bound.company_id, bound.snapshot_id, tools
-                    ),
+                    execute_document,
                 )
                 trace.planner_status = "planned"
                 trace.agent_stages = [
@@ -307,7 +350,25 @@ class FinancialQAPipeline:
                     "RiskAwareSupervisor",
                     "FinancialMultiAgentOrchestrator",
                 ]
-                trace.executed_agents = trace.selected_agents.copy()
+                trace.executed_agents = (
+                    ["Planner"]
+                    if adaptive_document
+                    and any(
+                        e["event"] == "LLM_AGENT_EXECUTED"
+                        and e["request_id"].startswith("document-planner-")
+                        for e in getattr(self.gateway, "events", [])
+                    )
+                    else []
+                )
+                trace.execution_events.extend(
+                    [
+                        dict(event="TOOL_EXECUTED", component="BM25"),
+                        dict(
+                            event="DETERMINISTIC_COMPONENT_EXECUTED",
+                            component="DocumentCandidateBuilder",
+                        ),
+                    ]
+                )
                 trace.tool_calls = [
                     dict(
                         component="RiskAwareSupervisor",
@@ -337,12 +398,16 @@ class FinancialQAPipeline:
                 if candidates:
                     histories = stage(
                         "m6",
-                        lambda: VerificationRuntime.verify_document(
-                            candidates,
-                            EvidenceContextBuilder(tools=tools),
-                            manifest,
-                            bound.company_id,
-                            bound.snapshot_id,
+                        lambda: (
+                            document_histories
+                            if document_histories is not None
+                            else VerificationRuntime.verify_document(
+                                candidates,
+                                EvidenceContextBuilder(tools=tools),
+                                manifest,
+                                bound.company_id,
+                                bound.snapshot_id,
+                            )
                         ),
                     )
                     trace.tool_calls.extend(
@@ -365,7 +430,16 @@ class FinancialQAPipeline:
                     recovery = stage(
                         "ocr_recovery_detection",
                         lambda: recover_histories(
-                            histories, manifest, self.document_repository, seen=recovery_seen
+                            histories,
+                            manifest,
+                            self.document_repository,
+                            seen=recovery_seen,
+                            gateway=self.gateway,
+                            allow_gateway=bool(
+                                self.gateway
+                                and bound.allow_gateway
+                                and bound.execution_mode != "deterministic"
+                            ),
                         ),
                     )
                     if recovery:
@@ -409,6 +483,7 @@ class FinancialQAPipeline:
                     response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
                     ledger.cache.clear()
             source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa_request))
+            trace.answer_requirements = source.plan.requirements
             trace.m7_status = source.status
             trace.unanswered_requirements = source.unanswered_requirements
             rendered = stage("citations", lambda: self.renderer.render_qa(source))
@@ -445,6 +520,55 @@ class FinancialQAPipeline:
             tools.close_search()
 
     def run(self, request: FinancialQARequest, *, recovery_seen=None) -> FinancialQAResponse:
+        from copy import copy
+
+        from ..core.request_gateway import RequestGateway
+
+        request = FinancialQARequest.model_validate(request)
+        scoped = copy(self)
+        if request.execution_mode == "auto" and self.gateway is None and request.allow_gateway:
+            result = scoped._run(
+                request.model_copy(update={"execution_mode": "deterministic"}),
+                recovery_seen=recovery_seen,
+            )
+            result.trace.execution_events.append(
+                dict(event="PROVIDER_DEGRADED", reason="gateway_unavailable_deterministic_baseline")
+            )
+            return result
+        if request.execution_mode != "deterministic" and request.allow_gateway and self.gateway:
+            if not isinstance(self.gateway, RequestGateway):
+                scoped.gateway = RequestGateway(
+                    self.gateway,
+                    max_calls=request.max_provider_calls,
+                    timeout_seconds=request.request_timeout_seconds,
+                )
+            start = len(scoped.gateway.events)
+            result = scoped._run(request, recovery_seen=recovery_seen)
+            events = scoped.gateway.events[start:]
+            result.trace.execution_events.extend(events)
+            result.trace.provider_calls = len(events)
+            result.trace.known_total_tokens = sum(e["tokens"] or 0 for e in events)
+            result.trace.calls_with_unknown_tokens = sum(e["tokens"] is None for e in events)
+            result.trace.provider_errors = [e["error"] for e in events if e["error"]]
+            result.trace.provider_stages = [
+                dict(
+                    stage=e["request_id"].rsplit("-", 1)[0],
+                    calls=1,
+                    known_total_tokens=e["tokens"],
+                    errors=[e["error"]] if e["error"] else [],
+                    model=e["model"],
+                    usage=e["usage"],
+                    cost=e["cost"],
+                    latency_ms=e["latency_ms"],
+                )
+                for e in events
+            ]
+            if scoped.gateway.exhausted:
+                result.trace.limitations.append("request_provider_budget_exhausted")
+            return result
+        return scoped._run(request, recovery_seen=recovery_seen)
+
+    def _run(self, request: FinancialQARequest, *, recovery_seen=None) -> FinancialQAResponse:
         recovery_seen = set() if recovery_seen is None else recovery_seen
         request = FinancialQARequest.model_validate_json(request.model_dump_json())
         started = perf_counter()
@@ -565,7 +689,7 @@ class FinancialQAPipeline:
             plan, coverage = request_inventory(qa_request, entries)
             existing_ids = set(plan.selected_verified_claim_ids)
             response.reused_claims = len(existing_ids)
-            if coverage == "clarification_required":
+            if coverage == "clarification_required" and bound.execution_mode != "auto":
                 return stop("clarification_required", plan.missing_information)
             if coverage == "answered" and not bound.force_refresh:
                 response.mode = "CACHE_HIT"
@@ -577,23 +701,40 @@ class FinancialQAPipeline:
             else:
 
                 def refresh():
+                    from ..agents.adaptive_controller import AdaptiveFinancialController
+
                     if existing_ids:
                         trace.limitations.append("full_request_refresh_fallback")
+                    adaptive_histories = None
+                    m5 = self._m5(bound)
+                    controller = AdaptiveFinancialController(
+                        m5, self.catalog, self.gateway, bound.model
+                    )
+
+                    def execute():
+                        nonlocal adaptive_histories
+                        context = PlannerContext(
+                            company_id=bound.company_id,
+                            document_id=bound.document_id,
+                            snapshot_id=bound.snapshot_id,
+                            period=bound.period or parsed.period,
+                            reporting_year=parsed.reporting_year
+                            or (int(bound.period[:4]) if bound.period else None),
+                            reporting_scope=bound.reporting_scope or parsed.reporting_scope,
+                            mode=bound.execution_mode,
+                            model=bound.model,
+                            provider_attempt_limit=1,
+                            conversation_context=bound.conversation_context,
+                        )
+                        if bound.execution_mode != "deterministic" and bound.allow_gateway:
+                            output, adaptive_histories = controller.run(bound.question, context)
+                            trace.adaptive_rounds = controller.rounds
+                            return output
+                        return m5.run(question=bound.question, context=context)
+
                     output = stage(
                         "m5",
-                        lambda: self._m5(bound).run(
-                            question=bound.question,
-                            context=PlannerContext(
-                                company_id=bound.company_id,
-                                document_id=bound.document_id,
-                                snapshot_id=bound.snapshot_id,
-                                period=bound.period or parsed.period,
-                                reporting_year=parsed.reporting_year or int(bound.period[:4]),
-                                reporting_scope=bound.reporting_scope or parsed.reporting_scope,
-                                mode=bound.execution_mode,
-                                model=bound.model,
-                            ),
-                        ),
+                        execute,
                     )
                     trace.stages["m5"].status = output.status
                     if output.question != bound.question or any(
@@ -608,6 +749,53 @@ class FinancialQAPipeline:
                         output.planner_result.effective_proposal if output.planner_result else None
                     )
                     trace.planner_intent = proposal.intent if proposal else None
+                    if (
+                        proposal
+                        and bound.execution_mode == "auto"
+                        and output.status in {"completed", "partial"}
+                    ):
+                        from ..outputs.qa_contracts import QARequirement
+
+                        obligations = []
+                        # The validated proposal supplies targets; independently
+                        # replayed M6 proofs still supply every answer assertion.
+                        for item, requested_period in dict.fromkeys(
+                            (o.canonical_item_id, o.period)
+                            for o in proposal.operations
+                            if o.operation == "find_financial_facts"
+                        ):
+                            obligations.append(
+                                QARequirement(
+                                    requirement_id=f"adaptive-{len(obligations)}",
+                                    text=bound.question,
+                                    kind="fact",
+                                    target_id=item,
+                                    period=requested_period,
+                                )
+                            )
+                        for formula in proposal.formula_ids:
+                            obligations.append(
+                                QARequirement(
+                                    requirement_id=f"adaptive-{len(obligations)}",
+                                    text=bound.question,
+                                    kind="metric",
+                                    target_id=formula,
+                                )
+                            )
+                        if proposal.reasoning_required:
+                            for assignment in proposal.assignments:
+                                for item in assignment.indicators:
+                                    obligations.append(
+                                        QARequirement(
+                                            requirement_id=f"adaptive-{len(obligations)}",
+                                            text=assignment.task,
+                                            kind="fact",
+                                            target_id=item,
+                                            interpretation=True,
+                                            interpretation_topic="metric_meaning",
+                                        )
+                                    )
+                        qa_request.answer_requirements = obligations
                     trace.selected_agents = (
                         output.routing_decision.selected_roles if output.routing_decision else []
                     )
@@ -617,8 +805,10 @@ class FinancialQAPipeline:
                             e.role
                             for e in output.trace
                             if e.stage == "specialist_execution"
-                            and e.outcome != "skipped"
-                            and any(x.role == e.role for x in output.specialist_executions)
+                            and any(
+                                x.role == e.role and x.llm.calls and x.llm.status == "success"
+                                for x in output.specialist_executions
+                            )
                         )
                     )
                     trace.financial_execution = output.model_dump(mode="json")
@@ -628,6 +818,7 @@ class FinancialQAPipeline:
                                 request=e.bound_request,
                                 result=e.response.model_dump(mode="json") if e.response else None,
                                 tool=e.operation,
+                                event=e.execution_kind,
                                 status=e.final_state,
                                 latency_ms=e.latency_ms,
                                 reasons=e.reasons,
@@ -677,12 +868,25 @@ class FinancialQAPipeline:
                     ):
                         return stop("verification_blocked", ["candidate_source_context_mismatch"])
                     if batch.claims:
-                        runtime = VerificationRuntime(
-                            self.catalog,
-                            self.gateway if bound.allow_gateway else None,
-                            model=bound.model,
+                        runtime = (
+                            controller
+                            if adaptive_histories is not None
+                            else VerificationRuntime(
+                                self.catalog,
+                                self.gateway
+                                if bound.allow_gateway and bound.execution_mode != "deterministic"
+                                else None,
+                                model=bound.model,
+                            )
                         )
-                        histories = stage("m6", lambda: runtime.verify(batch))
+                        histories = stage(
+                            "m6",
+                            lambda: (
+                                adaptive_histories
+                                if adaptive_histories is not None
+                                else runtime.verify(batch)
+                            ),
+                        )
                         for name, metadata in runtime.provider_metadata:
                             usage("m6_" + name, metadata)
                         for name, latency in runtime.stage_latency_ms.items():
@@ -756,6 +960,7 @@ class FinancialQAPipeline:
                     trace.limitations.append("refresh_stopped_preserved_verified_partial")
 
             source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa_request))
+            trace.answer_requirements = source.plan.requirements
             trace.m7_status = source.status
             trace.unanswered_requirements = source.unanswered_requirements
             rendered = stage("citations", lambda: self.renderer.render_qa(source))
@@ -796,6 +1001,13 @@ class FinancialQAPipeline:
             response.reused_claims = len(set(view.verified_claim_ids) & existing_ids)
             return response
         except Exception as error:
+            from pydantic import ValidationError
+
+            if isinstance(error, ValidationError):
+                trace.errors.extend(
+                    "schema:" + ".".join(str(p) for p in e["loc"]) + ":" + e["type"]
+                    for e in error.errors(include_input=False)
+                )
             return stop("internal_error", [current + ":" + type(error).__name__])
         finally:
             trace.total_latency_ms = (perf_counter() - started) * 1000

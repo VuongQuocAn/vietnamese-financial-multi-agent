@@ -113,9 +113,21 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     )
     trace.document_id, trace.company_id, trace.snapshot_id = document, company, snapshot
     trace.composition_id, trace.planner_intent = manifest.composition_id, "mixed"
-    plan = stage(
-        "fusion_planning", lambda: FinancialMultiAgentOrchestrator.plan_fusion(request.question)
-    )
+    from ..agents.qa_planning import plan_fusion
+
+    try:
+        plan = stage(
+            "fusion_planning",
+            lambda: (
+                plan_fusion(pipeline.gateway, request)
+                if request.execution_mode != "deterministic" and request.allow_gateway
+                else FinancialMultiAgentOrchestrator.plan_fusion(request.question)
+            ),
+        )
+    except ValueError:
+        trace.limitations.append("adaptive_fusion_planner_failed_source_only_fallback")
+        trace.execution_events.append(dict(event="PROVIDER_DEGRADED", component="FusionPlanner"))
+        plan = FinancialMultiAgentOrchestrator.plan_fusion(request.question)
     if len(plan.requirements) > 12:
         return stop("clarification_required", ["narrower_question_required"])
     bundle = EvidenceFusionBundle(
@@ -130,6 +142,7 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
         plan=plan,
     )
     trace.planner_status = "planned"
+    fusion_requirements = {}
     for part in plan.requirements:
         if part.lane not in {"financial", "document"}:
             bundle.missing_evidence.append(part.requirement_id)
@@ -164,6 +177,8 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
                 response=child.model_dump(mode="json"),
             )
         )
+        fusion_requirements[part.requirement_id] = child.trace.answer_requirements
+        trace.adaptive_rounds.extend(child.trace.adaptive_rounds)
         part.support_status = "accepted" if child.used_verified_claim_ids else "missing"
         if not child.used_verified_claim_ids:
             part.reason = next(iter(child.trace.errors), child.status)
@@ -260,6 +275,9 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     trace.executed_agents = list(dict.fromkeys(trace.executed_agents))
     qa = VietnameseQARequest(**bound.model_dump(include=set(VietnameseQARequest.model_fields)))
     qa.allow_gateway = False
+    if request.execution_mode != "deterministic" and request.allow_gateway:
+        qa.adaptive_fusion_plan = plan
+        qa.fusion_answer_requirements = fusion_requirements
     ledger = VerifiedClaimLedger(pipeline.repository)
     source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa))
     for part in plan.requirements:

@@ -368,7 +368,15 @@ class EvidenceCritic:
             ):
                 return False
             if check.check_id == "numeric" and check.status in {"pass", "fail"}:
-                if assertion is None or str(assertion.value) != check.observed.get("value"):
+                bound_assertion = assertion
+                if claim.analysis_premises:
+                    index = re.search(r":premise-(\d+)$", check.finding_id)
+                    if not index or int(index[1]) >= len(claim.analysis_premises):
+                        return False
+                    bound_assertion = extract_assertion(claim.analysis_premises[int(index[1])])
+                if bound_assertion is None or str(bound_assertion.value) != check.observed.get(
+                    "value"
+                ):
                     return False
         return True
 

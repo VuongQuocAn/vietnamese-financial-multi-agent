@@ -2,7 +2,7 @@
 
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
@@ -19,8 +19,17 @@ from ..evidence.snapshots import SnapshotDescriptor
 from .contracts import EvidencePlan, PlanValidation, QuerySpecification, RiskSignal
 
 
+class SpecialistAssignment(FinancialModel):
+    role: Literal["profitability", "liquidity_and_leverage", "cash_flow_and_earnings_quality"]
+    task: str = Field(min_length=1, max_length=1500)
+    indicators: list[Identity] = Field(default_factory=list, max_length=32)
+    formulas: list[Identity] = Field(default_factory=list, max_length=8)
+    depends_on: list[str] = Field(default_factory=list, max_length=2)
+
+
 class PlannerOperation(FinancialModel):
     operation_id: Identity
+    period: Identity | None = None
     operation: Literal[
         "find_financial_facts",
         "calculate_financial_metric",
@@ -34,6 +43,11 @@ class PlannerOperation(FinancialModel):
 
 
 class PlannerProposal(FinancialModel):
+    reasoning_required: bool = False
+    selection_reason: str = ""
+    assignments: list[SpecialistAssignment] = Field(default_factory=list, max_length=3)
+    completion_conditions: list[str] = Field(default_factory=list, max_length=8)
+    stop_reason: str | None = None
     intent: Literal[
         "direct_fact",
         "calculated_metric",
@@ -69,12 +83,24 @@ class PlannerContext(FinancialModel):
     reporting_year: int | None = Field(default=None, ge=1900, le=2200)
     reporting_scope: Literal["separate", "consolidated"] | None = None
     period: Identity | None = None
-    mode: Literal["gemini", "deterministic"] = "gemini"
+    mode: Literal["auto", "gemini", "deterministic"] = "gemini"
+    feedback: dict | None = None
+    previous_proposal: PlannerProposal | None = None
+    reusable_results: list[dict] = Field(default_factory=list)
+    conversation_context: list[dict] = Field(default_factory=list, max_length=8)
     provider_attempt_limit: int = Field(default=2, ge=1, le=2)
     provider_timeout_seconds: float = Field(default=60.0, gt=0, le=60)
     model: ModelIdentity = Field(
         default_factory=lambda: ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
     )
+
+    @model_serializer(mode="wrap")
+    def serialize_context(self, handler):
+        wire = handler(self)
+        for key in ("feedback", "previous_proposal", "reusable_results", "conversation_context"):
+            if not wire.get(key):
+                wire.pop(key, None)
+        return wire
 
 
 class PlannerLLMMetadata(FinancialModel):

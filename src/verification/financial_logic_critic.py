@@ -300,6 +300,12 @@ class FinancialLogicCritic:
             )
             return
         available = {"numeric_context", "sign_context"}
+        if claim.analysis_premises and all(
+            c.status in {"pass", "not_applicable"}
+            for c in validation.checks
+            if c.check_id not in {"semantic_conclusion", "reporting_scope"}
+        ):
+            available.add("financial_context")
         # The approved YoY direction is handled in Stage A. A YoY premise
         # cannot unlock arbitrary semantic profitability/liquidity comparisons.
         premise_ids = {"check:" + c.finding_id for c in validation.checks if c.status == "pass"} | {

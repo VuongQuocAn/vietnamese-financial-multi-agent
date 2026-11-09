@@ -11,9 +11,13 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 
 class FinancialQARequest(VietnameseQARequest):
+    allow_gateway: bool = True
     request_id: str = Field(default_factory=lambda: str(uuid4()), min_length=1)
     force_refresh: bool = False
-    execution_mode: Literal["gemini", "deterministic"] = "gemini"
+    execution_mode: Literal["auto", "gemini", "deterministic"] = "auto"
+    max_provider_calls: int = Field(default=16, ge=1, le=32)
+    request_timeout_seconds: float = Field(default=180, ge=10, le=300)
+    conversation_context: list[dict] = Field(default_factory=list, max_length=8)
 
 
 class PipelineStage(FinancialModel):
@@ -35,6 +39,9 @@ class CandidateOutcome(FinancialModel):
 
 
 class PipelineTrace(FinancialModel):
+    answer_requirements: list[QARequirement] = Field(default_factory=list)
+    adaptive_rounds: list[dict] = Field(default_factory=list)
+    execution_events: list[dict] = Field(default_factory=list)
     request_id: str
     document_id: str | None = None
     snapshot_id: str | None = None

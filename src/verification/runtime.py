@@ -45,9 +45,34 @@ class VerificationRuntime:
             batch=batch, validation=validation, evidence=evidence, logic=logic
         )
 
-    def verify(self, batch):
+    def verify(self, batch, *, allow_revision=True):
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         initial = self._checks(batch)
+        if not allow_revision:
+            from .decision_contracts import VerificationLoopResult
+            from .judge import VerificationJudge
+
+            start = perf_counter()
+            decisions = VerificationJudge().decide(
+                batch, initial.validation, initial.evidence, initial.logic
+            )
+            histories = [
+                VerificationHistory(
+                    contexts=[initial],
+                    outcome=VerificationLoopResult(
+                        parent_candidate_id=record.candidate_id,
+                        initial_input=batch,
+                        attempts=[record],
+                        stopped=True,
+                        stop_reason="revision_delegated_to_planner"
+                        if record.decision == "REVISE"
+                        else "initial_decision_terminal",
+                    ),
+                )
+                for record in decisions.claims
+            ]
+            self.stage_latency_ms["judge_revision"] = (perf_counter() - start) * 1000
+            return histories
         histories = []
         loop = BoundedVerificationLoop()
         for claim in batch.claims:

@@ -10,6 +10,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 import subprocess
 import sys
 import zipfile
@@ -42,6 +43,15 @@ def protected(root):
 
 def runtime(base, head):
     """Import the committed runtime, leaving the owner's local work untouched."""
+    # Frozen source lives outside its checkout. Preserve the operator's real
+    # source-policy/release storage instead of silently loading an empty policy.
+    root = Path.cwd().resolve()
+    if (root / "pyproject.toml").is_file():
+        os.environ.setdefault("FINANCIAL_PROJECT_ROOT", str(root))
+        # Also supported by older frozen implementations which predate the
+        # explicit project root setting.
+        os.environ.setdefault("DOCUMENT_RELEASE_ROOT", str(root / "artifacts/source-quality"))
+        os.environ.setdefault("DOCUMENT_SOURCE_POLICY_ROOT", str(root / "artifacts/source-quality"))
     target = base / "runtime"
     if not target.exists():
         archive = subprocess.check_output(["git", "archive", "--format=zip", head, "src"])

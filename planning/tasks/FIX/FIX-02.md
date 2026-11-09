@@ -1,0 +1,83 @@
+# TASK FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
+
+## Metadata
+
+- Milestone: FIX
+- Status: REVIEW
+- Priority: P1
+- Dependencies: REC-01
+- Estimated Complexity: L
+
+## Objective
+
+Planner Gemini hiểu, lập và sửa kế hoạch động; Specialists suy luận trên evidence;
+Judge Gemini phản biện và chuyển structured feedback về Planner. Python thực thi
+và giữ deterministic release authority M6/M7.
+
+## Context
+
+Owner giao09/11/2026 theo chỉ đạo FIX-02 đính kèm; baseline `20694b2` trên main.
+E2E-02 REVIEW:40 lượt deterministic/0Gemini,9issues OPEN. Tái sử dụng CHAT-01;
+giữ thay đổi nghiệm thu CHAT-01 local riêng, pending GEN-01a/Web và evidence cũ.
+
+## Inputs
+
+PlannerProposal/EvidencePlan/PlannerResult, ba Specialists, M6 critics/Judge/Ledger,
+M7/CHAT-01; issue log E2E-02; BBS/BCC accepted inputs và PDF gốc local.
+
+## Outputs
+
+Adaptive runtime/typed contracts, focused tests, runner tám ca thật và
+`docs/fix-02-adaptive-llm-agents.md` với actual calls/tokens/latency/issues/limitations.
+
+## Allowed Changes
+
+Planner assignments/tool routing, Specialist reasoning, Judge synthesis/feedback,
+request budgets và tối đa2revisions/3Judge assessments; financial/document/mixed/
+conversation entrypoints; root cause và fixes trực tiếp liên quan9issues.
+Commit/push main được Owner yêu cầu trong chỉ đạo nguồn.
+
+## Out of Scope
+
+Không framework agent mới, Vector DB, công thức mới, OCR pipeline, Web UI/M8,
+full regression1000+tests hoặc sửa raw/processed/accepted evidence.
+
+## Implementation Steps
+
+Khảo sát M5/M6/M7 → typed contracts → adaptive execution → bounded loop
+→ QA integration → focused/live checks → report/commit/push REVIEW.
+
+## Acceptance Criteria
+
+Planner chọn tool-only hoặc Specialists theo mục tiêu; Judge phản biện thật;
+feedback/replan đúng phần ảnh hưởng, tối đa2revisions và không vòng M6 lồng nhau.
+M6 Decimal/formula/company/period/snapshot/provenance gates không bị bypass.
+Trace phân biệt LLM/tool/deterministic/cache/degraded; usage và latency thật.
+Có Gemini live tám ca và ít nhất một feedback loop live; I001 không phát hành
+quotation đảo nghĩa trên đường đã kiểm thử. Không gọi mock/smoke là accuracy.
+Issues chưa đủ bằng chứng giữ OPEN; thiếu core acceptance thì REVIEW, không DONE.
+
+## Required Tests
+
+Focused mock Planner/tool-only/reasoning/feedback/budget/source gates; targeted
+integration baseline/reuse/document/conversation; tám ca BBS/BCC thật có trace,
+usage/errors/latency và đối chiếu source. Không retry để chọn output đẹp.
+Ruff, planning checker, diff check; CI nhẹ implementation cuối.
+
+## Risks and Blockers
+
+Provider failures và source coverage/trust phải được ghi minh bạch; không tạo
+evidence hoặc approval để đóng issues. Giữ toàn bộ kết quả lỗi trước bản sửa.
+
+## Implementation Evidence
+
+Chưa commit. [Báo cáo](../../../docs/fix-02-adaptive-llm-agents.md);
+evidence local artifacts/evidence/FIX-02/ giữ toàn bộ lượt lỗi và bổ sung Q21.
+Live loop có2feedback/replans,13calls/133034known tokens,partial do provider failure;
+I001 corrected và I009 source replay được kiểm chứng trên đường đã chạy.
+Chưa Judge PASS sau revision hoặc full live final SHA;9issues giữ OPEN.
+Local78compatibility/47focused/28CI-smoke và9adaptive cuối PASS, có overlap.
+
+## Handoff Notes
+
+Status REVIEW. Next action: Tech Lead review FIX-02 cùng limitations, không tự DONE.

@@ -1,5 +1,6 @@
 """Deterministic, read-only claim checks against an independently hydrated catalog."""
 
+import re
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 
@@ -130,7 +131,10 @@ class DeterministicFinancialValidator:
         if not claim.supporting_evidence:
             add("supporting_evidence", "undetermined", "supporting_evidence_missing")
         assertion = extract_assertion(claim.content)
-        if claim.kind == "fact":
+        if claim.kind == "supported_interpretation" and claim.analysis_premises:
+            self._analysis(batch, claim, result)
+            add("formula", "not_applicable", "fact_interpretation_has_no_formula")
+        elif claim.kind == "fact":
             self._fact(batch, claim, result, assertion)
             add("formula", "not_applicable", "fact_has_no_formula")
         elif claim.kind == "approved_metric" or claim.metric_ids or claim.calculation:
@@ -145,6 +149,50 @@ class DeterministicFinancialValidator:
             if claim.kind == "supported_interpretation"
             else "no_interpretation_conclusion",
             kind="unsupported_inference",
+        )
+
+    def _analysis(self, batch, claim, result):
+        sources = claim.supporting_evidence
+        if re.search(
+            r"\b(?:ty le|ty so|he so|ratio|margin|gap (?:doi|ba|bon))\b", fold(claim.content)
+        ):
+            self._check(result, "formula", "fail", "analysis_requires_approved_calculation")
+            return
+        if (
+            re.search(r"\d|%", claim.content)
+            or len(sources) != len(claim.analysis_premises)
+            or not sources
+            or any(e.kind != "fact" for e in sources)
+            or set(r.model_dump_json() for r in claim.fact_references)
+            != {e.reference.model_dump_json() for e in sources}
+        ):
+            self._check(result, "numeric", "fail", "analysis_premise_binding_invalid")
+            return
+        for index, (source, statement) in enumerate(
+            zip(sources, claim.analysis_premises, strict=True)
+        ):
+            local = claim.model_copy(
+                deep=True,
+                update=dict(
+                    content=statement,
+                    kind="fact",
+                    analysis_premises=[],
+                    supporting_evidence=[source],
+                    fact_references=[source.reference],
+                    citations=source.citations,
+                ),
+            )
+            sub = ClaimValidationResult(candidate_id=claim.candidate_id, claim_kind=claim.kind)
+            self._fact(batch, local, sub, extract_assertion(statement))
+            for check in sub.checks:
+                check.finding_id += f":premise-{index}"
+            result.checks.extend(sub.checks)
+            result.caveats.extend(sub.caveats)
+        self._citations(
+            claim,
+            result,
+            list({c.model_dump_json(): c for s in sources for c in s.citations}.values()),
+            claim.fact_references,
         )
 
     def _context(

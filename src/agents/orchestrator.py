@@ -130,7 +130,6 @@ def aggregate_candidates(executions):
                 group = _json([candidate.kind, candidate.company_id, candidate.period, semantics])
                 signature = _json(
                     [
-                        candidate.content,
                         candidate.document_id,
                         candidate.snapshot_id,
                         [(e.value, e.unit, e.scale, e.operand_periods) for e in evidence],
@@ -155,6 +154,13 @@ class FinancialMultiAgentOrchestrator:
         self._supervisor = supervisor
         self._router = router
         self._specialists = dict(specialists)
+        self._execution_cache = {}
+
+    def reset_request(self):
+        self._execution_cache.clear()
+        reset = getattr(self._supervisor, "reset_request", None)
+        if reset:
+            reset()
 
     @staticmethod
     def plan_fusion(question):
@@ -294,7 +300,9 @@ class FinancialMultiAgentOrchestrator:
             if routing.status not in {"routed", "partial"}:
                 output.stop_conditions.extend(routing.stop_reasons)
                 return finish(routing.status if routing.status != "incomplete" else "failed")
-            routes = [r for r in routing.routes if r.execution_eligible]
+            routes = [
+                next(r for r in routing.routes if r.role == role) for role in routing.selected_roles
+            ]
             if (
                 len(routes) > 3
                 or len({r.role for r in routes}) != len(routes)
@@ -327,14 +335,68 @@ class FinancialMultiAgentOrchestrator:
                 stage, start = "specialist_execution", perf_counter()
                 if route.role not in self._specialists:
                     raise ValueError("selected_specialist_not_configured")
-                result = SpecialistResult.model_validate(
-                    self._specialists[route.role].analyze(
+                proposal = planner.effective_proposal or planner.proposal
+                reasoning = bool(proposal and proposal.reasoning_required)
+                task = route.selection_reason
+                dependencies = []
+                if proposal:
+                    assignment = next(
+                        (a for a in proposal.assignments if a.role == route.role), None
+                    )
+                    if assignment:
+                        dependencies = [
+                            e.result.model_dump(mode="json", exclude={"llm", "trace", "latency_ms"})
+                            for e in output.specialist_executions
+                            if e.role in assignment.depends_on and e.result
+                        ]
+                projected = execution.projection.supervisor_result.model_copy(deep=True)
+                if reasoning:
+                    projected.evidence_bundle.limitations.append(
+                        "PLANNER_TASK:" + task + "\nPRIOR_AGENT_RESULTS:" + _json(dependencies)
+                    )
+                fingerprint = _json(
+                    dict(
                         question=question,
-                        supervisor_result=execution.projection.supervisor_result.model_copy(
-                            deep=True
+                        role=route.role,
+                        task=task,
+                        reasoning=reasoning,
+                        evidence=projected.evidence_bundle.model_dump(
+                            mode="json",
+                            include={
+                                "facts",
+                                "calculations",
+                                "citations",
+                                "claim_fact_references",
+                                "compatibility",
+                            },
                         ),
+                        dependencies=dependencies,
                     )
                 )
+                cached = self._execution_cache.get(fingerprint)
+                specialist = self._specialists[route.role]
+                # Tool-only uses exact typed numeric rendering, with no model call.
+                old_deterministic = specialist._deterministic
+                if context.mode == "auto" and not reasoning:
+                    specialist._deterministic = True
+                try:
+                    result = (
+                        cached.model_copy(deep=True)
+                        if cached
+                        else SpecialistResult.model_validate(
+                            specialist.analyze(
+                                question=question,
+                                supervisor_result=projected,
+                            )
+                        )
+                    )
+                finally:
+                    specialist._deterministic = old_deterministic
+                if cached:
+                    result.llm = result.llm.__class__(status="cache_hit")
+                    trace(stage, "CACHE_HIT", start, role=route.role)
+                elif result.status in {"generated", "partial"}:
+                    self._execution_cache[fingerprint] = result.model_copy(deep=True)
                 if result.role != route.role or result.question != question:
                     raise ValueError("specialist_result_binding_mismatch")
                 execution.result, execution.status, execution.llm = (

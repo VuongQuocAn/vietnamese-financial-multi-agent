@@ -99,7 +99,7 @@ def _document_inventory(request, entries, intent, specs):
 def request_inventory(request, entries):
     from ..agents.fusion_contracts import is_mixed
 
-    if is_mixed(request.question):
+    if is_mixed(request.question) or request.adaptive_fusion_plan:
         return _fusion_inventory(request, entries)
     intent, specs = document_intent(request.question)
     if intent != "other":
@@ -107,8 +107,15 @@ def request_inventory(request, entries):
     if request.composition_id is not None or request.composition_sha256 is not None:
         return GroundedAnswerPlan(reasons=["composition_requires_document_question"]), "unsupported"
     parsed, issues = understand(request.question)
-    plan = GroundedAnswerPlan(requirements=understand_requirements(request.question))
-    if "cross_document_comparison_blocked_D03_B10" in issues:
+    plan = GroundedAnswerPlan(
+        requirements=[
+            r.model_copy(deep=True, update={"verified_claim_ids": [], "reason": None})
+            for r in request.answer_requirements
+        ]
+        if request.answer_requirements
+        else understand_requirements(request.question)
+    )
+    if "cross_document_comparison_blocked_D03_B10" in issues and not request.answer_requirements:
         plan.reasons.append("cross_document_comparison_blocked_D03_B10")
         return plan, "unsupported"
     if "ambiguous_reporting_scope" in issues:
@@ -269,7 +276,10 @@ def _fusion_inventory(request, entries):
         return GroundedAnswerPlan(
             missing_information=["approved_fusion_context_required"]
         ), "clarification_required"
-    for part in decompose(request.question).requirements:
+    fusion = request.adaptive_fusion_plan or decompose(request.question)
+    if fusion.question != request.question or len(fusion.requirements) > 12:
+        return GroundedAnswerPlan(reasons=["fusion_plan_question_binding_invalid"]), "unsupported"
+    for part in fusion.requirements:
         if part.lane == "financial":
             financial_question = part.execution_question or part.original_span
             if parsed.reporting_year:
@@ -280,6 +290,11 @@ def _fusion_inventory(request, entries):
                     "composition_id": None,
                     "composition_sha256": None,
                     "document_snapshots": [],
+                    "adaptive_fusion_plan": None,
+                    "fusion_answer_requirements": {},
+                    "answer_requirements": request.fusion_answer_requirements.get(
+                        part.requirement_id, []
+                    ),
                 }
             )
             child, _ = request_inventory(sub, [e for e in entries if e.identity.kind != "document"])

@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
+
+Status: **REVIEW**. Owner giao09/11/2026; baseline `20694b2`; chưa commit.
+[Spec](tasks/FIX/FIX-02.md), [report](../docs/fix-02-adaptive-llm-agents.md).
+Planner assignments/analyses/Judge feedback, request caps và M6/M7 gates đã nối.
+Live Q21:2feedback/replans,13actual calls/133034known tokens/114,672s;partial,
+revision cuối provider failure. Tools cache; revision1 chỉ Cash Flow gọi lại.
+I001 corrected quotation và I009 source replay có bằng chứng,9issues vẫn OPEN.
+78compatibility/47focused/28CI-smoke và9adaptive cuối PASS (có overlap).
+Chưa Judge PASS sau revision/full live final SHA; giữ pending GEN-01a/Web/CHAT docs.
+Next action: Tech Lead review FIX-02 cùng các giới hạn; không tự DONE/Web/M8.
+
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 
 Status: **REVIEW**, Owner giao 09/11/2026. [Spec](tasks/E2E/E2E-02.md),
