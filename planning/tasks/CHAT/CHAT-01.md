@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: CHAT
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: REC-01
 - Estimated Complexity: M
@@ -40,10 +40,10 @@ Resolve deterministic context → QA binding → verified state update → real 
 
 ## Acceptance Criteria
 
-- [ ] Kế thừa/chuyển công ty/kỳ/chủ đề, hỏi lại khi mơ hồ, session độc lập.
-- [ ] Answer qua pipeline hiện hữu, claims/citations verified; không lấy answer cũ làm evidence.
-- [ ] API/service create/send/history/reset và traces; storage lifecycle rõ ràng.
-- [ ] 5–8 real scenarios, đo calls/latency, focused tests/CI, báo cáo và push main.
+- [x] Kế thừa/chuyển công ty/kỳ/chủ đề, hỏi lại khi mơ hồ, session độc lập.
+- [x] Answer qua pipeline hiện hữu, claims/citations verified; không lấy answer cũ làm evidence.
+- [x] API/service create/send/history/reset và traces; storage lifecycle rõ ràng.
+- [x] Bảy real scenarios, đo calls/latency, focused tests/CI, báo cáo và push main.
 
 ## Required Tests
 
@@ -56,8 +56,19 @@ Giữ rõ giới hạn QA/source hiện hữu; không nâng smoke thành financi
 
 ## Implementation Evidence
 
-Chưa commit. Evidence local tại `artifacts/evidence/CHAT-01/`.
+Implementation `21eec27791a8ea06ef7770803cc693bb72727fea` đã push main.
+[CI42582799192](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42582799192)
+SUCCESS đúng SHA:18Python/9Web PASS; full regression SKIPPED.
+Local23supporting+3conversation tests PASS; Ruff/planning/diff PASS.
+Bảy scenarios/20turns:13completed_with_caveats/1partial/5clarify/1blocked;
+142citations/sáuclaims audit không mismatch/leakage;396source hashes unchanged;
+0Gemini; resolver median5,730ms/max24,484ms. Chi tiết và giới hạn tại
+[report](../../../docs/chat-01-multi-turn-qa.md).
+Evidence local `artifacts/evidence/CHAT-01/run4/` + `document-fix/` cho S3 sau fix.
 
 ## Handoff Notes
 
-Next action: triển khai và kiểm chứng CHAT-01; dừng REVIEW cho Tech Lead.
+Chờ Tech Lead nghiệm thu; session in-memory mất sau restart; Web inject approved
+pipeline qua service contract. Giữ source-readiness/QA limitations S2/S7 và pending
+GEN-01a/Web; không bắt đầu CORE-Check, WEB-02 hoặc M8.
+Next action: Tech Lead review CHAT-01.

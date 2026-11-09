@@ -29,8 +29,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | EF | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | PERF | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | REC | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| CHAT | 1 | 0 | 1 | 0 | 0 | 0 | 0 |
-| TOTAL | 119 | 110 | 1 | 0 | 8 | 0 | 0 |
+| CHAT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 119 | 110 | 0 | 0 | 8 | 0 | 1 |
 
 ## Implementation thực tế
 

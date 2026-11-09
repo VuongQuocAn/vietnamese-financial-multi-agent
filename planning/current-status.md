@@ -4,11 +4,19 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## CHAT-01 — Multi-turn Conversational QA
 
-Status: **IN_PROGRESS**, Owner giao ngày09/11/2026; baseline `423514b`.
-[Spec](tasks/CHAT/CHAT-01.md). REC-01 DONE có giới hạn đã đồng bộ; không sửa REC.
-Thin deterministic resolver → FinancialQARequest → pipeline hiện hữu M5/M6/M7.
-Giữ pending GEN-01a/Web, không full regression/M8; tối đa2 live calls nếu cần.
-Next action: triển khai và kiểm chứng CHAT-01.
+Status: **REVIEW**, Owner giao ngày09/11/2026; baseline `423514b`.
+[Spec](tasks/CHAT/CHAT-01.md), [report](../docs/chat-01-multi-turn-qa.md).
+Implementation `21eec27791a8ea06ef7770803cc693bb72727fea` đã push main;
+[CI42582799192](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42582799192)
+SUCCESS đúng SHA:18Python/9Web PASS; full regression SKIPPED.
+Deterministic context resolver/session/API → pipeline hiện hữu M5/M6/Ledger/M7;
+session mất sau restart; Web inject approved pipeline. Local23supporting+3conversation
+PASS; bảy scenarios/20turns:13full-with-caveats/1partial/5clarify/1blocked;
+142citations/sáuclaims audited,0mismatch/leakage;396source hashes unchanged;0Gemini.
+Resolver median5,730ms/max24,484ms; pipeline latency và S2/S7 QA/source limits giữ nguyên.
+REC-01 DONE có giới hạn đã đồng bộ; không sửa REC. Giữ pending GEN-01a/Web.
+Chờ nghiệm thu; không bắt đầu CORE-Check, WEB-02 hoặc M8.
+Next action: Tech Lead review CHAT-01.
 
 ## REC-01 — Conditional OCR Recovery & Approved Release Activation
 
