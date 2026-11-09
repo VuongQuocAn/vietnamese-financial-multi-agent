@@ -219,6 +219,79 @@ def test_invalid_analysis_does_not_erase_numeric_claim_or_inflate_replan_context
     assert "approved_formula_candidates" not in prompt
 
 
+@pytest.mark.parametrize("supported", [True, False])
+def test_analysis_numeric_proof_bridge_keeps_native_release_authority(tmp_path, supported):
+    from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
+    from vietnamese_financial_multi_agent.verification import (
+        DeterministicFinancialValidator,
+        EvidenceCritic,
+        FinancialLogicCritic,
+    )
+    from vietnamese_financial_multi_agent.verification.judge import VerificationJudge
+
+    from .test_evidence_critic import semantic_gateway
+    from .test_financial_logic_critic import gateway as logic_gateway
+    from .test_financial_validators import batch_for
+    from .test_m4_execution import fixture
+
+    data = fixture()
+    batch = batch_for(data)
+    claim = batch.claims[0]
+    claim.kind = "supported_interpretation"
+    claim.analysis_premises = [claim.content]
+    claim.content = "Doanh thu trong kỳ được ghi nhận trong báo cáo."
+    catalog = SnapshotCatalog(**data)
+    validation = DeterministicFinancialValidator(catalog).validate(batch)
+
+    def semantic(result):
+        for a in result["assertions"]:
+            a.update(
+                status="supported" if supported else "unsupported",
+                evidence_ids=["E1"],
+                reason="direct_support" if supported else "beyond_evidence",
+                missing=[],
+            )
+
+    evidence = EvidenceCritic(catalog, semantic_gateway(semantic)).assess(batch, validation)
+    assertion = evidence.claims[0].assertions[0]
+    assert bool(assertion.check_references) == supported
+    logic = FinancialLogicCritic(logic_gateway(status="consistent")).assess(
+        batch, validation, evidence
+    )
+    decision = VerificationJudge().decide(batch, validation, evidence, logic).claims[0]
+    assert (decision.decision == "ACCEPT") == supported
+    from vietnamese_financial_multi_agent.verification.decision_contracts import (
+        VerificationLoopResult,
+    )
+    from vietnamese_financial_multi_agent.verification.ledger_contracts import (
+        VerificationHistory,
+        VerificationProofContext,
+    )
+    from vietnamese_financial_multi_agent.verification.ledger_repository import (
+        VerifiedClaimRepository,
+    )
+
+    history = VerificationHistory(
+        contexts=[
+            VerificationProofContext(
+                batch=batch, validation=validation, evidence=evidence, logic=logic
+            )
+        ],
+        outcome=VerificationLoopResult(
+            parent_candidate_id=claim.candidate_id,
+            initial_input=batch,
+            attempts=[decision],
+            stopped=True,
+            stop_reason="initial_decision_terminal",
+        ),
+    )
+    admission = VerifiedClaimRepository(tmp_path).admit_many([history])[0]
+    assert admission.status == ("stored" if supported else "rejected")
+    if supported:
+        assert logic.claims[0].trace.llm.calls == 1
+        assert all(a.status == "consistent" for a in logic.claims[0].assertions)
+
+
 def test_judge_pass_cannot_promote_native_m6_rejection(monkeypatch):
     import vietnamese_financial_multi_agent.agents.adaptive_controller as module
 

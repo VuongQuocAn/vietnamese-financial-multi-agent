@@ -480,6 +480,24 @@ class EvidenceCritic:
                 source = by_id[target.assertion_id]
                 target.status, target.evidence_ids = source.status, source.evidence_ids
                 target.reasons, target.missing = [source.reason], list(source.missing)
+                if claim.analysis_premises and source.status == "supported":
+                    # Bind the semantic finding to independently validated numeric
+                    # premises. The model supplies no check IDs or approval here.
+                    refs = [
+                        e.reference for e in result.evidence if e.evidence_id in source.evidence_ids
+                    ]
+                    checks = [
+                        c
+                        for c in result.deterministic_findings
+                        if c.status == "pass"
+                        and c.references
+                        and all(r in refs for r in c.references)
+                    ]
+                    if refs and all(
+                        any(c.check_id == "numeric" and ref in c.references for c in checks)
+                        for ref in refs
+                    ):
+                        target.check_references = [c.finding_id for c in checks]
         except Exception:
             _error(result, "semantic", "semantic_gateway_failed")
         finally:
