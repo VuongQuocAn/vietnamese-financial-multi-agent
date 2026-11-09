@@ -14,6 +14,7 @@ from typing import Literal
 from pydantic import Field
 
 from ..accounting.contracts import FinancialModel
+from ..core.data_config import default_project_root
 from ..core.persistence import atomic_json
 from .composition import EvidencePin, payload_sha256, verify_saved_pages
 from .document_evidence import EvidenceIdentity
@@ -84,7 +85,8 @@ class DocumentSourcePolicy(FinancialModel):
 
 
 def policy_path():
-    root = Path(os.environ.get("DOCUMENT_SOURCE_POLICY_ROOT", "artifacts/source-quality")).resolve()
+    root = Path(os.environ.get("DOCUMENT_SOURCE_POLICY_ROOT", "artifacts/source-quality"))
+    root = (root if root.is_absolute() else default_project_root() / root).resolve()
     path = root / "document-source-policy.json"
     if path.is_symlink() or not path.resolve().is_relative_to(root):
         raise ValueError("source_policy_storage_mismatch")
@@ -93,10 +95,107 @@ def policy_path():
 
 def load_source_policy():
     path = policy_path()
-    return (
-        DocumentSourcePolicy.model_validate_json(path.read_bytes())
-        if path.exists()
-        else DocumentSourcePolicy()
+    expected = os.environ.get("DOCUMENT_SOURCE_POLICY_SHA256", "").strip()
+    if not path.exists():
+        if "DOCUMENT_SOURCE_POLICY_ROOT" in os.environ or expected:
+            raise ValueError("source_policy_required")
+        return DocumentSourcePolicy()
+    policy = DocumentSourcePolicy.model_validate_json(path.read_bytes())
+    if expected and payload_sha256(policy.model_dump(mode="json")) != expected:
+        raise ValueError("source_policy_fingerprint_mismatch")
+    return policy
+
+
+class CorrectionPromotionCheck(FinancialModel):
+    release_sha256: str
+    status: Literal["ready", "pending_approval", "blocked"]
+    checks: dict[str, bool]
+    reasons: list[str]
+
+
+def check_correction_promotion(
+    release, manifest, repository, pdf, saved_page, *, expected_release_sha256
+):
+    """Read-only preflight of the actual release. Never grants approval or activates it."""
+    from .composition import load_composition
+
+    policy = load_source_policy()
+    checks = {
+        "release_digest": release.digest == expected_release_sha256,
+        "registered_release": release in policy.releases,
+        "composition": (release.composition_id, release.composition_sha256)
+        == (manifest.composition_id, payload_sha256(manifest.model_dump(mode="json"))),
+    }
+    records = [
+        c
+        for c in policy.corrections
+        if c.digest == release.correction_sha256 and c.validation_status == "VALIDATED"
+    ]
+    checks["validated_correction"] = len(records) == 1
+    if all(checks.values()):
+        correction = records[0]
+        try:
+            bindings = verify_saved_pages(Path(pdf), [saved_page])
+            checks["pdf_provenance"] = len(bindings) == 1 and (
+                bindings[0].page,
+                bindings[0].image_sha256,
+                bindings[0].source_ref,
+            ) == (correction.page, correction.source_image_digest, correction.pdf_source_reference)
+            catalog = load_composition(
+                manifest,
+                repository,
+                document_id=manifest.logical_document_id,
+                composition_id=manifest.composition_id,
+            )
+            rows = {r.evidence_identity().model_dump_json(): r for r in catalog.evidence}
+            checks["content_and_selectors"] = bool(release.evidence) and all(
+                (row := rows.get(pin.identity.model_dump_json())) is not None
+                and row.kind == "text"
+                and row.snapshot_id == release.snapshot_id
+                and row.snapshot_id == "correction:" + correction.digest
+                and payload_sha256(row.model_dump(mode="json")) == pin.payload_sha256
+                and text_digest(row.raw_text or "") == pin.text_sha256
+                and row.raw_text == correction.corrected_text
+                and pin.source_selector == correction.source_selector
+                and all(
+                    a.reference is not None
+                    and a.reference.source_pointer == pin.source_selector
+                    and (
+                        a.reference.anchor.page.page,
+                        a.reference.anchor.page.image,
+                        a.reference.anchor.page.source_ref,
+                    )
+                    == (
+                        correction.page,
+                        "sha256:" + correction.source_image_digest,
+                        correction.pdf_source_reference,
+                    )
+                    for a in row.sources
+                )
+                and not any(issue.startswith("pdf_review:") for issue in row.resolution_issues)
+                and not any(
+                    c.original == pin.identity
+                    and (
+                        c.validation_status == "PROPOSED"
+                        or c.correction_type == "material_transcription"
+                    )
+                    for c in policy.corrections
+                )
+                for pin in release.evidence
+            )
+        except (ValueError, OSError):
+            checks["pdf_and_materialization"] = False
+    checks["approval"] = any(a.release_sha256 == release.digest for a in policy.approvals)
+    reasons = [key for key, valid in checks.items() if not valid]
+    return CorrectionPromotionCheck(
+        release_sha256=release.digest,
+        checks=checks,
+        reasons=reasons,
+        status="ready"
+        if not reasons
+        else "pending_approval"
+        if reasons == ["approval"]
+        else "blocked",
     )
 
 

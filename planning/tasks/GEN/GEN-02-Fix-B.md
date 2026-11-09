@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: REVIEW
+- Status: IN_PROGRESS
 - Priority: P1
 - Dependencies: GEN-02-Fix-A, QA-01b, EXT-01
 - Estimated Complexity: M
@@ -80,4 +80,13 @@ và inherited changes nguyên hash. CI đã đối chiếu đúng implementation
 
 ## Handoff Notes
 
-Next action: dừng REVIEW; Tech Lead nghiệm thu và quyết định H08 release/PDF30 follow-up.
+## Closure09/11/2026
+
+Tech Lead chấp nhận implementation `d78f115`, chưa approve promotion H08; giao closure
+nhỏ về persistent quarantine/approval, startup/transfer và preflight release thật.
+17targeted tests PASS, process/API mới với moved storage/cwd nạp đúng policy pin,
+giữ2quarantines/0actual approvals. H08 candidate đúng digest/PDF/content, preflight
+pending_approval; wrong digest blocked; old bad claims không visible, ledger/source
+bytes giữ nguyên. Không tạo approval thật hoặc accepted promotion. Chờ CI closure.
+
+Next action: hoàn tất checkpoint closure để Tech Lead review quyết định H08 release.

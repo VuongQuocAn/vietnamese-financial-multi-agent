@@ -1,5 +1,16 @@
 # Data contracts
 
+Fix-B closure: policy root tương đối được neo vào project root, không theo cwd;
+bản cài ngoài checkout cần root tuyệt đối. Store được cấu hình nhưng thiếu file phải
+fail closed. DOCUMENT_SOURCE_POLICY_SHA256 pin canonical typed-policy digest, kiểm
+tra tại API startup và mỗi lần M6/replay nạp policy. Không cấu hình và không có store
+vẫn là legacy empty policy; môi trường có reviewed data phải chuyển cả store và pin.
+Fingerprint bao gồm quarantine lẫn approval, không chỉ correction text. Khi operator
+thay trust state hợp lệ cần cập nhật pin/restart; không tự bỏ pin hoặc tự ký approval.
+`check_correction_promotion` là read-only preflight: exact expected release digest,
+registered release, composition/pins/content/selectors/current quality và PDF render;
+chỉ ready khi có approval riêng đúng digest. Hàm không activate accepted release.
+
 GEN-02-Fix-B: `DocumentCorrection` tái sử dụng `EvidenceIdentity`, original payload
 digest, composition/page/image/selector bindings và visual-review provenance.
 PROPOSED/VALIDATED là engineering states; `CorrectionApproval` riêng cần authority

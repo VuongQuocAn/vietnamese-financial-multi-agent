@@ -32,6 +32,10 @@ from .test_document_qa_pipeline import setup
 @pytest.fixture
 def correction_case(tmp_path, monkeypatch):
     monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_ROOT", str(tmp_path / "policy"))
+    monkeypatch.delenv("DOCUMENT_SOURCE_POLICY_SHA256", raising=False)
+    save_source_policy(
+        DocumentSourcePolicy()
+    )  # Explicit empty legacy fixture, not a missing trust store.
     service, manifest, template = setup(tmp_path)
     original = template.model_copy(
         deep=True,
@@ -115,6 +119,103 @@ def approve_fixture(policy, release):
         )
     ]
     save_source_policy(policy)
+
+
+def test_policy_reload_after_cwd_change_and_environment_transfer(
+    correction_case, tmp_path, monkeypatch
+):
+    import json
+    import os
+    import shutil
+    import subprocess
+    import sys
+
+    from vietnamese_financial_multi_agent.evidence.document_corrections import (
+        load_source_policy,
+        policy_path,
+    )
+
+    *_, release, policy, _ = correction_case
+    approve_fixture(policy, release)
+    expected = payload_sha256(load_source_policy().model_dump(mode="json"))
+    moved = tmp_path / "another-environment"
+    moved.mkdir()
+    shutil.copyfile(policy_path(), moved / "document-source-policy.json")
+    environment = dict(
+        os.environ, DOCUMENT_SOURCE_POLICY_ROOT=str(moved), DOCUMENT_SOURCE_POLICY_SHA256=expected
+    )
+    script = "from vietnamese_financial_multi_agent.evidence.document_corrections import load_source_policy; import json; p=load_source_policy(); print(json.dumps({'quarantines':len(p.corrections),'approvals':len(p.approvals)}))"
+    data = json.loads(
+        subprocess.check_output(
+            [sys.executable, "-c", script], cwd=moved, env=environment, text=True
+        )
+    )
+    assert data == {
+        "quarantines": 1,
+        "approvals": 1,
+    }  # Synthetic authority only; persisted without recreation.
+    monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_ROOT", "artifacts/source-quality")
+    from vietnamese_financial_multi_agent.core.data_config import default_project_root
+
+    monkeypatch.chdir(tmp_path)
+    assert (
+        policy_path()
+        == default_project_root() / "artifacts/source-quality/document-source-policy.json"
+    )
+
+
+def test_api_startup_rejects_missing_or_mismatched_policy(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+    from vietnamese_financial_multi_agent.api.main import create_app
+    from vietnamese_financial_multi_agent.evidence.document_corrections import load_source_policy
+
+    monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_ROOT", str(tmp_path / "policy"))
+    monkeypatch.delenv("DOCUMENT_SOURCE_POLICY_SHA256", raising=False)
+    with pytest.raises(ValueError, match="source_policy_required"):
+        with TestClient(create_app(storage_root=tmp_path / "api", service=object())):
+            pass
+    save_source_policy(DocumentSourcePolicy())
+    monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_SHA256", "wrong")
+    with pytest.raises(ValueError, match="source_policy_fingerprint_mismatch"):
+        with TestClient(create_app(storage_root=tmp_path / "api", service=object())):
+            pass
+    expected = payload_sha256(DocumentSourcePolicy().model_dump(mode="json"))
+    monkeypatch.setenv("DOCUMENT_SOURCE_POLICY_SHA256", expected)
+    app = create_app(storage_root=tmp_path / "api", service=object())
+    with TestClient(app):
+        assert app.state.source_policy_sha256 == expected
+    assert load_source_policy() == DocumentSourcePolicy()
+
+
+def test_promotion_preflight_requires_exact_release_and_separate_approval(
+    correction_case, monkeypatch
+):
+    from vietnamese_financial_multi_agent.evidence.composition import PageBinding
+    from vietnamese_financial_multi_agent.evidence.document_corrections import (
+        check_correction_promotion,
+    )
+
+    *_, correction, rows, manifest, release, policy, repository = correction_case
+    save_source_policy(policy)
+    # Unit-only PDF binding fixture. Actual H08 closure uses the real PDF/render.
+    monkeypatch.setattr(
+        "vietnamese_financial_multi_agent.evidence.document_corrections.verify_saved_pages",
+        lambda *_: [
+            PageBinding(
+                page=correction.page,
+                image_sha256=correction.source_image_digest,
+                source_ref=correction.pdf_source_reference,
+            )
+        ],
+    )
+    args = (release, manifest, repository, "unit-fixture.pdf", {})
+    pending = check_correction_promotion(*args, expected_release_sha256=release.digest)
+    assert pending.status == "pending_approval" and pending.reasons == ["approval"]
+    approve_fixture(policy, release)
+    assert (
+        check_correction_promotion(*args, expected_release_sha256=release.digest).status == "ready"
+    )
+    assert check_correction_promotion(*args, expected_release_sha256="wrong").status == "blocked"
 
 
 def test_pending_and_approved_versions_keep_inputs_and_require_fresh_verification(correction_case):

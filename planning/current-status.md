@@ -4,7 +4,7 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 
-Status **REVIEW có P1 release blockers**, Owner giao09/11/2026; baseline `46aa45f`.
+Status **IN_PROGRESS closure; H08 promotion chưa approved**, Owner giao09/11/2026; baseline `46aa45f`.
 [Spec](tasks/GEN/GEN-02-Fix-B.md). PDF16 BCC2024 ghi “khó có khả năng”, OCR bỏ “khó”;
 RCA “không” trước đây cần đính chính, giữ original/frozen inputs bất biến.
 Correction engineering VALIDATED; chưa có Tech Lead approval để promote release.
@@ -14,7 +14,10 @@ actual0approvals. A7 giữ gate;17legacy unchanged. Audit5additional excerpts ph
 PDF30/9 P1, đã quarantine/revoke1extra control claim;2P2lexical chưa sửa.
 [Report](../docs/gen-02-fix-b-ocr-source-quality.md). Implementation `d78f1159517de6437bd039d5030040f2d05013b6` đã push main;
 [CI42549793493](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42549793493) completed/SUCCESS đúng implementation SHA; 1169 Python/9 Web PASS; full regression manual SKIPPED.
-Next action: dừng REVIEW; Tech Lead nghiệm thu và quyết định H08 release/PDF30 follow-up.
+Tech Lead chấp nhận impl d78f115 và giao closure nhỏ.17targeted tests PASS; restart/
+moved storage/cwd nạp đúng policy pin,2quarantines/0actual approvals. Real H08 preflight
+đúng digest/PDF/content, pending_approval. Accepted release không đổi. Chờ closure CI.
+Next action: hoàn tất closure CI và bàn giao REVIEW.
 
 ## GEN-02-Fix-A — QA Coverage & False Abstention Recovery
 

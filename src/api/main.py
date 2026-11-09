@@ -113,6 +113,13 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app):
+        from ..evidence.composition import payload_sha256
+        from ..evidence.document_corrections import load_source_policy
+
+        policy = (
+            load_source_policy()
+        )  # Validate configured persistent trust before serving requests.
+        app.state.source_policy_sha256 = payload_sha256(policy.model_dump(mode="json"))
         store = DocumentStore(root, max_upload_bytes=upload_limit, max_pages=page_limit)
         with exclusive_writer(store):
             adapter = None

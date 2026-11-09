@@ -123,4 +123,45 @@ P2 lexical và overbroad extra excerpts ghi nhận, không sửa ngoài scope. S
 text-only/selector-level, không tự clear inherited pdf_review flags. Chưa có actual
 accepted corrected release, không tự DONE hoặc bắt đầu task tiếp theo.
 
-Next action: dừng REVIEW; Tech Lead nghiệm thu và quyết định H08 release/PDF30 follow-up.
+## Closure — persistence, startup và promotion preflight
+
+Tech Lead chấp nhận implementation `d78f115`, chưa approve H08 promotion; giao closure
+nhỏ ngày09/11/2026. Closure không tạo approval thật hoặc tự chuyển DONE.
+
+Root tương đối nay neo vào source project, nên đổi cwd không làm mất quarantine.
+Configured store bị thiếu hoặc pin sai sẽ chặn API startup; M6/replay cũng fail closed.
+Startup ghi canonical policy fingerprint trong app.state, không đưa source text vào API.
+DOCUMENT_SOURCE_POLICY_SHA256 là `payload_sha256(policy.model_dump(mode="json"))`,
+không phải hash bytes của JSON có whitespace. Môi trường có reviewed data cần giữ
+DOCUMENT_SOURCE_POLICY_ROOT và pin cùng dữ liệu. Legacy không cấu hình/no store vẫn
+empty; không dùng chế độ đó để triển khai dataset đã review.
+
+17targeted tests PASS (correction + API), gồm3closure tests: persisted fixture approval
+qua process/root/cwd khác; startup thiếu/sai policy bị chặn; exact release preflight
+không tự cấp approval. Approval dương chỉ thuộc synthetic unit fixture.
+
+Actual closure copy policy, candidate manifest/repository/release, PDF, saved-page,
+review images và old ledgers vào root khác; so hash nguồn/đích, khởi động process/API
+mới rồi kiểm tra candidate thật. Không chạy lại full QA hoặc tạo source correction mới.
+
+| Check thật sau restart/transfer | Result |
+| --- | --- |
+| Policy canonical digest | `4f642dd00425612e45ce6bf90ab2b7d253e6cdad5a27a78ca559ab5c51fa036c` |
+| Quarantines / actual approvals |2 /0, giữ PDF16 và PDF30 |
+| H08 expected release digest | `082d30e483d2a0133d696e923c90a1a555aaf993e49da6bb9a200a5cfd6625bc` |
+| Registered release/composition/content/selectors/PDF provenance | PASS |
+| Promotion preflight | pending_approval, chỉ thiếu approval |
+| Wrong expected release digest | blocked |
+| Old H08 / PDF30 defective claims visible |0 /0;2claims khác trong ledger control vẫn visible |
+| Accepted release / source files / old ledger bytes | Không thay đổi |
+
+Artifacts local `artifacts/evidence/GEN-02-Fix-B/closure/`:
+`restart-transfer-promotion.json`, `transfer-manifest.json`, `real-check.log` và
+`moved-environment/`. Đây là mô phỏng chuyển storage/cwd/process trên cùng máy,
+không tuyên bố đã deploy máy khác. PDF render phải tái lập đúng binding đã lưu;
+fingerprint sai sẽ block thay vì âm thầm rebind. Khi có approval thật, phải giữ PDF30
+review/quarantine trong policy, bind đúng H08 release digest rồi cập nhật deployment
+pin và chọn composition có kiểm soát. Không dùng lại fixture approval.
+
+Closure chưa commit/CI. Next action: hoàn tất checkpoint closure để Tech Lead review;
+H08 actual promotion vẫn chờ quyết định riêng.
