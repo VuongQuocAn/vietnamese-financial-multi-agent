@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: GEN-02-Fix-A, QA-01b, EXT-01
 - Estimated Complexity: M
@@ -84,9 +84,10 @@ và inherited changes nguyên hash. CI đã đối chiếu đúng implementation
 
 Tech Lead chấp nhận implementation `d78f115`, chưa approve promotion H08; giao closure
 nhỏ về persistent quarantine/approval, startup/transfer và preflight release thật.
-17targeted tests PASS, process/API mới với moved storage/cwd nạp đúng policy pin,
+86packaged tests PASS (gồm18correction/API), process/API mới với moved storage/cwd nạp đúng policy pin,
 giữ2quarantines/0actual approvals. H08 candidate đúng digest/PDF/content, preflight
 pending_approval; wrong digest blocked; old bad claims không visible, ledger/source
-bytes giữ nguyên. Không tạo approval thật hoặc accepted promotion. Chờ CI closure.
+bytes giữ nguyên. Không tạo approval thật hoặc accepted promotion.
+Closure `28bfb6d8d5a9a071061444f26745454c0066e4aa`; [CI42554771165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42554771165) SUCCESS đúng SHA;86packaged tests PASS,18correction/API trong nhóm này; real H08 preflight đúng digest/PDF, pending_approval;2quarantines/0actual approvals. PDF30 giữ quarantine; accepted release không đổi.
 
-Next action: hoàn tất checkpoint closure để Tech Lead review quyết định H08 release.
+Next action: Tech Lead review closure và quyết định approval H08 theo exact release digest; PDF30 tiếp tục quarantine.

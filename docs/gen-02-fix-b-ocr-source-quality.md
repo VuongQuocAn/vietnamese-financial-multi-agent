@@ -136,9 +136,10 @@ không phải hash bytes của JSON có whitespace. Môi trường có reviewed 
 DOCUMENT_SOURCE_POLICY_ROOT và pin cùng dữ liệu. Legacy không cấu hình/no store vẫn
 empty; không dùng chế độ đó để triển khai dataset đã review.
 
-17targeted tests PASS (correction + API), gồm3closure tests: persisted fixture approval
+18correction/API tests nằm trong86packaged tests PASS (84.15s), gồm4closure tests: persisted fixture approval
 qua process/root/cwd khác; startup thiếu/sai policy bị chặn; exact release preflight
-không tự cấp approval. Approval dương chỉ thuộc synthetic unit fixture.
+không tự cấp approval; wheel chưa cấu hình dùng legacy empty, configured relative root
+không fallback cwd. Approval dương chỉ thuộc synthetic unit fixture.
 
 Actual closure copy policy, candidate manifest/repository/release, PDF, saved-page,
 review images và old ledgers vào root khác; so hash nguồn/đích, khởi động process/API
@@ -156,12 +157,17 @@ mới rồi kiểm tra candidate thật. Không chạy lại full QA hoặc tạ
 | Accepted release / source files / old ledger bytes | Không thay đổi |
 
 Artifacts local `artifacts/evidence/GEN-02-Fix-B/closure/`:
-`restart-transfer-promotion.json`, `transfer-manifest.json`, `real-check.log` và
+`restart-transfer-promotion.json`, `transfer-manifest.json`, `packaged-real-check.json`, `wheel-tests.log` và
 `moved-environment/`. Đây là mô phỏng chuyển storage/cwd/process trên cùng máy,
 không tuyên bố đã deploy máy khác. PDF render phải tái lập đúng binding đã lưu;
 fingerprint sai sẽ block thay vì âm thầm rebind. Khi có approval thật, phải giữ PDF30
 review/quarantine trong policy, bind đúng H08 release digest rồi cập nhật deployment
 pin và chọn composition có kiểm soát. Không dùng lại fixture approval.
 
-Closure chưa commit/CI. Next action: hoàn tất checkpoint closure để Tech Lead review;
-H08 actual promotion vẫn chờ quyết định riêng.
+Closure đầu `f3f7ed83d273ef91c9c039d0e5bac5f4b4eecdcb` có [CI42553388569](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42553388569) FAILED:17tests lỗi khi wheel không suy ra checkout root.
+Bản sửa `28bfb6d8d5a9a071061444f26745454c0066e4aa` giữ legacy empty khi chưa cấu hình;
+wheel có reviewed data phải truyền root tuyệt đối và pin. Kiểm tra local dùng wheel
+đã build, bỏ inherited GEN-01a runtime changes khỏi package kiểm tra:86tests PASS;
+preflight/restart trên candidate/PDF thật cũng PASS binding, vẫn pending_approval.
+[CI42554771165](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42554771165) completed/SUCCESS đúng SHA28bfb6d:1173 Python/9 Web PASS; full regression manual SKIPPED. Log local ở closure/ci-final.log.
+Status REVIEW. Next action: Tech Lead review closure và quyết định approval H08 theo exact release digest; PDF30 tiếp tục quarantine.
