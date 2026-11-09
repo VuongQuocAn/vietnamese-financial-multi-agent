@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## PERF-01 — Fast Path Optimization
+
+Status: **IN_PROGRESS**; Owner giao09/11/2026, baseline `8478c98`.
+[Spec](tasks/PERF/PERF-01.md), [report](../docs/perf-01-fast-path-optimization.md).
+Hai bottlenecks: exact-byte parsed ledger/source snapshot reuse, dynamic policy giữ
+nguyên.99focused PASS,12payloads tương đương,13ledger entries byte-exact; H08/PDF30
+blocked,17legacy replay;38inputs/4frozen/8pending source-Web nguyên hash.
+Refresh median31,346→35,828s (chậm14,3%); cache-hit6,845→6,655s (nhanh2,8%);
+source load giảm72,3%; không đạt mục tiêu tổng thể. Chưa commit/CI; giữ GEN-01a/Web.
+Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW cho Tech Lead.
+
 ## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 
 Status: **DONE — nghiệm thu có giới hạn ngày09/11/2026**.

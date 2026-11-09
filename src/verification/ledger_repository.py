@@ -30,6 +30,9 @@ class VerifiedClaimRepository:
         self.lock = lock if lock is not None else RLock()
         # Cache only hashes of fully validated wire payloads, never mutable records.
         self._validated_payloads: set[str] = set()
+        self._snapshot_bytes: bytes | None = None
+        self._snapshot: VerifiedClaimLedgerSnapshot | None = None
+        self._snapshot_validated: set[str] = set()
 
     def _path(self):
         path = self.root / "verified-claims.json"
@@ -38,27 +41,39 @@ class VerifiedClaimRepository:
         return path
 
     def _read(self):
+        # Writers receive detached records; the private parsed snapshot is never exposed.
+        return self._load().model_copy(deep=True)
+
+    def _load(self):
+        """Reuse only exact wire bytes; current source policy is never cached here."""
         path = self._path()
-        snapshot = (
-            VerifiedClaimLedgerSnapshot.model_validate_json(path.read_text(encoding="utf-8"))
-            if path.exists()
-            else VerifiedClaimLedgerSnapshot()
-        )
-        seen = set()
+        wire = path.read_bytes() if path.exists() else None
+        if self._snapshot is None or wire != self._snapshot_bytes:
+            snapshot = (
+                VerifiedClaimLedgerSnapshot.model_validate_json(wire)
+                if wire is not None
+                else VerifiedClaimLedgerSnapshot()
+            )
+            keys = [e.identity.verified_claim_id for e in snapshot.entries]
+            if len(set(keys)) != len(keys):
+                raise ValueError("Duplicate identity in verified ledger")
+            snapshot.entries.sort(key=lambda e: e.identity.verified_claim_id)
+            self._snapshot_bytes, self._snapshot = wire, snapshot
+            self._snapshot_validated = set()
+        snapshot = self._snapshot
         for entry in snapshot.entries:
             key = entry.identity.verified_claim_id
-            if key in seen:
-                raise ValueError("Duplicate identity in verified ledger")
-            seen.add(key)
             # Retain revoked entries in storage, but never expose them as current
             # trusted output. One affected claim must not hide unrelated entries.
             if not self._source_eligible(entry):
+                continue
+            if key in self._snapshot_validated:
                 continue
             digest = verification_input_digest(entry)
             if digest not in self._validated_payloads:
                 validate_entry(entry)
                 self._validated_payloads.add(digest)
-        snapshot.entries.sort(key=lambda e: e.identity.verified_claim_id)
+            self._snapshot_validated.add(key)
         return snapshot
 
     def admit(
@@ -107,7 +122,9 @@ class VerifiedClaimRepository:
 
     def list_all(self) -> list[LedgerEntry]:
         with self.lock:
-            return [e for e in self._read().entries if self._source_eligible(e)]
+            return [
+                e.model_copy(deep=True) for e in self._load().entries if self._source_eligible(e)
+            ]
 
     @staticmethod
     def _source_eligible(entry):
@@ -118,9 +135,16 @@ class VerifiedClaimRepository:
         return not document_source_issues(entry.accepted_claim, entry.decision.evidence)
 
     def get(self, verified_claim_id: str) -> LedgerEntry | None:
-        return next(
-            (e for e in self.list_all() if e.identity.verified_claim_id == verified_claim_id), None
-        )
+        with self.lock:
+            return next(
+                (
+                    e.model_copy(deep=True)
+                    for e in self._load().entries
+                    if e.identity.verified_claim_id == verified_claim_id
+                    and self._source_eligible(e)
+                ),
+                None,
+            )
 
     def list_by_document(
         self, document_id: str, snapshot_id: str | None = None
@@ -128,9 +152,13 @@ class VerifiedClaimRepository:
         return self.query(VerifiedClaimQuery(document_id=document_id, snapshot_id=snapshot_id))
 
     def query(self, query: VerifiedClaimQuery) -> list[LedgerEntry]:
+        with self.lock:
+            return self._query(query)
+
+    def _query(self, query: VerifiedClaimQuery) -> list[LedgerEntry]:
         query = VerifiedClaimQuery.model_validate_json(query.model_dump_json())
         matches = []
-        for entry in self.list_all():
+        for entry in self._load().entries:
             document = entry.identity.kind == "document"
             if document != (query.kind == "document"):
                 continue
@@ -167,5 +195,6 @@ class VerifiedClaimRepository:
                 and query.reference not in entry.decision.supporting_references
             ):
                 continue
-            matches.append(entry)
+            if self._source_eligible(entry):
+                matches.append(entry.model_copy(deep=True))
         return matches

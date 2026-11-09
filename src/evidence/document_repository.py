@@ -33,6 +33,8 @@ class DocumentEvidenceRepository:
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
         self.lock = lock if lock is not None else RLock()
+        self._snapshot_bytes: bytes | None = None
+        self._snapshot: _Snapshot | None = None
 
     def _path(self):
         path = self.root / "document-evidence.json"
@@ -41,12 +43,15 @@ class DocumentEvidenceRepository:
         return path
 
     def _read(self):
+        return self._load().model_copy(deep=True)
+
+    def _load(self):
+        """One private parsed snapshot; exact bytes invalidate even same-stat edits."""
         path = self._path()
-        snapshot = (
-            _Snapshot.model_validate_json(path.read_text(encoding="utf-8"))
-            if path.exists()
-            else _Snapshot()
-        )
+        wire = path.read_bytes() if path.exists() else None
+        if self._snapshot is not None and wire == self._snapshot_bytes:
+            return self._snapshot
+        snapshot = _Snapshot.model_validate_json(wire) if wire is not None else _Snapshot()
         seen = set()
         for evidence in snapshot.records:
             identity = evidence.evidence_identity()
@@ -55,6 +60,7 @@ class DocumentEvidenceRepository:
             seen.add(identity)
         if any(e.evidence_identity() is not None for e in snapshot.quarantine):
             raise ValueError("Indexed identity found in quarantine")
+        self._snapshot_bytes, self._snapshot = wire, snapshot
         return snapshot
 
     def put(self, evidence: DocumentEvidence) -> Literal["stored", "idempotent", "quarantined"]:
@@ -80,7 +86,12 @@ class DocumentEvidenceRepository:
     def get(self, identity: EvidenceIdentity) -> DocumentEvidence | None:
         with self.lock:
             return next(
-                (e for e in self._read().records if e.evidence_identity() == identity), None
+                (
+                    e.model_copy(deep=True)
+                    for e in self._load().records
+                    if e.evidence_identity() == identity
+                ),
+                None,
             )
 
     def put_many(self, records: list[DocumentEvidence]) -> list[str]:
@@ -116,12 +127,12 @@ class DocumentEvidenceRepository:
     ) -> list[DocumentEvidence]:
         with self.lock:
             return [
-                e
-                for e in self._read().records
+                e.model_copy(deep=True)
+                for e in self._load().records
                 if e.document_id == document_id
                 and (snapshot_id is None or e.snapshot_id == snapshot_id)
             ]
 
     def list_quarantine(self) -> list[DocumentEvidence]:
         with self.lock:
-            return self._read().quarantine
+            return [e.model_copy(deep=True) for e in self._load().quarantine]
