@@ -168,6 +168,39 @@ class EvidenceAwareQueryPlanner:
         return document_operations(requirements, manifest, snapshot_id)
 
     def _prompt(self, context):
+        if context.feedback:
+            return dict(
+                instruction=(
+                    "Bạn là Planner sửa kế hoạch, không tính hoặc phê duyệt số liệu. Trả JSON object đúng schema. "
+                    "Giữ intent/company/year/scope và operations không bị ảnh hưởng trong previous_proposal. "
+                    "evidence_inventory từ tools cho biết evidence đã có, native_status và assigned_roles. "
+                    "Không thêm retrieval cho cùng indicator/period/evidence_key đã truy xuất; nếu validation "
+                    "blocked thì không giả vờ nguồn chưa có. Sửa assignment để specialist phù hợp nhận đủ "
+                    "tiền đề, hoặc sửa task/bỏ nhận định sai phạm vi. Profitability không có CFO trong boundary: "
+                    "không giao kết luận toàn diện chất lượng lợi nhuận cho agent chỉ có PAT. Cash Flow có thể "
+                    "nhận cả PAT và CFO. Giữ task của phần đúng nguyên văn để reuse. Không sao chép prose "
+                    "claim làm evidence. Thiếu tiêu chí kết luận toàn diện thì mô tả quan hệ có giới hạn, "
+                    "không liên tục yêu cầu lại CFO/PAT đã có. Không thể cải thiện hợp lệ thì stop_reason rõ ràng. "
+                    "depends_on chỉ tham chiếu role hoặc operation_id đã khai báo. period=null khi chỉ có năm."
+                ),
+                schema=PlannerProposal.model_json_schema(),
+                canonical_indicators=list(ITEM_RULES),
+                approved_formulas=[p.formula_id for p in self._catalog.policies],
+                specialist_boundaries=[b.model_dump(mode="json") for b in SPECIALIST_BOUNDARIES],
+                companies=sorted({a for d in self._documents for a in d.company_aliases}),
+                context=context.model_dump(
+                    mode="json",
+                    include={
+                        "company_id",
+                        "reporting_year",
+                        "period",
+                        "reporting_scope",
+                        "feedback",
+                        "previous_proposal",
+                        "reusable_results",
+                    },
+                ),
+            )
         return {
             "instruction": (
                 "Lập kế hoạch phân tích tài chính tiếng Việt, không thực thi hoặc trả số liệu. "

@@ -120,6 +120,105 @@ def test_shared_gateway_budget_counts_only_actual_transport_calls():
     assert gateway.generate.call_count == len(budget.events) == 1 and budget.exhausted
 
 
+def test_retrieved_inventory_survives_failed_specialist_and_repeated_feedback_stops(monkeypatch):
+    import vietnamese_financial_multi_agent.agents.adaptive_controller as module
+    from vietnamese_financial_multi_agent.verification.adaptive_judge import (
+        evidence_inventory,
+        ground_feedback,
+    )
+
+    from .test_adaptive_router import inputs
+
+    _, supervisor = inputs("Doanh thu TEST 2030")
+    proposals = [
+        PlannerProposal(
+            intent="direct_fact",
+            reasoning_required=True,
+            assignments=[SpecialistAssignment(role="profitability", task=f"repair-{i}")],
+        )
+        for i in range(3)
+    ]
+    outputs = [
+        SimpleNamespace(
+            status="partial",
+            supervisor_result=supervisor,
+            specialist_executions=[],
+            planner_result=SimpleNamespace(effective_proposal=p, model_dump=lambda **_: {}),
+        )
+        for p in proposals
+    ]
+    inventory = evidence_inventory(outputs[0], [])
+    assert inventory[0]["indicator"] == "b02.net_revenue"
+    feedback = JudgeFeedback(
+        assessment="REVISION_NEEDED",
+        revision_required=True,
+        issues=[
+            JudgeIssue(
+                issue_type="MISSING_EVIDENCE",
+                explanation="Need revenue",
+                required_evidence=["b02.net_revenue"],
+                suggested_action="REQUEST_ADDITIONAL_EVIDENCE",
+            )
+        ],
+    )
+    grounded = ground_feedback(feedback.model_copy(deep=True), inventory)
+    assert grounded.issues[0].issue_type == "EVIDENCE_NOT_USED"
+    assert grounded.issues[0].suggested_action == "REVISE_ANALYSIS"
+    missing = feedback.model_copy(deep=True)
+    missing.issues[0].required_evidence = ["b03.operating_cash_flow"]
+    assert ground_feedback(missing, inventory).issues[0].evidence_state == "NOT_RETRIEVED"
+    m5 = Mock()
+    m5.run.side_effect = outputs
+    monkeypatch.setattr(module, "to_verification_input", lambda _: None)
+    monkeypatch.setattr(
+        module,
+        "VerificationRuntime",
+        lambda *a, **kw: SimpleNamespace(
+            verify=lambda *a, **kw: [], provider_metadata=[], stage_latency_ms={}
+        ),
+    )
+    monkeypatch.setattr(AdaptiveJudge, "assess", lambda *a: feedback.model_copy(deep=True))
+    controller = AdaptiveFinancialController(m5, None, None, None)
+    controller.run("q", PlannerContext(mode="auto"))
+    assert m5.run.call_count == 2
+    assert controller.rounds[-1]["stop_reason"] == "retrieved_evidence_not_used_after_revision"
+
+
+def test_invalid_analysis_does_not_erase_numeric_claim_or_inflate_replan_context():
+    from vietnamese_financial_multi_agent.agents import ProfitabilitySpecialist
+
+    from .test_adaptive_router import inputs
+
+    _, supervisor = inputs("Doanh thu TEST 2030")
+    payload = dict(
+        claims=[dict(evidence_id="E001", kind="fact", meaning="fact_value", period="2030")],
+        missing_information=[],
+        analyses=[dict(statement="Bounded claim", evidence_ids=["E001"], limitations=["flag"] * 9)],
+    )
+    specialist = ProfitabilitySpecialist(gateway_for(payload, []))
+    result = specialist.analyze(question="Doanh thu TEST 2030", supervisor_result=supervisor)
+    assert result.status == "partial" and len(result.candidates) == 1
+    assert result.candidates[0].kind == "fact"
+    assert any("invalid_analysis_schema" in t.reasons for t in result.trace)
+    context = PlannerContext(
+        mode="auto",
+        feedback={"issues": []},
+        previous_proposal=PlannerProposal(intent="direct_fact"),
+        reusable_results=[
+            dict(
+                evidence_inventory=[
+                    dict(indicator="b02.net_revenue", value="10", native_status="M6_ACCEPT")
+                ]
+            )
+        ],
+    )
+    prompt = planner()._prompt(context)
+    import json
+
+    assert len(json.dumps(prompt, ensure_ascii=False)) < 16000
+    assert "approved_formula_candidates" not in prompt
+
+
 def test_judge_pass_cannot_promote_native_m6_rejection(monkeypatch):
     import vietnamese_financial_multi_agent.agents.adaptive_controller as module
 

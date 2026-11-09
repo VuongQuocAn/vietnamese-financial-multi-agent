@@ -4,7 +4,7 @@ import json
 from time import perf_counter
 
 from ..verification.adapter import to_verification_input
-from ..verification.adaptive_judge import AdaptiveJudge
+from ..verification.adaptive_judge import AdaptiveJudge, evidence_inventory, ground_feedback
 from ..verification.runtime import VerificationRuntime
 
 
@@ -20,7 +20,7 @@ class AdaptiveFinancialController:
         self.stage_latency_ms = {}
 
     def run(self, question, context):
-        seen, accepted = set(), {}
+        seen, accepted, seen_issues = set(), {}, set()
         histories, output, last_usable = [], None, None
         round_started = perf_counter()
         for revision in range(3):
@@ -119,7 +119,12 @@ class AdaptiveFinancialController:
             for name, latency in runtime.stage_latency_ms.items():
                 self.stage_latency_ms[name] = self.stage_latency_ms.get(name, 0) + latency
             judge = AdaptiveJudge(self.gateway, self.model)
-            feedback = judge.assess(question, output, histories)
+            review_histories = dict(accepted)
+            review_histories.update({h.outcome.parent_candidate_id: h for h in histories})
+            review_histories = list(review_histories.values())
+            inventory = evidence_inventory(output, review_histories)
+            feedback = ground_feedback(judge.assess(question, output, review_histories), inventory)
+            event["evidence_inventory"] = inventory
             event["judge"] = feedback.model_dump(mode="json")
             event["judge_latency_ms"] = judge.latency_ms
             event["m6_decisions"] = {
@@ -139,6 +144,20 @@ class AdaptiveFinancialController:
             if not feedback.revision_required:
                 event["stop_reason"] = feedback.assessment
                 break
+            issue_keys = {
+                (tuple(sorted(i.required_evidence)), i.evidence_state)
+                for i in feedback.issues
+                if i.required_evidence
+            }
+            if (
+                revision
+                and issue_keys
+                and issue_keys <= seen_issues
+                and all(state == "RETRIEVED_NOT_USED" for _, state in issue_keys)
+            ):
+                event["stop_reason"] = "retrieved_evidence_not_used_after_revision"
+                break
+            seen_issues.update(issue_keys)
             if revision == 2 or getattr(self.gateway, "exhausted", False):
                 event["stop_reason"] = "revision_or_request_budget_exhausted"
                 break
@@ -151,11 +170,14 @@ class AdaptiveFinancialController:
                     feedback=feedback.model_dump(mode="json"),
                     previous_proposal=proposal,
                     reusable_results=[
+                        dict(evidence_inventory=inventory, verified_candidates=list(accepted))
+                    ]
+                    + [
                         dict(
                             role=e.role,
                             result=dict(
                                 status=e.result.status,
-                                candidates=[
+                                analyses=[
                                     dict(
                                         candidate_id=c.candidate_id,
                                         kind=c.kind,
@@ -163,23 +185,16 @@ class AdaptiveFinancialController:
                                         evidence_ids=c.supporting_evidence_ids,
                                     )
                                     for c in e.result.candidates
+                                    if c.kind == "supported_interpretation"
                                 ],
-                                evidence=[
-                                    dict(
-                                        evidence_id=s.evidence_id,
-                                        indicator=s.canonical_item_id,
-                                        period=s.period,
-                                        value=s.value,
-                                        unit=s.unit,
-                                        scale=s.scale,
-                                        reference=s.reference.model_dump(mode="json"),
-                                    )
-                                    for s in e.result.supporting_evidence
+                                evidence_indicators=[
+                                    s.canonical_item_id for s in e.result.supporting_evidence
                                 ],
                                 missing_evidence=e.result.missing_evidence,
+                                generation_issues=[
+                                    t.reasons for t in e.result.trace if t.outcome == "excluded"
+                                ],
                             ),
-                            m6_decisions=event["m6_decisions"],
-                            verified_candidates=list(accepted),
                         )
                         for e in output.specialist_executions
                         if e.result

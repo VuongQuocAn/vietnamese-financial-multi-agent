@@ -1,7 +1,7 @@
 # FIX-02 — Adaptive LLM Agents và bounded Judge feedback
 
 Ngày09/11/2026; baseline `20694b2`. **REVIEW, chưa đủ điều kiện DONE.**
-Implementation [`b7eb2bf838c6c194cb7a55910a4937bfc043e731`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b7eb2bf838c6c194cb7a55910a4937bfc043e731) đã push main, SHA đã xác minh.
+Implementation ban đầu [`b7eb2bf838c6c194cb7a55910a4937bfc043e731`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b7eb2bf838c6c194cb7a55910a4937bfc043e731) đã push main, SHA đã xác minh.
 [CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
 completed/SUCCESS đúng implementation SHA:27Python/9Web PASS, lint/format/planning/
 typecheck/build đạt; full regression SKIPPED. Checkpoint sau chỉ docs, không gán CI
@@ -210,3 +210,33 @@ thức chưa duyệt. Các hạn chế source/quality cũ và PDF quarantine cò
 
 Next action: Tech Lead review FIX-02 và quyết định nghiệm thu phần đã có bằng
 chứng hoặc giao phạm vi kiểm chứng bổ sung; không tự chuyển DONE/Web/M8.
+
+## Hoàn thiện REVIEW — 09/11/2026
+
+Owner yêu cầu giải quyết ba P1 trong cùng task và một lượt live Q21→F08,
+Q01/Q11/Q08 sau khi code ổn định. Status vẫn REVIEW.
+
+Đối chiếu trace cũ xác định CFO/PAT **đã được tools truy xuất**. Vòng đầu chỉ giao
+PAT cho Profitability và CFO cho Cash Flow. Vòng sửa đã giao thêm PAT cho Cash
+Flow, nhưng một analysis có14limitations vượt contract tối đa8 làm toàn bộ
+SpecialistResult failed, kể cả các numeric claims đúng. Judge chỉ thấy candidates
+còn lại nên lại gọi đó là thiếu CFO. Đây là lỗi sử dụng/truyền evidence, không
+phải bằng chứng PDF thiếu số liệu CFO.
+
+Sửa đổi tiếp theo: inventory từ Supervisor độc lập với Specialist/claims; Judge
+nhận cả facts đã truy xuất, assigned_roles và native M6 status. Feedback được đối
+chiếu inventory để phân biệt NOT_RETRIEVED/RETRIEVED_NOT_USED/VALIDATION_BLOCKED/
+MIXED; không tự nâng claim ACCEPT. Evidence đã có thì REVISE_ANALYSIS thay vì
+REQUEST_ADDITIONAL_EVIDENCE cho cùng nguồn. Lặp cùng yêu cầu sau revision thì dừng
+với retrieved_evidence_not_used_after_revision, không thêm vòng truy xuất vô ích.
+Numeric claims hợp lệ được giữ khi một analysis lỗi schema; raw output/error trace
+vẫn lưu nguyên. Replay offline output cũ đã giữ2facts, loại analysis sai,0provider calls.
+
+Replan prompt riêng chỉ nhận schema/IDs/boundaries và compact state: inventory,
+analyses, generation issues, previous proposal, feedback. Không lặp formula policy
+provenance, citations hoặc full SpecialistResult; prior-agent context cũng chỉ giữ
+candidate summaries. Runtime của lượt xác nhận được xuất từ commit, có SHA và
+hash manifest, không import pending GEN-01a từ working tree.
+
+Kết quả lượt xác nhận được bổ sung sau khi chạy; không dùng mocked replay để gọi
+là Gemini live và không bỏ các lỗi của những lượt trước.

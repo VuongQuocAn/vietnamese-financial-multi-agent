@@ -1,5 +1,6 @@
 """Semantic synthesis of existing M6 assessments; deterministic Judge remains release gate."""
 
+import hashlib
 import json
 from time import perf_counter
 from typing import Literal
@@ -26,12 +27,16 @@ class JudgeIssue(FinancialModel):
         "CONTRADICTION",
         "INCOMPLETE_COVERAGE",
         "SOURCE_QUALITY",
+        "EVIDENCE_NOT_USED",
     ]
     explanation: str = Field(min_length=1, max_length=1500)
     required_evidence: list[str] = Field(default_factory=list, max_length=16)
     suggested_action: Literal[
         "REQUEST_ADDITIONAL_EVIDENCE", "REVISE_ANALYSIS", "DROP_CLAIM", "STOP"
     ]
+    evidence_state: (
+        Literal["NOT_RETRIEVED", "RETRIEVED_NOT_USED", "VALIDATION_BLOCKED", "MIXED"] | None
+    ) = None
 
 
 class JudgeFeedback(FinancialModel):
@@ -39,6 +44,77 @@ class JudgeFeedback(FinancialModel):
     issues: list[JudgeIssue] = Field(default_factory=list, max_length=16)
     revision_required: bool = False
     explanation: str = ""
+
+
+def evidence_inventory(output, histories):
+    """Tool retrieval is independent of whether a Specialist emitted valid claims."""
+    supervisor = getattr(output, "supervisor_result", None)
+    if supervisor is None:
+        return []
+    records = [h.outcome.final for h in histories]
+    routing = getattr(output, "routing_decision", None)
+    rows = {}
+    for match in supervisor.evidence_bundle.facts:
+        fact = match.record
+        key = hashlib.sha256(match.reference.model_dump_json().encode()).hexdigest()[:16]
+        supported = [
+            r
+            for r in records
+            if any(e.reference == match.reference for e in r.original_claim.supporting_evidence)
+        ]
+        native = (
+            "M6_ACCEPT"
+            if any(r.decision == "ACCEPT" and r.original_claim.kind == "fact" for r in supported)
+            else "RETRIEVED_PENDING_M6"
+        )
+        if native != "M6_ACCEPT" and any(
+            r.validation and any(c.status == "fail" for c in r.validation.checks) for r in supported
+        ):
+            native = "VALIDATION_BLOCKED"
+        rows[key] = dict(
+            evidence_key=key,
+            indicator=fact.canonical_item_id,
+            period=fact.context.period,
+            value=str(fact.value.normalized_value),
+            unit=fact.value.unit,
+            scale=str(fact.context.scale),
+            native_status=native,
+            assigned_roles=[
+                r.role
+                for r in routing.routes
+                if r.execution_eligible and fact.canonical_item_id in r.assigned_items
+            ]
+            if routing
+            else [],
+            used_by_claim_ids=[r.candidate_id for r in supported],
+        )
+    return list(rows.values())
+
+
+def ground_feedback(feedback, inventory):
+    """Never turn retrieved evidence into fictitious missing-source requests."""
+    for issue in feedback.issues:
+        if not issue.required_evidence:
+            continue
+        rows = [r for r in inventory if r["indicator"] in issue.required_evidence]
+        present = {r["indicator"] for r in rows}
+        if not present:
+            issue.evidence_state = "NOT_RETRIEVED"
+        elif present != set(issue.required_evidence):
+            issue.evidence_state = "MIXED"
+        elif any(r["native_status"] == "VALIDATION_BLOCKED" for r in rows):
+            issue.evidence_state = "VALIDATION_BLOCKED"
+        else:
+            issue.evidence_state = "RETRIEVED_NOT_USED"
+            if issue.issue_type == "MISSING_EVIDENCE":
+                issue.issue_type = "EVIDENCE_NOT_USED"
+                issue.explanation = (
+                    "Tool inventory xác nhận evidence đã được truy xuất; cần sửa assignment/analysis, không phải tìm lại cùng nguồn. Judge: "
+                    + issue.explanation[:1000]
+                )
+            if issue.suggested_action == "REQUEST_ADDITIONAL_EVIDENCE":
+                issue.suggested_action = "REVISE_ANALYSIS"
+    return feedback
 
 
 class AdaptiveJudge:
@@ -53,6 +129,7 @@ class AdaptiveJudge:
             # A checked direct fact/calculation needs no second semantic review.
             return JudgeFeedback(assessment="PASS", explanation="tool_only_deterministic_M6_gate")
         records = [h.outcome.final for h in histories]
+        inventory = evidence_inventory(output, histories)
         payload = dict(
             instruction=(
                 "Bạn là Judge tổng hợp cho yêu cầu tài chính. Evidence Critic và Logic Critic đã "
@@ -65,10 +142,17 @@ class AdaptiveJudge:
                 "INSUFFICIENT_EVIDENCE/REJECT. Không yêu cầu ratio chưa approved. "
                 "claim_id phải thuộc candidates hoặc null cho thiếu coverage toàn câu hỏi. "
                 "Không xem OCR quotation tự khớp là chứng minh PDF đúng. Xuất duy nhất JSON theo schema."
+                " Tool evidence_inventory là toàn bộ evidence đã truy xuất, kể cả khi Specialist lỗi schema "
+                "hoặc không tạo claim. Không kết luận thiếu CFO/PAT chỉ vì candidate không có nó. "
+                "Nếu evidence đã có, phân biệt chưa giao/chưa dùng/validation blocked; yêu cầu sửa assignment "
+                "hoặc bỏ claim sai phạm vi thay vì truy xuất lại cùng nguồn. Không yêu cầu Specialist ngoài "
+                "capability phải nhận evidence đó. Có thể PASS câu trả lời có giới hạn nếu đã mô tả đúng "
+                "quan hệ PAT/CFO và thừa nhận chưa đủ kết luận toàn diện chất lượng lợi nhuận."
             ),
             schema=JudgeFeedback.model_json_schema(),
             question=question,
             planner=proposal.model_dump(mode="json") if proposal else None,
+            evidence_inventory=inventory,
             candidates=[
                 dict(
                     claim_id=r.candidate_id,
@@ -141,7 +225,7 @@ class AdaptiveJudge:
                 raise ValueError("judge_revision_mismatch")
             if feedback.assessment == "REVISION_NEEDED" and not feedback.issues:
                 raise ValueError("judge_feedback_required")
-            return feedback
+            return ground_feedback(feedback, inventory)
         except Exception:
             return JudgeFeedback(assessment="JUDGE_ERROR", explanation="semantic_judge_failed")
         finally:

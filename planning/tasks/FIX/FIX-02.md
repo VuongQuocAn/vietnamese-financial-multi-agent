@@ -84,3 +84,13 @@ Local78compatibility/47focused/28CI-smoke và9adaptive cuối PASS, có overlap.
 ## Handoff Notes
 
 Status REVIEW. Next action: Tech Lead review FIX-02 cùng limitations, không tự DONE.
+
+## Hoàn thiện REVIEW theo Owner — 09/11/2026
+
+Giữ cùng FIX-02, không mở task mới/không chạy lại40câu. Kiểm tra missing CFO thật
+hay evidence đã có nhưng chưa được giao/dùng; rút gọn context replanning và chặn
+yêu cầu lặp không tiến triển. Sau khi code ổn định, chạy đúng một lượt live:
+Q21→F08, Q01/Q11 tool-only sau period fix, Q08 quotation giữ từ “khó”.
+Runtime phải import source từ implementation commit, giữ input/reference bất biến;
+không thay code runtime sau lượt live rồi dùng kết quả đó chứng nhận code mới.
+Kết quả cải thiện hoặc dừng có lý do đúng phải có trace; CI không thay live acceptance.

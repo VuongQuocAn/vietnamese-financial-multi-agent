@@ -345,7 +345,14 @@ class FinancialMultiAgentOrchestrator:
                     )
                     if assignment:
                         dependencies = [
-                            e.result.model_dump(mode="json", exclude={"llm", "trace", "latency_ms"})
+                            dict(
+                                role=e.role,
+                                status=e.result.status,
+                                candidates=[
+                                    dict(kind=c.kind, content=c.content)
+                                    for c in e.result.candidates
+                                ],
+                            )
                             for e in output.specialist_executions
                             if e.role in assignment.depends_on and e.result
                         ]

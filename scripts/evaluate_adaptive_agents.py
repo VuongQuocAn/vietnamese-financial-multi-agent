@@ -6,21 +6,27 @@ Every execution is persisted, including failures; no automatic output retries.
 
 import argparse
 import json
+import subprocess
+import sys
 from pathlib import Path
 from time import perf_counter
 
-from evaluate_real_pdf import build, digest, save
+from evaluate_real_pdf import build, digest, runtime, save
 from evaluate_real_pdf import protected as protected_inputs
-from vietnamese_financial_multi_agent.api.conversations import ConversationService
-from vietnamese_financial_multi_agent.api.qa_gateway import create_qa_adapter
-from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
-from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=Path("artifacts/evidence/FIX-02/live"))
     parser.add_argument("--mode", choices=["auto", "deterministic"], default="auto")
+    parser.add_argument(
+        "--acceptance", action="store_true", help="One targeted Q21/F08/Q01/Q11/Q08 pass"
+    )
+    parser.add_argument(
+        "--committed-runtime",
+        action="store_true",
+        help="Import exact committed source, preserving unrelated local work",
+    )
     parser.add_argument(
         "--case-id",
         action="append",
@@ -30,6 +36,14 @@ def main():
     if args.output.exists():
         raise ValueError("fresh_output_directory_required")
     root = Path.cwd()
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    if args.committed_runtime:
+        runtime(args.output, head)
+    from vietnamese_financial_multi_agent.api.conversations import ConversationService
+    from vietnamese_financial_multi_agent.api.qa_gateway import create_qa_adapter
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+
     inputs = root / "artifacts/evidence/E2E-02"
     questions = {q["id"]: q for q in json.loads((inputs / "questions.json").read_bytes())}
     cases = [dict(questions[key]) for key in ("Q01", "Q11", "Q21", "Q08", "Q22", "Q33", "Q34")]
@@ -40,6 +54,9 @@ def main():
             case["conversation"] = "source"
     if args.case_id:
         cases = [case for case in cases if case["id"] in args.case_id]
+    if args.acceptance:
+        selected = {case["id"]: case for case in cases}
+        cases = [selected[key] for key in ("Q21", "F08", "Q01", "Q11", "Q08")]
     protected = protected_inputs(root)
     protected = {name: value for name, value in protected.items() if not name.startswith("src/")}
     save(
@@ -47,10 +64,16 @@ def main():
         dict(
             cases=cases,
             mode=args.mode,
+            implementation_sha=head,
+            runtime_source="git_archive" if args.committed_runtime else "working_tree",
             references_sha256=digest(inputs / "reference.json"),
             protected=protected,
             runtime_files={
-                p.relative_to(root).as_posix(): digest(p) for p in (root / "src").rglob("*.py")
+                p.relative_to(source_root.parent).as_posix(): digest(p)
+                for source_root in [
+                    args.output / "runtime/src" if args.committed_runtime else root / "src"
+                ]
+                for p in source_root.rglob("*.py")
             },
         ),
     )
@@ -122,10 +145,29 @@ def main():
     save(
         args.output / "integrity.json",
         dict(
+            imported_runtime_verified=all(
+                Path(module.__file__)
+                .resolve()
+                .is_relative_to((args.output / "runtime/src").resolve())
+                for name, module in sys.modules.items()
+                if args.committed_runtime
+                and name.startswith("vietnamese_financial_multi_agent")
+                and getattr(module, "__file__", None)
+            )
+            if args.committed_runtime
+            else None,
             protected_count=len(protected),
             protected_unchanged=all(digest(root / p) == h for p, h in protected.items()),
             references_unchanged=digest(inputs / "reference.json")
             == json.loads((args.output / "freeze.json").read_bytes())["references_sha256"],
+            implementation_sha=head,
+            runtime_unchanged=all(
+                digest((args.output / "runtime" if args.committed_runtime else root) / name)
+                == value
+                for name, value in json.loads((args.output / "freeze.json").read_bytes())[
+                    "runtime_files"
+                ].items()
+            ),
         ),
     )
 

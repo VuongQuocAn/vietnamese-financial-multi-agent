@@ -393,6 +393,12 @@ def with_assignment(prompt, upstream):
                 "analyses.statement chỉ là diễn giải KHÔNG chứa chữ số hoặc tỷ lệ; số và kỳ đã có "
                 "trong numeric claims, dùng 'trong kỳ này' khi cần. "
                 "Ưu tiên một analysis ngắn trực tiếp đáp ứng task; không lặp các giới hạn thành nhiều claims. "
+                "limitations tối đa 8 ý; backend đã giữ source caveats nên không chép toàn bộ flags vào đây. "
+                "statement chỉ mô tả quan hệ có căn cứ giữa những facts được giao. Điều chưa thể kết luận "
+                "hoặc nguyên nhân chưa biết ghi riêng trong limitations, không ghép thành claim thiếu nguồn. "
+                "Không biến việc agent này chưa được giao một chỉ tiêu thành claim rằng toàn hệ thống thiếu "
+                "chỉ tiêu đó. Nếu task vượt phạm vi evidence được giao, ghi giới hạn trong missing_information; "
+                "giữ facts hợp lệ, không tạo analysis kết luận về toàn câu hỏi từ chỉ một chỉ tiêu. "
                 "Nhận định là candidate_pending_M6, không tự phê duyệt. Thiếu evidence nêu missing_information. "
                 "Không dùng prior agent claim làm nguồn thay cho evidence gốc."
             ),
@@ -532,48 +538,63 @@ def generate_candidates(
     if not isinstance(analyses, list) or len(analyses) > 8:
         raise ValueError("invalid_analysis_envelope")
     for raw in analyses:
-        analysis = AnalysisProposal.model_validate(raw)
-        if set(analysis.evidence_ids) - evidence_by_id.keys():
-            raise ValueError("analysis_unknown_evidence")
-        sources = [evidence_by_id[key] for key in dict.fromkeys(analysis.evidence_ids)]
-        if re.search(r"\d|%", analysis.statement) or any(s.calculation for s in sources):
+        try:
+            analysis = AnalysisProposal.model_validate(raw)
+            if set(analysis.evidence_ids) - evidence_by_id.keys():
+                raise ValueError("analysis_unknown_evidence")
+            sources = [evidence_by_id[key] for key in dict.fromkeys(analysis.evidence_ids)]
+            if re.search(r"\d|%", analysis.statement) or any(s.calculation for s in sources):
+                result.trace.append(
+                    SpecialistTrace(
+                        stage="grounding",
+                        outcome="excluded",
+                        reasons=["analysis_requires_number_free_fact_premises"],
+                    )
+                )
+                continue
+            owner = sources[0]
+            if any(
+                (s.company_id, s.document_id, s.snapshot_id, s.period)
+                != (owner.company_id, owner.document_id, owner.snapshot_id, owner.period)
+                for s in sources
+            ):
+                raise ValueError("analysis_context_mismatch")
+            result.candidates.append(
+                SpecialistCandidate(
+                    candidate_id=prefix + "-analysis-" + uuid4().hex,
+                    kind="supported_interpretation",
+                    content=analysis.statement,
+                    company_id=owner.company_id,
+                    document_id=owner.document_id,
+                    snapshot_id=owner.snapshot_id,
+                    period=owner.period,
+                    fact_references=_unique([s.reference for s in sources if not s.calculation]),
+                    metric_ids=[s.calculation.metric_id for s in sources if s.calculation],
+                    supporting_evidence_ids=analysis.evidence_ids,
+                    analysis_premises=[
+                        f"{s.label} kỳ {s.period} là {_number(s.value)} {s.unit}"
+                        + (f" (hệ số đơn vị {s.scale})" if s.scale != "1" else "")
+                        + "."
+                        for s in sources
+                    ],
+                    citations=_unique([c for s in sources for c in s.citations]),
+                    caveats=sorted(
+                        set(analysis.limitations + [c for s in sources for c in s.caveats])
+                    ),
+                )
+            )
+        except (ValidationError, ValueError) as error:
             result.trace.append(
                 SpecialistTrace(
                     stage="grounding",
                     outcome="excluded",
-                    reasons=["analysis_requires_number_free_fact_premises"],
+                    reasons=[
+                        "invalid_analysis_schema"
+                        if isinstance(error, ValidationError)
+                        else str(error)
+                    ],
                 )
             )
-            continue
-        owner = sources[0]
-        if any(
-            (s.company_id, s.document_id, s.snapshot_id, s.period)
-            != (owner.company_id, owner.document_id, owner.snapshot_id, owner.period)
-            for s in sources
-        ):
-            raise ValueError("analysis_context_mismatch")
-        result.candidates.append(
-            SpecialistCandidate(
-                candidate_id=prefix + "-analysis-" + uuid4().hex,
-                kind="supported_interpretation",
-                content=analysis.statement,
-                company_id=owner.company_id,
-                document_id=owner.document_id,
-                snapshot_id=owner.snapshot_id,
-                period=owner.period,
-                fact_references=_unique([s.reference for s in sources if not s.calculation]),
-                metric_ids=[s.calculation.metric_id for s in sources if s.calculation],
-                supporting_evidence_ids=analysis.evidence_ids,
-                analysis_premises=[
-                    f"{s.label} kỳ {s.period} là {_number(s.value)} {s.unit}"
-                    + (f" (hệ số đơn vị {s.scale})" if s.scale != "1" else "")
-                    + "."
-                    for s in sources
-                ],
-                citations=_unique([c for s in sources for c in s.citations]),
-                caveats=sorted(set(analysis.limitations + [c for s in sources for c in s.caveats])),
-            )
-        )
     seen = set()
     for index, raw in enumerate(payload["claims"]):
         try:
