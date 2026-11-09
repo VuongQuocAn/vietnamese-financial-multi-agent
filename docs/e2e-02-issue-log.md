@@ -250,3 +250,15 @@ tiếp theo từ code và traces; **không tự đóng issue**. Chi tiết và g
 | I007 | Trace baseline có0provider nhưng M5/M6 lớn; constructors deepcopy catalog và proof/context serialization lặp. Live replan còn gửi context quá lớn. | Giữ stage timings; live Q21 bổ sung114,672s/13calls/133034known tokens. Đã rút gọn context sau lượt đo, chưa live đo lại. OPEN, không gọi fast failure là tối ưu thành công. |
 | I008 | Composer/citation renderer giữ từng protected source reference và đưa nhiều caveats/reason codes vào prose. | OPEN; chưa thay presentation hoặc gộp citations mất identity. |
 | I009 | Resolver biến câu hỏi vị trí thành truy vấn thuyết minh mới, mất exact source topic của lượt trước. | Auto exact verified-source lookup replay câu gốc với binding hiện tại. Live Q33→Q34:Q34 completed_with_caveats,0calls,PDF21,165ms; OPEN chờ review, chưa khẳng định mọi follow-up đã đạt. |
+
+### Bổ sung hoàn thiện FIX-02
+
+Source321f09e sửa inventory độc lập với claims, schema isolation và liên kết
+numeric premises→semantic proof; không nới M6/Ledger. Hai lượt5ca được cho phép
+đã chạy trên committed archives. I001 tiếp tục có quotation đúng/“khó”/PDF16.
+I006 còn PARTIAL: Judge PASS nhưng M6/M7 không chấp nhận đủ analyses; chưa live
+revision thành công. I007 còn OPEN: Q21cuối25626known tokens/85,602s,không có
+replan call để đo compaction; local processing vẫn lớn. F08dependency đã đi qua,
+nhưng Judge có structured_output_invalid; Q11calculator/M6 ACCEPT nhưng answer
+obligations dư operands làm partial. Q01cuốihttp503. Không đóng issue hoặc gọi
+hai lượt này thành final5/5PASS; xem [báo cáo](fix-02-adaptive-llm-agents.md).

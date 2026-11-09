@@ -238,5 +238,78 @@ provenance, citations hoặc full SpecialistResult; prior-agent context cũng ch
 candidate summaries. Runtime của lượt xác nhận được xuất từ commit, có SHA và
 hash manifest, không import pending GEN-01a từ working tree.
 
-Kết quả lượt xác nhận được bổ sung sau khi chạy; không dùng mocked replay để gọi
-là Gemini live và không bỏ các lỗi của những lượt trước.
+### Hai lượt xác nhận được cho phép, không retry
+
+Lượt đã thống nhất đầu tiên chạy source commit `c6add554e7a6445fb06f1691f0c9fda140614549`,
+archive riêng, thứ tự Q21→F08→Q01→Q11→Q08,17calls/61071known tokens:
+
+| Case | Kết quả | Giây | Actual calls | Known tokens |
+| --- | --- | ---: | ---: | ---: |
+| Q21 | PARTIAL; Judge PASS vòng0,không provider error | 87,343 | 7 | 29221 |
+| F08 | PARTIAL; không dependency/context error | 88,404 | 6 | 24732 |
+| Q01 | Completed_with_caveats,tool-only | 80,215 | 1 | 5235 |
+| Q11 | Provider_unavailable,http_503 trước planning | 19,067 | 1 | unknown |
+| Q08 | Completed_with_caveats,giữ “khó”,PDF16 | 9,135 | 2 | 1883 |
+
+Lượt này lộ chặn proof M6: analyses không chứa chữ số có numeric premises PASS,
+nhưng semantic support finding chưa được nối với check_references. Logic Critic
+trả supported_numeric_premise_missing. Tôi đã chốt lượt live quá sớm trước khi
+kiểm tra đủ đường proof này; không dùng kết quả đó chứng nhận bản sửa sau nó.
+
+Bản sửa [`321f09e91cd4e32bcfcb0584d84f70d5c31e13e4`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/321f09e91cd4e32bcfcb0584d84f70d5c31e13e4)
+chỉ nối semantic finding **supported** với check IDs do backend lấy từ numeric
+validations PASS, đúng references đã được model chỉ ra và backend hydrate.
+Không lấy check IDs hoặc approval từ LLM. Không đổi semantic verdict thành supported;
+Logic Critic, native Judge và Ledger vẫn phải chấp nhận. Test synthetic có semantic
+support→Logic consistent→native ACCEPT→Ledger stored; semantic unsupported vẫn bị
+Ledger rejected.61focused tests PASS, không coi đó là live financial accuracy.
+Planner còn được nhắc: depends_on không tự giao evidence; task đối chiếu PAT/CFO
+phải giao cả hai indicators cho Specialist phù hợp.
+
+Owner xác nhận cho phép **thêm đúng một lượt5ca** sau bản sửa, không retry.
+Lượt bổ sung chạy đúng `321f09e`,không sửa runtime sau run:
+
+| Case | Kết quả trên source cuối | Giây | Calls | Known tokens |
+| --- | --- | ---: | ---: | ---: |
+| Q21 | PARTIAL; PAT/CFO đều M6_ACCEPT trong inventory,Judge PASS vòng0 | 85,602 | 6 | 25626 |
+| F08 | PARTIAL; routing/dependencies chạy được; Judge structured_output_invalid→JUDGE_ERROR | 86,263 | 6 | 28747 |
+| Q01 | Provider_unavailable,http_503 tại Planner; không retry | 24,860 | 1 | unknown |
+| Q11 | Calculator computed,1approved_metric M6 ACCEPT,0Specialist calls; output PARTIAL | 100,825 | 1 | 5794 |
+| Q08 | Completed_with_caveats; quotation có “người nợ khó có khả năng thanh toán”,PDF16 | 13,361 | 2 | 1874 |
+
+Q11 PARTIAL vì Planner có explicit operand retrieval operations và answer obligations
+đòi gross_profit/net_revenue như hai answers độc lập, trong khi M5 chỉ sinh metric
+candidate. Đây là coverage/obligation mismatch, không phải lỗi Decimal, formula,
+period hoặc calculator; không gọi toàn bộ case PASS. Q21/F08 còn thiếu accepted
+interpretation cho PAT; M6 chặn các analyses có semantic support chưa đủ hoặc
+financial checks không đạt. Judge PASS không làm M7 vượt các blockers này.
+
+Lượt bổ sung16actual calls/62041known tokens,1unknown-token call. Không chọn kết
+quả tốt nhất của hai phiên bản để ghép thành “5/5 PASS”. Raw responses/errors,
+traces/ledgers nằm riêng tại artifacts/evidence/FIX-02/review-completion/live/
+và proof-binding-live/. Cả hai:414protected inputs/reference unchanged,
+runtime_unchanged=true, imported_runtime_verified=true; toàn bộ package modules
+được import từ archive đúng SHA, không dùng code GEN-01a pending.
+
+### Đối chiếu ba P1 còn lại
+
+1. **Evidence đã có:** root cause được phân biệt và sửa ở inventory/assignment/
+   schema/proof bridge. Hai lượt mới không yêu cầu lại CFO/PAT đã có. Tuy nhiên
+   Q21 đều Judge PASS ở vòng0, không kích hoạt replanning; **chưa có bằng chứng
+   live mới về một revision thành công**. Repeated-known-evidence stop được kiểm
+   bằng mock, không ghi thành live PASS. Judge coverage còn lệch với M7 PARTIAL.
+2. **Context/cost:** Q21 cuối25626known tokens so với133034 trước,giảm80,7%;
+   calls13→6,latency114,672→85,602s. Hai workflows có số revisions khác nhau,
+   nên không quy toàn bộ mức giảm cho compaction. Planner cuối1call/5797tokens;
+   không có replan call để đo lại prompt compaction live. Latency local vẫn lớn:
+   Q21 provider wall9,831s nhưng end-to-end85,602s; Q01/Q11 scalar/metric còn chậm.
+   Không tuyên bố P1 latency đã giải quyết.
+3. **Code cuối:** có live5attempts trên exact source321f09e, cả financial,
+   follow-up, calculator và corrected quotation. Q01 của lượt cuối bị503,
+   F08 Judge output invalid và các PARTIAL trên vẫn còn; **chưa có một lượt
+   final-runtime5/5 đạt yêu cầu**. Không sửa runtime tiếp rồi gán số đo cũ cho nó.
+
+[CI42606529703](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42606529703)
+completed/SUCCESS đúng321f09e:31Python/9Web PASS, full regression SKIPPED.
+CI của c6add55 cũng SUCCESS29Python/9Web. Đây là engineering evidence;
+không thay thế các gaps live phía trên. Giữ FIX-02 REVIEW và tất cả issues OPEN.

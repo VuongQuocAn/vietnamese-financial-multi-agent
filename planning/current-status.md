@@ -4,18 +4,20 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**. Owner giao09/11/2026; baseline `20694b2`.
-Implementation `b7eb2bf838c6c194cb7a55910a4937bfc043e731` đã push main, SHA xác minh;
-[CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
-completed/SUCCESS đúng implementation SHA:27Python/9Web PASS, full regression SKIPPED.
+Status: **REVIEW**. Owner yêu cầu hoàn thiện trong cùng task, không chạy lại40câu.
+Implementation `321f09e91cd4e32bcfcb0584d84f70d5c31e13e4` đã push main;
+[CI42606529703](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42606529703)
+SUCCESS đúng SHA31Python/9Web,full regression SKIPPED;61local focused PASS.
 [Spec](tasks/FIX/FIX-02.md), [report](../docs/fix-02-adaptive-llm-agents.md).
-Planner assignments/analyses/Judge feedback, request caps và M6/M7 gates đã nối.
-Live Q21:2feedback/replans,13actual calls/133034known tokens/114,672s;partial,
-revision cuối provider failure. Tools cache; revision1 chỉ Cash Flow gọi lại.
-I001 corrected quotation và I009 source replay có bằng chứng,9issues vẫn OPEN.
-78compatibility/47focused/28CI-smoke và9adaptive cuối PASS (có overlap).
-Chưa Judge PASS sau revision/full live final SHA; giữ pending GEN-01a/Web/CHAT docs.
-Next action: Tech Lead review FIX-02 cùng các giới hạn; không tự DONE/Web/M8.
+Sửa inventory/assignment/schema isolation, compact replanning và numeric proof links;
+không nới native M6/Ledger gates. Hai lượt5ca được Owner cho phép, không retry.
+Runtime cuối source archive321f09e/imports verified,414inputs/reference unchanged.
+Q21partial85,602s/6calls/25626known tokens;PAT/CFO có sẵn,Judge PASS vòng0,
+chưa chứng minh revision thành công; latency còn cao. F08không dependency error
+nhưng Judge invalid output;Q01http503;Q11calculator/M6 ACCEPT nhưng partial vì
+operand answer obligations;Q08quotation giữ “khó”,PDF16. Chưa có final5/5 đạt.
+Giữ pending GEN-01a/Web/CHAT local và9issues OPEN.
+Next action: Tech Lead review các chặn còn lại trong FIX-02; không tự DONE/Web/M8.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 
