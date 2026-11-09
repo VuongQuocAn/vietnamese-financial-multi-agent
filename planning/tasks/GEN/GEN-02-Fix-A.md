@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: GEN
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: GEN-01, QA-01b, EF-01, EXT-01
 - Estimated Complexity: S
@@ -45,10 +45,10 @@ một lần → report/commit/push/CI → REVIEW. Không chạy lại 40 câu GE
 
 ## Acceptance Criteria
 
-- [ ] H03 không internal error; verified metric hoặc explicit capability gap.
-- [ ] H06/H07 selection grounded; H11 giữ requirements; H12/C1 useful partial.
-- [ ] Không unsupported/citation/snapshot leakage; giữ quality/accounting/M6 gates.
-- [ ] Focused actual pipeline và6 fresh expected trước execution; CI đúng SHA.
+- [x] H03 không internal error; verified metric hoặc explicit capability gap.
+- [x] H06/H07 selection grounded; H11 giữ requirements; H12/C1 useful partial.
+- [x] Không unsupported/citation/snapshot leakage; giữ quality/accounting/M6 gates.
+- [x] Focused actual pipeline và6 fresh expected trước execution; CI đúng SHA.
 
 ## Required Tests
 
@@ -57,12 +57,20 @@ Ruff/planning/diff. Không Gemini/OCR hoặc full40 regression.
 
 ## Risks and Blockers
 
-Chờ kết quả targeted actual pipeline; chưa được nghiệm thu DONE.
+Các P1 Fix-A đã đạt targeted behavior. H08/Fix-B ngoài scope; còn giới hạn12selectors
+cùng trang và exact-phrase predicates. CI đúng implementation đã SUCCESS; chờ Tech Lead nghiệm thu.
 
 ## Implementation Evidence
 
-Chưa commit. Vòng1:25 existing document/generalization/fusion tests PASS.
+Implementation `22b8c7c5b1c0a6756c0be2595874f8086ce47d30` đã push main,16 files.
+[CI42542900770](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42542900770)
+completed/SUCCESS;1157 Python/9 Web PASS, full regression manual SKIPPED. Final local122focused +8planning PASS;
+vòng1 có25existing tests (overlap). H03/H06/H07/H11 full; H12/C1 useful partial,
+giữ accounting gate.6fresh/6full,0incorrect/unsupported. Citations37/37focused,
+51/51fresh; A7 ACCEPT1/INVESTIGATE1;17legacy claims replay nguyên file.
+Không Gateway/Gemini/OCR;38inputs/4frozen GEN-02 files và runtime sau lock nguyên hash.
+RCA/traces/summary local trong artifacts; [report](../../../docs/gen-02-fix-a-qa-coverage.md).
 
 ## Handoff Notes
 
-Next action: hoàn tất fixes và focused validation trong giới hạn hai vòng.
+Next action: dừng REVIEW, chờ Tech Lead nghiệm thu.

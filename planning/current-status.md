@@ -1,13 +1,19 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-08 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## GEN-02-Fix-A — QA Coverage & False Abstention Recovery
 
-Status **IN_PROGRESS**, Owner giao09/11/2026; baseline `6f682c3`.
+Status **REVIEW**, Owner giao09/11/2026; baseline `6f682c3`.
 [Spec](tasks/GEN/GEN-02-Fix-A.md). Tối đa hai vòng focused fixes/test; không Gemini/OCR,
 không chạy lại40câu; H03/H06/H07/H11/H12 là regression đã biết. Giữ GEN-01a/Web.
-Next action: hoàn tất fixes và focused validation.
+Implementation `22b8c7c5b1c0a6756c0be2595874f8086ce47d30` đã push main;
+[CI42542900770](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42542900770) completed/SUCCESS;1157 Python/9 Web PASS, full regression manual SKIPPED.
+H03/H06/H07/H11 full; H12/C1 useful partial;6fresh/6full.130local tests PASS
+(122focused +8planning);0incorrect/unsupported,37/37+51/51citations.
+A7 source-quality block giữ nguyên;17legacy replay;38inputs/frozen/runtime nguyên hash.
+[Report](../docs/gen-02-fix-a-qa-coverage.md). Không tune fresh; không bắt đầu Fix-B/M8.
+Next action: dừng REVIEW, chờ Tech Lead nghiệm thu.
 
 ## GEN-02 — Cross-Company End-to-End Generalization & Blind QA Validation
 
