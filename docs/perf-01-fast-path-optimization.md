@@ -1,11 +1,14 @@
 # PERF-01 — Fast Path Optimization
 
-Ngày09/11/2026 (Asia/Bangkok). Baseline `8478c98`; chờ implementation commit/CI.
+Ngày09/11/2026 (Asia/Bangkok). Status **REVIEW**; baseline `8478c98`.
+Implementation `de2d430bb59be9539ede5e772470dba8011483c1` đã push main;
+[CI42565568084](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42565568084)
+SUCCESS đúng SHA, Python3.12 và Web smoke; full regression manual SKIPPED.
 Giữ pending GEN-01a/Web. Không OCR/Gemini, không sửa frozen GEN-02/evidence cũ.
 
-Kết quả có giới hạn: source loading giảm rõ, nhưng **median force-refresh chậm hơn
-14,3% trong mẫu này**; không đạt mục tiêu tăng tốc tổng thể. Không đề nghị coi ledger
-cache là thành công về latency. Chờ Tech Lead đánh giá tradeoff trước nghiệm thu.
+Kết quả có giới hạn: cache-hit median nhanh23,2%, document refresh nhanh23,7%, nhưng
+**median force-refresh toàn nhóm chậm hơn4,5%**. Không đề nghị coi ledger cache là
+thành công về latency. Chờ Tech Lead đánh giá tradeoff trước nghiệm thu.
 
 ## Phạm vi đo
 
@@ -19,11 +22,16 @@ parent/child timings. Catalog initialization không tính vào E2E request; chư
 riêng OS process/import startup. Cùng pending GEN-01a code ở cả hai lượt local;
 CI kiểm tra implementation đã stage, không chứa các pending changes đó.
 
-Lượt baseline đầu bị focused tests chạy đồng thời, nên bị loại khỏi so sánh. Giữ
-nguyên traces/log và số đo trong `baseline.json/discarded_attempt`; đo xác nhận một
-lần bằng source snapshot với hai module gốc lấy từ HEAD, không chạy tests đồng thời.
-Final baseline/after đều tuần tự, cùng wrapper và điều kiện process/cache. Không
-chọn lại câu hỏi, đổi sources/policy hoặc mở vòng tối ưu thứ ba.
+Hai baseline không dùng cho so sánh: lượt đầu trùng focused tests; lượt snapshot kế
+tiếp không tìm đúng default trust-store root. Giữ traces/log và số đo trong
+`baseline.json/discarded_attempts`. Baseline hợp lệ dùng hai module gốc từ `8478c98`,
+không chạy tests đồng thời, cấu hình DOCUMENT_SOURCE_POLICY_ROOT tuyệt đối đến đúng
+store mà after nạp mặc định. `policy-resolution-control.json` xác nhận cùng typed
+policy digest/2reviews/1approval và file hash; không dùng policy rỗng làm baseline.
+Baseline xác nhận được đo lại sau after vì lỗi đo lường; cột trước/sau chỉ hai biến
+thể code. Cùng wrapper, seed, process/cache conditions và effective policy; không chọn
+lại câu hỏi hoặc mở vòng tối ưu thứ ba. Đây là các phép đo lỗi được loại minh bạch,
+không phải thêm vòng tìm tối ưu hoặc lấy lượt nhanh nhất.
 
 ## Hai điểm sửa có giới hạn
 
@@ -57,27 +65,27 @@ Cache không chứa M6 decision mới hoặc M7 answer; request cache hiện h�
 
 | Case | Refresh trước | Refresh sau | Cải thiện | Cache-hit trước | Cache-hit sau | Cải thiện |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| D01 fact | 33,129 | 33,322 | -0,6% | 5,383 | 6,524 | -21,2% |
-| D05 metric | 29,564 | 38,333 | -29,7% | 5,895 | 6,785 | -15,1% |
-| D17 document | 13,466 | 12,565 | 6,7% | 6,871 | 4,864 | 29,2% |
-| D22 hai document requirements | 14,671 | 14,880 | -1,4% | 6,819 | 4,420 | 35,2% |
-| D18 mixed | 90,669 | 78,349 | 13,6% | 46,422 | 37,185 | 19,9% |
-| D23 partial-control | 69,404 | 62,337 | 10,2% | 38,469 | 32,888 | 14,5% |
-| Median sáu cases | 31,346 | 35,828 | **-14,3%** | 6,845 | 6,655 | **2,8%** |
+| D01 fact | 30,814 | 33,322 | -8,1% | 7,427 | 6,524 | 12,2% |
+| D05 metric | 37,723 | 38,333 | -1,6% | 7,160 | 6,785 | 5,2% |
+| D17 document | 16,910 | 12,565 | 25,7% | 8,701 | 4,864 | 44,1% |
+| D22 hai document requirements | 19,080 | 14,880 | 22,0% | 8,626 | 4,420 | 48,8% |
+| D18 mixed | 83,794 | 78,349 | 6,5% | 46,603 | 37,185 | 20,2% |
+| D23 partial-control | 66,598 | 62,337 | 6,4% | 38,253 | 32,888 | 14,0% |
+| Median sáu cases | 34,269 | 35,828 | **-4,5%** | 8,663 | 6,655 | **23,2%** |
 
 | Component / nhóm | Trước | Sau | Cải thiện |
 | --- | ---: | ---: | ---: |
-| Financial refresh median D01/D05 | 31,346 | 35,828 | -14,3% |
-| Document refresh median D17/D22 | 14,068 | 13,722 | 2,5% |
-| Document cache-hit median D17/D22 | 6,845 | 4,642 | 32,2% |
-| Ledger query median / sáu refresh | 4,336 | 4,699 | **-8,4%** |
-| Source list/load median / bốn refresh có document sources | 3,271 | 0,906 | 72,3% |
-| Graph constructor median / D18,D23 refresh (inclusive source load) | 9,447 | 6,492 | 31,3% |
-| Catalog initialization / một process | 14,347 | 8,287 | 42,2% |
+| Financial refresh median D01/D05 | 34,269 | 35,828 | -4,5% |
+| Document refresh median D17/D22 | 17,995 | 13,722 | 23,7% |
+| Document cache-hit median D17/D22 | 8,663 | 4,642 | 46,4% |
+| Ledger query median / sáu refresh | 4,541 | 4,699 | **-3,5%** |
+| Source list/load median / bốn refresh có document sources | 3,653 | 0,906 | 75,2% |
+| Graph constructor median / D18,D23 refresh (inclusive source load) | 9,309 | 6,492 | 30,3% |
+| Catalog initialization / một process | 10,907 | 8,287 | 24,0% |
 
-Ví dụ root-cause baseline: D18 có8ledger queries/13,434s và4source-document loads/
-6,540s; D22 có2source loads/2,434s. Ledger query không nhanh hơn sau thay đổi:
-detached copies/current policy vẫn tốn thời gian. M5 của D05 cũng tăng13,322→17,186s;
+Ví dụ root-cause baseline: D18 có8ledger queries/12,110s và4source-document loads/
+6,921s; D22 có2source loads/3,662s. Ledger query không nhanh hơn sau thay đổi:
+detached copies/current policy vẫn tốn thời gian. M5 của D05 cũng tăng16,653→17,186s;
 catalog initialization chênh lớn dù không phải mục tiêu sửa. Không đủ mẫu để tách
 ảnh hưởng retention/copying, GC và nhiễu máy; không gán mọi chênh lệch cho tối ưu.
 Graph timing giảm một phần do source loader bên trong, không phải bỏ graph validation.
@@ -91,7 +99,10 @@ identical**. Đây là tương đương baseline, không phải independent fina
 Local99focused tests đã PASS:98trong nhóm cuối +1test fixture đã sửa và chạy riêng.
 Hai vòng implementation/test; failures là tests mới truy cập nhầm computed properties
 không có trong wire JSON, không phải nới validation hoặc sửa financial policy.
-Ruff changed files, planning/diff checks PASS. CI chưa xác minh tại bản report này.
+Ruff changed files, planning/diff checks PASS. CI SUCCESS được xác minh bằng initial
+run metadata đúng SHA và `gh run watch --exit-status` exit0; transcript cuối lưu cả
+hai jobs và required steps PASS. Export JSON/log chi tiết sau đó bị GitHub API403
+rate-limit; không suy số lượng CI tests từ local hoặc từ tên step.
 Persisted H08 original/PDF30 claims bị filter ở cả cold/warm reads, old proof replay
 bị reject;17legacy accepted proofs replay/restart exact. Tests còn kiểm tra policy
 change sau warm cache, clean claim không bị ẩn, snapshot/composition/release mismatch,
@@ -113,4 +124,4 @@ M6 và M7 vẫn chạy theo contracts hiện hữu; không redesign hoặc bỏ 
 P2 đề xuất profiling detached copies/catalog retention trước khi quyết định tiếp tục
 ledger optimization; chưa triển khai. Không tối ưu vòng ba để chạy theo target.
 
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW cho Tech Lead.
+Next action: Tech Lead review.

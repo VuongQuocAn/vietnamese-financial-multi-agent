@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: PERF
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: GEN-02, GEN-02-Fix-A, GEN-02-Fix-B
 - Estimated Complexity: S
@@ -48,7 +48,7 @@ Baseline → chọn bottleneck → tối đa hai vòng sửa/test → final pair
 - [x] Tối đa hai bottlenecks có số liệu; báo cả chậm hơn/limitations.
 - [x] Semantics, identities, verification/citations/Firewall không hồi quy.
 - [x] H08/PDF30, cache invalidation, mismatch và17legacy replay đạt.
-- [ ] Focused regression và CI đúng implementation SHA đạt; giữ pending changes.
+- [x] Focused regression và CI đúng implementation SHA đạt; giữ pending changes.
 
 ## Required Tests
 
@@ -60,10 +60,14 @@ Mẫu nhỏ offline không đại diện provider latency hoặc M8 financial ac
 
 ## Implementation Evidence
 
-Chưa commit;99focused PASS,12payloads tương đương,13entries exact;17legacy replay;
-source loading median giảm72,3%, force-refresh median chậm14,3%, cache-hit median
-giảm2,8%. Không đạt mục tiêu tổng thể. [Report](../../../docs/perf-01-fast-path-optimization.md).
+Implementation `de2d430bb59be9539ede5e772470dba8011483c1` đã push main;
+[CI42565568084](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42565568084)
+SUCCESS đúng SHA (Python3.12/Web; manual full regression SKIPPED).99focused PASS,
+12payloads tương đương,13entries exact;17legacy replay/H08/PDF30 blocked.
+Source load giảm75,2%, document refresh giảm23,7%, cache-hit giảm23,2%; refresh toàn
+nhóm chậm4,5%, ledger query chậm3,5%. Hai baseline lỗi được loại minh bạch; final
+policy digest đúng như after. [Report](../../../docs/perf-01-fast-path-optimization.md).
 
 ## Handoff Notes
 
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW cho Tech Lead.
+Next action: Tech Lead review.

@@ -4,14 +4,18 @@ Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## PERF-01 — Fast Path Optimization
 
-Status: **IN_PROGRESS**; Owner giao09/11/2026, baseline `8478c98`.
+Status: **REVIEW**; Owner giao09/11/2026, baseline `8478c98`.
 [Spec](tasks/PERF/PERF-01.md), [report](../docs/perf-01-fast-path-optimization.md).
 Hai bottlenecks: exact-byte parsed ledger/source snapshot reuse, dynamic policy giữ
 nguyên.99focused PASS,12payloads tương đương,13ledger entries byte-exact; H08/PDF30
 blocked,17legacy replay;38inputs/4frozen/8pending source-Web nguyên hash.
-Refresh median31,346→35,828s (chậm14,3%); cache-hit6,845→6,655s (nhanh2,8%);
-source load giảm72,3%; không đạt mục tiêu tổng thể. Chưa commit/CI; giữ GEN-01a/Web.
-Next action: xác minh CI đúng implementation SHA rồi chuyển REVIEW cho Tech Lead.
+Implementation `de2d430bb59be9539ede5e772470dba8011483c1` đã push main;
+[CI42565568084](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42565568084)
+SUCCESS đúng SHA, Python3.12/Web; manual full regression SKIPPED.
+Refresh median34,269→35,828s (chậm4,5%); cache-hit8,663→6,655s (nhanh23,2%);
+document refresh nhanh23,7%, source load giảm75,2%, ledger query chậm3,5%.
+Hai baseline lỗi loại minh bạch; final policy digest khớp after. Giữ GEN-01a/Web.
+Next action: Tech Lead review.
 
 ## GEN-02-Fix-B — OCR Source Quality & Controlled Evidence Correction
 
