@@ -122,6 +122,21 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
         calls.append(request)
         assert request.constraints.timeout_seconds == 10
         assert len(request.messages[0].images) == 1
+        prompt = request.messages[0].content
+        instructions, locator_json = prompt.split("\n", 1)
+        assert "Read the image first" in instructions
+        assert "not a sample answer" in instructions
+        assert "do not copy current_text or merge adjacent paragraphs" in instructions
+        assert "exactly five fields and no other fields" in instructions
+        for field in ("text", "readability", "ambiguous_spans", "page", "selector"):
+            assert field in instructions
+        assert "additionalProperties" not in instructions
+        assert "$defs" not in instructions and '"properties"' not in instructions
+        assert json.loads(locator_json) == {
+            "page": identity.page,
+            "selector": binding["selector"],
+            "current_text": original.raw_text,
+        }
         if mode == "timeout":
             raise TimeoutError()
         value = dict(
@@ -153,6 +168,9 @@ def test_bounded_transcription_proposals(correction_case, tmp_path, monkeypatch,
     assert len(calls) == (0 if mode.startswith("wrong_") else 1)
     if calls:
         assert result["call_latency_ms"] >= 0
+    if mode == "schema_echo":
+        assert result["error_code"] == "recovery_output_schema_invalid"
+        assert "transcription" not in result
     assert not any(k in result for k in ("review_provenance", "approval", "release"))
     assert len(list((tmp_path / "recovery-candidates").glob("*.json"))) == 1
     if mode == "repeat":

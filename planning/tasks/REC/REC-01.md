@@ -88,4 +88,9 @@ deadline8s dưới minimum10s; default10s và local block<10 đã sửa. Một l
 provider success/STOP1701tokens/6,553s nhưng JSON thừa additionalProperties bị
 schema chặn; chưa transcription hợp lệ đầu-cuối.22focused PASS, không1193/fullCI.
 Bản sửa deadline có Git checkpoint riêng; xem report/provider-fix artifacts; PDF30 quarantine nguyên.
-Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.
+Chỉ đạo sau0285817: bỏ schema prompt, đúng5fields, đọc ảnh trước/current_text chỉ
+locator; giữ extra=forbid.19offline PASS trước một live1609tokens/6,083s.
+JSON strict PASS nhưng visual source-fidelity FAIL:missing maturity25/03/2021,
+collateral merge/mortgage date2011→2021. Chưa recovered; PDF30quarantine/H08 nguyên.
+Không CI lớn/M5–M7/task mới; evidence local REC-01/prompt-fix/visual-audit.json.
+Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.

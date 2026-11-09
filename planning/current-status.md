@@ -25,7 +25,12 @@ deadline8s dưới minimum10s. Đã sửa default10s/chặn config<10 trước �
 Một validation live:provider success/STOP,1701tokens,6,553s; JSON thừa
 additionalProperties nên schema reject, chưa transcription đầu-cuối thành công.
 22focused PASS; không rerun1193/CI/H08; bản sửa deadline có Git checkpoint riêng. PDF30 quarantine nguyên.
-Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.
+Theo chỉ đạo mới sau0285817: bỏ schema dài, prompt đúng5fields/đọc ảnh trước,
+giữ strict validation;19offline PASS. Một live:JSON strict PASS,1609tokens,
+call6,083s/branch8,553s; visual audit FAIL:thiếu đáo hạn25/03/2021,ghép collateral,
+sai ngày hợp đồng2011→2021. Chưa phục hồi OCR; PDF30quarantine/H08activation nguyên.
+Không CI lớn/M5–M7/task mới. [Report](../docs/rec-01-conditional-ocr-recovery.md).
+Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.
 
 ## PERF-01 — Fast Path Optimization
 

@@ -192,4 +192,43 @@ Owner cho phép diagnostic/fix/validation trong chính REC-01; không mở task 
 Artifacts local `provider-fix/`: offline-root-cause, provider-original-error,
 live-provider-response, live-confirmation, private request snapshots và focused-tests.
 
-Next action: Tech Lead xem lỗi structured output còn chặn transcription đầu-cuối.
+## Sửa prompt/output theo chỉ đạo Tech Lead sau `0285817`
+
+REC-01 tiếp tục REVIEW. Chỉ thay prompt recovery và assertions offline; không sửa
+M5–M7, validation, activation H08 hoặc source policy. Bỏ toàn bộ model_json_schema
+khỏi prompt; hướng dẫn ngắn yêu cầu chính xác text/readability/ambiguous_spans/page/
+selector, không trường khác. Yêu cầu đọc ảnh trước, current_text chỉ là locator
+OCR lỗi, không là đáp án mẫu; không copy hoặc ghép đoạn bên cạnh. extra=forbid
+giữ nguyên, không xóa additionalProperties để ép PASS.
+
+**19offline tests PASS** trước live, lint/format PASS. Assertions kiểm tra đúng
+prompt/locator/image/deadline, không schema annotations và field thừa vẫn bị reject.
+Không chạy lại CI lớn, H08, M5–M7 E2E hoặc benchmark clean path.
+
+Đúng **một lượt Gemini live** PDF thật BCC2024 trang30/selector9 sau offline tests:
+provider success/STOP, model gemini-3.5-flash-lite; 1412input/197output/**1609tokens**;
+call6082,999ms, branch8552,703ms; timeout10s; không retry, cost unknown.
+JSON đúng năm fields, strict validation PASS, runtime proposal_pending_review.
+
+**Source-fidelity FAIL — chưa phục hồi OCR**. Đã kiểm tra exact-render image cùng
+binding hash và ảnh xoay để đọc (chỉ review, provider vẫn nhận ảnh gốc):
+
+- Đoạn (i) trên ảnh in ngày đáo hạn **25/03/2021**; live output vẫn bỏ câu đó.
+- Tài sản bảo đảm nằm dưới heading riêng ở đoạn tiếp theo; output vẫn ghép vào (i).
+- Ngày hợp đồng trong collateral bullet là **03/03/2011**; output ghi **03/03/2021**.
+
+Text chỉ thay đổi nhỏ dấu câu/case so với OCR cũ, giữ material defects. Readability
+provider trả readable/empty ambiguous_spans không chứng minh đúng ảnh. Vì vậy không
+gọi proposal này là correction đã verified hoặc trusted recovery; không cấp review/
+approval, không tạo release/activation mới. PDF30/9 quarantine và H08 activation giữ
+nguyên byte hashes. Không gọi live lần hai để chọn output đẹp hoặc tự mở scope mới.
+
+Artifacts local `artifacts/evidence/REC-01/prompt-fix/`: offline-tests.log,
+exact-page30.png, fixed-request-private.json, live-provider-response.json,
+live-confirmation.json, visual-audit.json, protected-before.json, runtime-lock.json.
+Console script có dòng generic “Live transcription succeeded” chỉ là structured
+payload có sẵn; **visual-audit.json mới là kết luận cuối: recovered=false**.
+Một call mới/1609known tokens; lịch sử REC-01 tổng4calls,3310known tokens ở hai
+responses success,usage của hai HTTP400 unknown. Không suy accuracy toàn corpus.
+
+Next action: Tech Lead review kết quả source-fidelity FAIL dù schema đã PASS.
