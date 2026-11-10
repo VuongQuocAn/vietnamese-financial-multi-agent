@@ -38,6 +38,15 @@ from .qa_pipeline_contracts import (
 )
 
 
+def _provider_failure_status(errors):
+    return (
+        "provider_unavailable"
+        if set(errors)
+        & {"provider_unavailable", "timeout", "rate_limit", "quota_exceeded", "authentication"}
+        else "verification_blocked"
+    )
+
+
 class _RequestLedger:
     """Cache exact query results only for this synchronous request; invalidate on write."""
 
@@ -75,7 +84,8 @@ class FinancialQAPipeline:
             self.compositions, self.document_repository
         )
 
-    def _m5(self, request, *, document=False):
+    def _m5(self, request, *, document=False, catalog=None):
+        catalog = self.catalog if catalog is None else catalog
         gateway = (
             self.gateway
             if request.allow_gateway and request.execution_mode != "deterministic"
@@ -84,11 +94,11 @@ class FinancialQAPipeline:
         deterministic = request.execution_mode == "deterministic"
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
-                SnapshotCatalog([]) if document else self.catalog,
+                SnapshotCatalog([]) if document else catalog,
                 () if document else self.documents,
                 gateway,
             ),
-            supervisor=RiskAwareSupervisor(self.catalog),
+            supervisor=RiskAwareSupervisor(catalog),
             router=AdaptiveSpecialistRouter(),
             specialists={
                 "profitability": ProfitabilitySpecialist(
@@ -706,9 +716,10 @@ class FinancialQAPipeline:
                     if existing_ids:
                         trace.limitations.append("full_request_refresh_fallback")
                     adaptive_histories = None
-                    m5 = self._m5(bound)
+                    snapshot = stage("request_snapshot", self.catalog.request_snapshot)
+                    m5 = stage("m5_setup", lambda: self._m5(bound, catalog=snapshot))
                     controller = AdaptiveFinancialController(
-                        m5, self.catalog, self.gateway, bound.model
+                        m5, snapshot, self.gateway, bound.model
                     )
 
                     def execute():
@@ -754,48 +765,11 @@ class FinancialQAPipeline:
                         and bound.execution_mode == "auto"
                         and output.status in {"completed", "partial"}
                     ):
-                        from ..outputs.qa_contracts import QARequirement
+                        from ..outputs.qa_composer import planned_requirements
 
-                        obligations = []
-                        # The validated proposal supplies targets; independently
-                        # replayed M6 proofs still supply every answer assertion.
-                        for item, requested_period in dict.fromkeys(
-                            (o.canonical_item_id, o.period)
-                            for o in proposal.operations
-                            if o.operation == "find_financial_facts"
-                        ):
-                            obligations.append(
-                                QARequirement(
-                                    requirement_id=f"adaptive-{len(obligations)}",
-                                    text=bound.question,
-                                    kind="fact",
-                                    target_id=item,
-                                    period=requested_period,
-                                )
-                            )
-                        for formula in proposal.formula_ids:
-                            obligations.append(
-                                QARequirement(
-                                    requirement_id=f"adaptive-{len(obligations)}",
-                                    text=bound.question,
-                                    kind="metric",
-                                    target_id=formula,
-                                )
-                            )
-                        if proposal.reasoning_required:
-                            for assignment in proposal.assignments:
-                                for item in assignment.indicators:
-                                    obligations.append(
-                                        QARequirement(
-                                            requirement_id=f"adaptive-{len(obligations)}",
-                                            text=assignment.task,
-                                            kind="fact",
-                                            target_id=item,
-                                            interpretation=True,
-                                            interpretation_topic="metric_meaning",
-                                        )
-                                    )
-                        qa_request.answer_requirements = obligations
+                        qa_request.answer_requirements = planned_requirements(
+                            bound.question, proposal
+                        )
                     trace.selected_agents = (
                         output.routing_decision.selected_roles if output.routing_decision else []
                     )
@@ -829,14 +803,18 @@ class FinancialQAPipeline:
                         usage(name, metadata)
                     if output.status not in {"completed", "partial"}:
                         status = {
-                            "failed": "provider_unavailable"
+                            "failed": _provider_failure_status(trace.provider_errors)
                             if trace.provider_errors
                             else "internal_error",
                             "clarification_required": "clarification_required",
                             "unsupported": "unsupported",
                         }.get(output.status, "verification_blocked")
                         return stop(status, output.stop_conditions)
-                    batch = to_verification_input(output)
+                    batch = (
+                        controller.batch
+                        if adaptive_histories is not None
+                        else to_verification_input(output)
+                    )
                     # Exact duplicates from one upstream result are one candidate.
                     unique = {}
                     for claim in batch.claims:
@@ -904,7 +882,18 @@ class FinancialQAPipeline:
                                 initial_decision=history.outcome.attempts[0].decision,
                                 final_decision=final.decision,
                                 reasons=final.reason_codes,
-                                validation={c.check_id: c.status for c in final.validation.checks}
+                                validation={
+                                    c.check_id: c.status
+                                    for c in sorted(
+                                        final.validation.checks,
+                                        key=lambda c: {
+                                            "not_applicable": 0,
+                                            "pass": 1,
+                                            "undetermined": 2,
+                                            "fail": 3,
+                                        }[c.status],
+                                    )
+                                }
                                 if final.validation
                                 else {},
                                 evidence_status=final.evidence.status if final.evidence else None,
@@ -991,7 +980,7 @@ class FinancialQAPipeline:
                 "unsupported": "unsupported",
             }.get(source.status, "verification_blocked")
             if not view.verified_claim_ids and trace.provider_errors:
-                return stop("provider_unavailable", trace.provider_errors)
+                return stop(_provider_failure_status(trace.provider_errors), trace.provider_errors)
             if (
                 response.mode == "BLOCKED"
                 and response.newly_accepted_claims

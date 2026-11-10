@@ -1,6 +1,7 @@
 """M5 contracts và read-only preflight; không planner, dispatch hoặc tính toán."""
 
 import json
+from functools import lru_cache
 from typing import Any, Literal
 
 from pydantic import Field, ValidationError, model_validator
@@ -314,9 +315,16 @@ def _check_graph(edges, name):
         visit(key)
 
 
+@lru_cache(maxsize=64)
+def _contract_schema(model):
+    # Private, read-only traversal cache keyed by the actual contract class.
+    # Never return it to callers/prompts that may mutate schema dictionaries.
+    return model.model_json_schema()
+
+
 def _schema_path_exists(model, path):
     """Schema traversal support union/$ref/list; runtime vẫn kiểm concrete payload."""
-    root = model.model_json_schema()
+    root = _contract_schema(model)
 
     def walk(schema, parts):
         if "$ref" in schema:

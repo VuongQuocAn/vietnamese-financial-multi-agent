@@ -16,7 +16,8 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
-from ..core.llm_gateway import SharedLLMGateway
+from ..core.llm_gateway import SharedLLMGateway, unwrap_singleton_object
+from ..core.schema_cache import model_schema
 from ..evidence.snapshots import SnapshotCatalog
 from .contracts import VerificationInput
 from .evidence_context import EvidenceContextBuilder
@@ -27,6 +28,7 @@ from .evidence_contracts import (
     EvidenceSupportFinding,
     SemanticEvidenceAssessment,
 )
+from .logic_rules import assertion_category
 from .numeric import extract_assertion
 from .validation_contracts import (
     ValidationResult,
@@ -398,8 +400,11 @@ class EvidenceCritic:
                 "Số đúng không chứng minh cải thiện, nguyên nhân hay kết luận khác. Không dùng kiến thức ngoài nguồn. Không tính lại số/công thức.",
                 "Nguồn có caveat vẫn có thể hỗ trợ assertion trong phạm vi nguồn; không nâng chất lượng/provenance. Source review chưa xác minh phải giữ limitation.",
                 "Mỗi assertion đúng một lần. supported/partial/unsupported cần evidence_ids liên quan; insufficient có thể không có evidence_ids. Không thêm fields/prose/values/citations.",
+                "Field missing luôn là array, tên chính xác missing có dấu quote JSON. Không xuất _missing. "
+                "EVIDENCE_LIMITATION chỉ mô tả giới hạn căn cứ, không khẳng định tỷ lệ đã tính hoặc đã cải thiện; "
+                "vẫn kiểm tra mọi mệnh đề khác trong câu và chỉ hỗ trợ trong phạm vi evidence.",
             ],
-            "output_schema": SemanticEvidenceAssessment.model_json_schema(),
+            "output_schema": model_schema(SemanticEvidenceAssessment),
         }
         payload = dict(
             candidate_id=claim.candidate_id,
@@ -410,7 +415,14 @@ class EvidenceCritic:
                 snapshot_id=claim.snapshot_id,
                 period=claim.period,
             ),
-            assertions=[dict(assertion_id=a.assertion_id, content=a.content) for a in assertions],
+            assertions=[
+                dict(
+                    assertion_id=a.assertion_id,
+                    content=a.content,
+                    assertion_type=assertion_category(a.content),
+                )
+                for a in assertions
+            ],
             deterministic_findings=[
                 dict(
                     check_id=c.check_id, status=c.status, reason=c.reason_code, expected=c.expected
@@ -466,12 +478,28 @@ class EvidenceCritic:
                 response.error,
             )
             if response.status != "success" or not isinstance(response.output, JSONOutput):
+                trace.failure_kind = (
+                    "truncated"
+                    if response.finish_reason == "length"
+                    else "invalid_json"
+                    if isinstance(response.output, JSONOutput)
+                    and response.output.validation_status == "invalid_json"
+                    else "provider_failure"
+                )
                 _error(result, "semantic", "semantic_gateway_response_failed")
                 return
             try:
-                assessment = SemanticEvidenceAssessment.model_validate(response.output.payload)
+                assessment = SemanticEvidenceAssessment.model_validate(
+                    unwrap_singleton_object(response.output.payload)
+                )
+            except ValidationError:
+                trace.failure_kind = "invalid_schema"
+                _error(result, "semantic", "semantic_output_invalid")
+                return
+            try:
                 self._validate_semantic(assessment, claim, result, assertions)
-            except (ValidationError, ValueError):
+            except ValueError:
+                trace.failure_kind = "invalid_semantic_contract"
                 _error(result, "semantic", "semantic_output_invalid")
                 return
             trace.semantic_response = assessment

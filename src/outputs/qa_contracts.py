@@ -62,6 +62,7 @@ class QARequirement(FinancialModel):
     aspect: Literal["value", "formula", "operands"] = "value"
     depends_on: list[str] = Field(default_factory=list)
     interpretation_topic: Literal["metric_meaning", "earnings_quality", "unbounded"] | None = None
+    required_indicators: list[str] = Field(default_factory=list)
     verified_claim_ids: list[str] = Field(default_factory=list)
     reason: str | None = None
 

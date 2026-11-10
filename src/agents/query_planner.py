@@ -2,7 +2,6 @@
 
 import json
 import re
-from copy import deepcopy
 from datetime import date
 from time import perf_counter
 from uuid import uuid4
@@ -18,6 +17,7 @@ from ..core.llm_contracts import (
     RequestConstraints,
 )
 from ..core.llm_gateway import SharedLLMGateway
+from ..core.schema_cache import model_schema
 from ..evidence.snapshots import SnapshotCatalog
 from ..tools.financial_qa import QADocument
 from ..tools.question_understanding import (
@@ -152,7 +152,9 @@ class EvidenceAwareQueryPlanner:
     def __init__(
         self, catalog: SnapshotCatalog, documents=(), gateway: SharedLLMGateway | None = None
     ):
-        self._catalog = deepcopy(catalog)
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
         self._documents = [QADocument.model_validate(d).model_copy(deep=True) for d in documents]
         known = {d.document_id for d in catalog.descriptors}
         if len({d.document_id for d in self._documents}) != len(self._documents) or any(
@@ -181,9 +183,10 @@ class EvidenceAwareQueryPlanner:
                     "nhận cả PAT và CFO. Giữ task của phần đúng nguyên văn để reuse. Không sao chép prose "
                     "claim làm evidence. Thiếu tiêu chí kết luận toàn diện thì mô tả quan hệ có giới hạn, "
                     "không liên tục yêu cầu lại CFO/PAT đã có. Không thể cải thiện hợp lệ thì stop_reason rõ ràng. "
-                    "depends_on chỉ tham chiếu role hoặc operation_id đã khai báo. period=null khi chỉ có năm."
+                    "depends_on chỉ tham chiếu role hoặc operation_id đã khai báo. period=null khi chỉ có năm. "
+                    "Giữ user_requested_targets của câu hỏi gốc; chỉ thay execution dependencies/assignments cần sửa."
                 ),
-                schema=PlannerProposal.model_json_schema(),
+                schema=model_schema(PlannerProposal),
                 canonical_indicators=list(ITEM_RULES),
                 approved_formulas=[p.formula_id for p in self._catalog.policies],
                 specialist_boundaries=[b.model_dump(mode="json") for b in SPECIALIST_BOUNDARIES],
@@ -225,6 +228,11 @@ class EvidenceAwareQueryPlanner:
                 "độc lập trong câu hỏi phải là multi_step_analysis, kể cả chỉ truy xuất/đối chiếu "
                 "mà không tính ratio. Bắt buộc thêm prepare_bundle phụ thuộc tất cả source outputs. "
                 "Hai operands nội bộ của một metric không phải hai mục tiêu độc lập. "
+                "Bắt buộc khai báo user_requested_targets: chỉ những goals người dùng hỏi, tách khỏi operations "
+                "và required_indicators dùng nội bộ. Metric-only có kind=metric/formula target, không có fact "
+                "targets cho operands trừ khi người dùng hỏi độc lập. Explanation có aspect formula/operands. "
+                "Phân tích dùng interpretation=true và topic đúng; chất lượng lợi nhuận dùng topic=earnings_quality "
+                "với required_indicators gồm cả PAT/CFO, không dùng CFO sign thay quan hệ chất lượng lợi nhuận. "
                 "Yêu cầu kiểm tra/giải thích nguồn, công thức, cách tính hoặc các kỳ đầu vào "
                 "của một metric là evidence_explanation, dù có từ tính trong câu hỏi. "
                 "Metric dùng calculate_financial_metric/formula_id, rồi get_metric_evidence_lineage "
@@ -256,7 +264,7 @@ class EvidenceAwareQueryPlanner:
                 "mỗi find_financial_facts có period riêng (YYYY cho B02/B03, YYYY-12-31 cho B01). "
                 "Chỉ dùng những kỳ được nêu hoặc có trong filing đã chọn; không lấy từ tài liệu khác."
             ),
-            "schema": PlannerProposal.model_json_schema(),
+            "schema": model_schema(PlannerProposal),
             "canonical_indicators": {
                 key: dict(
                     aliases=list(
@@ -537,6 +545,30 @@ class EvidenceAwareQueryPlanner:
             else:
                 proposal = proposal.model_copy(deep=True)
             result.effective_proposal = proposal
+            # Legacy/saved proposals remain usable via question-only goals. Never
+            # infer user obligations from the number or kind of executed tools.
+            from ..outputs.qa_composer import planned_requirements
+            from .planner_contracts import UserRequestedTarget
+
+            requirements = planned_requirements(question, proposal)
+            if not proposal.user_requested_targets:
+                proposal.user_requested_targets = [
+                    UserRequestedTarget(
+                        **r.model_dump(include=set(UserRequestedTarget.model_fields))
+                    )
+                    for r in requirements
+                    if r.kind in {"fact", "metric", "explanation", "limitations"}
+                ]
+            for target in proposal.user_requested_targets:
+                if target.kind == "fact" and target.target_id not in proposal.required_indicators:
+                    raise ValueError("answer_target_outside_plan_indicators")
+                if (
+                    target.kind in {"metric", "explanation"}
+                    and target.target_id not in proposal.formula_ids
+                ):
+                    raise ValueError("answer_target_outside_plan_formulas")
+                if set(target.required_indicators) - set(proposal.required_indicators):
+                    raise ValueError("answer_target_premises_outside_plan")
             result.query = QuerySpecification(
                 original_question=question,
                 intent=proposal.intent,

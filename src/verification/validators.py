@@ -1,7 +1,6 @@
 """Deterministic, read-only claim checks against an independently hydrated catalog."""
 
 import re
-from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 
 from ..evidence.contracts import assess_fact_consistency
@@ -9,6 +8,7 @@ from ..evidence.snapshots import SnapshotCatalog
 from ..tools.financial_calculator import CalculateFinancialMetricRequest, FinancialCalculator
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
 from .contracts import CandidateClaim, VerificationInput
+from .logic_rules import assertion_category
 from .numeric import extract_assertion, fold
 from .validation_contracts import (
     ClaimValidationResult,
@@ -51,7 +51,9 @@ class DeterministicFinancialValidator:
     """
 
     def __init__(self, catalog: SnapshotCatalog):
-        self._catalog = deepcopy(catalog)
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
         self._retrieval = FinancialRetrievalTools(self._catalog)
         self._calculator = FinancialCalculator(self._catalog)
 
@@ -133,7 +135,8 @@ class DeterministicFinancialValidator:
         assertion = extract_assertion(claim.content)
         if claim.kind == "supported_interpretation" and claim.analysis_premises:
             self._analysis(batch, claim, result)
-            add("formula", "not_applicable", "fact_interpretation_has_no_formula")
+            if not any(c.check_id == "formula" and c.status == "fail" for c in result.checks):
+                add("formula", "not_applicable", "fact_interpretation_has_no_formula")
         elif claim.kind == "fact":
             self._fact(batch, claim, result, assertion)
             add("formula", "not_applicable", "fact_has_no_formula")
@@ -153,9 +156,10 @@ class DeterministicFinancialValidator:
 
     def _analysis(self, batch, claim, result):
         sources = claim.supporting_evidence
-        if re.search(
-            r"\b(?:ty le|ty so|he so|ratio|margin|gap (?:doi|ba|bon))\b", fold(claim.content)
-        ):
+        if re.search(r"\d|%", claim.content):
+            self._check(result, "numeric", "fail", "analysis_premise_binding_invalid")
+            return
+        if assertion_category(claim.content) == "NUMERIC_ASSERTION":
             self._check(result, "formula", "fail", "analysis_requires_approved_calculation")
             return
         if (

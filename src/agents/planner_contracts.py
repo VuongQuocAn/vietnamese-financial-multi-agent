@@ -42,7 +42,20 @@ class PlannerOperation(FinancialModel):
     dependencies: list[Identity] = Field(default_factory=list, max_length=32)
 
 
+class UserRequestedTarget(FinancialModel):
+    """Answer goals, independent of the execution DAG and its supporting operands."""
+
+    kind: Literal["fact", "metric", "explanation", "limitations"]
+    target_id: Identity | None = None
+    period: Identity | None = None
+    interpretation: bool = False
+    interpretation_topic: Literal["metric_meaning", "earnings_quality", "unbounded"] | None = None
+    required_indicators: list[Identity] = Field(default_factory=list, max_length=16)
+    aspect: Literal["value", "formula", "operands"] = "value"
+
+
 class PlannerProposal(FinancialModel):
+    user_requested_targets: list[UserRequestedTarget] = Field(default_factory=list, max_length=32)
     reasoning_required: bool = False
     selection_reason: str = ""
     assignments: list[SpecialistAssignment] = Field(default_factory=list, max_length=3)
@@ -74,6 +87,13 @@ class PlannerProposal(FinancialModel):
     missing_information: list[Identity] = Field(default_factory=list)
     unsupported_capabilities: list[Identity] = Field(default_factory=list)
     reasons: list[Identity] = Field(default_factory=list)
+
+    @model_serializer(mode="wrap")
+    def serialize_proposal(self, handler):
+        wire = handler(self)
+        if not wire.get("user_requested_targets"):
+            wire.pop("user_requested_targets", None)
+        return wire
 
 
 class PlannerContext(FinancialModel):

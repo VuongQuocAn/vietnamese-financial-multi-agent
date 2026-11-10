@@ -1,6 +1,5 @@
 """Typed read-only evidence tools trên M3-07 và M4-02; không suy financial claims."""
 
-from copy import deepcopy
 from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
@@ -97,7 +96,9 @@ class EvidenceRetrievalTools:
     """
 
     def __init__(self, catalog: SnapshotCatalog):
-        self._catalog = deepcopy(catalog)
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
         self._api = self._catalog.api
         self._financial = FinancialRetrievalTools(self._catalog)
         self._selections = {}

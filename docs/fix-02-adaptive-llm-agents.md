@@ -1,5 +1,8 @@
 # FIX-02 — Adaptive LLM Agents và bounded Judge feedback
 
+Checkpoint remediation mới ngày10/11/2026 ở cuối báo cáo; các lượt09/11 bên dưới
+được giữ làm evidence lịch sử, không gán cho implementation mới.
+
 Ngày09/11/2026; baseline `20694b2`. **REVIEW, chưa đủ điều kiện DONE.**
 Implementation ban đầu [`b7eb2bf838c6c194cb7a55910a4937bfc043e731`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b7eb2bf838c6c194cb7a55910a4937bfc043e731) đã push main, SHA đã xác minh.
 [CI42600674784](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42600674784)
@@ -313,3 +316,161 @@ runtime_unchanged=true, imported_runtime_verified=true; toàn bộ package modul
 completed/SUCCESS đúng321f09e:31Python/9Web PASS, full regression SKIPPED.
 CI của c6add55 cũng SUCCESS29Python/9Web. Đây là engineering evidence;
 không thay thế các gaps live phía trên. Giữ FIX-02 REVIEW và tất cả issues OPEN.
+
+## Correctness & Performance Remediation — 10/11/2026
+
+Owner/Tech Lead giao implementation sau [diagnostic](fix-02-root-cause-diagnostic.md),
+baseline runtime321f09e, HEAD bắt đầu2a3d82b. Giữ FIX-02 REVIEW, không Web/M8/OCR
+hoặc thay financial formulas. Diagnostic09/11 được giữ và đưa vào checkpoint này.
+Implementation SHA, số đo cuối/live/CI được bổ sung sau khi chốt source bên dưới.
+
+### Correctness và module boundaries
+
+- **A1:** `PlannerProposal.user_requested_targets` typed tách khỏi operations,
+  required_indicators và evidence/lineage dependencies. Planner khai báo goals;
+  backend đối chiếu catalog và giữ các explicit lexical targets bị model bỏ sót.
+  Legacy proposals dùng question parser, không suy obligations từ tools. M7 nhận
+  requirements từ goals; formula/operand explanation lấy từ calculation được
+  ACCEPT, không yêu cầu fact claims độc lập cho toán hạng nội bộ. Caller M7 trực
+  tiếp/historical vẫn giữ protected-slot default; không tự thêm prose.
+- **A2:** `logic_rules.assertion_category` phân biệt numeric assertion, qualitative
+  interpretation, evidence limitation, unsupported causal claim và unknown.
+  Evidence-deficiency predicate phải chi phối complement; mệnh đề đối lập/độc lập
+  và mọi digits/percentages vẫn bị numeric gates kiểm tra. Không whitelist đơn
+  thuần từ “không/chưa”. Semantic Evidence/Logic Critics vẫn phải hỗ trợ assertion;
+  numeric premises PASS không tự chứng minh conclusion. Earnings-quality targets
+  cần cả PAT/CFO, không dùng CFO sign thay quan hệ chất lượng lợi nhuận.
+- **A3:** Backend `AnswerCoverage` được tính bằng **chính request_inventory của M7**
+  trên read-only projections của native ACCEPT records, có scope/ambiguity/
+  explanation checks. Projections không được lưu hoặc dùng phát hành. Coverage
+  không nằm trong output schema của LLM (`JudgeRecommendation` riêng); backend
+  bổ sung nó vào feedback. PASS thiếu coverage thành REVISION_NEEDED khi có hướng
+  sửa/evidence đã có, hoặc INSUFFICIENT_EVIDENCE. Không nâng native decisions.
+  Giữ accepted interpretations không bị semantic veto khi sửa goal khác; vẫn
+  admission/proof replay trước Ledger/M7 và tối đa2revisions/3rounds.
+- **A4:** JSON malformed không còn latch failure cho mọi agents sau nó. Error vẫn
+  ở call/claim tương ứng; outage/timeout/rate-limit tiếp tục fail-stop và shared
+  caps giữ nguyên. Không thêm retry. Chuẩn hóa duy nhất singleton-array chứa một
+  object; raw response giữ nguyên và vẫn strict schema/semantic validation.
+  Không regex sửa `_missing` hoặc nội dung tài chính. Evidence trace phân biệt
+  invalid_json/invalid_schema/invalid_semantic_contract/truncated/provider_failure;
+  không gọi lỗi JSON là provider outage. Prompt nhắc exact `missing` field.
+- Trace validation summary giữ status nghiêm trọng nhất khi nhiều findings cùng
+  check_id; formula FAIL không bị dòng not_applicable ghi đè. Raw proof checks
+  và Ledger authority được giữ.
+
+Files runtime: agents/{planner_contracts,query_planner,adaptive_controller,contracts,
+supervisor}; api/financial_qa_pipeline; core/{llm_gateway,request_gateway,schema_cache};
+evidence/{snapshots,retrieval}; tools/{financial_retrieval,financial_calculator,
+evidence_retrieval}; outputs/{qa_contracts,qa_composer}; verification/{validators,
+logic_rules,adaptive_judge,evidence_contracts,evidence_critic,financial_logic_critic}.
+Thêm focused tests và đưa chúng vào CI smoke. Không cần sửa specialist_common:
+diagnostic xác nhận numeric premises đã được truyền đầy đủ ở tầng đó.
+
+### Performance và tính bất biến
+
+Một `SnapshotCatalog.request_snapshot()` tách khỏi caller cho mỗi fresh financial
+request; Planner/Supervisor/tools/M6 chỉ đọc cùng snapshot riêng. Public constructors
+vẫn detach input bình thường. API source view được dựng lại từ exact detached state;
+result models trả ra vẫn là bản sao. Selection/lineage caches chỉ tồn tại trên
+snapshot đó, không cache xuyên request hoặc bỏ current source-policy checks.
+Không áp dụng cache này cho historical Ledger/release eligibility.
+
+Schema path traversal giữ private cache theo contract class; schemas dùng trong
+prompts giữ cached JSON text bất biến, trả dict riêng cho caller. Loại bỏ lần
+OrchestrationResult→VerificationInput thứ hai trong pipeline bằng batch controller
+đã tạo. Không bỏ revalidation của inputs mutable tại M6 boundaries, không bỏ
+native proof replay/admission. Thêm timers request_snapshot/m5_setup và M6
+handoff/setup để giảm khoảng thời gian chưa có attribution.
+
+Proof digests mới có thể khác do source plan có typed goals, timing/random IDs và
+failure metadata. Decimal values, source references, formula identity/digest,
+period/scope không được thay. Không rewrite historical ledger; bốn financial
+entries thực tế từ lượt321f09e đã replay qua current proof validation và giữ hash.
+
+### Validation trước live
+
+Regression fail trước sửa đã tái hiện metric-only dư obligations, câu phủ định bị
+formula gate chặn, global failure latch và repeated schema generation. Một test
+Judge PASS/missing explicit target chạy riêng trên archived321f09e cũng FAIL đúng
+triệu chứng. Các negative controls về phần trăm/positive ratio/hidden assertion,
+source/context mutation và strict JSON vẫn chặn phát hành.
+
+Local targeted verification có305PASS/1FAIL do protected-slot default bị thêm
+explanation; đã sửa để calculation explanation chỉ materialize qua adaptive
+requirements, giữ default M7. Nhóm liên quan sau sửa75PASS; không xóa test cũ.
+Focused loop control chứng minh revision có thay đổi assignment, feedback tới
+Planner, native ACCEPT sau sửa và dừng PASS; proof không bị mutation, nested M6
+revision vẫn tắt. Đây là **mock/engineering evidence**, không phải successful live
+revision. Không chạy full unit suite hoặc E2E40câu.
+
+Artifacts riêng: `artifacts/evidence/FIX-02/remediation/`. `local-before.json`
+ghim thay đổi local ngoài task; `historical-replay.json` ghim replay bất biến.
+`offline-replay-3/` dùng frozen M5 outputs, current native M6/Ledger/M7 và chỉ replay
+provider responses đã lưu. Call mới không có response ghi RECORDED_RESPONSE_UNAVAILABLE
+và fail closed, không dựng semantic verdict mới:
+
+| Case | Quan sát offline | Giới hạn |
+| --- | --- | --- |
+| Q11 | M6 ACCEPT metric, completed_with_caveats; formula/operands từ calculation metadata | Saved Planner/full-pipeline benchmark bổ sung bên dưới; không là live |
+| Q21 | Không còn formula false positive cho negated ratio; native4ACCEPT/1INVESTIGATE/1ABSTAIN; coverage guard đổi saved Judge PASS thành revision; plan lặp dừng no_substantive_plan_progress | Không có archived response cho semantic call mới của analysis; vẫn PARTIAL |
+| F08 | Ba fact candidates ACCEPT, analysis thiếu mới ABSTAIN/REVISE; malformed critic không chặn các Logic/Judge calls sau; không release unverified analysis | Archive không có Logic/Judge responses trước đây bị latch; legacy follow-up proposal chưa có typed goals, nên verification_blocked; cần fresh Planner/live để đánh giá conversation |
+
+Runner replay đầu đọc strict Decimal bằng Python-mode thay vì JSON-mode nên dừng
+trước pipeline; đã đổi sang model_validate_json, giữ thư mục cũ. Replay tiếp theo
+làm rõ classification lỗi JSON/outage; giữ mọi artifacts, không chọn output đẹp.
+Không thay frozen questions/references/answers hoặc accepted data.
+
+### Latency before/after và live checkpoint
+
+Python3.12.0/Windows/cùngvenv, saved Planner response Q11 nguyên bản, cùng accepted
+inputs/snapshot và sáu fresh ledgers mỗi version; **0network calls**. Before là
+archived321f09e; after là archive HEAD+chỉ source delta FIX-02, loại pending GEN/Web,
+ghim `candidate/hashes.json` để đối chiếu implementation commit. Mỗi version có
+ba fresh-pipeline trials, mỗi trial cold rồi warm cùng pipeline; mỗi request vẫn
+force_refresh và Ledger mới. Cold là catalog/tool/request cache mới; không flush
+OS cache, process-global schema cache có thể warm giữa trials. Không heavy profiler
+hoặc tuyên bố đây là cold boot toàn OS. Catalog bootstrap nằm ngoài request timer.
+
+| Điều kiện | Before median s | After median s | Giảm wall |
+| --- | ---: | ---: | ---: |
+| Cold,3mẫu | 39,729 | 9,782 | 75,4% |
+| Warm,3mẫu | 40,273 | 10,464 | 74,0% |
+| Gộp6mẫu | 40,001 | 9,910 | 75,2% |
+
+Range before39,302–41,782s; after9,757–10,570s. So sánh mọi12calculation candidates:
+native ACCEPT, Decimal display, formula/version/digest, operands, company/document/
+snapshot/period, references và citations **exactly equivalent**. Source-provenance
+signature hash và measurements tại `performance-summary.json`. Không cần cùng
+verified IDs vì request/source-plan/timing identities khác; không rewrite lịch sử.
+
+| Stage,median6mẫu | Before s | After s | Giảm |
+| --- | ---: | ---: | ---: |
+| Setup/application residual ngoài M5, loại Ledger/M7 | 12,552 | 3,695 | 70,6% |
+| Planner local gồm validation/materialization, child M5 | 1,478 | 0,698 | 52,8% |
+| Financial Tools, child Supervisor/M5 | 4,040 | 0,273 | 93,3% |
+| M6 checks, child M5, chưa gồm constructors/handoff | 2,695 | 0,564 | 79,1% |
+| Ledger lookup/admission/reload ngoài M5 | 1,336 | 1,834 | −37,4% |
+| M7 Composer/citations/Firewall ngoài M5 | 0,492 | 0,525 | −6,7% |
+| M5 inclusive | 25,610 | 3,906 | 84,7% |
+| Total wall | 40,001 | 9,910 | 75,2% |
+| Total process CPU | 38,945 | 9,672 | 75,2% |
+
+Các child stages lồng trong M5; **không cộng các medians thành total**. Setup là
+residual gồm construction/context/export chưa tách hết, không giả một before timer
+riêng. Planner dùng replay, gồm local request/validation/materialization; không là
+latency server Gemini. Ledger/M7 không cải thiện; plan/goal/explanation metadata
+nhiều hơn là nguyên nhân PROBABLE, chưa profiler riêng. Fresh snapshot copy và
+proof serialization/admission còn overhead; chưa tối ưu tiếp ngoài evidence này.
+
+Lượt after working-tree sơ bộ được giữ riêng (bốn mẫu, dừng); không dùng nó để
+chứng nhận implementation vì có pending source. Bảng dùng đủ sáu after mẫu từ
+archive riêng. Original100,825s là phép đo ngày09/11 khác tải máy; **không** dùng
+100,825→9,910 làm mức speedup. Đây là benchmark engineering một câu hỏi thật,
+không phải đánh giá chất lượng tài chính toàn PDF hay mọi questions.
+
+58local CI-smoke PASS trên candidate archive; Ruff các files đã sửa, planning
+checker122tasks và diff check PASS. Bốn historical financial entries replay PASS,
+inputs và thay đổi local ngoài task giữ nguyên. Source sẽ được commit/push trước
+khi chạy tối đa một lượt live Q21/Q11/F08; CI/live exact SHA cập nhật ở checkpoint.
+Next action: chạy validation live đã được Owner cho phép và bàn giao REVIEW.

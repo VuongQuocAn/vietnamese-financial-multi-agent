@@ -10,6 +10,54 @@ def _has(text, pattern):
     return re.search(pattern, text) is not None
 
 
+def assertion_category(content):
+    """Conservative assertion scope; limitation complements never authorize a value.
+
+    A limitation must have an evidence-deficiency predicate governing a conclusion
+    or calculation. Contrast/independent clauses remain outside that scope. All
+    digits/percentages and positive quantitative assertions keep numeric gates.
+    This is routing to semantic assessment, never an evidence-support verdict.
+    """
+    text = fold(content)
+    if re.search(r"\d|%", text):
+        return "NUMERIC_ASSERTION"
+    clauses = re.split(r"[.;!?]|,|\b(?:nhung|tuy nhien|song|vi vay|do do|boi vi)\b", text)
+    limitation = False
+    remainder = []
+    for clause in clauses:
+        match = re.search(
+            r"\b(?:(?:chua du|khong du|khong co|thieu) "
+            r"(?:co so|can cu|bang chung|du lieu|thong tin)(?: de)?|(?:chua|khong) the) "
+            r"(?:tinh(?: toan)?|ket luan|khang dinh|xac nhan|danh gia|chung minh)\b",
+            clause,
+        )
+        if match:
+            limitation = True
+            # Do not consume a new independent/consequence assertion.
+            governed = clause[match.end() :]
+            escape = re.search(r"\b(?:nen|vi|do|va thuc te|dong thoi)\b", governed)
+            remainder.append(clause[: match.start()])
+            if escape:
+                remainder.append(governed[escape.start() :])
+        else:
+            remainder.append(clause)
+    positive = " ".join(remainder)
+    if re.search(
+        r"\b(?:ty le|ty so|he so|ratio|margin|gap (?:doi|ba|bon)|lon hon|nho hon|cao hon|thap hon|vuot)\b",
+        positive,
+    ):
+        return "NUMERIC_ASSERTION"
+    if re.search(r"\b(?:chu yeu do|nguyen nhan|dan den|nho .+ nen|do .+ nen)\b", positive):
+        return "UNSUPPORTED_CAUSAL_CLAIM"
+    if limitation and not positive.strip():
+        return "EVIDENCE_LIMITATION"
+    if limitation and re.fullmatch(
+        r"\s*(?:(?:trong ky nay )?(?:bao cao|doanh nghiep) ghi nhan .*)?", positive
+    ):
+        return "EVIDENCE_LIMITATION"
+    return "QUALITATIVE_FINANCIAL_INTERPRETATION" if positive.strip() else "UNKNOWN_OR_AMBIGUOUS"
+
+
 def assertion_spans(content):
     # Split coordinated propositions, while retaining noun phrases and the M5
     # sign/paraphrase template as a single assertion.
@@ -157,6 +205,8 @@ def classify(content, claim, checks):
 def semantic_requirements(content, claim):
     """Conservative local minimum; Gemini cannot relabel an unknown inference as numeric."""
     text = fold(content)
+    if assertion_category(content) == "EVIDENCE_LIMITATION":
+        return {"financial_context"}
     if _has(text, r"(?:dong luc|quyet dinh|nho|chi phi|nguyen nhan)"):
         return {"causal_evidence"}
     if _has(text, r"(?:tien bo|so sanh|tot len|cai thien|suy giam|on dinh)"):

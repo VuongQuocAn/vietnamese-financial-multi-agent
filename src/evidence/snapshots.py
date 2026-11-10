@@ -1,6 +1,7 @@
 """Explicit snapshot catalog/closure trên records hiện có; không I/O hoặc latest."""
 
 from collections.abc import Iterable
+from copy import deepcopy
 from typing import Literal
 
 from pydantic import Field, ValidationError
@@ -16,6 +17,11 @@ from .metrics import DerivedMetric, MetricRequest, build_metric
 from .preparation_policy import check_metric_formula_policy
 from .reporting_scope import resolve_reporting_scope
 from .retrieval import EvidenceRetrieval
+
+
+def isolated_catalog(catalog):
+    """Internal read-only request snapshots may be shared; public inputs detach."""
+    return catalog if getattr(catalog, "_request_snapshot", False) else deepcopy(catalog)
 
 
 class SnapshotDescriptor(FinancialModel):
@@ -160,6 +166,28 @@ class SnapshotCatalog:
                 break
             current = parents[0]
         return chain, issues
+
+    def request_snapshot(self):
+        """One detached owner for synchronous read-only tools/critics in a request.
+
+        Never stored on the caller's catalog or reused across requests. Results
+        leave tool boundaries as detached models; current release policy remains
+        independently checked by verification/admission, outside these caches.
+        """
+        snapshot = deepcopy(self)
+        # Catalog records are mutable at public boundaries; rebuild once from
+        # this exact detached state rather than trust a possibly older API view.
+        snapshot.api = EvidenceRetrieval(
+            snapshot.facts,
+            snapshot.evidence,
+            snapshot.metrics,
+            graph=snapshot.graph,
+            source_reviews=snapshot.reviews,
+        )
+        snapshot._request_snapshot = True
+        snapshot._entry_cache = {}
+        snapshot.api._lineage_cache = {}
+        return snapshot
 
     def get_reporting_scope(self, document_id, snapshot_id):
         """Separate read-only context overlay; không thay metric/fact compatibility."""
@@ -365,6 +393,11 @@ class SnapshotCatalog:
         )
 
     def entry(self, descriptor):
+        cache = getattr(self, "_entry_cache", None)
+        key = descriptor.model_dump_json()
+        if cache is not None and key in cache:
+            return cache[key].model_copy(deep=True)
+
         def belongs(record):
             return (record.document_id, record.snapshot_id) == (
                 descriptor.document_id,
@@ -382,7 +415,7 @@ class SnapshotCatalog:
             if q.decision in {"insufficient", "conflicted"}
         )
         limitations.extend(i.code for m in metrics for i in m.issues)
-        return SnapshotEntry(
+        result = SnapshotEntry(
             descriptor=descriptor.model_copy(deep=True),
             snapshot_chain=chain,
             fact_count=len(facts),
@@ -401,6 +434,9 @@ class SnapshotCatalog:
             if not metrics or any(m.status != "closed" for m in metrics)
             else "closed",
         )
+        if cache is not None:
+            cache[key] = result.model_copy(deep=True)
+        return result
 
     def select(self, document_id: str, snapshot_id: str | None = None) -> SnapshotSelection:
         candidates = [

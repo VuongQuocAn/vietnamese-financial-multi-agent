@@ -44,7 +44,13 @@ class RequestGateway:
         if is_judge:
             self.judge_calls += 1
         response = self.gateway.generate(bound)
-        if response.status != "success" and response.error:
+        # Invalid output belongs to this call. Keep it unverified, while other
+        # critics/Judge may still assess independent claims. Never auto-retry it.
+        if (
+            response.status != "success"
+            and response.error
+            and response.error.category not in {"structured_output_invalid", "schema_mismatch"}
+        ):
             self.failure_category = response.error.category
         self.events.append(
             dict(

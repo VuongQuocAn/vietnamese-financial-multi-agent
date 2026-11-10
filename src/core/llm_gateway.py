@@ -27,6 +27,15 @@ class LLMTransport(Protocol):
         ...
 
 
+def unwrap_singleton_object(payload):
+    """Only an unambiguous one-object transport envelope; never repair JSON/content."""
+    return (
+        payload[0]
+        if type(payload) is list and len(payload) == 1 and type(payload[0]) is dict
+        else payload
+    )
+
+
 class GatewayAttempt(ContractModel):
     response: LLMResponse
     latency_ms: float

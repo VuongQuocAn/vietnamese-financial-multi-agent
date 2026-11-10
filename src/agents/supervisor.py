@@ -1,6 +1,5 @@
 """Bounded EvidencePlan execution; M4 owns financial policy, M6 owns verification."""
 
-from copy import deepcopy
 from time import perf_counter
 from typing import Literal
 
@@ -189,7 +188,9 @@ def _failure(status, reasons):
 
 class RiskAwareSupervisor:
     def __init__(self, catalog: SnapshotCatalog):
-        self._catalog = deepcopy(catalog)
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
         self._financial = FinancialRetrievalTools(self._catalog)
         self._calculator = FinancialCalculator(self._catalog)
         self._evidence = EvidenceRetrievalTools(self._catalog)

@@ -419,6 +419,9 @@ class EvidenceRetrieval:
         )
 
     def get_lineage(self, metric_id: str) -> RetrievalResult:
+        cache = getattr(self, "_lineage_cache", None)
+        if cache is not None and metric_id in cache:
+            return cache[metric_id].model_copy(deep=True)
         metric = self.get_metric(metric_id)
         if metric.status != "found":
             return metric
@@ -454,6 +457,8 @@ class EvidenceRetrieval:
             result.status, result.reasons = "ambiguous", ["ambiguous_candidates"]
         elif lineage.completeness == "partial":
             result.reasons = ["partial_lineage", *lineage.unresolved]
+        if cache is not None:
+            cache[metric_id] = result.model_copy(deep=True)
         return result
 
     def get_anchor(self, anchor_id: str) -> RetrievalResult:

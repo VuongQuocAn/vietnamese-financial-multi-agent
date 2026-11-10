@@ -106,3 +106,26 @@ tokens/85,602s nhưng PARTIAL; không có revision mới nên chưa chứng minh
 replanning live. F08không dependency error nhưng Judge invalid output;Q01http503;
 Q11metric M6 ACCEPT nhưng partial do operand obligations;Q08quotation đúng.
 Giữ REVIEW, không ghép kết quả tốt nhất của hai source versions thành5/5PASS.
+
+### Diagnostic-only — 09/11/2026
+
+[Root cause diagnostic](../../../docs/fix-02-root-cause-diagnostic.md) đối chiếu
+runtime321f09e, raw traces Q21/F08/Q11 và offline Q11 cProfile/replay,0network calls.
+Xác nhận Q21 negated-ratio gate/semantic coverage, Q11 dư operand obligations,
+F08 malformed Evidence Critic JSON lan qua shared Gateway; local copying,
+metric/lineage reassessment và schema generation là hotspots đo được trong replay.
+Không sửa runtime/accepted data/Ledger, không gọi Gemini hoặc đổi status.
+Diagnostic chưa commit; FIX-02 REVIEW — WAITING FOR TECH LEAD DECISION.
+Next action: Tech Lead chọn phạm vi và giải pháp sửa theo diagnostic.
+
+### Remediation được giao — 10/11/2026
+
+Owner/Tech Lead duyệt A1–A4 correctness và B2–B4 performance trong cùng FIX-02;
+cho phép commit/push main và tối đa một lượt live Q21/Q11/F08 sau focused/offline
+validation. Tách typed user targets khỏi operations/dependencies; scope-aware
+limitation routing, native coverage dùng rules M7; strict JSON failure isolation;
+request snapshot/lineage/schema cache không bỏ source/proof/mutation gates.
+Giữ pending GEN-01a/Web/CHAT, raw/reference/approved data và historical Ledger.
+Kết quả/SHA/CI ở [báo cáo](../../../docs/fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026).
+Status REVIEW; không tự DONE. Next action: hoàn tất validation đã giao và bàn giao
+Tech Lead nghiệm thu implementation cùng limitations.

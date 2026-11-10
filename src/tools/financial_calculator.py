@@ -1,6 +1,5 @@
 """M4 bounded Decimal executor; eligibility luôn lấy từ production catalog."""
 
-from copy import deepcopy
 from decimal import ROUND_HALF_EVEN, Context, Decimal, DecimalException, localcontext
 from typing import Literal
 
@@ -93,7 +92,9 @@ class FinancialCalculator:
     """
 
     def __init__(self, catalog: SnapshotCatalog):
-        self._catalog = deepcopy(catalog)
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
         self._retrieval = FinancialRetrievalTools(self._catalog)
 
     def _numeric_contract_errors(self, request):

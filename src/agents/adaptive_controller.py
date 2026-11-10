@@ -4,7 +4,12 @@ import json
 from time import perf_counter
 
 from ..verification.adapter import to_verification_input
-from ..verification.adaptive_judge import AdaptiveJudge, evidence_inventory, ground_feedback
+from ..verification.adaptive_judge import (
+    AdaptiveJudge,
+    bind_coverage,
+    evidence_inventory,
+    ground_feedback,
+)
 from ..verification.runtime import VerificationRuntime
 
 
@@ -18,6 +23,7 @@ class AdaptiveFinancialController:
         self.rounds = []
         self.provider_metadata = []
         self.stage_latency_ms = {}
+        self.batch = None
 
     def run(self, question, context):
         seen, accepted, seen_issues = set(), {}, set()
@@ -112,8 +118,17 @@ class AdaptiveFinancialController:
                 break
             seen.add(signature)
             last_usable = output
+            start = perf_counter()
             batch = to_verification_input(output)
+            self.stage_latency_ms["handoff"] = (
+                self.stage_latency_ms.get("handoff", 0) + (perf_counter() - start) * 1000
+            )
+            self.batch = batch
+            start = perf_counter()
             runtime = VerificationRuntime(self.catalog, self.gateway, model=self.model)
+            self.stage_latency_ms["setup"] = (
+                self.stage_latency_ms.get("setup", 0) + (perf_counter() - start) * 1000
+            )
             histories = runtime.verify(batch, allow_revision=False)
             self.provider_metadata.extend(runtime.provider_metadata)
             for name, latency in runtime.stage_latency_ms.items():
@@ -123,7 +138,10 @@ class AdaptiveFinancialController:
             review_histories.update({h.outcome.parent_candidate_id: h for h in histories})
             review_histories = list(review_histories.values())
             inventory = evidence_inventory(output, review_histories)
-            feedback = ground_feedback(judge.assess(question, output, review_histories), inventory)
+            feedback = bind_coverage(
+                judge.assess(question, output, review_histories), question, output, review_histories
+            )
+            feedback = ground_feedback(feedback, inventory)
             event["evidence_inventory"] = inventory
             event["judge"] = feedback.model_dump(mode="json")
             event["judge_latency_ms"] = judge.latency_ms
@@ -134,7 +152,11 @@ class AdaptiveFinancialController:
             for history in histories:
                 record = history.outcome.final
                 if record.decision == "ACCEPT" and record.candidate_id not in affected:
-                    if feedback.assessment == "PASS" or record.original_claim.kind in {
+                    if feedback.assessment in {
+                        "PASS",
+                        "REVISION_NEEDED",
+                        "INSUFFICIENT_EVIDENCE",
+                    } or record.original_claim.kind in {
                         "fact",
                         "approved_metric",
                     }:

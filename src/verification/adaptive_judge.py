@@ -6,7 +6,7 @@ from time import perf_counter
 from typing import Literal
 from uuid import uuid4
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..core.llm_contracts import (
@@ -17,6 +17,8 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..core.llm_gateway import unwrap_singleton_object
+from ..core.schema_cache import model_schema
 
 
 class JudgeIssue(FinancialModel):
@@ -39,11 +41,149 @@ class JudgeIssue(FinancialModel):
     ) = None
 
 
-class JudgeFeedback(FinancialModel):
+class JudgeRecommendation(FinancialModel):
     assessment: Literal["PASS", "REVISION_NEEDED", "REJECT", "INSUFFICIENT_EVIDENCE", "JUDGE_ERROR"]
     issues: list[JudgeIssue] = Field(default_factory=list, max_length=16)
     revision_required: bool = False
     explanation: str = ""
+
+
+class JudgeFeedback(JudgeRecommendation):
+    # Coverage is backend-only and cannot be supplied as an LLM attestation.
+    coverage: "AnswerCoverage | None" = None
+
+    @model_serializer(mode="wrap")
+    def serialize_feedback(self, handler):
+        wire = handler(self)
+        if wire.get("coverage") is None:
+            wire.pop("coverage", None)
+        return wire
+
+
+class GoalCoverage(FinancialModel):
+    requirement_id: str
+    target_id: str | None
+    interpretation: bool
+    verified_candidate_ids: list[str] = Field(default_factory=list)
+    blocked_candidate_ids: list[str] = Field(default_factory=list)
+    missing_reason: str | None = None
+    recoverable: bool = False
+
+
+class AnswerCoverage(FinancialModel):
+    goals: list[GoalCoverage] = Field(default_factory=list)
+    complete: bool
+
+
+def answer_coverage(question, output, histories):
+    from types import SimpleNamespace
+
+    from ..outputs.firewall_qa_binding import request_inventory
+    from ..outputs.qa_composer import matches_financial_target, planned_requirements
+    from ..outputs.qa_contracts import VietnameseQARequest
+
+    proposal = output.planner_result.effective_proposal
+    context = getattr(output, "context", None)
+    records = [h.outcome.final for h in histories]
+    inventory = evidence_inventory(output, histories)
+    # Read-only coverage projections of *native ACCEPTs*, not admitted Ledger
+    # entries. Never persisted or passed to output composition/admission. Reuse
+    # M7's exact target/scope/ambiguity/explanation rules rather than a second
+    # interpretation of completeness. Native proof/admission still runs later.
+    entries = []
+    for record in records:
+        if record.decision != "ACCEPT":
+            continue
+        claim = record.original_claim
+        if context and any(
+            getattr(claim, k) != getattr(context, k)
+            for k in ("company_id", "document_id", "snapshot_id")
+        ):
+            continue
+        entries.append(
+            SimpleNamespace(
+                identity=SimpleNamespace(
+                    verified_claim_id=record.candidate_id,
+                    kind=claim.kind,
+                    company_id=claim.company_id,
+                    document_id=claim.document_id,
+                    snapshot_id=claim.snapshot_id,
+                    period=claim.period,
+                ),
+                accepted_claim=claim,
+                decision=record,
+                verification_status="verified",
+                content=claim.content,
+                citations=record.supporting_citations,
+                caveats=record.caveats,
+            )
+        )
+    request = VietnameseQARequest(
+        question=question,
+        **{
+            k: getattr(context, k, None)
+            for k in ("company_id", "document_id", "snapshot_id", "period", "reporting_scope")
+        },
+        answer_requirements=planned_requirements(question, proposal),
+    )
+    plan, status = request_inventory(request, entries)
+    goals = []
+    for target in plan.requirements:
+        related = []
+        for record in records:
+            claim = record.original_claim
+            if context and any(
+                getattr(claim, k) != getattr(context, k)
+                for k in ("company_id", "document_id", "snapshot_id")
+            ):
+                continue
+            if not matches_financial_target(claim, target):
+                continue
+            related.append(record)
+        verified = target.verified_claim_ids
+        present = any(r["indicator"] == target.target_id for r in inventory)
+        hard_blocked = any(
+            r.validation and any(c.status == "fail" for c in r.validation.checks) for r in related
+        )
+        goals.append(
+            GoalCoverage(
+                requirement_id=target.requirement_id,
+                target_id=target.target_id,
+                interpretation=target.interpretation,
+                verified_candidate_ids=verified,
+                blocked_candidate_ids=[r.candidate_id for r in related if r.decision != "ACCEPT"],
+                missing_reason=None if verified else target.reason or "unsupported_answer_goal",
+                recoverable=not verified
+                and present
+                and not hard_blocked
+                and target.reason != "ambiguous_verified_claims",
+            )
+        )
+    return AnswerCoverage(goals=goals, complete=status == "answered")
+
+
+def bind_coverage(feedback, question, output, histories):
+    """A semantic PASS cannot hide missing native goals or promote an M6 decision."""
+    coverage = answer_coverage(question, output, histories)
+    feedback.coverage = coverage
+    if feedback.assessment != "PASS" or coverage.complete:
+        return feedback
+    missing = [g for g in coverage.goals if not g.verified_candidate_ids]
+    feedback.issues = [
+        JudgeIssue(
+            issue_type="INCOMPLETE_COVERAGE",
+            explanation=f"User target {g.requirement_id} has no matching native ACCEPT: {g.missing_reason}",
+            required_evidence=[g.target_id] if g.target_id else [],
+            suggested_action="REVISE_ANALYSIS" if g.recoverable else "STOP",
+        )
+        for g in missing
+    ]
+    feedback.revision_required = any(g.recoverable for g in missing)
+    feedback.assessment = (
+        "REVISION_NEEDED" if feedback.revision_required else "INSUFFICIENT_EVIDENCE"
+    )
+    feedback.explanation = "native_answer_coverage_incomplete"
+    return feedback
 
 
 def evidence_inventory(output, histories):
@@ -149,10 +289,11 @@ class AdaptiveJudge:
                 "capability phải nhận evidence đó. Có thể PASS câu trả lời có giới hạn nếu đã mô tả đúng "
                 "quan hệ PAT/CFO và thừa nhận chưa đủ kết luận toàn diện chất lượng lợi nhuận."
             ),
-            schema=JudgeFeedback.model_json_schema(),
+            schema=model_schema(JudgeRecommendation),
             question=question,
             planner=proposal.model_dump(mode="json") if proposal else None,
             evidence_inventory=inventory,
+            answer_coverage=answer_coverage(question, output, histories).model_dump(mode="json"),
             candidates=[
                 dict(
                     claim_id=r.candidate_id,
@@ -215,7 +356,10 @@ class AdaptiveJudge:
             response = self.gateway.generate(request)
             if response.status != "success" or not isinstance(response.output, JSONOutput):
                 raise ValueError("judge_provider_failed")
-            feedback = JudgeFeedback.model_validate(response.output.payload)
+            recommendation = JudgeRecommendation.model_validate(
+                unwrap_singleton_object(response.output.payload)
+            )
+            feedback = JudgeFeedback(**recommendation.model_dump())
             if any(
                 i.claim_id and i.claim_id not in {r.candidate_id for r in records}
                 for i in feedback.issues

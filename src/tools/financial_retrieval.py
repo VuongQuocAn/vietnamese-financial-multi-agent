@@ -1,6 +1,5 @@
 """Typed read-only M4 adapters; không tính toán, rebuild metric hoặc chọn latest."""
 
-from copy import deepcopy
 from typing import Annotated, Literal
 
 from pydantic import Field
@@ -106,14 +105,20 @@ class FinancialRetrievalTools:
     """
 
     def __init__(self, catalog: SnapshotCatalog, *, coverage=()):
-        self._catalog = deepcopy(catalog)
-        self._api = EvidenceRetrieval(
-            self._catalog.facts,
-            self._catalog.evidence,
-            self._catalog.metrics,
-            graph=self._catalog.graph,
-            source_reviews=self._catalog.reviews,
-            coverage=coverage,
+        from ..evidence.snapshots import isolated_catalog
+
+        self._catalog = isolated_catalog(catalog)
+        self._api = (
+            self._catalog.api
+            if not coverage and getattr(self._catalog, "_request_snapshot", False)
+            else EvidenceRetrieval(
+                self._catalog.facts,
+                self._catalog.evidence,
+                self._catalog.metrics,
+                graph=self._catalog.graph,
+                source_reviews=self._catalog.reviews,
+                coverage=coverage,
+            )
         )
         self._selections = {}
 

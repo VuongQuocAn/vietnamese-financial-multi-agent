@@ -192,14 +192,22 @@ def _assertion_signature(entry):
     claim = entry.accepted_claim
     if entry.identity.kind == "document":
         return (claim.claim_type, claim.requirement.target, entry.content)
+    return financial_assertion_signature(claim, claim_scope(entry))
+
+
+def financial_assertion_signature(claim, reporting_scope=None):
     calc = claim.calculation
     return json.dumps(
         dict(
-            context=_segment(entry).context.model_dump(mode="json"),
-            kind=entry.identity.kind,
-            interpretation=entry.content
-            if entry.identity.kind == "supported_interpretation"
-            else None,
+            context=dict(
+                company_id=claim.company_id,
+                document_id=claim.document_id,
+                snapshot_id=claim.snapshot_id,
+                period=claim.period,
+                reporting_scope=reporting_scope,
+            ),
+            kind=claim.kind,
+            interpretation=claim.content if claim.kind == "supported_interpretation" else None,
             evidence=[
                 dict(
                     kind=e.kind,
@@ -438,6 +446,98 @@ def understand_requirements(question):
     return requirements
 
 
+def planned_requirements(question, proposal):
+    """Materialize only user goals; old proposals use question parsing, never tools."""
+    requirements = (
+        [
+            QARequirement(requirement_id=f"adaptive-{i}", text=question, **target.model_dump())
+            for i, target in enumerate(proposal.user_requested_targets)
+        ]
+        if proposal.user_requested_targets
+        else understand_requirements(question)
+    )
+    # Explicit lexical goals cannot disappear from a model-authored inventory.
+    for explicit in understand_requirements(question):
+        if explicit.kind not in {"fact", "metric", "explanation", "limitations"}:
+            continue
+        if not any(
+            (r.kind, r.target_id, r.interpretation, r.aspect)
+            == (explicit.kind, explicit.target_id, explicit.interpretation, explicit.aspect)
+            for r in requirements
+        ):
+            requirements.append(
+                explicit.model_copy(update={"requirement_id": f"adaptive-{len(requirements)}"})
+            )
+    # Explain a requested calculation from its own admitted metadata, never by
+    # turning its internal operands into independent fact obligations. Keep the
+    # generic M7 protected-slot default unchanged for historical direct callers.
+    for metric in [r for r in requirements if r.kind == "metric" and not r.interpretation]:
+        for aspect in ("formula", "operands"):
+            if not any(
+                r.kind == "explanation" and r.target_id == metric.target_id and r.aspect == aspect
+                for r in requirements
+            ):
+                requirements.append(
+                    QARequirement(
+                        requirement_id=f"support-{len(requirements)}",
+                        text=question,
+                        kind="explanation",
+                        target_id=metric.target_id,
+                        period=metric.period,
+                        aspect=aspect,
+                        depends_on=[metric.requirement_id],
+                    )
+                )
+    for requirement in requirements:
+        if requirement.kind == "explanation":
+            requirement.depends_on = [
+                r.requirement_id
+                for r in requirements
+                if r.kind == "metric"
+                and not r.interpretation
+                and r.target_id == requirement.target_id
+            ]
+        if requirement.interpretation_topic == "earnings_quality":
+            requirement.required_indicators = sorted(
+                set(requirement.required_indicators)
+                | {"b02.profit_after_tax", "b03.operating_cash_flow"}
+            )
+    if not requirements:
+        return understand_requirements(question)
+    return requirements
+
+
+def matches_financial_target(claim, requirement):
+    """Shared coverage predicate for native M6 records and admitted M7 claims."""
+    if requirement.period and claim.period != requirement.period:
+        return False
+    expected = (
+        "supported_interpretation"
+        if requirement.interpretation
+        else ("fact" if requirement.kind == "fact" else "approved_metric")
+    )
+    if claim.kind != expected:
+        return False
+    if not set(requirement.required_indicators) <= {
+        e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"
+    }:
+        return False
+    if requirement.interpretation:
+        if requirement.interpretation_topic == "unbounded":
+            return False
+        if (
+            requirement.interpretation_topic == "earnings_quality"
+            and "chat luong loi nhuan" not in normalize(claim.content)
+        ):
+            return False
+    if requirement.kind == "fact":
+        return any(
+            e.kind == "fact" and e.canonical_item_id == requirement.target_id
+            for e in claim.supporting_evidence
+        )
+    return bool(claim.calculation and claim.calculation.formula_id == requirement.target_id)
+
+
 def _matches_target(entry, requirement):
     if requirement.period and entry.identity.period != requirement.period:
         return False
@@ -455,11 +555,6 @@ def _matches_target(entry, requirement):
     if entry.identity.kind == "document":
         return False
     claim = entry.accepted_claim
-    expected_kind = (
-        "supported_interpretation"
-        if requirement.interpretation
-        else ("fact" if requirement.kind == "fact" else "approved_metric")
-    )
     if entry.verification_status != "verified" or entry.decision.decision != "ACCEPT":
         return False
     if requirement.kind == "explanation":
@@ -469,22 +564,7 @@ def _matches_target(entry, requirement):
             and claim.calculation.formula_id == requirement.target_id
             and metric_explanation(entry, [requirement.aspect])
         )
-    if requirement.interpretation:
-        if requirement.interpretation_topic == "unbounded":
-            return False
-        if (
-            requirement.interpretation_topic == "earnings_quality"
-            and "chat luong loi nhuan" not in normalize(entry.content)
-        ):
-            return False
-    if entry.identity.kind != expected_kind:
-        return False
-    if requirement.kind == "fact":
-        return any(
-            e.kind == "fact" and e.canonical_item_id == requirement.target_id
-            for e in claim.supporting_evidence
-        )
-    return bool(claim.calculation and claim.calculation.formula_id == requirement.target_id)
+    return matches_financial_target(claim, requirement)
 
 
 def _answer_text(response):

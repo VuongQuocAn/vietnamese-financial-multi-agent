@@ -15,7 +15,8 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
-from ..core.llm_gateway import SharedLLMGateway
+from ..core.llm_gateway import SharedLLMGateway, unwrap_singleton_object
+from ..core.schema_cache import model_schema
 from .contracts import VerificationInput
 from .evidence_contracts import EvidenceCriticResult
 from .evidence_critic import EvidenceCritic
@@ -27,6 +28,7 @@ from .logic_contracts import (
     SemanticLogicAssessment,
 )
 from .logic_rules import (
+    assertion_category,
     assertion_spans,
     classify,
     context_gate,
@@ -319,6 +321,7 @@ class FinancialLogicCritic:
                     assertion_id=a.assertion_id,
                     content=a.content,
                     minimum_required_premises=sorted(semantic_requirements(a.content, claim)),
+                    assertion_type=assertion_category(a.content),
                 )
                 for a in pending
             ],
@@ -385,6 +388,8 @@ class FinancialLogicCritic:
                 "Số liệu PASS chỉ là numeric premise; unsupported/partial/undetermined không phải proven premise.",
                 "Thiếu bằng chứng là insufficient_context; inconsistent cần contradiction được chứng minh.",
                 "Tương quan không chứng minh nguyên nhân. Margin dương không chứng minh cải thiện.",
+                "Giới hạn bằng chứng có phạm vi phủ định: chưa đủ căn cứ kết luận cải thiện không phải khẳng định cải thiện. "
+                "Không dùng câu phủ định để che một mệnh đề khẳng định hoặc quan hệ nhân quả khác chưa được chứng minh.",
                 "CFO khác lợi nhuận. Debt/assets không đủ chứng minh mất khả năng thanh toán.",
                 "Consistent cần required_premises đã available, premise_ids gồm numeric check và supported assertion.",
                 "premise_ids chỉ lấy chuỗi check:... hoặc support:... từ allowed_premise_ids; không dùng tên loại premise như sign_context làm ID.",
@@ -393,7 +398,7 @@ class FinancialLogicCritic:
                 "Không áp separate2024 sang năm khác, không chọn original/recovery2022; giữ D03-B10.",
                 "Trả mỗi assertion đúng một lần; limitations luôn gồm bounded_to_supplied_evidence.",
             ],
-            output_schema=SemanticLogicAssessment.model_json_schema(),
+            output_schema=model_schema(SemanticLogicAssessment),
         )
         request = LLMRequest(
             contract_version="llm_gateway_v1",
@@ -423,7 +428,9 @@ class FinancialLogicCritic:
                 _error(output, "semantic", "semantic_gateway_response_failed")
                 return
             try:
-                assessment = SemanticLogicAssessment.model_validate(response.output.payload)
+                assessment = SemanticLogicAssessment.model_validate(
+                    unwrap_singleton_object(response.output.payload)
+                )
                 self._validate_semantic(
                     assessment, claim, pending, evidence, validation, available, premise_ids
                 )

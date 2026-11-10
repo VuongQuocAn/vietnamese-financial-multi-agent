@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..agents.orchestration_contracts import CandidateConflict
@@ -62,10 +62,27 @@ class EvidenceSupportFinding(FinancialModel):
 
 
 class EvidenceCriticTrace(FinancialModel):
+    failure_kind: (
+        Literal[
+            "invalid_json",
+            "invalid_schema",
+            "invalid_semantic_contract",
+            "provider_failure",
+            "truncated",
+        ]
+        | None
+    ) = None
     deterministic_latency_ms: float = 0
     semantic_latency_ms: float = 0
     llm: PlannerLLMMetadata = Field(default_factory=PlannerLLMMetadata)
     semantic_response: SemanticEvidenceAssessment | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_trace(self, handler):
+        wire = handler(self)
+        if wire.get("failure_kind") is None:
+            wire.pop("failure_kind", None)
+        return wire
 
 
 class ClaimEvidenceAssessment(FinancialModel):
