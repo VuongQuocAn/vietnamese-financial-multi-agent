@@ -121,6 +121,8 @@ def _explicit_constraints(question):
     )
     if "dau nam" in text and len(years) == 1:
         periods.append(f"{years[0]}-01-01")
+    if "cuoi nam" in text and len(years) == 1:
+        periods.append(f"{years[0]}-12-31")
     return years, scopes, origins, sorted(set(periods))
 
 
@@ -147,6 +149,50 @@ def _ordered_operations(proposal):
     for key in operations:
         visit(key)
     return ordered
+
+
+def _complete_proposal_fields(raw):
+    """Recover only fully decoded top-level fields; never repair or invent values.
+
+    A truncated optional tail must not discard an already complete execution DAG.
+    The recovered object still goes through all ordinary typed/context checks.
+    """
+    decoder = json.JSONDecoder()
+    text, fields = raw.lstrip(), {}
+    if not text.startswith("{"):
+        return None
+    position = 1
+    try:
+        while True:
+            while position < len(text) and text[position].isspace():
+                position += 1
+            key, position = decoder.raw_decode(text, position)
+            if not isinstance(key, str) or key in fields:
+                return None
+            while position < len(text) and text[position].isspace():
+                position += 1
+            if text[position] != ":":
+                break
+            position += 1
+            while position < len(text) and text[position].isspace():
+                position += 1
+            value, position = decoder.raw_decode(text, position)
+            fields[key] = value
+            while position < len(text) and text[position].isspace():
+                position += 1
+            if text[position] != ",":
+                break
+            position += 1
+    except (ValueError, IndexError):
+        pass
+    required = {
+        "intent",
+        "company_alias",
+        "reporting_years",
+        "operations",
+        "user_requested_targets",
+    }
+    return fields if required <= fields.keys() and fields["operations"] else None
 
 
 class EvidenceAwareQueryPlanner:
@@ -314,7 +360,7 @@ class EvidenceAwareQueryPlanner:
                 ),
                 Message(role="user", content=question),
             ],
-            generation=GenerationParameters(temperature=0.0, max_output_tokens=3000),
+            generation=GenerationParameters(temperature=0.0, max_output_tokens=6000),
             output_spec=OutputSpec(format="json"),
             constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
         )
@@ -334,6 +380,25 @@ class EvidenceAwareQueryPlanner:
         if isinstance(response.output, JSONOutput):
             result.raw_proposal = response.output.payload
         if response.status != "success" or not isinstance(response.output, JSONOutput):
+            if (
+                isinstance(response.output, JSONOutput)
+                and response.status in {"malformed", "partial"}
+                and response.output.validation_status == "invalid_json"
+            ):
+                recovered = _complete_proposal_fields(response.output.raw_text)
+                if recovered:
+                    result.raw_proposal = recovered
+                    result.trace.append(
+                        PlannerTrace(
+                            stage="proposal_schema",
+                            outcome="complete_fields_recovered",
+                            reasons=[
+                                "raw_response_preserved_in_llm_attempt",
+                                "ordinary_validation_required",
+                            ],
+                        )
+                    )
+                    return recovered
             raise ValueError(
                 response.error.category if response.error else "gateway_response_failed"
             )
@@ -623,6 +688,20 @@ class EvidenceAwareQueryPlanner:
 
             operations = {operation.operation_id: operation for operation in proposal.operations}
             for target in proposal.user_requested_targets:
+                if (
+                    target.kind == "metric"
+                    and target.interpretation
+                    and not proposal.reasoning_required
+                    and target.aspect == "value"
+                    and not any(r.interpretation for r in understand_requirements(question))
+                ):
+                    target.interpretation = False
+                    target.interpretation_topic = None
+                    target.reasoning_operations = []
+                    target.reasoning_periods = []
+                    result.trace.append(
+                        PlannerTrace(stage="semantic_policy", outcome="metric_value_goal_restored")
+                    )
                 if target.interpretation and not target.required_indicators:
                     original = (
                         context.previous_proposal.user_requested_targets
@@ -835,6 +914,11 @@ class EvidenceAwareQueryPlanner:
         if proposal.snapshot_origin and proposal.snapshot_origin not in origins:
             raise ValueError("proposal_invented_snapshot_origin")
         period = periods[0] if periods else context.period
+        if period is None:
+            from ..tools.question_understanding import understand
+
+            # The existing parser resolves explicit phrases such as cuối năm.
+            period = understand(question)[0].period
         # A provider may echo the explicitly requested filing year into period.
         # Preserve the raw proposal, but let statement types materialize their own
         # annual/as-of periods rather than treating the same year as invented.
@@ -959,6 +1043,8 @@ class EvidenceAwareQueryPlanner:
             if context.company_id and d.company_id == context.company_id
             for a in d.company_aliases
         }
+        if context.company_id:
+            bound_aliases.add(normalize(context.company_id))
         if proposal.company_alias and normalize(proposal.company_alias) not in (
             aliases or bound_aliases
         ):

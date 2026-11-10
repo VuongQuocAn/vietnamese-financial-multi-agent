@@ -421,6 +421,8 @@ def with_assignment(prompt, upstream):
                 "cho so sánh/phép tính mới; inputs là evidence_id hoặc operation_id trước đó. "
                 "greater/less/equal đối chiếu độ lớn, subtract tính chênh lệch, ratio tính tỷ số ad hoc, "
                 "percentage_change dùng current trước/prior sau với period_relation=across_periods. "
+                "Mọi operation so sánh hoặc tính toán inputs khác kỳ đều phải khai báo "
+                "period_relation=across_periods, kể cả subtract/greater/less/equal. "
                 "Backend dùng Decimal và M6 replay độc lập; không gọi tỷ số ad hoc là metric chuẩn. "
                 "analyses có goal, operations, assumptions, claim_type. Statement diễn giải ý nghĩa "
                 "của quan hệ đã tính, được chứa số có nguồn hoặc kết quả kiểm chứng; không đoán nguyên nhân. "

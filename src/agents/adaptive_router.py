@@ -111,7 +111,18 @@ def _scope_error(evidence, requirement, planner, upstream):
         for s in query.selectors
     ):
         return "query_context_mismatch"
-    if query.reporting_year and evidence.period[:4] != str(query.reporting_year):
+    same_filing_operand = (
+        evidence.kind == "fact"
+        and selector.period == evidence.period
+        and evidence.period in query.reporting_periods
+        and selector.document_id == evidence.document_id
+        and selector.snapshot_id == evidence.snapshot_id
+    )
+    if (
+        query.reporting_year
+        and evidence.period[:4] != str(query.reporting_year)
+        and not same_filing_operand
+    ):
         return "reporting_period_mismatch"
     if explicit_periods and evidence.period not in explicit_periods:
         return "reporting_period_mismatch"

@@ -559,6 +559,41 @@ def planned_requirements(question, proposal):
     return list(unique.values())
 
 
+def _reasoning_matches(proof, requirement):
+    expected = [
+        op
+        for op in requirement.reasoning_operations
+        if op
+        not in {
+            "retrieve_facts",
+            "find_financial_facts",
+            "retrieve_evidence",
+            "get_evidence_sources",
+            "interpret",
+            "assess_limitations",
+            "conclude",
+        }
+    ]
+    if not expected:
+        text = normalize(requirement.text)
+        if "chenh lech" in text:
+            expected = ["subtract"]
+        elif "so sanh" in text:
+            expected = ["compare"]
+    if not expected:
+        return True
+    if not proof or not proof.calculation:
+        return False
+    actual = [s.operation.operator for s in proof.calculation.steps]
+    if expected == ["compare"]:
+        return any(
+            op
+            in {"greater", "less", "equal", "subtract", "percentage_change", "relative_difference"}
+            for op in actual
+        )
+    return expected == actual
+
+
 def matches_financial_target(claim, requirement, logic=None):
     """Shared coverage predicate for native M6 records and admitted M7 claims."""
     if requirement.period and claim.period != requirement.period:
@@ -581,12 +616,7 @@ def matches_financial_target(claim, requirement, logic=None):
         return False
     if requirement.interpretation:
         proof = getattr(claim, "reasoning", None)
-        if requirement.reasoning_operations and (
-            not proof
-            or not proof.calculation
-            or requirement.reasoning_operations
-            != [s.operation.operator for s in proof.calculation.steps]
-        ):
+        if not _reasoning_matches(proof, requirement):
             return False
         if requirement.reasoning_periods and (
             not proof
@@ -697,6 +727,8 @@ def _public_notes(notes):
     """Keep diagnostic codes in the wire trace, expose bounded source caveats."""
     result = []
     for note in notes:
+        if note in {"usable", "usable_with_caveat", "insufficient", "conflicted"}:
+            continue
         if note.startswith(("PLANNER_TASK:", "specialist_annotation:")):
             continue
         if re.search(r"\b[a-zA-Z][a-zA-Z0-9]*(?:_[a-zA-Z0-9]+)+\b", note):

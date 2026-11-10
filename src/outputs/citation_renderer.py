@@ -7,6 +7,7 @@ replaced by the locator's resolution status.
 
 import hashlib
 import json
+import re
 
 from pydantic import ValidationError
 
@@ -216,6 +217,10 @@ def _reference_text(ref):
         location += ", " + ", ".join(selectors)
     page = ref.source_citations[0].source.reference
     label = f"{page.anchor.page.symbol} {page.anchor.page.year}" if page else "Tài liệu"
+    if page and re.search(
+        r"(?:document:|sha256:|[0-9a-f]{8}-[0-9a-f]{4}-)", page.anchor.page.symbol
+    ):
+        label = f"Tài liệu nguồn {page.anchor.page.year}"
     text = f"{ref.display_label} {label} — {location}."
     if _public_notes(ref.limitations):
         text += " Giới hạn nguồn: " + "; ".join(_public_notes(ref.limitations))

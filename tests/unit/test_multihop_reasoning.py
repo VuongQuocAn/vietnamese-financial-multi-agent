@@ -220,7 +220,13 @@ def test_composer_renderer_firewall_preserve_calculation_and_hide_internal_metad
     data, batch = reasoning_case(formula=formula, operator="subtract")
     claim = batch.claims[0]
     batch.caveats.extend(
-        ["PLANNER_TASK: private task", "candidate_pending_M6", "INTERNAL_OPERATION_7"]
+        [
+            "PLANNER_TASK: private task",
+            "candidate_pending_M6",
+            "INTERNAL_OPERATION_7",
+            "usable",
+            "insufficient",
+        ]
     )
     validation, evidence, logic, _ = verify(data, batch)
     history = VerificationHistory(
@@ -265,7 +271,13 @@ def test_composer_renderer_firewall_preserve_calculation_and_hide_internal_metad
     assert rendered.references
     assert all(
         token not in rendered.rendered_text
-        for token in ["PLANNER_TASK", "candidate_pending_M6", "INTERNAL_OPERATION_7"]
+        for token in [
+            "PLANNER_TASK",
+            "candidate_pending_M6",
+            "INTERNAL_OPERATION_7",
+            "usable",
+            "insufficient",
+        ]
     )
     assert "PLANNER_TASK: private task" in rendered.caveats
 

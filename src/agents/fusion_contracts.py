@@ -138,9 +138,12 @@ def is_mixed(question):
     unsupported_financial = any(
         r.reason in {"unsupported_formula", "unsupported_question_or_formula"} for r in requirements
     )
+    # Citations accompany a financial answer; they are not a separate document
+    # lane. Sending them through fusion recursively loses the financial goal.
+    source_only = all(r.lane != "relation" or r.kind == "source_context" for r in requirements)
     return (
         "financial" in lanes
-        and ("document" in lanes or "relation" in lanes)
+        and ("document" in lanes or "relation" in lanes and not source_only)
         or "document" in lanes
         and unsupported_financial
     )
