@@ -10,6 +10,48 @@ def _has(text, pattern):
     return re.search(pattern, text) is not None
 
 
+_EVIDENCE_NOUN = r"(?:co so|can cu|bang chung|du lieu|thong tin)"
+_SHORTAGE = r"(?:(?:chua|khong)(?: co)? du|chua co|khong co|thieu)"
+_EPISTEMIC_ACTION = r"(?:tinh(?: toan)?|ket luan|khang dinh|xac nhan|danh gia|chung minh)"
+_LIMITATION_PREDICATE = re.compile(
+    rf"\b(?:{_SHORTAGE} {_EVIDENCE_NOUN}|"
+    rf"{_EVIDENCE_NOUN}(?: (?:hien co|hien tai|duoc cung cap|nay|van|hien|con))* "
+    rf"(?:chua|khong)(?: co)? du|(?:chua|khong) the)(?: de)? {_EPISTEMIC_ACTION}\b"
+)
+_SCOPE_BOUNDARY = re.compile(
+    r"[.;!?,]|\b(?:nhung|tuy nhien|song|vi vay|do do|boi vi|"
+    r"va thuc te|dong thoi)\b|"
+    # A new subject + asserted predicate is outside the preceding epistemic
+    # complement, even when linked by a plain conjunction rather than punctuation.
+    r"\b(?:va|hoac) (?=(?:ty le|ty so|he so|doanh thu|loi nhuan|cfo|dong tien) "
+    r"(?:(?:nay|do) )?(?:(?:da|dang|van) )?(?:tang|giam|cai thien|vuot|cao hon|thap hon)\b)"
+)
+
+
+def _limitation_remainder(text):
+    """Remove only governed epistemic complements, retaining independent clauses.
+
+    Handles evidence-first and deficiency-first word orders. Negation of the
+    deficiency itself is not a limitation. This grants no semantic support: every
+    retained or governed assertion is still assessed by the independent critics.
+    """
+    limitation, remainder = False, []
+    for clause in _SCOPE_BOUNDARY.split(text):
+        match = _LIMITATION_PREDICATE.search(clause)
+        if match is None or re.search(r"\bkhong(?: phai)?\s*$", clause[: match.start()]):
+            remainder.append(clause)
+            continue
+        limitation = True
+        remainder.append(clause[: match.start()])
+        # Causes of evidence insufficiency stay within that limitation. A causal
+        # financial assertion starts a new scope and cannot inherit its negation.
+        governed = clause[match.end() :]
+        escape = re.search(r"\b(?:nen|vi|do)\b(?! thieu\b)", governed)
+        if escape:
+            remainder.append(governed[escape.start() :])
+    return limitation, " ".join(" ".join(remainder).split())
+
+
 def assertion_category(content):
     """Conservative assertion scope; limitation complements never authorize a value.
 
@@ -21,27 +63,7 @@ def assertion_category(content):
     text = fold(content)
     if re.search(r"\d|%", text):
         return "NUMERIC_ASSERTION"
-    clauses = re.split(r"[.;!?]|,|\b(?:nhung|tuy nhien|song|vi vay|do do|boi vi)\b", text)
-    limitation = False
-    remainder = []
-    for clause in clauses:
-        match = re.search(
-            r"\b(?:(?:chua du|khong du|khong co|thieu) "
-            r"(?:co so|can cu|bang chung|du lieu|thong tin)(?: de)?|(?:chua|khong) the) "
-            r"(?:tinh(?: toan)?|ket luan|khang dinh|xac nhan|danh gia|chung minh)\b",
-            clause,
-        )
-        if match:
-            limitation = True
-            # Do not consume a new independent/consequence assertion.
-            governed = clause[match.end() :]
-            escape = re.search(r"\b(?:nen|vi|do|va thuc te|dong thoi)\b", governed)
-            remainder.append(clause[: match.start()])
-            if escape:
-                remainder.append(governed[escape.start() :])
-        else:
-            remainder.append(clause)
-    positive = " ".join(remainder)
+    limitation, positive = _limitation_remainder(text)
     if re.search(
         r"\b(?:ty le|ty so|he so|ratio|margin|gap (?:doi|ba|bon)|lon hon|nho hon|cao hon|thap hon|vuot)\b",
         positive,

@@ -161,3 +161,13 @@ guard. Không thêm ca thứ4 vì F08đã cung cấp tình huống thiếu sót/
 [Report](../../../docs/fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).
 Status REVIEW,không tự DONE/đóng9issues. Next action: Tech Lead quyết định blocker
 Q21D01tái diễn và nghiệm thu phạm vi đã có evidence;không tự sửa/live thêm/Web/M8.
+
+### Tech Lead giao sửa P1 Q21 — 10/11/2026
+
+Q11/F08được chấp nhận;chỉ sửa phạm vi phủ định tổng quát,regression Việt+negative
+controls,replay exact analysisQ21,giữ independent M6gates. Answer coverage đã có
+trong input Judge9a356bf;nhắc model xét complete/goals,backend guard giữ quyền chặn.
+113targetedPASS;exact replay2numeric premisesPASS/0formula false positive nhưng
+M6ABSTAIN khi thiếu semantic response,Ledger rejected;6historical proofs unchanged.
+Cho phép đúng1liveQ21sau offlinePASS trên source mới;không Q11/F08/benchmark/full
+suite. Kết quả/SHA/CI trong phần P1Q21 của report. Status REVIEW,không tự DONE.

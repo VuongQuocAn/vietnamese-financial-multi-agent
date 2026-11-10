@@ -722,3 +722,67 @@ revision thành công; Q21 còn false positive formula gate **High/P1** và answ
 PARTIAL. Chưa đạt đầy đủ live acceptance của FIX-02; không đóng9issues hoặc tự DONE.
 Next action duy nhất: Tech Lead quyết định xử lý blocker Q21 D01 tái diễn và nghiệm
 thu phạm vi đã có evidence; không tự sửa thêm/live thêm/Web/M8.
+
+## P1 Q21 — phạm vi phủ định và Judge input,10/11/2026
+
+Tech Lead chấp nhận Q11/F08 và bounded feedback, chỉ giao xử lý Q21D01; không
+tối ưu hiệu năng hoặc test diện rộng. Baseline9a356bf/HEADdocs e463316; pending
+GEN/Web/CHAT và source/approved data giữ nguyên.
+
+### Thay đổi và offline evidence trước live
+
+`logic_rules._limitation_remainder` tách evidence-deficiency predicate và
+calculation/conclusion complement nằm trong phạm vi nó. Hỗ trợ deficiency-first
+(“chưa có đủ căn cứ để…”) và evidence-first (“dữ liệu hiện có vẫn chưa đủ để…”),
+không ngoại lệ riêng một câu Q21. Scope dừng tại punctuation, contrast và
+conjunction mở subject+asserted predicate mới. Phủ định kép đối với deficiency
+không được coi là limitation. Digits/% vẫn qua deterministic gate trước scope
+routing; independent ratio/causal clauses vẫn phải kiểm chứng. Không tự ACCEPT
+vì có “chưa đủ”; các cách nói chưa rõ vẫn defer semantic/abstain.
+
+Không thay Financial Validator, Evidence Critic, Logic Critic, native M6 hoặc
+Ledger policy. Model phải hỗ trợ conclusion; numeric premises kiểm tra độc lập
+với canonical facts/sources. Synthetic negative controls: unsupported Evidence
+hoặc insufficient Logic không thể tạo native ACCEPT/Ledger stored; fully supported
+control vẫn qua đủ tầng, không phải research accuracy evidence.
+
+**answer_coverage đã có trong input LLM Judge trước call ở9a356bf**, được xác minh
+từ source và raw provider requests; không chỉ bổ sung sau kết quả. Không thêm
+contract hay coverage calculation khác. Sửa prompt yêu cầu xét từng native
+verified_candidate_ids/blocked_candidate_ids/missing_reason/recoverable;
+answer_coverage.complete=false không PASS vì facts/inventory đủ; thiếu có thể sửa
+thì REVISION_NEEDED,không thể sửa thì INSUFFICIENT_EVIDENCE. Backend guard vẫn
+giữ quyền chặn cuối. Capture-request tests với native ACCEPT có/không xác nhận
+coverage trong actual request và model PASS không vượt guard. Chưa suy thành
+model đã tự phát hiện coverage đúng trong live.
+
+`tests/unit/test_q21_negation.py`: nhiều diễn đạt Việt,percentages,contrast,
+independent assertion sau conjunction,double negation,evidence/logic/admission
+gates và Judge input. Nhóm targeted mới+existing adaptive/financial-validator/
+evidence/logic: **113PASS**; regression trước sửa tái hiện evidence-first/chưa có
+đủ,independent numeric clause và deficiency negation. Một test coverage fixture
+đầu dùng nhầm revenue target với gross-profit claim đã sửa đúng explicit target;
+không tính fixture mismatch là runtime bug. Thêm focused file vào CI smoke;
+không full suite/benchmark/Q11/F08live lại.
+
+Replay exact saved candidate `candidate:c500b69f901255b873a005ea` từ controlled-live
+Ledger batch, không đổi content/premises/references: EVIDENCE_LIMITATION,
+2numeric premisesPASS,0financial checkFAIL,không còn formula false positive.
+Không có saved semantic response cho analysis trước đây bị chặn nên no-Gateway
+replay:Evidence insufficient_evidence/semantic_gateway_unavailable,Logic
+insufficient_context,M6ABSTAIN/required_semantic_assessment_unavailable,Ledger
+rejected. Không dựng verdict LLM giả. Replay đầu route đã semantic nhưng label
+QUALITATIVE do whitespace giữa clauses; chuẩn hóa whitespace ở remainder, thêm
+exact-statement regression và giữ cả artifacts cũ/cuối. Sáu historical entries
+replay proofPASS/bytes unchanged.
+
+Artifacts ignored: `artifacts/evidence/FIX-02/q21-negation/` gồm regression-before,
+offline-tests-final logs,candidate/hashes.json,saved-analysis-replay-2/{summary,
+history}.json,historical-proof-replay.json. Candidate chỉ2runtime deltas,
+logic_rules/adaptive_judge,không import pending local modules.
+
+### Live Q21 và checkpoint
+
+Sau offlinePASS, chạy đúng1Q21request trên implementation commit mới/source archive
+cố định,không retry hoặc sửa runtime giữa run. Actual usage/latency/native/M7 và
+CI đúng SHA bổ sung dưới đây. FIX-02giữREVIEW.
