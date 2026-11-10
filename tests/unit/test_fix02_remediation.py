@@ -311,11 +311,71 @@ def test_metric_interpretation_coverage_uses_calculation_operands():
         kind="metric",
         target_id=claim.calculation.formula_id,
         interpretation=True,
+        interpretation_topic="metric_meaning",
         required_indicators=indicators,
+        reasoning_operations=["divide"],
+        reasoning_periods=[claim.period],
     )
     assert matches_financial_target(claim, goal)
     goal.required_indicators.append("b03.operating_cash_flow")
     assert not matches_financial_target(claim, goal)
+
+
+def test_admitted_arithmetic_survives_a_mismatched_dynamic_goal(tmp_path):
+    from vietnamese_financial_multi_agent.outputs import VietnameseQAComposer, VietnameseQARequest
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+    from vietnamese_financial_multi_agent.verification import (
+        BoundedVerificationLoop,
+        VerificationHistory,
+        VerificationProofContext,
+        VerifiedClaimLedger,
+        VerifiedClaimRepository,
+    )
+
+    from .test_multihop_reasoning import reasoning_case, verify
+
+    data, batch = reasoning_case(operator="subtract")
+    validation, evidence, logic, _ = verify(data, batch)
+    history = VerificationHistory(
+        contexts=[
+            VerificationProofContext(
+                batch=batch, validation=validation, evidence=evidence, logic=logic
+            )
+        ],
+        outcome=BoundedVerificationLoop().start(
+            batch, validation, evidence, logic, candidate_id=batch.claims[0].candidate_id
+        ),
+    )
+    repository = VerifiedClaimRepository(tmp_path)
+    assert repository.admit(history).status == "stored"
+    claim = batch.claims[0]
+    goal = QARequirement(
+        requirement_id="original",
+        text="Phân tích quan hệ",
+        kind="fact",
+        target_id=claim.supporting_evidence[0].canonical_item_id,
+        period=claim.period,
+        interpretation=True,
+        interpretation_topic="dynamic_calculation",
+        required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
+        reasoning_operations=["ratio"],
+        reasoning_periods=[claim.period],
+    )
+    result = VietnameseQAComposer(VerifiedClaimLedger(repository)).compose(
+        VietnameseQARequest(
+            question="Phân tích quan hệ",
+            answer_requirements=[goal],
+            **{
+                k: getattr(claim, k) for k in ("company_id", "document_id", "snapshot_id", "period")
+            },
+        )
+    )
+    assert result.status == "partial"
+    assert result.used_verified_claim_ids
+    assert result.unanswered_requirements[0].requirement_id == "original"
+    assert any(
+        r.requirement_id.startswith("support-derived-") for r in result.answered_requirements
+    )
 
 
 def test_optional_explanation_does_not_reduce_completeness(tmp_path):

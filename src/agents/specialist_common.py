@@ -436,6 +436,8 @@ def with_assignment(prompt, upstream):
                 "Đánh giá có giới hạn cần nói quan hệ đó có ý nghĩa gì trong phạm vi kỳ/chỉ tiêu, "
                 "không chỉ lặp số hoặc nói chỉ tiêu này lớn hơn chỉ tiêu kia. "
                 "Không chép evidence IDs hay diagnostic flags vào statement/limitations; chúng ở metadata. "
+                "Không tự gán tình trạng đã/chưa kiểm toán hoặc tính xác thực của báo cáo nếu evidence "
+                "không khai báo điều đó; chỉ nêu đúng giới hạn nguồn được cung cấp. "
                 "limitations tối đa 8 ý; backend đã giữ source caveats nên không chép toàn bộ flags vào đây. "
                 "statement giải thích ý nghĩa có giới hạn của quan hệ giữa những facts được giao; "
                 "tách ý nghĩa của kết quả khỏi việc chỉ nhắc lại kết quả số học. Điều chưa thể kết luận "

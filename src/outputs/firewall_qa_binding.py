@@ -241,7 +241,7 @@ def request_inventory(request, entries):
             not goal.interpretation
             or goal.verified_claim_ids
             or not goal.required_indicators
-            or goal.interpretation_topic in {"dynamic_calculation", "unbounded"}
+            or goal.interpretation_topic == "unbounded"
         ):
             continue
         for entry in entries:
@@ -253,6 +253,11 @@ def request_inventory(request, entries):
                 and proof.claim_type == "derived_fact"
                 and proof.calculation
                 and set(goal.required_indicators) <= indicators
+                and (
+                    not goal.reasoning_periods
+                    or set(goal.reasoning_periods)
+                    == {o.period for o in proof.calculation.operands.values()}
+                )
                 and (goal.period is None or goal.period == claim.period)
                 and (scope is None or claim_scope(entry) == scope)
                 and not any(

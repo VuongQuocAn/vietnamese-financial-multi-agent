@@ -268,6 +268,10 @@ class EvidenceAwareQueryPlanner:
                 "interpretation_topic=dynamic_calculation, target_id là một chỉ tiêu đầu vào, "
                 "required_indicators gồm tất cả operands. Yêu cầu giải thích ý nghĩa cần "
                 "metric_meaning/earnings_quality và task kết luận sau phép tính. "
+                "Mục tiêu hỏi dữ liệu cho thấy điều gì hoặc ý nghĩa biến động phải có target "
+                "metric_meaning/earnings_quality riêng, không thay bằng dynamic_calculation. "
+                "Chỉ đặt reasoning_operations bắt buộc cho phép tính người dùng thật sự yêu cầu; "
+                "các phép tính hỗ trợ do bạn chọn không phải nghĩa vụ trả lời độc lập. "
                 "Goal động cần reasoning_operations là thứ tự operators cần tính và reasoning_periods "
                 "là các kỳ đầu vào; không dùng phép tính khác đã lưu để đáp ứng nhầm goal. "
                 "Xuất duy nhất JSON theo schema. Không xuất document/snapshot/metric IDs, values, "
@@ -448,7 +452,7 @@ class EvidenceAwareQueryPlanner:
                                     if missing_assignments
                                     else "Response trước sai cú pháp JSON. "
                                 )
-                                + "Xuất lại duy nhất JSON object hợp lệ theo contract đã cung cấp. Giữ nguyên câu hỏi, conversation context, company, filing, period và user_requested_targets; chỉ sửa metadata/định dạng, không thêm mục tiêu hay công thức.",
+                                + "Xuất lại duy nhất JSON object hợp lệ theo contract đã cung cấp. Nếu reasoning_required=true thì assignments bắt buộc có ít nhất một role đã đăng ký, task và đủ indicators/formulas; không được bỏ hoặc trả assignments=[]. Giữ nguyên câu hỏi, conversation context, company, filing, period và user_requested_targets; chỉ sửa metadata/định dạng, không thêm mục tiêu hay công thức.",
                             ),
                         ]
                     )

@@ -631,15 +631,21 @@ def matches_financial_target(claim, requirement, logic=None):
         return False
     if requirement.interpretation:
         proof = getattr(claim, "reasoning", None)
-        if not _reasoning_matches(proof, requirement):
-            return False
-        if requirement.reasoning_periods and (
-            not proof
-            or not proof.calculation
-            or set(requirement.reasoning_periods)
-            != {o.period for o in proof.calculation.operands.values()}
+        if requirement.interpretation_topic == "dynamic_calculation" and not _reasoning_matches(
+            proof, requirement
         ):
             return False
+        if requirement.reasoning_periods:
+            calculation = getattr(claim, "calculation", None)
+            periods = (
+                {o.period for o in proof.calculation.operands.values()}
+                if proof and proof.calculation
+                else {o.context.period for o in calculation.trace.operands}
+                if calculation
+                else {e.period for e in claim.supporting_evidence}
+            )
+            if set(requirement.reasoning_periods) != periods:
+                return False
         if requirement.interpretation_topic == "dynamic_calculation":
             return bool(
                 proof
