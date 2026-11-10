@@ -424,8 +424,11 @@ def with_assignment(prompt, upstream):
                 "Mọi operation so sánh hoặc tính toán inputs khác kỳ đều phải khai báo "
                 "period_relation=across_periods, kể cả subtract/greater/less/equal. "
                 "Backend dùng Decimal và M6 replay độc lập; không gọi tỷ số ad hoc là metric chuẩn. "
-                "analyses có goal, operations, assumptions, claim_type. Statement diễn giải ý nghĩa "
-                "của quan hệ đã tính, được chứa số có nguồn hoặc kết quả kiểm chứng; không đoán nguyên nhân. "
+                "analyses có goal, operations, assumptions, claim_type. "
+                "assumptions=[] khi chỉ dùng facts/đơn vị/kỳ đã có trong evidence; không ghi metadata "
+                "đã biết thành giả định. Chỉ ghi assumptions cho điều kiện chưa được chứng minh. "
+                "Statement diễn giải ý nghĩa của quan hệ đã tính, được chứa số có nguồn hoặc kết quả "
+                "kiểm chứng; không đoán nguyên nhân. "
                 "Ưu tiên một analysis ngắn trực tiếp đáp ứng task; không lặp các giới hạn thành nhiều claims. "
                 "limitations tối đa 8 ý; backend đã giữ source caveats nên không chép toàn bộ flags vào đây. "
                 "statement chỉ mô tả quan hệ có căn cứ giữa những facts được giao. Điều chưa thể kết luận "
@@ -646,7 +649,7 @@ def generate_candidates(
                     candidate_id=prefix + "-analysis-" + uuid4().hex,
                     kind="supported_interpretation",
                     content=render_dynamic(computation, {s.evidence_id: s.label for s in sources})
-                    if failed_operations
+                    if failed_operations or analysis.claim_type == "derived_fact"
                     else " ".join(
                         [analysis.statement, *analysis.assumptions, *analysis.limitations]
                     ),

@@ -403,6 +403,8 @@ class FinancialLogicCritic:
                 "Không tính lại số/công thức, thêm facts, sửa scope/snapshot, xuất decision hoặc ledger.",
                 "Số liệu PASS chỉ là numeric premise; unsupported/partial/undetermined không phải proven premise.",
                 "Thiếu bằng chứng là insufficient_context; inconsistent cần contradiction được chứng minh.",
+                "consistent phải có missing_evidence=[]; nếu còn thiếu premise thì dùng insufficient_context. "
+                "Một giới hạn chưa xác nhận được nguyên nhân không khẳng định nguyên nhân đó.",
                 "Tương quan không chứng minh nguyên nhân. Margin dương không chứng minh cải thiện.",
                 "Giới hạn bằng chứng có phạm vi phủ định: chưa đủ căn cứ kết luận cải thiện không phải khẳng định cải thiện. "
                 "Không dùng câu phủ định để che một mệnh đề khẳng định hoặc quan hệ nhân quả khác chưa được chứng minh.",

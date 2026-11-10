@@ -11,6 +11,22 @@ from google.genai import types
 from ..core.gemini_adapter import GeminiAdapter
 
 
+class QAGeminiAdapter(GeminiAdapter):
+    """Constrain Planner generation; typed Planner validation remains authoritative."""
+
+    def _config(self, request):
+        contents, config = super()._config(request)
+        if (
+            request.request_id.startswith("planner-")
+            and request.output_spec is not None
+            and request.output_spec.format == "json"
+        ):
+            from ..agents.planner_contracts import PlannerProposal
+
+            config.response_json_schema = PlannerProposal.model_json_schema()
+        return contents, config
+
+
 class QACredentialError(ValueError):
     """Chỉ code cố định; không đưa nội dung secret/path/provider exception ra log."""
 
@@ -57,4 +73,4 @@ def create_qa_adapter(project_root, *, key_file=None, key_index=0):
         )
     except Exception:
         raise QACredentialError("gemini_client_initialization_failed") from None
-    return GeminiAdapter(client), credential
+    return QAGeminiAdapter(client), credential

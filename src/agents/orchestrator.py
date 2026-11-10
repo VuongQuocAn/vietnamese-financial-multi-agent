@@ -44,9 +44,29 @@ def _check_assignment(result, projection, route):
         ):
             raise ValueError("candidate_evidence_identity_missing")
         supports = [evidence[key] for key in candidate.supporting_evidence_ids]
+        calculation = candidate.reasoning.calculation if candidate.reasoning else None
+
+        def bound_period(support, candidate=candidate, calculation=calculation):
+            if candidate.period == support.period:
+                return True
+            return bool(
+                calculation
+                and candidate.period in {o.period for o in calculation.operands.values()}
+                and any(
+                    o.reference == support.reference and o.period == support.period
+                    for o in calculation.operands.values()
+                )
+                and any(
+                    step.operation.period_relation == "across_periods"
+                    and support.evidence_id in step.operands
+                    for step in calculation.steps
+                )
+            )
+
         if any(
-            (candidate.company_id, candidate.document_id, candidate.snapshot_id, candidate.period)
-            != (e.company_id, e.document_id, e.snapshot_id, e.period)
+            (candidate.company_id, candidate.document_id, candidate.snapshot_id)
+            != (e.company_id, e.document_id, e.snapshot_id)
+            or not bound_period(e)
             for e in supports
         ) or any(c not in projection.citations for c in candidate.citations):
             raise ValueError("candidate_provenance_outside_assignment")

@@ -54,8 +54,8 @@ ZERO_TEMPLATE = (
 LIMITATIONS = [
     "Đối chiếu lợi nhuận và dòng tiền là tín hiệu trong kỳ, chưa phải đánh giá toàn diện chất lượng lợi nhuận.",
     "Phép tính ad hoc phải nêu định nghĩa và không tự trở thành chỉ tiêu kế toán chuẩn.",
-    "Chưa đối chiếu đầy đủ điều chỉnh/tỷ giá để xác nhận cash bridge hoặc nguyên nhân chênh lệch.",
-    "B02 và B03 có nguồn riêng; cùng filing không tự xác nhận reporting scope còn unresolved.",
+    "Chưa đủ dữ liệu để xác nhận các điều chỉnh dòng tiền hoặc nguyên nhân chênh lệch.",
+    "Báo cáo kết quả kinh doanh và lưu chuyển tiền tệ có nguồn riêng; phạm vi báo cáo vẫn chưa được xác nhận.",
 ]
 UNAPPROVED = (
     r"\b(?:cfo (?:net income|tren loi nhuan(?: sau thue)?)|cash conversion ratio|"

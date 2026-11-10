@@ -689,6 +689,14 @@ class EvidenceAwareQueryPlanner:
             operations = {operation.operation_id: operation for operation in proposal.operations}
             for target in proposal.user_requested_targets:
                 if (
+                    target.aspect in {"formula", "operands"}
+                    and target.target_id in proposal.formula_ids
+                ):
+                    target.interpretation = False
+                    target.interpretation_topic = None
+                    target.reasoning_operations = []
+                    target.reasoning_periods = []
+                if (
                     target.kind == "metric"
                     and target.interpretation
                     and not proposal.reasoning_required
@@ -953,6 +961,39 @@ class EvidenceAwareQueryPlanner:
             for o in proposal.operations
             if o.operation == "find_financial_facts" and o.period
         }
+        anchored_years = {
+            int(match[1])
+            for document in self._documents
+            for alias in document.company_aliases
+            for match in re.finditer(
+                r"(?<!\w)" + re.escape(normalize(alias)) + r"\s+(?:nam\s+)?((?:19|20|21)\d{2})\b",
+                normalize(question),
+            )
+        }
+        bound_filings = {
+            d.reporting_year
+            for d in self._documents
+            if context.document_id
+            and d.document_id == context.document_id
+            and (not context.company_id or d.company_id == context.company_id)
+        }
+        if (
+            context.mode == "auto"
+            and proposal.reasoning_required
+            and len(years) > 1
+            and len(bound_filings) == 1
+            and anchored_years == bound_filings
+            and len(explicit_filings) <= 1
+            and not proposal.cross_document_comparison
+            and len(operand_periods) > 1
+            and all(p[:4] in {str(y) for y in years} for p in operand_periods)
+        ):
+            proposal.reporting_years = list(bound_filings)
+            years = list(bound_filings)
+            query.cross_document_comparison = False
+            result.trace.append(
+                PlannerTrace(stage="catalog_resolution", outcome="bound_filing_year_restored")
+            )
         if (
             context.mode == "auto"
             and proposal.reasoning_required
@@ -1244,10 +1285,26 @@ class EvidenceAwareQueryPlanner:
                         else str(query.reporting_year)
                     )
                 )
-                if operation.period and operation.period[:4] not in {
-                    str(y)
-                    for y in (*_explicit_constraints(result.question)[0], query.reporting_year)
-                }:
+                approved_operand = any(
+                    m.definition.name in proposal.formula_ids
+                    and (m.request.document_id, m.request.snapshot_id)
+                    == (selector.document_id, selector.snapshot_id)
+                    and policy.formula_id == m.definition.name
+                    and operand.canonical_item_id == item
+                    and m.request.operand_periods.get(operand.role) == period
+                    for m in self._catalog.metrics
+                    for policy in self._catalog.policies
+                    for operand in policy.operands
+                )
+                if (
+                    operation.period
+                    and not approved_operand
+                    and operation.period[:4]
+                    not in {
+                        str(y)
+                        for y in (*_explicit_constraints(result.question)[0], query.reporting_year)
+                    }
+                ):
                     raise ValueError("operation_period_not_requested")
                 key = fact(item, period, key)
                 types[operation.operation_id] = "fact"

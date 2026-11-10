@@ -80,6 +80,8 @@ def _render(proposal, evidence):
             r"(?: tai thoi diem bao cao)?[.]?",
             r"no phai tra tuong ung(?: khoang)? \{value\} dong "
             r"tren (?:moi )?100 dong tong tai san tai thoi diem bao cao[.]?",
+            r"trong ky \{period\},? (?:cu|voi moi|tren moi) 100 dong tong tai san "
+            r"tuong ung(?: khoang)? \{value\} dong no phai tra[.]?",
         ]
         statement = unicodedata.normalize("NFC", proposal.statement or "")
         folded = unicodedata.normalize("NFD", statement.casefold().replace("đ", "d"))
@@ -103,7 +105,12 @@ def _render(proposal, evidence):
                     start, end = matched.span(key)
                     if start >= 0:
                         text = text[:start] + replacements[key] + text[end:]
-                return text
+                # Bind the accepted paraphrase to its exact as-of period using
+                # the existing M6 per-100 arithmetic grammar.
+                return (
+                    f"Trong kỳ {evidence.period}, cứ 100 đồng tổng tài sản "
+                    f"tương ứng khoảng {value} đồng nợ phải trả."
+                )
         raise ValueError("unsupported_or_numeric_prose")
     else:
         raise ValueError("kind_or_meaning_mismatch")
