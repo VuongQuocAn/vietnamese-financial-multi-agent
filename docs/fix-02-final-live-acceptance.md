@@ -1,5 +1,98 @@
 # FIX-02-ACCEPT — Final Live Acceptance
 
+## Khôi phục adapter — kết quả hiện tại
+
+Owner phê duyệt đúng một lượt sửa bổ sung ngày 10/11/2026: bỏ toàn bộ Pydantic
+schema khỏi generation API, smoke L01 trước rồi mới chạy manifest10ca. Đã làm đúng
+trình tự trên implementation `513ba5751c4e28254f8f7091c4890057e398e773`, đã push main.
+Chỉ runtime `src/api/qa_gateway.py` thay đổi so với `93d5829`; giữ mọi cải tiến
+downstream, typed validation/DAG và M6/Firewall. Test mới yêu cầu JSON MIME, không
+gửi `response_json_schema` hoặc `response_schema`. Không nghiên cứu schema tối ưu.
+
+**Hồi quy HTTP400 đã được khắc phục; FIX-02 vẫn BLOCKED, chưa đủ điều kiện DONE.**
+Planner smoke L01: một call Gemini thật,6.600tokens,6,691giây,planned và DAG hợp lệ/
+execution eligible. Chỉ sau smoke này mới chạy lại nguyên manifest10ca/11lượt trên
+source Git đã đóng băng đúng `513ba57`; không đổi câu hỏi, oracle hoặc chọn lại ca.
+
+| Ca | Đánh giá nội dung cuối | Bằng chứng chính |
+| --- | --- | --- |
+| L01 | CORRECT_WITH_CAVEAT | BCC assets3.275.086.920.922VND, đúng PDF5. |
+| L02 | CORRECT_WITH_CAVEAT | BCC gross margin10,01%, đủ công thức/operands, đúng PDF7. |
+| L03 | CORRECT_WITH_CAVEAT | CFO−PAT7.070.123.808VND, đủ hai số nguồn;5ACCEPT. M7partial vì thêm mục tiêu diễn giải ngoài câu hỏi, không vì phép tính thiếu. |
+| L04/Q21 | PARTIAL | Hai facts, chênh lệch và greater(CFO,PAT) đã phát hành;5ACCEPT/1ABSTAIN, chưa có đánh giá chất lượng lợi nhuận đáp ứng yêu cầu. |
+| L05/Q23 | UNJUSTIFIED_ABSTAIN | 6ACCEPT nhưng final chỉ yêu cầu làm rõ; Firewall CLARIFICATION_REQUIRED, không phát hành các phần độc lập đã xác minh. |
+| L06 | CORRECT_WITH_CAVEAT | So sánh hai kỳ cùng filing: PAT tăng1.059.972.358VND,17,13%;3ACCEPT, đã live xác nhận sửa multi-period. |
+| L07 | CORRECT_WITH_CAVEAT | Đủ doanh thu/PAT/CFO và nguồn;3ACCEPT/1INVESTIGATE, nhánh không hợp lệ không bị promote. |
+| L08 | PARTIAL | Ratio59,06%, công thức/operands đúng;2ACCEPT/1INVESTIGATE. Diễn giải per100 đã ACCEPT nhưng không được M7 chọn. |
+| L09/MH03 | PARTIAL | Chênh lệch417.992.011.559VND đúng và có nguồn; thiếu lời giải thích được hỏi về tính chất đối chiếu không chuẩn. Không gán kết quả tốt hơn của vòng1 cho câu trả lời mới này. |
+| L10 | RUNTIME_FAILURE | Lượt1 doanh thu đúng; lượt2 kế thừa đúng context nhưng Planner trả JSON lỗi cú pháp,structured_output_invalid. |
+
+Tổng **5/10 CORRECT_WITH_CAVEAT,3PARTIAL,1UNJUSTIFIED_ABSTAIN,1RUNTIME_FAILURE**.
+Không thấy sai số liệu/phép tính/citation trong các phần đã phát hành và đối chiếu;
+không dùng số ACCEPT hay statusPARTIAL để thay đánh giá nội dung. Chưa đạt8/10 và
+còn các lỗi P1 có bằng chứng, nên không chuyển DONE/CONDITIONAL DONE.
+
+### Những lỗi còn lại có bằng chứng cụ thể
+
+- **P1 Q21:** candidate `candidate:aa43b5f583f9eccf048a025d` ABSTAIN vì
+  `required_semantic_assessment_unavailable`. Provider response023 của Evidence
+  Critic có assertionsA3/A6 là supported nhưng evidence_ids rỗng; Logic Critic không
+  được gọi cho claim này. Phép tính hợp lệ vẫn giữ, phần đánh giá yêu cầu chưa đạt.
+- **P1 Q23:** round0 có6ACCEPT; revision sau thất bại với
+  `revision_adds_unrequested_formula`. Final chuyển clarification dù binding
+  document/snapshot đã có; cần bảo toàn last-valid goals và các nhánh ACCEPT khi
+  revision không thực thi được, giữ nguyên gate cho formula không hợp lệ.
+- **P1 L08:** per100 interpretation `candidate:7de43e82479771b140b3f4c9` đã ACCEPT
+  nhưng không phủ goal required_indicators. Supporting evidence là metric; trong
+  `matches_financial_target`, operands chỉ được đưa vào indicator set cho kind
+  approved_metric. Cần đối chiếu coverage của metric-backed interpretations với
+  proof đã được chấp nhận, không phê duyệt lại bằng M7.
+- **L10 protocol failure:** response050 finishSTOP nhưng JSON có `- inputs"` trong
+  reasoning_steps. Context kế thừa đủ company/document/snapshot/period; không
+  gọi đây là mất ngữ cảnh. Prefix recovery không phục hồi được object đủ typed
+  fields, nên chưa kiểm chứng được answer YoY ở lượt2. Không retry vì muốn output đẹp.
+- L09 thiếu qualification được hỏi; các caveats dài/lặp còn lại không tự mở thành
+  công việc thẩm mỹ. Không dùng lượt sửa adapter để triển khai thêm các thay đổi này.
+
+### Usage, source audit và checks của lượt bổ sung
+
+Full manifest:50actual attempts,281.216known tokens/7unknown usage;7HTTP503 được
+ghi nhận theo retry/backoff hiện hữu,0HTTP400; một response malformed JSON.
+Tổng latency11lượt658,661giây, loại startup. Cộng smoke:51attempts,
+287.816known tokens/7unknown. Cùng gemini-3.5-flash-lite, không đổi key/model.
+Đây là quick acceptance, không M8 hoặc financial accuracy benchmark.
+
+Đã đọc lại sáu trang scan nguồn liên quan và đối chiếu số liệu/phép tính độc lập
+ở phần audit lịch sử:141display-reference occurrences thuộc đúng PDF/trang,
+0wrong-source trong kiểm tra này. `integrity.json` xác nhận imported runtime đúng
+SHA,578protected files không đổi trong lượt;414original inputs/reference,manifest
+và12local files ngoài task giữ hash trước khi cập nhật planning. Source caveats
+page-level/BBS scope unresolved vẫn nguyên, không nâng thành cell-level certainty.
+
+Local:5targeted tests PASS; Ruff lint/format và diff check PASS. Không chạy lại
+full offline suite. [CI42810151159](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42810151159)
+SUCCESS đúng513ba57:145Python/9Web,lint/format/planning/typecheck/build đạt;
+không dùng CI thay quality acceptance. Planning sẽ được kiểm cả working tree và
+index riêng để giữ local changes ngoài task không vào commit.
+
+Artifacts local, không commit dữ liệu riêng tư:
+`artifacts/evidence/FIX-02/final-acceptance/emergency-smoke/summary.json`;
+`emergency-acceptance/results.json`, `assessment.json`, `audit-summary.json`,
+`provider/`, `ledger/`, `Lxx-turnN-answer.txt`, `integrity.json` cùng thư mục gốc;
+CI receipt tại `ci-513ba57.json`. Giữ toàn bộ failures và original/resolved turns.
+
+**Next action duy nhất:** Tech Lead quyết định phạm vi remediation các P1 đã có
+trace trên `513ba57`; adapter HTTP400 không còn là blocker. Không tự mở task mới,
+thêm kiến trúc hoặc vòng sửa khác ngoài lượt adapter được phê duyệt.
+
+---
+
+## Hồ sơ nghiệm thu trước khôi phục adapter
+
+Các phần dưới giữ lịch sử tới checkpoint629eb08. “Bản cuối” trong hồ sơ này là
+vòng2 `93d5829`, không phải implementation hiện tại `513ba57` nêu ở trên.
+Next action cũ về adapter đã được chỉ đạo bổ sung của Owner thay thế.
+
 Ngày 10/11/2026, Asia/Bangkok. **Kết luận: BLOCKED, chưa đề xuất DONE.**
 Đã chạy đủ 10 ca/11 lượt trên baseline và sau mỗi vòng sửa, tổng cộng hai vòng
 corrective implementation. Bản cuối gây hồi quy tích hợp: 10 request Planner

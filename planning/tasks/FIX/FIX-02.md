@@ -300,3 +300,20 @@ Chi tiết câu hỏi/output/quality/trace/source audit/limitations trong
 [final report](../../../docs/fix-02-final-live-acceptance.md).
 Next action: Tech Lead quyết định remediation blocker adapter JSON Schema trên
 93d5829 cùng phạm vi live validation tiếp theo; chưa đề xuất DONE.
+
+
+### Owner duyệt khôi phục adapter — 10/11/2026
+
+Đúng một lượt vượt giới hạn cũ, chỉ bỏ full Pydantic generation schema; không tối ưu
+schema/kiến trúc. Implementation513ba5751c4e28254f8f7091c4890057e398e773 đã push main;
+giữ toàn bộ downstream93d5829 và typed/DAG/M6/Firewall.5targeted testsPASS.
+SmokeL01 thành công1Gemini call/6600tokens rồi mới chạy manifest10ca/11lượt đúngSHA.
+Kết quả5CORRECT_WITH_CAVEAT/3PARTIAL/1UNJUSTIFIED_ABSTAIN/1RUNTIME_FAILURE;
+full50actual attempts/281216known tokens/7unknown,0HTTP400,7HTTP503 được ghi nhận.
+Q21analysissemantic còn thiếu;Q23sixACCEPT nhưng finalclarification;L08accepted
+metric interpretation không được M7 chọn;L09thiếu qualification;L10turn2JSONsyntax,
+context vẫn được kế thừa đúng. Chưa đủ điều kiện DONE;statusBLOCKED giữ nguyên.
+CI42810151159SUCCESS exact513ba57:145Python/9Web;414originalinputs/reference và local nguyên.
+Chi tiết/phân loại/trace tại [final report](../../../docs/fix-02-final-live-acceptance.md).
+Next action: Tech Lead quyết định remediation các P1 có trace trên513ba57;
+không tự mở task/kiến trúc/vòng sửa khác ngoài lượt adapter được duyệt.

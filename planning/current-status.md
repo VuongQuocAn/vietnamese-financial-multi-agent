@@ -4,22 +4,21 @@ Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Final Live Acceptance
 
-Status: **BLOCKED — final live acceptance chưa đạt**.
-Implementation cuối `93d58299478a6ec884d243aab217c50a8ffeae1a` đã push main;
-baseline `af4eae9`, checkpoint đầu `e11fa52`, vòng sửa 1 `066032a`.
-Đã chạy manifest cố định 10 ca/11 lượt trên cả ba SHA: baseline3/10,
-vòng1=4/10, cuối0/10 CORRECT hoặc CORRECT_WITH_CAVEAT.
-Hai vòng sửa đã dùng hết; adapter schema Planner mới gây 10HTTP400 invalid_request,
-chưa chạy downstream trên bản cuối; đây không phải checkpoint demo Gemini QA ổn định.
-106actual attempts/499560known tokens/23unknown usage; không retry400/không M8.
-113focused controls cuối đạt sau targeted fixes; saved L06/L08 replay đạt,0network.
-[CI42806510730](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42806510730)
-SUCCESS exact93d5829:145Python/9Web; không thay live acceptance.
-414selected inputs/reference và local ngoài task giữ hash; chỉ hunk FIX-02/counts
-trong planning dùng chung được stage. Không sửa dữ liệu/OCR/approvals.
-[Báo cáo và traces](../docs/fix-02-final-live-acceptance.md).
-Next action: Tech Lead quyết định remediation blocker adapter JSON Schema trên
-93d5829 cùng phạm vi live validation tiếp theo; không tự sửa vòng3/DONE/task mới.
+Status: **BLOCKED — adapter đã khôi phục, chất lượng nghiệm thu chưa đạt**.
+Implementation `513ba5751c4e28254f8f7091c4890057e398e773` đã push main theo
+lượt khẩn cấp Owner duyệt: bỏ Planner response_json_schema, giữ typed validation,
+DAG và toàn bộ downstream93d5829. SmokeL01PASS:1Gemini call/6600tokens.
+Sau smoke chạy đúng manifest10ca/11lượt trên513ba57:5CORRECT_WITH_CAVEAT,
+3PARTIAL,1UNJUSTIFIED_ABSTAIN(Q23),1RUNTIME_FAILURE(L10JSONsyntax).
+0HTTP400;full50attempts/281216known tokens/7unknown,7HTTP503 được ghi nhận.
+Q21thiếu analysissemantic;Q23có6ACCEPT nhưng finalclarification;L08interpretation
+đãACCEPT không được M7 chọn;L09thiếu qualification;không đủ điều kiện DONE.
+5local targeted PASS;[CI42810151159](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42810151159)
+SUCCESS exact513ba57:145Python/9Web;không thay live acceptance.
+414original inputs/reference,manifest và local ngoài task giữ nguyên;không OCR/M8.
+[Báo cáo/traces](../docs/fix-02-final-live-acceptance.md).
+Next action: Tech Lead quyết định remediation các P1 có trace trên513ba57;
+không tự mở task/kiến trúc/vòng sửa khác ngoài lượt adapter được duyệt.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 
