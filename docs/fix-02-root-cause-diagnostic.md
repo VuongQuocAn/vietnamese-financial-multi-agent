@@ -399,3 +399,17 @@ engineering/research cũ; SHA điều tra vẫn321f09e, diagnostic chưa commit.
 
 **Next action duy nhất:** Tech Lead đọc diagnostic và quyết định phạm vi/giải pháp
 sửa tiếp trong FIX-02. Giữ REVIEW; không tự DONE, mở task khác hoặc tối ưu runtime.
+
+## Bổ sung bằng chứng live — 10/11/2026
+
+Diagnostic phía trên giữ evidence09/11. Controlled live được Tech Lead cho phép
+trên9a356bf xác nhận D01chưa được giải quyết đầy đủ:analysis Q21chứa “dữ liệu chưa
+đủ để tính toán tỷ lệ…” nhưng assertion_category=NUMERIC_ASSERTION,dù không có
+digits/% mới. Predicate evidence-limitation hiện yêu cầu deficiency marker trước
+“cơ sở/căn cứ/bằng chứng/dữ liệu/thông tin” rồi calculation/conclusion;đảo thứ tự
+“dữ liệu chưa đủ để…” không khớp,nên ratio keyword còn ngoài phạm vi phủ định và
+formula gate chặn. CONFIRMEDHigh/P1từ exact raw candidate+read-only reproduction;
+không áp dụng fix trong phiên validation-only. PAT/CFOretrieved/bound và ACCEPT;
+Q21vẫnPARTIAL,không gọi đây là thiếu nguồn thật. F08có natural coverage revision
+thành công với backend guard,không phải raw LLM Judge tự phát REVISION_NEEDED.
+[Full live report](fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).

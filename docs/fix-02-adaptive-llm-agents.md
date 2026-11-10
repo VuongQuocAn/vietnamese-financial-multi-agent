@@ -561,3 +561,164 @@ JSON/provider/model variability vẫn là giới hạn; schema/gates không đư
 Giữ **FIX-02 REVIEW — WAITING FOR TECH LEAD REVIEW**, không đề xuất DONE.
 Next action duy nhất: Tech Lead review9a356bf và quyết định nghiệm thu/phạm vi
 kiểm chứng tiếp theo dựa trên giới hạn live đã ghi.
+
+## Kiểm chứng live có kiểm soát trên9a356bf — 10/11/2026
+
+Owner/Tech Lead chấp nhận remediation ở mức engineering và cho phép thêm **một
+lượt live cuối**, thứ tự Q11→Q21→F08; dừng nếu Q11 còn integration failure. Phiên này
+chỉ kiểm chứng, không sửa runtime hoặc tối ưu benchmark. HEAD lúc bắt đầu ebf0e10
+chỉ là docs checkpoint; toàn bộ runtime được export từ đúng
+`9a356bfaf53f0003b5f19edb031de9a3da4f6f39`,164files và imports khớp trước/sau.
+Không ghép kết quả6748da7/321f09e vào lượt này. Gemini vẫn3.5FlashLite,
+shared caps20calls/180s mỗi request, tối đa2revisions/3rounds, không retry.
+
+Artifacts local, Git ignored tại `artifacts/evidence/FIX-02/controlled-live-9a356bf/`:
+`runner.py`, `console.log`, `run/{freeze,results,provider-attempts,integrity}.json`,
+`run/provider/`, `run/ledger/`, `run/runtime/`, `audit.py`, `audit.json`.
+Runner riêng thêm Q11 stop gate, không sửa runtime/production pipeline. Questions
+và reference E2E-02 nguyên bản; Q21/F08 dùng chung ConversationService session,
+Ledger mới trong lượt này. Không injection lỗi, mock verdict hay sửa source data.
+
+### Kết quả end-to-end trên cùng source
+
+| Case | Actual output | Wall s | Calls | API tokens | M6 cuối | M7 coverage | Nguồn |
+| --- | --- | ---: | ---: | ---: | --- | --- | --- |
+| Q11 | completed_with_caveats | 22,394 | 1 | 5981 | 1ACCEPT metric | answered,3/3goals | 13citations,PDF7 |
+| Q21 | partial_verified_coverage | 29,874 | 4 | 19883 | 3ACCEPT,1INVESTIGATE | partial,3/5goals | 21citations,PDF7/8 |
+| F08 | completed_with_caveats,sau1revision | 50,412 | 12 | 75970 | 5ACCEPT histories hợp nhất | answered,1/1goal | 21citations,PDF7/8 |
+
+17actual provider calls,101834API tokens =94773input+7061output; mọi provider call
+success/STOP,0provider errors/unknown total usage. Thinking/cached tokens đều null,
+không suy thành0. Không gọi thêm ca thứ tư: F08 đã xuất hiện thiếu sót thực sự và
+revision tự nhiên có thể kiểm chứng. Không gọi mọi Specialist mặc định: Planner
+chọn đúng Cash Flow cho PAT/CFO; Q11 tool-only,0Specialist LLM calls.
+
+### Q11 gate và financial audit
+
+Calculator computed gross_margin=**7,21%**, operands32.482.519.668/450.474.531.227VND,
+năm2025. Đối chiếu frozen Decimal reference7,2107338853…%, sai số nhỏ hơn0,005
+percentage points; formula digest/operand roles/company/document/snapshot/period
+đúng. M6 ACCEPT, Ledger stored, M7 answered cả metric/formula/operands; không có
+unanswered target.13citations cùng PDF7, Firewall ALLOW_WITH_CAVEAT. Q11 gate đủ
+điều kiện nên runner tiếp tục Q21/F08. Wall22,394s là một sample live có network,
+không gộp với benchmark offline9,947s hoặc tuyên bố một speedup mới.
+
+### Q21: vẫn còn blocker High, không phải provider failure
+
+Cash Flow Specialist thực sự chạy, nhận cả PAT/CFO, tạo facts và interpretation
+`candidate:c500b69f901255b873a005ea`. Câu analysis nói dữ liệu chưa đủ để tính tỷ lệ
+chuyển đổi hoặc kết luận chi tiết chất lượng lợi nhuận. Cấu trúc
+**“dữ liệu chưa đủ để tính toán tỷ lệ…”** chưa khớp evidence-deficiency predicate
+của `logic_rules.assertion_category`: pattern hiện đòi “chưa đủ + cơ sở/căn cứ/…”
+hoặc “chưa/không thể” rồi calculation/conclusion. Vì không nhận diện được phạm vi
+phủ định, từ “tỷ lệ” trong phần còn lại bị phân loại NUMERIC_ASSERTION.
+`DeterministicFinancialValidator._analysis` trả formula FAIL /
+analysis_requires_approved_calculation, trước khi kiểm tra hai numeric premises.
+
+Audit offline bằng **nguyên statement của live**, đúng archived9a356bf, không
+Gemini: không có digits/% mới nhưng assertion_category=NUMERIC_ASSERTION.
+Root cause **CONFIRMED**, tái diễn D01 ở cách diễn đạt khác; chưa giải quyết đầy
+đủ A2, không coi đó là legitimate missing-source abstention hoặc đã ACCEPT analysis.
+Không sửa regex/runtime trong phiên kiểm chứng này.
+
+PAT7.249.557.946VND/PDF7 và CFO14.319.681.754VND/PDF8 cùng CFO-sign candidate đều
+native ACCEPT. Analysis bị INVESTIGATE và không vào Ledger. M7 chọn hai fact IDs;
+CFO-sign không đáp ứng hai relational interpretation goals. Output số đúng nhưng
+**chưa giải thích quan hệ CFO/PAT hoặc đáp ứng đánh giá chất lượng lợi nhuận**.
+Đối chiếu frozen Q21 reference: PARTIAL, không là câu trả lời đầy đủ.
+
+Raw LLM Judge trả PASS về số liệu; backend coverage guard đổi thành
+INSUFFICIENT_EVIDENCE,complete=false,hai no_supported_interpretation,STOP do
+native hard financial blocker khiến recoverable=false. Đây là hành vi dừng an
+toàn theo code hiện tại, nhưng **LLM Judge vẫn đánh giá thiếu coverage**. Không
+gán corrected verdict cho bản thân model, không dùng Judge PASS vượt M6.
+
+### F08: context và một live revision thành công
+
+F08 dùng nguyên câu “Như thế có đáng lo không?”, được resolve theo Q21 thành câu
+follow-up năm2025; company/document/snapshot/period và conversation_context được
+inherited. Không dùng nhầm Q11 metric làm referent. Raw Planner/operation bindings
+không gặp lại ba integration errors của6748da7.
+
+1. **Round0:** Cash Flow nhận cả PAT/CFO và tạo analysis `candidate:b45b536f…`
+   chỉ mô tả hai chỉ tiêu dương. Native M6 ACCEPT4claims trong round, nhưng analysis
+   chưa nêu giới hạn đánh giá rủi ro/chất lượng lợi nhuận và không đáp ứng declared
+   earnings_quality goal theo M7 matching; không gọi số dương là không đáng lo.
+2. Raw LLM Judge lại PASS. **Backend native/M7 coverage guard** phát hiện thiếu
+   coverage thật, recoverable=true, evidence đã có; phát structured
+   REVISION_NEEDED/INCOMPLETE_COVERAGE/REVISE_ANALYSIS/RETRIEVED_NOT_USED. Đây là
+   nguồn feedback, không phải claim rằng LLM tự phát hiện sai sót. Không ép model
+   trả REVISION_NEEDED và không tạo lỗi production để kích hoạt loop.
+3. Replan request chứa **exact feedback**, previous proposal và reusable evidence.
+   Planner thay task: mô tả quan hệ có giới hạn và nêu giới hạn phân tích, không
+   đòi PAT/CFO đã có.4tool calls round1 CACHE_HIT; không retrieval mới. Chỉ Cash
+   Flow Specialist được gọi lại; Evidence/Logic Critics và Judge đánh giá lại.
+4. Analysis mới `candidate:3c66c375ade92bfa6ef4d5f9` nêu lợi nhuận và CFO dương,
+   đồng thời chưa đủ đánh giá đầy đủ rủi ro/chất lượng lợi nhuận với context đang
+   có. Evidence supported, Logic consistent, numeric premises/source bindings PASS,
+   native M6 ACCEPT, Ledger stored. Round1 raw Judge PASS và backend coverage=true;
+   dừng PASS,không revision2/nested M6 loop. M7 dùng analysis mới,answered1/1,
+   Firewall ALLOW_WITH_CAVEAT; không phát hành claim chưa ACCEPT.
+
+Round wall14,308s→14,662s nằm trong M5, không cộng với end-to-end50,412s thành
+total. Native final5ACCEPT là union hai rounds có3IDs chung và2analyses khác nhau,
+không phải5claims mới ở round1. M7 chọn đúng một final interpretation; old
+sign-only analysis không đáp ứng earnings_quality target nên không thay câu mới.
+
+Đây là **live coverage-feedback → Planner sửa affected assignment → cache reuse
+→ Specialist/Critics → native ACCEPT → Judge/M7 answered trên cùng9a356bf**.
+Không cần ca bổ sung để tạo lỗi giả. Structured outputs của các Critics/Judges đều
+hợp lệ trong lượt này, không có F08 structured_output_invalid. Không suy một lượt
+thành bảo đảm mọi JSON tương lai hợp lệ.
+
+Nội dung F08 là **kết luận có giới hạn/không kết luận đầy đủ mức đáng lo**, không
+phải nhận định doanh nghiệp chắc chắn an toàn hoặc chất lượng lợi nhuận tốt. Câu
+“thiếu dữ liệu” được đọc trong phạm vi context đã cung cấp, không chứng nhận toàn
+PDF thiếu dữ liệu điều chỉnh/vốn lưu động. Không dùng F08 để đổi Q21 thành PASS;
+hai requests khác nhau, dù cùng source/session. Prose/caveats dài và lộ internal
+reason codes/PLANNER_TASK vẫn là limitation I008, chưa được sửa.
+
+### Chi tiết agent calls/tokens/latency
+
+Mọi số tokens dưới đây do provider báo, `?`=unknown cho thinking/cached. Latency là
+Gateway wall theo execution_events, đã nằm trong stage cha; không tách network
+và token generation khi không có stream/TTFT. Không cộng các stages lồng nhau.
+
+| Case/call | Agent | Round | Input | Output | Thinking/cached | Total | Gateway s |
+| --- | --- | ---: | ---: | ---: | --- | ---: | ---: |
+| Q11/1 | planner | 0 | 5403 | 578 | ? / ? | 5981 | 2.132 |
+| Q21/1 | planner | 0 | 5424 | 1305 | ? / ? | 6729 | 3.984 |
+| Q21/2 | cash-flow-earnings-quality | 0 | 2783 | 495 | ? / ? | 3278 | 1.845 |
+| Q21/3 | evidence-critic | 0 | 4542 | 102 | ? / ? | 4644 | 1.023 |
+| Q21/4 | adaptive-judge | 0 | 5073 | 159 | ? / ? | 5232 | 1.338 |
+| F08/1 | planner | 0 | 6130 | 1148 | ? / ? | 7278 | 3.598 |
+| F08/2 | cash-flow-earnings-quality | 0 | 2776 | 467 | ? / ? | 3243 | 1.939 |
+| F08/3 | evidence-critic | 0 | 7731 | 110 | ? / ? | 7841 | 1.472 |
+| F08/4 | evidence-critic | 0 | 4543 | 102 | ? / ? | 4645 | 1.278 |
+| F08/5 | financial-logic | 0 | 10722 | 267 | ? / ? | 10989 | 1.518 |
+| F08/6 | adaptive-judge | 0 | 4457 | 105 | ? / ? | 4562 | 1.226 |
+| F08/7 | planner | 1 | 4423 | 1108 | ? / ? | 5531 | 2.997 |
+| F08/8 | cash-flow-earnings-quality | 1 | 2772 | 503 | ? / ? | 3275 | 2.075 |
+| F08/9 | evidence-critic | 1 | 7696 | 107 | ? / ? | 7803 | 1.152 |
+| F08/10 | evidence-critic | 1 | 4539 | 102 | ? / ? | 4641 | 1.741 |
+| F08/11 | financial-logic | 1 | 10451 | 258 | ? / ? | 10709 | 2.533 |
+| F08/12 | adaptive-judge | 1 | 5308 | 145 | ? / ? | 5453 | 1.348 |
+
+### Audit, trạng thái và quyết định còn lại
+
+Read-only `audit.py` trên archived9a356bf: Calculator/reference Decimal đúng;
+PAT/CFO/source document/snapshot/year/page bindings khớp; cả6financial Ledger
+entries mới replay proof PASS, Ledger bytes không đổi. Exact replan feedback và
+previous proposal, task delta,4CACHE_HIT và M7 coverage được assert từ raw trace.
+Audit xác nhận164runtime/414protected inputs/reference và mọi local changes ngoài
+task nguyên. Không ingestion/OCR/PDF/source-correction/formula/policy changes.
+
+Không chạy lại benchmark/unit/full regression/CI: runtime không đổi, CI42729994715
+SUCCESS63Python/9Web vẫn là engineering evidence của9a356bf, không gán cho SHA
+docs checkpoint mới. Chỉ planning/diff checks cho tài liệu cập nhật.
+
+**Kết luận:** Q11 live đạt; F08 đạt trong phạm vi trả lời có giới hạn và đã có live
+revision thành công; Q21 còn false positive formula gate **High/P1** và answer
+PARTIAL. Chưa đạt đầy đủ live acceptance của FIX-02; không đóng9issues hoặc tự DONE.
+Next action duy nhất: Tech Lead quyết định xử lý blocker Q21 D01 tái diễn và nghiệm
+thu phạm vi đã có evidence; không tự sửa thêm/live thêm/Web/M8.

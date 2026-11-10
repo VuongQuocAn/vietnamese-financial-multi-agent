@@ -274,3 +274,17 @@ calculation/provenance equivalent, không dùng profiler inclusive làm wall spe
 CI42729994715 SUCCESS đúng9a356bf63Python/9Web; không coi CI là financial accuracy.
 Cả9issues giữ OPEN chờ Tech Lead; chi tiết/limitations trong phần remediation của
 [báo cáo FIX-02](fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026).
+
+### Controlled live9a356bf — 10/11/2026
+
+Một lượt Q11→Q21→F08 theo phê duyệt mới,17calls/101834API tokens/0provider failures,
+runtime/inputs cố định. I006:Q21vẫnPARTIAL;analysis lời giới hạn “dữ liệu chưa đủ để
+tính toán tỷ lệ…” bị formula gate chặn (D01tái diễn,High/P1),không thiếu PAT/CFO.
+Raw Judge PASS bị native/M7 coverage guard đổi INSUFFICIENT_EVIDENCE. F08có natural
+coverage revision thành công:backend phát feedback→Planner sửa affected task→tools
+CACHE_HIT→native ACCEPT interpretation→M7answered/Judge PASS. Không ép verdict hoặc
+sửa runtime để tạo loop. Q11completed_with_caveats,metricM6 ACCEPT/M7answered.
+I007không benchmark thêm;wall liveQ11/Q21/F08=22,394/29,874/50,412s,không ghép với
+offline timings. I008prose/caveats/internal reason codes còn. Giữ9issuesOPEN,không
+coi F08 đạt là Q21đạt;chi tiết ở phần controlled live của
+[report](fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).

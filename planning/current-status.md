@@ -4,25 +4,27 @@ Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**; remediation Owner/Tech Lead giao10/11/2026.
-Implementation `9a356bfaf53f0003b5f19edb031de9a3da4f6f39` đã push main;
+Status: **REVIEW**; remediation đã được Tech Lead chấp nhận mức engineering;
+controlled live bổ sung10/11/2026 trên cố định runtime
+`9a356bfaf53f0003b5f19edb031de9a3da4f6f39`,không sửa runtime/retry/benchmark.
 [CI42729994715](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42729994715)
-SUCCESS đúng SHA63Python/9Web; lint/format/planning/typecheck/build PASS,
-full regression SKIPPED. [Spec](tasks/FIX/FIX-02.md),
-[report](../docs/fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026),
-[diagnostic](../docs/fix-02-root-cause-diagnostic.md).
-Tách user goals/tool dependencies, scope-aware limitation/semantic coverage,
-strict JSON isolation; shared request snapshot/lineage/schema reuse, giữ M6 gates.
-Q11paired offline median40,001→9,947s (−75,1%),3cold/3warm mỗi version;
-12calculations/provenance equivalent,164runtime files khớp source9a356bf.
-Một lượt live trên6748da7:3Planner calls/19639tokens,provider success nhưng
-Q11goal mismatch vàQ21/F08invalid goal bindings. Correction sau đó replay chính
-responses:Q11completed/M6 ACCEPT;Q21/F08planned/dispatch đúng, thiếu archived
-Specialist responses nên fail closed. Không live lần hai; chưa final live answer
-hoặc successful live revision. Local63CI-smoke/69focused PASS (overlap),
-414inputs/reference và pending GEN-01a/Web/CHAT giữ nguyên;9issues OPEN.
-Next action: Tech Lead review9a356bf và quyết định nghiệm thu/phạm vi kiểm chứng
-tiếp theo theo giới hạn live; không tự DONE/Web/M8.
+SUCCESS đúng runtime SHA63Python/9Web;full regression SKIPPED,không chạy CI mới.
+[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).
+Một lượt Q11→Q21→F08,17calls/101834API tokens,0provider failures.
+Q11completed_with_caveats22,394s/1call,M6 ACCEPT metric,M7answered3/3,
+computed7,21%,đủformula/operands/citations;stop gate PASS.
+Q21partial29,874s/4calls,3ACCEPT/1INVESTIGATE,M7covered3/5;D01negated-ratio gate
+tái diễn với “dữ liệu chưa đủ để tính toán tỷ lệ…”,CONFIRMEDHigh/P1.
+F08completed_with_caveats50,412s/12calls,M7answered1/1;sau1natural revision:
+backend coverage phát feedback→Planner sửa task→4toolsCACHE_HIT→Specialist/
+Critics/native ACCEPT analysis→Judge PASS+coverage true. Raw LLM Judge round0
+vẫnPASS;không gán việc phát hiện thiếu coverage cho model. Có successful live
+revision trên9a356bf,khôngép verdict/ca lỗi giả;không lấy F08đổi Q21thànhPASS.
+164runtime files/414inputs/reference/pending GEN/Web/CHAT unchanged;
+6new Ledger proofs replay PASS,không đổi bytes. Không tự đóng9issues/DONE.
+Q11offline paired median40,001→9,947s (−75,1%)giữ bằng chứng cũ,khôngđo lại.
+Next action: Tech Lead quyết định blocker Q21D01tái diễn và nghiệm thu phạm vi
+đã có evidence;không tự sửa/live thêm/Web/M8.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 

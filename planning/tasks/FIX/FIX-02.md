@@ -140,3 +140,24 @@ archived Specialist responses nên fail closed. Chưa final live/ successful liv
 revision;414inputs/reference và pending GEN/Web/CHAT giữ nguyên;9issues OPEN.
 Status REVIEW, chưa đề xuất DONE. Next action: Tech Lead review9a356bf và quyết định
 nghiệm thu/phạm vi kiểm chứng tiếp theo theo limitations.
+
+### Kiểm chứng live cuối được giao — 10/11/2026
+
+Tech Lead chấp nhận remediation engineering và cho phép một lượt Q11→Q21→F08
+trên cố định9a356bf;Q11stop gate PASS,không runtime changes/retry/benchmark mới.
+Artifacts `artifacts/evidence/FIX-02/controlled-live-9a356bf/`;imports/164runtime
+files/414protected inputs/reference/local changes nguyên.17actual Gemini calls,
+101834API tokens,0provider errors. Q11completed_with_caveats22,394s/1call/5981tokens,
+computed7,21%,M6 ACCEPT metric,M7answered3/3. Q21partial29,874s/4calls/19883tokens:
+3ACCEPT/1INVESTIGATE,M7covered3/5,negated-ratio formula false positive còn với
+“dữ liệu chưa đủ để tính toán tỷ lệ…”,D01CONFIRMEDHigh/P1;raw Judge PASS bị backend
+coverage đổi INSUFFICIENT_EVIDENCE/STOP. F08completed_with_caveats50,412s/12calls/
+75970tokens,M7answered1/1;round0thiếu interpretation coverage thật→backend feedback
+REVISION_NEEDED→Planner sửa task→4tools CACHE_HIT→Specialist/Critics/native ACCEPT
+analysis→round1Judge PASS+coverage true. Có successful live revision trên9a356bf,
+không ép LLM Judge hoặc tạo lỗi giả;raw Judge round0vẫn PASS,feedback từ coverage
+guard. Không thêm ca thứ4 vì F08đã cung cấp tình huống thiếu sót/sửa thực tế.
+6new Ledger entries proof replay PASS,không đổi bytes;numeric/source audit PASS.
+[Report](../../../docs/fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).
+Status REVIEW,không tự DONE/đóng9issues. Next action: Tech Lead quyết định blocker
+Q21D01tái diễn và nghiệm thu phạm vi đã có evidence;không tự sửa/live thêm/Web/M8.
