@@ -9,6 +9,131 @@ from time import perf_counter
 from evaluate_real_pdf import build, digest, save
 
 
+def replay_captured(source, output):
+    """Reuse captured M5 outputs; missing semantic responses stay fail-closed."""
+    from types import SimpleNamespace
+
+    from vietnamese_financial_multi_agent.agents.adaptive_controller import (
+        AdaptiveFinancialController,
+    )
+    from vietnamese_financial_multi_agent.agents.cash_flow_earnings_quality_specialist import (
+        CashFlowEarningsQualityProposal,
+        _render,
+    )
+    from vietnamese_financial_multi_agent.agents.orchestration_contracts import OrchestrationResult
+    from vietnamese_financial_multi_agent.agents.orchestrator import aggregate_candidates
+    from vietnamese_financial_multi_agent.agents.specialist_common import generate_candidates
+    from vietnamese_financial_multi_agent.core.llm_contracts import LLMResponse
+    from vietnamese_financial_multi_agent.outputs import CitationRenderer, VietnameseQAComposer
+    from vietnamese_financial_multi_agent.outputs.information_firewall import InformationFirewall
+    from vietnamese_financial_multi_agent.outputs.qa_composer import planned_requirements
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import VietnameseQARequest
+    from vietnamese_financial_multi_agent.verification import VerifiedClaimLedger
+
+    rows = json.loads((source / "results.json").read_bytes())
+    actual = next(row["actual"] for row in rows if row["id"] == "Q21")
+    orchestration = OrchestrationResult.model_validate_json(
+        json.dumps(actual["trace"]["financial_execution"])
+    )
+    archived = next((source / "provider").glob("cash-flow-earnings-quality-*.json"))
+    captured = json.loads(archived.read_bytes())
+    original_digest = digest(archived)
+    response = LLMResponse.model_validate_json(json.dumps(captured["response"]))
+
+    class StoredGateway:
+        def generate(self, request):
+            return response.model_copy(
+                update=dict(request_id=request.request_id, correlation=request.correlation)
+            )
+
+    for execution in orchestration.specialist_executions:
+        if execution.role != "cash_flow_and_earnings_quality" or not execution.result:
+            continue
+        result = execution.result
+        result.candidates = []
+        result.trace = []
+        generate_candidates(
+            gateway=StoredGateway(),
+            model=orchestration.context.model,
+            result=result,
+            prompt={},
+            proposal_type=CashFlowEarningsQualityProposal,
+            render=_render,
+            prefix="captured-replay",
+        )
+        execution.status = result.status
+    orchestration.candidates, orchestration.conflicts = aggregate_candidates(
+        orchestration.specialist_executions
+    )
+    pipeline = build(Path.cwd(), output / "current")
+    # No Gateway for new Critics or Judge: this proves arithmetic preservation,
+    # and cannot manufacture semantic support that was never captured live.
+    controller = AdaptiveFinancialController(
+        SimpleNamespace(run=lambda **kwargs: orchestration),
+        pipeline.catalog,
+        None,
+        orchestration.context.model,
+    )
+    _, histories = controller.run(orchestration.question, orchestration.context)
+    admission = pipeline.repository.admit_many(histories)
+    ledger = VerifiedClaimLedger(pipeline.repository)
+    context = orchestration.context
+    request = VietnameseQARequest(
+        question=orchestration.question,
+        company_id=context.company_id,
+        document_id=context.document_id,
+        snapshot_id=context.snapshot_id,
+        period=context.period,
+        answer_requirements=planned_requirements(
+            orchestration.question, orchestration.planner_result.effective_proposal
+        ),
+    )
+    answer = VietnameseQAComposer(ledger).compose(request)
+    rendered = CitationRenderer().render_qa(answer)
+    firewall = InformationFirewall(ledger).evaluate_qa(
+        request=request, response=answer, rendered=rendered
+    )
+    save(output / "proofs.json", [h.model_dump(mode="json") for h in histories])
+    save(
+        output / "result.json",
+        dict(
+            network_calls=0,
+            captured_raw_unchanged=original_digest == digest(archived),
+            m6=[
+                dict(
+                    kind=h.outcome.final.original_claim.reasoning.claim_type
+                    if h.outcome.final.original_claim.reasoning
+                    else "direct_fact",
+                    decision=h.outcome.final.decision,
+                    checks=[
+                        dict(check=c.check_id, status=c.status, reason=c.reason_code)
+                        for c in h.outcome.final.validation.checks
+                        if c.status not in {"pass", "not_applicable"}
+                    ],
+                )
+                for h in histories
+            ],
+            admission=[a.status for a in admission],
+            m7=answer.status,
+            firewall=firewall.decision,
+            text=rendered.rendered_text,
+            limitations=[
+                "Saved Planner/tool outputs and Specialist JSON only; new semantic responses unavailable. Not live acceptance."
+            ],
+            answer=answer.model_dump(mode="json"),
+            rendered=rendered.model_dump(mode="json"),
+        ),
+    )
+    print(
+        dict(
+            network_calls=0,
+            m6=[h.outcome.final.decision for h in histories],
+            m7=answer.status,
+            firewall=firewall.decision,
+        )
+    )
+
+
 def replay_outputs(source, output):
     """Replay saved native proofs and the final M7 contracts without new LLM work."""
     from vietnamese_financial_multi_agent.outputs import CitationRenderer, VietnameseQAComposer
@@ -118,9 +243,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--replay-input", type=Path)
+    parser.add_argument("--captured-live-input", type=Path)
+    parser.add_argument("--committed-runtime", action="store_true")
     args = parser.parse_args()
     if args.output.exists():
         raise ValueError("fresh_output_required")
+    if args.committed_runtime:
+        import subprocess
+
+        from evaluate_real_pdf import runtime
+
+        runtime(
+            args.output, subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        )
+    if args.captured_live_input:
+        replay_captured(args.captured_live_input, args.output)
+        return
     if args.replay_input:
         replay_outputs(args.replay_input, args.output)
         return

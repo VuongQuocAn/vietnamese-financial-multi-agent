@@ -463,3 +463,152 @@ def test_approved_metric_can_be_a_reasoning_premise_without_another_calculator()
     logic = FinancialLogicCritic(gateway(status="consistent")).assess(batch, validation, evidence)
     decision = VerificationJudge().decide(batch, validation, evidence, logic).claims[0]
     assert decision.decision == "ACCEPT", decision.model_dump()
+
+
+def test_statement_identifiers_and_disclosed_methodology_are_not_unverified_numbers():
+    data, batch = reasoning_case()
+    claim = batch.claims[0]
+    claim.reasoning.claim_type = "reasoned_conclusion"
+    claim.reasoning.assumptions = ["Use supplied observations only."]
+    claim.content = "B02 và B03 là hai nguồn trong kỳ 2030."
+    validation = DeterministicFinancialValidator(SnapshotCatalog(**data)).validate(batch)
+    assert not any(
+        c.status == "fail" or c.check_id == "conditional_assumptions"
+        for c in validation.claims[0].checks
+    )
+    assert verify(data, batch)[-1].claims[0].decision != "ACCEPT"  # Critics are still required.
+
+
+def test_judge_outage_preserves_native_accepted_derived_proof(monkeypatch):
+    from types import SimpleNamespace as NS
+    from unittest.mock import Mock
+
+    import vietnamese_financial_multi_agent.agents.adaptive_controller as module
+    from vietnamese_financial_multi_agent.agents.planner_contracts import (
+        PlannerContext,
+        PlannerProposal,
+    )
+    from vietnamese_financial_multi_agent.verification.adaptive_judge import (
+        AdaptiveJudge,
+        JudgeFeedback,
+    )
+
+    data, batch = reasoning_case()
+    v, e, logic, _ = verify(data, batch)
+    history = VerificationHistory(
+        contexts=[VerificationProofContext(batch=batch, validation=v, evidence=e, logic=logic)],
+        outcome=BoundedVerificationLoop().start(batch, v, e, logic, candidate_id="C1"),
+    )
+    output = NS(
+        status="completed",
+        supervisor_result=None,
+        specialist_executions=[],
+        planner_result=NS(
+            effective_proposal=PlannerProposal(
+                intent="multi_step_analysis", reasoning_required=True
+            ),
+            model_dump=lambda **kwargs: {},
+        ),
+    )
+    monkeypatch.setattr(module, "to_verification_input", lambda _: batch)
+    monkeypatch.setattr(
+        module,
+        "VerificationRuntime",
+        lambda *args, **kwargs: NS(
+            verify=lambda *a, **kw: [history], provider_metadata=[], stage_latency_ms={}
+        ),
+    )
+    monkeypatch.setattr(
+        AdaptiveJudge, "assess", lambda *args: JudgeFeedback(assessment="JUDGE_ERROR")
+    )
+    controller = module.AdaptiveFinancialController(
+        Mock(run=lambda **kwargs: output), None, None, None
+    )
+    _, actual = controller.run("Compare", PlannerContext(mode="auto"))
+    assert actual == [history] and history.outcome.final.decision == "ACCEPT"
+
+
+def test_automatic_context_uses_unique_company_filing_anchor(tmp_path):
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+
+    from .test_financial_qa_pipeline import setup
+
+    service, _, _, _, _ = setup(tmp_path)
+    document = service.documents[0]
+    service.documents.append(
+        document.model_copy(update=dict(document_id="prior-document", reporting_year=2029))
+    )
+    bound, blocked, reasons = service._context(
+        FinancialQARequest(question="Doanh thu TEST 2030 tăng so với 2029?", execution_mode="auto")
+    )
+    assert blocked is None, reasons
+    assert bound.document_id == document.document_id
+    _, blocked, _ = service._context(
+        FinancialQARequest(question="So sánh TEST 2030 và TEST 2029", execution_mode="auto")
+    )
+    assert blocked == "clarification_required"
+
+
+def test_single_filing_comparison_needs_semantic_planning_not_cross_document_approval():
+    from vietnamese_financial_multi_agent.tools.question_understanding import understand
+
+    assert understand("Tính chênh lệch doanh thu và lợi nhuận TEST 2030")[1] == [
+        "semantic_intent_requires_gateway"
+    ]
+    assert (
+        "cross_document_comparison_blocked_D03_B10"
+        in understand("So sánh TEST 2030 và OTHER 2029")[1]
+    )
+
+
+def test_partial_answer_keeps_independent_derived_branch_without_claiming_analysis_complete(
+    tmp_path,
+):
+    from vietnamese_financial_multi_agent.outputs import CitationRenderer, VietnameseQAComposer
+    from vietnamese_financial_multi_agent.outputs.information_firewall import InformationFirewall
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import (
+        QARequirement,
+        VietnameseQARequest,
+    )
+    from vietnamese_financial_multi_agent.verification import VerifiedClaimLedger
+
+    data, batch = reasoning_case()
+    v, e, logic, _ = verify(data, batch)
+    history = VerificationHistory(
+        contexts=[VerificationProofContext(batch=batch, validation=v, evidence=e, logic=logic)],
+        outcome=BoundedVerificationLoop().start(batch, v, e, logic, candidate_id="C1"),
+    )
+    repo = VerifiedClaimRepository(tmp_path)
+    repo.admit(history)
+    ledger = VerifiedClaimLedger(repo)
+    c = batch.claims[0]
+    request = VietnameseQARequest(
+        question="Giải thích quan hệ được giao",
+        company_id=c.company_id,
+        document_id=c.document_id,
+        snapshot_id=c.snapshot_id,
+        period=c.period,
+        answer_requirements=[
+            QARequirement(
+                requirement_id="analysis",
+                text="Giải thích",
+                kind="fact",
+                target_id=c.supporting_evidence[0].canonical_item_id,
+                interpretation=True,
+                interpretation_topic="metric_meaning",
+                required_indicators=[s.canonical_item_id for s in c.supporting_evidence],
+            )
+        ],
+    )
+    answer = VietnameseQAComposer(ledger).compose(request)
+    assert answer.status == "partial" and [
+        r.requirement_id for r in answer.unanswered_requirements
+    ] == ["analysis"]
+    assert c.content in answer.answer_vi
+    rendered = CitationRenderer().render_qa(answer)
+    assert (
+        InformationFirewall(ledger)
+        .evaluate_qa(request=request, response=answer, rendered=rendered)
+        .decision
+        == "ALLOW_WITH_CAVEAT"
+    )

@@ -645,7 +645,9 @@ def generate_candidates(
                     kind="supported_interpretation",
                     content=render_dynamic(computation, {s.evidence_id: s.label for s in sources})
                     if failed_operations
-                    else " ".join([analysis.statement, *analysis.limitations]),
+                    else " ".join(
+                        [analysis.statement, *analysis.assumptions, *analysis.limitations]
+                    ),
                     company_id=owner.company_id,
                     document_id=owner.document_id,
                     snapshot_id=owner.snapshot_id,

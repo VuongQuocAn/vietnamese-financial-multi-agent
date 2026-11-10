@@ -231,6 +231,53 @@ def request_inventory(request, entries):
                 if signatures
                 else "insufficient_admitted_calculation_metadata"
             )
+    # Useful arithmetic can survive a failed dependent interpretation. Keep the
+    # original analytical goal unanswered; expose only separately admitted
+    # derived proofs, never turn a calculation into coverage of that conclusion.
+    for goal in list(plan.requirements):
+        if (
+            not goal.interpretation
+            or goal.verified_claim_ids
+            or not goal.required_indicators
+            or goal.interpretation_topic in {"dynamic_calculation", "unbounded"}
+        ):
+            continue
+        for entry in entries:
+            claim = entry.accepted_claim
+            proof = getattr(claim, "reasoning", None)
+            indicators = {s.canonical_item_id for s in getattr(claim, "supporting_evidence", [])}
+            if not (
+                proof
+                and proof.claim_type == "derived_fact"
+                and proof.calculation
+                and set(goal.required_indicators) <= indicators
+                and (goal.period is None or goal.period == claim.period)
+                and (scope is None or claim_scope(entry) == scope)
+                and not any(
+                    r.requirement_id == "support-derived-" + entry.identity.verified_claim_id
+                    for r in plan.requirements
+                )
+                and entry.verification_status == "verified"
+                and entry.decision.decision == "ACCEPT"
+            ):
+                continue
+            plan.requirements.append(
+                QARequirement(
+                    requirement_id="support-derived-" + entry.identity.verified_claim_id,
+                    text=goal.text,
+                    kind="fact",
+                    target_id=claim.supporting_evidence[0].canonical_item_id,
+                    period=claim.period,
+                    interpretation=True,
+                    interpretation_topic="dynamic_calculation",
+                    required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
+                    reasoning_operations=[s.operation.operator for s in proof.calculation.steps],
+                    reasoning_periods=sorted(
+                        {o.period for o in proof.calculation.operands.values()}
+                    ),
+                    verified_claim_ids=[entry.identity.verified_claim_id],
+                )
+            )
     ids = _unique(k for r in plan.requirements for k in r.verified_claim_ids)
     years = {e.identity.period[:4] for e in entries if e.identity.verified_claim_id in ids}
     if len(years) > 1 or len(ids) > 12:

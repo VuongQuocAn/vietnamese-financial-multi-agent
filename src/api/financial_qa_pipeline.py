@@ -163,6 +163,24 @@ class FinancialQAPipeline:
             )
             if len(set(filing)) == 1:
                 year = int(filing[0])
+            if year is None:
+                # A unique declared company-alias/year pair identifies a filing;
+                # another unanchored year can be its comparative column. Two
+                # explicit filings remain ambiguous and are never merged here.
+                text = normalize(request.question)
+                anchored = {
+                    int(match[1])
+                    for document in self.documents
+                    for alias in document.company_aliases
+                    for match in re.finditer(
+                        r"(?<!\w)"
+                        + re.escape(normalize(alias))
+                        + r"\s+(?:nam\s+)?((?:19|20|21)\d{2})\b",
+                        text,
+                    )
+                }
+                if len(anchored) == 1:
+                    year = next(iter(anchored))
         identities = self._document_identities(request, year)
         if len(identities) != 1:
             return None, "clarification_required", ["document_company_binding_unresolved"]

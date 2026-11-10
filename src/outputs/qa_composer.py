@@ -619,7 +619,7 @@ def matches_financial_target(claim, requirement, logic=None):
                 for finding in getattr(logic, "assertions", [])
             )
             if proof:
-                return bool(typed and not proof.assumptions)
+                return bool(typed)
             text = normalize(claim.content)
             predicate = r"(?:vuot|cao hon|thap hon|ho tro|bao dam|chuyen hoa|chuyen doi|tuong xung|chenh lech)"
             relation = re.search(

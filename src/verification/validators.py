@@ -326,7 +326,9 @@ class DeterministicFinancialValidator:
                 allowed.update(
                     Decimal(s.result).quantize(Decimal("0.01")) for s in computation.steps
                 )
-            numbers = [parse_number(n) for n in re.findall(NUMBER, claim.content)]
+            # Statement identifiers (B02/B03, note IDs) are not monetary values.
+            # Still bind a value directly followed by its currency, e.g. 100VND.
+            numbers = [parse_number(n) for n in re.findall(r"(?<!\w)" + NUMBER, claim.content)]
             if any(n not in allowed for n in numbers):
                 self._check(result, "numeric_binding", "fail", "reasoning_unbound_number")
             units = {s.unit for s in sources} | (
@@ -347,7 +349,7 @@ class DeterministicFinancialValidator:
                 and not any(s.calculation for s in sources)
             ):
                 self._check(result, "dynamic_calculation", "fail", "reasoning_calculation_required")
-        if proof.claim_type == "conditional_inference" or proof.assumptions:
+        if proof.claim_type == "conditional_inference":
             self._check(
                 result,
                 "conditional_assumptions",

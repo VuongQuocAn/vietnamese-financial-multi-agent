@@ -45,7 +45,9 @@ Evidence Critic và Logic Critic; số đúng không tự chứng minh causality
 toàn diện. Một giả thuyết có assumptions chưa chứng minh không vào Verified Ledger.
 
 M7 chỉ đọc admitted claims. Kết luận có giới hạn có thể đáp ứng goal nếu Critic xác
-nhận đúng quan hệ, đủ nguồn và phép tính; không cần một kết luận tốt/xấu tuyệt đối.
+nhận đúng quan hệ, đủ nguồn và phép tính khi có khẳng định định lượng; không cần
+một kết luận tốt/xấu tuyệt đối. Phần tính toán độc lập vẫn được hiển thị khi diễn
+giải phụ thuộc nó chưa đạt, nhưng original analytical goal vẫn unanswered.
 Phép tính ad hoc dùng topic `dynamic_calculation`, với operators/periods tương ứng.
 Arithmetic proof được hiển thị cùng insight; citation dùng tên filing và trang,
 không đưa operation IDs/diagnostic annotations vào prose. Firewall kiểm tra toàn

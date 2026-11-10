@@ -265,3 +265,11 @@ Hai captured Q21 responses replay giữ raw payload, không tạo thêm reasonin
 chưa có trong response. Kết quả engineering cuối/live/CI ghi tại báo cáo FIX-02.
 Cho phép commit/push main và tối đa3 live cases sau offline ổn định, không retry.
 Trạng thái bàn giao phải là REVIEW — WAITING FOR TECH LEAD ACCEPTANCE, không DONE.
+
+Limited live trên `69eab23`: Q21 có greater(CFO,PAT) nhưng PARTIAL, JudgeHTTP503;
+Q23/MH03 preflight blocked, tổng3provider calls/11366known tokens/1unknown usage.
+Sau live sửa generic number boundaries/assumption verification, native ACCEPT
+retention và comparison preflight; không gọi live lần nữa.251focused PASS.
+Saved Q21 replay:3ACCEPT (2facts+1derived), analysisABSTAIN vì semantic responses
+không có; M7partial/FirewallALLOW_WITH_CAVEAT. Không báo full financial acceptance.
+Final implementation SHA/CI và preservation ghi ở checkpoint báo cáo FIX-02.

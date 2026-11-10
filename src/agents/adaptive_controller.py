@@ -159,6 +159,7 @@ class AdaptiveFinancialController:
                         "PASS",
                         "REVISION_NEEDED",
                         "INSUFFICIENT_EVIDENCE",
+                        "JUDGE_ERROR",
                     } or record.original_claim.kind in {
                         "fact",
                         "approved_metric",

@@ -111,7 +111,7 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     if len(years) > 1 or "lien tai lieu" in text:
         return parsed, ["cross_document_comparison_blocked_D03_B10"]
     if any(p in text for p in ("so sanh", "chenh lech")):
-        if len(years) == 1 and "cung bao cao" in text:
+        if len(years) == 1:
             return parsed, ["semantic_intent_requires_gateway"]
         return parsed, ["cross_document_comparison_blocked_D03_B10"]
     if any(

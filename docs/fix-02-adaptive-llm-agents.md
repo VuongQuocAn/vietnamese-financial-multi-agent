@@ -1124,3 +1124,59 @@ arithmetic và contract paths; chất lượng analytical prose phải xét riê
 Giới hạn được công khai: cross-document accounting comparability chưa approved;
 M7 chưa có kênh phát hành hypothetical scenarios ngoài Ledger; numeric binding
 không thay semantic assessment về attribution, mức độ kết luận hoặc causality.
+
+### Limited live trên69eab23 và correction offline
+
+Implementation live: `69eab23c620e9d9039c6d2b5e2946b1ec08a46a6`, đã push main.
+Chạy đúng3 cases, không retry hoặc thêm case sau thất bại; runtime imports/archive
+khớp SHA,164source files/414protected inputs/reference giữ nguyên.
+
+| Case | Thực thi thực tế | Native M6 / M7 | Kết luận |
+| --- | --- | --- | --- |
+| Q21 | Planner → Cash Flow Specialist;2find facts/2source lookups;greater(CFO,PAT);17,797s | Native3ACCEPT/1INVESTIGATE;final2ACCEPT/1INVESTIGATE do retention;M7partial;FirewallALLOW_WITH_CAVEAT | Specialist đã có quan hệ và diễn giải có giới hạn, nhưng analysis chưa được phát hành |
+| Q23 | 0provider calls;0,004s | Không chạy M6/M7 | Preflight không chọn được filing từ company/year anchor khi có hai năm |
+| MH03 | 0provider calls;0,011s | Không chạy M6/M7 | Single-filing difference bị legacy parser coi là cross-document ở fusion preflight |
+
+Tổng3actual provider calls: Planner1,Specialist1 thành công,AdaptiveJudge1HTTP503;
+11.366known API tokens và1call unknown usage. Không có semantic Evidence/Logic
+Critic calls live cho analysis vì deterministic validation đã chặn. Native derived
+comparison thực sự ACCEPT, không phải LLM tự cấp verified. Judge không revision
+do provider failure. Cả hai factual values và page7/8 provenance đúng PDF; rendered
+text không có PLANNER_TASK/internal reason codes.21citation variants được giữ theo
+source identities, không phải21trang PDF độc lập.
+
+Hai false blockers mới được xác định từ captured JSON: numeric binding đọc `B02`/
+`B03` như số02/03; phương pháp dùng số được giao và caveat không đánh giá toàn diện
+bị coi như giả định sự kiện chưa có nguồn. Correction tổng quát sau live:
+
+- Chỉ bind numeric tokens có biên từ; statement IDs không là giá trị tài chính.
+- Assumptions/limitations do model viết nằm trong proposition và được cả hai
+  Critics đánh giá. Conditional inference vẫn bị chặn Ledger; methodological
+  qualifications không tự buộc mọi interpretation thành conditional.
+- Judge outage giữ native ACCEPT; derived branch được M7 hiển thị như phần hỗ trợ
+  trong câu trả lời PARTIAL, không biến original analytical goal thành answered.
+- Company-alias/year anchor duy nhất chọn filing; hai filing explicit vẫn mơ hồ.
+  Single-year comparison chuyển semantic planning; không cấp cross-document approval.
+
+Correction này **không có live mới**. Saved Q21 replay bằng raw Specialist JSON và
+tool outputs thật, M6 tính lại trên canonical catalog:3ACCEPT (2facts+1derived),
+reasoned conclusionABSTAIN vì thiếu semantic responses, M7partial/FirewallALLOW_WITH_CAVEAT.
+Không tạo Critic responses để làm analysis PASS. Comparison và numeric premises
+được giữ khi Judge unavailable; raw captured responses giữ hash.
+
+Engineering trước live490focused PASS; sau correction251focused consumers PASS,
+38multi-hop controls nằm trong nhóm này;57feedback và110specialist checks đã chạy ở
+các bước trước, có overlap, không cộng thành tổng độc lập. Ruff scoped/planning/diff
+PASS. Full local format chỉ vướng một Markdown fence CRLF có sẵn ngoài task;
+HEAD của file đó là LF và formatter trên HEAD PASS, không sửa file ngoài scope.
+PDF audit độc lập:11unique inputs/37source occurrences/22arithmetic steps,0value/
+page mismatch.16real-source probes và14historical proofs đã replay như phần trên.
+
+[CI42772703465](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42772703465)
+SUCCESS đúng69eab23,Python3.12/Web (lint/format/planning/typecheck/build/browser);
+không gán kết quả này cho correction SHA sau đó. Final SHA/CI ghi ở checkpoint cuối.
+
+**Chưa đạt live financial acceptance**: chưa có full reasoned conclusion qua Critics
+và M7 trên final source; Q23/MH03 chưa qua provider. Giữ các giới hạn conditional
+scenario/cross-document/provenance đã nêu. Status REVIEW — WAITING FOR TECH LEAD
+ACCEPTANCE. Next action: Tech Lead review implementation cùng live/offline limits.
