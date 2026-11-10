@@ -68,6 +68,34 @@ def test_explicit_user_goal_cannot_be_marked_optional():
     assert planned_requirements("Doanh thu thuần?", proposal)[0].required
 
 
+@pytest.mark.parametrize("wrong_target", [False, True])
+def test_redundant_source_metadata_must_match_its_declared_producer(wrong_target):
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+
+    from .test_financial_qa import gateway_for
+    from .test_query_planner import planner
+
+    instance = planner()
+    question = "Biên lợi nhuận gộp TEST 2030"
+    wire = instance._deterministic(question)
+    wire["operations"][1]["formula_id"] = "revenue_yoy" if wrong_target else "gross_margin"
+    wire["user_requested_targets"] = [
+        dict(
+            kind="metric",
+            target_id="gross_margin",
+            interpretation=True,
+            interpretation_topic="dynamic_calculation",
+            reasoning_operations=["divide"],
+        )
+    ]
+    instance._gateway = gateway_for(wire, [])
+    result = instance.plan(question, PlannerContext(mode="auto"))
+    assert result.raw_proposal == wire
+    assert result.status == ("failed" if wrong_target else "planned"), result.reasons
+    if not wrong_target:
+        assert not result.effective_proposal.user_requested_targets[0].interpretation
+
+
 def test_reasoning_dependencies_can_reference_validated_execution_operations():
     from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerProposal
 

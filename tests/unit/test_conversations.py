@@ -13,6 +13,35 @@ def ask(service, session, question, **kwargs):
     return service.send(session.conversation_id, FinancialQARequest(question=question, **kwargs))
 
 
+def test_protocol_failure_preserves_established_topic_for_next_followup(tmp_path, monkeypatch):
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import (
+        FinancialQAResponse,
+        PipelineTrace,
+    )
+
+    pipeline, request, _, _, _ = setup(tmp_path)
+    service = ConversationService(pipeline)
+    session = service.create()
+    ask(service, session, request.question, execution_mode="deterministic")
+    before = service.history(session.conversation_id)
+    monkeypatch.setattr(
+        pipeline,
+        "run",
+        lambda _: FinancialQAResponse(
+            status="internal_error", trace=PipelineTrace(request_id="protocol-failure")
+        ),
+    )
+    failed = ask(service, session, "Công thức chỉ số này là gì?")
+    assert failed.response.status == "internal_error"
+    after = service.history(session.conversation_id)
+    assert after.topics == before.topics and after.reference_question == before.reference_question
+    assert after.selected_context == before.selected_context
+    bound, *_, clarification = service._resolve(
+        after, FinancialQARequest(question="Công thức chỉ số này là gì?")
+    )
+    assert bound is not None and clarification is None
+
+
 def test_real_pipeline_followup_and_http_history(tmp_path):
     pipeline, _, _, _, _ = setup(tmp_path / "ledger")
     service = ConversationService(pipeline)

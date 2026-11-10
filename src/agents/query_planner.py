@@ -781,6 +781,20 @@ class EvidenceAwareQueryPlanner:
             operations = {operation.operation_id: operation for operation in proposal.operations}
             for target in proposal.user_requested_targets:
                 if (
+                    target.kind == "metric"
+                    and target.target_id in proposal.formula_ids
+                    and target.interpretation_topic == "dynamic_calculation"
+                ):
+                    target.interpretation = False
+                    target.interpretation_topic = None
+                    target.reasoning_operations = []
+                    target.reasoning_periods = []
+                    result.trace.append(
+                        PlannerTrace(
+                            stage="semantic_policy", outcome="approved_calculation_goal_bound"
+                        )
+                    )
+                if (
                     target.kind == "explanation"
                     and target.aspect in {"formula", "operands"}
                     and target.target_id is None
@@ -1367,9 +1381,31 @@ class EvidenceAwareQueryPlanner:
             inputs = [op_evidence[d] for d in operation.dependencies]
             kind = operation.operation
             if kind != "find_financial_facts" and operation.canonical_item_id:
-                raise ValueError("proposal_unexpected_indicator_binding")
+                producer = (
+                    operations.get(operation.dependencies[0])
+                    if len(operation.dependencies) == 1
+                    else None
+                )
+                if not (
+                    kind == "get_evidence_sources"
+                    and producer
+                    and producer.operation == "find_financial_facts"
+                    and producer.canonical_item_id == operation.canonical_item_id
+                ):
+                    raise ValueError("proposal_unexpected_indicator_binding")
             if kind != "calculate_financial_metric" and operation.formula_id:
-                raise ValueError("proposal_unexpected_formula_binding")
+                producer = (
+                    operations.get(operation.dependencies[0])
+                    if len(operation.dependencies) == 1
+                    else None
+                )
+                if not (
+                    kind == "get_metric_evidence_lineage"
+                    and producer
+                    and producer.operation == "calculate_financial_metric"
+                    and producer.formula_id == operation.formula_id
+                ):
+                    raise ValueError("proposal_unexpected_formula_binding")
             if kind == "find_financial_facts":
                 item = operation.canonical_item_id
                 if item not in ITEM_RULES or operation.dependencies:

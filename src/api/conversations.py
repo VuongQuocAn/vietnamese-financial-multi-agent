@@ -416,7 +416,9 @@ class ConversationService:
                 state.verified_claim_ids = []
                 state.citation_ids = []
                 state.summary = ""
-            if not successful:
+            if not successful and not (
+                response.status in {"internal_error", "provider_unavailable"} and not changed
+            ):
                 # A failed current target cannot leave an older target looking like
                 # the referent of "this metric". Successful evidence remains in QA.
                 state.topics = []
