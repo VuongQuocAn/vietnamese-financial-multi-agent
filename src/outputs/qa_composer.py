@@ -613,7 +613,7 @@ def matches_financial_target(claim, requirement, logic=None):
     if claim.kind != expected:
         return False
     indicators = {e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"}
-    if claim.calculation and claim.calculation.evidence:
+    if getattr(claim, "calculation", None) and claim.calculation.evidence:
         indicators.update(
             match.record.canonical_item_id
             for operand in claim.calculation.evidence.operands

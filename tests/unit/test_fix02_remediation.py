@@ -18,6 +18,35 @@ from .test_llm_gateway import request
 from .test_m4_execution import fixture
 
 
+def test_reasoning_dependencies_can_reference_validated_execution_operations():
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerProposal
+
+    wire = dict(
+        intent="direct_fact",
+        operations=[
+            dict(
+                operation_id="retrieve",
+                operation="find_financial_facts",
+                canonical_item_id="b02.net_revenue",
+            )
+        ],
+        reasoning_steps=[
+            dict(
+                step_id="explain",
+                operation="interpret",
+                inputs=["retrieve"],
+                dependencies=["retrieve"],
+                goal="Diễn giải",
+                expected_output="Nhận xét có nguồn",
+            )
+        ],
+    )
+    assert PlannerProposal.model_validate(wire)
+    wire["reasoning_steps"][0]["dependencies"] = ["unknown"]
+    with pytest.raises(ValueError, match="reasoning_plan_dependency_invalid"):
+        PlannerProposal.model_validate(wire)
+
+
 def test_metric_interpretation_coverage_uses_calculation_operands():
     from vietnamese_financial_multi_agent.outputs.qa_composer import matches_financial_target
     from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement

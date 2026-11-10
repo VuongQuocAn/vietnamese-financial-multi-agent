@@ -171,7 +171,8 @@ class PlannerProposal(FinancialModel):
     @model_validator(mode="after")
     def dependency_graph(self):
         self.ordered_specialist_roles()
-        known = set()
+        # Public reasoning may depend on the already validated execution DAG.
+        known = {operation.operation_id for operation in self.operations}
         for step in self.reasoning_steps:
             if step.step_id in known or set(step.dependencies) - known:
                 raise ValueError("reasoning_plan_dependency_invalid")
