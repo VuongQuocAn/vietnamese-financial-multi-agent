@@ -48,6 +48,7 @@ class VietnameseQARequest(FinancialModel):
 class QARequirement(FinancialModel):
     requirement_id: str
     text: str
+    required: bool = True
     kind: Literal[
         "fact",
         "metric",

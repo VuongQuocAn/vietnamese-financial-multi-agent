@@ -113,6 +113,7 @@ class AdaptiveFinancialController:
             ]
             if output.status not in {"completed", "partial"} or not proposal:
                 event["stop_reason"] = "execution_unavailable"
+                event["restored_last_valid_execution"] = last_usable is not None
                 output = last_usable or output
                 break
             if signature in seen or proposal.stop_reason:

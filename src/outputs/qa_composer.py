@@ -584,6 +584,13 @@ def _reasoning_matches(proof, requirement):
         return True
     if not proof or not proof.calculation:
         return False
+    aliases = {
+        "subtraction": "subtract",
+        "addition": "add",
+        "division": "divide",
+        "multiplication": "multiply",
+    }
+    expected = [aliases.get(op, op) for op in expected]
     actual = [s.operation.operator for s in proof.calculation.steps]
     if expected == ["compare"]:
         return any(
@@ -606,7 +613,7 @@ def matches_financial_target(claim, requirement, logic=None):
     if claim.kind != expected:
         return False
     indicators = {e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"}
-    if claim.kind == "approved_metric" and claim.calculation and claim.calculation.evidence:
+    if claim.calculation and claim.calculation.evidence:
         indicators.update(
             match.record.canonical_item_id
             for operand in claim.calculation.evidence.operands
@@ -661,6 +668,8 @@ def matches_financial_target(claim, requirement, logic=None):
             if not (typed or relation):
                 return False
     if requirement.kind == "fact":
+        if requirement.interpretation:
+            return requirement.target_id in indicators
         return any(
             e.kind == "fact" and e.canonical_item_id == requirement.target_id
             for e in claim.supporting_evidence
@@ -808,7 +817,7 @@ def validate_qa_response(response, retrieved):
     if response.limitations != expected_limits:
         errors.append("limitation_projection_mismatch")
     answered = [r for r in response.plan.requirements if r.verified_claim_ids]
-    unanswered = [r for r in response.plan.requirements if not r.verified_claim_ids]
+    unanswered = [r for r in response.plan.requirements if r.required and not r.verified_claim_ids]
     if (
         response.answered_requirements != answered
         or response.unanswered_requirements != unanswered
@@ -863,7 +872,18 @@ def validate_qa_response(response, retrieved):
         and len({s.context.company_id for s in response.grounded_segments}) > 1
     ):
         errors.append("mixed_companies")
-    if len({s.context.period[:4] for s in response.grounded_segments if s.context.period}) > 1:
+    if len(
+        {s.context.period[:4] for s in response.grounded_segments if s.context.period}
+    ) > 1 and not (
+        len(
+            {
+                (s.context.company_id, s.context.document_id, s.context.snapshot_id)
+                for s in response.grounded_segments
+            }
+        )
+        == 1
+        and all(r.period or r.reasoning_periods for r in answered if r.kind in {"fact", "metric"})
+    ):
         errors.append("mixed_reporting_years")
     if response.answer_vi != _answer_text(response):
         errors.append("unapproved_display_text")
@@ -1039,7 +1059,7 @@ class VietnameseQAComposer:
             r for r in response.plan.requirements if r.verified_claim_ids
         ]
         response.unanswered_requirements = [
-            r for r in response.plan.requirements if not r.verified_claim_ids
+            r for r in response.plan.requirements if r.required and not r.verified_claim_ids
         ]
         response.status = status or ("partial" if response.unanswered_requirements else "answered")
         response.used_verified_claim_ids = [

@@ -53,6 +53,7 @@ class UserRequestedTarget(FinancialModel):
     """Answer goals, independent of the execution DAG and its supporting operands."""
 
     kind: Literal["fact", "metric", "explanation", "limitations"]
+    required: bool = True
     target_id: Identity | None = None
     period: Identity | None = None
     interpretation: bool = False

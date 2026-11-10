@@ -129,6 +129,8 @@ def answer_coverage(question, output, histories):
     plan, status = request_inventory(request, entries)
     goals = []
     for target in plan.requirements:
+        if not target.required:
+            continue
         related = []
         for record in records:
             claim = record.original_claim

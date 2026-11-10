@@ -18,6 +18,107 @@ from .test_llm_gateway import request
 from .test_m4_execution import fixture
 
 
+def test_metric_interpretation_coverage_uses_calculation_operands():
+    from vietnamese_financial_multi_agent.outputs.qa_composer import matches_financial_target
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+
+    from .test_verified_claim_ledger import history_for
+
+    claim = history_for(metric=True).outcome.final.original_claim.model_copy(deep=True)
+    claim.kind = "supported_interpretation"
+    indicators = [
+        m.record.canonical_item_id
+        for o in claim.calculation.evidence.operands
+        for m in o.facts.matches
+    ]
+    goal = QARequirement(
+        requirement_id="analysis",
+        text="Diễn giải tỷ lệ",
+        kind="metric",
+        target_id=claim.calculation.formula_id,
+        interpretation=True,
+        required_indicators=indicators,
+    )
+    assert matches_financial_target(claim, goal)
+    goal.required_indicators.append("b03.operating_cash_flow")
+    assert not matches_financial_target(claim, goal)
+
+
+def test_optional_explanation_does_not_reduce_completeness(tmp_path):
+    from vietnamese_financial_multi_agent.outputs import VietnameseQAComposer, VietnameseQARequest
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+
+    from .test_vietnamese_qa_composer import qa
+
+    _, ledger, context = qa.__wrapped__(tmp_path)
+    goals = [
+        QARequirement(
+            requirement_id="value", text="Doanh thu", kind="fact", target_id="b02.net_revenue"
+        ),
+        QARequirement(
+            requirement_id="extra",
+            text="Nhận xét hỗ trợ",
+            kind="fact",
+            target_id="b02.net_revenue",
+            interpretation=True,
+            required=False,
+        ),
+    ]
+    result = VietnameseQAComposer(ledger).compose(
+        VietnameseQARequest(question="Doanh thu?", answer_requirements=goals, **context)
+    )
+    assert result.status == "answered" and not result.unanswered_requirements
+    goals[1].required = True
+    result = VietnameseQAComposer(ledger).compose(
+        VietnameseQARequest(question="Doanh thu?", answer_requirements=goals, **context)
+    )
+    assert result.status == "partial"
+
+
+def test_explicit_comparative_periods_in_same_filing_survive_inventory(tmp_path):
+    from types import SimpleNamespace
+
+    from vietnamese_financial_multi_agent.outputs import VietnameseQARequest
+    from vietnamese_financial_multi_agent.outputs.firewall_qa_binding import request_inventory
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+
+    from .test_vietnamese_qa_composer import qa
+
+    repository, _, context = qa.__wrapped__(tmp_path)
+    entry = next(e for e in repository.list_all() if e.identity.kind == "fact")
+    entries, goals = [], []
+    for year in ("2029", "2030"):
+        claim = entry.accepted_claim.model_copy(deep=True)
+        claim.period = year
+        identity = entry.identity.model_copy(update={"period": year, "verified_claim_id": year})
+        entries.append(
+            SimpleNamespace(
+                identity=identity,
+                accepted_claim=claim,
+                decision=entry.decision,
+                verification_status="verified",
+                content=entry.content,
+            )
+        )
+        goals.append(
+            QARequirement(
+                requirement_id=year,
+                text="So sánh doanh thu",
+                kind="fact",
+                target_id="b02.net_revenue",
+                period=year,
+            )
+        )
+    context.pop("period")
+    request = VietnameseQARequest(
+        question="So sánh doanh thu hai kỳ", answer_requirements=goals, **context
+    )
+    plan, status = request_inventory(request, entries)
+    assert status == "answered" and set(plan.selected_verified_claim_ids) == {"2029", "2030"}
+    entries[1].identity = entries[1].identity.model_copy(update={"document_id": "other"})
+    assert request_inventory(request, entries)[1] == "clarification_required"
+
+
 @pytest.mark.parametrize("explicit_operand", [False, True])
 def test_internal_operations_do_not_create_answer_targets(tmp_path, explicit_operand):
     service, req, _, _, output = setup(tmp_path)

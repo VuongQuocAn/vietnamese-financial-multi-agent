@@ -287,7 +287,11 @@ class EvidenceAwareQueryPlanner:
                 "độc lập trong câu hỏi phải là multi_step_analysis, kể cả chỉ truy xuất/đối chiếu "
                 "mà không tính ratio. Bắt buộc thêm prepare_bundle phụ thuộc tất cả source outputs. "
                 "Hai operands nội bộ của một metric không phải hai mục tiêu độc lập. "
-                "Bắt buộc khai báo user_requested_targets: chỉ những goals người dùng hỏi, tách khỏi operations "
+                "Bắt buộc khai báo user_requested_targets: required=true chỉ cho goals người dùng hỏi. "
+                "Giải thích hỗ trợ tự thêm có required=false; không tự yêu cầu đánh giá chất lượng lợi nhuận "
+                "khi người dùng chỉ hỏi phép tính chênh lệch. Nếu người dùng hỏi phân tích/đánh giá/giải thích "
+                "thì diễn giải đó bắt buộc required=true. reasoning_operations dùng đúng operator của calculation DAG "
+                "(subtract, divide, percentage_change...), không dùng mô tả tự do. Tách khỏi operations "
                 "và required_indicators dùng nội bộ. Metric-only có kind=metric/formula target, không có fact "
                 "targets cho operands trừ khi người dùng hỏi độc lập. Explanation có aspect formula/operands. "
                 "Phân tích dùng interpretation=true và topic đúng; chất lượng lợi nhuận dùng topic=earnings_quality "
@@ -688,6 +692,13 @@ class EvidenceAwareQueryPlanner:
 
             operations = {operation.operation_id: operation for operation in proposal.operations}
             for target in proposal.user_requested_targets:
+                if (
+                    target.kind == "explanation"
+                    and target.aspect in {"formula", "operands"}
+                    and target.target_id is None
+                    and len(proposal.formula_ids) == 1
+                ):
+                    target.target_id = proposal.formula_ids[0]
                 if (
                     target.aspect in {"formula", "operands"}
                     and target.target_id in proposal.formula_ids

@@ -184,7 +184,9 @@ def request_inventory(request, entries):
             for e in entries
             if _matches_target(e, requirement)
             and (
-                parsed.reporting_year is None or e.identity.period[:4] == str(parsed.reporting_year)
+                requirement.period is not None
+                or parsed.reporting_year is None
+                or e.identity.period[:4] == str(parsed.reporting_year)
             )
             and (scope is None or claim_scope(e) == scope)
         ]
@@ -280,7 +282,14 @@ def request_inventory(request, entries):
             )
     ids = _unique(k for r in plan.requirements for k in r.verified_claim_ids)
     years = {e.identity.period[:4] for e in entries if e.identity.verified_claim_id in ids}
-    if len(years) > 1 or len(ids) > 12:
+    explicit_periods = {r.period for r in plan.requirements if r.period}
+    explicit_periods.update(p for r in plan.requirements for p in r.reasoning_periods)
+    bound_comparison = bool(request.answer_requirements) and all(
+        e.identity.period in explicit_periods
+        for e in entries
+        if e.identity.verified_claim_id in ids
+    )
+    if (len(years) > 1 and not bound_comparison) or len(ids) > 12:
         for requirement in plan.requirements:
             requirement.verified_claim_ids = []
         plan.missing_information.append("period" if len(years) > 1 else "narrower_question")
@@ -292,7 +301,11 @@ def request_inventory(request, entries):
                 requirement.reason = "select_claims_for_limitations"
     plan.selected_verified_claim_ids = ids
     status = (
-        ("partial" if any(not r.verified_claim_ids for r in plan.requirements) else "answered")
+        (
+            "partial"
+            if any(r.required and not r.verified_claim_ids for r in plan.requirements)
+            else "answered"
+        )
         if ids
         else "clarification_required"
         if any(r.reason == "ambiguous_verified_claims" for r in plan.requirements)
