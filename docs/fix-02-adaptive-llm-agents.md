@@ -786,3 +786,56 @@ logic_rules/adaptive_judge,không import pending local modules.
 Sau offlinePASS, chạy đúng1Q21request trên implementation commit mới/source archive
 cố định,không retry hoặc sửa runtime giữa run. Actual usage/latency/native/M7 và
 CI đúng SHA bổ sung dưới đây. FIX-02giữREVIEW.
+
+### Kết quả lượt Q21 duy nhất trên implementation mới
+
+Implementation đã commit/push
+[`8eadc84d98928ec4b53e6589e723bbeb8e617009`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8eadc84d98928ec4b53e6589e723bbeb8e617009).
+164runtime files của candidate offline khớp commit; live import archive đúng SHA,
+không pending local source. Chỉ1request Q21,không Q11/F08lại,không retry hoặc sửa
+runtime sau khi chạy. Raw artifacts `q21-negation/live/`, audit `live-audit.json`,
+`live-schema-diagnostic.json`; inputs/reference/question giữ nguyên.
+
+| Case | Actual status | Wall s | Calls | Input tokens | Output tokens | Total | Gateway s |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Q21 | verification_blocked | 9,415 | 1Planner | 5424 | 1434 | 6858 | 3,906 |
+
+Provider trả success/STOP,JSON hợp lệ; cached/thinking tokens null (unknown),cost
+unknown. **Không phải provider failure hoặc thiếu source evidence.** Proposal
+strict validation FAIL ở `assignments[1].depends_on`:3items trong khi schema max2.
+Profitability dependency=[op_pat];Cash Flow dependency=[op_pat,op_cfo,op_bundle].
+Prompt schema thực tế **đã ghi maxItems=2**,đúng backend contract; model không tuân
+thủ. Đây là giới hạn SpecialistAssignment tồn tại từ9a356bf, không phải error từ
+negation scope mới, nhưng vẫn là lỗi integration/generation làm live request dừng.
+Không tự bỏ dependency hoặc nới maxItems để nhận output trong phiên này.
+
+Application ghi `invalid_proposal_schema_schema`,pipeline trả verification_blocked
+và không phát hành claim. Specialists/Evidence Critic/Logic Critic/Semantic Judge:
+**0calls**; native M6 decisions rỗng, M7 không chạy,0new Ledger claims/citations.
+Vì không đi tới semantic verification, **live chưa xác nhận Q21negation fix đầu-cuối**.
+Không gán offline ABSTAIN thành actual live M6 result; không gọi run này PARTIAL
+do thiếu bằng chứng hoặc completed. Runtime/sources chưa đổi và không live lần2.
+
+Read-only diagnostic parse đúng raw response tái hiện Pydantic `too_long`,location
+assignments/1/depends_on,max2/actual3; không biến response thành plan có thể chạy.
+Audit xác nhận164runtime/414protected inputs/reference và pending local unchanged.
+Q11/F08đã được Tech Lead chấp nhận trên9a356bf giữ evidence cũ,không ghép thành một
+lượt successful trên8eadc84. Bounded live feedback ở F08vẫn là bằng chứng trước đó;
+coverage đã nằm trong input của cả hai versions, không tuyên bố model mới phát
+hiện coverage đúng khi Judge còn chưa được gọi trong run mới.
+
+**Trạng thái:** phạm vi phủ định đã sửa và exact Q21analysis replay không còn
+formula false positive;113targeted testsPASS,independent native/source gates giữ
+nguyên. End-to-end Q21acceptance vẫn chưa đạt do Planner output schema violation,
+không phải financial evidence insufficiency. CI đúng8eadc84 được chốt ở checkpoint
+tài liệu. FIX-02REVIEW,không tự DONE,không tiếp tục sửa/đánh giá lớn.
+
+[CI42735324025](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42735324025)
+SUCCESS đúng implementation `8eadc84d98928ec4b53e6589e723bbeb8e617009`:
+**85Python +9Web PASS**,Ruff lint/format/planning/typecheck/build PASS,
+full regression SKIPPED. Local113targetedPASS có overlap với CI,không cộng số tests.
+CI chỉ là engineering validation,không thay kết quả live bị chặn. Planning/diff
+checks của docs checkpoint PASS;runtime không đổi sau live,không gán CI cho SHA
+tài liệu mới. Q11/F08previous acceptance và giới hạn raw LLM Judge vẫn giữ nguyên.
+Next action duy nhất: Tech Lead review8eadc84 và quyết định chặn Planner schema/
+phạm vi live acceptance Q21;giữ FIX-02REVIEW,không tựDONE/Web/M8.

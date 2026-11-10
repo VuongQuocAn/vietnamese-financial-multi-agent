@@ -4,27 +4,26 @@ Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**; remediation đã được Tech Lead chấp nhận mức engineering;
-controlled live bổ sung10/11/2026 trên cố định runtime
-`9a356bfaf53f0003b5f19edb031de9a3da4f6f39`,không sửa runtime/retry/benchmark.
-[CI42729994715](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42729994715)
-SUCCESS đúng runtime SHA63Python/9Web;full regression SKIPPED,không chạy CI mới.
-[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).
-Một lượt Q11→Q21→F08,17calls/101834API tokens,0provider failures.
-Q11completed_with_caveats22,394s/1call,M6 ACCEPT metric,M7answered3/3,
-computed7,21%,đủformula/operands/citations;stop gate PASS.
-Q21partial29,874s/4calls,3ACCEPT/1INVESTIGATE,M7covered3/5;D01negated-ratio gate
-tái diễn với “dữ liệu chưa đủ để tính toán tỷ lệ…”,CONFIRMEDHigh/P1.
-F08completed_with_caveats50,412s/12calls,M7answered1/1;sau1natural revision:
-backend coverage phát feedback→Planner sửa task→4toolsCACHE_HIT→Specialist/
-Critics/native ACCEPT analysis→Judge PASS+coverage true. Raw LLM Judge round0
-vẫnPASS;không gán việc phát hiện thiếu coverage cho model. Có successful live
-revision trên9a356bf,khôngép verdict/ca lỗi giả;không lấy F08đổi Q21thànhPASS.
-164runtime files/414inputs/reference/pending GEN/Web/CHAT unchanged;
-6new Ledger proofs replay PASS,không đổi bytes. Không tự đóng9issues/DONE.
-Q11offline paired median40,001→9,947s (−75,1%)giữ bằng chứng cũ,khôngđo lại.
-Next action: Tech Lead quyết định blocker Q21D01tái diễn và nghiệm thu phạm vi
-đã có evidence;không tự sửa/live thêm/Web/M8.
+Status: **REVIEW**; Tech Lead chấp nhận Q11/F08,engineering performance và live
+bounded feedback trên9a356bf;giao sửa P1Q21scope và đúng1Q21live sau offlinePASS.
+Implementation mới `8eadc84d98928ec4b53e6589e723bbeb8e617009` đã push main.
+[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#p1-q21--phạm-vi-phủ-định-và-judge-input10112026).
+Evidence-first/deficiency-first limitation scopes,independent assertions/double
+negation/numeric gates giữ nguyên;không tựACCEPT. Coverage đã có trong inputJudge
+từ9a356bf,prompt mới nhắc xét native complete/goals,backendguard vẫn chặn cuối.
+113targetedPASS;exact savedQ21replay2numeric premisesPASS/0formulafalsepositive,
+nhưngM6ABSTAIN/Ledgerrejected khi thiếu semantic response;6historical proofs nguyên.
+Một liveQ21trên8eadc84:verification_blocked9,415s/1Plannercall/6858APItokens;
+provider success/STOP/validJSON nhưng assignments[1].depends_on3items>max2.
+Prompt schema/backendkhớp;0Specialist/Critics/Judgecalls,M6rỗng/M7không chạy,
+0claimphát hành. Không gọi đây là thiếu evidence/provider outage;chưa có live
+acceptance choQ21trênsource mới,khôngretry/nới schema/runtimefixsau run.
+164runtime/414inputs/reference/pendingGEN/Web/CHAT giữ nguyên;9issuesOPEN.
+[CI42735324025](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42735324025)
+SUCCESS85Python/9Web exact8eadc84;lint/format/planning/typecheck/buildPASS,
+full regressionSKIPPED;không benchmark mới/Q11/F08rerun.
+Next action: Tech Lead review8eadc84 và quyết định chặn Planner schema/live
+acceptance;giữREVIEW,không tựDONE/Web/M8.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 

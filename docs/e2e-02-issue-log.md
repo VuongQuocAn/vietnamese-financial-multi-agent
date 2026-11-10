@@ -288,3 +288,17 @@ I007không benchmark thêm;wall liveQ11/Q21/F08=22,394/29,874/50,412s,không gh�
 offline timings. I008prose/caveats/internal reason codes còn. Giữ9issuesOPEN,không
 coi F08 đạt là Q21đạt;chi tiết ở phần controlled live của
 [report](fix-02-adaptive-llm-agents.md#kiểm-chứng-live-có-kiểm-soát-trên9a356bf--10112026).
+
+### P1Q21 scope fix — 10/11/2026
+
+Tech Lead chấp nhận Q11/F08và giao xử lý D01. Source8eadc84:scope predicate hỗ trợ
+evidence-first/deficiency-first,giữ independent numeric clauses/double negation;
+exact saved Q21analysis replay hết formula false positive,2numeric premisesPASS,
+M6ABSTAIN khi không có semantic response (không tự ACCEPT).113targetedPASS.
+answer_coverage đã có trước call LLM Judge từ9a356bf;prompt mới nhắc model dùng
+complete/goals,backend guard vẫn chặn cuối. Một Q21liveđược phép trên8eadc84 bị
+verification_blocked ở Planner strict schema:assignments[1].depends_on3items>max2;
+1call/6858tokens/provider success,0downstream agent/M6/M7. Không gán là thiếu
+evidence hoặc provider failure;chưa livevalidate end-to-end,sửa thêm/retry không
+được thực hiện.9issuesgiữOPEN,TechLead quyết định;chi tiết phần P1Q21 trong
+[report](fix-02-adaptive-llm-agents.md#p1-q21--phạm-vi-phủ-định-và-judge-input10112026).
