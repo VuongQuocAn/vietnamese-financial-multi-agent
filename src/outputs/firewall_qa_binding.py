@@ -285,6 +285,53 @@ def request_inventory(request, entries):
                     verified_claim_ids=[entry.identity.verified_claim_id],
                 )
             )
+    # A Planner inventory may omit the explanation the Specialist actually
+    # supplied. Keep native ACCEPT interpretations tied to exactly the selected
+    # arithmetic proof as optional supporting prose, never as a new verdict or
+    # as coverage of an unanswered required goal.
+    selected = {k for r in plan.requirements for k in r.verified_claim_ids}
+    selected_proofs = {
+        e.accepted_claim.reasoning.calculation.model_dump_json()
+        for e in entries
+        if e.identity.verified_claim_id in selected
+        and getattr(e.accepted_claim, "reasoning", None)
+        and e.accepted_claim.reasoning.calculation
+    }
+    for entry in entries:
+        claim = entry.accepted_claim
+        proof = getattr(claim, "reasoning", None)
+        facts = [
+            s.canonical_item_id
+            for s in getattr(claim, "supporting_evidence", [])
+            if s.kind == "fact"
+        ]
+        if (
+            entry.identity.verified_claim_id not in selected
+            and len(selected) < 12
+            and entry.verification_status == "verified"
+            and entry.decision.decision == "ACCEPT"
+            and proof
+            and proof.claim_type == "reasoned_conclusion"
+            and proof.calculation
+            and proof.calculation.model_dump_json() in selected_proofs
+            and facts
+            and (scope is None or claim_scope(entry) == scope)
+        ):
+            plan.requirements.append(
+                QARequirement(
+                    requirement_id="support-interpretation-" + entry.identity.verified_claim_id,
+                    text=request.question,
+                    kind="fact",
+                    target_id=facts[0],
+                    period=claim.period,
+                    required=False,
+                    interpretation=True,
+                    interpretation_topic="metric_meaning",
+                    required_indicators=facts,
+                    verified_claim_ids=[entry.identity.verified_claim_id],
+                )
+            )
+            selected.add(entry.identity.verified_claim_id)
     ids = _unique(k for r in plan.requirements for k in r.verified_claim_ids)
     years = {e.identity.period[:4] for e in entries if e.identity.verified_claim_id in ids}
     explicit_periods = {r.period for r in plan.requirements if r.period}

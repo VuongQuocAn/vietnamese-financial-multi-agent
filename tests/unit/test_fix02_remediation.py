@@ -18,6 +18,85 @@ from .test_llm_gateway import request
 from .test_m4_execution import fixture
 
 
+@pytest.mark.parametrize("category,calls", [("provider_unavailable", 2), ("authentication", 1)])
+def test_transient_agent_failure_does_not_cancel_independent_calls(category, calls):
+    from vietnamese_financial_multi_agent.core.fake_llm_transport import FakeLLMTransport
+    from vietnamese_financial_multi_agent.core.llm_gateway import _failure
+
+    gateway = Mock()
+    gateway.generate.side_effect = lambda req: (
+        _failure(req, category) if req.request_id == "failed-agent" else FakeLLMTransport()(req)
+    )
+    budget = RequestGateway(gateway, max_calls=2, timeout_seconds=10)
+    assert budget.generate(request("failed-agent")).status == "error"
+    following = budget.generate(request("independent-agent"))
+    assert (following.status == "success") == (calls == 2)
+    assert gateway.generate.call_count == calls
+
+
+@pytest.mark.parametrize("accepted", [False, True])
+def test_admitted_interpretation_sharing_selected_proof_is_presented(accepted):
+    from types import SimpleNamespace as NS
+
+    from vietnamese_financial_multi_agent.outputs import VietnameseQARequest
+    from vietnamese_financial_multi_agent.outputs.firewall_qa_binding import request_inventory
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+
+    from .test_multihop_reasoning import reasoning_case
+
+    _, batch = reasoning_case(operator="subtract")
+    derived = batch.claims[0]
+    analysis = derived.model_copy(deep=True)
+    analysis.reasoning.claim_type = "reasoned_conclusion"
+    analysis.content = "Đây là phép đối chiếu số học có giới hạn trong phạm vi dữ liệu."
+    entries = [
+        NS(
+            identity=NS(
+                verified_claim_id=key,
+                kind=claim.kind,
+                **{
+                    k: getattr(claim, k)
+                    for k in ("company_id", "document_id", "snapshot_id", "period")
+                },
+            ),
+            accepted_claim=claim,
+            decision=NS(decision=decision, logic=None),
+            verification_status="verified",
+            content=claim.content,
+        )
+        for key, claim, decision in [
+            ("derived", derived, "ACCEPT"),
+            ("interpretation", analysis, "ACCEPT" if accepted else "INVESTIGATE"),
+        ]
+    ]
+    goal = QARequirement(
+        requirement_id="calculation",
+        text="Đối chiếu",
+        kind="fact",
+        target_id=derived.supporting_evidence[0].canonical_item_id,
+        interpretation=True,
+        interpretation_topic="dynamic_calculation",
+        required_indicators=[s.canonical_item_id for s in derived.supporting_evidence],
+        reasoning_operations=["subtract"],
+        reasoning_periods=[derived.period],
+    )
+    plan, status = request_inventory(
+        VietnameseQARequest(
+            question="Đối chiếu",
+            answer_requirements=[goal],
+            **{
+                k: getattr(derived, k)
+                for k in ("company_id", "document_id", "snapshot_id", "period")
+            },
+        ),
+        entries,
+    )
+    assert status == "answered"
+    assert ("interpretation" in plan.selected_verified_claim_ids) == accepted
+    if accepted:
+        assert not plan.requirements[-1].required
+
+
 def test_tool_only_fact_does_not_require_model_added_interpretation():
     from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
 
