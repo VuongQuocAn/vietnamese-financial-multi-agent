@@ -563,3 +563,15 @@ trong một trang; relevance cho phép đảo predicate/subject chính xác tron
 không tạo quan hệ tài chính mới. Câu dẫn kết thúc dấu hai chấm không tự là heading;
 declared lists vẫn cần đủ mục. Quotation phương pháp trước bảng giữ giới hạn excerpt,
 không suy ra các số trong bảng. Source-quality flags luôn giữ và M6 kiểm tra từng nguồn.
+
+## FIX-02 — Planner dependency DAG
+
+`SpecialistAssignment.depends_on` cho phép tối đa 35 references, theo năng lực tối đa
+32 operations và 3 Specialist roles. Mỗi reference phải là operation ID hoặc role
+được khai báo trong cùng proposal; không trùng, không tự phụ thuộc, không tạo vòng.
+Operation chỉ phụ thuộc operation; ID operation không được trùng namespace role.
+Proposal kiểm tra toàn DAG trước materialization; Router kiểm tra lại trước dispatch,
+giữ capability boundaries và chặn role phụ thuộc không đủ điều kiện thực thi.
+Tools chạy trước routing, các role chạy theo thứ tự topo. References không cấp quyền
+đọc evidence ngoài projection của role và không cấp M6 ACCEPT. Financial Validator,
+Evidence/Logic Critics, native M6, Judge coverage guard và M7 giữ nguyên authority.

@@ -2,7 +2,7 @@
 
 from typing import Any, Literal
 
-from pydantic import Field, model_serializer
+from pydantic import Field, field_validator, model_serializer, model_validator
 
 from ..accounting.contracts import FinancialModel
 from ..core.gemini_adapter import DEFAULT_GEMINI_MODEL
@@ -24,7 +24,14 @@ class SpecialistAssignment(FinancialModel):
     task: str = Field(min_length=1, max_length=1500)
     indicators: list[Identity] = Field(default_factory=list, max_length=32)
     formulas: list[Identity] = Field(default_factory=list, max_length=8)
-    depends_on: list[str] = Field(default_factory=list, max_length=2)
+    depends_on: list[Identity] = Field(default_factory=list, max_length=35)
+
+    @field_validator("depends_on")
+    @classmethod
+    def unique_dependencies(cls, references):
+        if len(references) != len(set(references)):
+            raise ValueError("duplicate_specialist_dependency")
+        return references
 
 
 class PlannerOperation(FinancialModel):
@@ -87,6 +94,52 @@ class PlannerProposal(FinancialModel):
     missing_information: list[Identity] = Field(default_factory=list)
     unsupported_capabilities: list[Identity] = Field(default_factory=list)
     reasons: list[Identity] = Field(default_factory=list)
+
+    def ordered_specialist_roles(self) -> list[str]:
+        """Validate the bounded operation/role DAG before any dispatch."""
+        operations = {op.operation_id: op for op in self.operations}
+        assignments = {assignment.role: assignment for assignment in self.assignments}
+        if len(operations) != len(self.operations):
+            raise ValueError("duplicate_proposal_operation")
+        if len(assignments) != len(self.assignments):
+            raise ValueError("duplicate_specialist_role")
+        if operations.keys() & assignments.keys():
+            raise ValueError("ambiguous_dependency_reference")
+        graph = {key: op.dependencies for key, op in operations.items()}
+        for references in graph.values():
+            if len(references) != len(set(references)):
+                raise ValueError("duplicate_operation_dependency")
+            if set(references) - operations.keys():
+                raise ValueError("unknown_proposal_dependency")
+        graph.update({role: assignment.depends_on for role, assignment in assignments.items()})
+        ordered, active, visited = [], set(), set()
+
+        def visit(key):
+            if key not in graph:
+                raise ValueError("unknown_specialist_dependency")
+            if key in active:
+                raise ValueError("proposal_dependency_cycle")
+            if key in visited:
+                return
+            references = graph[key]
+            if len(references) > 35 or len(references) != len(set(references)):
+                raise ValueError("invalid_dependency_references")
+            active.add(key)
+            for reference in references:
+                visit(reference)
+            active.remove(key)
+            visited.add(key)
+            if key in assignments:
+                ordered.append(key)
+
+        for key in graph:
+            visit(key)
+        return ordered
+
+    @model_validator(mode="after")
+    def dependency_graph(self):
+        self.ordered_specialist_roles()
+        return self
 
     @model_serializer(mode="wrap")
     def serialize_proposal(self, handler):

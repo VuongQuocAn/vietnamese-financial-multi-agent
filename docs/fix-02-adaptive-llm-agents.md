@@ -839,3 +839,28 @@ checks của docs checkpoint PASS;runtime không đổi sau live,không gán CI 
 tài liệu mới. Q11/F08previous acceptance và giới hạn raw LLM Judge vẫn giữ nguyên.
 Next action duy nhất: Tech Lead review8eadc84 và quyết định chặn Planner schema/
 phạm vi live acceptance Q21;giữ FIX-02REVIEW,không tựDONE/Web/M8.
+
+## Planner dependency contract — 10/11/2026
+
+Tech Lead cho phép sửa integration trong FIX-02, giữ REVIEW. Contract cho phép
+35 references (32 operations + 3 roles), thay giới hạn 2. Proposal kiểm tra toàn
+DAG trước materialization: reference tồn tại, không trùng/vòng, operation chỉ
+tham chiếu operation, namespace operation/role không nhập nhằng. Router kiểm tra
+lại DAG, giữ capability gate và chặn role dependency không đủ điều kiện chạy.
+Không thay Financial Validator, Evidence/Logic Critics, M6, Judge hoặc M7.
+
+77 targeted tests PASS: 63 Planner/router/adaptive/negation và 14 orchestrator;
+10 dependency controls được chạy lại sau bổ sung assertions, không cộng trùng.
+Controls gồm giới hạn schema, DAG đủ 32 operations/3 roles, ba tool refs,
+role topo order, missing/duplicate/self/cycle/tool→role/collision/wrong role,
+capability gate và role dependency không eligible. Replay dùng nguyên payload
+Planner từ live 8eadc84 (provider response SHA256
+`a6eedf55de925311c4e9fcfd93e733b459f00c058b9eaa152c80f767a191532e`):
+Planner planned, Supervisor completed, Router chọn profitability rồi cash-flow;
+dispatch cả hai generated (1 và 2 candidates). Specialist chạy deterministic
+chỉ kiểm tra dispatch, không thay bằng chứng live reasoning/M6 ACCEPT.
+0 live calls; 414 protected inputs giữ nguyên. Harness ban đầu dùng nhầm tên
+correlation field; sửa harness rồi replay PASS, không thay payload/source evidence.
+Artifacts ignored: `artifacts/evidence/FIX-02/planner-dependencies/` chứa replay,
+raw hash, full trace và candidate runtime hashes. SHA và đúng một Q21 live sẽ
+được chốt sau implementation commit; không chạy lại Q11/F08/benchmark/full E2E.

@@ -505,25 +505,10 @@ class AdaptiveSpecialistRouter:
         if proposal and proposal.reasoning_required:
             if not assignments or len(assignments) != len(proposal.assignments):
                 return stop("blocked", "reasoning_requires_unique_planner_assignments")
-            ordered, visiting = [], set()
-
-            def visit(role):
-                if role in visiting or role not in assignments:
-                    raise ValueError("invalid_specialist_dependency")
-                if role in ordered:
-                    return
-                visiting.add(role)
-                for dependency in assignments[role].depends_on:
-                    if dependency in {op.operation_id for op in proposal.operations}:
-                        # Tool dependencies precede routing and are checked by
-                        # the Supervisor's evidence closure below.
-                        continue
-                    visit(dependency)
-                visiting.remove(role)
-                ordered.append(role)
-
-            for role in assignments:
-                visit(role)
+            try:
+                ordered = proposal.ordered_specialist_roles()
+            except ValueError as error:
+                return stop("blocked", str(error))
             for role, assignment in assignments.items():
                 items, formulas = _CAPABILITIES[role]
                 if set(assignment.indicators) - items or set(assignment.formulas) - formulas:
@@ -534,6 +519,12 @@ class AdaptiveSpecialistRouter:
                     if r.target_id in (*assignment.indicators, *assignment.formulas)
                 }
             chosen = tuple(role for role in ordered if coverage[role])
+            if any(
+                dependency in assignments and dependency not in chosen
+                for role in chosen
+                for dependency in assignments[role].depends_on
+            ):
+                return stop("blocked", "specialist_dependency_not_eligible")
         assigned = set()
         for role in chosen:
             assigned.update(coverage[role])

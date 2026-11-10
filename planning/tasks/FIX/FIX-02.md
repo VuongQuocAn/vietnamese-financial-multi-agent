@@ -187,3 +187,17 @@ giữ FIX-02REVIEW,không tựDONE/Web/M8.
 SUCCESS đúng8eadc84:85Python/9Web,Ruff/planning/typecheck/buildPASS;full regression
 SKIPPED. Không dùng CI thay liveacceptance. Checkpoint tiếp theo chỉ docs/planning;
 không runtimechanges sau lượtQ21,không gán CI choSHAdocs.
+
+### Tech Lead giao sửa Planner dependency contract — 10/11/2026
+
+Giữ REVIEW; chỉ mở `SpecialistAssignment.depends_on` từ 2 lên 35 references,
+theo 32 operations/3 roles. Kiểm tra toàn DAG: tồn tại, unique, không vòng,
+không operation→role hoặc ID nhập nhằng. Router giữ capability boundaries và
+chặn role phụ thuộc không đủ điều kiện dispatch; không thay M6/Judge/M7.
+77 targeted tests PASS (63 Planner/router/adaptive/negation và 14 orchestrator;
+10 dependency controls đã chạy lại sau bổ sung assertions, không cộng trùng).
+Replay nguyên JSON Planner live 8eadc84 PASS: ba refs giữ nguyên, Supervisor
+completed, hai Specialist generated bằng deterministic dispatch smoke;
+không gọi provider/không cấp M6 ACCEPT. 414 inputs giữ nguyên.
+Tiếp theo đúng một Q21 live trên implementation SHA mới đã commit/freeze.
+Không Q11/F08/benchmark/full E2E; nếu nguyên nhân mới thì báo, không retry/sửa tiếp.
