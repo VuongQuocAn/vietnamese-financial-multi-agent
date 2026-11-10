@@ -201,3 +201,19 @@ completed, hai Specialist generated bằng deterministic dispatch smoke;
 không gọi provider/không cấp M6 ACCEPT. 414 inputs giữ nguyên.
 Tiếp theo đúng một Q21 live trên implementation SHA mới đã commit/freeze.
 Không Q11/F08/benchmark/full E2E; nếu nguyên nhân mới thì báo, không retry/sửa tiếp.
+
+Implementation `0b6c8d74b3674198a4a6b259ea2ade033fbc57de` đã push main;164candidate
+files khớp archive. Một Q21live:partial_verified_coverage23,226s/7calls/44344tokens,
+0provider errors. Ba dependencies schema/materialization PASS,1LLMSpecialist,
+2Evidence/1Logic/1Judge,4nativeM6ACCEPT nhưng relational coverage thiếu;rawJudge
+PASS dù input complete=false,backend REVISION_NEEDED. Planner round1success/schema
+PASS nhưng non-null fact targets kind=explanation/aspect=formula bị
+answer_target_outside_plan_formulas;STOP execution_unavailable,không downstream
+round1. M7partial/covered3of6/ALLOW_WITH_CAVEAT;hai facts đúng,thiếu relational
+interpretation. Không kết luận thiếu evidence thật hoặc provider outage.
+Không sinh lại negated Q21sentence;offline scope replay vẫn là evidence chính.
+Không runtime fix/retry;164runtime/414inputs/reference/local giữ nguyên.
+CI42737707767FAIL vì workflow indentation (83testsPASS rồi shell exit126),
+checkpoint sửa riêng YAML/docs,không đổi source/tests hoặc gán live sang SHA mới.
+Next action: Tech Lead review partial Q21 và quyết định revision-target blocker;
+FIX-02REVIEW,không tựDONE/Web/M8.

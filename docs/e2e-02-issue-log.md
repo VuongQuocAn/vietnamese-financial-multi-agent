@@ -302,3 +302,16 @@ verification_blocked ở Planner strict schema:assignments[1].depends_on3items>m
 evidence hoặc provider failure;chưa livevalidate end-to-end,sửa thêm/retry không
 được thực hiện.9issuesgiữOPEN,TechLead quyết định;chi tiết phần P1Q21 trong
 [report](fix-02-adaptive-llm-agents.md#p1-q21--phạm-vi-phủ-định-và-judge-input10112026).
+
+### Planner dependency follow-up — 10/11/2026
+
+Theo Tech Lead, mở cap35 và kiểm tra DAG;77targetedPASS,exact rawPlanner replay
+ba depsPASS. LiveQ21 duy nhất trên `0b6c8d7`:partial_verified_coverage23,226s,
+7calls/44344tokens/0providererrors. Round0 ba depsPASS→Specialist→Critics→M6
+4ACCEPT→rawJudgePASS;coveragefalse/backendREVISION_NEEDED→Planner revision
+bị answer_target_outside_plan_formulas (non-null fact IDs mang explanation/formula).
+M7partial3/6;không coi là thiếu evidence thật hoặc closed Q21. Negated sentence
+không xuất hiện nên chưa exercise lại scope fix ở live. Không runtime fix/retry;
+9issuesgiữOPEN/FIX-02REVIEW. CI liveSHAFAIL do YAMLindent,83testsPASS rồi shell126;
+workflow-only correction không thay runtime. Chi tiết và next action TechLead trong
+[report](fix-02-adaptive-llm-agents.md#planner-dependency-contract--10112026).

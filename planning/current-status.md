@@ -4,26 +4,23 @@ Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**; Tech Lead chấp nhận Q11/F08,engineering performance và live
-bounded feedback trên9a356bf;giao sửa P1Q21scope và đúng1Q21live sau offlinePASS.
-Implementation mới `8eadc84d98928ec4b53e6589e723bbeb8e617009` đã push main.
-[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#p1-q21--phạm-vi-phủ-định-và-judge-input10112026).
-Evidence-first/deficiency-first limitation scopes,independent assertions/double
-negation/numeric gates giữ nguyên;không tựACCEPT. Coverage đã có trong inputJudge
-từ9a356bf,prompt mới nhắc xét native complete/goals,backendguard vẫn chặn cuối.
-113targetedPASS;exact savedQ21replay2numeric premisesPASS/0formulafalsepositive,
-nhưngM6ABSTAIN/Ledgerrejected khi thiếu semantic response;6historical proofs nguyên.
-Một liveQ21trên8eadc84:verification_blocked9,415s/1Plannercall/6858APItokens;
-provider success/STOP/validJSON nhưng assignments[1].depends_on3items>max2.
-Prompt schema/backendkhớp;0Specialist/Critics/Judgecalls,M6rỗng/M7không chạy,
-0claimphát hành. Không gọi đây là thiếu evidence/provider outage;chưa có live
-acceptance choQ21trênsource mới,khôngretry/nới schema/runtimefixsau run.
-164runtime/414inputs/reference/pendingGEN/Web/CHAT giữ nguyên;9issuesOPEN.
-[CI42735324025](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42735324025)
-SUCCESS85Python/9Web exact8eadc84;lint/format/planning/typecheck/buildPASS,
-full regressionSKIPPED;không benchmark mới/Q11/F08rerun.
-Next action: Tech Lead review8eadc84 và quyết định chặn Planner schema/live
-acceptance;giữREVIEW,không tựDONE/Web/M8.
+Status: **REVIEW**; Q11/F08 và engineering scope fix được Tech Lead chấp nhận.
+Dependency contract cap35/whole DAG/capability gates;77targeted tests và exact
+saved Planner JSON replay PASS,ba refs giữ nguyên/materialize/dispatch đúng.
+Live runtime `0b6c8d74b3674198a4a6b259ea2ade033fbc57de` đã push main.
+[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#planner-dependency-contract--10112026).
+Đúng1Q21live:partial_verified_coverage23,226s/7calls/44344tokens/0providererrors.
+Planner ba dependenciesPASS→1Specialist→2Evidence/1Logic→4M6ACCEPT→Judge→M7.
+RawJudge PASS dù input coveragefalse;backend REVISION_NEEDED. Planner round1
+schemaPASS nhưng revision relational non-null fact targets explanation/formula
+bị answer_target_outside_plan_formulas;STOP execution_unavailable,không retry/fix.
+M7partial/covered3of6:hai facts và limitations,thiếu earnings_quality interpretation.
+Không gọi là thiếu evidence thật/provider outage;không sinh negated Q21sentence,
+không tuyên bố livevalidate scope fix. 164runtime/414inputs/reference/local nguyên.
+CI liveSHA42737707767FAIL:YAMLindent83testsPASS rồi shell126;checkpoint sửa riêng
+workflow/docs,source/tests giữ nguyên.9issuesOPEN;không Q11/F08/benchmark/full E2E.
+Next action: Tech Lead review partial Q21 và quyết định revision-target blocker;
+giữ REVIEW,không tựDONE/Web/M8.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 

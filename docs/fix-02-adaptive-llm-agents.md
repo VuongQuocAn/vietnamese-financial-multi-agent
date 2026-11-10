@@ -864,3 +864,78 @@ correlation field; sửa harness rồi replay PASS, không thay payload/source e
 Artifacts ignored: `artifacts/evidence/FIX-02/planner-dependencies/` chứa replay,
 raw hash, full trace và candidate runtime hashes. SHA và đúng một Q21 live sẽ
 được chốt sau implementation commit; không chạy lại Q11/F08/benchmark/full E2E.
+
+Implementation live: **`0b6c8d74b3674198a4a6b259ea2ade033fbc57de`**, đã push main.
+Candidate offline khớp toàn bộ 164 Python files trong git archive SHA này.
+Đúng một Q21 request chạy `--committed-runtime`, fresh ledger, original question;
+bounded revision bên trong request không phải lượt live thứ hai. Không runtime
+changes sau lượt chạy; không ghép kết quả live của SHA khác.
+
+**Kết quả: `partial_verified_coverage`, 23,226s, 7 calls, 44.344 tokens
+(40.800 input / 3.544 output), 0 provider errors, không tự COMPLETED.**
+Tất cả calls Gemini qua Shared Gateway, model `gemini-3.5-flash-lite`.
+
+| Agent/call | Input tokens | Output tokens | Total | Provider wall ms |
+| --- | ---: | ---: | ---: | ---: |
+| Planner round 0 | 5437 | 1200 | 6637 | 3533,602 |
+| Cash-flow Specialist | 2782 | 418 | 3200 | 1733,080 |
+| Evidence Critic — generic analysis | 7602 | 107 | 7709 | 1416,160 |
+| Evidence Critic — CFO sign | 4541 | 102 | 4643 | 1366,497 |
+| Logic Critic | 10405 | 251 | 10656 | 1550,295 |
+| LLM Judge | 5004 | 145 | 5149 | 1352,589 |
+| Planner round 1 | 5029 | 1321 | 6350 | 3381,088 |
+
+Đây là wall time của adapter từng call, không phải toàn stage. Full stage/provider
+Gateway latencies và raw requests/responses nằm trong `live/results.json`,
+`live/provider-attempts.json`, `live/provider/` và `live-audit.json` (ignored).
+
+Round 0 Planner schema/materialization PASS với chính ba refs
+`op_pat/op_cfo/op_bundle`. Planner chọn một cash-flow role nhận đủ PAT/CFO;
+Supervisor hoàn tất, Specialist thực sự chạy LLM. Evidence Critic hai calls trả
+supported; Logic Critic một call trả consistent cho generic bounded analysis,
+CFO-sign có deterministic logic consistent. Native M6 **4 ACCEPT**, admission
+stored 4: hai numeric facts, generic supported interpretation và CFO-sign
+interpretation. Không claim nào được tự nâng ACCEPT bằng dependency contract.
+
+Tuy nhiên, Specialist chỉ nói báo cáo có hai chỉ tiêu để phục vụ xem xét và mô tả
+CFO dương; chưa phân tích quan hệ PAT/CFO theo goal earnings_quality. Coverage
+guard không dùng các ACCEPT này để tự coi relational goal đã được trả lời.
+Judge input có `answer_coverage.complete=false`, ba goals thiếu matching native
+ACCEPT. **Raw LLM Judge vẫn PASS**, backend mới chuyển thành REVISION_NEEDED
+với `RETRIEVED_NOT_USED/REVISE_ANALYSIS`; không ghi LLM đã tự phát hiện thiếu sót.
+
+Round 1 Planner provider cũng success/valid JSON và dependency schema PASS,
+nhưng trả hai targets `kind=explanation`, `target_id=b02.profit_after_tax` hoặc
+`b03.operating_cash_flow`, `interpretation_topic=earnings_quality`, `aspect=formula`,
+trong khi `formula_ids=[]`. Nhánh bind relational goal hiện chỉ xử lý target_id
+null; hai non-null fact IDs đi vào formula target gate và bị
+**`answer_target_outside_plan_formulas`**. Không có Specialist/Critics/Judge ở
+round 1; controller STOP `execution_unavailable`, giữ kết quả đã xác minh round 0.
+Đây là integration blocker ở binding/validation của revision target, chưa phải
+bằng chứng thiếu financial evidence thật hoặc lỗi provider. Không sửa/retry tiếp.
+
+M7 `partial`, Firewall `ALLOW_WITH_CAVEAT`, coverage **3/6**: hai facts và
+limitations covered; ba requirements earnings_quality chưa có supported
+interpretation phù hợp. Một phần overlap do một explicit relational goal và hai
+requirements trích từ câu hỏi; không báo 3/6 là tỷ lệ đúng tài chính. Câu trả lời
+thực tế dẫn PAT **7.249.557.946 VND (PDF 7)** và CFO **14.319.681.754 VND (PDF 8)**,
+nêu còn thiếu nhận định và giới hạn nguồn/scope, không đưa kết luận chất lượng lợi
+nhuận hoàn chỉnh. Prose còn internal reason/task markers và nhiều citation lặp;
+ghi nhận giới hạn, không mở scope sửa.
+
+Lượt này không sinh câu “dữ liệu chưa đủ để tính toán tỷ lệ…” của Q21 cũ. Không
+quan sát formula false positive ở M6, nhưng cũng không tuyên bố negation fix đã
+được exercise đầy đủ bằng live; bằng chứng scope fix vẫn là regression/exact
+analysis replay được Tech Lead chấp nhận trước. Q11/F08 không chạy lại; giới hạn
+raw Judge PASS dù coverage thiếu vẫn giữ trong báo cáo.
+
+Integrity PASS: 164 runtime files unchanged/imports đúng archive, 414 protected
+inputs và reference E2E-02 unchanged. CI `42737707767` trên đúng live SHA FAIL vì
+dòng test mới bị thụt lề trong YAML folded command: 83 tests PASS rồi shell cố
+execute file test, exit 126. Lint/format/planning PASS; không gọi CI này SUCCESS.
+Checkpoint tiếp theo sửa riêng indentation workflow và docs/planning; source,
+tests và live runtime giữ nguyên, không live lại để gán kết quả cho SHA mới.
+
+FIX-02 giữ **REVIEW**. Next action duy nhất: Tech Lead review partial Q21 và
+quyết định blocker revision-target binding; không tự DONE, retry, runtime fix,
+benchmark, Q11/F08/E2E-02 rộng, WEB-02 hoặc M8.
