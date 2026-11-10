@@ -235,3 +235,17 @@ failure được xác nhận có trên baseline. [Report](../../../docs/fix-02-a
 Implementation chưa commit tại offline checkpoint; live sau commit/freeze.
 Status REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.
 Next action: đúng một Q21 live trên implementation commit đã đóng băng.
+
+Implementation `a320e8cf04905e012982ad4e06f0f881b3e67c79` đã push main.
+Một Q21live57,088s/12calls/77174tokens/0providererrors:hai rounds planned/dispatch
+PASS;round1 dùng4CACHE_HIT;native final4ACCEPT,M7partial3/4,hai facts phát hành đúng.
+Model revision vẫn tạo generic co-presence/limitation,không relational analysis;
+backend chặn rawJudgePASS/coveragefalse và dừng không tiến triển. Final renderer
+còn nối raw PLANNER_TASK/codes sau sanitized composer;đã ghi root cause,không hotfix.
+4newproofs replay/164runtime/414inputs/reference/unrelatedlocal unchanged.
+[CI42765017155](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42765017155)
+SUCCESS đúng a320e8c:107Python/9Web,lint/format/planning/typecheck/buildPASS;
+full regressionSKIPPED. Không gọi live financial acceptancePASS;checkpoint sau
+chỉ docs/planning,không runtime changes hoặc gán live cho SHA docs.
+Status REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.
+Next action: Tech Lead review a320e8c và quyết định hai giới hạn còn lại.

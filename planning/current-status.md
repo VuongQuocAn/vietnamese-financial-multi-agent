@@ -2,28 +2,24 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
+## FIX-02 ? Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**; Q11/F08 và engineering scope fix được Tech Lead chấp nhận.
-Dependency contract cap35/whole DAG/capability gates;77targeted tests và exact
-saved Planner JSON replay PASS,ba refs giữ nguyên/materialize/dispatch đúng.
-Live runtime `0b6c8d74b3674198a4a6b259ea2ade033fbc57de` đã push main.
-[Spec](tasks/FIX/FIX-02.md),[report](../docs/fix-02-adaptive-llm-agents.md#planner-dependency-contract--10112026).
-Đúng1Q21live:partial_verified_coverage23,226s/7calls/44344tokens/0providererrors.
-Planner ba dependenciesPASS→1Specialist→2Evidence/1Logic→4M6ACCEPT→Judge→M7.
-RawJudge PASS dù input coveragefalse;backend REVISION_NEEDED. Planner round1
-schemaPASS nhưng revision relational non-null fact targets explanation/formula
-bị answer_target_outside_plan_formulas;STOP execution_unavailable,không retry/fix.
-M7partial/covered3of6:hai facts và limitations,thiếu earnings_quality interpretation.
-Không gọi là thiếu evidence thật/provider outage;không sinh negated Q21sentence,
-không tuyên bố livevalidate scope fix. 164runtime/414inputs/reference/local nguyên.
-CI liveSHA42737707767FAIL:YAMLindent83testsPASS rồi shell126;checkpoint sửa riêng
-workflow/docs,source/tests giữ nguyên.9issuesOPEN;không Q11/F08/benchmark/full E2E.
-[CI42738238199](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42738238199)
-SUCCESS95Python/9Web trên checkpoint b0b4a0d,Ruff/planning/typecheck/buildPASS;
-source/tests identical live0b6c8d7,không gán CI cho liveSHA hoặc đổi Q21PARTIAL.
-Next action: Tech Lead review partial Q21 và quyết định revision-target blocker;
-giữ REVIEW,không tựDONE/Web/M8.
+Status: **REVIEW ? WAITING FOR TECH LEAD ACCEPTANCE**.
+Implementation `a320e8cf04905e012982ad4e06f0f881b3e67c79` ?? push main.
+Semantic normalization/partial goals/M7 relational dedup v? Specialist failure isolation.
+Exact Q21 revision baselineFAIL?planned/materialized/dispatch;5captured Planner
+replays/10historical proofs PASS;165earlier/81final/13preservation tests PASS (overlap).
+M?t Q21live57,088s/12calls/77174tokens/0providererrors:hai rounds planned/dispatch,
+round1 tool4CACHE_HIT,final4M6ACCEPT,M7partial3/4,hai facts ??ng PDF7/8.
+RawJudgePASS c? hai rounds nh?ng backend coveragefalse;STOP kh?ng ti?n tri?n.
+C?n thi?u relational analysis;final CitationRenderer n?i raw PLANNER_TASK/codes sau
+composer sanitization. Kh?ng hotfix/retry/financial acceptancePASS.
+4newproofs replay;164runtime/414inputs/reference/unrelatedlocal unchanged.
+[CI42765017155](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42765017155)
+SUCCESS ??ng a320e8c:107Python/9Web,lint/format/planning/typecheck/buildPASS.
+M?t fixture regression failure t?i hi?n
+tr?n baseline;kh?ng g?i to?n suitePASS. [Report](../docs/fix-02-adaptive-llm-agents.md#flexible-contracts--10112026).
+Next action: Tech Lead review a320e8c v? quy?t ??nh hai gi?i h?n c?n l?i.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 

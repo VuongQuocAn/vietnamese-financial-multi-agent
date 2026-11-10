@@ -983,7 +983,7 @@ approved formulas, canonical facts, OCR corrections, source policy hoặc Ledger
 - Digest cap24 không xóa toàn bộ evidence: bounded40 theo 32 indicators+8 metrics.
   QA requirement envelope40→128 chứa model/lexical goals và supporting explanations.
   Request/call/revision budgets, capability gates và native fail-closed giữ nguyên.
-- Prose bỏ PLANNER_TASK/annotations, diễn đạt caveats thay raw codes. Structured
+- Composer lọc PLANNER_TASK/annotations và diễn đạt một số caveats thay raw codes. Structured
   response/proof giữ caveats gốc; processing failure có thông báo riêng.
 
 ### Compatibility matrix
@@ -1039,5 +1039,52 @@ Harness: `scripts/replay_flexible_contracts.py`.
   causal/numeric limitation bypass, invalid DAG và Judge không vượt native blockers.
   Ruff/planning/diff PASS local trước freeze.
 
-Implementation SHA/live/CI được ghi tại checkpoint sau freeze.
-Next action: đúng một Q21 live trên implementation commit đã đóng băng.
+### Một Q21 live trên runtime đã đóng băng
+
+Implementation **`a320e8cf04905e012982ad4e06f0f881b3e67c79`**, đã push main.
+164runtime files khớp candidate offline và git archive; toàn bộ imports đúng archive.
+Chạy đúng một request Q21, không retry, không sửa runtime sau live.
+
+Kết quả **partial_verified_coverage**,57,088s/12calls/77.174tokens
+(72.205input/4.969output),0provider errors; M7partial3/4,Firewall ALLOW_WITH_CAVEAT.
+
+| Round | Planner/dispatch | Native M6 | Feedback/stop |
+| --- | --- | --- | --- |
+| 0 | planned; cash-flow Specialist;4tool calls | 3ACCEPT/1ABSTAIN | Raw Judge PASS; native coverage false→REVISION_NEEDED |
+| 1 | planned; cash-flow Specialist lần2;4CACHE_HIT | 4ACCEPT | Raw Judge PASS; coverage vẫn false; STOP retrieved_evidence_not_used_after_revision |
+
+Không còn Planner schema/formula binding failure. Round0 còn dùng metric/fact IDs
+cho interpretation và null explanation; effective normalization/materialization
+đều PASS. Round1 planned và gọi Specialist/Critics/Judge thực sự, không chỉ smoke.
+Specialist vẫn chỉ tạo nhận định đồng hiện PAT/CFO và limitation chung; không đưa
+ra relational earnings-quality assertion. M6 ACCEPT không đồng nghĩa đã đáp ứng
+goal; M7 không dùng generic limitation hoặc CFO sign để nhận coverage đầy đủ.
+Không kết luận thiếu evidence thật chỉ từ việc model chưa dùng evidence đã giao.
+
+Hai facts phát hành: PAT7.249.557.946VND/PDF7 và CFO14.319.681.754VND/PDF8,
+đúng document/snapshot/period2025;21citations,0unsupported numeric claim được phát
+hành. Bốn Ledger proofs mới replay hợp lệ/bytes unchanged; initialABSTAIN không
+bị đổi thành ACCEPT của cùng claim. 414inputs/reference và unrelated local hashes
+giữ nguyên. `live-audit.json` chứa checks/call usage/rounds, không thay oracle.
+Audit harness ban đầu đọc nhầm latency field ở wrapper; sửa harness read-only rồi
+PASS, không thay provider responses, source hoặc chạy lại request.
+
+**Giới hạn integration chưa đạt:** CitationRenderer (`citation_renderer.py:305`)
+nối raw annotations/caveats sau sanitized composer text, nên final answer vẫn lộ
+PLANNER_TASK và raw codes, đồng thời lặp nhiều citations cấp trang. Việc composer
+sanitization PASS chưa kiểm chứng được toàn bộ rendered response. Đây là lỗi còn
+lại của output boundary, không gọi requirement prose-cleanup là đã hoàn tất.
+Ngay composer, regex nhận diện code chỉ gồm chữ/underscore nên bỏ sót token có
+chữ số như candidate_claims_pending_M6_verification; status flags đơn từ cũng
+chưa được diễn đạt. Hai đường này cần được xử lý cùng output annotations khi
+Tech Lead giao tiếp, không thay raw caveats/proof để che dấu lỗi renderer.
+Theo stop rule sau live: chỉ lưu trace/root cause và giữ REVIEW; không hotfix,
+không live lại hoặc tự nâng thành successful financial acceptance.
+
+[CI42765017155](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42765017155)
+**SUCCESS đúng a320e8cf04905e012982ad4e06f0f881b3e67c79**:107Python/9Web PASS;
+Ruff lint/format/planning/typecheck/build PASS,full regression SKIPPED.
+Không dùng CI thay Q21 financial acceptance. Checkpoint sau chỉ docs/planning,
+source/tests/workflow giống implementation đã live, không gán live cho SHA docs.
+Next action: Tech Lead review a320e8c và hai giới hạn còn lại (relational reasoning,
+final renderer), quyết định nghiệm thu/phạm vi tiếp theo.
