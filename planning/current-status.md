@@ -2,24 +2,28 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## FIX-02 ? Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
+## FIX-02 — Adaptive Multi-Hop Financial Reasoning & Flexible Verification
 
-Status: **REVIEW ? WAITING FOR TECH LEAD ACCEPTANCE**.
-Implementation `a320e8cf04905e012982ad4e06f0f881b3e67c79` ?? push main.
-Semantic normalization/partial goals/M7 relational dedup v? Specialist failure isolation.
-Exact Q21 revision baselineFAIL?planned/materialized/dispatch;5captured Planner
-replays/10historical proofs PASS;165earlier/81final/13preservation tests PASS (overlap).
-M?t Q21live57,088s/12calls/77174tokens/0providererrors:hai rounds planned/dispatch,
-round1 tool4CACHE_HIT,final4M6ACCEPT,M7partial3/4,hai facts ??ng PDF7/8.
-RawJudgePASS c? hai rounds nh?ng backend coveragefalse;STOP kh?ng ti?n tri?n.
-C?n thi?u relational analysis;final CitationRenderer n?i raw PLANNER_TASK/codes sau
-composer sanitization. Kh?ng hotfix/retry/financial acceptancePASS.
-4newproofs replay;164runtime/414inputs/reference/unrelatedlocal unchanged.
-[CI42765017155](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42765017155)
-SUCCESS ??ng a320e8c:107Python/9Web,lint/format/planning/typecheck/buildPASS.
-M?t fixture regression failure t?i hi?n
-tr?n baseline;kh?ng g?i to?n suitePASS. [Report](../docs/fix-02-adaptive-llm-agents.md#flexible-contracts--10112026).
-Next action: Tech Lead review a320e8c v? quy?t ??nh hai gi?i h?n c?n l?i.
+Status: **REVIEW — WAITING FOR TECH LEAD ACCEPTANCE**.
+Implementation cuối `af4eae958bdb72f1449d606e15beeadb22be5c4f` đã push main;
+live chỉ trên `69eab23`, không gán live cho correction SHA.
+Planner reasoning plan → M4 Decimal DAG → M5 public proof → M6 claim-level replay
+→ M7 grounded output; giữ provenance/scope/unit/period và native Ledger authority.
+251 focused sau correction PASS; 490 trước live và các nhóm trước có overlap.
+16 real-source derived probes/14 historical proofs replay; PDF audit11inputs/
+37occurrences/22steps không mismatch. Không gọi đây là financial benchmark.
+Ba live cases: Q21 có greater(CFO,PAT) nhưng PARTIAL/JudgeHTTP503; Q23/MH03 bị
+preflight chặn trước provider;3actual calls/11366known tokens/1unknown usage.
+Saved Q21 replay sau correction giữ2facts+derived ACCEPT; analysis ABSTAIN vì
+thiếu semantic responses, M7partial/FirewallALLOW_WITH_CAVEAT;0network.
+Final archived replay16/16 answered/released và14historical proofs PASS,0network;
+[CI42774786427](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42774786427)
+SUCCESS exact af4eae9:145Python/9Web;lint/format/planning/typecheck/build PASS.
+164runtime files khớp commit;414inputs/reference và10unrelated local files giữ hash.
+Chưa full live financial acceptance.
+[Báo cáo](../docs/fix-02-adaptive-llm-agents.md#adaptive-multi-hop-reasoning--10112026),
+[matrix/thiết kế](../docs/fix-02-multihop-design.md). Giữ local ngoài task và dữ liệu nguồn.
+Next action: Tech Lead review af4eae9 cùng các giới hạn live/offline; không tự DONE.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 

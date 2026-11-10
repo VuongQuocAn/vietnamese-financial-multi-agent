@@ -1180,3 +1180,26 @@ không gán kết quả này cho correction SHA sau đó. Final SHA/CI ghi ở c
 và M7 trên final source; Q23/MH03 chưa qua provider. Giữ các giới hạn conditional
 scenario/cross-document/provenance đã nêu. Status REVIEW — WAITING FOR TECH LEAD
 ACCEPTANCE. Next action: Tech Lead review implementation cùng live/offline limits.
+
+### Checkpoint cuối FIX-02-MH
+
+Final implementation **`af4eae958bdb72f1449d606e15beeadb22be5c4f`**, đã push main.
+[CI42774786427](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42774786427)
+completed/**SUCCESS đúng SHA**:145Python/9Web PASS;lint/format/planning/typecheck/
+production build/browser PASS;full regression manual SKIPPED.
+
+Hai replay dùng `git archive` của đúng final SHA:164/164source files khớp commit.
+`contracts-af4eae9/`:16/16real-source derived probes answered/released;14historical
+proofs replay, original files giữ nguyên. `replay-af4eae9/`:captured Q21 raw JSON
+giữ hash, M6fresh3ACCEPT/1ABSTAIN, M7partial/FirewallALLOW_WITH_CAVEAT,0network;
+không có numeric-binding failure hoặc false promotion khi thiếu semantic responses.
+414protected inputs/reference và10unrelated local files giữ byte/hash.
+Evidence manifests tại `artifacts/evidence/FIX-02/multihop/final-integrity.json`,
+`pdf-numeric-audit.json`, `ci-final.json`; outputs riêng, không commit private data.
+
+Local251targeted sau correction và CI145 là engineering evidence, không gán thành
+financial quality benchmark. Live vẫn chỉ thuộc69eab23; final source chưa có live
+analysis ACCEPT đầu-cuối hoặc successful live revision. Không retry/case thứ4,
+không đổi nguồn/OCR, không đóng issues hoặc tự nghiệm thu DONE.
+**FIX-02 REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.**
+Next action: Tech Lead review af4eae9 cùng các giới hạn live/offline đã ghi.
