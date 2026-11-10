@@ -97,10 +97,19 @@ def test_missing_critic_ids_restore_unique_premises_or_request_reassessment(ambi
     assert bool(result.trace.reassessment_llm) == ambiguous
     assert result.assertions[0].status == "supported" and result.assertions[0].evidence_ids
     assert not result.errors
-    logic = FinancialLogicCritic(logic_gateway(status="consistent")).assess(
-        batch, validation, evidence
-    )
+
+    def omit_redundant_check_ids(wire):
+        for assertion in wire["assertions"]:
+            assertion["premise_ids"] = [
+                key for key in assertion["premise_ids"] if key.startswith("support:")
+            ]
+
+    logic = FinancialLogicCritic(
+        logic_gateway(omit_redundant_check_ids, status="consistent")
+    ).assess(batch, validation, evidence)
     assert logic.claims[0].trace.llm.calls == 1
+    assert logic.claims[0].trace.binding_recoveries
+    assert not logic.claims[0].errors
 
 
 def test_binding_recovery_never_creates_a_supported_verdict():
@@ -119,6 +128,90 @@ def test_binding_recovery_never_creates_a_supported_verdict():
     result = EvidenceCritic(catalog, semantic_gateway()).assess(batch, validation).claims[0]
     assert not result.trace.binding_recoveries
     assert result.assertions[0].status == "insufficient_evidence"
+
+
+@pytest.mark.parametrize("second_response", ["valid", "malformed", "changed_company"])
+def test_planner_json_reemission_is_bounded_and_preserves_request(second_response):
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+
+    from .test_evidence_critic import response
+    from .test_query_planner import planner
+
+    instance = planner()
+    question = "Doanh thu TEST 2030"
+    payload = instance._deterministic(question)
+    calls = []
+
+    def transport(req):
+        calls.append(req)
+        if len(calls) == 1 or second_response == "malformed":
+            result = response(req, {})
+            result.status = "malformed"
+            result.output = parse_json_output(
+                '{"company_alias":"TEST","reasoning_steps":[- inputs"}'
+            )
+            result.error = GatewayError(
+                category="structured_output_invalid",
+                code="structured_output_invalid",
+                origin="adapter",
+                retryability="unknown",
+            )
+            return result
+        if second_response == "changed_company":
+            payload["company_alias"] = "OTHER"
+        return response(req, payload)
+
+    instance._gateway = SharedLLMGateway({"gemini": transport})
+    context = PlannerContext(
+        mode="auto",
+        provider_attempt_limit=1,
+        conversation_context=[dict(original_question="So với năm trước thì sao?", period="2030")],
+    )
+    result = instance.plan(question, context)
+    assert len(calls) == result.llm.calls == 2
+    assert calls[0].messages[:2] == calls[1].messages[:2]
+    assert calls[1].output_spec.format == "json" and calls[1].output_spec.schema_ref is None
+    assert len(result.llm.attempts) == 2
+    if second_response == "valid":
+        assert result.status == "planned", result.reasons
+        assert result.plan.query.company_alias == "TEST"
+        assert any(t.outcome == "planner_json_reemitted" for t in result.trace)
+    else:
+        assert result.status == "failed"
+        assert result.plan is None
+
+
+def test_planner_requests_missing_assignments_once_instead_of_inventing_roles():
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+
+    from .test_evidence_critic import response
+    from .test_query_planner import planner
+
+    instance = planner()
+    question = "Phân tích doanh thu TEST 2030"
+    payload = instance._deterministic(question)
+    payload.update(reasoning_required=True, assignments=[])
+    calls = []
+
+    def transport(req):
+        calls.append(req)
+        if len(calls) == 2:
+            payload["assignments"] = [
+                dict(
+                    role="profitability",
+                    task="Phân tích số liệu doanh thu được giao",
+                    indicators=["b02.net_revenue"],
+                )
+            ]
+        return response(req, payload)
+
+    instance._gateway = SharedLLMGateway({"gemini": transport})
+    result = instance.plan(question, PlannerContext(mode="auto", provider_attempt_limit=1))
+    assert result.status == "planned", result.reasons
+    assert len(calls) == 2 and len(result.effective_proposal.assignments) == 1
+    assert "thiếu assignments" in calls[1].messages[-1].content
 
 
 def test_metric_interpretation_coverage_uses_calculation_operands():

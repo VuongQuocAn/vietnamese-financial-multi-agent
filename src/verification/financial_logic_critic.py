@@ -449,6 +449,36 @@ class FinancialLogicCritic:
                 assessment = SemanticLogicAssessment.model_validate(
                     unwrap_singleton_object(response.output.payload)
                 )
+                if assessment.candidate_id == claim.candidate_id:
+                    checks = {
+                        c.finding_id
+                        for c in validation.checks
+                        if c.check_id == "numeric" and c.status == "pass"
+                    }
+                    for assertion in assessment.assertions:
+                        target = next(
+                            (a for a in pending if a.assertion_id == assertion.assertion_id), None
+                        )
+                        if target is None:
+                            continue
+                        linked = {
+                            "check:" + key
+                            for support in target.support_findings
+                            if support.status == "supported"
+                            and "support:" + support.assertion_id in assertion.premise_ids
+                            for key in support.check_references
+                            if key in checks
+                        }
+                        added = sorted(linked - set(assertion.premise_ids))
+                        if added:
+                            assertion.premise_ids.extend(added)
+                            trace.binding_recoveries.append(
+                                dict(
+                                    assertion_id=assertion.assertion_id,
+                                    premise_ids=added,
+                                    reason="accepted_support_check_lineage",
+                                )
+                            )
                 self._validate_semantic(
                     assessment, claim, pending, evidence, validation, available, premise_ids
                 )

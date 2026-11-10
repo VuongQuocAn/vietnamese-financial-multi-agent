@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..agents.orchestration_contracts import CandidateConflict
@@ -77,10 +77,18 @@ class LogicFinding(FinancialModel):
 
 
 class FinancialLogicTrace(FinancialModel):
+    binding_recoveries: list[dict] = Field(default_factory=list)
     deterministic_latency_ms: float = 0
     semantic_latency_ms: float = 0
     llm: PlannerLLMMetadata = Field(default_factory=PlannerLLMMetadata)
     semantic_response: SemanticLogicAssessment | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_trace(self, handler):
+        wire = handler(self)
+        if not wire.get("binding_recoveries"):
+            wire.pop("binding_recoveries", None)
+        return wire
 
 
 class ClaimLogicAssessment(FinancialModel):

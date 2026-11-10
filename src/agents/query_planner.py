@@ -151,7 +151,7 @@ def _ordered_operations(proposal):
     return ordered
 
 
-def _complete_proposal_fields(raw):
+def _complete_proposal_fields(raw, *, require_complete=True):
     """Recover only fully decoded top-level fields; never repair or invent values.
 
     A truncated optional tail must not discard an already complete execution DAG.
@@ -192,7 +192,11 @@ def _complete_proposal_fields(raw):
         "operations",
         "user_requested_targets",
     }
-    return fields if required <= fields.keys() and fields["operations"] else None
+    return (
+        fields
+        if not require_complete or (required <= fields.keys() and fields["operations"])
+        else None
+    )
 
 
 class EvidenceAwareQueryPlanner:
@@ -383,13 +387,35 @@ class EvidenceAwareQueryPlanner:
         meta.provenance, meta.error = response.provenance, response.error
         if isinstance(response.output, JSONOutput):
             result.raw_proposal = response.output.payload
-        if response.status != "success" or not isinstance(response.output, JSONOutput):
-            if (
-                isinstance(response.output, JSONOutput)
-                and response.status in {"malformed", "partial"}
-                and response.output.validation_status == "invalid_json"
+        missing_assignments = bool(
+            isinstance(result.raw_proposal, dict)
+            and result.raw_proposal.get("reasoning_required")
+            and not result.raw_proposal.get("assignments")
+        )
+        if (
+            response.status != "success"
+            or not isinstance(response.output, JSONOutput)
+            or missing_assignments
+        ):
+            if isinstance(response.output, JSONOutput) and (
+                missing_assignments
+                or (
+                    response.status in {"malformed", "partial"}
+                    and response.output.validation_status == "invalid_json"
+                )
             ):
-                recovered = _complete_proposal_fields(response.output.raw_text)
+                recovered = (
+                    None
+                    if missing_assignments
+                    else _complete_proposal_fields(response.output.raw_text)
+                )
+                if recovered:
+                    try:
+                        parsed = PlannerProposal.model_validate(recovered)
+                        if parsed.reasoning_required and not parsed.assignments:
+                            recovered = None
+                    except ValidationError:
+                        recovered = None
                 if recovered:
                     result.raw_proposal = recovered
                     result.trace.append(
@@ -403,6 +429,68 @@ class EvidenceAwareQueryPlanner:
                         )
                     )
                     return recovered
+                decoded = (
+                    _complete_proposal_fields(response.output.raw_text, require_complete=False)
+                    or {}
+                )
+                remaining = context.provider_timeout_seconds - (perf_counter() - start)
+                if remaining > 1:
+                    retry = request.model_copy(deep=True)
+                    retry.request_id = "planner-json-recovery-" + uuid4().hex
+                    retry.constraints.timeout_seconds = remaining
+                    retry.messages.extend(
+                        [
+                            Message(role="assistant", content=response.output.raw_text),
+                            Message(
+                                role="user",
+                                content=(
+                                    "Response trước thiếu assignments trong khi reasoning_required=true. Bổ sung assignments với role đã đăng ký, task đáp ứng câu hỏi và đầy đủ indicators/formulas. "
+                                    if missing_assignments
+                                    else "Response trước sai cú pháp JSON. "
+                                )
+                                + "Xuất lại duy nhất JSON object hợp lệ theo contract đã cung cấp. Giữ nguyên câu hỏi, conversation context, company, filing, period và user_requested_targets; chỉ sửa metadata/định dạng, không thêm mục tiêu hay công thức.",
+                            ),
+                        ]
+                    )
+                    repaired = self._gateway.generate_with_recovery(retry, max_attempts=1)
+                    attempts.extend(repaired)
+                    meta.calls = len(attempts)
+                    meta.latency_ms = (perf_counter() - start) * 1000
+                    if repaired:
+                        response = repaired[-1].response
+                        meta.status, meta.usage, meta.cost = (
+                            response.status,
+                            response.usage,
+                            response.cost,
+                        )
+                        meta.provenance, meta.error = response.provenance, response.error
+                        if response.status == "success" and isinstance(response.output, JSONOutput):
+                            payload = response.output.payload
+                            PlannerProposal.model_validate(payload)
+                            if payload.get("reasoning_required") and not payload.get("assignments"):
+                                raise ValueError("planner_assignment_metadata_missing")
+                            for field in (
+                                "company_alias",
+                                "reporting_years",
+                                "reporting_scope",
+                                "period",
+                                "snapshot_origin",
+                                "user_requested_targets",
+                            ):
+                                if field in decoded and payload.get(field) != decoded[field]:
+                                    raise ValueError("json_recovery_changes_request:" + field)
+                            result.raw_proposal = payload
+                            result.trace.append(
+                                PlannerTrace(
+                                    stage="proposal_schema",
+                                    outcome="planner_json_reemitted",
+                                    reasons=[
+                                        "one_protocol_recovery",
+                                        "ordinary_validation_required",
+                                    ],
+                                )
+                            )
+                            return payload
             raise ValueError(
                 response.error.category if response.error else "gateway_response_failed"
             )

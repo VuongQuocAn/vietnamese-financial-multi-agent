@@ -39,6 +39,8 @@ from .qa_pipeline_contracts import (
 
 
 def _provider_failure_status(errors):
+    if set(errors) & {"structured_output_invalid", "schema_mismatch"}:
+        return "internal_error"
     return (
         "provider_unavailable"
         if set(errors)
@@ -640,6 +642,8 @@ class FinancialQAPipeline:
             elif status == "provider_unavailable":
                 response.mode = "PROVIDER_FAILURE"
                 response.answer_vi = "Nhà cung cấp chưa khả dụng; chưa có đủ claim đã xác minh."
+            elif status == "internal_error":
+                response.answer_vi = "Chưa xử lý được yêu cầu do lỗi kỹ thuật. Ngữ cảnh hội thoại được giữ để bạn có thể tiếp tục."
             return response
 
         def usage(name, metadata):
