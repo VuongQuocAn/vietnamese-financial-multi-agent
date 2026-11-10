@@ -76,6 +76,8 @@ class QARequirement(FinancialModel):
     @model_serializer(mode="wrap")
     def serialize_requirement(self, handler):
         wire = handler(self)
+        if wire.get("required", True):
+            wire.pop("required", None)
         for key in ("reasoning_operations", "reasoning_periods"):
             if not wire.get(key):
                 wire.pop(key, None)

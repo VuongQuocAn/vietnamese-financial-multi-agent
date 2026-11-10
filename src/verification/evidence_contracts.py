@@ -62,6 +62,8 @@ class EvidenceSupportFinding(FinancialModel):
 
 
 class EvidenceCriticTrace(FinancialModel):
+    binding_recoveries: list[dict] = Field(default_factory=list)
+    reassessment_llm: PlannerLLMMetadata | None = None
     failure_kind: (
         Literal[
             "invalid_json",
@@ -82,6 +84,10 @@ class EvidenceCriticTrace(FinancialModel):
         wire = handler(self)
         if wire.get("failure_kind") is None:
             wire.pop("failure_kind", None)
+        if not wire.get("binding_recoveries"):
+            wire.pop("binding_recoveries", None)
+        if wire.get("reassessment_llm") is None:
+            wire.pop("reassessment_llm", None)
         return wire
 
 

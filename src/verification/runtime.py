@@ -41,6 +41,9 @@ class VerificationRuntime:
         for name, output in (("evidence", evidence), ("logic", logic)):
             for claim in output.claims:
                 self.provider_metadata.append((name, claim.trace.llm))
+                reassessment = getattr(claim.trace, "reassessment_llm", None)
+                if reassessment:
+                    self.provider_metadata.append((name + "_binding", reassessment))
         return VerificationProofContext(
             batch=batch, validation=validation, evidence=evidence, logic=logic
         )

@@ -536,11 +536,66 @@ class EvidenceCritic:
                 _error(result, "semantic", "semantic_output_invalid")
                 return
             try:
+                self._restore_missing_bindings(assessment, claim, result, assertions)
                 self._validate_semantic(assessment, claim, result, assertions)
-            except ValueError:
-                trace.failure_kind = "invalid_semantic_contract"
-                _error(result, "semantic", "semantic_output_invalid")
-                return
+            except ValueError as error:
+                if (
+                    str(error) == "semantic_evidence_missing"
+                    and self.semantic_calls < self._max_calls
+                ):
+                    # One metadata reassessment with the same proposition and sources.
+                    # No verdict is supplied or manufactured by the backend.
+                    retry = request.model_copy(deep=True)
+                    retry.request_id = "evidence-critic-binding-" + uuid4().hex
+                    retry.messages.append(
+                        Message(
+                            role="user",
+                            content=json.dumps(
+                                dict(
+                                    instruction="Đánh giá lại đúng các assertions và evidence đã cung cấp. Kết quả trước thiếu evidence_ids: mỗi supported/partial/unsupported phải chọn IDs liên quan trong evidence. Không đủ căn cứ thì insufficient_evidence; không tự giữ supported.",
+                                    previous_assessment=assessment.model_dump(mode="json"),
+                                    evidence_identity=[
+                                        dict(
+                                            evidence_id=e.evidence_id,
+                                            reference=e.reference.model_dump(mode="json"),
+                                        )
+                                        for e in result.evidence
+                                        if e.available
+                                    ],
+                                ),
+                                ensure_ascii=False,
+                            ),
+                        )
+                    )
+                    self.semantic_calls += 1
+                    repeated = self._gateway.generate(retry)
+                    trace.reassessment_llm = trace.llm.__class__(
+                        calls=1,
+                        model=self._model,
+                        status=repeated.status,
+                        usage=repeated.usage,
+                        cost=repeated.cost,
+                        provenance=repeated.provenance,
+                        error=repeated.error,
+                    )
+                    if repeated.status == "success" and isinstance(repeated.output, JSONOutput):
+                        try:
+                            assessment = SemanticEvidenceAssessment.model_validate(
+                                unwrap_singleton_object(repeated.output.payload)
+                            )
+                            self._validate_semantic(assessment, claim, result, assertions)
+                        except (ValidationError, ValueError):
+                            trace.failure_kind = "invalid_semantic_contract"
+                            _error(result, "semantic", "semantic_output_invalid")
+                            return
+                    else:
+                        trace.failure_kind = "provider_failure"
+                        _error(result, "semantic", "semantic_gateway_response_failed")
+                        return
+                else:
+                    trace.failure_kind = "invalid_semantic_contract"
+                    _error(result, "semantic", "semantic_output_invalid")
+                    return
             trace.semantic_response = assessment
             by_id = {a.assertion_id: a for a in assessment.assertions}
             for target in assertions:
@@ -592,6 +647,50 @@ class EvidenceCritic:
         finally:
             trace.semantic_latency_ms = (perf_counter() - start) * 1000
             trace.llm.latency_ms = trace.semantic_latency_ms
+
+    @staticmethod
+    def _restore_missing_bindings(assessment, claim, result, assertions):
+        """Restore only the unique declared premise group; never change a verdict."""
+        if assessment.candidate_id != claim.candidate_id or sorted(
+            a.assertion_id for a in assessment.assertions
+        ) != sorted(a.assertion_id for a in assertions):
+            return
+        available = [e for e in result.evidence if e.available]
+        if not available or len({e.reference.model_dump_json() for e in available}) != len(
+            available
+        ):
+            return
+        refs = {e.reference.model_dump_json() for e in available}
+        proof = claim.reasoning.calculation if claim.reasoning else None
+        proof_refs = (
+            {o.reference.model_dump_json() for o in proof.operands.values()} if proof else set()
+        )
+        # Multiple independent sources are ambiguous unless they form exactly
+        # the replayed calculation's declared operand group.
+        if len(available) != 1 and proof_refs != refs:
+            return
+        if not all(
+            any(
+                c.check_id == "numeric" and c.status == "pass" and e.reference in c.references
+                for c in result.deterministic_findings
+            )
+            for e in available
+        ):
+            return
+        for assertion in assessment.assertions:
+            if (
+                assertion.status == "supported"
+                and not assertion.evidence_ids
+                and not assertion.missing
+            ):
+                assertion.evidence_ids = [e.evidence_id for e in available]
+                result.trace.binding_recoveries.append(
+                    dict(
+                        assertion_id=assertion.assertion_id,
+                        evidence_ids=list(assertion.evidence_ids),
+                        reason="unique_validated_premise_group",
+                    )
+                )
 
     @staticmethod
     def _validate_semantic(assessment, claim, result, assertions):

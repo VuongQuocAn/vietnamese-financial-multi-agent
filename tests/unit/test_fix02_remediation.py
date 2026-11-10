@@ -47,6 +47,80 @@ def test_reasoning_dependencies_can_reference_validated_execution_operations():
         PlannerProposal.model_validate(wire)
 
 
+@pytest.mark.parametrize("ambiguous", [False, True])
+def test_missing_critic_ids_restore_unique_premises_or_request_reassessment(ambiguous):
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+    from vietnamese_financial_multi_agent.verification import EvidenceCritic, FinancialLogicCritic
+
+    from .test_evidence_critic import response
+    from .test_financial_logic_critic import gateway as logic_gateway
+    from .test_multihop_reasoning import reasoning_case
+
+    data, batch = reasoning_case()
+    claim = batch.claims[0]
+    claim.reasoning.claim_type = "reasoned_conclusion"
+    claim.content = "Các chỉ tiêu trong kỳ được đối chiếu trong phạm vi số liệu đã cung cấp."
+    if ambiguous:
+        claim.reasoning = None
+    catalog = SnapshotCatalog(**data)
+    validation = DeterministicFinancialValidator(catalog).validate(batch)
+    calls = []
+
+    def transport(req):
+        calls.append(req)
+        payload = json.loads(req.messages[1].content)
+        return response(
+            req,
+            dict(
+                candidate_id=payload["candidate_id"],
+                assertions=[
+                    dict(
+                        assertion_id=a["assertion_id"],
+                        status="supported",
+                        evidence_ids=[]
+                        if len(calls) == 1
+                        else [e["evidence_id"] for e in payload["evidence"]],
+                        reason="direct_support",
+                        missing=[],
+                    )
+                    for a in payload["assertions"]
+                ],
+            ),
+        )
+
+    evidence = EvidenceCritic(catalog, SharedLLMGateway({"gemini": transport})).assess(
+        batch, validation
+    )
+    result = evidence.claims[0]
+    assert len(calls) == (2 if ambiguous else 1)
+    assert bool(result.trace.binding_recoveries) != ambiguous
+    assert bool(result.trace.reassessment_llm) == ambiguous
+    assert result.assertions[0].status == "supported" and result.assertions[0].evidence_ids
+    assert not result.errors
+    logic = FinancialLogicCritic(logic_gateway(status="consistent")).assess(
+        batch, validation, evidence
+    )
+    assert logic.claims[0].trace.llm.calls == 1
+
+
+def test_binding_recovery_never_creates_a_supported_verdict():
+    from vietnamese_financial_multi_agent.verification import EvidenceCritic
+
+    from .test_evidence_critic import semantic_gateway
+
+    data = fixture()
+    batch = batch_for(data)
+    claim = batch.claims[0]
+    claim.kind = "supported_interpretation"
+    claim.analysis_premises = [claim.content]
+    claim.content = "Doanh thu trong kỳ được ghi nhận trong báo cáo."
+    catalog = SnapshotCatalog(**data)
+    validation = DeterministicFinancialValidator(catalog).validate(batch)
+    result = EvidenceCritic(catalog, semantic_gateway()).assess(batch, validation).claims[0]
+    assert not result.trace.binding_recoveries
+    assert result.assertions[0].status == "insufficient_evidence"
+
+
 def test_metric_interpretation_coverage_uses_calculation_operands():
     from vietnamese_financial_multi_agent.outputs.qa_composer import matches_financial_target
     from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
