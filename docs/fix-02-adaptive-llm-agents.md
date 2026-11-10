@@ -474,3 +474,57 @@ checker122tasks và diff check PASS. Bốn historical financial entries replay P
 inputs và thay đổi local ngoài task giữ nguyên. Source sẽ được commit/push trước
 khi chạy tối đa một lượt live Q21/Q11/F08; CI/live exact SHA cập nhật ở checkpoint.
 Next action: chạy validation live đã được Owner cho phép và bàn giao REVIEW.
+
+### Lượt live duy nhất và correction offline sau live
+
+Đã commit/push implementation ban đầu
+[`6748da77ccf48a04946174ca160815124c339b14`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/6748da77ccf48a04946174ca160815124c339b14),
+toàn164runtime files khớp candidate archive dùng đo hiệu năng.
+[CI42728887170](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42728887170)
+SUCCESS đúng6748da7, Python/Web jobs SUCCESS. Đây không phải CI của correction sau.
+
+Owner cho phép tối đa một lượt live: đã chạy đúng Q11→Q21→F08 trên archived6748da7,
+không retry,0calls ngoài lượt này. Artifacts `remediation/live/`; integrity xác nhận
+imports/runtime/source SHA,414protected inputs và reference nguyên hash.
+
+| Case | Actual status | Wall s | Actual calls | API total tokens |
+| --- | --- | ---: | ---: | ---: |
+| Q11 | verification_blocked; calculator/M6 ACCEPT metric nhưng goal không match | 12,711 | 1 | 6375 |
+| Q21 | internal_error; Planner target ID là operation ID, không được bind | 6,682 | 1 | 6692 |
+| F08 | internal_error; relational explanation target=null bị xem là formula explanation | 6,156 | 1 | 6572 |
+
+Tổng3actual Planner calls/19639API tokens; cả ba provider responses success/STOP,
+không503/timeout/JSON malformed. **Lượt live FAIL vì integration mới**, không phải
+provider failure và không phải bằng chứng latency/answer quality thành công.
+Không có Specialist/Critic/Judge live execution hoặc revision trong lượt này.
+
+Ba lỗi mới chưa được legacy saved proposals/tests bao phủ:
+
+1. `required_indicators` trên metric goal chỉ được so với standalone fact evidence,
+   trong khi metric evidence giữ verified operands bên trong calculation. Sửa
+   target matching để đọc canonical indicators từ admitted calculation operands;
+   vẫn cần native ACCEPT của metric/calculation, không phát hành operand facts.
+2. Goal đã chỉ rõ operation ID: bind đúng operation được tham chiếu thành canonical
+   item/formula ID theo operation kind. Không tự lấy toàn DAG làm goals; unknown
+   hoặc sai loại vẫn bị chặn. Raw proposal giữ nguyên, effective proposal và trace
+   ghi explicit_operation_target_bound.
+3. `explanation` + interpretation=true + target=null + explicit premise list là
+   relational interpretation. Reuse M7 fact-interpretation requirement, anchor vào
+   premise đầu tiên **đã khai báo** và giữ yêu cầu tất cả premises; không chọn metric
+   đại diện, không tính ratio mới. Trace relational_goal_bound. Invalid goal contracts
+   trả verification_blocked có reason, không gán internal_error/provider outage.
+
+Regression chạy trên archived6748da7:3FAIL/1PASS đúng ba lỗi; sau correction31tests
+PASS, thêm typed-block control và nhóm pipeline/adaptive tổng69PASS. Các tests này
+không phải Gemini live. Raw responses của lượt live không bị sửa.
+
+`live-planner-offline/` replay chính ba actual Planner responses trên source correction:
+Q11 planned→calculator/M6 ACCEPT→completed_with_caveats, có formula/operands/citations;
+Q21/F08 planned và dispatch đúng Specialists, không internal_error. Archive chỉ có
+Planner responses nên các Specialist calls mới ghi unavailable và fail closed,
+verification_blocked; **không giả lập verdict thành công để báo đã trả lời đủ**.
+Không chạy live lần hai. Correction sau live chỉ có offline/CI validation; vẫn
+thiếu live acceptance trên implementation cuối và một successful live revision.
+
+Final correction SHA/CI và số đo kiểm tra lại từ source archive riêng được ghi ở
+checkpoint cuối. Giữ REVIEW, chưa đề xuất nghiệm thu/DONE.

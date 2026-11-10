@@ -805,6 +805,12 @@ class FinancialQAPipeline:
                         status = {
                             "failed": _provider_failure_status(trace.provider_errors)
                             if trace.provider_errors
+                            else "verification_blocked"
+                            if output.planner_result
+                            and any(
+                                reason.startswith(("invalid_", "answer_target_"))
+                                for reason in output.planner_result.reasons
+                            )
                             else "internal_error",
                             "clarification_required": "clarification_required",
                             "unsupported": "unsupported",

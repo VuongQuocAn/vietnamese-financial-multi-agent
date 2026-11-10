@@ -518,9 +518,14 @@ def matches_financial_target(claim, requirement):
     )
     if claim.kind != expected:
         return False
-    if not set(requirement.required_indicators) <= {
-        e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"
-    }:
+    indicators = {e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"}
+    if claim.kind == "approved_metric" and claim.calculation and claim.calculation.evidence:
+        indicators.update(
+            match.record.canonical_item_id
+            for operand in claim.calculation.evidence.operands
+            for match in operand.facts.matches
+        )
+    if not set(requirement.required_indicators) <= indicators:
         return False
     if requirement.interpretation:
         if requirement.interpretation_topic == "unbounded":

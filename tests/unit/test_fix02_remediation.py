@@ -44,6 +44,68 @@ def test_internal_operations_do_not_create_answer_targets(tmp_path, explicit_ope
     )
 
 
+def test_metric_goal_binds_operands_inside_verified_calculation(tmp_path):
+    from vietnamese_financial_multi_agent.agents.planner_contracts import UserRequestedTarget
+
+    service, req, _, _, output = setup(tmp_path)
+    service.gateway = Mock()
+    output.planner_result.effective_proposal.user_requested_targets = [
+        UserRequestedTarget(
+            kind="metric",
+            target_id="gross_margin",
+            period="2030",
+            required_indicators=["b02.gross_profit", "b02.net_revenue"],
+        )
+    ]
+    result = service.run(req)
+    assert result.status == "completed_with_caveats", result.trace.unanswered_requirements
+    assert result.trace.native_decisions == {"ACCEPT": 1}
+    assert result.citations and "Công thức:" in result.answer_vi
+
+
+def test_invalid_goal_contract_is_typed_block_not_internal_error(tmp_path):
+    service, req, repo, _, output = setup(tmp_path)
+    service.gateway = Mock()
+    output.status, output.candidates = "failed", []
+    output.planner_result.status = "failed"
+    output.planner_result.reasons = ["answer_target_outside_plan_indicators"]
+    result = service.run(req)
+    assert result.status == "verification_blocked"
+    assert not result.used_verified_claim_ids and not repo.list_all()
+
+
+@pytest.mark.parametrize("binding", ["operation", "relation", "unknown"])
+def test_explicit_goal_binding_preserves_raw_proposal_and_rejects_unknown(binding):
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+
+    from .test_financial_qa import gateway_for
+    from .test_query_planner import planner
+
+    instance = planner()
+    question = "Doanh thu TEST 2030"
+    proposal = instance._deterministic(question)
+    proposal["user_requested_targets"] = [dict(kind="fact", target_id="fact_0")]
+    if binding == "relation":
+        proposal["user_requested_targets"] = [
+            dict(
+                kind="explanation",
+                target_id=None,
+                interpretation=True,
+                interpretation_topic="metric_meaning",
+                required_indicators=["b02.net_revenue"],
+            )
+        ]
+    elif binding == "unknown":
+        proposal["user_requested_targets"][0]["target_id"] = "unregistered-operation"
+    instance._gateway = gateway_for(proposal, [])
+    result = instance.plan(question, PlannerContext(mode="auto"))
+    assert result.status == ("failed" if binding == "unknown" else "planned"), result.reasons
+    assert result.raw_proposal == proposal
+    if binding != "unknown":
+        goal = result.effective_proposal.user_requested_targets[0]
+        assert goal.kind == "fact" and goal.target_id == "b02.net_revenue"
+
+
 @pytest.mark.parametrize(
     "text,blocked",
     [

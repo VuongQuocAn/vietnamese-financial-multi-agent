@@ -550,6 +550,44 @@ class EvidenceAwareQueryPlanner:
             from ..outputs.qa_composer import planned_requirements
             from .planner_contracts import UserRequestedTarget
 
+            operations = {operation.operation_id: operation for operation in proposal.operations}
+            for target in proposal.user_requested_targets:
+                operation = operations.get(target.target_id)
+                if (
+                    operation
+                    and target.kind == "fact"
+                    and operation.operation == "find_financial_facts"
+                ):
+                    target.target_id = operation.canonical_item_id
+                    result.trace.append(
+                        PlannerTrace(
+                            stage="proposal_schema", outcome="explicit_operation_target_bound"
+                        )
+                    )
+                elif (
+                    operation
+                    and target.kind in {"metric", "explanation"}
+                    and operation.operation == "calculate_financial_metric"
+                ):
+                    target.target_id = operation.formula_id
+                    result.trace.append(
+                        PlannerTrace(
+                            stage="proposal_schema", outcome="explicit_operation_target_bound"
+                        )
+                    )
+                if (
+                    target.kind == "explanation"
+                    and target.interpretation
+                    and target.target_id is None
+                    and target.required_indicators
+                ):
+                    # A relation over explicit fact premises is an interpretation,
+                    # not a request for an unapproved calculated formula. Anchor
+                    # selection to its first *declared* premise and require all.
+                    target.kind, target.target_id = "fact", target.required_indicators[0]
+                    result.trace.append(
+                        PlannerTrace(stage="proposal_schema", outcome="relational_goal_bound")
+                    )
             requirements = planned_requirements(question, proposal)
             if not proposal.user_requested_targets:
                 proposal.user_requested_targets = [
