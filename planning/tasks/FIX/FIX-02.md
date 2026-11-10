@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: FIX
-- Status: REVIEW
+- Status: BLOCKED
 - Priority: P1
 - Dependencies: REC-01
 - Estimated Complexity: L
@@ -283,3 +283,20 @@ captured Q21fresh M6 replay3ACCEPT/1ABSTAIN,M7partial/FirewallALLOW_WITH_CAVEAT.
 Live69eab23 giữ riêng, không dùng CI/offline thay full financial acceptance.
 REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.
 Next action: Tech Lead review af4eae9 cùng các giới hạn live/offline.
+
+
+### FIX-02-ACCEPT — Final live acceptance, 10/11/2026
+
+Owner giao manifest10ca/11lượt, Gemini thật, tối đa2vòng corrective implementation,
+commit/push main và xác nhận lại live đúngSHA. Baselineaf4eae9=3/10;
+vòng1 066032a=4/10; cuối93d58299478a6ec884d243aab217c50a8ffeae1a=0/10.
+Status BLOCKED: schema generation Planner mới gây10HTTP400 invalid_request;
+downstream chưa được chạy/live xác nhận trên bản cuối. Không là checkpoint demo ổn định.
+106actual attempts/499560known tokens/23unknown usage; manifest và414inputs/reference
+giữ nguyên. Hai vòng sửa đã dùng hết; không tiếp tục vòng3/M8/task mới.
+113focused cuối đạt sau targeted fixes; saved L06/L08 replay đạt,0network;
+CI42806510730SUCCESS exact93d5829:145Python/9Web, không thay live acceptance.
+Chi tiết câu hỏi/output/quality/trace/source audit/limitations trong
+[final report](../../../docs/fix-02-final-live-acceptance.md).
+Next action: Tech Lead quyết định remediation blocker adapter JSON Schema trên
+93d5829 cùng phạm vi live validation tiếp theo; chưa đề xuất DONE.

@@ -2,28 +2,24 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## FIX-02 — Adaptive Multi-Hop Financial Reasoning & Flexible Verification
+## FIX-02 — Final Live Acceptance
 
-Status: **REVIEW — WAITING FOR TECH LEAD ACCEPTANCE**.
-Implementation cuối `af4eae958bdb72f1449d606e15beeadb22be5c4f` đã push main;
-live chỉ trên `69eab23`, không gán live cho correction SHA.
-Planner reasoning plan → M4 Decimal DAG → M5 public proof → M6 claim-level replay
-→ M7 grounded output; giữ provenance/scope/unit/period và native Ledger authority.
-251 focused sau correction PASS; 490 trước live và các nhóm trước có overlap.
-16 real-source derived probes/14 historical proofs replay; PDF audit11inputs/
-37occurrences/22steps không mismatch. Không gọi đây là financial benchmark.
-Ba live cases: Q21 có greater(CFO,PAT) nhưng PARTIAL/JudgeHTTP503; Q23/MH03 bị
-preflight chặn trước provider;3actual calls/11366known tokens/1unknown usage.
-Saved Q21 replay sau correction giữ2facts+derived ACCEPT; analysis ABSTAIN vì
-thiếu semantic responses, M7partial/FirewallALLOW_WITH_CAVEAT;0network.
-Final archived replay16/16 answered/released và14historical proofs PASS,0network;
-[CI42774786427](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42774786427)
-SUCCESS exact af4eae9:145Python/9Web;lint/format/planning/typecheck/build PASS.
-164runtime files khớp commit;414inputs/reference và10unrelated local files giữ hash.
-Chưa full live financial acceptance.
-[Báo cáo](../docs/fix-02-adaptive-llm-agents.md#adaptive-multi-hop-reasoning--10112026),
-[matrix/thiết kế](../docs/fix-02-multihop-design.md). Giữ local ngoài task và dữ liệu nguồn.
-Next action: Tech Lead review af4eae9 cùng các giới hạn live/offline; không tự DONE.
+Status: **BLOCKED — final live acceptance chưa đạt**.
+Implementation cuối `93d58299478a6ec884d243aab217c50a8ffeae1a` đã push main;
+baseline `af4eae9`, checkpoint đầu `e11fa52`, vòng sửa 1 `066032a`.
+Đã chạy manifest cố định 10 ca/11 lượt trên cả ba SHA: baseline3/10,
+vòng1=4/10, cuối0/10 CORRECT hoặc CORRECT_WITH_CAVEAT.
+Hai vòng sửa đã dùng hết; adapter schema Planner mới gây 10HTTP400 invalid_request,
+chưa chạy downstream trên bản cuối; đây không phải checkpoint demo Gemini QA ổn định.
+106actual attempts/499560known tokens/23unknown usage; không retry400/không M8.
+113focused controls cuối đạt sau targeted fixes; saved L06/L08 replay đạt,0network.
+[CI42806510730](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42806510730)
+SUCCESS exact93d5829:145Python/9Web; không thay live acceptance.
+414selected inputs/reference và local ngoài task giữ hash; chỉ hunk FIX-02/counts
+trong planning dùng chung được stage. Không sửa dữ liệu/OCR/approvals.
+[Báo cáo và traces](../docs/fix-02-final-live-acceptance.md).
+Next action: Tech Lead quyết định remediation blocker adapter JSON Schema trên
+93d5829 cùng phạm vi live validation tiếp theo; không tự sửa vòng3/DONE/task mới.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 
