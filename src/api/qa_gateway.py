@@ -12,19 +12,7 @@ from ..core.gemini_adapter import GeminiAdapter
 
 
 class QAGeminiAdapter(GeminiAdapter):
-    """Constrain Planner generation; typed Planner validation remains authoritative."""
-
-    def _config(self, request):
-        contents, config = super()._config(request)
-        if (
-            request.request_id.startswith("planner-")
-            and request.output_spec is not None
-            and request.output_spec.format == "json"
-        ):
-            from ..agents.planner_contracts import PlannerProposal
-
-            config.response_json_schema = PlannerProposal.model_json_schema()
-        return contents, config
+    """Use JSON MIME generation; Planner owns typed schema and DAG validation."""
 
 
 class QACredentialError(ValueError):

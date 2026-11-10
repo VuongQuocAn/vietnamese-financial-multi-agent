@@ -52,7 +52,9 @@ def test_malformed_tail_recovers_complete_plan_fields_only_and_rejects_incomplet
         output_spec=OutputSpec(format="json"),
     )
     _, config = QAGeminiAdapter(object())._config(request)
-    assert "operations" in config.response_json_schema["properties"]
+    assert config.response_mime_type == "application/json"
+    assert config.response_json_schema is None
+    assert config.response_schema is None
     assert request.output_spec.schema_ref is None  # No invented validation attestation.
 
 
