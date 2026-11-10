@@ -137,7 +137,14 @@ def answer_coverage(question, output, histories):
                 for k in ("company_id", "document_id", "snapshot_id")
             ):
                 continue
-            if not matches_financial_target(claim, target):
+            matches = matches_financial_target(claim, target, getattr(record, "logic", None))
+            diagnostic_relation = (
+                target.interpretation
+                and claim.kind == "supported_interpretation"
+                and set(target.required_indicators)
+                <= {s.canonical_item_id for s in claim.supporting_evidence if s.kind == "fact"}
+            )
+            if not matches and not diagnostic_relation:
                 continue
             related.append(record)
         verified = target.verified_claim_ids
@@ -169,10 +176,41 @@ def bind_coverage(feedback, question, output, histories):
     if feedback.assessment != "PASS" or coverage.complete:
         return feedback
     missing = [g for g in coverage.goals if not g.verified_candidate_ids]
+    inventory = evidence_inventory(output, histories)
+    records = [h.outcome.final for h in histories]
+
+    def guidance(goal):
+        available = [
+            {k: r[k] for k in ("indicator", "period", "value", "unit", "native_status")}
+            for r in inventory
+            if r["native_status"] != "VALIDATION_BLOCKED"
+        ]
+        prior = [
+            r.original_claim.content
+            for r in records
+            if r.candidate_id in goal.blocked_candidate_ids
+        ]
+        operations = [
+            step.operation.model_dump(mode="json")
+            for r in records
+            if getattr(r.original_claim, "reasoning", None)
+            and r.original_claim.reasoning.calculation
+            for step in r.original_claim.reasoning.calculation.steps
+        ]
+        return (
+            f"Goal {goal.requirement_id}: {goal.missing_reason}. "
+            "Compare/calculate compatible premises, explain the relationship and its actual limits. "
+            "Repeating facts/signs or generic insufficiency does not answer this analytical goal. "
+            "Reuse retrieved sources; request only genuinely missing inputs. "
+            f"Available premises: {json.dumps(available, ensure_ascii=False)}. "
+            f"Prior candidate conclusions: {json.dumps(prior, ensure_ascii=False)}. "
+            f"Existing computations: {json.dumps(operations, ensure_ascii=False)}. "
+        )[:1500]
+
     feedback.issues = [
         JudgeIssue(
             issue_type="INCOMPLETE_COVERAGE",
-            explanation=f"User target {g.requirement_id} has no matching native ACCEPT: {g.missing_reason}",
+            explanation=guidance(g),
             required_evidence=[g.target_id] if g.target_id else [],
             suggested_action="REVISE_ANALYSIS" if g.recoverable else "STOP",
         )

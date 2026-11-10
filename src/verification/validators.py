@@ -5,10 +5,14 @@ from decimal import Decimal, InvalidOperation
 
 from ..evidence.contracts import assess_fact_consistency
 from ..evidence.snapshots import SnapshotCatalog
-from ..tools.financial_calculator import CalculateFinancialMetricRequest, FinancialCalculator
+from ..tools.financial_calculator import (
+    CalculateFinancialMetricRequest,
+    FinancialCalculator,
+    render_dynamic,
+)
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
 from .contracts import CandidateClaim, VerificationInput
-from .logic_rules import assertion_category
+from .logic_rules import _limitation_remainder, assertion_category
 from .numeric import extract_assertion, fold
 from .validation_contracts import (
     ClaimValidationResult,
@@ -135,7 +139,9 @@ class DeterministicFinancialValidator:
         assertion = extract_assertion(claim.content)
         if claim.kind == "supported_interpretation" and claim.analysis_premises:
             self._analysis(batch, claim, result)
-            if not any(c.check_id == "formula" and c.status == "fail" for c in result.checks):
+            if not claim.metric_ids and not any(
+                c.check_id == "formula" and c.status == "fail" for c in result.checks
+            ):
                 add("formula", "not_applicable", "fact_interpretation_has_no_formula")
         elif claim.kind == "fact":
             self._fact(batch, claim, result, assertion)
@@ -155,6 +161,8 @@ class DeterministicFinancialValidator:
         )
 
     def _analysis(self, batch, claim, result):
+        if claim.reasoning is not None:
+            return self._reasoning(batch, claim, result)
         sources = claim.supporting_evidence
         if re.search(r"\d|%", claim.content):
             self._check(result, "numeric", "fail", "analysis_premise_binding_invalid")
@@ -192,6 +200,160 @@ class DeterministicFinancialValidator:
                 check.finding_id += f":premise-{index}"
             result.checks.extend(sub.checks)
             result.caveats.extend(sub.caveats)
+        self._citations(
+            claim,
+            result,
+            list({c.model_dump_json(): c for s in sources for c in s.citations}.values()),
+            claim.fact_references,
+        )
+
+    def _reasoning(self, batch, claim, result):
+        """Independently check every source/operation before semantic interpretation.
+
+        Existing wire/proof paths remain unchanged when reasoning is absent.
+        A failed branch only blocks this candidate and its dependent conclusion.
+        """
+        proof, sources = claim.reasoning, claim.supporting_evidence
+        if not sources or len(sources) != len(claim.analysis_premises):
+            self._check(result, "numeric", "fail", "analysis_premise_binding_invalid")
+            return
+        expected_refs = {e.reference.model_dump_json() for e in sources if e.kind == "fact"}
+        if (
+            expected_refs != {r.model_dump_json() for r in claim.fact_references}
+            and not claim.metric_ids
+        ):
+            self._check(result, "numeric", "fail", "analysis_premise_binding_invalid")
+            return
+        if len({e.evidence_id for e in sources}) != len(sources):
+            self._check(result, "numeric", "fail", "analysis_duplicate_evidence_identity")
+            return
+        if (claim.company_id, claim.document_id, claim.snapshot_id, claim.period) != (
+            sources[0].company_id,
+            sources[0].document_id,
+            sources[0].snapshot_id,
+            sources[0].period,
+        ):
+            self._check(result, "context", "fail", "reasoning_owner_mismatch")
+        if batch.context.period and batch.context.period != claim.period:
+            self._check(result, "context", "fail", "reasoning_requested_period_mismatch")
+        periods = {s.period for s in sources}
+        across = proof.calculation and any(
+            step.operation.period_relation == "across_periods" for step in proof.calculation.steps
+        )
+        if len(periods) > 1 and not across:
+            self._check(result, "context", "fail", "reasoning_period_relation_missing")
+        for index, (source, statement) in enumerate(
+            zip(sources, claim.analysis_premises, strict=True)
+        ):
+            local = claim.model_copy(
+                deep=True,
+                update=dict(
+                    content=statement,
+                    kind="approved_metric" if source.calculation else "fact",
+                    reasoning=None,
+                    analysis_premises=[],
+                    supporting_evidence=[source],
+                    company_id=source.company_id,
+                    document_id=source.document_id,
+                    snapshot_id=source.snapshot_id,
+                    period=source.period,
+                    fact_references=[source.reference]
+                    if not source.calculation
+                    else [
+                        r
+                        for r in claim.fact_references
+                        if r.observation
+                        in {o.observation for o in source.calculation.trace.operands}
+                    ],
+                    calculation=source.calculation,
+                    metric_ids=[source.calculation.metric_id] if source.calculation else [],
+                    citations=source.citations,
+                ),
+            )
+            sub = ClaimValidationResult(candidate_id=claim.candidate_id, claim_kind=claim.kind)
+            local_batch = batch.model_copy(deep=True)
+            if across:
+                local_batch.context.period = None
+                local_batch.context.reporting_year = None
+            if source.calculation:
+                self._metric(local_batch, local, sub, extract_assertion(statement))
+            else:
+                self._fact(local_batch, local, sub, extract_assertion(statement))
+            for check in sub.checks:
+                check.finding_id += f":premise-{index}"
+            result.checks.extend(sub.checks)
+            result.caveats.extend(sub.caveats)
+        computation = proof.calculation
+        if computation:
+            try:
+                expected = self._calculator.calculate_dynamic(
+                    {s.evidence_id: s.reference for s in sources},
+                    [s.operation for s in computation.steps],
+                )
+                if computation != expected:
+                    raise ValueError("dynamic_replay_mismatch")
+                self._check(
+                    result,
+                    "dynamic_calculation",
+                    "pass",
+                    "dynamic_independent_replay_matches",
+                    expected=expected.model_dump(mode="json"),
+                )
+            except (ValueError, ArithmeticError, TypeError) as error:
+                self._check(result, "dynamic_calculation", "fail", str(error))
+        if proof.claim_type == "derived_fact":
+            exact = (
+                bool(computation)
+                and not proof.assumptions
+                and claim.content
+                == render_dynamic(computation, {s.evidence_id: s.label for s in sources})
+            )
+            self._check(
+                result,
+                "derived_statement",
+                "pass" if exact else "fail",
+                "derived_statement_matches" if exact else "derived_statement_mismatch",
+            )
+        else:
+            # Digits in a conclusion must occur in the disclosed inputs/results or
+            # periods. Semantic critics still check attribution and interpretation.
+            from .numeric import NUMBER, parse_number
+
+            allowed = {Decimal(s.value) for s in sources}
+            allowed.update(Decimal(y) for s in sources for y in re.findall(r"\d{4}", s.period))
+            if computation:
+                allowed.update(Decimal(s.result) for s in computation.steps)
+                allowed.update(
+                    Decimal(s.result).quantize(Decimal("0.01")) for s in computation.steps
+                )
+            numbers = [parse_number(n) for n in re.findall(NUMBER, claim.content)]
+            if any(n not in allowed for n in numbers):
+                self._check(result, "numeric_binding", "fail", "reasoning_unbound_number")
+            units = {s.unit for s in sources} | (
+                {s.unit for s in computation.steps} if computation else set()
+            )
+            if (
+                re.search(r"%|phần trăm", claim.content, re.IGNORECASE) and "percent" not in units
+            ) or any(unit not in units for unit in re.findall(r"\b(?:VND|USD)\b", claim.content)):
+                self._check(result, "numeric_binding", "fail", "reasoning_unbound_unit")
+            _, positive = _limitation_remainder(fold(claim.content))
+            quantitative_relation = re.search(
+                r"\b(?:(?:ty le|ty so|he so|ratio).{0,35}\b(?:la|dat|bang|tang|giam)|lon hon|nho hon|cao hon|thap hon|vuot)\b",
+                positive,
+            )
+            if (
+                quantitative_relation
+                and not computation
+                and not any(s.calculation for s in sources)
+            ):
+                self._check(result, "dynamic_calculation", "fail", "reasoning_calculation_required")
+        if proof.claim_type == "conditional_inference" or proof.assumptions:
+            self._check(
+                result,
+                "conditional_assumptions",
+                "undetermined",
+                "conditional_inference_is_not_verified_fact",
+            )
         self._citations(
             claim,
             result,

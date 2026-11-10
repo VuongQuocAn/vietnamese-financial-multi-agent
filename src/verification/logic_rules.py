@@ -102,6 +102,24 @@ def classify(content, claim, checks):
     financial outcome. Complex negation, hypothetical or quoted statements defer.
     """
     text = fold(content)
+    proof = getattr(claim, "reasoning", None)
+    if proof is not None:
+        if not _has(text, r"\b(?:khong|chua|neu|gia su|co the)\b") and _has(
+            text, r"(?:chu yeu do|nguyen nhan|dan den|nho .+ nen|do .+ nen|vi .+ nen)"
+        ):
+            return "insufficient_context", "causal_evidence_missing", ["causal_evidence"]
+        if proof.claim_type == "derived_fact":
+            valid = all(
+                any(c.check_id == key and c.status == "pass" for c in checks)
+                for key in ("dynamic_calculation", "derived_statement")
+            )
+            return (
+                "consistent" if valid else "insufficient_context",
+                "replayed_derived_fact" if valid else "derived_proof_missing",
+                ["comparison"],
+            )
+        # Structured inferences go to Critics after source/arithmetic validation.
+        return None
     if _has(text, r'\b(?:khong|chua|neu|gia su|co the|khong han)\b|["“”]'):
         return None
     parsed = extract_assertion(content)
@@ -227,6 +245,8 @@ def classify(content, claim, checks):
 def semantic_requirements(content, claim):
     """Conservative local minimum; Gemini cannot relabel an unknown inference as numeric."""
     text = fold(content)
+    if getattr(claim, "reasoning", None) is not None:
+        return {"financial_context"}
     if assertion_category(content) == "EVIDENCE_LIMITATION":
         return {"financial_context"}
     if _has(text, r"(?:dong luc|quyet dinh|nho|chi phi|nguyen nhan)"):

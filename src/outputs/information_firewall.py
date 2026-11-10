@@ -88,8 +88,18 @@ def _entry_errors(entries):
         ):
             integrity.append("ledger_citation_source_conflict")
         if any(
-            (e.company_id, e.document_id, e.snapshot_id, e.period)
-            != (identity.company_id, identity.document_id, identity.snapshot_id, identity.period)
+            (e.company_id, e.document_id, e.snapshot_id)
+            != (identity.company_id, identity.document_id, identity.snapshot_id)
+            or e.period != identity.period
+            and not (
+                getattr(claim, "reasoning", None)
+                and claim.reasoning.calculation
+                and any(
+                    s.operation.period_relation == "across_periods"
+                    for s in claim.reasoning.calculation.steps
+                )
+                and e.period in {p for s in claim.reasoning.calculation.steps for p in s.periods}
+            )
             for e in (claim.supporting_evidence if identity.kind != "document" else [])
         ):
             integrity.append("ledger_evidence_context_mismatch")

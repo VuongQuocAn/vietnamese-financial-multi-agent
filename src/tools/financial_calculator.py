@@ -6,14 +6,179 @@ from typing import Literal
 from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialContext, FinancialModel
-from ..evidence.contracts import Identity, ObservationIdentity
+from ..evidence.contracts import Identity, ObservationIdentity, assess_fact_consistency
 from ..evidence.preparation_policy import FormulaExecutionApproval, PreparedFormulaPolicy
+from ..evidence.retrieval import RetrievalReference
 from ..evidence.snapshots import SnapshotCatalog
 from .financial_retrieval import (
     FinancialMetricMatch,
     FinancialRetrievalTools,
+    GetFinancialFactRequest,
     GetFinancialMetricRequest,
 )
+
+
+class DynamicOperation(FinancialModel):
+    operation_id: str = Field(min_length=1, max_length=80)
+    operator: Literal[
+        "add",
+        "subtract",
+        "multiply",
+        "divide",
+        "relative_difference",
+        "percentage_change",
+        "ratio",
+        "greater",
+        "less",
+        "equal",
+        "sum",
+        "mean",
+    ]
+    inputs: list[str] = Field(min_length=2, max_length=16)
+    period_relation: Literal["same", "across_periods"] = "same"
+
+
+class DynamicOperand(FinancialModel):
+    reference: RetrievalReference
+    value: str
+    unit: str
+    scale: str
+    period: str
+    company_id: str
+    document_id: str
+    snapshot_id: str
+
+
+class DynamicStep(FinancialModel):
+    operation: DynamicOperation
+    operands: list[str]
+    result: str
+    unit: str
+    periods: list[str]
+    rounding: Literal["Decimal34_HALF_EVEN; display_2dp"] = "Decimal34_HALF_EVEN; display_2dp"
+
+
+class DynamicCalculation(FinancialModel):
+    """Request-local arithmetic proof; never an approved accounting metric."""
+
+    operands: dict[str, DynamicOperand]
+    steps: list[DynamicStep]
+    standard_metric: Literal[False] = False
+
+
+def execute_dynamic(operands: dict[str, DynamicOperand], operations: list[DynamicOperation]):
+    """Shared bounded Decimal interpreter. Inputs must be independently grounded by caller.
+
+    M5 produces candidates; M4/M6 hydrate exact source identities before replay.
+    No constants, Python expressions, implicit period mixing or unit invention.
+    """
+    if not operands or len(operands) > 16 or not operations or len(operations) > 12:
+        raise ValueError("dynamic_graph_bounds")
+    contexts = {(o.company_id, o.document_id, o.snapshot_id) for o in operands.values()}
+    if len(contexts) != 1 or any(not all(c) for c in contexts):
+        raise ValueError("dynamic_source_context_mismatch")
+    values, steps = {}, []
+    with localcontext(Context(prec=34, rounding=ROUND_HALF_EVEN)):
+        for key, operand in operands.items():
+            value, scale = Decimal(operand.value), Decimal(operand.scale)
+            if not value.is_finite() or not scale.is_finite() or scale <= 0:
+                raise ValueError("dynamic_non_finite_or_scale")
+            if not operand.period or not operand.unit or operand.reference.kind != "fact":
+                raise ValueError("dynamic_operand_identity_missing")
+            values[key] = (value * scale, operand.unit, {operand.period}, {key})
+        for operation in operations:
+            key, op = operation.operation_id, operation.operator
+            if key in values or any(i not in values for i in operation.inputs):
+                raise ValueError("dynamic_dependency_invalid")
+            if op not in {"sum", "mean"} and len(operation.inputs) != 2:
+                raise ValueError("dynamic_arity_invalid")
+            args = [values[i] for i in operation.inputs]
+            units = {a[1] for a in args}
+            periods = set().union(*(a[2] for a in args))
+            sources = set().union(*(a[3] for a in args))
+            if len(periods) > 1 and operation.period_relation != "across_periods":
+                raise ValueError("dynamic_period_mismatch")
+            if len(units) != 1 and op != "multiply":
+                raise ValueError("dynamic_unit_mismatch")
+            if "boolean" in units:
+                raise ValueError("dynamic_boolean_operand")
+            a, b = args[0][0], args[1][0]
+            unit = args[0][1]
+            if op in {"divide", "ratio", "relative_difference", "percentage_change"}:
+                if b == 0:
+                    raise ValueError("dynamic_zero_denominator")
+                value = (a - b) / b if op in {"relative_difference", "percentage_change"} else a / b
+                unit = "percent" if op == "percentage_change" else "ratio"
+                if unit == "percent":
+                    value *= 100
+            elif op == "multiply":
+                if not units & {"ratio"} or units - {"ratio"} and len(units) > 2:
+                    raise ValueError("dynamic_multiplication_units")
+                value = a * b
+                unit = next(iter(units - {"ratio"}), "ratio")
+            elif op in {"greater", "less", "equal"}:
+                value = Decimal(a > b if op == "greater" else a < b if op == "less" else a == b)
+                unit = "boolean"
+            else:
+                value = a - b if op == "subtract" else sum((arg[0] for arg in args), Decimal(0))
+                if op == "mean":
+                    value /= len(args)
+            if not value.is_finite():
+                raise ValueError("dynamic_result_non_finite")
+            values[key] = (value, unit, periods, sources)
+            steps.append(
+                DynamicStep(
+                    operation=operation,
+                    operands=sorted(sources),
+                    result=str(value),
+                    unit=unit,
+                    periods=sorted(periods),
+                )
+            )
+    return DynamicCalculation(operands=operands, steps=steps)
+
+
+def render_dynamic(calculation, labels):
+    """Public arithmetic trace, with evidence labels rather than operation IDs."""
+    values = {
+        key: labels[key] + f" (kỳ {operand.period})"
+        for key, operand in calculation.operands.items()
+    }
+    result = []
+    symbols = {
+        "add": "+",
+        "sum": "+",
+        "subtract": "−",
+        "multiply": "×",
+        "divide": "/",
+        "ratio": "/",
+        "greater": ">",
+        "less": "<",
+        "equal": "=",
+    }
+    for index, step in enumerate(calculation.steps, 1):
+        operation = step.operation
+        args = [values[key] for key in operation.inputs]
+        op = operation.operator
+        expression = f" {symbols.get(op, ', ')} ".join(args)
+        if op in {"relative_difference", "percentage_change"}:
+            expression = f"({args[0]} − {args[1]}) / {args[1]}" + (
+                " × 100" if op == "percentage_change" else ""
+            )
+        elif op == "mean":
+            expression = "Trung bình của " + ", ".join(args)
+        value = "đúng" if step.result == "1" else "sai"
+        if step.unit != "boolean":
+            with localcontext(Context(prec=34, rounding=ROUND_HALF_EVEN)):
+                value = format(Decimal(step.result).quantize(Decimal("0.01")), ",f").translate(
+                    str.maketrans({",": ".", ".": ","})
+                )
+            value += " " + {"ratio": "lần (tỷ số đối chiếu)", "percent": "%"}.get(
+                step.unit, step.unit
+            )
+        result.append(f"{expression}: {value}.")
+        values[operation.operation_id] = f"kết quả phép tính thứ {index}"
+    return " ".join(result)
 
 
 class CalculateFinancialMetricRequest(FinancialModel):
@@ -96,6 +261,95 @@ class FinancialCalculator:
 
         self._catalog = isolated_catalog(catalog)
         self._retrieval = FinancialRetrievalTools(self._catalog)
+
+    def calculate_dynamic(self, references, operations):
+        """Hydrate operands from canonical sources, never caller-provided values."""
+        operands, contexts = {}, []
+        for key, reference in references.items():
+            if reference.kind != "fact" or reference.observation is None:
+                raise ValueError("dynamic_fact_reference_required")
+            identity = reference.observation
+            response = self._retrieval.get_financial_fact(
+                GetFinancialFactRequest(
+                    document_id=identity.document_id,
+                    snapshot_id=identity.snapshot_id,
+                    local_observation_id=identity.local_id,
+                )
+            )
+            if response.status != "found" or len(response.matches) != 1:
+                raise ValueError("dynamic_operand_unavailable_or_conflicting")
+            match = response.matches[0]
+            fact = match.record
+            consistency = assess_fact_consistency(fact)
+            if (
+                consistency.status == "inconsistent"
+                or not fact.context.period_type
+                or not fact.context.currency
+                or fact.context.currency != fact.value.unit
+            ):
+                raise ValueError("dynamic_operand_context_or_source_invalid")
+            peers = [
+                f
+                for f in self._catalog.facts
+                if (
+                    f.document_id,
+                    f.snapshot_id,
+                    f.company_id,
+                    f.canonical_item_id,
+                    f.context.period,
+                    f.context.period_type,
+                    f.context.reporting_scope,
+                    f.value.unit,
+                )
+                == (
+                    fact.document_id,
+                    fact.snapshot_id,
+                    fact.company_id,
+                    fact.canonical_item_id,
+                    fact.context.period,
+                    fact.context.period_type,
+                    fact.context.reporting_scope,
+                    fact.value.unit,
+                )
+                and f.value.normalized_value is not None
+                and f.context.scale is not None
+            ]
+            if len({f.value.normalized_value * f.context.scale for f in peers}) > 1:
+                raise ValueError("dynamic_conflicting_source_values")
+            decisions = [q.decision for q in fact.quality_context if q.task_type == "direct_qa"]
+            if (
+                match.reference != reference
+                or match.display_status == "blocked"
+                or fact.value.status != "resolved"
+                or not decisions
+                or any(d in {"insufficient", "conflicted"} for d in decisions)
+                or not match.citations
+                or match.source_review.status != "found"
+                or not match.source_review.matches
+                or any(
+                    r.status in {"source_missing", "source_inconsistent"}
+                    for r in match.source_review.matches
+                )
+            ):
+                raise ValueError("dynamic_operand_unverified")
+            contexts.append(
+                (fact.context.period_type, fact.context.reporting_scope, fact.context.currency)
+            )
+            operands[key] = DynamicOperand(
+                reference=reference,
+                value=str(fact.value.normalized_value),
+                unit=fact.value.unit,
+                scale=str(fact.context.scale),
+                period=fact.context.period,
+                company_id=fact.company_id,
+                document_id=fact.document_id,
+                snapshot_id=fact.snapshot_id,
+            )
+        if len(set(contexts)) != 1:
+            raise ValueError("dynamic_reporting_context_mismatch")
+        # Across-period operations are explicit and same-filing. Stock/flow mixing
+        # and cross-document accounting comparability remain unavailable.
+        return execute_dynamic(operands, operations)
 
     def _numeric_contract_errors(self, request):
         # Mutable Pydantic records có thể bị sửa sau validation. Chặn malformed

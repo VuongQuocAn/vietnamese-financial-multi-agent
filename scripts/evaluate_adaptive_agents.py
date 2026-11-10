@@ -30,7 +30,7 @@ def main():
     parser.add_argument(
         "--case-id",
         action="append",
-        choices=["Q01", "Q11", "Q21", "Q08", "Q22", "Q33", "Q34", "F08"],
+        choices=["Q01", "Q11", "Q21", "Q08", "Q22", "Q23", "Q24", "MH03", "Q33", "Q34", "F08"],
     )
     args = parser.parse_args()
     if args.output.exists():
@@ -46,7 +46,16 @@ def main():
 
     inputs = root / "artifacts/evidence/E2E-02"
     questions = {q["id"]: q for q in json.loads((inputs / "questions.json").read_bytes())}
-    cases = [dict(questions[key]) for key in ("Q01", "Q11", "Q21", "Q08", "Q22", "Q33", "Q34")]
+    cases = [
+        dict(questions[key])
+        for key in ("Q01", "Q11", "Q21", "Q08", "Q22", "Q23", "Q24", "Q33", "Q34")
+    ]
+    cases.append(
+        dict(
+            id="MH03",
+            question="Tính chênh lệch doanh thu thuần và lợi nhuận gộp BBS 2025 bằng VND; dẫn nguồn và giải thích đây là phép đối chiếu, không phải chỉ tiêu kế toán chuẩn.",
+        )
+    )
     cases.append(dict(id="F08", question="Như thế có đáng lo không?", conversation="analysis"))
     cases[2]["conversation"] = "analysis"
     for case in cases:

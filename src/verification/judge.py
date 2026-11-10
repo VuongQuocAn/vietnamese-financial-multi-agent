@@ -40,6 +40,17 @@ METRIC_CHECKS = {
 
 
 def required_checks(claim):
+    if claim.reasoning:
+        required = COMMON_CHECKS.copy()
+        if any(s.kind == "fact" for s in claim.supporting_evidence):
+            required |= FACT_CHECKS
+        if any(s.kind == "metric" for s in claim.supporting_evidence):
+            required |= METRIC_CHECKS
+        if claim.reasoning.calculation:
+            required.add("dynamic_calculation")
+        if claim.reasoning.claim_type == "derived_fact":
+            required.add("derived_statement")
+        return required
     return COMMON_CHECKS | (METRIC_CHECKS if claim.metric_ids or claim.calculation else FACT_CHECKS)
 
 

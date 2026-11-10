@@ -58,6 +58,9 @@ class AdaptiveFinancialController:
                             for a in proposal.assignments
                         ),
                         reasoning=proposal.reasoning_required,
+                        reasoning_steps=[
+                            s.model_dump(mode="json") for s in proposal.reasoning_steps
+                        ],
                     ),
                     ensure_ascii=False,
                 )
@@ -205,6 +208,9 @@ class AdaptiveFinancialController:
                                         kind=c.kind,
                                         content=c.content,
                                         evidence_ids=c.supporting_evidence_ids,
+                                        reasoning=c.reasoning.model_dump(mode="json")
+                                        if c.reasoning
+                                        else None,
                                     )
                                     for c in e.result.candidates
                                     if c.kind == "supported_interpretation"

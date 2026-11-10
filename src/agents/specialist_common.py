@@ -23,11 +23,26 @@ from ..core.llm_contracts import (
 )
 from ..evidence.graph import graph_id
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
-from ..tools.financial_calculator import FinancialCalculationResponse
+from ..tools.financial_calculator import (
+    DynamicCalculation,
+    DynamicOperand,
+    DynamicOperation,
+    FinancialCalculationResponse,
+    execute_dynamic,
+    render_dynamic,
+)
 from .contracts import RiskSignal
 from .planner_contracts import PlannerLLMMetadata
 
 ClaimKind = Literal["fact", "approved_metric", "supported_interpretation"]
+
+
+class ReasoningProof(FinancialModel):
+    claim_type: Literal["derived_fact", "reasoned_conclusion", "conditional_inference"]
+    goal: str = Field(min_length=1, max_length=1000)
+    calculation: DynamicCalculation | None = None
+    assumptions: list[str] = Field(default_factory=list, max_length=8)
+    limitations: list[str] = Field(default_factory=list, max_length=8)
 
 
 class SpecialistEvidence(FinancialModel):
@@ -68,6 +83,7 @@ class SpecialistCandidate(FinancialModel):
     caveats: list[str] = Field(default_factory=list)
     missing_information: list[str] = Field(default_factory=list)
     analysis_premises: list[str] = Field(default_factory=list, max_length=16)
+    reasoning: ReasoningProof | None = None
     status: Literal["candidate", "insufficient_evidence"] = "candidate"
     financial_fact_verified: Literal[False] = False
 
@@ -76,6 +92,8 @@ class SpecialistCandidate(FinancialModel):
         wire = handler(self)
         if not wire.get("analysis_premises"):
             wire.pop("analysis_premises", None)
+        if wire.get("reasoning") is None:
+            wire.pop("reasoning", None)
         return wire
 
 
@@ -83,6 +101,12 @@ class AnalysisProposal(FinancialModel):
     statement: str = Field(min_length=1, max_length=1500)
     evidence_ids: list[str] = Field(min_length=1, max_length=16)
     limitations: list[str] = Field(default_factory=list, max_length=8)
+    goal: str = Field(default="", max_length=1000)
+    operations: list[DynamicOperation] = Field(default_factory=list, max_length=12)
+    assumptions: list[str] = Field(default_factory=list, max_length=8)
+    claim_type: Literal["derived_fact", "reasoned_conclusion", "conditional_inference"] = (
+        "reasoned_conclusion"
+    )
 
 
 class SpecialistTrace(FinancialModel):
@@ -360,7 +384,7 @@ def select_evidence(
         )
     result.supporting_evidence = _unique(result.supporting_evidence)
     years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", result.question))
-    if years:
+    if years and bundle.claim_fact_references is None:
         result.supporting_evidence = [
             e
             for e in result.supporting_evidence
@@ -388,12 +412,18 @@ def with_assignment(prompt, upstream):
             instruction=prompt["instruction"]
             + (
                 " NHIỆM VỤ PHÂN TÍCH: đọc PLANNER_TASK và PRIOR_AGENT_RESULTS trong limitations. "
+                "Grammar mẫu, giới hạn không tính mới và không thêm mệnh đề ở schema claims cũ "
+                "chỉ áp dụng claims; analyses dùng contract suy luận và operations bên dưới. "
                 "Ngoài claims số liệu theo schema cũ, thêm analyses:[{statement,evidence_ids,limitations}] "
                 "để diễn giải quan hệ giữa evidence được giao, trả lời mục tiêu thực tế. "
                 "Statement do bạn suy luận, không bị giới hạn vào grammar mẫu số học cũ; "
-                "mọi tiền đề phải có evidence_ids, không tính ratio mới hoặc đoán nguyên nhân. "
-                "analyses.statement chỉ là diễn giải KHÔNG chứa chữ số hoặc tỷ lệ; số và kỳ đã có "
-                "trong numeric claims, dùng 'trong kỳ này' khi cần. "
+                "mọi tiền đề phải có evidence_ids. Dùng analyses.operations theo analysis_schema "
+                "cho so sánh/phép tính mới; inputs là evidence_id hoặc operation_id trước đó. "
+                "greater/less/equal đối chiếu độ lớn, subtract tính chênh lệch, ratio tính tỷ số ad hoc, "
+                "percentage_change dùng current trước/prior sau với period_relation=across_periods. "
+                "Backend dùng Decimal và M6 replay độc lập; không gọi tỷ số ad hoc là metric chuẩn. "
+                "analyses có goal, operations, assumptions, claim_type. Statement diễn giải ý nghĩa "
+                "của quan hệ đã tính, được chứa số có nguồn hoặc kết quả kiểm chứng; không đoán nguyên nhân. "
                 "Ưu tiên một analysis ngắn trực tiếp đáp ứng task; không lặp các giới hạn thành nhiều claims. "
                 "limitations tối đa 8 ý; backend đã giữ source caveats nên không chép toàn bộ flags vào đây. "
                 "statement chỉ mô tả quan hệ có căn cứ giữa những facts được giao. Điều chưa thể kết luận "
@@ -568,47 +598,101 @@ def generate_candidates(
             if set(analysis.evidence_ids) - evidence_by_id.keys():
                 raise ValueError("analysis_unknown_evidence")
             sources = [evidence_by_id[key] for key in dict.fromkeys(analysis.evidence_ids)]
-            if re.search(r"\d|%", analysis.statement) or any(s.calculation for s in sources):
-                result.trace.append(
-                    SpecialistTrace(
-                        stage="grounding",
-                        outcome="excluded",
-                        reasons=["analysis_requires_number_free_fact_premises"],
-                    )
-                )
-                continue
             owner = sources[0]
             if any(
-                (s.company_id, s.document_id, s.snapshot_id, s.period)
-                != (owner.company_id, owner.document_id, owner.snapshot_id, owner.period)
+                (s.company_id, s.document_id, s.snapshot_id)
+                != (owner.company_id, owner.document_id, owner.snapshot_id)
                 for s in sources
             ):
                 raise ValueError("analysis_context_mismatch")
+            computation = None
+            failed_operations = False
+            if analysis.operations:
+                if any(s.kind != "fact" for s in sources):
+                    raise ValueError("dynamic_requires_fact_operands")
+                operands = {
+                    s.evidence_id: DynamicOperand(
+                        **{k: getattr(s, k) for k in DynamicOperand.model_fields}
+                    )
+                    for s in sources
+                }
+                valid_operations = []
+                for operation in analysis.operations:
+                    try:
+                        computation = execute_dynamic(operands, [*valid_operations, operation])
+                        valid_operations.append(operation)
+                    except (ValueError, ArithmeticError):
+                        failed_operations = True
+                        result.trace.append(
+                            SpecialistTrace(
+                                stage="grounding",
+                                outcome="excluded",
+                                reasons=["invalid_reasoning_branch:" + operation.operation_id],
+                            )
+                        )
+                if computation is None:
+                    raise ValueError("no_valid_reasoning_branch")
+            reasoning = ReasoningProof(
+                claim_type="derived_fact" if failed_operations else analysis.claim_type,
+                goal=analysis.goal or result.question,
+                calculation=computation,
+                assumptions=[] if failed_operations else analysis.assumptions,
+                limitations=analysis.limitations,
+            )
             result.candidates.append(
                 SpecialistCandidate(
                     candidate_id=prefix + "-analysis-" + uuid4().hex,
                     kind="supported_interpretation",
-                    content=analysis.statement,
+                    content=render_dynamic(computation, {s.evidence_id: s.label for s in sources})
+                    if failed_operations
+                    else " ".join([analysis.statement, *analysis.limitations]),
                     company_id=owner.company_id,
                     document_id=owner.document_id,
                     snapshot_id=owner.snapshot_id,
                     period=owner.period,
-                    fact_references=_unique([s.reference for s in sources if not s.calculation]),
+                    fact_references=_unique(
+                        [
+                            r
+                            for s in sources
+                            for r in (
+                                [s.reference]
+                                if not s.calculation
+                                else [
+                                    RetrievalReference(kind="fact", observation=o.observation)
+                                    for o in s.calculation.trace.operands
+                                ]
+                            )
+                        ]
+                    ),
                     metric_ids=[s.calculation.metric_id for s in sources if s.calculation],
                     supporting_evidence_ids=analysis.evidence_ids,
+                    reasoning=reasoning,
                     analysis_premises=[
-                        f"{s.label} kỳ {s.period} là {_number(s.value)} {s.unit}"
+                        f"{s.label} {'tại ngày' if len(s.period) > 4 else 'kỳ'} {s.period} là {_number(s.value)} "
+                        + ("%" if s.unit == "percent" else s.unit)
                         + (f" (hệ số đơn vị {s.scale})" if s.scale != "1" else "")
                         + "."
                         for s in sources
                     ],
                     citations=_unique([c for s in sources for c in s.citations]),
-                    caveats=sorted(
-                        set(analysis.limitations + [c for s in sources for c in s.caveats])
-                    ),
+                    # Model-authored caveats are part of the proposition assessed
+                    # above, never an unchecked path around numeric/semantic gates.
+                    caveats=sorted(set(c for s in sources for c in s.caveats)),
                 )
             )
-        except (ValidationError, ValueError) as error:
+            if computation and reasoning.claim_type not in {
+                "conditional_inference",
+                "derived_fact",
+            }:
+                derived = result.candidates[-1].model_copy(deep=True)
+                derived.candidate_id = prefix + "-derived-" + uuid4().hex
+                derived.content = render_dynamic(
+                    computation, {s.evidence_id: s.label for s in sources}
+                )
+                derived.reasoning.claim_type = "derived_fact"
+                derived.reasoning.assumptions = []
+                result.candidates.append(derived)
+        except (ValidationError, ValueError, ArithmeticError) as error:
             result.trace.append(
                 SpecialistTrace(
                     stage="grounding",

@@ -137,9 +137,20 @@ def _segment(entry):
         + [c for citation in entry.citations for c in citation.limitations]
         + ([SCOPE_CAVEAT] if scope is None else [])
     )
+    content = entry.content
+    if (
+        claim.reasoning
+        and claim.reasoning.calculation
+        and claim.reasoning.claim_type == "reasoned_conclusion"
+    ):
+        from ..tools.financial_calculator import render_dynamic
+
+        content += "\n" + render_dynamic(
+            claim.reasoning.calculation, {s.evidence_id: s.label for s in claim.supporting_evidence}
+        )
     return GroundedSegment(
         segment_id=entry.identity.verified_claim_id,
-        content=entry.content,
+        content=content,
         verified_claim_ids=[entry.identity.verified_claim_id],
         citations=entry.citations,
         context=QAClaimContext(
@@ -533,6 +544,8 @@ def planned_requirements(question, proposal):
                 requirement.interpretation_topic,
                 requirement.aspect,
                 tuple(sorted(requirement.required_indicators)),
+                tuple(requirement.reasoning_operations),
+                tuple(sorted(requirement.reasoning_periods)),
             )
         )
         if key in unique:
@@ -567,6 +580,30 @@ def matches_financial_target(claim, requirement, logic=None):
     if not set(requirement.required_indicators) <= indicators:
         return False
     if requirement.interpretation:
+        proof = getattr(claim, "reasoning", None)
+        if requirement.reasoning_operations and (
+            not proof
+            or not proof.calculation
+            or requirement.reasoning_operations
+            != [s.operation.operator for s in proof.calculation.steps]
+        ):
+            return False
+        if requirement.reasoning_periods and (
+            not proof
+            or not proof.calculation
+            or set(requirement.reasoning_periods)
+            != {o.period for o in proof.calculation.operands.values()}
+        ):
+            return False
+        if requirement.interpretation_topic == "dynamic_calculation":
+            return bool(
+                proof
+                and proof.claim_type == "derived_fact"
+                and proof.calculation
+                and not proof.assumptions
+            )
+        if proof and proof.claim_type in {"derived_fact", "conditional_inference"}:
+            return False
         if requirement.interpretation_topic == "unbounded":
             return False
         if requirement.interpretation_topic == "earnings_quality":
@@ -581,6 +618,8 @@ def matches_financial_target(claim, requirement, logic=None):
                 and "earnings_quality_context" in finding.required_premises
                 for finding in getattr(logic, "assertions", [])
             )
+            if proof:
+                return bool(typed and not proof.assumptions)
             text = normalize(claim.content)
             predicate = r"(?:vuot|cao hon|thap hon|ho tro|bao dam|chuyen hoa|chuyen doi|tuong xung|chenh lech)"
             relation = re.search(
@@ -660,7 +699,7 @@ def _public_notes(notes):
     for note in notes:
         if note.startswith(("PLANNER_TASK:", "specialist_annotation:")):
             continue
-        if re.search(r"\b[a-zA-Z]+_[a-zA-Z_]+\b", note):
+        if re.search(r"\b[a-zA-Z][a-zA-Z0-9]*(?:_[a-zA-Z0-9]+)+\b", note):
             if any(
                 word in note.lower() for word in ("failed", "failure", "error", "invalid_proposal")
             ):

@@ -52,8 +52,8 @@ ZERO_TEMPLATE = (
     "bằng không theo chỉ tiêu được báo cáo."
 )
 LIMITATIONS = [
-    "Chỉ mô tả facts và dấu dòng tiền; chưa đủ căn cứ kết luận chất lượng lợi nhuận cao/thấp.",
-    "Không có approved earnings-quality ratio; không tự tính tỷ lệ hoặc chênh lệch CFO và lợi nhuận.",
+    "Đối chiếu lợi nhuận và dòng tiền là tín hiệu trong kỳ, chưa phải đánh giá toàn diện chất lượng lợi nhuận.",
+    "Phép tính ad hoc phải nêu định nghĩa và không tự trở thành chỉ tiêu kế toán chuẩn.",
     "Chưa đối chiếu đầy đủ điều chỉnh/tỷ giá để xác nhận cash bridge hoặc nguyên nhân chênh lệch.",
     "B02 và B03 có nguồn riêng; cùng filing không tự xác nhận reporting scope còn unresolved.",
 ]
@@ -132,6 +132,7 @@ class CashFlowEarningsQualitySpecialist:
         self._model = model or ModelIdentity(provider="gemini", model=DEFAULT_GEMINI_MODEL)
 
     def _select(self, upstream, result, years, scopes, periods):
+        assigned = upstream.evidence_bundle.claim_fact_references is not None
         select_evidence(
             upstream, result, item_labels=ITEM_LABELS, metric_labels={}, period_roles={}
         )
@@ -159,7 +160,7 @@ class CashFlowEarningsQualitySpecialist:
             ):
                 error = "currency_unit_or_scale_mismatch"
             elif (
-                (years and evidence.period not in {str(y) for y in years})
+                (not assigned and years and evidence.period not in {str(y) for y in years})
                 or periods  # A calendar date is not a B03 fiscal_year fact.
                 or (
                     plan
@@ -258,7 +259,7 @@ class CashFlowEarningsQualitySpecialist:
                 "khác placeholder {sign} trong câu. Không thêm mệnh đề. Chỉ flow được diễn giải "
                 "vào/ra thuần; opening_cash/closing_cash là balances B03, profit là B02. "
                 "period giữ nguyên chuỗi trong evidence; không đổi fiscal_year sang as_of. "
-                "Không tính CFO/Net Income, cash conversion, accrual, FCF, CFO margin, coverage, "
+                "Trong schema claims cũ không tính CFO/Net Income, cash conversion, accrual, FCF, CFO margin, coverage, "
                 "earnings quality score hoặc chênh lệch. Không kết luận chất lượng lợi nhuận "
                 "cao/thấp, thao túng, mất khả năng trả nợ, dòng tiền bền vững, dự báo hoặc nguyên "
                 "nhân do phải thu/tồn kho/khấu hao. Không khẳng định closing=opening+net cash flow "
@@ -323,19 +324,28 @@ class CashFlowEarningsQualitySpecialist:
                 result.missing_evidence.append("snapshot_or_D03-B10_blocked")
                 return result
             years, scopes, _, periods = _explicit_constraints(question)
+            reasoning_assignment = (
+                upstream.evidence_bundle.claim_fact_references is not None
+                and any(
+                    note.startswith("PLANNER_TASK:")
+                    for note in upstream.evidence_bundle.limitations
+                )
+            )
             if len(scopes) > 1:
                 result.missing_evidence.append("ambiguous_reporting_scope")
                 return result
-            if len(years) > 1:
+            if len(years) > 1 and not reasoning_assignment:
                 result.missing_evidence.append("cross_document_comparison_blocked_D03_B10")
                 return result
             if re.search(r"\b(?:quy|thang|ban nien)\b", normalize(question)):
                 result.missing_evidence.append("non_annual_period_unsupported")
                 return result
             text = normalize(question)
-            unsupported = re.findall(UNAPPROVED, text)
+            unsupported = [] if reasoning_assignment else re.findall(UNAPPROVED, text)
             result.missing_evidence.extend("unsupported_capability:" + name for name in unsupported)
-            if re.search(r"chat luong loi nhuan|thao tung|ben vung|nguyen nhan|cash bridge", text):
+            if not reasoning_assignment and re.search(
+                r"chat luong loi nhuan|thao tung|ben vung|nguyen nhan|cash bridge", text
+            ):
                 result.missing_evidence.append("earnings_quality_or_reconciliation_not_established")
             if not unsupported or re.search(INDEPENDENT_FACT, re.sub(UNAPPROVED, "", text)):
                 self._select(upstream, result, years, scopes, periods)

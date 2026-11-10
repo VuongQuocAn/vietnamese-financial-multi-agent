@@ -17,7 +17,7 @@ from .citation_contracts import (
     CitationReference,
     RenderedCitationOutput,
 )
-from .qa_composer import _answer_text, _citations, _unique
+from .qa_composer import _answer_text, _citations, _public_notes, _unique
 from .qa_contracts import QAValidationResult, VietnameseQAResponse
 from .report_writer_contracts import GroundedFinancialReport
 
@@ -214,11 +214,11 @@ def _reference_text(ref):
         selectors.append(f"ô {loc.cell_id}")
     if selectors:
         location += ", " + ", ".join(selectors)
-    text = (
-        f"{ref.display_label} Tài liệu {ref.document_id} — Snapshot {ref.snapshot_id} — {location}."
-    )
-    if ref.limitations:
-        text += " Giới hạn nguồn: " + "; ".join(ref.limitations)
+    page = ref.source_citations[0].source.reference
+    label = f"{page.anchor.page.symbol} {page.anchor.page.year}" if page else "Tài liệu"
+    text = f"{ref.display_label} {label} — {location}."
+    if _public_notes(ref.limitations):
+        text += " Giới hạn nguồn: " + "; ".join(_public_notes(ref.limitations))
     return text
 
 
@@ -302,10 +302,10 @@ def _project(original):
     )
     # Upstream reports may keep some limitations only as metadata. Present them
     # explicitly too, without rewriting the original text or deleting duplicates.
-    if caveats:
-        text += "\n\nLưu ý nguồn: " + "; ".join(caveats)
-    if limits:
-        text += "\n\nGiới hạn nguồn: " + "; ".join(limits)
+    if _public_notes(caveats):
+        text += "\n\nLưu ý nguồn: " + "; ".join(_public_notes(caveats))
+    if _public_notes(limits):
+        text += "\n\nGiới hạn nguồn: " + "; ".join(_public_notes(limits))
     if references:
         text += "\n\n## Nguồn tham chiếu\n\n" + "\n\n".join(map(_reference_text, references))
     return RenderedCitationOutput(

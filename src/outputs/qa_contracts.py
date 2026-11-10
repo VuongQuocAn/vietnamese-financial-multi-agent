@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..agents.fusion_contracts import FusionPlan
@@ -63,10 +63,22 @@ class QARequirement(FinancialModel):
     interpretation: bool = False
     aspect: Literal["value", "formula", "operands"] = "value"
     depends_on: list[str] = Field(default_factory=list)
-    interpretation_topic: Literal["metric_meaning", "earnings_quality", "unbounded"] | None = None
+    interpretation_topic: (
+        Literal["metric_meaning", "earnings_quality", "dynamic_calculation", "unbounded"] | None
+    ) = None
     required_indicators: list[str] = Field(default_factory=list)
     verified_claim_ids: list[str] = Field(default_factory=list)
     reason: str | None = None
+    reasoning_operations: list[str] = Field(default_factory=list, max_length=12)
+    reasoning_periods: list[str] = Field(default_factory=list, max_length=16)
+
+    @model_serializer(mode="wrap")
+    def serialize_requirement(self, handler):
+        wire = handler(self)
+        for key in ("reasoning_operations", "reasoning_periods"):
+            if not wire.get(key):
+                wire.pop(key, None)
+        return wire
 
 
 class GroundedAnswerPlan(FinancialModel):

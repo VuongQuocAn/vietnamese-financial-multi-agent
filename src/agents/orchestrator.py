@@ -98,6 +98,9 @@ def aggregate_candidates(executions):
                 ),
             )
             key = _json(identity)
+            if candidate.reasoning:
+                identity["reasoning"] = candidate.reasoning.model_dump(mode="json")
+                key = _json(identity)
             origin = CandidateOrigin(
                 role=execution.role,
                 execution_id=execution.execution_id,

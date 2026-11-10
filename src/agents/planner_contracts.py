@@ -56,12 +56,43 @@ class UserRequestedTarget(FinancialModel):
     target_id: Identity | None = None
     period: Identity | None = None
     interpretation: bool = False
-    interpretation_topic: Literal["metric_meaning", "earnings_quality", "unbounded"] | None = None
+    interpretation_topic: (
+        Literal["metric_meaning", "earnings_quality", "dynamic_calculation", "unbounded"] | None
+    ) = None
     required_indicators: list[Identity] = Field(default_factory=list, max_length=16)
     aspect: Literal["value", "formula", "operands"] = "value"
+    reasoning_operations: list[str] = Field(default_factory=list, max_length=12)
+    reasoning_periods: list[str] = Field(default_factory=list, max_length=16)
+
+    @model_serializer(mode="wrap")
+    def serialize_target(self, handler):
+        wire = handler(self)
+        for key in ("reasoning_operations", "reasoning_periods"):
+            if not wire.get(key):
+                wire.pop(key, None)
+        return wire
+
+
+class ReasoningPlanStep(FinancialModel):
+    step_id: Identity
+    operation: Literal[
+        "retrieve_facts",
+        "retrieve_evidence",
+        "compare",
+        "calculate",
+        "interpret",
+        "evaluate_alternatives",
+        "assess_limitations",
+        "conclude",
+    ]
+    inputs: list[Identity] = Field(default_factory=list, max_length=16)
+    dependencies: list[Identity] = Field(default_factory=list, max_length=16)
+    goal: str = Field(min_length=1, max_length=1000)
+    expected_output: str = Field(min_length=1, max_length=1000)
 
 
 class PlannerProposal(FinancialModel):
+    reasoning_steps: list[ReasoningPlanStep] = Field(default_factory=list, max_length=16)
     user_requested_targets: list[UserRequestedTarget] = Field(default_factory=list, max_length=32)
     reasoning_required: bool = False
     selection_reason: str = ""
@@ -139,6 +170,11 @@ class PlannerProposal(FinancialModel):
     @model_validator(mode="after")
     def dependency_graph(self):
         self.ordered_specialist_roles()
+        known = set()
+        for step in self.reasoning_steps:
+            if step.step_id in known or set(step.dependencies) - known:
+                raise ValueError("reasoning_plan_dependency_invalid")
+            known.add(step.step_id)
         return self
 
     @model_serializer(mode="wrap")
@@ -146,6 +182,8 @@ class PlannerProposal(FinancialModel):
         wire = handler(self)
         if not wire.get("user_requested_targets"):
             wire.pop("user_requested_targets", None)
+        if not wire.get("reasoning_steps"):
+            wire.pop("reasoning_steps", None)
         return wire
 
 

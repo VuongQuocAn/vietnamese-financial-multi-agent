@@ -279,6 +279,23 @@ class LiquidityLeverageSpecialist:
                 result.missing_evidence.append("ambiguous_reporting_scope")
                 return result
             parsed, period_reasons = understand(question)
+            reasoning_assignment = (
+                upstream.evidence_bundle.claim_fact_references is not None
+                and any(
+                    note.startswith("PLANNER_TASK:")
+                    for note in upstream.evidence_bundle.limitations
+                )
+            )
+            if reasoning_assignment:
+                period_reasons = [
+                    reason
+                    for reason in period_reasons
+                    if reason
+                    not in {
+                        "multiple_periods_unsupported",
+                        "cross_document_comparison_blocked_D03_B10",
+                    }
+                ]
             if any(
                 reason in period_reasons
                 for reason in (

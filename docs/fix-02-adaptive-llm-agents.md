@@ -1088,3 +1088,39 @@ Không dùng CI thay Q21 financial acceptance. Checkpoint sau chỉ docs/plannin
 source/tests/workflow giống implementation đã live, không gán live cho SHA docs.
 Next action: Tech Lead review a320e8c và hai giới hạn còn lại (relational reasoning,
 final renderer), quyết định nghiệm thu/phạm vi tiếp theo.
+
+## Adaptive Multi-Hop Reasoning — 10/11/2026
+
+FIX-02-MH tiếp nối baseline `a320e8c`/checkpoint `b4de4f0`, trong cùng FIX-02.
+[Restriction & Reasoning Gap Matrix, kiến trúc và contracts](fix-02-multihop-design.md).
+
+Nguồn false abstention chính: number-free fact-only analysis; calculator chỉ có ba
+formula; comparison đã tính không được nhìn nhận là premise; topic grammar và
+renderer đưa diagnostic notes quay lại output. Đã thêm public reasoning plan/proof,
+typed arithmetic DAG cùng calculator, M6 replay từ canonical operands và tách
+derived content khỏi reasoned conclusion. Source/identity/context/quality checks
+độc lập vẫn giữ; conditional assumptions chưa chứng minh không được admit.
+
+Engineering: các controls bao gồm operators, DAG dependencies, scale/period/unit,
+conflicting source, arithmetic/citation tamper, branch isolation, no graph edge,
+metric premise, causal/conditional rejection và Composer → Renderer → Firewall.
+Kết quả cuối và implementation SHA được ghi sau khi freeze source trước live.
+
+Artifacts riêng: `artifacts/evidence/FIX-02/multihop/` (ignored). Offline16 probes
+lấy từ canonical BBS2025 và các cột so sánh trong cùng filing; không gọi Gemini.
+Lượt đầu cả16 M6 ACCEPT nhưng9 answered/7 clarification do goal động thiếu binding
+operator/kỳ; giữ toàn bộ lượt này. Sau bổ sung binding, saved native proofs replay:
+16/16 M7 answered và16/16 Firewall released; M4 canonical arithmetic replay khớp.
+14 historical proofs (4 dependency/6 controlled-live/4 flexible-contracts) replay,
+files giữ byte/hash. Hai captured Q21 Specialist responses giữ raw payload khi
+replay generation, mỗi response vẫn0 dynamic steps; không báo replay là insight mới.
+
+Đã tự đọc ảnh PDF BBS2025 trang5/7/8: total assets, revenue/cost/gross/PAT và CFO
+cùng các cột kỳ trước khớp inputs của các probes. Đây là kiểm tra những chỉ tiêu
+được dùng, không phải accuracy toàn PDF hoặc benchmark M8. Page-level provenance
+và OCR/scope caveats được giữ; không sửa nguồn. Các probes offline chứng minh
+arithmetic và contract paths; chất lượng analytical prose phải xét riêng qua live.
+
+Giới hạn được công khai: cross-document accounting comparability chưa approved;
+M7 chưa có kênh phát hành hypothetical scenarios ngoài Ledger; numeric binding
+không thay semantic assessment về attribution, mức độ kết luận hoặc causality.

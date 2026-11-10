@@ -208,6 +208,18 @@ class EvidenceAwareQueryPlanner:
         return {
             "instruction": (
                 "Lập kế hoạch phân tích tài chính tiếng Việt, không thực thi hoặc trả số liệu. "
+                "Phân biệt multi-fact/multi-period comparison, multi-hop và conditional assessment "
+                "qua intent cùng reasoning_steps. Phân tích cần reasoning_steps theo dependencies: "
+                "retrieve_facts/evidence → compare/calculate → interpret → assess_limitations → conclude; "
+                "mỗi bước có inputs, goal, expected_output. Chuyển các bước này thành task cụ thể "
+                "cho Specialist. So sánh/chênh lệch/tỷ số ad hoc được Specialist khai báo operations "
+                "và backend kiểm chứng; không cần registry, không đưa vào formula_ids hoặc gọi là metric chuẩn. "
+                "Yêu cầu chỉ tính/so sánh động: goal kind=fact, interpretation=true, "
+                "interpretation_topic=dynamic_calculation, target_id là một chỉ tiêu đầu vào, "
+                "required_indicators gồm tất cả operands. Yêu cầu giải thích ý nghĩa cần "
+                "metric_meaning/earnings_quality và task kết luận sau phép tính. "
+                "Goal động cần reasoning_operations là thứ tự operators cần tính và reasoning_periods "
+                "là các kỳ đầu vào; không dùng phép tính khác đã lưu để đáp ứng nhầm goal. "
                 "Xuất duy nhất JSON theo schema. Không xuất document/snapshot/metric IDs, values, "
                 "PDF citations, approval hoặc verified facts. Nhận diện nhiều mục tiêu và paraphrases. "
                 "reporting_years chỉ là năm filing được yêu cầu; period=null nếu chỉ nêu năm. "
@@ -660,7 +672,8 @@ class EvidenceAwareQueryPlanner:
                     target.interpretation
                     and target.required_indicators
                     and (target.target_id is None or target.target_id in target.required_indicators)
-                    and target.interpretation_topic in {"earnings_quality", "metric_meaning"}
+                    and target.interpretation_topic
+                    in {"earnings_quality", "metric_meaning", "dynamic_calculation"}
                     and all(item in ITEM_RULES for item in target.required_indicators)
                 ):
                     # A relation over explicit fact premises is an interpretation,
@@ -848,6 +861,33 @@ class EvidenceAwareQueryPlanner:
             p in normalize(question)
             for p in ("cung bao cao", "chinh bao cao", "theo bao cao", "bao cao nam")
         )
+        explicit_filings = set(
+            re.findall(r"\bbao cao(?: nam)? ((?:19|20|21)\d{2})\b", normalize(question))
+        )
+        operand_periods = {
+            o.period
+            for o in proposal.operations
+            if o.operation == "find_financial_facts" and o.period
+        }
+        if (
+            context.mode == "auto"
+            and proposal.reasoning_required
+            and len(years) > 1
+            and len(proposal.reporting_years) == 1
+            and not proposal.cross_document_comparison
+            and len(explicit_filings) <= 1
+            and len(operand_periods) > 1
+            and all(p[:4] in {str(y) for y in years} for p in operand_periods)
+        ):
+            # Source lookup/materialization must still resolve every operand in
+            # this one filing. This grants no cross-document comparability.
+            years = list(proposal.reporting_years)
+            query.cross_document_comparison = False
+            result.trace.append(
+                PlannerTrace(
+                    stage="catalog_resolution", outcome="request_local_same_filing_reasoning"
+                )
+            )
         if (
             len(years) > 1
             and same_filing

@@ -249,3 +249,19 @@ full regressionSKIPPED. Không gọi live financial acceptancePASS;checkpoint sa
 chỉ docs/planning,không runtime changes hoặc gán live cho SHA docs.
 Status REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.
 Next action: Tech Lead review a320e8c và quyết định hai giới hạn còn lại.
+
+### FIX-02-MH được giao — 10/11/2026
+
+Owner giao nâng cấp cả lớp multi-hop, không vá riêng Q21; giữ cùng task FIX-02.
+[Restriction matrix và thiết kế](../../../docs/fix-02-multihop-design.md).
+Mở Planner reasoning plan, typed Decimal DAG trong M4, public reasoning proof ở M5,
+native M6 kiểm source/derived/reasoned riêng, goal-aware M7 và final renderer.
+Giữ source/scope/period/unit/causality checks, bounded/shared budget và Ledger replay.
+Không đổi approved formulas, không OCR/ingestion hoặc thêm agent/framework.
+
+Offline16 real-source derived probes đã replay M4 và M7/Firewall;14 historical
+proofs giữ nguyên. Đây không là kết quả live LLM hay benchmark financial accuracy.
+Hai captured Q21 responses replay giữ raw payload, không tạo thêm reasoning steps
+chưa có trong response. Kết quả engineering cuối/live/CI ghi tại báo cáo FIX-02.
+Cho phép commit/push main và tối đa3 live cases sau offline ổn định, không retry.
+Trạng thái bàn giao phải là REVIEW — WAITING FOR TECH LEAD ACCEPTANCE, không DONE.
