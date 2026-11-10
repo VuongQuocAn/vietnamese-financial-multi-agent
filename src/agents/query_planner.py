@@ -814,7 +814,7 @@ class EvidenceAwareQueryPlanner:
                     target.reasoning_operations = []
                     target.reasoning_periods = []
                 if (
-                    target.kind == "metric"
+                    target.kind in {"fact", "metric"}
                     and target.interpretation
                     and not proposal.reasoning_required
                     and target.aspect == "value"

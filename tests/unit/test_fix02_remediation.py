@@ -18,6 +18,30 @@ from .test_llm_gateway import request
 from .test_m4_execution import fixture
 
 
+def test_tool_only_fact_does_not_require_model_added_interpretation():
+    from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+
+    from .test_financial_qa import gateway_for
+    from .test_query_planner import planner
+
+    instance = planner()
+    question = "Doanh thu TEST 2030 là bao nhiêu?"
+    wire = instance._deterministic(question)
+    wire["reasoning_required"] = False
+    wire["user_requested_targets"] = [
+        dict(
+            kind="fact",
+            target_id="b02.net_revenue",
+            interpretation=True,
+            interpretation_topic="metric_meaning",
+        )
+    ]
+    instance._gateway = gateway_for(wire, [])
+    result = instance.plan(question, PlannerContext(mode="auto"))
+    assert result.status == "planned", result.reasons
+    assert not result.effective_proposal.user_requested_targets[0].interpretation
+
+
 def test_admitted_reasoned_conclusion_does_not_need_redundant_purpose_label():
     from types import SimpleNamespace as NS
 

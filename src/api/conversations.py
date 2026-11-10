@@ -401,8 +401,13 @@ class ConversationService:
                     )
                 state.selected_context = context.model_copy(deep=True)
                 state.resolved_context = context.model_copy(deep=True)
-                # Partial coverage can leave several requested targets unresolved.
-                state.topics = topics if response.status != "partial_verified_coverage" else []
+                # Several partial targets are ambiguous; one verified topic
+                # remains a valid referent even when its analysis is incomplete.
+                state.topics = (
+                    topics
+                    if response.status != "partial_verified_coverage" or len(topics) == 1
+                    else []
+                )
                 state.reference_question = bound.question
                 state.verified_claim_ids = list(response.used_verified_claim_ids)
                 state.citation_ids = [c.citation_id for c in response.citations]

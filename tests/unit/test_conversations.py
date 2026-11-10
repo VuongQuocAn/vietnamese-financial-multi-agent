@@ -42,6 +42,28 @@ def test_protocol_failure_preserves_established_topic_for_next_followup(tmp_path
     assert bound is not None and clarification is None
 
 
+def test_single_verified_topic_survives_partial_analysis(tmp_path, monkeypatch):
+    pipeline, request, _, _, _ = setup(tmp_path)
+    original = pipeline.run
+
+    def partial(bound):
+        result = original(bound)
+        result.status = "partial_verified_coverage"
+        return result
+
+    monkeypatch.setattr(pipeline, "run", partial)
+    service = ConversationService(pipeline)
+    session = service.create()
+    first = ask(service, session, request.question, execution_mode="deterministic")
+    assert first.response.used_verified_claim_ids
+    state = service.history(session.conversation_id)
+    assert len(state.topics) == 1
+    bound, *_, clarification = service._resolve(
+        state, FinancialQARequest(question="Công thức chỉ số này là gì?")
+    )
+    assert bound is not None and clarification is None
+
+
 def test_real_pipeline_followup_and_http_history(tmp_path):
     pipeline, _, _, _, _ = setup(tmp_path / "ledger")
     service = ConversationService(pipeline)
