@@ -1,5 +1,7 @@
 # FIX-02 — Adaptive LLM Agents và bounded Judge feedback
 
+Checkpoint mới nhất: [Flexible contracts — 10/11/2026](#flexible-contracts--10112026).
+
 Checkpoint remediation mới ngày10/11/2026 ở cuối báo cáo; các lượt09/11 bên dưới
 được giữ làm evidence lịch sử, không gán cho implementation mới.
 
@@ -948,3 +950,94 @@ full regression SKIPPED. Checkpoint chỉ sửa indentation YAML và báo cáo/p
 runtime/tests với live SHA, không phải CI SUCCESS trên SHA live 0b6c8d7 và không
 thay kết quả Q21 PARTIAL. Docs checkpoint cuối không đổi source/tests/workflow;
 unrelated local changes giữ nguyên, chỉ FIX-02 planning được stage.
+
+## Flexible contracts — 10/11/2026
+
+Owner giao implementation tiếp theo trên baseline `378dbff`, cùng FIX-02.
+**REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.** Không thay M6 authority,
+approved formulas, canonical facts, OCR corrections, source policy hoặc Ledger cũ.
+
+### Root cause, restrictions và behavior
+
+- Q21 revision dùng fact ID với explanation/interpretation/earnings_quality/formula.
+  Binding cũ chỉ chuẩn hóa target null rồi áp formula gate lên fact ID. Binding mới
+  nhận diện fact interpretation từ topic và canonical premises, chuẩn hóa effective
+  target thành fact/value. Raw provider output giữ nguyên; transformations có trace.
+  Metric/formula explanation thực sự vẫn cần approved formula và calculation proof.
+- Revision giữ original goals và identity metadata; chỉ bổ sung metadata suy ra
+  duy nhất. Chặn đổi company/year/scope/period/snapshot origin và thêm công thức
+  không được yêu cầu. Duplicate dependencies được khử trùng; unknown refs/cycle chặn.
+- Một answer target không bind được không hủy các goals độc lập hợp lệ; goal chưa
+  giải quyết vẫn nằm trong inventory, không tạo operation/công thức mới. Không còn
+  independent usable goal thì Planner vẫn trả lỗi có kiểu.
+- M7 giữ required premises, period và native ACCEPT. Ưu tiên typed purpose
+  earnings_quality_context trong Logic Critic đã được kiểm chứng; legacy proof có
+  thể khớp quan hệ PAT/CFO diễn đạt trực tiếp. Không bắt đúng cụm “chất lượng lợi
+  nhuận”. Generic inventory, CFO sign và limitation không thỏa relational goal.
+- Gộp relational requirements tương đương theo topic/premises/period; giữ goals
+  khác kỳ/premises và hai fact values độc lập. Formula/operand explanations vẫn
+  lấy metadata từ calculation đã ACCEPT, không phát hành operand claim chưa verified.
+- Specialist payload/provider/analysis envelope lỗi không làm mất independent
+  numeric candidates từ renderer/assigned sources hiện hữu. Mọi candidate vẫn
+  qua M6; payload lỗi không trở thành claim; processing failure giữ trace riêng.
+- Digest cap24 không xóa toàn bộ evidence: bounded40 theo 32 indicators+8 metrics.
+  QA requirement envelope40→128 chứa model/lexical goals và supporting explanations.
+  Request/call/revision budgets, capability gates và native fail-closed giữ nguyên.
+- Prose bỏ PLANNER_TASK/annotations, diễn đạt caveats thay raw codes. Structured
+  response/proof giữ caveats gốc; processing failure có thông báo riêng.
+
+### Compatibility matrix
+
+| Boundary | Invariant giữ lại | Recovery/kết quả |
+| --- | --- | --- |
+| Question → Proposal | Không đoán company/period | Typed user goals tách operands |
+| Proposal → Effective | Canonical IDs/approved formulas, không tự verified | Chuẩn hóa interpretation/aspect/duplicate refs; raw+trace |
+| Effective → EvidencePlan | Refs resolve, DAG không cycle, exact snapshot | Independent goals còn thực thi dù một target lỗi |
+| Plan → Supervisor/Tools | Typed tools, source quality | Exact canonical SourceFacts không cần EF-EG edges |
+| Supervisor → Router | Capability/identity/reference gates | Assigned facts/citations đủ premises |
+| Router → Specialists | Chỉ assigned sources, prior claims không là nguồn | Bounded digest không xóa tất cả; dispatch replay PASS |
+| Specialists → VerificationInput | Numeric/source/period binding | Analysis envelope lỗi được cô lập; numeric candidates giữ lại |
+| VerificationInput → M6 | Numeric/formula/citation/quality/context gates | Không đổi native policy; malformed Critic không tạo ACCEPT |
+| Native ACCEPT → Ledger | Exact proof replay, không nâng INVESTIGATE | 10 historical entries replay; Ledger bytes giữ nguyên |
+| Ledger → M7 | ACCEPT+scope/period/premises/protected slots | Typed purpose/relational matching; semantic dedup |
+| Coverage → Revision | Bounded progress/calls, original goals | Earlier ACCEPTs giữ lại nếu revision lỗi |
+
+### Evidence retrieval và giới hạn
+
+Financial path hiện hữu dùng exact canonical SourceFacts và get_evidence_sources
+trực tiếp; graphless control vẫn trả đúng fact/citations/source review. Document/mixed
+path dùng BM25 trên approved composition và exact references; document Planner lỗi
+có exact-source fallback. Không vector DB/OCR lại/chọn kỳ-snapshot khác. BM25 text
+không tự thành canonical numeric observation; thiếu canonical binding là capability
+limitation thực sự. Source-quality/conflict gates giữ nguyên; uncertainty không được
+nâng thành số verified. Feedback phân biệt NOT_RETRIEVED/RETRIEVED_NOT_USED/
+VALIDATION_BLOCKED/MIXED và dừng khi retrieval không tiến triển.
+
+### Offline evidence và validation
+
+Artifacts ignored: `artifacts/evidence/FIX-02/flexible-contracts/`.
+Harness: `scripts/replay_flexible_contracts.py`.
+
+- Tests trước sửa:5FAIL/3PASS, tái hiện normalization/dedup/keyword matching.
+  Exact captured revision baseline cũng FAIL answer_target_outside_plan_formulas.
+- Sau sửa, chính Q21 revision raw unchanged: Planner planned, Supervisor completed,
+  cash-flow Specialist generated bằng deterministic dispatch, formula_ids rỗng.
+  Bốn saved Planner responses Q21/Q11/F08 của9a356bf cũng materialize/dispatch đúng.
+  Đây là compatibility smoke, không giả raw Specialist/Critics/Judge round1 chưa có.
+- 4Q21+6Q11/Q21/F08 proofs replay hợp lệ, Ledger bytes unchanged. Chỉ dùng ACCEPTs
+  cũ: **PARTIAL3/4** sau gộp goals tương đương, vẫn thiếu relational analysis thật;
+  không đổi nhãn answered. 414protected inputs/reference unchanged,0provider calls.
+- Local165earlier/81final pipeline-adaptive-flexible/13preservation tests PASS;
+  các nhóm overlap, không cộng số. Failed-revision preservation là contract test
+  dùng mock runtime/proof fixture, không phải live M6 acceptance.
+- Nhóm M7/M6 mở rộng232PASS/2FAIL: assertion đòi raw caveat code trong prose đã cập
+  nhật theo output contract, vẫn kiểm tra structured caveats; targeted rerun PASS.
+  Failure còn lại tại test_firewall_rechecks_original_conjunct_when_only_one_topic_is_verified:
+  fixture gọi put trên SelectedRepositories read-only; tái hiện riêng cũng FAIL
+  trên baseline378dbff. Không sửa ngoài scope hoặc gọi toàn nhóm PASS.
+- Negative controls giữ unknown items/formulas, wrong identity/period/citations,
+  causal/numeric limitation bypass, invalid DAG và Judge không vượt native blockers.
+  Ruff/planning/diff PASS local trước freeze.
+
+Implementation SHA/live/CI được ghi tại checkpoint sau freeze.
+Next action: đúng một Q21 live trên implementation commit đã đóng băng.

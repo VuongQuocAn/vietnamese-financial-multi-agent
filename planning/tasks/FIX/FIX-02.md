@@ -222,3 +222,16 @@ CI42738238199SUCCESS trên b0b4a0d85363e0dc194b7b43f640ba3e0d3495bc:
 95Python/9Web,Ruff/planning/typecheck/buildPASS,fullregressionSKIPPED.
 Checkpoint chỉ YAMLindent/docs/planning;source/tests giống live0b6c8d7 từng byte.
 Không gán CI cho liveSHA hoặc gọi Q21PASS. Docs cuối không sửa runtime/workflow.
+
+### Flexible contracts được giao — 10/11/2026
+
+Owner giao tiếp cùng FIX-02: semantic target normalization/raw-effective trace,
+independent partial goals, relational M7 matching/dedup, Specialist failure
+isolation và compatibility review. Giữ native M6/source/period/formula gates.
+Exact Q21 revision baselineFAIL→planned/materialized/dispatch;5captured Planner
+responses replay,10historical proofs unchanged,414inputs nguyên.
+165earlier/81final/13preservation targetedPASS (overlap);một unrelated fixture
+failure được xác nhận có trên baseline. [Report](../../../docs/fix-02-adaptive-llm-agents.md#flexible-contracts--10112026).
+Implementation chưa commit tại offline checkpoint; live sau commit/freeze.
+Status REVIEW — WAITING FOR TECH LEAD ACCEPTANCE.
+Next action: đúng một Q21 live trên implementation commit đã đóng băng.

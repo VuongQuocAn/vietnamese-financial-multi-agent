@@ -328,7 +328,10 @@ def test_critic_failure_categories_keep_strict_validation(control, expected):
     )
 
 
-def test_substantive_revision_reaches_native_complete_without_mutating_proof(monkeypatch):
+@pytest.mark.parametrize("failed_revision", [False, True])
+def test_substantive_revision_reaches_native_complete_without_mutating_proof(
+    monkeypatch, failed_revision
+):
     from types import SimpleNamespace as NS
 
     import vietnamese_financial_multi_agent.agents.adaptive_controller as module
@@ -372,10 +375,12 @@ def test_substantive_revision_reaches_native_complete_without_mutating_proof(mon
             )
         )
     m5 = Mock()
+    if failed_revision:
+        outputs[1].status = "failed"
     m5.run.side_effect = outputs
     monkeypatch.setattr(module, "to_verification_input", lambda _: None)
     runtime = Mock(provider_metadata=[], stage_latency_ms={})
-    runtime.verify.side_effect = [[], [history]]
+    runtime.verify.side_effect = [[history] if failed_revision else [], [history]]
     monkeypatch.setattr(module, "VerificationRuntime", lambda *a, **kw: runtime)
     judge = Mock(latency_ms=0)
     judge.assess.side_effect = [
@@ -396,8 +401,14 @@ def test_substantive_revision_reaches_native_complete_without_mutating_proof(mon
     monkeypatch.setattr(module, "AdaptiveJudge", lambda *a: judge)
     controller = module.AdaptiveFinancialController(m5, None, NS(exhausted=False), None)
     _, histories = controller.run("Chỉ tiêu đã yêu cầu TEST 2030?", context)
-    assert len(controller.rounds) == 2 and controller.rounds[-1]["judge"]["coverage"]["complete"]
-    assert controller.rounds[-1]["stop_reason"] == "PASS"
+    assert len(controller.rounds) == 2
+    if failed_revision:
+        assert controller.rounds[-1]["judge"] is None
+        assert controller.rounds[-1]["stop_reason"] == "execution_unavailable"
+        assert runtime.verify.call_count == 1
+    else:
+        assert controller.rounds[-1]["judge"]["coverage"]["complete"]
+        assert controller.rounds[-1]["stop_reason"] == "PASS"
     assert m5.run.call_args_list[1].kwargs["context"].feedback["issues"]
     assert all(call.kwargs == {"allow_revision": False} for call in runtime.verify.call_args_list)
     assert histories == [history] and history.model_dump_json() == original

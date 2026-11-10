@@ -2,6 +2,7 @@
 
 import json
 import re
+from copy import deepcopy
 from datetime import date
 from time import perf_counter
 from uuid import uuid4
@@ -534,7 +535,27 @@ class EvidenceAwareQueryPlanner:
             result.raw_proposal = payload
             result.trace.append(PlannerTrace(stage=stage, outcome=context.mode))
             stage = "proposal_schema"
-            proposal = PlannerProposal.model_validate(payload)
+            normalized = deepcopy(payload)
+            if isinstance(normalized, dict):
+                for collection, field in (
+                    ("operations", "dependencies"),
+                    ("assignments", "depends_on"),
+                ):
+                    entries = normalized.get(collection, [])
+                    for item in entries if isinstance(entries, list) else []:
+                        if isinstance(item, dict) and isinstance(item.get(field), list):
+                            references = item[field]
+                            if all(isinstance(ref, str) for ref in references):
+                                item[field] = list(dict.fromkeys(references))
+                                if item[field] != references:
+                                    result.trace.append(
+                                        PlannerTrace(
+                                            stage=stage,
+                                            outcome="duplicate_dependencies_removed",
+                                            reasons=[collection, field],
+                                        )
+                                    )
+            proposal = PlannerProposal.model_validate(normalized)
             result.proposal = proposal
             result.trace.append(PlannerTrace(stage=stage, outcome="validated"))
             stage = "semantic_policy"
@@ -545,13 +566,73 @@ class EvidenceAwareQueryPlanner:
             else:
                 proposal = proposal.model_copy(deep=True)
             result.effective_proposal = proposal
+            if context.previous_proposal:
+                previous = context.previous_proposal
+                permitted_formulas = set(previous.formula_ids) | set(
+                    self._deterministic(question)["formula_ids"]
+                )
+                if set(proposal.formula_ids) - permitted_formulas:
+                    raise ValueError("revision_adds_unrequested_formula")
+                for field in (
+                    "company_alias",
+                    "reporting_years",
+                    "reporting_scope",
+                    "period",
+                    "snapshot_origin",
+                ):
+                    before, after = getattr(previous, field), getattr(proposal, field)
+                    if before and after and before != after:
+                        raise ValueError("revision_context_changed:" + field)
+                    if before and not after:
+                        setattr(proposal, field, before)
+                        result.trace.append(
+                            PlannerTrace(
+                                stage="semantic_policy",
+                                outcome="revision_context_restored",
+                                reasons=[field],
+                            )
+                        )
+                # Keep original obligations even if the revised execution only
+                # addresses the affected goal. M7 can reuse earlier ACCEPTs.
+                for target in previous.user_requested_targets:
+                    if target not in proposal.user_requested_targets:
+                        proposal.user_requested_targets.append(target.model_copy(deep=True))
+                        result.trace.append(
+                            PlannerTrace(
+                                stage="semantic_policy",
+                                outcome="revision_goal_preserved",
+                                reasons=[target.model_dump_json()],
+                            )
+                        )
             # Legacy/saved proposals remain usable via question-only goals. Never
             # infer user obligations from the number or kind of executed tools.
-            from ..outputs.qa_composer import planned_requirements
+            from ..outputs.qa_composer import planned_requirements, understand_requirements
             from .planner_contracts import UserRequestedTarget
 
             operations = {operation.operation_id: operation for operation in proposal.operations}
             for target in proposal.user_requested_targets:
+                if target.interpretation and not target.required_indicators:
+                    original = (
+                        context.previous_proposal.user_requested_targets
+                        if context.previous_proposal
+                        else understand_requirements(question)
+                    )
+                    candidates = {
+                        tuple(sorted(goal.required_indicators))
+                        for goal in original
+                        if goal.interpretation
+                        and goal.interpretation_topic == target.interpretation_topic
+                        and goal.required_indicators
+                    }
+                    if len(candidates) == 1:
+                        target.required_indicators = list(next(iter(candidates)))
+                        result.trace.append(
+                            PlannerTrace(
+                                stage="semantic_policy",
+                                outcome="original_goal_premises_restored",
+                                reasons=target.required_indicators,
+                            )
+                        )
                 operation = operations.get(target.target_id)
                 if (
                     operation
@@ -576,15 +657,17 @@ class EvidenceAwareQueryPlanner:
                         )
                     )
                 if (
-                    target.kind == "explanation"
-                    and target.interpretation
-                    and target.target_id is None
+                    target.interpretation
                     and target.required_indicators
+                    and (target.target_id is None or target.target_id in target.required_indicators)
+                    and target.interpretation_topic in {"earnings_quality", "metric_meaning"}
+                    and all(item in ITEM_RULES for item in target.required_indicators)
                 ):
                     # A relation over explicit fact premises is an interpretation,
                     # not a request for an unapproved calculated formula. Anchor
                     # selection to its first *declared* premise and require all.
                     target.kind, target.target_id = "fact", target.required_indicators[0]
+                    target.aspect = "value"
                     result.trace.append(
                         PlannerTrace(stage="proposal_schema", outcome="relational_goal_bound")
                     )
@@ -597,16 +680,32 @@ class EvidenceAwareQueryPlanner:
                     for r in requirements
                     if r.kind in {"fact", "metric", "explanation", "limitations"}
                 ]
+            unresolved, usable = [], 0
             for target in proposal.user_requested_targets:
+                reason = None
                 if target.kind == "fact" and target.target_id not in proposal.required_indicators:
-                    raise ValueError("answer_target_outside_plan_indicators")
+                    reason = "answer_target_outside_plan_indicators"
                 if (
                     target.kind in {"metric", "explanation"}
                     and target.target_id not in proposal.formula_ids
                 ):
-                    raise ValueError("answer_target_outside_plan_formulas")
+                    reason = "answer_target_outside_plan_formulas"
                 if set(target.required_indicators) - set(proposal.required_indicators):
-                    raise ValueError("answer_target_premises_outside_plan")
+                    reason = "answer_target_premises_outside_plan"
+                if reason:
+                    unresolved.append(reason)
+                    result.trace.append(
+                        PlannerTrace(
+                            stage="semantic_policy",
+                            outcome="unresolved_answer_goal",
+                            reasons=[reason, target.model_dump_json()],
+                        )
+                    )
+                elif target.kind != "limitations":
+                    usable += 1
+            if unresolved and not usable:
+                raise ValueError(unresolved[0])
+            result.caveats.extend(sorted(set(unresolved)))
             result.query = QuerySpecification(
                 original_question=question,
                 intent=proposal.intent,

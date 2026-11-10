@@ -74,6 +74,7 @@ jobs:
           tests/unit/test_fix02_remediation.py
           tests/unit/test_q21_negation.py
           tests/unit/test_planner_dependencies.py
+          tests/unit/test_flexible_goals.py
           tests/unit/test_financial_qa_pipeline.py::test_fresh_verification_release_then_cache_without_provider
           tests/unit/test_llm_gateway.py::test_routing_and_explicit_model_configuration_without_network
       - name: Full unit regression (manual)

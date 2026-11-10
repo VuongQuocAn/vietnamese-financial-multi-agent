@@ -253,7 +253,10 @@ def test_duplicate_verified_assertions_preserve_all_caveats_and_identity(qa):
     assert response.status == "answered" and response.validation_result.valid
     assert len(response.used_verified_claim_ids) == 2
     assert len(response.grounded_segments) == 1
-    assert extra in response.grounded_segments[0].caveats and extra in response.answer_vi
+    assert extra in response.grounded_segments[0].caveats
+    assert extra in response.caveats
+    assert "Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh." in response.answer_vi
+    assert extra not in response.answer_vi
 
 
 def test_multi_intent_different_periods_requires_clarification(qa):

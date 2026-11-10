@@ -504,10 +504,49 @@ def planned_requirements(question, proposal):
             )
     if not requirements:
         return understand_requirements(question)
-    return requirements
+    # A relational goal's fact anchor is a representation choice. Equivalent
+    # anchors do not create independent obligations; distinct premises/periods do.
+    unique, aliases = {}, {}
+    relation_periods = {
+        r.period for r in requirements if r.interpretation_topic == "earnings_quality" and r.period
+    }
+    for requirement in requirements:
+        if (
+            requirement.interpretation_topic == "earnings_quality"
+            and requirement.period is None
+            and len(relation_periods) == 1
+        ):
+            requirement.period = next(iter(relation_periods))
+        key = (
+            (
+                "relation",
+                requirement.interpretation_topic,
+                requirement.period,
+                tuple(sorted(requirement.required_indicators)),
+            )
+            if requirement.interpretation_topic == "earnings_quality" and requirement.interpretation
+            else (
+                requirement.kind,
+                requirement.target_id,
+                requirement.period,
+                requirement.interpretation,
+                requirement.interpretation_topic,
+                requirement.aspect,
+                tuple(sorted(requirement.required_indicators)),
+            )
+        )
+        if key in unique:
+            aliases[requirement.requirement_id] = unique[key].requirement_id
+        else:
+            unique[key] = requirement
+    for requirement in unique.values():
+        requirement.depends_on = list(
+            dict.fromkeys(aliases.get(key, key) for key in requirement.depends_on)
+        )
+    return list(unique.values())
 
 
-def matches_financial_target(claim, requirement):
+def matches_financial_target(claim, requirement, logic=None):
     """Shared coverage predicate for native M6 records and admitted M7 claims."""
     if requirement.period and claim.period != requirement.period:
         return False
@@ -530,11 +569,28 @@ def matches_financial_target(claim, requirement):
     if requirement.interpretation:
         if requirement.interpretation_topic == "unbounded":
             return False
-        if (
-            requirement.interpretation_topic == "earnings_quality"
-            and "chat luong loi nhuan" not in normalize(claim.content)
-        ):
-            return False
+        if requirement.interpretation_topic == "earnings_quality":
+            from ..verification.logic_rules import assertion_category
+
+            if assertion_category(claim.content) == "EVIDENCE_LIMITATION":
+                return False
+            # Prefer the already verified Critic purpose. Legacy proofs can also
+            # express the relation directly without a prescribed topic sentence.
+            typed = any(
+                finding.status == "consistent"
+                and "earnings_quality_context" in finding.required_premises
+                for finding in getattr(logic, "assertions", [])
+            )
+            text = normalize(claim.content)
+            predicate = r"(?:vuot|cao hon|thap hon|ho tro|bao dam|chuyen hoa|chuyen doi|tuong xung|chenh lech)"
+            relation = re.search(
+                rf"\b(dong tien|cfo)\b[^.;]*\b{predicate}\b[^.;]*\b(loi nhuan|pat)\b", text
+            ) or re.search(
+                rf"\b(loi nhuan|pat)\b[^.;]*\b{predicate}\b[^.;]*\b(dong tien|cfo|bang tien)\b",
+                text,
+            )
+            if not (typed or relation):
+                return False
     if requirement.kind == "fact":
         return any(
             e.kind == "fact" and e.canonical_item_id == requirement.target_id
@@ -562,14 +618,14 @@ def _matches_target(entry, requirement):
     claim = entry.accepted_claim
     if entry.verification_status != "verified" or entry.decision.decision != "ACCEPT":
         return False
-    if requirement.kind == "explanation":
+    if requirement.kind == "explanation" and not requirement.interpretation:
         return bool(
             entry.identity.kind == "approved_metric"
             and claim.calculation
             and claim.calculation.formula_id == requirement.target_id
             and metric_explanation(entry, [requirement.aspect])
         )
-    return matches_financial_target(claim, requirement)
+    return matches_financial_target(claim, requirement, getattr(entry.decision, "logic", None))
 
 
 def _answer_text(response):
@@ -588,10 +644,31 @@ def _answer_text(response):
             + "."
         )
     if response.caveats:
-        parts.append("Lưu ý: " + "; ".join(response.caveats))
+        notes = _public_notes(response.caveats)
+        if notes:
+            parts.append("Lưu ý: " + "; ".join(notes))
     if response.limitations:
-        parts.append("Giới hạn: " + "; ".join(response.limitations))
+        notes = _public_notes(response.limitations)
+        if notes:
+            parts.append("Giới hạn: " + "; ".join(notes))
     return "\n".join(parts)
+
+
+def _public_notes(notes):
+    """Keep diagnostic codes in the wire trace, expose bounded source caveats."""
+    result = []
+    for note in notes:
+        if note.startswith(("PLANNER_TASK:", "specialist_annotation:")):
+            continue
+        if re.search(r"\b[a-zA-Z]+_[a-zA-Z_]+\b", note):
+            if any(
+                word in note.lower() for word in ("failed", "failure", "error", "invalid_proposal")
+            ):
+                note = "Một bước xử lý chưa hoàn tất; chỉ trình bày phần đã xác minh."
+            else:
+                note = "Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh."
+        result.append(note)
+    return _unique(result)
 
 
 def _requirement_label(requirement):
@@ -613,11 +690,11 @@ def _requirement_label(requirement):
     elif requirement.kind == "explanation":
         name = ("công thức của " if requirement.aspect == "formula" else "toán hạng của ") + name
     reason = {
-        "no_verified_claim": "chưa có claim ACCEPT",
-        "no_supported_interpretation": "chưa có nhận định ACCEPT phù hợp",
-        "insufficient_admitted_calculation_metadata": "metadata ACCEPT chưa đủ để giải thích",
+        "no_verified_claim": "chưa có nội dung đã xác minh",
+        "no_supported_interpretation": "chưa có nhận định được xác minh phù hợp",
+        "insufficient_admitted_calculation_metadata": "bằng chứng tính toán chưa đủ để giải thích",
     }.get(requirement.reason, "chưa đủ căn cứ hoặc cần làm rõ")
-    return f"{requirement.requirement_id} ({name}: {reason})"
+    return f"{name} ({reason})"
 
 
 def _ledger_limit(requirements):

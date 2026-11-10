@@ -366,9 +366,11 @@ def select_evidence(
             for e in result.supporting_evidence
             if (e.period[:4] if balance_sheet else e.period) in years
         ]
-    if len(result.supporting_evidence) > 24:
+    # Planner permits 32 indicators and 8 approved metrics. A larger digest must
+    # not discard every independently usable source.
+    if len(result.supporting_evidence) > 40:
         result.missing_evidence.append("evidence_digest_limit_exceeded")
-        result.supporting_evidence = []
+        result.supporting_evidence = result.supporting_evidence[:40]
     for index, evidence in enumerate(result.supporting_evidence, 1):
         evidence.evidence_id = f"E{index:03d}"
 
@@ -501,24 +503,42 @@ def generate_candidates(
         if isinstance(response.output, JSONOutput):
             result.raw_output = response.output.payload
         if response.status != "success" or not isinstance(result.raw_output, dict):
-            result.status = "failed"
             result.trace.append(
                 SpecialistTrace(
-                    stage="generation", outcome="failed", reasons=["gateway_response_failed"]
+                    stage="generation", outcome="excluded", reasons=["gateway_response_failed"]
                 )
             )
-            return result
-        payload = result.raw_output
+            payload = {
+                "claims": _numeric_proposals(result.supporting_evidence),
+                "missing_information": [],
+            }
+        else:
+            payload = result.raw_output
     if (
         set(payload)
         not in ({"claims", "missing_information"}, {"claims", "missing_information", "analyses"})
         or not isinstance(payload["claims"], list)
         or len(payload["claims"]) > 32
     ):
-        raise ValueError("invalid_proposal_envelope")
+        result.trace.append(
+            SpecialistTrace(
+                stage="generation", outcome="excluded", reasons=["invalid_proposal_envelope"]
+            )
+        )
+        # Only local, selected source facts are rendered; malformed model text
+        # supplies no claim. These candidates still require ordinary native M6.
+        payload = {
+            "claims": _numeric_proposals(result.supporting_evidence),
+            "missing_information": [],
+        }
     missing = payload["missing_information"]
     if not isinstance(missing, list) or any(not isinstance(m, str) for m in missing):
-        raise ValueError("invalid_missing_information")
+        result.trace.append(
+            SpecialistTrace(
+                stage="generation", outcome="excluded", reasons=["invalid_missing_information"]
+            )
+        )
+        missing = []
     if not deterministic and not payload["claims"] and not missing and result.supporting_evidence:
         # An unexplained empty model response supplies no rejection reason. Reuse
         # the existing numeric pathway only after source/metric selection gates;
@@ -536,7 +556,12 @@ def generate_candidates(
     evidence_by_id = {e.evidence_id: e for e in result.supporting_evidence}
     analyses = payload.get("analyses", [])
     if not isinstance(analyses, list) or len(analyses) > 8:
-        raise ValueError("invalid_analysis_envelope")
+        result.trace.append(
+            SpecialistTrace(
+                stage="generation", outcome="excluded", reasons=["invalid_analysis_envelope"]
+            )
+        )
+        analyses = []
     for raw in analyses:
         try:
             analysis = AnalysisProposal.model_validate(raw)
@@ -652,6 +677,18 @@ def generate_candidates(
                 )
             )
     rejected = any(t.outcome == "excluded" for t in result.trace)
+    if any(
+        reason
+        in {
+            "gateway_response_failed",
+            "invalid_proposal_envelope",
+            "invalid_missing_information",
+            "invalid_analysis_envelope",
+        }
+        for trace in result.trace
+        for reason in trace.reasons
+    ):
+        result.limitations.append("specialist_processing_failure")
     result.status = (
         "partial"
         if result.candidates

@@ -27,7 +27,9 @@ class VietnameseQARequest(FinancialModel):
     reporting_scope: Literal["separate", "consolidated"] | None = None
     # Request obligations materialized from a validated adaptive Planner proposal.
     # These select admitted claims only; never carry values or approval authority.
-    answer_requirements: list["QARequirement"] = Field(default_factory=list, max_length=40)
+    # 32 model goals + explicit question goals and two supporting explanations
+    # per metric. Keep the downstream envelope compatible with bounded Planner.
+    answer_requirements: list["QARequirement"] = Field(default_factory=list, max_length=128)
     adaptive_fusion_plan: FusionPlan | None = None
     fusion_answer_requirements: dict[str, list["QARequirement"]] = Field(default_factory=dict)
     allow_gateway: bool = False
