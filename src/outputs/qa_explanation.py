@@ -104,7 +104,7 @@ def explanation_text(explanation):
         for row in explanation.operands:
             o = row.operand
             parts.append(
-                f"- {row.label} ({o.role}): {o.value} {o.unit}; "
+                f"- {row.label}: {o.value} {o.unit}; "
                 f"hệ số đơn vị {o.context.scale}; kỳ {o.context.period}."
             )
     return "\n".join(parts)

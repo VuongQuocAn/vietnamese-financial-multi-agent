@@ -18,6 +18,56 @@ from .test_llm_gateway import request
 from .test_m4_execution import fixture
 
 
+def test_admitted_reasoned_conclusion_does_not_need_redundant_purpose_label():
+    from types import SimpleNamespace as NS
+
+    from vietnamese_financial_multi_agent.outputs.qa_composer import _matches_target
+    from vietnamese_financial_multi_agent.outputs.qa_contracts import QARequirement
+
+    from .test_multihop_reasoning import reasoning_case
+
+    _, batch = reasoning_case()
+    claim = batch.claims[0]
+    claim.reasoning.claim_type = "reasoned_conclusion"
+    goal = QARequirement(
+        requirement_id="analysis",
+        text="Phân tích quan hệ",
+        kind="fact",
+        target_id=claim.supporting_evidence[0].canonical_item_id,
+        interpretation=True,
+        interpretation_topic="earnings_quality",
+        required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
+    )
+    entry = NS(
+        identity=NS(period=claim.period, kind=claim.kind),
+        accepted_claim=claim,
+        verification_status="verified",
+        decision=NS(
+            decision="ACCEPT",
+            logic=NS(assertions=[NS(status="consistent", required_premises=["financial_context"])]),
+        ),
+    )
+    assert _matches_target(entry, goal)
+    entry.decision.decision = "INVESTIGATE"
+    assert not _matches_target(entry, goal)
+
+
+def test_explicit_user_goal_cannot_be_marked_optional():
+    from vietnamese_financial_multi_agent.agents.planner_contracts import (
+        PlannerProposal,
+        UserRequestedTarget,
+    )
+    from vietnamese_financial_multi_agent.outputs.qa_composer import planned_requirements
+
+    proposal = PlannerProposal(
+        intent="direct_fact",
+        user_requested_targets=[
+            UserRequestedTarget(kind="fact", target_id="b02.net_revenue", required=False)
+        ],
+    )
+    assert planned_requirements("Doanh thu thuần?", proposal)[0].required
+
+
 def test_reasoning_dependencies_can_reference_validated_execution_operations():
     from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerProposal
 

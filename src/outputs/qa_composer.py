@@ -471,6 +471,14 @@ def planned_requirements(question, proposal):
     for explicit in understand_requirements(question):
         if explicit.kind not in {"fact", "metric", "explanation", "limitations"}:
             continue
+        for existing in requirements:
+            if (existing.kind, existing.target_id, existing.interpretation, existing.aspect) == (
+                explicit.kind,
+                explicit.target_id,
+                explicit.interpretation,
+                explicit.aspect,
+            ):
+                existing.required = True
         if not any(
             (r.kind, r.target_id, r.interpretation, r.aspect)
             == (explicit.kind, explicit.target_id, explicit.interpretation, explicit.aspect)
@@ -644,6 +652,13 @@ def matches_financial_target(claim, requirement, logic=None):
         if requirement.interpretation_topic == "unbounded":
             return False
         if requirement.interpretation_topic == "earnings_quality":
+            if proof:
+                # M6 already assessed the reasoned conclusion and its declared
+                # premises. A redundant purpose label is not a second verdict.
+                return bool(
+                    proof.claim_type == "reasoned_conclusion"
+                    and any(f.status == "consistent" for f in getattr(logic, "assertions", []))
+                )
             from ..verification.logic_rules import assertion_category
 
             if assertion_category(claim.content) == "EVIDENCE_LIMITATION":
@@ -655,8 +670,6 @@ def matches_financial_target(claim, requirement, logic=None):
                 and "earnings_quality_context" in finding.required_premises
                 for finding in getattr(logic, "assertions", [])
             )
-            if proof:
-                return bool(typed)
             text = normalize(claim.content)
             predicate = r"(?:vuot|cao hon|thap hon|ho tro|bao dam|chuyen hoa|chuyen doi|tuong xung|chenh lech)"
             relation = re.search(
