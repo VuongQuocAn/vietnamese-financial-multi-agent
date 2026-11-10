@@ -127,5 +127,16 @@ limitation routing, native coverage dùng rules M7; strict JSON failure isolatio
 request snapshot/lineage/schema cache không bỏ source/proof/mutation gates.
 Giữ pending GEN-01a/Web/CHAT, raw/reference/approved data và historical Ledger.
 Kết quả/SHA/CI ở [báo cáo](../../../docs/fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026).
-Status REVIEW; không tự DONE. Next action: hoàn tất validation đã giao và bàn giao
-Tech Lead nghiệm thu implementation cùng limitations.
+Implementation cuối `9a356bfaf53f0003b5f19edb031de9a3da4f6f39` đã push main;
+[CI42729994715](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42729994715)
+SUCCESS đúng SHA63Python/9Web,lint/format/planning/typecheck/build PASS;full regression
+SKIPPED. Local63CI-smoke/69focused PASS (overlap),4historical financial entries replay
+unchanged. Paired Q11 median40,001→9,947s (−75,1%),3cold/3warm mỗi version,
+164runtime files benchmark khớp commit;12calculations/provenance equivalent.
+Một lượt live Q11/Q21/F08 trên6748da7:3Planner calls/19639tokens,provider success
+nhưng integration FAIL; correction sau đó validated bằng chính saved responses,
+không live lần hai. Q11offline completed;Q21/F08 planned/dispatch đúng nhưng thiếu
+archived Specialist responses nên fail closed. Chưa final live/ successful live
+revision;414inputs/reference và pending GEN/Web/CHAT giữ nguyên;9issues OPEN.
+Status REVIEW, chưa đề xuất DONE. Next action: Tech Lead review9a356bf và quyết định
+nghiệm thu/phạm vi kiểm chứng tiếp theo theo limitations.

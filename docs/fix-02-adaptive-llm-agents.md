@@ -322,7 +322,7 @@ không thay thế các gaps live phía trên. Giữ FIX-02 REVIEW và tất cả
 Owner/Tech Lead giao implementation sau [diagnostic](fix-02-root-cause-diagnostic.md),
 baseline runtime321f09e, HEAD bắt đầu2a3d82b. Giữ FIX-02 REVIEW, không Web/M8/OCR
 hoặc thay financial formulas. Diagnostic09/11 được giữ và đưa vào checkpoint này.
-Implementation SHA, số đo cuối/live/CI được bổ sung sau khi chốt source bên dưới.
+Implementation cuối9a356bf; số đo/live/CI đúng từng source được ghi bên dưới.
 
 ### Correctness và module boundaries
 
@@ -425,8 +425,8 @@ Không thay frozen questions/references/answers hoặc accepted data.
 
 Python3.12.0/Windows/cùngvenv, saved Planner response Q11 nguyên bản, cùng accepted
 inputs/snapshot và sáu fresh ledgers mỗi version; **0network calls**. Before là
-archived321f09e; after là archive HEAD+chỉ source delta FIX-02, loại pending GEN/Web,
-ghim `candidate/hashes.json` để đối chiếu implementation commit. Mỗi version có
+archived321f09e; after là archive source cuối9a356bf, loại pending GEN/Web,
+ghim `candidate-corrected/hashes.json` và kiểm tra164files khớp commit. Mỗi version có
 ba fresh-pipeline trials, mỗi trial cold rồi warm cùng pipeline; mỗi request vẫn
 force_refresh và Ledger mới. Cold là catalog/tool/request cache mới; không flush
 OS cache, process-global schema cache có thể warm giữa trials. Không heavy profiler
@@ -434,27 +434,28 @@ hoặc tuyên bố đây là cold boot toàn OS. Catalog bootstrap nằm ngoài 
 
 | Điều kiện | Before median s | After median s | Giảm wall |
 | --- | ---: | ---: | ---: |
-| Cold,3mẫu | 39,729 | 9,782 | 75,4% |
-| Warm,3mẫu | 40,273 | 10,464 | 74,0% |
-| Gộp6mẫu | 40,001 | 9,910 | 75,2% |
+| Cold,3mẫu | 39,729 | 9,865 | 75,2% |
+| Warm,3mẫu | 40,273 | 10,272 | 74,5% |
+| Gộp6mẫu | 40,001 | 9,947 | 75,1% |
 
-Range before39,302–41,782s; after9,757–10,570s. So sánh mọi12calculation candidates:
+Range before39,302–41,782s; after9,490–10,562s. So sánh mọi12calculation candidates:
 native ACCEPT, Decimal display, formula/version/digest, operands, company/document/
 snapshot/period, references và citations **exactly equivalent**. Source-provenance
-signature hash và measurements tại `performance-summary.json`. Không cần cùng
+signature/measurements tại `performance-summary-corrected.json` và
+`benchmark-{before,after-corrected}/`. Không cần cùng
 verified IDs vì request/source-plan/timing identities khác; không rewrite lịch sử.
 
 | Stage,median6mẫu | Before s | After s | Giảm |
 | --- | ---: | ---: | ---: |
-| Setup/application residual ngoài M5, loại Ledger/M7 | 12,552 | 3,695 | 70,6% |
-| Planner local gồm validation/materialization, child M5 | 1,478 | 0,698 | 52,8% |
-| Financial Tools, child Supervisor/M5 | 4,040 | 0,273 | 93,3% |
-| M6 checks, child M5, chưa gồm constructors/handoff | 2,695 | 0,564 | 79,1% |
-| Ledger lookup/admission/reload ngoài M5 | 1,336 | 1,834 | −37,4% |
-| M7 Composer/citations/Firewall ngoài M5 | 0,492 | 0,525 | −6,7% |
-| M5 inclusive | 25,610 | 3,906 | 84,7% |
-| Total wall | 40,001 | 9,910 | 75,2% |
-| Total process CPU | 38,945 | 9,672 | 75,2% |
+| Setup/application residual ngoài M5, loại Ledger/M7 | 12,552 | 3,799 | 69,7% |
+| Planner local gồm validation/materialization, child M5 | 1,478 | 0,635 | 57,0% |
+| Financial Tools, child Supervisor/M5 | 4,040 | 0,277 | 93,1% |
+| M6 checks, child M5, chưa gồm constructors/handoff | 2,695 | 0,521 | 80,7% |
+| Ledger lookup/admission/reload ngoài M5 | 1,336 | 1,851 | −38,6% |
+| M7 Composer/citations/Firewall ngoài M5 | 0,492 | 0,501 | −1,8% |
+| M5 inclusive | 25,610 | 3,874 | 84,9% |
+| Total wall | 40,001 | 9,947 | 75,1% |
+| Total process CPU | 38,945 | 9,609 | 75,3% |
 
 Các child stages lồng trong M5; **không cộng các medians thành total**. Setup là
 residual gồm construction/context/export chưa tách hết, không giả một before timer
@@ -466,14 +467,12 @@ proof serialization/admission còn overhead; chưa tối ưu tiếp ngoài evide
 Lượt after working-tree sơ bộ được giữ riêng (bốn mẫu, dừng); không dùng nó để
 chứng nhận implementation vì có pending source. Bảng dùng đủ sáu after mẫu từ
 archive riêng. Original100,825s là phép đo ngày09/11 khác tải máy; **không** dùng
-100,825→9,910 làm mức speedup. Đây là benchmark engineering một câu hỏi thật,
+100,825→9,947 làm mức speedup. Đây là benchmark engineering một câu hỏi thật,
 không phải đánh giá chất lượng tài chính toàn PDF hay mọi questions.
 
-58local CI-smoke PASS trên candidate archive; Ruff các files đã sửa, planning
-checker122tasks và diff check PASS. Bốn historical financial entries replay PASS,
-inputs và thay đổi local ngoài task giữ nguyên. Source sẽ được commit/push trước
-khi chạy tối đa một lượt live Q21/Q11/F08; CI/live exact SHA cập nhật ở checkpoint.
-Next action: chạy validation live đã được Owner cho phép và bàn giao REVIEW.
+Checkpoint trước live6748da7 có58local CI-smoke PASS trên candidate archive;
+Ruff các files đã sửa, planning checker122tasks và diff check PASS. Kết quả lượt
+live và correction9a356bf tiếp theo được ghi riêng bên dưới.
 
 ### Lượt live duy nhất và correction offline sau live
 
@@ -492,6 +491,12 @@ imports/runtime/source SHA,414protected inputs và reference nguyên hash.
 | Q11 | verification_blocked; calculator/M6 ACCEPT metric nhưng goal không match | 12,711 | 1 | 6375 |
 | Q21 | internal_error; Planner target ID là operation ID, không được bind | 6,682 | 1 | 6692 |
 | F08 | internal_error; relational explanation target=null bị xem là formula explanation | 6,156 | 1 | 6572 |
+
+| Call / agent,round0 | API input | API output | Thinking/cached | Adapter/transport s |
+| --- | ---: | ---: | --- | ---: |
+| Q11 / Planner | 5403 | 972 | unknown/null | 3,001 |
+| Q21 / Planner | 5424 | 1268 | unknown/null | 3,515 |
+| F08 / Planner | 5524 | 1048 | unknown/null | 2,917 |
 
 Tổng3actual Planner calls/19639API tokens; cả ba provider responses success/STOP,
 không503/timeout/JSON malformed. **Lượt live FAIL vì integration mới**, không phải
@@ -526,5 +531,33 @@ verification_blocked; **không giả lập verdict thành công để báo đã 
 Không chạy live lần hai. Correction sau live chỉ có offline/CI validation; vẫn
 thiếu live acceptance trên implementation cuối và một successful live revision.
 
-Final correction SHA/CI và số đo kiểm tra lại từ source archive riêng được ghi ở
-checkpoint cuối. Giữ REVIEW, chưa đề xuất nghiệm thu/DONE.
+Correction đã commit/push tại
+[`9a356bfaf53f0003b5f19edb031de9a3da4f6f39`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/9a356bfaf53f0003b5f19edb031de9a3da4f6f39).
+Benchmark bên trên đã đo lại đủ sáu mẫu từ source correction164files khớp commit,
+không dùng benchmark6748da7 để chứng nhận source mới.
+
+### Checkpoint bàn giao cuối
+
+[CI42729994715](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42729994715)
+SUCCESS đúng implementation `9a356bfaf53f0003b5f19edb031de9a3da4f6f39`:
+**63Python +9Web PASS**, Ruff lint/format/planning/typecheck/build PASS,
+full regression SKIPPED. Local CI-smoke63PASS trên candidate-corrected archive;
+focused69PASS; các nhóm có overlap, không cộng thành tổng độc lập. Benchmark cuối
+12before/after requests có giá trị/formula/operands/context/references/citations
+tương đương;414protected inputs/reference và pending local ngoài task nguyên.
+
+Issues E2E-02 giữ cả9OPEN, không tự đóng: I006 có correctness/coverage và offline
+loop controls mới nhưng chưa final live answer/revision; I007 có Q11 paired timing
+cải thiện75,1%, không chứng minh mọi câu hỏi đều nhanh. I001/I009 evidence trước
+được giữ, không chạy thêm Q08 hoặc40câu. Legacy coverage/parser và source-quality
+limitations chưa tự biến thành financial accuracy PASS.
+
+**Chặn nghiệm thu còn lại (High):** lượt live duy nhất trên6748da7 không đạt;
+correction9a356bf chưa có live Specialists/Critics/Judge và chưa successful live
+revision. Không yêu cầu thêm quota hoặc chạy lại vượt giới hạn trong phiên này.
+JSON/provider/model variability vẫn là giới hạn; schema/gates không được nới để
+đạt completed. Ledger/proof processing còn~1,851s median trong Q11 benchmark.
+
+Giữ **FIX-02 REVIEW — WAITING FOR TECH LEAD REVIEW**, không đề xuất DONE.
+Next action duy nhất: Tech Lead review9a356bf và quyết định nghiệm thu/phạm vi
+kiểm chứng tiếp theo dựa trên giới hạn live đã ghi.

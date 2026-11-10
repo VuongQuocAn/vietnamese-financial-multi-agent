@@ -262,3 +262,15 @@ replan call để đo compaction; local processing vẫn lớn. F08dependency đ
 nhưng Judge có structured_output_invalid; Q11calculator/M6 ACCEPT nhưng answer
 obligations dư operands làm partial. Q01cuốihttp503. Không đóng issue hoặc gọi
 hai lượt này thành final5/5PASS; xem [báo cáo](fix-02-adaptive-llm-agents.md).
+
+### Remediation tiếp theo — 10/11/2026
+
+Source9a356bf sửa typed goals/operand completeness, negated-ratio routing,
+native/M7 coverage, strict JSON isolation và request catalog/lineage/schema reuse.
+I006 còn OPEN: một lượt live6748da7 lộ goal-binding integration failures; đã sửa
+và replay chính Planner outputs, nhưng chưa final live Specialists/Judge/revision.
+I007 còn OPEN: paired offline Q11,6mẫu/version,median40,001→9,947s (−75,1%);
+calculation/provenance equivalent, không dùng profiler inclusive làm wall speedup.
+CI42729994715 SUCCESS đúng9a356bf63Python/9Web; không coi CI là financial accuracy.
+Cả9issues giữ OPEN chờ Tech Lead; chi tiết/limitations trong phần remediation của
+[báo cáo FIX-02](fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026).

@@ -1,23 +1,28 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-09 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## FIX-02 — Adaptive LLM Multi-Agent & Bounded Judge Feedback Loop
 
-Status: **REVIEW**. Owner yêu cầu hoàn thiện trong cùng task, không chạy lại40câu.
-Implementation `321f09e91cd4e32bcfcb0584d84f70d5c31e13e4` đã push main;
-[CI42606529703](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42606529703)
-SUCCESS đúng SHA31Python/9Web,full regression SKIPPED;61local focused PASS.
-[Spec](tasks/FIX/FIX-02.md), [report](../docs/fix-02-adaptive-llm-agents.md).
-Sửa inventory/assignment/schema isolation, compact replanning và numeric proof links;
-không nới native M6/Ledger gates. Hai lượt5ca được Owner cho phép, không retry.
-Runtime cuối source archive321f09e/imports verified,414inputs/reference unchanged.
-Q21partial85,602s/6calls/25626known tokens;PAT/CFO có sẵn,Judge PASS vòng0,
-chưa chứng minh revision thành công; latency còn cao. F08không dependency error
-nhưng Judge invalid output;Q01http503;Q11calculator/M6 ACCEPT nhưng partial vì
-operand answer obligations;Q08quotation giữ “khó”,PDF16. Chưa có final5/5 đạt.
-Giữ pending GEN-01a/Web/CHAT local và9issues OPEN.
-Next action: Tech Lead review các chặn còn lại trong FIX-02; không tự DONE/Web/M8.
+Status: **REVIEW**; remediation Owner/Tech Lead giao10/11/2026.
+Implementation `9a356bfaf53f0003b5f19edb031de9a3da4f6f39` đã push main;
+[CI42729994715](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42729994715)
+SUCCESS đúng SHA63Python/9Web; lint/format/planning/typecheck/build PASS,
+full regression SKIPPED. [Spec](tasks/FIX/FIX-02.md),
+[report](../docs/fix-02-adaptive-llm-agents.md#correctness--performance-remediation--10112026),
+[diagnostic](../docs/fix-02-root-cause-diagnostic.md).
+Tách user goals/tool dependencies, scope-aware limitation/semantic coverage,
+strict JSON isolation; shared request snapshot/lineage/schema reuse, giữ M6 gates.
+Q11paired offline median40,001→9,947s (−75,1%),3cold/3warm mỗi version;
+12calculations/provenance equivalent,164runtime files khớp source9a356bf.
+Một lượt live trên6748da7:3Planner calls/19639tokens,provider success nhưng
+Q11goal mismatch vàQ21/F08invalid goal bindings. Correction sau đó replay chính
+responses:Q11completed/M6 ACCEPT;Q21/F08planned/dispatch đúng, thiếu archived
+Specialist responses nên fail closed. Không live lần hai; chưa final live answer
+hoặc successful live revision. Local63CI-smoke/69focused PASS (overlap),
+414inputs/reference và pending GEN-01a/Web/CHAT giữ nguyên;9issues OPEN.
+Next action: Tech Lead review9a356bf và quyết định nghiệm thu/phạm vi kiểm chứng
+tiếp theo theo giới hạn live; không tự DONE/Web/M8.
 
 ## E2E-02 — Real PDF Pipeline Evaluation & Issue Discovery
 
