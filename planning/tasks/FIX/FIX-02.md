@@ -217,3 +217,8 @@ CI42737707767FAIL vì workflow indentation (83testsPASS rồi shell exit126),
 checkpoint sửa riêng YAML/docs,không đổi source/tests hoặc gán live sang SHA mới.
 Next action: Tech Lead review partial Q21 và quyết định revision-target blocker;
 FIX-02REVIEW,không tựDONE/Web/M8.
+
+CI42738238199SUCCESS trên b0b4a0d85363e0dc194b7b43f640ba3e0d3495bc:
+95Python/9Web,Ruff/planning/typecheck/buildPASS,fullregressionSKIPPED.
+Checkpoint chỉ YAMLindent/docs/planning;source/tests giống live0b6c8d7 từng byte.
+Không gán CI cho liveSHA hoặc gọi Q21PASS. Docs cuối không sửa runtime/workflow.

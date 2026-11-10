@@ -939,3 +939,12 @@ tests và live runtime giữ nguyên, không live lại để gán kết quả c
 FIX-02 giữ **REVIEW**. Next action duy nhất: Tech Lead review partial Q21 và
 quyết định blocker revision-target binding; không tự DONE, retry, runtime fix,
 benchmark, Q11/F08/E2E-02 rộng, WEB-02 hoặc M8.
+
+[CI42738238199](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42738238199)
+**SUCCESS** trên checkpoint `b0b4a0d85363e0dc194b7b43f640ba3e0d3495bc`:
+95 Python + 9 Web tests PASS, Ruff lint/format/planning/typecheck/build PASS;
+full regression SKIPPED. Checkpoint chỉ sửa indentation YAML và báo cáo/planning;
+`git diff 0b6c8d7 b0b4a0d -- src tests` rỗng. Đây là CI của checkpoint có cùng
+runtime/tests với live SHA, không phải CI SUCCESS trên SHA live 0b6c8d7 và không
+thay kết quả Q21 PARTIAL. Docs checkpoint cuối không đổi source/tests/workflow;
+unrelated local changes giữ nguyên, chỉ FIX-02 planning được stage.

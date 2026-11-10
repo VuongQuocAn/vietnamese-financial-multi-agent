@@ -315,3 +315,6 @@ không xuất hiện nên chưa exercise lại scope fix ở live. Không runtim
 9issuesgiữOPEN/FIX-02REVIEW. CI liveSHAFAIL do YAMLindent,83testsPASS rồi shell126;
 workflow-only correction không thay runtime. Chi tiết và next action TechLead trong
 [report](fix-02-adaptive-llm-agents.md#planner-dependency-contract--10112026).
+
+CI42738238199SUCCESS95Python/9Web trên b0b4a0d (YAML-only correction+docs);
+source/tests identical live0b6c8d7,không thay Q21PARTIAL hoặc đóng issues.

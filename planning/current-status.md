@@ -19,6 +19,9 @@ Không gọi là thiếu evidence thật/provider outage;không sinh negated Q21
 không tuyên bố livevalidate scope fix. 164runtime/414inputs/reference/local nguyên.
 CI liveSHA42737707767FAIL:YAMLindent83testsPASS rồi shell126;checkpoint sửa riêng
 workflow/docs,source/tests giữ nguyên.9issuesOPEN;không Q11/F08/benchmark/full E2E.
+[CI42738238199](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42738238199)
+SUCCESS95Python/9Web trên checkpoint b0b4a0d,Ruff/planning/typecheck/buildPASS;
+source/tests identical live0b6c8d7,không gán CI cho liveSHA hoặc đổi Q21PARTIAL.
 Next action: Tech Lead review partial Q21 và quyết định revision-target blocker;
 giữ REVIEW,không tựDONE/Web/M8.
 
