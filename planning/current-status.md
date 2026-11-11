@@ -4,14 +4,17 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EF-CORE-01 — EF-EG trong M5 Lite
 
-Status: **IN_PROGRESS**, Owner giao 11/11/2026; baseline `0f61655`, chưa commit.
+Status: **REVIEW**, Owner giao 11/11/2026; baseline `0f61655`.
+Implementation `f5bbac6b6d5befd0b3021654b48218feeab54942` đã push main;
+[CI42964593478](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42964593478)
+SUCCESS đúng SHA,210 tests PASS; Web/full regression SKIPPED.
 [Spec](tasks/EF/EF-CORE-01.md), [report](../docs/ef-core-01-graph-aware-multi-agent-integration.md).
 Graph facade/catalog + approved composition vào M5; G2/G4 dùng operand relations,
 analysis M6 ACCEPT và M7 chọn. G3/G5 PARTIAL, không tuyên bố Graph ON tăng accuracy.
-49 targeted PASS; live83 logical calls/269220 known tokens/3 unknown HTTP503;
+49 local +49 staged targeted PASS; live83 logical calls/269220 known tokens/3 unknown HTTP503;
 1366 protected files giữ hash; 33 facts/324 citations/13 metrics audit PASS.
 Giữ local edits ngoài scope; không OCR/extraction/M6/M7 changes.
-Next action: commit/push implementation và kiểm tra CI đúng SHA theo Owner.
+Next action: Tech Lead review tích hợp cùng caveats G3/G5; không tự DONE hoặc bắt đầu EF-CORE-02.
 
 ## CORE-FLOW-01 — Consolidate and Repair the Multi-Agent QA Pipeline
 

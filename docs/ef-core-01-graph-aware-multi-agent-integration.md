@@ -1,8 +1,10 @@
 # EF-CORE-01 — Tích hợp graph vào Multi-Agent QA
 
 Ngày 11/11/2026, Asia/Bangkok. Baseline `0f6165546d2db7a130fbcca666d0e2abf95b7649`.
-Status: **IN_PROGRESS — CONDITIONAL READY cho tích hợp, chờ CI**, chưa nghiệm thu DONE.
-Chưa commit tại lúc ghi báo cáo; implementation SHA/CI sẽ được xác minh sau push.
+Status: **REVIEW — CONDITIONAL READY cho tích hợp**, chờ Tech Lead nghiệm thu.
+Implementation [`f5bbac6b6d5befd0b3021654b48218feeab54942`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/f5bbac6b6d5befd0b3021654b48218feeab54942) đã push main;
+[CI42964593478](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42964593478)
+SUCCESS đúng SHA, **210 tests PASS**. Không tự chuyển DONE.
 
 ## Quyết định tích hợp
 
@@ -316,7 +318,9 @@ Các lượt `offline-final`, `offline-projection`, `offline-context`, `live`, `
 
 Model `gemini-3.5-flash-lite`, QA rotating adapter hiện có. Đây là logical generate calls quan sát ngoài Shared Gateway; không khẳng định số HTTP attempts nội bộ key pool, vì runner không lưu adapter.events. Cost API trả unknown, không ước tính tiền. Ba HTTP503 của pilot được lưu; numeric fallback/retry theo giới hạn request hiện có, không replay giả live.
 
-Local final: **49 targeted PASS** (EF controls, M5 Lite, composition graph, CORE-FLOW, M6 Lite, QA Lite). Source audit: 33 fact occurrences khớp frozen inputs, 324 original citation occurrences giữ source, 13 metric occurrences khớp Decimal độc lập; 15 tracked local files ngoài planning giữ nguyên bytes. Ruff cho file sửa, planning checker, diff và staged checks được kiểm tra trước commit. CI thêm ba EF controls vào suite trọng tâm; không full regression/browser/build vì không đổi frontend. Chỉ gọi CI SUCCESS sau khi kiểm tra đúng implementation SHA.
+Local final: **49 targeted PASS** (EF controls, M5 Lite, composition graph, CORE-FLOW, M6 Lite, QA Lite), và **49/49 trên bản staged tách biệt** để loại local edits ngoài task. Source audit: 33 fact occurrences khớp frozen inputs, 324 original citation occurrences giữ source, 13 metric occurrences khớp Decimal độc lập; 15 tracked local files ngoài planning giữ nguyên bytes. Năm staged runtime overlays khớp hashes của live-context. Ruff, planning và diff checks PASS; staged Ruff kiểm tra 654 files, planning 128 tasks (worktree có thêm GEN-01a local, 129 tasks).
+
+[CI42964593478](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42964593478) completed/SUCCESS đúng implementation `f5bbac6b6d5befd0b3021654b48218feeab54942`: Python 3.12, Ruff lint/format, planning và **210 tests PASS** (44,92 giây; một warning). Web smoke và full regression SKIPPED theo phạm vi. Phiên chốt evidence chỉ sửa docs/planning; không chạy lại Gemini, tests hoặc pipeline và không gán CI implementation cho commit tài liệu sau đó.
 
 ## Giới hạn và đề xuất EF-CORE-02
 

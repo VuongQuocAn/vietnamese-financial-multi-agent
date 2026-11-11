@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: CORE-FLOW-01, EF-01
 - Estimated Complexity: M
@@ -46,7 +46,7 @@ M6/M7 gốc; offline → Gemini live G1–G6 → controlled ON/OFF 2–3 câu.
 - [x] Graph retrieval, starting identity, citations/quality đúng trên PDF thật.
 - [x] Specialist sử dụng graph, M6 kiểm chứng, M7 phát hành ACCEPT.
 - [x] Negative controls và controlled Graph ON/OFF.
-- [ ] Tests/Ruff/planning/CI đúng SHA, report trung thực; REVIEW không tự DONE.
+- [x] Tests/Ruff/planning/CI đúng SHA, report trung thực; REVIEW không tự DONE.
 
 ## Required Tests
 
@@ -59,11 +59,14 @@ support. Không giả replay thành live hoặc accuracy tài chính toàn hệ 
 
 ## Implementation Evidence
 
-Chưa commit; [báo cáo](../../../docs/ef-core-01-graph-aware-multi-agent-integration.md).
-49 targeted PASS; G2/G4 graph→analysis ACCEPT→M7; G3/G5 PARTIAL.
+Implementation `f5bbac6b6d5befd0b3021654b48218feeab54942` đã push main;
+[CI42964593478](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42964593478)
+completed/SUCCESS đúng SHA,210 tests PASS; Web/full regression SKIPPED.
+[Báo cáo](../../../docs/ef-core-01-graph-aware-multi-agent-integration.md).
+49 local +49 staged targeted PASS; G2/G4 graph→analysis ACCEPT→M7; G3/G5 PARTIAL.
 83 live logical calls/269220 known tokens/3 unknown HTTP503; 1366 protected unchanged;
-33 fact/324 citation/13 metric occurrences audit PASS. Chờ CI đúng implementation SHA.
+33 fact/324 citation/13 metric occurrences audit PASS. Chưa nghiệm thu DONE.
 
 ## Handoff Notes
 
-Next action: commit/push implementation và kiểm tra CI đúng SHA theo Owner.
+Next action: Tech Lead review tích hợp cùng caveats G3/G5; không tự DONE hoặc bắt đầu EF-CORE-02.
