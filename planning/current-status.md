@@ -2,18 +2,16 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## MODEL-SERVE-01 — Qwen3-14B API notebook
+## MODEL-SERVE-01 — Qwen3-14B-AWQ + vLLM
 
 Status: **REVIEW** — **STATIC VALIDATED — NOT GPU TESTED**.
 [Notebook](../notebooks/colab_qwen_t4_api.ipynb), [spec](tasks/MODEL/MODEL-SERVE-01.md).
-Theo yêu cầu sửa của Owner: chỉ Qwen3-14B GGUF Q4_K_M, context mục tiêu 16K;
-Drive cache kiểm tra size/header, pinned CUDA server, thử HTTPS Cloudflare Tunnel,
-lưu kết nối/secret vào MyDrive/DACNTT/api_info.json và test tiếng Việt/JSON.
-Implementation [0d556d2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/0d556d2c23ecbdbeb732cec5740d78af324b668e); nbformat/AST, Ruff và 3 offline controls PASS.
-Fix apt bootstrap [3f15270](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3f15270bb7980e9e46ecddb3eecfbc26c5d91ecf): bỏ apt khi đủ tools, thiếu thì dùng nguồn Ubuntu riêng; 3 mocked controls PASS, chưa chạy build/GPU trên Colab.
-Run all giữ API chạy; Stop riêng sẽ dừng server/tunnel và vô hiệu URL trong file.
-Không tải weights/chạy build/GPU/Colab/tunnel; chưa xác nhận HTTPS hay 16K trên T4.
-Next action: Owner mở notebook trên Colab Free, chạy các cell và gửi log nếu lỗi.
+Owner yêu cầu chuyển backend: Qwen/Qwen3-14B-AWQ, vLLM 0.10.2 trong Python 3.11 riêng,
+engine V0/XFormers/float16 activations cho T4; mục tiêu 16K, non-thinking, concurrency1.
+Bỏ GGUF/llama.cpp/apt/build; giữ cache Drive, HTTPS nếu khả dụng, api_info.json và test API.
+Implementation [20be7ca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/20be7ca731cd1cc9cbc5ac2fdcd3a2244bc7f496); nbformat/AST, Ruff và 3 static controls PASS.
+Chưa install vLLM/tải weights/chạy model/GPU/tunnel trong Codex; chưa xác nhận 16K/T4/API.
+Next action: Owner mở notebook mới, chạy từ đầu trên Colab T4 và gửi log nếu lỗi.
 
 ## MODEL-CTX-01 — LLM context profiling
 

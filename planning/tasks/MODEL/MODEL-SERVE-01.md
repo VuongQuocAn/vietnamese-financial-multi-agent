@@ -7,88 +7,85 @@
 - Priority: P1
 - Dependencies: -
 - Estimated Complexity: S
-- Related Modules: notebook độc lập; không thay runtime DACNTT
+- Related Modules: notebook độc lập; không thay pipeline DACNTT
 
 ## Objective
 
-Mở Colab → Run all → chuẩn bị Qwen3-14B GGUF Q4_K_M → nhận API nếu môi trường cho phép.
-Context mục tiêu 16384 trên T4; chưa xác nhận GPU/16K hoặc external API hoạt động thực tế.
+Mở Colab → load Qwen3-14B-AWQ 4-bit → Start API → nhận HTTPS nếu khả dụng → Test.
+Context mục tiêu 16384 trên T4, non-thinking và concurrency1. Chỉ static validation trong Codex.
 
 ## Context
 
-Owner yêu cầu đơn giản hóa ngày 11/11/2026, cho phép commit/push main và bàn giao REVIEW.
-Chỉ hỗ trợ Qwen3-14B, bỏ lựa chọn Qwen3.5 và full-file SHA-256 model mỗi lần chạy.
-Yêu cầu mới thay phạm vi dual-model/local-only trước đây; giữ lịch sử implementation cũ.
+Owner yêu cầu chuyển GGUF/llama.cpp sang vLLM, bỏ toàn bộ apt/build CUDA/backend cũ.
+Cho phép commit/push main, bàn giao REVIEW để Owner chạy thử; không mở benchmark.
+Lịch sử dual-model/GGUF và apt fix được giữ trong Git, không áp dụng cho bản AWQ này.
 
 ## Inputs
 
-Qwen/Qwen3-14B-GGUF, file Qwen3-14B-Q4_K_M.gguf, revision
-530227a7d994db8eca5ab5ced2fb692b614357fd; size 9001752960 xác minh qua metadata.
-llama.cpp pin cd959bae99ff4bed22bef2604f45241c09bbb8c8; cloudflared pin 2026.10.7.
-Không tìm thấy qwen_vllm_api.ipynb trong thư mục dự án; tham chiếu docs chính thức
-Cloudflare Quick Tunnel và Colab được liên kết trong notebook.
+Qwen/Qwen3-14B-AWQ, revision 31c69efc29464b6bb0aee1398b5a7b50a99340c3;
+metadata xác nhận Qwen3ForCausalLM/AWQ4/group128/float16, hai shard safetensors.
+vLLM 0.10.2 (source AWQ min SM75), Python3.11 riêng qua uv0.9.5,
+Transformers4.55.2/HFHub0.34.4; torch2.8/xformers theo dependency của vLLM.
+Không tìm thấy qwen_vllm_api.ipynb trong repo; dùng source/docs vLLM và model chính thức.
 
 ## Outputs
 
-[Notebook](../../../notebooks/colab_qwen_t4_api.ipynb): chuẩn bị GPU/Drive, cache/build,
-Start API, Test API và Stop thủ công. Colab tự tạo MyDrive/DACNTT/api_info.json
-chứa BASE_URL/API_KEY/MODEL_NAME và status/timestamp; không commit file secret này.
+[Notebook](../../../notebooks/colab_qwen_t4_api.ipynb), giữ path cũ theo yêu cầu Owner.
+Cache: MyDrive/DACNTT/models/Qwen3-14B-AWQ; connection: MyDrive/DACNTT/api_info.json.
 
 ## Allowed Changes
 
-Notebook và ba tài liệu tracking liên quan; commit/push main đúng hunk thuộc task.
-Tự chọn implementation phù hợp theo yêu cầu Owner; dùng lại pinned CUDA backend.
+Notebook và registry/current-status/spec; chỉ stage hunks thuộc task, giữ local edits.
 
 ## Out of Scope
 
-Không pipeline M5/M6/M7/EF-EG, Gateway adapter, benchmark M8, weights/GPU execution
-trong Codex, FP16 downloads, lượng tử hóa lại hoặc cơ chế giữ Colab sống/vượt chặn.
+Không pipeline M5/M6/M7/EF-EG, Gateway adapter, benchmark M8, model download/inference
+trên máy Codex; không FP16 checkpoint hoặc quantize lại; không giữ Colab sống/vượt chặn.
 
 ## Implementation Steps
 
-1. Giữ một model/cache nhẹ, giới hạn tùy chọn context và HTTPS.
-2. Start server có key, thử tunnel HTTPS và kiểm tra public route trước khi lưu URL.
-3. Hai smoke tests, static validation, commit/push và bàn giao Owner thử Colab.
+1. Thay GGUF/build bằng cài wheels vLLM vào Python riêng, cache snapshot AWQ nhiều files.
+2. Start V0/XFormers/AWQ/half/eager, non-thinking template, readiness và lỗi VRAM rõ ràng.
+3. Giữ HTTPS/auth/Drive connection và hai API tests; static check, commit/push REVIEW.
 
 ## Acceptance Criteria
 
-- [x] Notebook hợp lệ, code parse được, không có execution outputs/secrets hardcoded.
-- [x] Một Qwen3-14B GGUF Q4_K_M; mặc định 16K, fallback 8K do Owner chọn khi OOM.
-- [x] Ưu tiên Drive, copy local; chưa có thì tải HF; chỉ kiểm tra size/GGUF header của weights.
-- [x] CUDA build pin/reuse, GPU offload, readiness/timeout/logs và dừng process sở hữu.
-- [x] OpenAI-compatible non-thinking server có API key; thử Cloudflare HTTPS khi được bật.
-- [x] Chỉ lưu URL HTTPS sau probe model alias và xác nhận thiếu key bị từ chối.
-- [x] Tự lưu api_info.json trên Drive; không in key; LOCAL_ONLY có BASE_URL null.
-- [x] Hai test tiếng Việt/JSON và latency/tokens/tốc độ/VRAM hoặc UNKNOWN.
-- [x] Run all giữ API chạy; Stop riêng vô hiệu URL và dừng server/tunnel.
-- [x] Không thay pipeline DACNTT hoặc chạy weights/build/tunnel/GPU trong Codex.
+- [x] Một model Qwen/Qwen3-14B-AWQ 4-bit; bỏ apt/llama.cpp/GGUF/build CUDA.
+- [x] Pin vLLM0.10.2, Python3.11 riêng; chỉ wheels, không thay torch của notebook kernel.
+- [x] Engine V0/XFormers, dtype half, AWQ, eager; context16K/concurrency1, không retry OOM.
+- [x] Ưu tiên cache Drive riêng AWQ, copy local; thiếu thì tải snapshot đã pin và lưu lại.
+- [x] Kiểm tra file sizes và AWQ config; không hash toàn bộ weights, không dùng cache GGUF cũ.
+- [x] Non-thinking cố định trong official template và request; kiểm tra final content.
+- [x] Server start/stop/readiness/timeouts/logs, HTTPS khi khả dụng và auth probe.
+- [x] Tự lưu BASE_URL/API_KEY/MODEL_NAME vào api_info.json; key không hiển thị.
+- [x] Test tiếng Việt/JSON, tokens/latency/output tok/s E2E/VRAM hoặc UNKNOWN.
+- [x] Run all giữ API chạy; Stop riêng dừng server/tunnel; không đổi pipeline DACNTT.
 
-Các criteria trên xác nhận cấu trúc/logic tĩnh, không phải kết quả thực thi Colab.
+Các criteria xác nhận code và logic tĩnh; chưa xác nhận Colab/T4/16K/API hoạt động.
 
 ## Required Tests
 
-nbformat schema, AST/sequential names, Ruff lint/format; ba offline controls:
-cache header/size không full hash, api_info READY/LOCAL_ONLY/STOPPED, final-content/JSON.
-Đối chiếu HF metadata/backend/tunnel docs; planning checker và git diff --check.
+nbformat, AST/sequential names, Ruff lint/format; 3 static controls cho cache AWQ nhiều
+files, official non-thinking Jinja template và flags theo pinned source. Planning/diff checks.
+Không full suite, cài vLLM, weights, GPU, model API/tunnel execution hoặc benchmark trong Codex.
 
 ## Risks and Blockers
 
-T4/16K chưa GPU tested; Colab có thể kết thúc phiên/chặn tunnel. Quick Tunnel đổi URL,
-không SLA/SSE; client phải stream=false. Public route chỉ probe từ Colab, chưa từ máy DACNTT.
-Codex cần kết nối/quyền đọc Drive hoặc Drive sync để lấy api_info.json; mount Colab
-không tự chia sẻ filesystem với Codex. File có thể stale nếu runtime bị ngắt đột ngột;
-client cần kiểm tra models trước khi dùng. Cache size/header không chứng minh toàn vẹn hash.
+T4/16K và driver/wheels chưa thử thực tế; server dừng và báo log nếu VRAM/KV-cache không đủ.
+Colab Free có thể chặn/kết thúc phiên; Quick Tunnel không SLA/SSE, client stream=false.
+Public probe chỉ từ Colab, không chứng minh máy DACNTT truy cập được. Codex cần quyền
+Drive/Drive sync để đọc connection; URL có thể stale sau runtime termination.
+Cache size/config không xác minh cryptographic integrity. Không tự DONE hoặc thêm FIX loop.
 
 ## Implementation Evidence
 
-Implementation sửa theo Owner: `0d556d2c23ecbdbeb732cec5740d78af324b668e`; static checks ở trên PASS local.
-Fix apt bootstrap [3f15270](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3f15270bb7980e9e46ecddb3eecfbc26c5d91ecf): bỏ apt khi đủ tools, thiếu thì dùng nguồn Ubuntu riêng; 3 mocked controls PASS, chưa chạy build/GPU trên Colab.
-Implementation đầu `34beda90f98262107696bfe6cc958d5a8850b320` được giữ trong lịch sử.
-Evidence offline ignored: artifacts/evidence/MODEL-SERVE-01/simplify/.
-Không weights/model calls/build/Colab/GPU/tunnel execution hoặc full suite/CI run trong phiên này.
+AWQ implementation `20be7ca731cd1cc9cbc5ac2fdcd3a2244bc7f496`. nbformat/AST, Ruff và 3 static controls PASS local.
+Metadata/source-only verification; chưa install vLLM hoặc tải weights/chạy model/GPU/tunnel.
+Evidence ignored: artifacts/evidence/MODEL-SERVE-01/awq/.
+GGUF lịch sử: 0d556d2/3f15270; không gán validation GGUF cho backend AWQ.
 STATIC VALIDATED — NOT GPU TESTED.
 
 ## Handoff Notes
 
-REVIEW, chờ Owner/Tech Lead nghiệm thu; không tự DONE.
-Next action: Owner mở notebook trên Colab Free, chạy các cell và gửi log nếu lỗi.
+REVIEW, chờ Owner/Tech Lead nghiệm thu.
+Next action: Owner mở notebook mới, chạy từ đầu trên Colab T4 và gửi log nếu lỗi.
