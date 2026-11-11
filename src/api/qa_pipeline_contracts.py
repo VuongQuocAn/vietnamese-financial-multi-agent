@@ -12,6 +12,7 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 class FinancialQARequest(VietnameseQARequest):
     m5_lite: bool = False
+    m5_graph: bool = True
     m6_lite: bool = False
     m7_lite: bool = False
     allow_gateway: bool = True

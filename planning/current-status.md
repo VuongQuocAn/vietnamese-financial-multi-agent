@@ -2,17 +2,31 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## EF-CORE-01 — EF-EG trong M5 Lite
+
+Status: **IN_PROGRESS**, Owner giao 11/11/2026; baseline `0f61655`, chưa commit.
+[Spec](tasks/EF/EF-CORE-01.md), [report](../docs/ef-core-01-graph-aware-multi-agent-integration.md).
+Graph facade/catalog + approved composition vào M5; G2/G4 dùng operand relations,
+analysis M6 ACCEPT và M7 chọn. G3/G5 PARTIAL, không tuyên bố Graph ON tăng accuracy.
+49 targeted PASS; live83 logical calls/269220 known tokens/3 unknown HTTP503;
+1366 protected files giữ hash; 33 facts/324 citations/13 metrics audit PASS.
+Giữ local edits ngoài scope; không OCR/extraction/M6/M7 changes.
+Next action: commit/push implementation và kiểm tra CI đúng SHA theo Owner.
+
 ## CORE-FLOW-01 — Consolidate and Repair the Multi-Agent QA Pipeline
 
-Status: **REVIEW**, key rotation + projection **CONDITIONAL READY**; parent f5baae3.
+Status: **DONE về nhiệm vụ triển khai**, Owner/Tech Lead phê duyệt ngày 11/11/2026;
+accepted implementation `0f6165546d2db7a130fbcca666d0e2abf95b7649`, đã push main.
 [Spec](tasks/CORE/CORE-FLOW-01.md), [report](../docs/core-flow-01-boundary-alignment.md).
 Fresh Q5 trả đúng tài sản giảm8,66%, nợ giảm14,35% so với đầu năm, PDF5/6;
 Q4/Q6/Q7/Q8 chạy cùng runtime, giữ reasoning và conversation. Q6 còn caveat
 Specialist nói thiếu bảng cân đối dù Specialist khác có dữ liệu; không sửa M5/M6.
 28provider attempts/89857known tokens/3unknown; rotation key0HTTP429→key1success.
-37targeted PASS, Ruff/planning/diff PASS; exact implementation SHA/CI ghi receipt
-local sau một commit/push gộp. Giữ mọi local edits ngoài task; không tự DONE.
-Next action: Tech Lead review key rotation/projection và kết quả live, đặc biệt caveat Q6.
+37targeted PASS, Ruff/planning/diff PASS; [CI42958816077](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42958816077)
+SUCCESS đúng SHA,207tests PASS. Nghiệm thu giữ caveat Q6 và các giới hạn nguồn;
+không nâng thành financial accuracy toàn hệ thống. Phiên này chỉ planning/report,
+không chạy lại tests/Gemini hoặc commit/push; giữ local edits ngoài task.
+Next action: chờ Owner giao nhiệm vụ mới.
 
 ## E2E-LITE-01 — Real-Data End-to-End Validation
 

@@ -97,7 +97,21 @@ class FinancialQAPipeline:
         if request.m5_lite and not document and self.orchestrator is None:
             from ..agents.lite_orchestrator import FinancialLiteOrchestrator
 
-            return FinancialLiteOrchestrator(catalog, gateway)
+            matches = [
+                m
+                for m in self.compositions
+                if m.financial_snapshot is not None
+                and (m.financial_snapshot.document_id, m.financial_snapshot.snapshot_id)
+                == (request.document_id, request.snapshot_id)
+                and (request.composition_id is None or m.composition_id == request.composition_id)
+            ]
+            return FinancialLiteOrchestrator(
+                catalog,
+                gateway,
+                graph_enabled=request.m5_graph,
+                composition=matches[0] if len(matches) == 1 else None,
+                document_repository=self.document_repository,
+            )
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
                 SnapshotCatalog([]) if document else catalog,

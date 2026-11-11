@@ -15,6 +15,7 @@ from ..tools.financial_retrieval import (
     FinancialRetrievalTools,
     FinancialToolResponse,
 )
+from ..tools.graph_retrieval import GraphContextResponse
 from .contracts import (
     TOOL_CONTRACTS,
     EvidencePlan,
@@ -44,6 +45,7 @@ class ExecutionEvidenceBundle(FinancialModel):
     claim_fact_references: list[RetrievalReference] | None = None
     calculations: list[FinancialCalculationResponse] = Field(default_factory=list)
     sources_and_lineage: list[EvidenceToolResponse] = Field(default_factory=list)
+    graph_contexts: list[GraphContextResponse] = Field(default_factory=list)
     snapshots: list[SnapshotSelection] = Field(default_factory=list)
     compatibility: list[MetricSnapshotClosure] = Field(default_factory=list)
     citations: list[EvidenceCitation] = Field(default_factory=list)
@@ -54,7 +56,12 @@ class ExecutionEvidenceBundle(FinancialModel):
     financial_fact_verified: Literal[False] = False
 
 
-ToolResponse = FinancialToolResponse | FinancialCalculationResponse | EvidenceToolResponse
+ToolResponse = (
+    FinancialToolResponse
+    | FinancialCalculationResponse
+    | EvidenceToolResponse
+    | GraphContextResponse
+)
 StepResponse = ToolResponse | SnapshotSelection | MetricSnapshotClosure | ExecutionEvidenceBundle
 
 

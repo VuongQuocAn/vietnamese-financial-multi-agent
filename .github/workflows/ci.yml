@@ -83,6 +83,7 @@ jobs:
           tests/unit/test_multihop_reasoning.py
           tests/unit/test_qa_lite.py
           tests/unit/test_m5_lite.py
+          tests/unit/test_ef_core.py
           tests/unit/test_m6_lite.py
           tests/unit/test_core_flow.py
           tests/unit/test_qa_gateway.py

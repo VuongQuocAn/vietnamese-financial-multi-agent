@@ -48,6 +48,20 @@ class GetGraphContextRequest(FinancialModel):
     limit: int = Field(default=20, ge=1, le=50)
 
 
+class GetSnapshotGraphContextRequest(FinancialModel):
+    """Explicit catalog selection; never impersonates an approved composition."""
+
+    tool: Literal["get_graph_context"] = "get_graph_context"
+    document_id: Identity
+    snapshot_id: Identity
+    node_id: Identity
+    relations: list[Relation] = Field(
+        default_factory=lambda: ["from_source", "associated_with", "used_in"]
+    )
+    depth: int = Field(default=2, ge=1, le=3)
+    limit: int = Field(default=12, ge=1, le=50)
+
+
 class GraphContextNode(FinancialModel):
     node: GraphNode
     depth: int
@@ -66,7 +80,7 @@ class GraphContextEdge(FinancialModel):
 
 
 class GraphContextResponse(FinancialModel):
-    request: GetGraphContextRequest
+    request: GetGraphContextRequest | GetSnapshotGraphContextRequest
     status: Literal["found", "not_found", "unavailable", "ambiguous"]
     start: GraphContextNode | None = None
     matches: list[GraphContextNode] = Field(default_factory=list)
@@ -83,6 +97,80 @@ class GraphContextResponse(FinancialModel):
 
 
 class GraphRetrievalTools:
+    @classmethod
+    def from_catalog(cls, catalog, *, document_id, snapshot_id):
+        """Reuse traversal/resolution on the existing, explicitly pinned EF-EG."""
+        from ..evidence.snapshots import isolated_catalog
+
+        catalog = isolated_catalog(catalog)
+        selected = [
+            d
+            for d in catalog.descriptors
+            if (d.document_id, d.snapshot_id) == (document_id, snapshot_id)
+        ]
+        if len(selected) != 1 or catalog.ancestry(selected[0])[1]:
+            raise ValueError("graph_snapshot_missing_or_ambiguous")
+        if catalog.graph is None:
+            raise ValueError("pinned_graph_missing")
+        validation = validate_graph(catalog.graph, catalog.facts, catalog.evidence, catalog.metrics)
+        if any(
+            a.status != "valid" for a in [*validation.nodes, *validation.edges, *validation.inputs]
+        ):
+            raise ValueError("invalid_pinned_graph")
+        tools = cls.__new__(cls)
+        tools._view = None
+        tools._selection = (document_id, snapshot_id)
+        tools._financial = tools._documents = EvidenceRetrievalTools(catalog)
+        tools._financial_sources = tools._document_sources = catalog.api
+        tools._document_ids = set()
+        tools._quality = validation.evidence_context
+        tools._grounding = {a.reference: a.grounding for a in validation.nodes}
+        tools._metadata, tools._anchor_metadata = {}, defaultdict(list)
+        for record in [*catalog.facts, *catalog.evidence]:
+            identity = (
+                record.observation_identity()
+                if hasattr(record, "observation_identity")
+                else record.evidence_identity()
+            )
+            kind = "source_fact" if hasattr(record, "observation_identity") else record.kind
+            nid = graph_id(kind, identity.model_dump())
+            tools._metadata[nid] = deepcopy(record.source_metadata)
+            for source in record_sources(record):
+                aid = graph_id("anchor", source.source_key())
+                tools._anchor_metadata[aid].append(
+                    dict(
+                        node_id=nid,
+                        quality=tools._quality[nid].model_dump(mode="json"),
+                        source_metadata=deepcopy(record.source_metadata),
+                    )
+                )
+        # Every endpoint must belong to this exact snapshot. No ancestor fallback.
+        tools._nodes = {}
+        for node in catalog.graph.nodes:
+            ref = node_reference(node)
+            if ref.kind == "metric":
+                matches = [m for m in catalog.metrics if m.metric_id == ref.record_id]
+                binding = (
+                    (matches[0].request.document_id, matches[0].request.snapshot_id)
+                    if len(matches) == 1
+                    else None
+                )
+            elif ref.kind == "anchor":
+                binding = (node.anchor.document_id, node.anchor.snapshot_id)
+            else:
+                identity = ref.observation if ref.kind == "fact" else ref.evidence
+                binding = (identity.document_id, identity.snapshot_id)
+            if binding == tools._selection:
+                tools._nodes[node.node_id] = node
+        tools._adjacency = defaultdict(list)
+        for edge in catalog.graph.edges:
+            if edge.source in tools._nodes and edge.target in tools._nodes:
+                tools._adjacency[edge.source].append(edge)
+                tools._adjacency[edge.target].append(edge)
+        for edges in tools._adjacency.values():
+            edges.sort(key=lambda e: e.edge_id)
+        return tools
+
     def __init__(self, projection):
         # Capture a validated immutable-by-ownership projection; external mutation
         # after construction cannot change traversal or strip caveats.
@@ -205,16 +293,23 @@ class GraphRetrievalTools:
             ],
         )
 
-    def get_graph_context(self, request: GetGraphContextRequest) -> GraphContextResponse:
-        request = GetGraphContextRequest.model_validate_json(request.model_dump_json())
+    def get_graph_context(self, request) -> GraphContextResponse:
+        request = type(request).model_validate_json(request.model_dump_json())
         response = GraphContextResponse(request=request, status="not_found")
-        if (request.document_id, request.composition_id) != (
-            self._view.document_id,
-            self._view.composition_id,
-        ):
+        if self._view is None:
+            valid = (
+                isinstance(request, GetSnapshotGraphContextRequest)
+                and (request.document_id, request.snapshot_id) == self._selection
+            )
+        else:
+            valid = isinstance(request, GetGraphContextRequest) and (
+                request.document_id,
+                request.composition_id,
+            ) == (self._view.document_id, self._view.composition_id)
+        if not valid:
             response.status, response.reasons = (
                 "unavailable",
-                ["explicit_composition_selection_mismatch"],
+                ["explicit_graph_selection_mismatch"],
             )
             return response
         if request.node_id not in self._nodes:
@@ -227,7 +322,18 @@ class GraphRetrievalTools:
             current, depth = queue.popleft()
             if depth >= request.depth:
                 continue
+            priority = {relation: i for i, relation in enumerate(request.relations)}
+            # Interleave requested relation groups. Many source anchors or exact
+            # associations must not exhaust the bound before any contextual link
+            # or operand is visited. Within each group retain stable edge order.
+            ranks, ordered = defaultdict(int), []
             for edge in self._adjacency[current]:
+                if edge.relation in priority:
+                    ordered.append(
+                        (ranks[edge.relation], priority[edge.relation], edge.edge_id, edge)
+                    )
+                    ranks[edge.relation] += 1
+            for _, _, _, edge in sorted(ordered, key=lambda item: item[:3]):
                 if edge.relation not in request.relations:
                     continue
                 neighbor = edge.target if edge.source == current else edge.source

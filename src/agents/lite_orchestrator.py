@@ -16,9 +16,16 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..evidence.graph import graph_id
 from ..tools.evidence_retrieval import EvidenceRetrievalTools, GetEvidenceSourcesRequest
 from ..tools.financial_calculator import CalculateFinancialMetricRequest, FinancialCalculator
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
+from ..tools.graph_retrieval import (
+    GetGraphContextRequest,
+    GetSnapshotGraphContextRequest,
+    GraphContextResponse,
+    GraphRetrievalTools,
+)
 from ..tools.question_understanding import normalize
 from . import cash_flow_earnings_quality_specialist as cash
 from . import liquidity_leverage_specialist as liquidity
@@ -36,6 +43,7 @@ from .routing_contracts import RoutingDecision
 from .specialist_common import (
     AnalysisProposal,
     SpecialistResult,
+    SpecialistTrace,
     _numeric_proposals,
     generate_candidates,
     select_evidence,
@@ -49,11 +57,108 @@ DOMAINS = {
 }
 
 
+def compact_graph_context(contexts, evidence):
+    """Bounded relations; raw tool traces retain complete original records."""
+    from ..evidence.composition_graph import node_reference
+
+    def citations(values):
+        # Group original selectors by source/page. Full anchors remain in the
+        # typed tool trace; repeated bbox/image payloads would crowd out lineage.
+        groups = {}
+        for citation in values:
+            key = (
+                citation.document_id,
+                citation.snapshot_id,
+                citation.pdf_page,
+                citation.provenance_level,
+            )
+            group = groups.setdefault(
+                key,
+                dict(
+                    document_id=key[0],
+                    snapshot_id=key[1],
+                    pdf_page=key[2],
+                    provenance_level=key[3],
+                    selectors=[],
+                    limitations=[],
+                ),
+            )
+            pointer = (
+                citation.source.reference.source_pointer
+                if citation.source.reference is not None
+                else None
+            )
+            if pointer is not None and pointer not in group["selectors"]:
+                group["selectors"].append(pointer)
+            group["limitations"] = sorted(set(group["limitations"] + citation.limitations))
+        return list(groups.values())
+
+    rows, seen = [], set()
+    for context in contexts:
+        if context.status != "found":
+            continue
+        nodes = {n.node.node_id: n for n in [context.start, *context.matches] if n}
+        for relation in sorted(
+            context.edges,
+            key=lambda r: (
+                {
+                    "used_in": 0,
+                    "same_extraction_context": 1,
+                    "associated_with": 2,
+                    "from_source": 3,
+                }[r.edge.relation],
+                r.edge.edge_id,
+            ),
+        ):
+            edge = relation.edge
+            if edge.edge_id in seen:
+                continue
+            seen.add(edge.edge_id)
+            endpoints = []
+            for nid in (edge.source, edge.target):
+                node = nodes[nid]
+                ref = node_reference(node.node)
+                selected = [e for e in evidence if e.reference == ref]
+                endpoints.append(
+                    dict(
+                        kind=node.node.kind,
+                        evidence_ids=[e.evidence_id for e in selected],
+                        labels=[e.label for e in selected],
+                        reference=ref.model_dump(mode="json"),
+                        citations=citations(node.original_citations),
+                        quality=node.quality.model_dump(mode="json"),
+                        grounding=node.grounding.model_dump(mode="json"),
+                        caveats=node.caveats,
+                        evidence_status=node.evidence.status,
+                        text_excerpts=[
+                            dict(
+                                text=m.record.raw_text[:600], truncated=len(m.record.raw_text) > 600
+                            )
+                            for m in node.evidence.matches
+                            if getattr(m.record, "raw_text", None)
+                        ],
+                    )
+                )
+            row = dict(
+                id=f"G{len(rows) + 1}",
+                relation=edge.relation,
+                operand_role=getattr(edge, "operand_role", None),
+                basis=relation.basis,
+                verification=relation.verification,
+                endpoints=endpoints,
+                caveats=context.caveats,
+            )
+            if len(json.dumps([*rows, row], ensure_ascii=False)) <= 14000:
+                rows.append(row)
+    return rows
+
+
 class LiteTask(FinancialModel):
     specialist: SpecialistRole
     objective: str = Field(min_length=1, max_length=600)
     # Optional retrieval handles, never coverage obligations or claim approvals.
     sources: list[str] = Field(default_factory=list, max_length=16)
+    use_graph: bool = False
 
 
 class LitePlan(FinancialModel):
@@ -150,7 +255,10 @@ class SupervisorLite:
         prompt = dict(
             instruction=(
                 "Supervisor tài chính. Chọn ít Specialist thực sự cần thiết từ roles trong nguồn. "
-                "Chỉ lập kế hoạch MỘT lần. JSON {tasks:[{specialist,objective,sources:[S1,...]}]}. "
+                "Chỉ lập kế hoạch MỘT lần. JSON {tasks:[{specialist,objective,sources:[S1,...],use_graph:false}]}. "
+                "Đặt use_graph=true khi cần truy vết nguồn, thành phần metric, phân tích nhiều bước, "
+                "kết hợp bảng/thuyết minh hoặc kiểm tra ngữ cảnh phép tính. Tra một giá trị đơn giản "
+                "không cần graph. Graph chỉ cung cấp structural/contextual relations, không chứng minh claim. "
                 "objective là công việc ngắn tiếng Việt; sources là handles phù hợp trong inventory. "
                 "Không DAG, approval, coverage hoặc suy đoán identities. Câu hỏi đơn giản một role; "
                 "nhiều phần chọn các role cần thiết, không gọi tất cả mặc định. "
@@ -204,9 +312,43 @@ class SupervisorLite:
 
 
 class FinancialLiteOrchestrator:
-    def __init__(self, catalog, gateway=None, *, supervisor=None):
+    def __init__(
+        self,
+        catalog,
+        gateway=None,
+        *,
+        supervisor=None,
+        graph_enabled=True,
+        composition=None,
+        document_repository=None,
+    ):
         self.catalog, self.gateway = catalog, gateway
         self.supervisor = supervisor or SupervisorLite(gateway)
+        self.graph_enabled = graph_enabled
+        self.composition, self.document_repository = composition, document_repository
+
+    def _graph_tools(self, context):
+        manifest = self.composition
+        if manifest is not None and self.document_repository is not None:
+            from ..evidence.composition_graph import CompositionGraphView
+
+            if (
+                manifest.financial_snapshot.document_id,
+                manifest.financial_snapshot.snapshot_id,
+            ) != (context.document_id, context.snapshot_id):
+                raise ValueError("composition_financial_snapshot_mismatch")
+            return GraphRetrievalTools(
+                CompositionGraphView(
+                    manifest,
+                    self.document_repository,
+                    self.catalog,
+                    document_id=manifest.logical_document_id,
+                    composition_id=manifest.composition_id,
+                )
+            )
+        return GraphRetrievalTools.from_catalog(
+            self.catalog, document_id=context.document_id, snapshot_id=context.snapshot_id
+        )
 
     def run_document(self, *args, **kwargs):
         raise ValueError("m5_lite_financial_scope_only")
@@ -233,6 +375,17 @@ class FinancialLiteOrchestrator:
         )
         choices = _numeric_proposals(result.supporting_evidence)
         by_handle = {choice["evidence_id"]: choice for choice in choices}
+        graph_context = compact_graph_context(
+            upstream.evidence_bundle.graph_contexts, result.supporting_evidence
+        )
+        if graph_context:
+            result.trace.append(
+                SpecialistTrace(
+                    stage="selection",
+                    outcome="graph_context_supplied",
+                    reasons=[json.dumps(graph_context, ensure_ascii=False)],
+                )
+            )
 
         class LiteProposal(proposal):
             @model_validator(mode="before")
@@ -270,7 +423,12 @@ class FinancialLiteOrchestrator:
                 "được giao Specialist khác. "
                 "percentage_change có inputs=[kỳ mục tiêu,kỳ gốc] để tính (mục tiêu/gốc-1)*100. "
                 "Trả phần có căn cứ khi thiếu phần khác. M6 sẽ xác minh mọi candidate."
+                " graph_context giữ liên kết nguồn/operand; structural_only và contextual_only "
+                "không phải semantic support hoặc nhân quả. Chỉ dùng evidence_ids số thực trong analyses. "
+                "Nếu một quan hệ graph giúp chọn nguồn hoặc diễn giải, ghi handle G tương ứng và "
+                "cách dùng cụ thể trong goal của analysis; không dùng thì không ghi. Không đưa G vào statement."
             ),
+            graph_context=graph_context,
             objective=task.objective,
             analysis_schema=AnalysisProposal.model_json_schema(),
             numeric_choices=choices,
@@ -302,6 +460,18 @@ class FinancialLiteOrchestrator:
             deterministic=deterministic,
             emit_derived=False,
         )
+        for candidate in result.candidates:
+            if candidate.reasoning:
+                for relation in graph_context:
+                    if re.search(r"\b" + relation["id"] + r"\b", candidate.reasoning.goal):
+                        result.trace.append(
+                            SpecialistTrace(
+                                stage="grounding",
+                                outcome="graph_use_reported_pending_M6",
+                                evidence_id=candidate.candidate_id,
+                                reasons=[relation["id"], candidate.reasoning.goal],
+                            )
+                        )
         return result
 
     def run(self, *, question, context):
@@ -326,6 +496,12 @@ class FinancialLiteOrchestrator:
         tools = FinancialRetrievalTools(self.catalog)
         calculator = FinancialCalculator(self.catalog)
         evidence_tools = EvidenceRetrievalTools(self.catalog)
+        graph_tools, graph_error = None, None
+        if self.graph_enabled and any(t.use_graph for t in plan.tasks):
+            try:
+                graph_tools = self._graph_tools(context)
+            except ValueError as error:
+                graph_error = str(error)
         all_upstream = SupervisorResult(
             plan_id=None,
             status="completed",
@@ -438,6 +614,67 @@ class FinancialLiteOrchestrator:
                                         if fact.observation_identity() == operand.observation:
                                             retrieve(fact)
                 bundle.claim_fact_references = [f.reference for f in bundle.facts]
+                if self.graph_enabled and task.use_graph:
+                    starts = list(
+                        dict.fromkeys(
+                            [c.metric_id for c in bundle.calculations if c.metric_id]
+                            + [
+                                graph_id(
+                                    "source_fact", f.record.observation_identity().model_dump()
+                                )
+                                for f in bundle.facts
+                            ]
+                        )
+                    )[:6]
+                    if not starts:
+                        bundle.limitations.append("graph_no_valid_starting_nodes")
+                    for node_id in starts:
+                        request = (
+                            GetGraphContextRequest(
+                                document_id=self.composition.logical_document_id,
+                                composition_id=self.composition.composition_id,
+                                node_id=node_id,
+                                depth=2,
+                                limit=8,
+                                relations=(
+                                    [
+                                        "used_in",
+                                        "from_source",
+                                        "same_extraction_context",
+                                        "associated_with",
+                                    ]
+                                    if node_id.startswith("derived_metric:")
+                                    else [
+                                        "from_source",
+                                        "same_extraction_context",
+                                        "associated_with",
+                                        "used_in",
+                                    ]
+                                ),
+                            )
+                            if self.composition is not None and graph_tools is not None
+                            else GetSnapshotGraphContextRequest(
+                                document_id=context.document_id,
+                                snapshot_id=context.snapshot_id,
+                                node_id=node_id,
+                                depth=2,
+                                limit=8,
+                            )
+                        )
+                        response = call(
+                            "get_graph_context",
+                            request,
+                            graph_tools.get_graph_context
+                            if graph_tools
+                            else lambda r: GraphContextResponse(
+                                request=r,
+                                status="unavailable",
+                                reasons=[graph_error or "graph_unavailable"],
+                            ),
+                        )
+                        bundle.graph_contexts.append(response)
+                        if response.status != "found":
+                            bundle.limitations.extend(response.reasons)
                 upstream.status = "partial" if bundle.limitations else "completed"
                 result = self._specialist(task, upstream, question, context)
                 result.limitations.extend(bundle.limitations)
@@ -448,6 +685,7 @@ class FinancialLiteOrchestrator:
                 all_upstream.evidence_bundle.facts.extend(bundle.facts)
                 all_upstream.evidence_bundle.calculations.extend(bundle.calculations)
                 all_upstream.evidence_bundle.citations.extend(bundle.citations)
+                all_upstream.evidence_bundle.graph_contexts.extend(bundle.graph_contexts)
             except Exception as error:
                 execution.status = "failed"
                 execution.error = OrchestrationError(

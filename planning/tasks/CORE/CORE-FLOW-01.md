@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: CORE
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-LITE-01, M6-LITE-01, M7-LITE-02
 - Estimated Complexity: M
@@ -73,12 +73,14 @@ không OCR hoặc benchmark mới. Engineering PASS không chứng minh financia
 Sửa key rotation/projection đạt fresh Q5; CONDITIONAL READY cho phạm vi này.
 Q6 caveat về thiếu bảng cân đối còn mâu thuẫn giữa Specialists, không mở rộng sửa
 M5/M6. Reporting_scope/page-level và generic M7 gaps giữ giới hạn, không financial
-accuracy toàn hệ thống. Tech Lead nghiệm thu trước DONE.
+accuracy toàn hệ thống. Owner/Tech Lead nghiệm thu DONE về nhiệm vụ triển khai
+ngày 11/11/2026, giữ các giới hạn đã báo.
 
 ## Implementation Evidence
 
-Parent f5baae3; implementation là một commit gộp key rotation và sửa projection.
-SHA/CI exact tại receipt local sau push và bàn giao.37targeted PASS, Ruff/planning/
+Accepted implementation `0f6165546d2db7a130fbcca666d0e2abf95b7649`, parent f5baae3;
+đã push main, gộp key rotation và sửa projection. [CI42958816077](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42958816077)
+SUCCESS đúng SHA,207tests PASS; receipt local đã xác minh.37targeted PASS, Ruff/planning/
 diff PASS; fresh Q5 đúng−8,66%/−14,35% với mẫu số đầu năm; Q4/Q6/Q7/Q8 cùng runtime.
 28actual provider attempts/89857known tokens/3unknown,2HTTP429/1HTTP503.252focused
 source/calculation/citation checks không mismatch;4204protected hashes unchanged.
@@ -90,4 +92,7 @@ M7 nhận full operands/steps/results/units và kỳ gốc/mục tiêu của rea
 đã ACCEPT; không tính/verify lại. Giữ nguyên M5/M6/Ledger và local edits ngoài task.
 Không tạo task mới, không OCR/M8/full local regression.
 
-Next action: Tech Lead review key rotation/projection và kết quả live, đặc biệt caveat Q6.
+Phiên nghiệm thu chỉ cập nhật planning/report và chạy planning/diff checks;
+không chạy lại tests/Gemini hoặc commit/push.
+
+Next action: chờ Owner giao nhiệm vụ mới.
