@@ -10,6 +10,7 @@ Theo yêu cầu sửa của Owner: chỉ Qwen3-14B GGUF Q4_K_M, context mục ti
 Drive cache kiểm tra size/header, pinned CUDA server, thử HTTPS Cloudflare Tunnel,
 lưu kết nối/secret vào MyDrive/DACNTT/api_info.json và test tiếng Việt/JSON.
 Implementation [0d556d2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/0d556d2c23ecbdbeb732cec5740d78af324b668e); nbformat/AST, Ruff và 3 offline controls PASS.
+Fix apt bootstrap [3f15270](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3f15270bb7980e9e46ecddb3eecfbc26c5d91ecf): bỏ apt khi đủ tools, thiếu thì dùng nguồn Ubuntu riêng; 3 mocked controls PASS, chưa chạy build/GPU trên Colab.
 Run all giữ API chạy; Stop riêng sẽ dừng server/tunnel và vô hiệu URL trong file.
 Không tải weights/chạy build/GPU/Colab/tunnel; chưa xác nhận HTTPS hay 16K trên T4.
 Next action: Owner mở notebook trên Colab Free, chạy các cell và gửi log nếu lỗi.

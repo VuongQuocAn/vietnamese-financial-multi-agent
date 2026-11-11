@@ -82,6 +82,7 @@ client cần kiểm tra models trước khi dùng. Cache size/header không ch�
 ## Implementation Evidence
 
 Implementation sửa theo Owner: `0d556d2c23ecbdbeb732cec5740d78af324b668e`; static checks ở trên PASS local.
+Fix apt bootstrap [3f15270](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3f15270bb7980e9e46ecddb3eecfbc26c5d91ecf): bỏ apt khi đủ tools, thiếu thì dùng nguồn Ubuntu riêng; 3 mocked controls PASS, chưa chạy build/GPU trên Colab.
 Implementation đầu `34beda90f98262107696bfe6cc958d5a8850b320` được giữ trong lịch sử.
 Evidence offline ignored: artifacts/evidence/MODEL-SERVE-01/simplify/.
 Không weights/model calls/build/Colab/GPU/tunnel execution hoặc full suite/CI run trong phiên này.
