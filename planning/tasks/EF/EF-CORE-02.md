@@ -68,7 +68,7 @@ Graph use/ACCEPT không đồng nghĩa added value; không dùng ON answer làm 
 
 Implementation [43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1) đã push main;
 [CI42976641605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42976641605) SUCCESS đúng SHA,213 Python tests PASS;
-Web/full regression SKIPPED. Dừng REVIEW, chờ Tech Lead nghiệm thu. 60 primary +20 bounded
+Web/full regression SKIPPED. Tech Lead nghiệm thu DONE trong task EF-CORE-03; giữ limitations. 60 primary +20 bounded
 replacements/Gemini thật,80 assessments;52 clean slots/23 clean pairs. Không có
 hai clean repetitions cho mọi câu; giữ rõ attrition và mọi failure/cost.
 ON14/23 vs OFF11/23 CWC, completeness84/111 vs82/111; không có financial facts mới.
@@ -82,4 +82,4 @@ raw traces/oracle/assessments/question appendix ignored. Không sửa runtime/M8
 
 ## Handoff Notes
 
-Next action: Tech Lead review EF-CORE-02 và các limitations trong report.
+Next action: theo dõi remediation trong EF-CORE-03.

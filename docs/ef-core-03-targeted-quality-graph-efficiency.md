@@ -1,6 +1,6 @@
 # EF-CORE-03 — Targeted Quality & Graph Efficiency Improvements
 
-Ngày11/11/2026, Asia/Bangkok. IN_PROGRESS, chưa commit.
+Ngày11/11/2026, Asia/Bangkok. REVIEW, chờ Tech Lead nghiệm thu có giới hạn.
 
 ## 1. Executive Summary
 
@@ -151,12 +151,6 @@ responses tương đương. M8/model khác chưa bắt đầu.
 
 ## 12. CI and Implementation Evidence
 
-Chưa commit, chưa CI implementation. Final task-only staged tree:71 targeted PASS;
-Ruff check và planning130tasks PASS. Workspace planning131tasks gồm GEN-01a local;
-không đưa task local đó vào commit. Formatter-only newline normalization không đổi
-logic đã test; không dùng CI EF-CORE-02 làm CI task này.
-Artifacts ignored trong artifacts/evidence/EF-CORE-03: Owner task, reproduction/
-profile/timings, fresh runs/ledgers/provider events, probe, period replay/hashes,
-task-only staging. Local edits ngoài task giữ lại.
+Status: **REVIEW**, chờ Tech Lead nghiệm thu có giới hạn. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: Tech Lead review EF-CORE-03 và quyết định các quality limitations còn lại.
 
-Next action: hoàn tất checks và commit/push/CI để bàn giao Tech Lead REVIEW.
+Artifacts ignored trong artifacts/evidence/EF-CORE-03 giữ Owner task, raw runs/ledgers/provider events, profile/timings, semantic probe, period replay, source audit và implementation/CI receipt. Checkpoint sau implementation chỉ docs/planning; không gán CI implementation cho SHA checkpoint.

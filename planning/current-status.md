@@ -4,11 +4,7 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EF-CORE-03 — Targeted quality và graph efficiency
 
-Status: **IN_PROGRESS**, Owner giao ngày11/11/2026; baseline48b9d78.
-P1 isolation, P2 metadata, P3 context coverage và P4 request-owned reuse.
-[Spec](tasks/EF/EF-CORE-03.md), [report](../docs/ef-core-03-targeted-quality-graph-efficiency.md).
-Giữ local edits ngoài task; chưa commit.
-Next action: hoàn tất checks và commit/push/CI.
+Status: **REVIEW**, chờ Tech Lead nghiệm thu có giới hạn. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: Tech Lead review EF-CORE-03 và quyết định các quality limitations còn lại.
 
 ## EF-CORE-02 — Controlled ablation
 
@@ -25,7 +21,7 @@ relations cải thiện accuracy. G3/G5/period-policy/AttributeError/M6 caveats 
 230Gateway/679767known tokens/18unknown;198oracle-fact/62metric/89citation checks0 mismatch.
 169runtime Python/10670protected/19unrelated files unchanged;3local evaluator tests,
 staged Ruff/planning/diff PASS. Giữ local edits ngoài task; không M8/runtime changes.
-Next action: Tech Lead review EF-CORE-02 và các limitations trong report.
+Next action: theo dõi remediation trong EF-CORE-03.
 
 ## EF-CORE-01 — EF-EG trong M5 Lite
 

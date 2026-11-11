@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: EF-CORE-02
 - Estimated Complexity: M
@@ -41,7 +41,7 @@ Root causes → P1–P3 → profile/P4 → targeted offline → BBS Gemini → b
 - [x] P1 isolation và P2 source metadata/semantic regression.
 - [x] P3 projection coverage và P4 đo trước/sau giữ isolation.
 - [x] Fresh BBS validation và báo cáo cả partial/technical failures.
-- [ ] Targeted final checks, commit/push và CI đúng SHA; bàn giao REVIEW.
+- [x] Targeted final checks, commit/push và CI đúng SHA; bàn giao REVIEW.
 
 ## Required Tests
 
@@ -53,8 +53,8 @@ Provider503; Q5 chưa tái hiện đủ phần trăm, C3 context/period cũ; gra
 
 ## Implementation Evidence
 
-Chưa commit; baseline48b9d78. Offline70 targeted PASS và23 final incremental PASS; fresh semantic probe5cases; xem báo cáo cho các live/quality limits. Không dùng engineering PASS để chứng nhận financial accuracy.
+Status: **REVIEW**, chờ Tech Lead nghiệm thu có giới hạn. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../../../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: Tech Lead review EF-CORE-03 và quyết định các quality limitations còn lại.
 
 ## Handoff Notes
 
-Next action: hoàn tất checks và commit/push/CI.
+Next action: Tech Lead review EF-CORE-03 và các quality limitations.
