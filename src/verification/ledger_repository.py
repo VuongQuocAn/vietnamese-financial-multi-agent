@@ -13,6 +13,7 @@ from .ledger_contracts import (
     VerifiedClaimLedgerSnapshot,
     VerifiedClaimQuery,
 )
+from .lite_contracts import LiteVerificationHistory
 from .validation_contracts import verification_input_digest
 
 
@@ -77,12 +78,15 @@ class VerifiedClaimRepository:
         return snapshot
 
     def admit(
-        self, history: VerificationHistory | DocumentVerificationHistory
+        self, history: VerificationHistory | DocumentVerificationHistory | LiteVerificationHistory
     ) -> LedgerAdmissionResult:
         return self.admit_many([history])[0]
 
     def admit_many(
-        self, histories: list[VerificationHistory | DocumentVerificationHistory]
+        self,
+        histories: list[
+            VerificationHistory | DocumentVerificationHistory | LiteVerificationHistory
+        ],
     ) -> list[LedgerAdmissionResult]:
         """One atomic snapshot for a batch; each claim still needs its own exact proof.
 

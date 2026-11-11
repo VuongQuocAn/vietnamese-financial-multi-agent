@@ -12,6 +12,7 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 class FinancialQARequest(VietnameseQARequest):
     m5_lite: bool = False
+    m6_lite: bool = False
     m7_lite: bool = False
     allow_gateway: bool = True
     request_id: str = Field(default_factory=lambda: str(uuid4()), min_length=1)
@@ -41,6 +42,8 @@ class CandidateOutcome(FinancialModel):
 
 
 class PipelineTrace(FinancialModel):
+    verification_mode: Literal["legacy", "lite"] = "legacy"
+    m6_lite: dict = Field(default_factory=dict)
     answer_mode: Literal["legacy", "lite"] = "legacy"
     m7_lite: dict = Field(default_factory=dict)
     answer_requirements: list[QARequirement] = Field(default_factory=list)

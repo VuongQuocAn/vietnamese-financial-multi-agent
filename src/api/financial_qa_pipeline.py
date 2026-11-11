@@ -650,7 +650,9 @@ class FinancialQAPipeline:
         request = FinancialQARequest.model_validate_json(request.model_dump_json())
         started = perf_counter()
         trace = PipelineTrace(
-            request_id=request.request_id, answer_mode="lite" if request.m7_lite else "legacy"
+            request_id=request.request_id,
+            answer_mode="lite" if request.m7_lite else "legacy",
+            verification_mode="lite" if request.m6_lite else "legacy",
         )
         response = FinancialQAResponse(trace=trace)
         current = "context"
@@ -878,6 +880,7 @@ class FinancialQAPipeline:
                         )
                         if (
                             not bound.m5_lite
+                            and not bound.m6_lite
                             and bound.execution_mode != "deterministic"
                             and bound.allow_gateway
                         ):
@@ -979,7 +982,7 @@ class FinancialQAPipeline:
                         ]
                     trace.candidate_count = len(batch.claims)
                     # Reject foreign identities/citations before semantic calls or writes.
-                    if any(
+                    if not bound.m6_lite and any(
                         (c.company_id, c.document_id, c.snapshot_id)
                         != (bound.company_id, bound.document_id, bound.snapshot_id)
                         or any(
@@ -996,10 +999,15 @@ class FinancialQAPipeline:
                     ):
                         return stop("verification_blocked", ["candidate_source_context_mismatch"])
                     if batch.claims:
+                        from ..verification.lite_runtime import LiteVerificationRuntime
+
+                        runtime_type = (
+                            LiteVerificationRuntime if bound.m6_lite else VerificationRuntime
+                        )
                         runtime = (
                             controller
                             if adaptive_histories is not None
-                            else VerificationRuntime(
+                            else runtime_type(
                                 self.catalog,
                                 self.gateway
                                 if bound.allow_gateway and bound.execution_mode != "deterministic"
@@ -1015,6 +1023,9 @@ class FinancialQAPipeline:
                                 else runtime.verify(batch)
                             ),
                         )
+                        if bound.m6_lite:
+                            trace.verification_mode = "lite"
+                            trace.m6_lite = runtime.summary
                         for name, metadata in runtime.provider_metadata:
                             usage("m6_" + name, metadata)
                         for name, latency in runtime.stage_latency_ms.items():
@@ -1078,12 +1089,16 @@ class FinancialQAPipeline:
                         trace.native_decisions = dict(
                             Counter(o.final_decision for o in trace.outcomes)
                         )
+                        if bound.m6_lite:
+                            trace.m6_lite["ledger_admitted_claim_ids"] = [
+                                o.verified_claim_id for o in trace.outcomes if o.verified_claim_id
+                            ]
                         # Native policy has ABSTAIN/INVESTIGATE, no fabricated REJECT threshold.
                         response.rejected_claims = trace.native_decisions.get("ABSTAIN", 0)
                         response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
                         ledger.cache.clear()
                         stage("ledger_reload", lambda: ledger.find_claims(query))
-                    if output.conflicts:
+                    if output.conflicts and not bound.m6_lite:
                         return stop("verification_blocked", ["unresolved_candidate_conflicts"])
                     response.mode = "PARTIAL_REUSE_AND_REFRESH" if existing_ids else "BLOCKED"
 

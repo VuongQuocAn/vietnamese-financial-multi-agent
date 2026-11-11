@@ -78,6 +78,7 @@ jobs:
           tests/unit/test_multihop_reasoning.py
           tests/unit/test_qa_lite.py
           tests/unit/test_m5_lite.py
+          tests/unit/test_m6_lite.py
           tests/unit/test_financial_qa_pipeline.py::test_fresh_verification_release_then_cache_without_provider
           tests/unit/test_llm_gateway.py::test_routing_and_explicit_model_configuration_without_network
       - name: Full unit regression (manual)

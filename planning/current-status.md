@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M6-LITE-01 — Simplified Financial Claim Verification
+
+Status: **REVIEW**, Owner giao11/11/2026; baseline `9a6aaac`; implementation chưa commit.
+[Spec](tasks/M6/M6-LITE-01.md), [report](../docs/m6-lite-01-simplified-verification.md).
+Flag false mặc định; deterministic→một semantic batch→single decision→existing Ledger/M7.
+3Lite/30targeted PASS; BBS5numeric ACCEPT, fresh pipeline3new/0calls/partial coverage.
+Live1/4calls,2242tokens,10,521s:3SUPPORTED+1UNSUPPORTED;8stored/reload,1ABSTAIN;
+0unsafe/0unjustified rejection trong4semantic cases; positive còn restatement/qualification.
+M7 offline dùng2semantic ACCEPT, không M7live/OCR/M8; giữ provenance/scope caveats.
+Next action: Tech Lead nghiệm thu M6-LITE-01 và giới hạn đã báo.
+
 ## M5-LITE-01 — Simplified Multi-Agent Orchestration
 
 Status: **REVIEW**, Owner giao11/11/2026; baseline `a7da263`.

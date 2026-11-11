@@ -13,6 +13,7 @@ from .ledger_contracts import (
     VerifiedDocumentClaim,
     VerifiedDocumentIdentity,
 )
+from .lite_contracts import LiteVerificationHistory
 from .validation_contracts import verification_input_digest
 from .verification_loop import BoundedVerificationLoop
 
@@ -88,7 +89,35 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
         entry = VerifiedDocumentClaim(identity=identity, history=history, payload_sha256="")
         entry.payload_sha256 = verification_input_digest(entry)
         return entry
-    history = replay_history(history)
+    if isinstance(history, LiteVerificationHistory):
+        from .lite_runtime import decide, payload_digest, semantic_payload
+
+        history = LiteVerificationHistory.model_validate_json(history.model_dump_json())
+        proof, outcome = history.proof, history.outcome
+        batch, validation = proof.batch, proof.validation
+        if (
+            len(batch.claims) != 1
+            or len(validation.claims) != 1
+            or validation.source_result_sha256 != batch.source_result_sha256
+            or validation.verification_input_sha256 != verification_input_digest(batch)
+            or validation.claims[0].candidate_id != batch.claims[0].candidate_id
+            or outcome.initial_input != batch
+            or outcome.parent_candidate_id != batch.claims[0].candidate_id
+            or len(outcome.attempts) != 1
+            or outcome.revision_input is not None
+            or not outcome.stopped
+            or outcome.stop_reason != "lite_single_pass"
+            or (
+                proof.semantic is not None
+                and proof.semantic_input_sha256
+                != payload_digest(semantic_payload(batch, batch.claims[0]))
+            )
+            or outcome.final != decide(proof)
+            or outcome.final.decision != "ACCEPT"
+        ):
+            raise LedgerAdmissionError("lite_proof_or_decision_replay_mismatch")
+    else:
+        history = replay_history(history)
     outcome = history.outcome
     final, original = outcome.final, outcome.attempts[0]
     claim = final.original_claim

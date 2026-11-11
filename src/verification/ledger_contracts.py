@@ -11,6 +11,7 @@ from .contracts import VerificationInput
 from .decision_contracts import VerificationLoopResult
 from .document_verification import DocumentVerificationHistory
 from .evidence_contracts import EvidenceCriticResult
+from .lite_contracts import LiteVerificationHistory
 from .logic_contracts import FinancialLogicCriticResult
 from .validation_contracts import ValidationResult
 
@@ -59,7 +60,7 @@ class VerifiedClaim(FinancialModel):
     version: Literal["verified_claim_v1"] = "verified_claim_v1"
     identity: VerifiedClaimIdentity
     verification_status: Literal["verified"] = "verified"
-    history: VerificationHistory
+    history: VerificationHistory | LiteVerificationHistory
     payload_sha256: str
 
     @property

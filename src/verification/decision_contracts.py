@@ -51,6 +51,14 @@ class VerificationDecisionTrace(FinancialModel):
     legacy_pairing: bool = False
 
 
+class LiteDecisionTrace(FinancialModel):
+    source_result_sha256: str
+    verification_input_sha256: str
+    validation_result_sha256: str
+    semantic_result_sha256: str
+    policy_version: Literal["verification_lite_v1"] = "verification_lite_v1"
+
+
 class VerificationDecisionRecord(FinancialModel):
     candidate_id: str
     original_claim: CandidateClaim
@@ -67,7 +75,7 @@ class VerificationDecisionRecord(FinancialModel):
     revision: RevisionProposal | None = None
     investigations: list[InvestigationRequirement] = Field(default_factory=list)
     errors: list[DecisionError] = Field(default_factory=list)
-    trace: VerificationDecisionTrace
+    trace: VerificationDecisionTrace | LiteDecisionTrace
     iteration_index: Literal[0, 1] = 0
     parent_candidate_id: str | None = None
 
