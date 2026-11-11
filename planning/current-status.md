@@ -13,7 +13,8 @@ Implementation [20be7ca](https://github.com/VuongQuocAn/vietnamese-financial-mul
 Chưa install vLLM/tải weights/chạy model/GPU/tunnel trong Codex; chưa xác nhận 16K/T4/API.
 Diagnostics [27487c1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/27487c1a53346fa7c4fbff2d3cb055ae09547bab): Owner log health/models200, first inference500; chưa rõ root cause. Hiện response body và traceback trước cleanup, 2 offline controls PASS; chưa GPU tested.
 T4 workaround [66f16ef](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/66f16ef35b7a16cba19c7b6ece9de58ce85e6053): log mới xác định OutOfResources shared memory 98304>65536, không phải VRAM OOM. Tắt chunked prefill/prefix caching, budget bằng context; sửa false OOM hint. 2 offline controls PASS; chưa xác nhận inference đã hết lỗi.
-Next action: Owner chạy lại cell Start API mới trên Colab và gửi kết quả/log.
+KV-cache adjustment [7eb7ee5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/7eb7ee5692ac407d986c25466504d43be58e9092): Owner log context16384 vượt KV capacity8512; đổi mặc định8192, vẫn cho chọn16K thử nghiệm. 2 offline controls PASS; chưa inference/GPU PASS, chưa chứng minh shared-memory fix thành công vì engine dừng trước inference.
+Next action: Owner đặt CONTEXT_SIZE=8192 rồi chạy lại Start API và gửi kết quả/log.
 
 ## MODEL-CTX-01 — LLM context profiling
 
