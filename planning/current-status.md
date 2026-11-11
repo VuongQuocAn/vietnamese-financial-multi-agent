@@ -4,7 +4,7 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## CORE-PERIOD-01 — Comparative period verification
 
-Status: **REVIEW**; chưa commit. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01 sau CI đúng SHA.
+Status: **REVIEW**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01.
 [Spec](tasks/CORE/CORE-PERIOD-01.md). Giữ local edits ngoài task; không M8/model khác.
 
 ## EF-CORE-03 — Targeted quality và graph efficiency

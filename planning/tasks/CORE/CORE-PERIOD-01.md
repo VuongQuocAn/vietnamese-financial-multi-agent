@@ -44,10 +44,10 @@ chạy một fresh lượt L1–L5 qua Gateway hiện có; đối chiếu oracle
 
 ## Acceptance Criteria
 
-- [ ] Root cause và trước/sau đúng trace thật.
-- [ ] Comparative hợp lệ ACCEPT; exact date và identity/provenance guards giữ nguyên.
-- [ ] Sai hướng/mẫu số/nguồn/kỳ bị chặn; metrics và candidate isolation không regression.
-- [ ] Fresh Gemini/raw M7 cho L1–L5, phân biệt verification và answer completeness.
+- [x] Root cause và trước/sau đúng trace thật.
+- [x] Comparative hợp lệ ACCEPT; exact date và identity/provenance guards giữ nguyên.
+- [x] Sai hướng/mẫu số/nguồn/kỳ bị chặn; metrics và candidate isolation không regression.
+- [x] Fresh Gemini/raw M7 cho L1–L5, phân biệt verification và answer completeness.
 - [ ] Targeted checks và CI đúng implementation SHA PASS; chờ Tech Lead nghiệm thu.
 
 ## Required Tests
@@ -61,8 +61,8 @@ Provider errors và generic M5 coverage phải báo riêng; không retry để l
 
 ## Implementation Evidence
 
-Status: **REVIEW**; chưa commit. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../../../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01 sau CI đúng SHA.
+Status: **REVIEW**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../../../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01.
 
 ## Handoff Notes
 
-Next action: Tech Lead review CORE-PERIOD-01 sau CI đúng SHA. Chưa tự DONE.
+Next action: Tech Lead review CORE-PERIOD-01. Chưa tự DONE.

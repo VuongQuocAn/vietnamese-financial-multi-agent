@@ -159,5 +159,4 @@ Generic M5 coverage, semantic/provider errors và M7 completeness phải chấm 
 
 ## CI Evidence
 
-Chưa commit/push; CI chưa chạy cho implementation này. Chỉ báo SUCCESS khi xác minh
-đúng implementation SHA. Chờ Tech Lead review; không tự chuyển DONE.
+Implementation [30710fed39abb1c84e712690d94180037241ac66](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main; [CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) **SUCCESS**, head SHA được đối chiếu chính xác. Python 3.12 targeted smoke **231 PASS**; Web/full regression SKIPPED theo workflow. Ruff/planning/diff PASS; local staged82 trước M7 +33 final M7 (12 overlap), và14 final controls sau guard/trace metadata adjustment. Không dùng CI thay research evaluation. Status **REVIEW**; next action: Tech Lead review CORE-PERIOD-01, giữ các giới hạn đã ghi.
