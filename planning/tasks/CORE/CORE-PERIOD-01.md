@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: CORE
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: EF-CORE-03
 - Estimated Complexity: S
@@ -48,7 +48,7 @@ chạy một fresh lượt L1–L5 qua Gateway hiện có; đối chiếu oracle
 - [x] Comparative hợp lệ ACCEPT; exact date và identity/provenance guards giữ nguyên.
 - [x] Sai hướng/mẫu số/nguồn/kỳ bị chặn; metrics và candidate isolation không regression.
 - [x] Fresh Gemini/raw M7 cho L1–L5, phân biệt verification và answer completeness.
-- [ ] Targeted checks và CI đúng implementation SHA PASS; chờ Tech Lead nghiệm thu.
+- [x] Targeted checks và CI đúng implementation SHA PASS; Tech Lead nghiệm thu có giới hạn ngày 11/11/2026.
 
 ## Required Tests
 
@@ -61,8 +61,11 @@ Provider errors và generic M5 coverage phải báo riêng; không retry để l
 
 ## Implementation Evidence
 
-Status: **REVIEW**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../../../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01.
+Status: **DONE — Tech Lead APPROVED có giới hạn ngày 11/11/2026**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../../../docs/core-period-01-comparative-period-verification.md). Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.
 
 ## Handoff Notes
 
-Next action: Tech Lead review CORE-PERIOD-01. Chưa tự DONE.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới. Giữ mọi giới hạn đã báo cáo.
+
+Quyết định Tech Lead: APPROVED — DONE có giới hạn. Phiên chốt chỉ cập nhật
+tài liệu/planning; không sửa runtime, chạy lại tests/Gemini/CI hoặc commit/push.

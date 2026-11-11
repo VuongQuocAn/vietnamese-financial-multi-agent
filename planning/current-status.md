@@ -2,9 +2,19 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## MODEL-CTX-01 — LLM context profiling
+
+Status: **REVIEW**; implementation chưa commit. 20 scenarios/61 captured logical
+calls, zero model API/weights/runtime changes. Qwen14B/8B: 17 overflow/2 near ở 8K,
+61 FIT tại 16K/32K non-thinking; Llama tokenizer gated unavailable. M7 Q6 context
+lớn nhất; đề xuất thử Qwen3-8B 4-bit/16K trên T4, chưa GPU benchmark.
+[Report](../docs/model-ctx-01-llm-context-profiling.md),
+[spec](tasks/MODEL/MODEL-CTX-01.md). 3 targeted PASS; CI pending.
+Next action: Tech Lead review MODEL-CTX-01 và quyết định task Colab serving.
+
 ## CORE-PERIOD-01 — Comparative period verification
 
-Status: **REVIEW**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01.
+Status: **DONE — Tech Lead APPROVED có giới hạn ngày 11/11/2026**; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../docs/core-period-01-comparative-period-verification.md). Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.
 [Spec](tasks/CORE/CORE-PERIOD-01.md). Giữ local edits ngoài task; không M8/model khác.
 
 ## EF-CORE-03 — Targeted quality và graph efficiency
