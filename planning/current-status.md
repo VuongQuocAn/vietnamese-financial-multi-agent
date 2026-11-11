@@ -8,7 +8,7 @@ Status: **REVIEW** — **STATIC VALIDATED — NOT GPU TESTED**.
 [Notebook](../notebooks/colab_qwen_t4_api.ipynb), [spec](tasks/MODEL/MODEL-SERVE-01.md).
 Hai GGUF Q4_K_M pin revision/hash; Drive cache và fallback; pinned CUDA build,
 start/stop/readiness; Vietnamese/JSON/financial/optional long-context tests.
-Implementation là commit thêm notebook; SHA sẽ được xác minh khi bàn giao.
+Implementation [34beda9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/34beda90f98262107696bfe6cc958d5a8850b320); SHA đã xác minh và push main.
 Static nbformat/AST, kiểm tra helpers offline, source/model metadata và planning/diff checks PASS.
 Không tải weights, build backend hoặc gọi model; chưa xác nhận GPU/context/API hoạt động.
 Next action: Project Owner mở notebook trên Colab Free, chọn model và chạy thử.

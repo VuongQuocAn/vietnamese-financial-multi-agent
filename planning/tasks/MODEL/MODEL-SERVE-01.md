@@ -76,7 +76,7 @@ copy failure fallback sang local. Không có external endpoint để máy Codex 
 
 ## Implementation Evidence
 
-Implementation SHA: commit thêm notebook (xác minh và báo SHA sau commit).
+Implementation SHA: `34beda90f98262107696bfe6cc958d5a8850b320` (đã xác minh và push main).
 Static validation PASS tại môi trường Codex; evidence local ignored tại
 `artifacts/evidence/MODEL-SERVE-01/`. Không tải weights hoặc chạy GPU/API inference.
 Static helpers không chứng minh financial accuracy hoặc GPU feasibility.
