@@ -1,4 +1,4 @@
-# TASK MODEL-SERVE-01 — Google Colab T4 Notebook for Qwen3.5-9B / Qwen3-14B 4-bit
+# TASK MODEL-SERVE-01 — Colab T4 Qwen3-14B API Notebook
 
 ## Metadata
 
@@ -11,77 +11,83 @@
 
 ## Objective
 
-Notebook Colab Free chọn một GGUF Q4_K_M, cache Drive, start local API và test tương tác.
-Chỉ tạo notebook; không triển khai/chạy model trong Codex.
+Mở Colab → Run all → chuẩn bị Qwen3-14B GGUF Q4_K_M → nhận API nếu môi trường cho phép.
+Context mục tiêu 16384 trên T4; chưa xác nhận GPU/16K hoặc external API hoạt động thực tế.
 
 ## Context
 
-Owner giao task ngày 11/11/2026, cho phép commit/push main đúng phạm vi.
-STATIC VALIDATED — NOT GPU TESTED; chưa xác nhận GPU inference/context/API.
+Owner yêu cầu đơn giản hóa ngày 11/11/2026, cho phép commit/push main và bàn giao REVIEW.
+Chỉ hỗ trợ Qwen3-14B, bỏ lựa chọn Qwen3.5 và full-file SHA-256 model mỗi lần chạy.
+Yêu cầu mới thay phạm vi dual-model/local-only trước đây; giữ lịch sử implementation cũ.
 
 ## Inputs
 
-Owner spec; metadata Hugging Face của axteam/Qwen3.5-9B-GGUF và Qwen/Qwen3-14B-GGUF;
-source llama.cpp v0.9.0 pin cd959bae99ff4bed22bef2604f45241c09bbb8c8.
-Notebook chứa source links và model revision/size/SHA-256 xác minh từ LFS metadata.
+Qwen/Qwen3-14B-GGUF, file Qwen3-14B-Q4_K_M.gguf, revision
+530227a7d994db8eca5ab5ced2fb692b614357fd; size 9001752960 xác minh qua metadata.
+llama.cpp pin cd959bae99ff4bed22bef2604f45241c09bbb8c8; cloudflared pin 2026.10.7.
+Không tìm thấy qwen_vllm_api.ipynb trong thư mục dự án; tham chiếu docs chính thức
+Cloudflare Quick Tunnel và Colab được liên kết trong notebook.
 
 ## Outputs
 
-[Notebook](../../../notebooks/colab_qwen_t4_api.ipynb), bốn phần tiếng Việt và Colab forms.
+[Notebook](../../../notebooks/colab_qwen_t4_api.ipynb): chuẩn bị GPU/Drive, cache/build,
+Start API, Test API và Stop thủ công. Colab tự tạo MyDrive/DACNTT/api_info.json
+chứa BASE_URL/API_KEY/MODEL_NAME và status/timestamp; không commit file secret này.
 
 ## Allowed Changes
 
-Notebook, registry/current-status/dashboard/spec và checker nhận task ID MODEL-SERVE.
-Stage riêng các hunk mới khi planning có local edits; không commit local edits ngoài task.
+Notebook và ba tài liệu tracking liên quan; commit/push main đúng hunk thuộc task.
+Tự chọn implementation phù hợp theo yêu cầu Owner; dùng lại pinned CUDA backend.
 
 ## Out of Scope
 
-Không weights/GPU inference/Colab execution, Gateway adapter, M5/M6/M7/EF-EG,
-benchmark M8, vision encoder, quantize lại, FP16 download hoặc public tunnel.
+Không pipeline M5/M6/M7/EF-EG, Gateway adapter, benchmark M8, weights/GPU execution
+trong Codex, FP16 downloads, lượng tử hóa lại hoặc cơ chế giữ Colab sống/vượt chặn.
 
 ## Implementation Steps
 
-1. Xác minh filenames/revisions/LFS hashes và backend source/arguments.
-2. Tạo notebook: config/GPU, Drive/local cache, CUDA server và API tests.
-3. Kiểm tra tĩnh, planning/diff; commit/push main và bàn giao REVIEW.
+1. Giữ một model/cache nhẹ, giới hạn tùy chọn context và HTTPS.
+2. Start server có key, thử tunnel HTTPS và kiểm tra public route trước khi lưu URL.
+3. Hai smoke tests, static validation, commit/push và bàn giao Owner thử Colab.
 
 ## Acceptance Criteria
 
-- [x] Notebook hợp lệ, code cells parse được, không có execution outputs.
-- [x] Dropdown hai model, mặc định Qwen3.5-9B; Q4_K_M và context 16K/8K.
-- [x] GPU/runtime/disk checks; không âm thầm CPU-only.
-- [x] Drive cache riêng từng model, header/size/hash và download fallback.
-- [x] Pinned CUDA source build, SM75 trên T4, reuse binary khi hợp lệ.
-- [x] Start/stop process sở hữu, timeout/readiness/logs, offload/API probes.
-- [x] Local OpenAI-compatible API; non-thinking parameter và final-content checks.
-- [x] Vietnamese QA, JSON numeric checks, financial 20%, optional tokenizer-counted long context.
-- [x] Usage/latency/VRAM/timing báo UNKNOWN khi không được backend cung cấp.
-- [x] Connection template phân biệt local/external; không giả public URL/key.
-- [x] Không tải weights/chạy backend/inference, không đổi runtime DACNTT.
+- [x] Notebook hợp lệ, code parse được, không có execution outputs/secrets hardcoded.
+- [x] Một Qwen3-14B GGUF Q4_K_M; mặc định 16K, fallback 8K do Owner chọn khi OOM.
+- [x] Ưu tiên Drive, copy local; chưa có thì tải HF; chỉ kiểm tra size/GGUF header của weights.
+- [x] CUDA build pin/reuse, GPU offload, readiness/timeout/logs và dừng process sở hữu.
+- [x] OpenAI-compatible non-thinking server có API key; thử Cloudflare HTTPS khi được bật.
+- [x] Chỉ lưu URL HTTPS sau probe model alias và xác nhận thiếu key bị từ chối.
+- [x] Tự lưu api_info.json trên Drive; không in key; LOCAL_ONLY có BASE_URL null.
+- [x] Hai test tiếng Việt/JSON và latency/tokens/tốc độ/VRAM hoặc UNKNOWN.
+- [x] Run all giữ API chạy; Stop riêng vô hiệu URL và dừng server/tunnel.
+- [x] Không thay pipeline DACNTT hoặc chạy weights/build/tunnel/GPU trong Codex.
 
-Các dấu trên xác nhận cấu trúc/logic tĩnh; Owner vẫn phải thử thực tế trên Colab.
+Các criteria trên xác nhận cấu trúc/logic tĩnh, không phải kết quả thực thi Colab.
 
 ## Required Tests
 
-nbformat schema; AST parse tất cả code cells và sequential name analysis;
-offline helper controls cho cache integrity, JSON/final content, long-context budget;
-đối chiếu flags/API với pinned source và model IDs/files với HF metadata;
-planning checker và git diff --check. Không full project suite/CI/GPU smoke.
+nbformat schema, AST/sequential names, Ruff lint/format; ba offline controls:
+cache header/size không full hash, api_info READY/LOCAL_ONLY/STOPPED, final-content/JSON.
+Đối chiếu HF metadata/backend/tunnel docs; planning checker và git diff --check.
 
 ## Risks and Blockers
 
-GPU availability, Colab CUDA toolkit/build, architecture load, 16K VRAM và API inference
-chưa chạy thực tế. Drive filesystem free-space không bảo đảm phản ánh account quota;
-copy failure fallback sang local. Không có external endpoint để máy Codex gọi.
+T4/16K chưa GPU tested; Colab có thể kết thúc phiên/chặn tunnel. Quick Tunnel đổi URL,
+không SLA/SSE; client phải stream=false. Public route chỉ probe từ Colab, chưa từ máy DACNTT.
+Codex cần kết nối/quyền đọc Drive hoặc Drive sync để lấy api_info.json; mount Colab
+không tự chia sẻ filesystem với Codex. File có thể stale nếu runtime bị ngắt đột ngột;
+client cần kiểm tra models trước khi dùng. Cache size/header không chứng minh toàn vẹn hash.
 
 ## Implementation Evidence
 
-Implementation SHA: `34beda90f98262107696bfe6cc958d5a8850b320` (đã xác minh và push main).
-Static validation PASS tại môi trường Codex; evidence local ignored tại
-`artifacts/evidence/MODEL-SERVE-01/`. Không tải weights hoặc chạy GPU/API inference.
-Static helpers không chứng minh financial accuracy hoặc GPU feasibility.
+Implementation sửa theo Owner: `0d556d2c23ecbdbeb732cec5740d78af324b668e`; static checks ở trên PASS local.
+Implementation đầu `34beda90f98262107696bfe6cc958d5a8850b320` được giữ trong lịch sử.
+Evidence offline ignored: artifacts/evidence/MODEL-SERVE-01/simplify/.
+Không weights/model calls/build/Colab/GPU/tunnel execution hoặc full suite/CI run trong phiên này.
+STATIC VALIDATED — NOT GPU TESTED.
 
 ## Handoff Notes
 
-REVIEW, chờ Project Owner/Tech Lead nghiệm thu; không tự DONE hoặc mở FIX task.
-Next action: Project Owner mở notebook trên Colab Free, chọn model và chạy thử.
+REVIEW, chờ Owner/Tech Lead nghiệm thu; không tự DONE.
+Next action: Owner mở notebook trên Colab Free, chạy các cell và gửi log nếu lỗi.

@@ -2,16 +2,17 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## MODEL-SERVE-01 — Colab T4 local API notebook
+## MODEL-SERVE-01 — Qwen3-14B API notebook
 
 Status: **REVIEW** — **STATIC VALIDATED — NOT GPU TESTED**.
 [Notebook](../notebooks/colab_qwen_t4_api.ipynb), [spec](tasks/MODEL/MODEL-SERVE-01.md).
-Hai GGUF Q4_K_M pin revision/hash; Drive cache và fallback; pinned CUDA build,
-start/stop/readiness; Vietnamese/JSON/financial/optional long-context tests.
-Implementation [34beda9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/34beda90f98262107696bfe6cc958d5a8850b320); SHA đã xác minh và push main.
-Static nbformat/AST, kiểm tra helpers offline, source/model metadata và planning/diff checks PASS.
-Không tải weights, build backend hoặc gọi model; chưa xác nhận GPU/context/API hoạt động.
-Next action: Project Owner mở notebook trên Colab Free, chọn model và chạy thử.
+Theo yêu cầu sửa của Owner: chỉ Qwen3-14B GGUF Q4_K_M, context mục tiêu 16K;
+Drive cache kiểm tra size/header, pinned CUDA server, thử HTTPS Cloudflare Tunnel,
+lưu kết nối/secret vào MyDrive/DACNTT/api_info.json và test tiếng Việt/JSON.
+Implementation [0d556d2](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/0d556d2c23ecbdbeb732cec5740d78af324b668e); nbformat/AST, Ruff và 3 offline controls PASS.
+Run all giữ API chạy; Stop riêng sẽ dừng server/tunnel và vô hiệu URL trong file.
+Không tải weights/chạy build/GPU/Colab/tunnel; chưa xác nhận HTTPS hay 16K trên T4.
+Next action: Owner mở notebook trên Colab Free, chạy các cell và gửi log nếu lỗi.
 
 ## MODEL-CTX-01 — LLM context profiling
 
