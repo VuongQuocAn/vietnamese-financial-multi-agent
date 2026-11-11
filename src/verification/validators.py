@@ -11,6 +11,7 @@ from ..tools.financial_calculator import (
     render_dynamic,
 )
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
+from ..tools.question_understanding import comparison_periods
 from .contracts import CandidateClaim, VerificationInput
 from .logic_rules import _limitation_remainder, assertion_category
 from .numeric import extract_assertion, fold
@@ -234,9 +235,17 @@ class DeterministicFinancialValidator:
             sources[0].period,
         ):
             self._check(result, "context", "fail", "reasoning_owner_mismatch")
-        if batch.context.period and batch.context.period != claim.period:
-            self._check(result, "context", "fail", "reasoning_requested_period_mismatch")
+        requested_periods = comparison_periods(batch.question)
         periods = {s.period for s in sources}
+        comparative = (
+            bool(requested_periods)
+            and periods <= requested_periods
+            and (not batch.context.period or batch.context.period in requested_periods)
+        )
+        if requested_periods and not comparative:
+            self._check(result, "context", "fail", "reasoning_comparison_period_mismatch")
+        if batch.context.period and batch.context.period != claim.period and not comparative:
+            self._check(result, "context", "fail", "reasoning_requested_period_mismatch")
         across = proof.calculation and any(
             step.operation.period_relation == "across_periods" for step in proof.calculation.steps
         )
@@ -272,7 +281,7 @@ class DeterministicFinancialValidator:
             )
             sub = ClaimValidationResult(candidate_id=claim.candidate_id, claim_kind=claim.kind)
             local_batch = batch.model_copy(deep=True)
-            if across:
+            if across and (not batch.context.period or comparative):
                 local_batch.context.period = None
                 local_batch.context.reporting_year = None
             if source.calculation:
@@ -292,6 +301,26 @@ class DeterministicFinancialValidator:
                 )
                 if computation != expected:
                     raise ValueError("dynamic_replay_mismatch")
+                # A change relative to the base uses target first, base second.
+                # Bind direct change operands to the same canonical indicator;
+                # replay still owns the arithmetic, denominator and source guards.
+                by_id = {s.evidence_id: s for s in sources}
+                for step in computation.steps:
+                    op = step.operation
+                    if op.period_relation != "across_periods" or op.operator not in {
+                        "subtract",
+                        "percentage_change",
+                        "relative_difference",
+                    }:
+                        continue
+                    if all(key in by_id for key in op.inputs):
+                        target, base = (by_id[key] for key in op.inputs)
+                        if target.period != base.period and (
+                            target.period < base.period
+                            or not target.canonical_item_id
+                            or target.canonical_item_id != base.canonical_item_id
+                        ):
+                            raise ValueError("reasoning_comparison_operand_mismatch")
                 self._check(
                     result,
                     "dynamic_calculation",
@@ -396,8 +425,17 @@ class DeterministicFinancialValidator:
         }
         mismatch = [k for k, v in observed.items() if v and expected[k] and v != expected[k]]
         missing = [k for k, v in observed.items() if not v or not expected[k]]
+        requested_periods = comparison_periods(batch.question)
+        if requested_periods and period not in requested_periods:
+            mismatch.append("requested_comparison_period")
         for field in ("company_id", "document_id", "snapshot_id", "period"):
             requested = getattr(batch.context, field)
+            if (
+                field == "period"
+                and period in requested_periods
+                and (requested is None or requested in requested_periods)
+            ):
+                continue
             if (
                 requested is not None
                 and expected[field] is not None

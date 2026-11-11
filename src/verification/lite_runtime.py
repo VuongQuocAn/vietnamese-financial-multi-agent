@@ -202,7 +202,8 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
             # in this filing. Replay their own canonical periods, retaining the
             # request's company/document/snapshot binding.
             premise_batch = batch.model_copy(deep=True)
-            premise_batch.context.period = None
+            # Keep an exact-date request binding. Only explicit comparison
+            # endpoints may relax it in the shared deterministic validator.
             premise_batch.context.reporting_year = None
             super()._reasoning(premise_batch, local, result)
             result.checks = [
@@ -213,7 +214,6 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
                     "reasoning_unbound_number",
                     "reasoning_unbound_unit",
                     "reasoning_calculation_required",
-                    "reasoning_period_relation_missing",
                 }
             ]
             allowed = {Decimal(s.value) for s in claim.supporting_evidence}

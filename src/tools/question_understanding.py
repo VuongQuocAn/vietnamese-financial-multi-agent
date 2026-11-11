@@ -80,6 +80,41 @@ def natural_formula(text):
     return None
 
 
+def comparison_periods(question: str) -> set[str]:
+    """Explicit comparison endpoints, separate from a single requested fact date.
+
+    Filing selection still owns document/year binding; canonical sources and M4
+    own operand identity, accounting compatibility and calculation replay.
+    """
+    text = normalize(question)
+    comparative = any(
+        t in text for t in ("so voi", "so sanh", "thay doi", "bien dong", "chenh lech")
+    )
+    endpoints = "dau nam" in text and (
+        any(t in text for t in ("cuoi nam", "cuoi ky"))
+        or re.search(r"\bcuoi (?:19|20|21)\d{2}\b", text)
+    )
+    if not comparative and not endpoints:
+        return set()
+    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
+    dates = set(re.findall(r"\b(?:19|20|21)\d{2}-\d{2}-\d{2}\b", text))
+    try:
+        dates.update(
+            date(int(y), int(m), int(d)).isoformat()
+            for d, m, y in re.findall(r"\b(\d{1,2})/(\d{1,2})/((?:19|20|21)\d{2})\b", text)
+        )
+    except ValueError:
+        return set()
+    if len(dates) > 1:
+        return dates
+    if len(years) == 1 and "dau nam" in text:
+        year = next(iter(years))
+        return {f"{year}-01-01"} | (dates or {f"{year}-12-31"})
+    if len(years) > 1:
+        return years
+    return set()
+
+
 def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     text = normalize(question)
     years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
@@ -105,7 +140,7 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
         if len(periods) != 1:
             return parsed, ["multiple_periods_unsupported"]
         parsed.period = next(iter(periods))
-    elif parsed.reporting_year and "dau nam" in text:
+    elif parsed.reporting_year and "dau nam" in text and not comparison_periods(question):
         parsed.period = f"{parsed.reporting_year}-01-01"
     # Một baseline đơn mục tiêu; không diễn giải phép so sánh thành một fact.
     if len(years) > 1 or "lien tai lieu" in text:

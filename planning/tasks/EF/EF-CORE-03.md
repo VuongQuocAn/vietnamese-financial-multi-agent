@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: EF-CORE-02
 - Estimated Complexity: M
@@ -53,8 +53,10 @@ Provider503; Q5 chưa tái hiện đủ phần trăm, C3 context/period cũ; gra
 
 ## Implementation Evidence
 
-Status: **REVIEW**, chờ Tech Lead nghiệm thu có giới hạn. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../../../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: Tech Lead review EF-CORE-03 và quyết định các quality limitations còn lại.
+Status: **DONE — Tech Lead APPROVED có điều kiện ngày11/11/2026**, trong phạm vi P1–P4; giữ các quality limitations đã báo cáo. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../../../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.
 
 ## Handoff Notes
 
-Next action: Tech Lead review EF-CORE-03 và các quality limitations.
+Phiên nghiệm thu chỉ cập nhật tài liệu/planning; không tối ưu graph, chạy lại tests/live/CI hoặc thay đổi runtime/dữ liệu.
+
+Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.

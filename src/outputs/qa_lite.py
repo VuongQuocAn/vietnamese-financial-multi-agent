@@ -403,9 +403,38 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
         )
         if request.allow_gateway and request.execution_mode != "deterministic":
             gaps.append(dict(type="C", text=GAP_TEXT["C"]))
-    covered = {k for s in segments for k in s["claim_ids"]}
     trace["llm_segments_released"] = len(segments)
     trace["llm_released_claims"] = list(dict.fromkeys(k for s in segments for k in s["claim_ids"]))
+    # A cited finding can still omit its admitted calculation results. Restore
+    # the existing public trace verbatim; this is presentation, not verification
+    # or new arithmetic. Keep the original provider output in the trace.
+    trace["restored_calculation_claims"] = []
+    for key, entry in entries.items():
+        proof = getattr(entry.accepted_claim, "reasoning", None)
+        if (
+            not proof
+            or not proof.calculation
+            or not any(
+                step.operation.period_relation == "across_periods"
+                for step in proof.calculation.steps
+            )
+        ):
+            continue
+        displayed = list(
+            _quantities("\n".join(s["text"] for s in segments if key in s["claim_ids"]))
+        )
+        if any(
+            step.unit != "boolean"
+            and not any(
+                abs(value) == abs(Decimal(step.result).quantize(Decimal("0.01")))
+                and unit == ("%" if step.unit == "percent" else step.unit)
+                for value, _, unit in displayed
+            )
+            for step in proof.calculation.steps
+        ):
+            segments.append(dict(text=_proof_text(entry), claim_ids=[key]))
+            trace["restored_calculation_claims"].append(key)
+    covered = {k for s in segments for k in s["claim_ids"]}
     for key, entry in entries.items():
         if key not in covered and (not covered or trace["rejected_segments"]):
             segments.append(dict(text=entry.content, claim_ids=[key]))

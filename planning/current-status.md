@@ -2,9 +2,14 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## CORE-PERIOD-01 — Comparative period verification
+
+Status: **REVIEW**; chưa commit. Request binding + M6 endpoint guards, M7 phục hồi calculation display đã ACCEPT. 82 staged targeted trước M7 +33 final M7 PASS (12 overlap);20 real controls PASS;6 fresh E2E/25 attempts/111680 known tokens/1 unknown. L2 final fresh đủ −8,66%/−14,35%/59,06%;Q5/C3 final M7 offline replay đủ số, runtime vẫn partial;46fact/593citation checks0 mismatch. [Report](../docs/core-period-01-comparative-period-verification.md). Next action: Tech Lead review CORE-PERIOD-01 sau CI đúng SHA.
+[Spec](tasks/CORE/CORE-PERIOD-01.md). Giữ local edits ngoài task; không M8/model khác.
+
 ## EF-CORE-03 — Targeted quality và graph efficiency
 
-Status: **REVIEW**, chờ Tech Lead nghiệm thu có giới hạn. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: Tech Lead review EF-CORE-03 và quyết định các quality limitations còn lại.
+Status: **DONE — Tech Lead APPROVED có điều kiện ngày11/11/2026**, trong phạm vi P1–P4; giữ các quality limitations đã báo cáo. [Implementation cec9f44](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cec9f44f5dc610e306e2cbfb20dde18f6984f1d1) đã push main; [CI42985614260](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42985614260) SUCCESS đúng SHA,217Python PASS; Web/full regression SKIPPED. 71staged targeted PASS; P1 isolation/P2 metadata/P3 coverage/P4 reuse. BBS setup−27,06%/traversal−16,12%,18rawresponses exact. C1 đủ biến động; D1 endpoints/C3/Q5 còn partial. 15fresh E2E+1semantic batch,56provider attempts/188331known tokens/4unknown invocations; 82fact/1287citation occurrences0mismatch;15unrelated tracked files/PDF digest giữ nguyên. [Report](../docs/ef-core-03-targeted-quality-graph-efficiency.md). Không M8/model khác, không tuyên bố accuracy tăng. Next action: chờ Owner/Tech Lead giao nhiệm vụ mới.
 
 ## EF-CORE-02 — Controlled ablation
 

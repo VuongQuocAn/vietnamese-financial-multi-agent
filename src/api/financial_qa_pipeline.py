@@ -887,13 +887,19 @@ class FinancialQAPipeline:
 
                     def execute():
                         nonlocal adaptive_histories
+                        from ..tools.question_understanding import comparison_periods
+
                         context = PlannerContext(
                             company_id=bound.company_id,
                             document_id=bound.document_id,
                             snapshot_id=bound.snapshot_id,
                             period=(
                                 None
-                                if bound.m5_lite and bound.period and len(bound.period) == 4
+                                if bound.m5_lite
+                                and (
+                                    (bound.period and len(bound.period) == 4)
+                                    or (not bound.period and comparison_periods(bound.question))
+                                )
                                 else bound.period or parsed.period
                             ),
                             reporting_year=parsed.reporting_year
