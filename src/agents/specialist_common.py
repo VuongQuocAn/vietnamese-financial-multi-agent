@@ -145,6 +145,38 @@ def _unique(values):
     return list({v.model_dump_json(): v for v in values}.values())
 
 
+def source_projection(evidence):
+    """Project selected citation bindings without upgrading source precision."""
+    groups = {}
+    for citation in evidence.citations:
+        key = (
+            citation.document_id,
+            citation.snapshot_id,
+            citation.pdf_page,
+            citation.provenance_level,
+        )
+        row = groups.setdefault(
+            key,
+            dict(
+                document_id=key[0],
+                snapshot_id=key[1],
+                pdf_page=key[2],
+                provenance_level=key[3],
+                availability="linked",
+                selector_available=False,
+                limitations=[],
+            ),
+        )
+        reference = citation.source.reference
+        row["selector_available"] |= bool(reference and reference.source_pointer)
+        row["limitations"] = sorted(set(row["limitations"] + citation.limitations))
+    return dict(
+        availability="linked" if groups else "missing",
+        bindings=list(groups.values()),
+        caveats=evidence.caveats,
+    )
+
+
 def _number(value):
     # Display only; never calculate a new financial metric or silently change scale.
     return format(Decimal(value), ",f").translate(str.maketrans({",": ".", ".": ","}))
@@ -618,6 +650,8 @@ def generate_candidates(
     for raw in analyses:
         try:
             analysis = AnalysisProposal.model_validate(raw)
+            if analysis.claim_type == "derived_fact" and not analysis.operations:
+                raise ValueError("derived_fact_requires_computation")
             if set(analysis.evidence_ids) - evidence_by_id.keys():
                 raise ValueError("analysis_unknown_evidence")
             sources = [evidence_by_id[key] for key in dict.fromkeys(analysis.evidence_ids)]

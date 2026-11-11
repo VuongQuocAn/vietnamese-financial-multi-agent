@@ -47,6 +47,7 @@ from .specialist_common import (
     _numeric_proposals,
     generate_candidates,
     select_evidence,
+    source_projection,
 )
 from .supervisor import ExecutionEvidenceBundle, StepExecutionResult, SupervisorResult
 
@@ -93,7 +94,7 @@ def compact_graph_context(contexts, evidence):
             group["limitations"] = sorted(set(group["limitations"] + citation.limitations))
         return list(groups.values())
 
-    rows, seen = [], set()
+    rows, seen, pending = [], set(), []
     for context in contexts:
         if context.status != "found":
             continue
@@ -115,8 +116,10 @@ def compact_graph_context(contexts, evidence):
                 continue
             seen.add(edge.edge_id)
             endpoints = []
+            caveats = set(context.caveats)
             for nid in (edge.source, edge.target):
                 node = nodes[nid]
+                caveats.update(node.caveats)
                 ref = node_reference(node.node)
                 selected = [e for e in evidence if e.reference == ref]
                 endpoints.append(
@@ -124,11 +127,13 @@ def compact_graph_context(contexts, evidence):
                         kind=node.node.kind,
                         evidence_ids=[e.evidence_id for e in selected],
                         labels=[e.label for e in selected],
-                        reference=ref.model_dump(mode="json"),
+                        # Exact typed references remain in the tool response;
+                        # prompt endpoints bind by immutable node ID and retain
+                        # original document/snapshot/page citations below.
+                        reference=dict(kind=ref.kind, node_id=nid),
                         citations=citations(node.original_citations),
-                        quality=node.quality.model_dump(mode="json"),
-                        grounding=node.grounding.model_dump(mode="json"),
-                        caveats=node.caveats,
+                        quality=node.quality.model_dump(mode="json", exclude_defaults=True),
+                        grounding=node.grounding.model_dump(mode="json", exclude_defaults=True),
                         evidence_status=node.evidence.status,
                         text_excerpts=[
                             dict(
@@ -140,16 +145,29 @@ def compact_graph_context(contexts, evidence):
                     )
                 )
             row = dict(
-                id=f"G{len(rows) + 1}",
+                id="",
                 relation=edge.relation,
                 operand_role=getattr(edge, "operand_role", None),
                 basis=relation.basis,
                 verification=relation.verification,
                 endpoints=endpoints,
-                caveats=context.caveats,
+                caveats=sorted(caveats),
             )
-            if len(json.dumps([*rows, row], ensure_ascii=False)) <= 14000:
-                rows.append(row)
+            pending.append(row)
+    # Balance relation types across the entire bundle, not per starting node.
+    groups = {}
+    for row in pending:
+        groups.setdefault(row["relation"], []).append(row)
+    ordered = [
+        row
+        for i in range(max((len(g) for g in groups.values()), default=0))
+        for group in groups.values()
+        for row in group[i : i + 1]
+    ]
+    for row in ordered:
+        row["id"] = f"G{len(rows) + 1}"
+        if len(json.dumps([*rows, row], ensure_ascii=False)) <= 14000:
+            rows.append(row)
     return rows
 
 
@@ -268,6 +286,8 @@ class SupervisorLite:
                 "kèm facts, metrics và kỳ so sánh phù hợp. Objective phải yêu cầu diễn giải khi người dùng "
                 "hỏi ý nghĩa/nhận xét/nguyên nhân/giới hạn. Chọn cả metric handles để gọi Calculator. "
                 "Thiếu dữ liệu vẫn chọn các nguồn độc lập phù hợp; không bịa handles."
+                " Giữ đủ từng chỉ tiêu, kỳ gốc/kỳ mục tiêu, biến động tuyệt đối/phần trăm "
+                "và từng loại quan hệ được người dùng yêu cầu trong objective."
             ),
             context={
                 k: getattr(context, k)
@@ -423,6 +443,15 @@ class FinancialLiteOrchestrator:
                 "được giao Specialist khác. "
                 "percentage_change có inputs=[kỳ mục tiêu,kỳ gốc] để tính (mục tiêu/gốc-1)*100. "
                 "Trả phần có căn cứ khi thiếu phần khác. M6 sẽ xác minh mọi candidate."
+                " Xem xét từng chỉ tiêu trong câu hỏi/objective; khi so sánh hai kỳ, nêu hướng "
+                "và mức biến động được yêu cầu, dùng subtract và percentage_change trên facts "
+                "nếu chưa có metric tương ứng. Không bỏ chỉ tiêu còn lại sau khi tính chỉ tiêu đầu. "
+                "source_metadata là binding nguồn đã có: linked không phải missing; page-level "
+                "hoặc uncertain vẫn có trang nhưng giới hạn độ chính xác. Selector tồn tại không "
+                "tự chứng minh cell-level precision. Chỉ báo thiếu trang khi binding thực sự thiếu. "
+                "Nếu được hỏi phân biệt relations, giải thích từng loại có trong graph_context: "
+                "from_source là nguồn gốc, associated_with là association selector, used_in là "
+                "vai trò toán hạng, same_extraction_context chỉ là cùng ngữ cảnh trích xuất."
                 " graph_context giữ liên kết nguồn/operand; structural_only và contextual_only "
                 "không phải semantic support hoặc nhân quả. Chỉ dùng evidence_ids số thực trong analyses. "
                 "Nếu một quan hệ graph giúp chọn nguồn hoặc diễn giải, ghi handle G tương ứng và "
@@ -430,6 +459,7 @@ class FinancialLiteOrchestrator:
             ),
             graph_context=graph_context,
             objective=task.objective,
+            user_question=question,
             analysis_schema=AnalysisProposal.model_json_schema(),
             numeric_choices=choices,
             evidence=[
@@ -441,6 +471,7 @@ class FinancialLiteOrchestrator:
                     scale=e.scale,
                     period=e.period,
                     operand_periods=e.operand_periods,
+                    source_metadata=source_projection(e),
                 )
                 for e in result.supporting_evidence
             ],

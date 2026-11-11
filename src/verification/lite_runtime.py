@@ -8,7 +8,7 @@ from time import perf_counter
 from uuid import uuid4
 
 from ..agents.planner_contracts import PlannerLLMMetadata
-from ..agents.specialist_common import ReasoningProof
+from ..agents.specialist_common import ReasoningProof, source_projection
 from ..core.llm_contracts import (
     GenerationParameters,
     JSONOutput,
@@ -65,6 +65,10 @@ def semantic_payload(batch, claim):
             if proof and proof.calculation
             else []
         ),
+        sources=[
+            dict(evidence_id=s.evidence_id, **source_projection(s))
+            for s in claim.supporting_evidence
+        ],
         assumptions=proof.assumptions if proof else [],
         limitations=list(
             dict.fromkeys(
@@ -378,6 +382,11 @@ class LiteVerificationRuntime:
                         "điều kiện, không chứng minh sự thật; không ACCEPT khẳng định về chất lượng "
                         "báo cáo hay quan hệ nhân quả không có trong nguồn chỉ vì các số đúng. "
                         "không suy nguyên nhân, chất lượng, xu hướng dài hạn từ một quan hệ số học. "
+                        "sources chứa document/snapshot/page/provenance bindings đã kiểm tra. "
+                        "Bác caveat nói không có trang khi binding đã có PDF page; phân biệt "
+                        "page-level/uncertain với missing. Citation không chứng nhận mọi nội dung "
+                        "trên trang. Arithmetic đúng không hỗ trợ thêm mệnh đề về nguyên liệu hay "
+                        "nguyên nhân; wording mơ hồ phải INSUFFICIENT, không tự diễn giải thành sự thật. "
                         "SUPPORTED nếu đủ căn cứ; INSUFFICIENT nếu thiếu; UNSUPPORTED nếu sai/vượt evidence. "
                         'Chỉ JSON {"verdicts":[{"claim_id":"...","verdict":"SUPPORTED|INSUFFICIENT|UNSUPPORTED","reason":"..."}]}. '
                         "Mỗi claim một verdict; không sửa claim, không cần IDs nguồn/proof/schema khác."

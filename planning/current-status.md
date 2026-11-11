@@ -2,9 +2,17 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## EF-CORE-03 — Targeted quality và graph efficiency
+
+Status: **IN_PROGRESS**, Owner giao ngày11/11/2026; baseline48b9d78.
+P1 isolation, P2 metadata, P3 context coverage và P4 request-owned reuse.
+[Spec](tasks/EF/EF-CORE-03.md), [report](../docs/ef-core-03-targeted-quality-graph-efficiency.md).
+Giữ local edits ngoài task; chưa commit.
+Next action: hoàn tất checks và commit/push/CI.
+
 ## EF-CORE-02 — Controlled ablation
 
-Status: **REVIEW**, chờ Tech Lead nghiệm thu. Runtime baseline `f5bbac6` giữ nguyên.
+Status: **DONE**, Tech Lead nghiệm thu trong task EF-CORE-03. Runtime baseline `f5bbac6` giữ nguyên.
 [Implementation 43c55aa](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1) đã push main;
 [CI42976641605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42976641605) SUCCESS đúng SHA,213 Python PASS;
 Web/full regression SKIPPED. [Spec](tasks/EF/EF-CORE-02.md),

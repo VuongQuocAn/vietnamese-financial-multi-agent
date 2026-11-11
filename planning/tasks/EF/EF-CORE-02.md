@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: EF-CORE-01
 - Estimated Complexity: M

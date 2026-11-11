@@ -119,6 +119,7 @@ class GraphRetrievalTools:
             raise ValueError("invalid_pinned_graph")
         tools = cls.__new__(cls)
         tools._view = None
+        tools._resolved = {}
         tools._selection = (document_id, snapshot_id)
         tools._financial = tools._documents = EvidenceRetrievalTools(catalog)
         tools._financial_sources = tools._document_sources = catalog.api
@@ -175,6 +176,7 @@ class GraphRetrievalTools:
         # Capture a validated immutable-by-ownership projection; external mutation
         # after construction cannot change traversal or strip caveats.
         self._view = projection.view.model_copy(deep=True)
+        self._resolved = {}
         validation = validate_graph(
             self._view.graph,
             projection.financial.facts,
@@ -214,19 +216,23 @@ class GraphRetrievalTools:
                         "source_metadata": record.source_metadata.copy(),
                     }
                 )
-        self._financial = EvidenceRetrievalTools(projection.financial)
-        self._documents = EvidenceRetrievalTools(
-            SnapshotCatalog(
-                projection.documents.descriptors,
-                evidence=projection.documents.evidence,
-                graph=build_graph([], projection.documents.evidence),
-            )
+        # One detached catalog owner per facade. Nested financial/source tools
+        # share this read-only state instead of recursively copying it again.
+        financial = deepcopy(projection.financial)
+        financial._request_snapshot = True
+        self._financial = EvidenceRetrievalTools(financial)
+        documents = SnapshotCatalog(
+            projection.documents.descriptors,
+            evidence=projection.documents.evidence,
+            graph=build_graph([], projection.documents.evidence),
         )
+        documents._request_snapshot = True
+        self._documents = EvidenceRetrievalTools(documents)
         self._document_ids = {e.evidence_identity() for e in projection.documents.evidence}
         # Structural source projection keeps citations even when M4 usability is
         # blocked (e.g. an approved original UUID namespace). Never replace the
         # guarded evidence.status or feed this projection into M6 as ACCEPT proof.
-        self._financial_sources = projection.financial.api
+        self._financial_sources = financial.api
         self._document_sources = self._documents._catalog.api
         self._nodes = {n.node_id: n for n in self._view.graph.nodes}
         self._adjacency = defaultdict(list)
@@ -240,6 +246,11 @@ class GraphRetrievalTools:
             edges.sort(key=lambda e: e.edge_id)
 
     def _resolve(self, node, depth):
+        if node.node_id not in self._resolved:
+            self._resolved[node.node_id] = self._resolve_uncached(node, 0)
+        return self._resolved[node.node_id].model_copy(deep=True, update={"depth": depth})
+
+    def _resolve_uncached(self, node, depth):
         ref = node_reference(node)
         tools = self._documents if ref.evidence in self._document_ids else self._financial
         if ref.kind == "anchor":
