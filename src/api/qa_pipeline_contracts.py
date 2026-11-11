@@ -11,6 +11,7 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 
 class FinancialQARequest(VietnameseQARequest):
+    m5_lite: bool = False
     m7_lite: bool = False
     allow_gateway: bool = True
     request_id: str = Field(default_factory=lambda: str(uuid4()), min_length=1)

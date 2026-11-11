@@ -94,6 +94,10 @@ class FinancialQAPipeline:
             else None
         )
         deterministic = request.execution_mode == "deterministic"
+        if request.m5_lite and not document and self.orchestrator is None:
+            from ..agents.lite_orchestrator import FinancialLiteOrchestrator
+
+            return FinancialLiteOrchestrator(catalog, gateway)
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
                 SnapshotCatalog([]) if document else catalog,
@@ -144,7 +148,7 @@ class FinancialQAPipeline:
         return {(d.document_id, d.company_id) for d in documents}
 
     def _context(self, request):
-        if request.m7_lite:
+        if request.m7_lite or request.m5_lite:
             return self._lite_context(request)
         parsed, issues = understand(request.question)
         blocked = {
@@ -872,7 +876,11 @@ class FinancialQAPipeline:
                             provider_attempt_limit=1,
                             conversation_context=bound.conversation_context,
                         )
-                        if bound.execution_mode != "deterministic" and bound.allow_gateway:
+                        if (
+                            not bound.m5_lite
+                            and bound.execution_mode != "deterministic"
+                            and bound.allow_gateway
+                        ):
                             output, adaptive_histories = controller.run(bound.question, context)
                             trace.adaptive_rounds = controller.rounds
                             return output
@@ -915,7 +923,8 @@ class FinancialQAPipeline:
                             for e in output.trace
                             if e.stage == "specialist_execution"
                             and any(
-                                x.role == e.role and x.llm.calls and x.llm.status == "success"
+                                x.role == e.role
+                                and (bound.m5_lite or (x.llm.calls and x.llm.status == "success"))
                                 for x in output.specialist_executions
                             )
                         )

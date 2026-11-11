@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M5-LITE-01 — Simplified Multi-Agent Orchestration
+
+Status: **REVIEW**, Owner giao11/11/2026; baseline `a7da263`.
+[Spec](tasks/M5/M5-LITE-01.md), [report](../docs/m5-lite-01-simplified-orchestration.md).
+Flagfalse; một Supervisor plan→Specialists/tools→candidates→native M6; không DAG/coverage/replan.
+4Lite+15legacy PASS;BBS offlineA3/B8candidates,adapter0issues;native smoke3ACCEPT,
+finalpartial_verified_coverage. Live4calls:3success/1HTTP503,4073known tokens/1unknown;
+originalA1/B6candidates;final shorthand parser replayA4/B8,không live thêm/M6-M7 changes.
+Implementation: một commit chứa module Lite; CI exactSHA báo sau push; chưa nghiệm thu.
+Next action: Tech Lead review M5-LITE-01 và giới hạn live/replay.
+
 ## M7-LITE-02 — Natural Answer Release
 
 Status: **REVIEW**, Owner giao11/11/2026; Owner duyệt đúng1commit/push; baseline `c102b8956356af6562c2558729a0e7ff373b09f3`.
