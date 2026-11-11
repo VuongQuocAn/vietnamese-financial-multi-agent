@@ -3,7 +3,9 @@
 Ngày 11/11/2026. **REVIEW — chưa đạt đầy đủ mục tiêu phát hành câu trả lời tự nhiên.**
 Baseline tham chiếu và HEAD khi bắt đầu đều là
 `b9d0cdb88417a344f1269dbfb6cf7300b18824bd`, branch `main`.
-Implementation SHA và CI exact-SHA được bổ sung sau commit/push; không tự nghiệm thu DONE.
+Implementation [`e6411ec06297676080052385a1e7199867fd37b3`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/e6411ec06297676080052385a1e7199867fd37b3) đã push main.
+[CI42935098419](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42935098419) completed/SUCCESS đúng SHA: **185 Python/9 Web PASS**; full regression manual SKIPPED.
+Tài liệu chốt evidence được commit riêng, không thêm implementation commit hoặc nghiệm thu DONE.
 
 ## Kiến trúc thực tế
 
@@ -79,7 +81,8 @@ HTTP 503/429 không được báo thành NO_DATA. Fallback không có lời gọ
 - Sau live, replay bốn immutable provider responses trên final compact payload:
   0 network calls, final answers và retained IDs giống bản live. Đây là offline replay,
   không phải bốn lượt Gemini mới và không chứng minh model sẽ trả tương tự với prompt mới.
-- Ruff check/format, planning checker và `git diff --check`: kết quả chốt ở evidence.
+- Ruff check/format, planning checker và `git diff --check`: PASS.
+- CI exact implementation SHA: 185 Python/9 Web PASS; typecheck/lint/build PASS; full regression manual SKIPPED.
 
 Các negative controls bắt buộc đã được bao phủ: non-ACCEPT; sai company;
 sai period/snapshot; citation lệch nguồn; unknown claim ID; số bịa; nhận định mới;

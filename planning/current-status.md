@@ -10,7 +10,8 @@ Flag false mặc định; giữ legacy/M1–M6/local. 155targeted+17final PASS (
 Live đúng4calls:Q21HTTP503,Q23success,L08/L09HTTP429;317792known tokens/3unknown.
 12/12findings giữ,69refs/0binding errors;3PARTIAL/1CORRECT_WITH_CAVEAT, không natural-answer PASS.
 Payload live quá lớn; final scalar projection/48000chars cap chỉ offline replay, chưa live lại.
-10.087protected files/11unrelated local files giữ hash; chưa commit/CI.
+10.087protected files/11unrelated local files giữ hash; implementation `e6411ec06297676080052385a1e7199867fd37b3` đã push main.
+[CI42935098419](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42935098419) completed/SUCCESS exactSHA:185Python/9Web PASS;full regression SKIPPED.
 Next action: Tech Lead review M7-LITE-01, gồm chi phí và giới hạn paraphrase/live.
 
 ## FIX-02 — Final Live Acceptance

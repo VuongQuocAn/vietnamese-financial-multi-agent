@@ -50,7 +50,8 @@ Không có semantic approval mới tại M7. Đoạn diễn giải không đủ 
 
 ## Implementation Evidence
 
-Chưa commit; 155targeted +17final Lite PASS (overlap), real Q23 pipeline smoke không M5/M6/provider.
+Implementation `e6411ec06297676080052385a1e7199867fd37b3` đã push main; [CI42935098419](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42935098419) SUCCESS đúng SHA:185Python/9Web PASS.
+155targeted +17final Lite PASS (overlap), real Q23 pipeline smoke không M5/M6/provider.
 Live4calls:1success/1HTTP503/2HTTP429,317792known tokens/3unknown;12/12findings giữ,69refs/0binding errors.
 3PARTIAL/1CORRECT_WITH_CAVEAT; chưa đạt phát hành paraphrase tự nhiên. Compact payload sau live chỉ offline replay.
 [Report](../../../docs/m7-lite-01-grounded-answer-runtime.md);10.087protected files và11unrelated local files nguyên hash.
