@@ -4,6 +4,7 @@ import json
 from unittest.mock import Mock
 
 import pytest
+from vietnamese_financial_multi_agent.api.claim_selection import select_claims
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.core.llm_contracts import (
     Cost,
@@ -13,7 +14,7 @@ from vietnamese_financial_multi_agent.core.llm_contracts import (
     parse_json_output,
 )
 from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
-from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite, select_claims
+from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite
 from vietnamese_financial_multi_agent.verification.ledger import (
     LedgerAdmissionError,
     build_verified_claim,

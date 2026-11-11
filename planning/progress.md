@@ -31,7 +31,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | REC | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
 | CHAT | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
 | FIX | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
-| TOTAL | 126 | 114 | 0 | 1 | 8 | 0 | 3 |
+| CORE | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 127 | 114 | 0 | 1 | 8 | 0 | 4 |
 
 ## Implementation thực tế
 

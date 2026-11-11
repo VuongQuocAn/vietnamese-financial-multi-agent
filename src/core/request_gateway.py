@@ -1,6 +1,6 @@
 """One shared call/deadline budget across all agents and child QA lanes."""
 
-from time import perf_counter
+from time import perf_counter, sleep
 
 from .llm_gateway import SharedLLMGateway, _failure
 
@@ -24,7 +24,7 @@ class RequestGateway:
         self.revisions_used += 1
         return True
 
-    def generate(self, request):
+    def generate(self, request, *, _retry=False):
         if self.failure_category:
             return _failure(request, self.failure_category)
         remaining = self.deadline - perf_counter()
@@ -69,6 +69,23 @@ class RequestGateway:
                 cost=response.cost.model_dump(mode="json"),
                 error=response.error.code if response.error else None,
                 latency_ms=(perf_counter() - started) * 1000,
+                retry_attempt=int(_retry),
             )
         )
+        if (
+            not _retry
+            and response.error
+            and response.error.provider_error_code in {"http_429", "http_503"}
+            and len(self.events) < self.max_calls
+        ):
+            delay = response.error.retry_after_seconds or 1
+            # One provider retry only; respect Retry-After and the same request
+            # deadline/call budget. Long backoffs remain an explicit failure.
+            if 0 <= delay <= 5 and self.deadline - perf_counter() > delay + 1:
+                sleep(delay)
+                # A 429 may have latched the request's failure category above;
+                # allow this one retry, then retain a repeated rate limit.
+                if self.failure_category == "rate_limit":
+                    self.failure_category = None
+                return self.generate(request, _retry=True)
         return response

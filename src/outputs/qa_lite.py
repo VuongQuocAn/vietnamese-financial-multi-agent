@@ -18,10 +18,10 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
-from ..tools.question_understanding import EXTRA_ALIASES, ITEM_RULES, normalize
+from ..tools.question_understanding import ITEM_RULES
 from .citation_contracts import CitationReference
 from .citation_renderer import _digest, _identity, _locator, _reference_text
-from .qa_composer import _public_notes, claim_scope
+from .qa_composer import _public_notes
 
 GAP_TEXT = {
     "A": "Chưa có dữ liệu nguồn khả dụng trong phạm vi đã chọn.",
@@ -29,143 +29,6 @@ GAP_TEXT = {
     "C": "Lỗi kỹ thuật khi tạo câu trả lời; các findings đã xác minh được giữ bên dưới.",
 }
 NUMBER = re.compile(r"(?<!\w)[−-]?\d+(?:[.,]\d+)*(?!\w)")
-
-
-def periods_for(request):
-    """Explicit multiple years are allowed within the bound filing/snapshot."""
-    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", request.question))
-    if request.period:
-        if years and request.period[:4] not in years:
-            return set()
-        years.add(request.period[:4])
-    if len(years) == 1 and "nam truoc" in normalize(request.question):
-        years.add(str(int(next(iter(years))) - 1))
-    return years
-
-
-def _targets(question):
-    text = normalize(question)
-    return {
-        key
-        for key, rule in ITEM_RULES.items()
-        if any(
-            re.search(r"(?<!\w)" + re.escape(normalize(a)) + r"(?!\w)", text)
-            for a in (*rule.aliases, *EXTRA_ALIASES.get(key, ()))
-        )
-    }
-
-
-def _relevant(entry, question):
-    # Catalog aliases aid retrieval only; no Planner/formula/coverage admission.
-    targets = _targets(question)
-    evidence = entry.accepted_claim.supporting_evidence
-    # Source labels cover names shortened in the question (e.g. after-tax profit).
-    label_match = any(normalize(e.label) in normalize(question) for e in evidence)
-    item_ids = {e.canonical_item_id for e in evidence if e.canonical_item_id}
-    for e in evidence:
-        if e.calculation and e.calculation.evidence:
-            item_ids.update(
-                m.record.canonical_item_id
-                for operand in e.calculation.evidence.operands
-                for m in operand.facts.matches
-            )
-    if targets and item_ids:
-        return bool(targets & item_ids) or label_match
-    # Unknown vocabulary remains retrievable without inventing financial intent.
-    stop = set("cua ky nam la va cac cho biet bao cao tai ngay so lieu dan nguon".split())
-    q = set(normalize(question).split()) - stop
-    c = set(normalize(entry.content).split()) - stop
-    return len({w for w in q & c if not w.isdigit()}) >= 2
-
-
-def _claim_years(entry):
-    periods = [entry.identity.period]
-    for evidence in entry.accepted_claim.supporting_evidence:
-        periods.extend([evidence.period, *evidence.operand_periods.values()])
-        if evidence.calculation and evidence.calculation.evidence:
-            periods.extend(
-                m.record.context.period
-                for o in evidence.calculation.evidence.operands
-                for m in o.facts.matches
-            )
-    return {p[:4] for p in periods}
-
-
-def select_claims(request, entries, current_ids=()):
-    selected, excluded = [], []
-    current_ids = set(current_ids)
-    years = periods_for(request)
-    for entry in entries:
-        i, reason = entry.identity, None
-        if entry.verification_status != "verified" or entry.decision.decision != "ACCEPT":
-            reason = "not_m6_accept"
-        elif any(
-            getattr(request, key) is None or getattr(request, key) != getattr(i, key)
-            for key in ("company_id", "document_id", "snapshot_id")
-        ):
-            reason = "scope_identity_mismatch"
-        elif i.kind == "document":
-            reason = "financial_claim_required"
-        elif not years or i.period[:4] not in years:
-            reason = "period_out_of_scope"
-        elif not _claim_years(entry) <= years:
-            reason = "comparative_period_out_of_scope"
-        elif not set(re.findall(r"\b(?:19|20|21)\d{2}\b", entry.content)) <= years:
-            reason = "comparative_period_out_of_scope"
-        elif (
-            request.period
-            and "-" in request.period
-            and len(years) == 1
-            and i.period != request.period
-        ):
-            reason = "period_out_of_scope"
-        elif request.reporting_scope and claim_scope(entry) != request.reporting_scope:
-            reason = "reporting_scope_unconfirmed"
-        elif not entry.citations:
-            reason = "missing_citations"
-        else:
-            try:
-                for c in entry.citations:
-                    if (c.document_id, c.snapshot_id) != (i.document_id, i.snapshot_id):
-                        raise ValueError("citation_scope_mismatch")
-                    _locator(c)
-                    if c not in entry.accepted_claim.citations:
-                        raise ValueError("citation_not_in_accepted_claim")
-            except ValueError:
-                reason = "citation_source_mismatch"
-        if (
-            reason is None
-            and i.verified_claim_id not in current_ids
-            and not _relevant(entry, request.question)
-        ):
-            reason = "not_relevant"
-        if reason:
-            excluded.append(dict(claim_id=i.verified_claim_id, reason=reason))
-        else:
-            selected.append(entry)
-    # Conflicting facts about the same source item/period are withheld individually.
-    facts = {}
-    for entry in selected:
-        for e in entry.accepted_claim.supporting_evidence:
-            if e.kind == "fact":
-                key = (e.company_id, e.document_id, e.snapshot_id, e.period, e.canonical_item_id)
-                facts.setdefault(key, set()).add((Decimal(e.value), e.unit, Decimal(e.scale)))
-    conflicting = {key for key, values in facts.items() if len(values) > 1}
-    safe = []
-    for entry in selected:
-        if any(
-            (e.company_id, e.document_id, e.snapshot_id, e.period, e.canonical_item_id)
-            in conflicting
-            for e in entry.accepted_claim.supporting_evidence
-            if e.kind == "fact"
-        ):
-            excluded.append(
-                dict(claim_id=entry.identity.verified_claim_id, reason="conflicting_facts")
-            )
-        else:
-            safe.append(entry)
-    safe.sort(key=lambda e: e.identity.verified_claim_id not in current_ids)
-    return safe, excluded
 
 
 def _decimal(token):
@@ -214,7 +77,11 @@ def _numbers_supported(text, claims):
     for e in claims:
         for evidence in e.accepted_claim.supporting_evidence:
             values.append(
-                (Decimal(evidence.value) * Decimal(evidence.scale), Decimal(1), evidence.unit)
+                (
+                    Decimal(evidence.value) * Decimal(evidence.scale),
+                    Decimal(1),
+                    "%" if evidence.unit == "percent" else evidence.unit,
+                )
             )
     for value, quantum, unit in _quantities(text):
         if not any(
@@ -400,6 +267,8 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
                         "Bạn là Answer Agent M7. Tổng hợp câu trả lời tiếng Việt mạch lạc từ findings ACCEPT. "
                         "Diễn đạt lại tự nhiên, kết nối các findings thay vì chép từng claim. "
                         "Chỉ paraphrase/tổng hợp kết luận đã cho; không tự tính, suy nguyên nhân hay đánh giá mới. "
+                        "Giữ đúng chiều so sánh, kỳ gốc và kỳ mục tiêu của phép tính. Không diễn giải "
+                        "một biểu thức số học thành tăng/giảm của kỳ khác hoặc với mẫu số khác. "
                         "Mỗi đoạn dẫn đủ claim_ids cho cả số liệu và nhận định. Không suy thêm biên lợi nhuận, "
                         "chất lượng lợi nhuận hay khả năng thanh toán nếu chưa có kết luận ACCEPT tương ứng. "
                         "Giữ mức chắc chắn, caveats, phân biệt facts với nhận định. "
@@ -471,17 +340,19 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
             )
             gaps.append(dict(type="C", text=GAP_TEXT["C"]))
     elif selected:
-        trace["fallback_reasons"].append("gateway_disabled_or_unavailable")
-        gaps.append(dict(type="C", text=GAP_TEXT["C"]))
+        trace["fallback_reasons"].append(
+            "deterministic_presentation"
+            if request.execution_mode == "deterministic" or not request.allow_gateway
+            else "gateway_unavailable"
+        )
+        if request.allow_gateway and request.execution_mode != "deterministic":
+            gaps.append(dict(type="C", text=GAP_TEXT["C"]))
     covered = {k for s in segments for k in s["claim_ids"]}
     trace["llm_segments_released"] = len(segments)
     trace["llm_released_claims"] = list(dict.fromkeys(k for s in segments for k in s["claim_ids"]))
     for key, entry in entries.items():
-        if key not in covered:
-            proof = _proof_text(entry)
-            segments.append(
-                dict(text=entry.content + ("\n" + proof if proof else ""), claim_ids=[key])
-            )
+        if key not in covered and (not covered or trace["rejected_segments"]):
+            segments.append(dict(text=entry.content, claim_ids=[key]))
             trace["fallback"] = True
     if trace["rejected_segments"]:
         trace["fallback"] = True
@@ -492,8 +363,6 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
     if not selected:
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
-    if trace["fallback"] and not gaps:
-        gaps.append(dict(type="B", text=GAP_TEXT["B"]))
     gaps = list({g["type"]: g for g in gaps}.values())
     text, references, bindings = _projection(segments, selected)
     caveats = list(

@@ -34,6 +34,7 @@ from .orchestrator import aggregate_candidates
 from .planner_contracts import PlannerLLMMetadata
 from .routing_contracts import RoutingDecision
 from .specialist_common import (
+    AnalysisProposal,
     SpecialistResult,
     _numeric_proposals,
     generate_candidates,
@@ -153,6 +154,11 @@ class SupervisorLite:
                 "objective là công việc ngắn tiếng Việt; sources là handles phù hợp trong inventory. "
                 "Không DAG, approval, coverage hoặc suy đoán identities. Câu hỏi đơn giản một role; "
                 "nhiều phần chọn các role cần thiết, không gọi tất cả mặc định. "
+                "Hiểu ý định ngữ nghĩa, không yêu cầu đúng tên chỉ tiêu. Tăng/giảm phần trăm cần "
+                "metric tăng trưởng và hai kỳ; tỷ trọng nguồn vốn cần metric nợ/tài sản. "
+                "Phân tích tổng quát sinh lời và cơ cấu vốn giao profitability và liquidity_and_leverage, "
+                "kèm facts, metrics và kỳ so sánh phù hợp. Objective phải yêu cầu diễn giải khi người dùng "
+                "hỏi ý nghĩa/nhận xét/nguyên nhân/giới hạn. Chọn cả metric handles để gọi Calculator. "
                 "Thiếu dữ liệu vẫn chọn các nguồn độc lập phù hợp; không bịa handles."
             ),
             context={
@@ -164,7 +170,7 @@ class SupervisorLite:
             },
         )
         payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
-        if len(payload) + len(question) > 8000:
+        if len(payload) + len(question) > 48000:
             return fallback_plan(question, sources), metadata, ["supervisor_payload_limit_fallback"]
         request = LLMRequest(
             contract_version="llm_gateway_v1",
@@ -241,16 +247,32 @@ class FinancialLiteOrchestrator:
                 "Bạn là Specialist tài chính. Dùng evidence liên quan để trả lời objective. "
                 "JSON {claims:[],missing_information:[],analyses:[]}. claims chọn objects hoặc "
                 "evidence_id từ numeric_choices; "
-                "không tự tính số. analyses tùy chọn [{statement,evidence_ids,goal,operations:[],"
+                "không tự tính số. Mọi so sánh, diễn giải, nhận xét hay giới hạn có căn cứ phải ở "
+                "analyses, không đặt trong claims. Khi objective yêu cầu phân tích, tạo analyses "
+                "có ý nghĩa từ evidence, không chỉ liệt kê số liệu. analyses [{statement,evidence_ids,goal,operations:[],"
                 "assumptions:[],limitations:[],claim_type:reasoned_conclusion}]. "
                 "Được phân tích quan hệ, so sánh và nêu giới hạn dựa trên nguồn, không chỉ điền số. "
                 "Phép tính mới chỉ khai báo operations để Financial Calculator thực thi: "
                 "{operation_id,operator,inputs:[evidence_id hoặc operation_id],period_relation}. "
                 "operator: sum,subtract,ratio,percentage_change,mean,greater,less,equal; period_relation "
                 "same hoặc across_periods. Không bịa giá trị/nguồn, không ACCEPT claim. "
+                "Các metric đã được Calculator tính có thể dùng trực tiếp làm evidence cho analyses "
+                "với operations rỗng. Không tính lại metric hoặc dùng metric làm DynamicOperand. "
+                "Nếu không có evidence nhân quả, phân biệt biến động quan sát với nguyên nhân chưa chứng minh. "
+                "Không khẳng định thu hẹp hoạt động, tái cơ cấu, tuân thủ chuẩn mực, đã kiểm toán hay "
+                "số liệu phản ánh chính xác thực tế chỉ từ biến động các chỉ tiêu. Assumptions không "
+                "được biến thành sự thật; tránh giả định không cần thiết. Tách các nhận định độc lập "
+                "thành analyses riêng để thiếu bằng chứng cho một ý không làm mất các ý có căn cứ. "
+                "Không đưa evidence_id vào statement. Không đưa hằng số/ngưỡng so sánh vào nhận định "
+                "nếu không có trong evidence hoặc kết quả Calculator. Dùng claim_type=reasoned_conclusion "
+                "cho diễn giải; derived_fact chỉ dành cho phép tính thuần túy không assumptions. "
+                "Chỉ trả missing_information cho objective của Specialist này, không báo thiếu phần "
+                "được giao Specialist khác. "
+                "percentage_change có inputs=[kỳ mục tiêu,kỳ gốc] để tính (mục tiêu/gốc-1)*100. "
                 "Trả phần có căn cứ khi thiếu phần khác. M6 sẽ xác minh mọi candidate."
             ),
             objective=task.objective,
+            analysis_schema=AnalysisProposal.model_json_schema(),
             numeric_choices=choices,
             evidence=[
                 dict(
@@ -266,7 +288,7 @@ class FinancialLiteOrchestrator:
             ],
         )
         deterministic = self.gateway is None or context.mode == "deterministic"
-        if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 7500:
+        if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
             deterministic = True
             result.limitations.append("specialist_payload_limit_numeric_fallback")
         generate_candidates(
@@ -278,6 +300,7 @@ class FinancialLiteOrchestrator:
             render=module._render,
             prefix="m5-lite-" + task.specialist,
             deterministic=deterministic,
+            emit_derived=False,
         )
         return result
 
@@ -288,11 +311,9 @@ class FinancialLiteOrchestrator:
             output.status = "clarification_required"
             output.stop_conditions = ["trusted_context_required"]
             return output
-        # Explicit comparative years constrain retrieval within the trusted snapshot.
-        years = re.findall(r"\b(?:19|20|21)\d{2}\b", question)
-        retrieval_context = (
-            context.model_copy(update={"period": " ".join(years)}) if years else context
-        )
+        # The pinned filing contains comparative columns. Let the semantic plan
+        # select supporting periods; a target year is not an operand-year filter.
+        retrieval_context = context.model_copy(update={"period": None})
         sources = inventory(self.catalog, retrieval_context)
         plan, metadata, gaps = self.supervisor.plan(question, context, sources)
         output.usage.stages["planning"] = metadata

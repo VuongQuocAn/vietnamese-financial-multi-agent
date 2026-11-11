@@ -4,13 +4,13 @@ import json
 from types import SimpleNamespace
 
 import pytest
+from vietnamese_financial_multi_agent.api.claim_selection import select_claims
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.core.llm_contracts import JSONOutput
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway, _failure
 from vietnamese_financial_multi_agent.outputs.qa_lite import (
     _numbers_supported,
     compose_lite,
-    select_claims,
 )
 from vietnamese_financial_multi_agent.verification.ledger import build_verified_claim
 
@@ -99,9 +99,8 @@ def test_relevance_and_multi_period_not_coverage(admitted):
     request.answer_requirements = []  # Legacy coverage is not a release authority.
     comparative = entry.model_copy(deep=True)
     comparative.accepted_claim.supporting_evidence[0].operand_periods = {"prior": "1999"}
-    assert (
-        select_claims(request, [comparative])[1][0]["reason"] == "comparative_period_out_of_scope"
-    )
+    # Operand periods were verified by M6; retrieval filters target periods only.
+    assert select_claims(request, [comparative])[0] == [comparative]
     irrelevant = request.model_copy(update={"question": "Nợ phải trả và tổng tài sản năm 2030?"})
     assert not select_claims(irrelevant, [entry])[0]
     comparison = request.model_copy(
@@ -214,6 +213,18 @@ def test_valid_segment_survives_other_bad_segment_and_omission(admitted):
     assert fields["used_verified_claim_ids"] == [key, "other-accepted"]
 
 
+def test_natural_summary_does_not_require_enumerating_every_accepted_claim(admitted):
+    request, entry = admitted
+    other = entry.model_copy(deep=True)
+    other.identity.verified_claim_id = "other-accepted"
+    key = entry.identity.verified_claim_id
+    gateway, _ = gateway_for(dict(segments=[dict(text=entry.content, claim_ids=[key])], gaps=[]))
+    fields, trace = compose_lite(request, [entry, other], gateway=gateway)
+    assert fields["used_verified_claim_ids"] == [key]
+    assert set(trace["selected_claims"]) == {key, "other-accepted"}
+    assert not trace["fallback"] and not trace["gaps"]
+
+
 def test_empty_ledger_does_not_invent_sources_or_call_provider(admitted):
     request, _ = admitted
     gateway, calls = gateway_for({})
@@ -232,7 +243,7 @@ def test_lite_fresh_cache_refresh_failure_and_legacy_compatibility(tmp_path):
     cached = service.run(lite_request)
     assert cached.used_verified_claim_ids == legacy.used_verified_claim_ids
     assert cached.trace.answer_mode == "lite" and cached.citations
-    assert cached.status == "partial_verified_coverage"
+    assert cached.status == "completed_with_caveats"
     before = repo._path().read_bytes()
     result.status = "failed"
     failed = service.run(

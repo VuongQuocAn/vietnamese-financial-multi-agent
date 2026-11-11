@@ -9,7 +9,7 @@ from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
 TASK_ID = re.compile(
-    r"(?:(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|(?:M[567]|E2E)-LITE-\d{2}|QA-Q\d{2}|QA-Fix-\d{2})"
+    r"(?:CORE-FLOW-\d{2}|(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|(?:M[567]|E2E)-LITE-\d{2}|QA-Q\d{2}|QA-Fix-\d{2})"
 )
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
@@ -118,6 +118,8 @@ def check(root: Path) -> int:
         milestones.append("CHAT")
     if any(task[2] == "FIX" for task in tasks.values()):
         milestones.append("FIX")
+    if any(task[2] == "CORE" for task in tasks.values()):
+        milestones.append("CORE")
     require(len(counts) == len(milestones) + 1, "Dashboard must contain milestones and TOTAL")
     for row, milestone in zip(counts, [*milestones, "TOTAL"], strict=True):
         subset = [task for task in tasks.values() if milestone == "TOTAL" or task[2] == milestone]

@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## CORE-FLOW-01 — Consolidate and Repair the Multi-Agent QA Pipeline
+
+Status: **REVIEW / NOT READY**, Owner giao 11/11/2026; baseline a92bc8f.
+[Spec](tasks/CORE/CORE-FLOW-01.md), [report](../docs/core-flow-01-boundary-alignment.md).
+Đã sửa M5/M6/pipeline/M7/context/conversation; giữ local edits, không OCR/extraction.
+Live106attempts/182239known tokens,21HTTP503/7HTTP429. Q5 từng sai mẫu số khi
+M7 paraphrase; sửa cuối có targeted controls nhưng live lại bị429. Không financial
+accuracy PASS; SHA/CI exact và final checks tại receipt local sau commit.
+Next action: chạy lại live Q4–Q8 trên implementation commit khi provider hết429.
+
+
 ## E2E-LITE-01 — Real-Data End-to-End Validation
 
 Status: **REVIEW**; runtime e72f867 + một sửa M7 selection, chưa commit.

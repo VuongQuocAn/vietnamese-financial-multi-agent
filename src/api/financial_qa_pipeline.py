@@ -261,7 +261,7 @@ class FinancialQAPipeline:
 
     def _lite_context(self, request):
         """Resolve filing authority without legacy goal/formula coverage gates."""
-        from ..outputs.qa_lite import periods_for
+        from .claim_selection import periods_for
 
         parsed, issues = understand(request.question)
         if set(issues) & {"invalid_period", "non_annual_period_unsupported"}:
@@ -277,7 +277,14 @@ class FinancialQAPipeline:
             return None, "clarification_required", ["snapshot_" + selection.status]
         snapshot = selection.candidates[0].descriptor.snapshot_id
         if not years:
-            return None, "clarification_required", ["period_required"]
+            declared_years = {
+                d.reporting_year
+                for d in self.documents
+                if (d.document_id, d.company_id) == (document, company)
+            }
+            if len(declared_years) != 1:
+                return None, "clarification_required", ["period_required"]
+            request = request.model_copy(update={"period": str(next(iter(declared_years)))})
         scope = request.reporting_scope or parsed.reporting_scope
         if scope:
             resolution = self.catalog.get_reporting_scope(document, snapshot)
@@ -662,7 +669,8 @@ class FinancialQAPipeline:
 
         def release_lite():
             nonlocal lite_releasing
-            from ..outputs.qa_lite import compose_lite, select_claims
+            from ..outputs.qa_lite import compose_lite
+            from .claim_selection import select_claims
 
             lite_releasing = True
             entries = ledger.find_claims(query).claims
@@ -828,7 +836,7 @@ class FinancialQAPipeline:
             entries = stage("ledger_lookup", lambda: ledger.find_claims(query).claims)
             if request.m7_lite:
                 from ..outputs.qa_contracts import GroundedAnswerPlan
-                from ..outputs.qa_lite import select_claims
+                from .claim_selection import select_claims
 
                 selected, _ = select_claims(bound, entries)
                 plan = GroundedAnswerPlan(
@@ -869,7 +877,11 @@ class FinancialQAPipeline:
                             company_id=bound.company_id,
                             document_id=bound.document_id,
                             snapshot_id=bound.snapshot_id,
-                            period=bound.period or parsed.period,
+                            period=(
+                                None
+                                if bound.m5_lite and bound.period and len(bound.period) == 4
+                                else bound.period or parsed.period
+                            ),
                             reporting_year=parsed.reporting_year
                             or (int(bound.period[:4]) if bound.period else None),
                             reporting_scope=bound.reporting_scope or parsed.reporting_scope,

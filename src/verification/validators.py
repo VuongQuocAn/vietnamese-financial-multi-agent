@@ -287,7 +287,7 @@ class DeterministicFinancialValidator:
         if computation:
             try:
                 expected = self._calculator.calculate_dynamic(
-                    {s.evidence_id: s.reference for s in sources},
+                    {s.evidence_id: s.reference for s in sources if s.kind == "fact"},
                     [s.operation for s in computation.steps],
                 )
                 if computation != expected:

@@ -154,6 +154,8 @@ class ConversationService:
                 if explicit.get("company_id", docs[0].company_id) != docs[0].company_id:
                     return None, old, [], [], [], "Công ty và tài liệu đã chọn không khớp."
                 explicit["company_id"] = docs[0].company_id
+                if not values.get("period") and "period" not in explicit:
+                    explicit["period"] = str(docs[0].reporting_year)
         switched = any(
             k in explicit and explicit[k] != values[k]
             for k in ("company_id", "document_id", "period")
@@ -243,6 +245,20 @@ class ConversationService:
                     [],
                     "Bạn muốn so sánh chỉ tiêu nào? Hiện chỉ hỗ trợ tăng trưởng doanh thu qua công thức đã duyệt.",
                 )
+        elif (
+            (request.m5_lite or request.m7_lite)
+            and not topics
+            and not switched
+            and len(state.topics) == 1
+            and state.verified_claim_ids
+            and re.search(r"\b(?:ty le do|ty le nay|chi so do|chi so nay)\b", text)
+        ):
+            # Resolve the single prior verified topic, retaining the actual new
+            # question. Prior answers are context, never evidence or verdicts.
+            topics = list(state.topics)
+            question = request.question + f" (Tham chiếu: {topics[0]}.)"
+            expanded = True
+            inherited.extend(["topic", "verified_claim_reference"])
         elif not topics:
             if (
                 request.execution_mode != "deterministic"
@@ -323,6 +339,15 @@ class ConversationService:
         if context.reporting_scope and not parsed.reporting_scope:
             question += " hợp nhất" if context.reporting_scope == "consolidated" else " riêng"
         bound = request.model_copy(update={**context.model_dump(), "question": question})
+        if "verified_claim_reference" in inherited:
+            bound.conversation_context = [
+                dict(
+                    question=state.reference_question,
+                    topic=state.topics[0],
+                    verified_claim_ids=state.verified_claim_ids,
+                    citation_ids=state.citation_ids,
+                )
+            ]
         # Document periods live in the declared reporting year, not financial fact
         # period filters. Annual financial questions also let QA derive B01/B02 dates.
         if kind == "document" or document_intent(question)[0] == "document":
@@ -345,7 +370,8 @@ class ConversationService:
         inherited = [
             key
             for key in inherited
-            if key == "topic" or (getattr(context, key) and key not in changed)
+            if key in {"topic", "verified_claim_reference"}
+            or (getattr(context, key) and key not in changed)
         ]
         return bound, context, inherited, changed, topics, None
 

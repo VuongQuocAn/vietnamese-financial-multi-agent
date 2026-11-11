@@ -11,10 +11,11 @@ import json
 import subprocess
 from pathlib import Path
 
+from vietnamese_financial_multi_agent.api.claim_selection import select_claims
 from vietnamese_financial_multi_agent.api.qa_gateway import create_qa_adapter
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
-from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite, select_claims
+from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite
 from vietnamese_financial_multi_agent.verification import (
     VerifiedClaimLedger,
     VerifiedClaimQuery,

@@ -6,10 +6,11 @@ import tempfile
 from pathlib import Path
 
 from evaluate_generalization import pipeline
+from vietnamese_financial_multi_agent.api.claim_selection import select_claims
 from vietnamese_financial_multi_agent.api.qa_gateway import create_qa_adapter
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
-from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite, select_claims
+from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite
 from vietnamese_financial_multi_agent.verification.contracts import VerificationInput
 from vietnamese_financial_multi_agent.verification.ledger import build_verified_claim
 from vietnamese_financial_multi_agent.verification.ledger_contracts import VerifiedClaimQuery

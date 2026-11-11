@@ -481,7 +481,16 @@ def _numeric_proposals(evidence):
 
 
 def generate_candidates(
-    *, gateway, model, result, prompt, proposal_type, render, prefix, deterministic=False
+    *,
+    gateway,
+    model,
+    result,
+    prompt,
+    proposal_type,
+    render,
+    prefix,
+    deterministic=False,
+    emit_derived=True,
 ):
     if deterministic:
         # Existing typed numeric renderers; no model, interpretation or new calculation.
@@ -622,13 +631,12 @@ def generate_candidates(
             computation = None
             failed_operations = False
             if analysis.operations:
-                if any(s.kind != "fact" for s in sources):
-                    raise ValueError("dynamic_requires_fact_operands")
                 operands = {
                     s.evidence_id: DynamicOperand(
                         **{k: getattr(s, k) for k in DynamicOperand.model_fields}
                     )
                     for s in sources
+                    if s.kind == "fact"
                 }
                 valid_operations = []
                 for operation in analysis.operations:
@@ -660,7 +668,11 @@ def generate_candidates(
                     content=render_dynamic(computation, {s.evidence_id: s.label for s in sources})
                     if failed_operations or analysis.claim_type == "derived_fact"
                     else " ".join(
-                        [analysis.statement, *analysis.assumptions, *analysis.limitations]
+                        [
+                            analysis.statement,
+                            *("Giả định: " + a for a in analysis.assumptions),
+                            *("Giới hạn: " + note for note in analysis.limitations),
+                        ]
                     ),
                     company_id=owner.company_id,
                     document_id=owner.document_id,
@@ -696,10 +708,15 @@ def generate_candidates(
                     caveats=sorted(set(c for s in sources for c in s.caveats)),
                 )
             )
-            if computation and reasoning.claim_type not in {
-                "conditional_inference",
-                "derived_fact",
-            }:
+            if (
+                emit_derived
+                and computation
+                and reasoning.claim_type
+                not in {
+                    "conditional_inference",
+                    "derived_fact",
+                }
+            ):
                 derived = result.candidates[-1].model_copy(deep=True)
                 derived.candidate_id = prefix + "-derived-" + uuid4().hex
                 derived.content = render_dynamic(
