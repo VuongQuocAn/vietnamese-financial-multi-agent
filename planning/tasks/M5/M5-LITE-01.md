@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M5
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-08
 - Estimated Complexity: M
@@ -58,7 +58,7 @@ Candidate không được ACCEPT hoặc ghi Ledger/M7 trước M6. Không task F
 - [x] Candidate findings chuyển native M6 input, không bypass verification/admission.
 - [x] Legacy default giữ nguyên; flag tương thích M7 Lite.
 - [x] Có offline tests, BBS smoke và live evidence trong4calls; phân biệt original/replay.
-- [ ] Tech Lead nghiệm thu findings và giới hạn live/M6; CI không thay chất lượng tài chính.
+- [x] Owner/Tech Lead nghiệm thu ngày11/11/2026, giữ giới hạn live/M6 đã báo; CI không thay chất lượng tài chính.
 
 ## Required Tests
 
@@ -74,9 +74,12 @@ Không tuyên bố E2E live hoặc mọi nhận định được M6 chấp nhậ
 
 ## Implementation Evidence
 
-Implementation SHA: commit duy nhất chứa task này; xem report và Git log.
-Local BBS original/live/replay và checks ghi tại report; chỉ REVIEW, chưa nghiệm thu.
+Implementation SHA: `9a6aaac9a60a4dc2b000bd4f0e86bce875cf3295`, đã push main đúng một commit.
+[CI42942089012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42942089012)
+SUCCESS exactSHA: Python3.12/Web smoke. SHA/CI receipt cập nhật local sau commit.
+Local BBS original/live/replay và checks ghi tại report; Owner/Tech Lead APPROVED ngày11/11/2026.
+Phiên chuyển DONE chỉ cập nhật planning; không chạy lại Gemini/tests/CI, không tạo task FIX.
 
 ## Handoff Notes
 
-Next action: Tech Lead review M5-LITE-01 và những giới hạn đã báo.
+Next action: chờ Owner giao nhiệm vụ mới.

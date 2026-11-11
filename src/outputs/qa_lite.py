@@ -93,6 +93,7 @@ def _claim_years(entry):
 
 def select_claims(request, entries, current_ids=()):
     selected, excluded = [], []
+    current_ids = set(current_ids)
     years = periods_for(request)
     for entry in entries:
         i, reason = entry.identity, None
@@ -132,7 +133,11 @@ def select_claims(request, entries, current_ids=()):
                         raise ValueError("citation_not_in_accepted_claim")
             except ValueError:
                 reason = "citation_source_mismatch"
-        if reason is None and not _relevant(entry, request.question):
+        if (
+            reason is None
+            and i.verified_claim_id not in current_ids
+            and not _relevant(entry, request.question)
+        ):
             reason = "not_relevant"
         if reason:
             excluded.append(dict(claim_id=i.verified_claim_id, reason=reason))
@@ -159,7 +164,6 @@ def select_claims(request, entries, current_ids=()):
             )
         else:
             safe.append(entry)
-    current_ids = set(current_ids)
     safe.sort(key=lambda e: e.identity.verified_claim_id not in current_ids)
     return safe, excluded
 

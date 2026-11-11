@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M7
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M7-05
 - Estimated Complexity: M
@@ -59,3 +59,5 @@ Live4calls:1success/1HTTP503/2HTTP429,317792known tokens/3unknown;12/12findings 
 ## Handoff Notes
 
 Next action: Tech Lead review M7-LITE-01 với giới hạn live/chi phí/paraphrase; không tự DONE hoặc tiếp tục task khác.
+
+Owner xác nhận M7-LITE-01/02 đã nghiệm thu trong nhiệm vụ E2E-LITE-01 ngày11/11/2026. Đồng bộ DONE; giữ nguyên evidence/giới hạn nghiên cứu cũ, không chạy lại live task cũ.

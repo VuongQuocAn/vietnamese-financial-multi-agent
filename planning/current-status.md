@@ -1,44 +1,61 @@
 # Trạng thái hiện tại
 
-Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
+
+## E2E-LITE-01 — Real-Data End-to-End Validation
+
+Status: **REVIEW**; runtime e72f867 + một sửa M7 selection, chưa commit.
+[Spec](tasks/E2E/E2E-LITE-01.md), [report](../docs/e2e-lite-01-real-data-validation.md).
+Offline8cases/9turns:1CWC/4PARTIAL/3refusal theo case; live2cases/6calls,
+6203known tokens/2unknownHTTP503. Q6 có15ACCEPT/reload nhưng0M7selected;
+sửa current-request relevance, replay14/15phát hành, không live lại.
+47numeric/148citation variants:0mismatch;12+19targeted PASS;3259protected hashes unchanged.
+Kết luận NOT READY: routing/semantic findings/context/conversation/label guard còn P1.
+M7-LITE-01 DONE đồng bộ theo xác nhận Owner trong task; giữ historical limits.
+Next action: Tech Lead review E2E-LITE-01 và quyết định remediation P1.
 
 ## M6-LITE-01 — Simplified Financial Claim Verification
 
-Status: **REVIEW**, Owner giao11/11/2026; baseline `9a6aaac`; implementation chưa commit.
+Status: **DONE — Owner/Tech Lead APPROVED ngày11/11/2026**, giữ các giới hạn đã báo; baseline `9a6aaac`; [implementation e72f867](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/e72f867d05f25d14f1c46cb5ee1ae6480a6b7146) đã push main.
+[CI](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42945795996) SUCCESS exactSHA; đúng một implementation commit. Receipt cập nhật local sau commit.
 [Spec](tasks/M6/M6-LITE-01.md), [report](../docs/m6-lite-01-simplified-verification.md).
 Flag false mặc định; deterministic→một semantic batch→single decision→existing Ledger/M7.
 3Lite/30targeted PASS; BBS5numeric ACCEPT, fresh pipeline3new/0calls/partial coverage.
 Live1/4calls,2242tokens,10,521s:3SUPPORTED+1UNSUPPORTED;8stored/reload,1ABSTAIN;
 0unsafe/0unjustified rejection trong4semantic cases; positive còn restatement/qualification.
 M7 offline dùng2semantic ACCEPT, không M7live/OCR/M8; giữ provenance/scope caveats.
-Next action: Tech Lead nghiệm thu M6-LITE-01 và giới hạn đã báo.
+Phiên nghiệm thu chỉ cập nhật planning; không chạy lại Gemini/tests/CI hoặc sửa runtime.
+Next action: chờ Owner giao nhiệm vụ mới.
 
 ## M5-LITE-01 — Simplified Multi-Agent Orchestration
 
-Status: **REVIEW**, Owner giao11/11/2026; baseline `a7da263`.
+Status: **DONE — Owner/Tech Lead APPROVED ngày11/11/2026**, giữ các giới hạn đã báo; baseline `a7da263`.
 [Spec](tasks/M5/M5-LITE-01.md), [report](../docs/m5-lite-01-simplified-orchestration.md).
 Flagfalse; một Supervisor plan→Specialists/tools→candidates→native M6; không DAG/coverage/replan.
 4Lite+15legacy PASS;BBS offlineA3/B8candidates,adapter0issues;native smoke3ACCEPT,
 finalpartial_verified_coverage. Live4calls:3success/1HTTP503,4073known tokens/1unknown;
 originalA1/B6candidates;final shorthand parser replayA4/B8,không live thêm/M6-M7 changes.
-Implementation: một commit chứa module Lite; CI exactSHA báo sau push; chưa nghiệm thu.
-Next action: Tech Lead review M5-LITE-01 và giới hạn live/replay.
+Implementation `9a6aaac9a60a4dc2b000bd4f0e86bce875cf3295` đã push main; đúng một commit.
+[CI42942089012](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42942089012)
+SUCCESS exactSHA: Python3.12/Web smoke; full regression skipped. Receipt cập nhật local sau commit.
+Phiên nghiệm thu chỉ cập nhật planning; không chạy lại Gemini/tests/CI, không tạo task FIX.
+Next action: chờ Owner giao nhiệm vụ mới.
 
 ## M7-LITE-02 — Natural Answer Release
 
-Status: **REVIEW**, Owner giao11/11/2026; Owner duyệt đúng1commit/push; baseline `c102b8956356af6562c2558729a0e7ff373b09f3`.
+Status: **DONE — Owner/Tech Lead APPROVED ngày11/11/2026; đóng giai đoạn M7 Lite**.
 [Spec](tasks/M7/M7-LITE-02.md), [report](../docs/m7-lite-02-natural-answer-release.md).
-Bỏ verbatim gate; numeric/ID/source checks, page citations với exact source bindings backend.
-19targeted PASS; offline12/12findings/69→6refs, realQ23 pipeline smoke0calls/M5/M6.
-Đúng2live calls: L08 phát hành3đoạnGemini/no fallback/1945tokens/2refs; Q23HTTP503/usageunknown/fallback/1ref.
-Live7/7findings giữ,0binding errors; final runtime giữ hash qua live; không thêm live/retry; chốt19tests/staged/Ruff/planning/diff và CI exactSHA sau push.
-Giữ M7-LITE-01 REVIEW và upstream/local work. Numeric matching không chứng nhận semantic correctness.
-Owner xác nhận Q23HTTP503 là lỗi provider; dừng triển khai M7 Lite, không mở M7-LITE-03.
-Next action: Owner/Tech Lead nghiệm thu implementation commit đã push; SHA/CI tại local commit-receipt.
+Implementation [`a7da263db2e76e7ec07d8020f320c4b951dd9695`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/a7da263db2e76e7ec07d8020f320c4b951dd9695) đã push main; đúng một commit,7files thuộc task.
+[CI42939001230](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42939001230) SUCCESS exactSHA:186Python/9Web;19staged tests/Ruff/planning/diff PASS.
+L08 đã phát hành3đoạnGemini/no fallback/1945known tokens;Q23HTTP503/usageunknown là lỗi provider.
+Offline12/12findings/69→6refs;live7/7findings giữ,0binding errors. Giữ các giới hạn numeric/semantic và upstream đã ghi.
+Phiên nghiệm thu chỉ cập nhật tài liệu; không chạy lại tests/CI/Gemini, không sửa runtime.
+Không mở M7-LITE-03 hoặc M5/M6 Lite/M8; không tiếp tục sửa M7 vì Q23.
+Next action: chờ Owner giao nhiệm vụ mới.
 
 ## M7-LITE-01 — Simplified Grounded Answer Generation
 
-Status: **REVIEW**, Owner giao11/11/2026; baseline `b9d0cdb88417a344f1269dbfb6cf7300b18824bd`.
+Status: **DONE**, Owner xác nhận nghiệm thu trong E2E-LITE-01 ngày11/11/2026; baseline `b9d0cdb88417a344f1269dbfb6cf7300b18824bd`.
 [Spec](tasks/M7/M7-LITE-01.md), [report](../docs/m7-lite-01-grounded-answer-runtime.md).
 Flag false mặc định; giữ legacy/M1–M6/local. 155targeted+17final PASS (overlap), realQ23 smoke0calls.
 Live đúng4calls:Q21HTTP503,Q23success,L08/L09HTTP429;317792known tokens/3unknown.
@@ -46,7 +63,7 @@ Live đúng4calls:Q21HTTP503,Q23success,L08/L09HTTP429;317792known tokens/3unkno
 Payload live quá lớn; final scalar projection/48000chars cap chỉ offline replay, chưa live lại.
 10.087protected files/11unrelated local files giữ hash; implementation `e6411ec06297676080052385a1e7199867fd37b3` đã push main.
 [CI42935098419](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42935098419) completed/SUCCESS exactSHA:185Python/9Web PASS;full regression SKIPPED.
-Next action: Tech Lead review M7-LITE-01, gồm chi phí và giới hạn paraphrase/live.
+Giữ evidence/giới hạn lịch sử; đồng bộ DONE theo xác nhận Owner trong E2E-LITE-01, không tiếp tục task cũ.
 
 ## FIX-02 — Final Live Acceptance
 

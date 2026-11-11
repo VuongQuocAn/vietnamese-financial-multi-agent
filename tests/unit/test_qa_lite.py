@@ -246,3 +246,18 @@ def test_lite_fresh_cache_refresh_failure_and_legacy_compatibility(tmp_path):
     fresh_service, fresh_request, _, _, _ = setup(tmp_path / "fresh")
     fresh = fresh_service.run(fresh_request.model_copy(update={"m7_lite": True}))
     assert fresh.newly_accepted_claims == 1 and fresh.used_verified_claim_ids
+
+
+def test_current_request_claims_survive_broad_question_but_keep_scope_checks(admitted):
+    request, entry = admitted
+    request.question = "Nhận xét tình hình tài chính năm " + entry.identity.period[:4]
+    identity = entry.identity.verified_claim_id
+    assert not select_claims(request, [entry])[0]
+    assert select_claims(request, [entry], [identity])[0] == [entry]
+    foreign = entry.model_copy(deep=True)
+    foreign.identity.company_id = "foreign"
+    selected, excluded = select_claims(request, [foreign], [identity])
+    assert not selected
+    assert excluded[0]["reason"] == "scope_identity_mismatch"
+    bad_period = request.model_copy(update={"period": "1999"})
+    assert not select_claims(bad_period, [entry], [identity])[0]

@@ -30,10 +30,15 @@ jobs:
         shell: bash
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          FULL_REGRESSION: ${{ inputs.full_regression }}
         run: |
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] || [ -z "$BASE_SHA" ] || [[ "$BASE_SHA" =~ ^0+$ ]]; then
+          if [ "$FULL_REGRESSION" = true ]; then
             echo "web=true" >> "$GITHUB_OUTPUT"
-          elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- web src pyproject.toml .github/workflows/ci.yml; then
+          elif [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            echo "web=false" >> "$GITHUB_OUTPUT"
+          elif [ -z "$BASE_SHA" ] || [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$BASE_SHA" "$GITHUB_SHA" -- web; then
             echo "web=false" >> "$GITHUB_OUTPUT"
           else
             echo "web=true" >> "$GITHUB_OUTPUT"

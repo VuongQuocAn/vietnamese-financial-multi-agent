@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M6
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M6-06, M5-08, M7-05
 - Estimated Complexity: M
@@ -80,9 +80,12 @@ Giữ giới hạn ngôn ngữ/numeric binding và upstream M5/M7 nếu phát hi
 
 ## Implementation Evidence
 
-Implementation chưa commit; targeted/offline/live đã đạt trong phạm vi báo cáo. Baseline `9a6aaac9a60a4dc2b000bd4f0e86bce875cf3295`.
+[implementation e72f867](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/e72f867d05f25d14f1c46cb5ee1ae6480a6b7146) đã push main, đúng một commit/17task files.
+[CI](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42945795996) SUCCESS exactSHA. Targeted/offline/live đạt trong phạm vi báo cáo; receipt này local sau commit. Baseline `9a6aaac9a60a4dc2b000bd4f0e86bce875cf3295`.
 Evidence cuối ghi ở báo cáo; traces riêng `artifacts/evidence/M6-LITE-01/`.
+Owner/Tech Lead nghiệm thu ngày11/11/2026, chuyển REVIEW → DONE và giữ các giới hạn
+đã báo. Phiên chốt chỉ cập nhật planning, không chạy lại Gemini/tests/CI hoặc sửa runtime.
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu M6-LITE-01 và các giới hạn trong báo cáo.
+Next action: chờ Owner giao nhiệm vụ mới.
