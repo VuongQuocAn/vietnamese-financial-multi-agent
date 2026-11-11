@@ -31,7 +31,7 @@ Profiling script/test/report, planning/checker và một CI test entry; không r
 ## Tests
 
 3 targeted PASS; actual Qwen deterministic/template smoke 4 checks PASS;
-Ruff staged tree PASS. Planning/diff final và CI ghi tại receipt.
+Ruff/planning/diff PASS. [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED.
 
 ## Blockers
 
@@ -39,7 +39,7 @@ Không blocker cho profiling Qwen; Llama gated được ghi unavailable theo spe
 
 ## Git Checkpoint
 
-Implementation chưa commit; CI pending. Raw artifacts ignored, source hashes unchanged.
+Implementation [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5); [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED. Raw artifacts ignored, source hashes unchanged.
 
 ## Exact Next Action
 

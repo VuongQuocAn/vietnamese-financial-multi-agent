@@ -58,7 +58,8 @@ OCR/extraction, dataset writes hoặc M8. Không tự DONE task này.
 - [x] VRAM đúng architecture, stage budgets và đề xuất 8B/16K để thử GPU thật.
 - [x] Llama tokenizer gated ghi unavailable, không bịa counts/tokenizer thay thế.
 - [x] Không runtime/model API/weights/data changes; source hash unchanged.
-- [ ] CI SUCCESS đúng implementation SHA; Tech Lead review các limitations.
+- [x] CI SUCCESS đúng implementation SHA.
+- [ ] Tech Lead review các limitations.
 
 ## Required Tests
 
@@ -73,10 +74,11 @@ Historical samples không đại diện mọi workload; chưa GPU/financial-qual
 
 ## Implementation Evidence
 
-Implementation SHA: chưa commit. 20 scenarios/61 logical calls; Qwen 14B/8B cùng
+Implementation SHA: [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5); [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED. 20 scenarios/61 logical calls; Qwen 14B/8B cùng
 tokenizer hash, 17 overflow/2 near tại 8K; 61 FIT tại 16K và 32K non-thinking.
 M7 multi-specialist input lớn nhất 8.886, reserve 4.096. Llama UNKNOWN toàn bộ.
-Ba targeted tests PASS; final local validation/CI ghi tại report và receipt.
+Ba targeted tests + bốn actual tokenizer checks PASS; Ruff/planning/diff PASS.
+Local và CI tách riêng; không GPU/financial-quality claim.
 
 ## Handoff Notes
 

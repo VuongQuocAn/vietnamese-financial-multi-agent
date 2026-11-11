@@ -4,12 +4,12 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## MODEL-CTX-01 — LLM context profiling
 
-Status: **REVIEW**; implementation chưa commit. 20 scenarios/61 captured logical
+Status: **REVIEW**; implementation [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5). 20 scenarios/61 captured logical
 calls, zero model API/weights/runtime changes. Qwen14B/8B: 17 overflow/2 near ở 8K,
 61 FIT tại 16K/32K non-thinking; Llama tokenizer gated unavailable. M7 Q6 context
 lớn nhất; đề xuất thử Qwen3-8B 4-bit/16K trên T4, chưa GPU benchmark.
 [Report](../docs/model-ctx-01-llm-context-profiling.md),
-[spec](tasks/MODEL/MODEL-CTX-01.md). 3 targeted PASS; CI pending.
+[spec](tasks/MODEL/MODEL-CTX-01.md). 3 targeted +4 tokenizer checks PASS; [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED.
 Next action: Tech Lead review MODEL-CTX-01 và quyết định task Colab serving.
 
 ## CORE-PERIOD-01 — Comparative period verification

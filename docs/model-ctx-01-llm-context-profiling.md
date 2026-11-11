@@ -413,8 +413,10 @@ Reproduce trong env riêng (không cần torch): cài project dependencies và
 flag để offline. Script dùng revision cố định, không tải weights. Cần có các local
 ignored source traces nêu ở mục 3; không tự gọi Gemini để thay thế source thiếu.
 
-Validation: 3 targeted tests PASS; Ruff/planning/diff và exact implementation-SHA
-CI ghi trong receipt sau commit. Các checks là engineering evidence cho profiler,
+Validation local: 3 targeted tests PASS; 4 actual Qwen deterministic/template
+checks PASS; Ruff trên staged tree, planning và diff checks PASS.
+Implementation [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5); [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED. Các checks là engineering evidence cho profiler,
 không phải financial-quality hoặc GPU-serving PASS.
-Implementation SHA/CI: xem `implementation-receipt.json` local và registry sau CI.
+Receipt local ghi implementation SHA, CI head SHA và scope/source integrity.
+Checkpoint tài liệu sau implementation không được gán là SHA chạy CI.
 Next action: Tech Lead review MODEL-CTX-01 và quyết định task Colab serving.
