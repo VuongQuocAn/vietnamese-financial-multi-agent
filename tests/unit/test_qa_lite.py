@@ -1,13 +1,14 @@
 """Offline engineering controls; synthetic data is not financial acceptance."""
 
 import json
+from types import SimpleNamespace
 
 import pytest
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.core.llm_contracts import JSONOutput
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway, _failure
 from vietnamese_financial_multi_agent.outputs.qa_lite import (
-    _same_proposition,
+    _numbers_supported,
     compose_lite,
     select_claims,
 )
@@ -115,9 +116,9 @@ def test_relevance_and_multi_period_not_coverage(admitted):
 
 
 @pytest.mark.parametrize(
-    "variant", ["unknown_id", "fabricated_number", "unsupported_analysis", "invalid_json"]
+    "variant", ["unknown_id", "fabricated_number", "paraphrase", "invalid_json"]
 )
-def test_unsafe_answer_falls_back_without_losing_findings(admitted, variant):
+def test_known_errors_fallback_and_natural_paraphrase_releases(admitted, variant):
     request, entry = admitted
     key = entry.identity.verified_claim_id
     segment = dict(text=entry.content, claim_ids=[key])
@@ -125,15 +126,17 @@ def test_unsafe_answer_falls_back_without_losing_findings(admitted, variant):
         segment["claim_ids"] = ["absent"]
     elif variant == "fabricated_number":
         segment["text"] = entry.content + " Số tiền 999999999 VND."
-    elif variant == "unsupported_analysis":
-        segment["text"] = (
-            entry.content + " Do đó chất lượng lợi nhuận tốt do tăng trưởng kinh doanh."
-        )
+    elif variant == "paraphrase":
+        segment["text"] = "Theo số liệu được xác minh, " + entry.content.replace(" là ", " đạt ")
     body = dict(segments=[segment], gaps=[]) if variant != "invalid_json" else {"wrong": True}
     gateway, calls = gateway_for(body, malformed=variant == "invalid_json")
     fields, trace = compose_lite(request, [entry], gateway=gateway)
     assert len(calls) == 1 and calls[0].output_spec.schema_ref is None
     assert fields["used_verified_claim_ids"] == [key]
+    if variant == "paraphrase":
+        assert segment["text"] in fields["answer_vi"]
+        assert trace["llm_segments_released"] == 1 and not trace["fallback"]
+        return
     assert entry.content in fields["answer_vi"]
     assert "999999999" not in fields["answer_vi"]
     assert "Do đó chất lượng" not in fields["answer_vi"]
@@ -151,12 +154,44 @@ def test_provider_failure_has_c_gap_and_no_retry(admitted, error):
     assert fields["used_verified_claim_ids"] and fields["citations"]
 
 
-def test_rounding_is_positional_and_does_not_approve_financial_interpretation():
-    assert _same_proposition("Tỷ lệ là 59,1%.", "Tỷ lệ là 59,06%.")
-    assert not _same_proposition("Tỷ lệ là 59,2%.", "Tỷ lệ là 59,06%.")
-    assert not _same_proposition("Tỷ lệ là 59,06%, chứng tỏ an toàn.", "Tỷ lệ là 59,06%.")
-    assert not _same_proposition("Không đủ căn cứ.", "Đủ căn cứ.")
-    assert not _same_proposition("Năm 2026 là 59,1%.", "Năm 2025 là 59,06%.")
+def test_numeric_integrity_supports_paraphrase_rounding_and_units_not_semantics():
+    claim = SimpleNamespace(
+        content="Năm 2025, tỷ lệ là 59,06%; lợi nhuận là 7.249.557.946 VND.",
+        accepted_claim=SimpleNamespace(calculation=None, supporting_evidence=[]),
+    )
+    assert _numbers_supported("Tỷ lệ nợ đạt khoảng 59,1% vào năm 2025.", [claim])
+    assert _numbers_supported("Lợi nhuận đạt khoảng 7,25 tỷ đồng.", [claim])
+    assert not _numbers_supported("Tỷ lệ là 59,2%.", [claim])
+    assert not _numbers_supported("Tỷ lệ là 59,06 VND.", [claim])
+    assert not _numbers_supported("Năm 2026 là 59,1%.", [claim])
+    assert not _numbers_supported("Kết quả là 999999999 VND.", [claim])
+    # Numeric integrity deliberately cannot certify a financial conclusion.
+    assert _numbers_supported("Tỷ lệ 59,06% chứng tỏ an toàn.", [claim])
+
+
+def test_page_references_keep_exact_per_claim_source_bindings(admitted):
+    request, entry = admitted
+    other = entry.model_copy(deep=True)
+    other.identity.verified_claim_id = "other-accepted"
+    for number, e in enumerate([entry, other]):
+        citation = e.citations[0].model_copy(deep=True)
+        citation.source.reference.source_pointer += f"/variant-{number}"
+        e.decision.supporting_citations = [citation]
+        e.accepted_claim.citations = [citation]
+    fields, trace = compose_lite(request, [entry, other])
+    assert len(fields["citations"]) == 1
+    reference = fields["citations"][0]
+    assert len(reference.source_citations) == 2
+    assert reference.source_locator.provenance_level == "page"
+    assert reference.source_locator.element_id is None and reference.anchor_id is None
+    assert set(reference.bound_verified_claim_ids) == {
+        entry.identity.verified_claim_id,
+        "other-accepted",
+    }
+    assert len(trace["citation_bindings"]) == 2
+    assert (
+        trace["citation_bindings"][0]["source_ids"] != trace["citation_bindings"][1]["source_ids"]
+    )
 
 
 def test_valid_segment_survives_other_bad_segment_and_omission(admitted):

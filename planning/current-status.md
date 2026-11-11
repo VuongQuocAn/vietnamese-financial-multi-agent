@@ -2,6 +2,18 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-LITE-02 — Natural Answer Release
+
+Status: **REVIEW**, Owner giao11/11/2026; Owner duyệt đúng1commit/push; baseline `c102b8956356af6562c2558729a0e7ff373b09f3`.
+[Spec](tasks/M7/M7-LITE-02.md), [report](../docs/m7-lite-02-natural-answer-release.md).
+Bỏ verbatim gate; numeric/ID/source checks, page citations với exact source bindings backend.
+19targeted PASS; offline12/12findings/69→6refs, realQ23 pipeline smoke0calls/M5/M6.
+Đúng2live calls: L08 phát hành3đoạnGemini/no fallback/1945tokens/2refs; Q23HTTP503/usageunknown/fallback/1ref.
+Live7/7findings giữ,0binding errors; final runtime giữ hash qua live; không thêm live/retry; chốt19tests/staged/Ruff/planning/diff và CI exactSHA sau push.
+Giữ M7-LITE-01 REVIEW và upstream/local work. Numeric matching không chứng nhận semantic correctness.
+Owner xác nhận Q23HTTP503 là lỗi provider; dừng triển khai M7 Lite, không mở M7-LITE-03.
+Next action: Owner/Tech Lead nghiệm thu implementation commit đã push; SHA/CI tại local commit-receipt.
+
 ## M7-LITE-01 — Simplified Grounded Answer Generation
 
 Status: **REVIEW**, Owner giao11/11/2026; baseline `b9d0cdb88417a344f1269dbfb6cf7300b18824bd`.
