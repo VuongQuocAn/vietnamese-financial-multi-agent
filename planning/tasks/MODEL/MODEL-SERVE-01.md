@@ -89,4 +89,5 @@ STATIC VALIDATED — NOT GPU TESTED.
 
 REVIEW, chờ Owner/Tech Lead nghiệm thu.
 Diagnostics [27487c1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/27487c1a53346fa7c4fbff2d3cb055ae09547bab): Owner log health/models200, first inference500; chưa rõ root cause. Hiện response body và traceback trước cleanup, 2 offline controls PASS; chưa GPU tested.
-Next action: Owner chạy lại cell Start API và gửi response lỗi cùng ERROR/Traceback gốc.
+T4 workaround [66f16ef](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/66f16ef35b7a16cba19c7b6ece9de58ce85e6053): log mới xác định OutOfResources shared memory 98304>65536, không phải VRAM OOM. Tắt chunked prefill/prefix caching, budget bằng context; sửa false OOM hint. 2 offline controls PASS; chưa xác nhận inference đã hết lỗi.
+Next action: Owner chạy lại cell Start API mới trên Colab và gửi kết quả/log.
