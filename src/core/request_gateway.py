@@ -75,6 +75,7 @@ class RequestGateway:
         if (
             not _retry
             and response.error
+            and response.error.retryability != "not_retryable"
             and response.error.provider_error_code in {"http_429", "http_503"}
             and len(self.events) < self.max_calls
         ):

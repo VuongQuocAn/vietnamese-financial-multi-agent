@@ -18,6 +18,7 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..tools.financial_calculator import render_dynamic
 from ..tools.question_understanding import ITEM_RULES
 from .citation_contracts import CitationReference
 from .citation_renderer import _digest, _identity, _locator, _reference_text
@@ -75,6 +76,12 @@ def _numbers_supported(text, claims):
     """
     values = [q for e in claims for q in _quantities(e.content + "\n" + _proof_text(e))]
     for e in claims:
+        proof = getattr(e.accepted_claim, "reasoning", None)
+        if proof and proof.calculation:
+            values.extend(
+                (Decimal(step.result), Decimal(1), "%" if step.unit == "percent" else step.unit)
+                for step in proof.calculation.steps
+            )
         for evidence in e.accepted_claim.supporting_evidence:
             values.append(
                 (
@@ -83,7 +90,26 @@ def _numbers_supported(text, claims):
                     "%" if evidence.unit == "percent" else evidence.unit,
                 )
             )
-    for value, quantum, unit in _quantities(text):
+    # A negative accepted percentage change may be expressed as "giảm 8,66%".
+    # Keep the sign in the proof; only presentation supplies the word for it.
+    decreases = [
+        Decimal(step.result)
+        for e in claims
+        if getattr(e.accepted_claim, "reasoning", None) and e.accepted_claim.reasoning.calculation
+        for step in e.accepted_claim.reasoning.calculation.steps
+        if step.unit == "percent" and Decimal(step.result) < 0
+    ]
+    for match, (value, quantum, unit) in zip(NUMBER.finditer(text), _quantities(text), strict=True):
+        if (
+            unit == "%"
+            and value >= 0
+            and re.search(r"giảm\s+(?:khoảng\s+)?$", text[: match.start()], re.I)
+            and any(
+                (-source / quantum).quantize(Decimal(1), rounding=ROUND_HALF_UP) * quantum == value
+                for source in decreases
+            )
+        ):
+            continue
         if not any(
             (unit is None or unit == source_unit)
             and value.is_signed() == source.is_signed()
@@ -98,11 +124,36 @@ def _numbers_supported(text, claims):
     return True
 
 
+def _reasoning_calculation(entry):
+    """Project admitted operations verbatim; never execute or approve arithmetic."""
+    proof = getattr(entry.accepted_claim, "reasoning", None)
+    if not proof or not proof.calculation:
+        return None
+    calculation = proof.calculation.model_dump(mode="json")
+    labels = {e.evidence_id: e.label for e in entry.accepted_claim.supporting_evidence}
+    calculation["operand_labels"] = labels
+    periods = {key: [operand.period] for key, operand in proof.calculation.operands.items()}
+    for step in calculation["steps"]:
+        operation = step["operation"]
+        if operation["operator"] == "percentage_change":
+            target, base = operation["inputs"]
+            step["target_periods"] = periods[target]
+            step["base_periods"] = periods[base]
+            step["expression"] = "(target - base) / base * 100"
+        periods[operation["operation_id"]] = step["periods"]
+    return calculation
+
+
 def _proof_text(entry):
     """Display existing admitted calculation fields; no formula registry approval."""
+    proof = getattr(entry.accepted_claim, "reasoning", None)
+    lines = []
+    if proof and proof.calculation:
+        labels = {e.evidence_id: e.label for e in entry.accepted_claim.supporting_evidence}
+        lines.append(render_dynamic(proof.calculation, labels))
     calc = entry.accepted_claim.calculation
     if not calc or not calc.trace or not calc.result:
-        return ""
+        return "\n".join(lines)
     formula = calc.trace.formula
     expression = formula.expression
     labels = {
@@ -112,7 +163,7 @@ def _proof_text(entry):
     }
     for role in sorted(labels, key=len, reverse=True):
         expression = re.sub(r"\b" + re.escape(role) + r"\b", labels[role], expression)
-    lines = [f"Công thức đã xác minh: ({expression}) × {formula.output_multiplier}."]
+    lines.append(f"Công thức đã xác minh: ({expression}) × {formula.output_multiplier}.")
     for operand in calc.trace.operands:
         lines.append(
             f"{labels.get(operand.role, 'Toán hạng')}: {operand.value} {operand.unit}; "
@@ -249,6 +300,7 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
                     )
                     if e.accepted_claim.reasoning
                     else None,
+                    reasoning_calculation=_reasoning_calculation(e),
                     caveats=_public_notes(e.caveats),
                     limitations=_public_notes(e.accepted_claim.missing_information),
                 )
@@ -269,6 +321,10 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
                         "Chỉ paraphrase/tổng hợp kết luận đã cho; không tự tính, suy nguyên nhân hay đánh giá mới. "
                         "Giữ đúng chiều so sánh, kỳ gốc và kỳ mục tiêu của phép tính. Không diễn giải "
                         "một biểu thức số học thành tăng/giảm của kỳ khác hoặc với mẫu số khác. "
+                        "reasoning_calculation là các bước đã được M6 ACCEPT. Trình bày các kết quả "
+                        "tính toán liên quan, gồm mức biến động phần trăm, không chỉ nói tăng/giảm. "
+                        "percentage_change dùng kỳ mục tiêu so với kỳ gốc (mẫu số); kết quả âm "
+                        "diễn đạt giảm với độ lớn dương, làm tròn hai chữ số thập phân. "
                         "Mỗi đoạn dẫn đủ claim_ids cho cả số liệu và nhận định. Không suy thêm biên lợi nhuận, "
                         "chất lượng lợi nhuận hay khả năng thanh toán nếu chưa có kết luận ACCEPT tương ứng. "
                         "Giữ mức chắc chắn, caveats, phân biệt facts với nhận định. "

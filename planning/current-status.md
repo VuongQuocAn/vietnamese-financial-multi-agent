@@ -4,14 +4,15 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## CORE-FLOW-01 — Consolidate and Repair the Multi-Agent QA Pipeline
 
-Status: **REVIEW / NOT READY**, Owner giao 11/11/2026; baseline a92bc8f.
+Status: **REVIEW**, key rotation + projection **CONDITIONAL READY**; parent f5baae3.
 [Spec](tasks/CORE/CORE-FLOW-01.md), [report](../docs/core-flow-01-boundary-alignment.md).
-Đã sửa M5/M6/pipeline/M7/context/conversation; giữ local edits, không OCR/extraction.
-Live106attempts/182239known tokens,21HTTP503/7HTTP429. Q5 từng sai mẫu số khi
-M7 paraphrase; sửa cuối có targeted controls nhưng live lại bị429. Không financial
-accuracy PASS; SHA/CI exact và final checks tại receipt local sau commit.
-Next action: chạy lại live Q4–Q8 trên implementation commit khi provider hết429.
-
+Fresh Q5 trả đúng tài sản giảm8,66%, nợ giảm14,35% so với đầu năm, PDF5/6;
+Q4/Q6/Q7/Q8 chạy cùng runtime, giữ reasoning và conversation. Q6 còn caveat
+Specialist nói thiếu bảng cân đối dù Specialist khác có dữ liệu; không sửa M5/M6.
+28provider attempts/89857known tokens/3unknown; rotation key0HTTP429→key1success.
+37targeted PASS, Ruff/planning/diff PASS; exact implementation SHA/CI ghi receipt
+local sau một commit/push gộp. Giữ mọi local edits ngoài task; không tự DONE.
+Next action: Tech Lead review key rotation/projection và kết quả live, đặc biệt caveat Q6.
 
 ## E2E-LITE-01 — Real-Data End-to-End Validation
 

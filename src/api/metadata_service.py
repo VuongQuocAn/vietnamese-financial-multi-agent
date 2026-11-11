@@ -119,6 +119,7 @@ class FreeTierKeyPool:
         cooldown=60,
         clock=time.time,
         schemas=None,
+        model=DEFAULT_METADATA_MODEL,
     ):
         self.keys = [KeyState(adapter) for adapter in adapters]
         self.store = store
@@ -126,6 +127,7 @@ class FreeTierKeyPool:
         if not self.keys or not 1 <= max_attempts <= 32 or not 1 <= cooldown <= 86400:
             raise ValueError("Invalid key pool limits")
         self.max_attempts, self.cooldown, self.clock = max_attempts, cooldown, clock
+        self.model = model
         self.lock, self.selected = RLock(), 0
         self.attempts = []
         self.ledger_path = safe_path(store.root, "free-tier-usage.json")
@@ -189,12 +191,20 @@ class FreeTierKeyPool:
                 project_ref != POOL_SCOPE
                 or credential_ref != POOL_CREDENTIAL
                 or request.model.provider != "gemini"
-                or request.model.model != DEFAULT_METADATA_MODEL
+                or request.model.model != self.model
             ):
                 return GuardResult(False, "invalid_configuration")
             attempted = set()
             last_response = None
+            deadline = time.perf_counter() + (
+                request.constraints.timeout_seconds
+                if request.constraints and request.constraints.timeout_seconds
+                else 60
+            )
             while len(attempted) < min(self.max_attempts, len(self.keys)):
+                remaining = deadline - time.perf_counter()
+                if remaining < 1:
+                    break
                 now = self.clock()
                 eligible = [
                     i
@@ -223,7 +233,11 @@ class FreeTierKeyPool:
                 key = self.keys[index]
                 key.recent_requests = [t for t in key.recent_requests if t > now - 60] + [now]
                 attempted.add(index)
-                response = self.gateway.generate(request)
+                started = time.perf_counter()
+                bound = request.model_copy(deep=True)
+                if bound.constraints:
+                    bound.constraints.timeout_seconds = remaining
+                response = self.gateway.generate(bound)
                 last_response = response
                 error = response.error
                 category = error.category if error else None
@@ -234,6 +248,8 @@ class FreeTierKeyPool:
                         error_category=category,
                         usage=response.usage.export(),
                         provider_reported_model=response.provenance.provider_reported_model,
+                        provider_error_code=error.provider_error_code if error else None,
+                        latency_ms=(time.perf_counter() - started) * 1000,
                     )
                 )
                 total = response.usage.total_tokens
@@ -251,6 +267,7 @@ class FreeTierKeyPool:
                     # cause speculative duplicate requests on other credentials.
                     return GuardResult(True, "provider_response", response=response)
                 self.selected = (index + 1) % len(self.keys)
+                self.attempts[-1]["cooldown_seconds"] = max(0, key.cooldown_until - self.clock())
             return GuardResult(
                 bool(attempted),
                 "key_pool_unavailable",

@@ -30,6 +30,11 @@ scripts/evaluate_core_flow.py; artifacts riêng ignored artifacts/evidence/CORE-
 
 ## Allowed Changes
 
+Owner bổ sung: nối QA Gateway với FreeTierKeyPool hiện có và sửa tối thiểu projection
+M7/numeric presentation cho calculation steps đã ACCEPT; targeted tests, fresh Q5 rồi
+Q4/Q6/Q7/Q8. Một commit/push gộp khi đạt, xác minh CI đúng SHA, dừng REVIEW.
+Không mở task FIX, không sửa M5/M6/Ledger.
+
 M5 Lite, contract operands tối thiểu, M6 Lite, điều phối/context/conversation,
 M7 Lite, targeted tests, planning/checker và báo cáo. Một implementation commit/push
 main nếu validation đạt; xác minh CI đúng SHA.
@@ -54,8 +59,8 @@ Giữ mọi local edits trước task; runtime đánh giá dùng baseline + task
 - [x] Context từ báo cáo và follow-up một tham chiếu rõ hoạt động.
 - [x] Tám case được đánh giá trên câu trả lời cuối, có citations và provider trace.
 - [x] Targeted tests/Ruff/planning/diff đạt; không dữ liệu/secrets trong commit.
-- [ ] Sửa Q5 cuối được live xác minh đúng; Q4/Q7 có kết luận semantic verified
-  và câu trả lời đáp ứng phạm vi trên implementation cuối khi provider hết429.
+- [x] Sửa Q5 được fresh live xác minh đúng; Q4/Q7 có kết luận semantic verified,
+  Q6/Q8 hoàn tất cùng runtime; caveat Q6 ghi rõ để Tech Lead review.
 
 ## Required Tests
 
@@ -65,21 +70,24 @@ không OCR hoặc benchmark mới. Engineering PASS không chứng minh financia
 
 ## Risks and Blockers
 
-Provider503/429 chặn live cuối; Q5 từng sai mẫu số trong paraphrase. Đã sửa và có
-control offline, chưa live xác minh thành công. NOT READY; không tự DONE.
+Sửa key rotation/projection đạt fresh Q5; CONDITIONAL READY cho phạm vi này.
+Q6 caveat về thiếu bảng cân đối còn mâu thuẫn giữa Specialists, không mở rộng sửa
+M5/M6. Reporting_scope/page-level và generic M7 gaps giữ giới hạn, không financial
+accuracy toàn hệ thống. Tech Lead nghiệm thu trước DONE.
 
 ## Implementation Evidence
 
-Implementation là commit chứa spec/report này; SHA và CI đúng SHA tại receipt
-local artifacts/evidence/CORE-FLOW-01/receipt.json và bàn giao sau commit.
-75 targeted trên bản stage trước retry refinement; 6 controls cuối local PASS;
-29staged final PASS; Ruff/planning/diff PASS, CI exactSHA chờ sau push và ghi receipt.
-Live106attempts/182239known tokens,
-28unknown,21HTTP503/7HTTP429; tám case/chín lượt đủ bộ trước sửa Q5 cuối.
-783source/metric/citation checks không mismatch, nhưng Q5 câu trả lời sai nghĩa
-phần trăm được ghi riêng, không gọi financial accuracy PASS.
+Parent f5baae3; implementation là một commit gộp key rotation và sửa projection.
+SHA/CI exact tại receipt local sau push và bàn giao.37targeted PASS, Ruff/planning/
+diff PASS; fresh Q5 đúng−8,66%/−14,35% với mẫu số đầu năm; Q4/Q6/Q7/Q8 cùng runtime.
+28actual provider attempts/89857known tokens/3unknown,2HTTP429/1HTTP503.252focused
+source/calculation/citation checks không mismatch;4204protected hashes unchanged.
+Report chính dùng tên chỉ tiêu/số dễ đọc; câu trả lời nguyên văn và IDs ở raw trace.
 
 ## Handoff Notes
 
-Next action: chạy lại live Q4–Q8 trên implementation commit khi provider hết429,
-đối chiếu Q5 trước Tech Lead nghiệm thu.
+M7 nhận full operands/steps/results/units và kỳ gốc/mục tiêu của reasoning calculation
+đã ACCEPT; không tính/verify lại. Giữ nguyên M5/M6/Ledger và local edits ngoài task.
+Không tạo task mới, không OCR/M8/full local regression.
+
+Next action: Tech Lead review key rotation/projection và kết quả live, đặc biệt caveat Q6.
