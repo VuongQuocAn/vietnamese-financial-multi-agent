@@ -88,4 +88,5 @@ STATIC VALIDATED — NOT GPU TESTED.
 ## Handoff Notes
 
 REVIEW, chờ Owner/Tech Lead nghiệm thu.
-Next action: Owner mở notebook mới, chạy từ đầu trên Colab T4 và gửi log nếu lỗi.
+Diagnostics [27487c1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/27487c1a53346fa7c4fbff2d3cb055ae09547bab): Owner log health/models200, first inference500; chưa rõ root cause. Hiện response body và traceback trước cleanup, 2 offline controls PASS; chưa GPU tested.
+Next action: Owner chạy lại cell Start API và gửi response lỗi cùng ERROR/Traceback gốc.

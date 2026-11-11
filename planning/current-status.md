@@ -11,7 +11,8 @@ engine V0/XFormers/float16 activations cho T4; mục tiêu 16K, non-thinking, co
 Bỏ GGUF/llama.cpp/apt/build; giữ cache Drive, HTTPS nếu khả dụng, api_info.json và test API.
 Implementation [20be7ca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/20be7ca731cd1cc9cbc5ac2fdcd3a2244bc7f496); nbformat/AST, Ruff và 3 static controls PASS.
 Chưa install vLLM/tải weights/chạy model/GPU/tunnel trong Codex; chưa xác nhận 16K/T4/API.
-Next action: Owner mở notebook mới, chạy từ đầu trên Colab T4 và gửi log nếu lỗi.
+Diagnostics [27487c1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/27487c1a53346fa7c4fbff2d3cb055ae09547bab): Owner log health/models200, first inference500; chưa rõ root cause. Hiện response body và traceback trước cleanup, 2 offline controls PASS; chưa GPU tested.
+Next action: Owner chạy lại cell Start API và gửi response lỗi cùng ERROR/Traceback gốc.
 
 ## MODEL-CTX-01 — LLM context profiling
 
