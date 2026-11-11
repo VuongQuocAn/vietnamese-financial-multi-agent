@@ -2,9 +2,23 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## EF-CORE-02 — Controlled ablation
+
+Status: **IN_PROGRESS**, experiment xong, chờ commit/CI; Owner11/11/2026.
+[Spec](tasks/EF/EF-CORE-02.md), [report](../docs/ef-core-02-graph-ablation-quality-evaluation.md).
+Runtime baseline `f5bbac6`, giữ M5/M6/M7 và mọi local runtime edits.
+60 primary +20 replacements,80 independent assessments;52 clean slots/23 clean pairs.
+ON14/23 vs OFF11/23 CWC, completeness84/111 vs82/111; không thêm financial facts.
+Mean tokens +60,22%, latency +61,23%; source projection có lợi hẹp, relations chưa
+chứng minh tăng financial accuracy. G3/G5/period-policy/AttributeError đã chẩn đoán.
+230 Gateway calls/679767 known tokens/18 unknown;198facts/62metrics/89citations
+checked0 mismatch;10670 protected/169 runtime Python/19 unrelated files unchanged.
+3 evaluator tests PASS; Ruff/planning/diff PASS; chưa commit/push/CI.
+Next action: hoàn thành commit/push và xác minh CI implementation.
+
 ## EF-CORE-01 — EF-EG trong M5 Lite
 
-Status: **REVIEW**, Owner giao 11/11/2026; baseline `0f61655`.
+Status: **DONE về tích hợp, còn giới hạn chất lượng**, Owner giao 11/11/2026; baseline `0f61655`.
 Implementation `f5bbac6b6d5befd0b3021654b48218feeab54942` đã push main;
 [CI42964593478](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42964593478)
 SUCCESS đúng SHA,210 tests PASS; Web/full regression SKIPPED.
@@ -14,7 +28,9 @@ analysis M6 ACCEPT và M7 chọn. G3/G5 PARTIAL, không tuyên bố Graph ON tă
 49 local +49 staged targeted PASS; live83 logical calls/269220 known tokens/3 unknown HTTP503;
 1366 protected files giữ hash; 33 facts/324 citations/13 metrics audit PASS.
 Giữ local edits ngoài scope; không OCR/extraction/M6/M7 changes.
-Next action: Tech Lead review tích hợp cùng caveats G3/G5; không tự DONE hoặc bắt đầu EF-CORE-02.
+Next action: theo dõi EF-CORE-02 do Owner đã giao.
+
+Owner xác nhận Tech Lead đã nghiệm thu EF-CORE-01 trong task EF-CORE-02.
 
 ## CORE-FLOW-01 — Consolidate and Repair the Multi-Agent QA Pipeline
 

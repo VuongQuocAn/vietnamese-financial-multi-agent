@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: CORE-FLOW-01, EF-01
 - Estimated Complexity: M
@@ -67,6 +67,11 @@ completed/SUCCESS đúng SHA,210 tests PASS; Web/full regression SKIPPED.
 83 live logical calls/269220 known tokens/3 unknown HTTP503; 1366 protected unchanged;
 33 fact/324 citation/13 metric occurrences audit PASS. Chưa nghiệm thu DONE.
 
+Owner xác nhận Tech Lead đã nghiệm thu tích hợp trong task EF-CORE-02 ngày 11/11/2026;
+giữ mọi giới hạn chất lượng của evidence EF-CORE-01.
+
 ## Handoff Notes
+
+Handoff cũ dưới đây là lịch sử trước nghiệm thu; trạng thái mới theo xác nhận Owner ở trên.
 
 Next action: Tech Lead review tích hợp cùng caveats G3/G5; không tự DONE hoặc bắt đầu EF-CORE-02.
