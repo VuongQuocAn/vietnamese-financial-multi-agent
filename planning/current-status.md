@@ -4,17 +4,20 @@ Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## EF-CORE-02 — Controlled ablation
 
-Status: **IN_PROGRESS**, experiment xong, chờ commit/CI; Owner11/11/2026.
-[Spec](tasks/EF/EF-CORE-02.md), [report](../docs/ef-core-02-graph-ablation-quality-evaluation.md).
-Runtime baseline `f5bbac6`, giữ M5/M6/M7 và mọi local runtime edits.
-60 primary +20 replacements,80 independent assessments;52 clean slots/23 clean pairs.
-ON14/23 vs OFF11/23 CWC, completeness84/111 vs82/111; không thêm financial facts.
-Mean tokens +60,22%, latency +61,23%; source projection có lợi hẹp, relations chưa
-chứng minh tăng financial accuracy. G3/G5/period-policy/AttributeError đã chẩn đoán.
-230 Gateway calls/679767 known tokens/18 unknown;198facts/62metrics/89citations
-checked0 mismatch;10670 protected/169 runtime Python/19 unrelated files unchanged.
-3 evaluator tests PASS; Ruff/planning/diff PASS; chưa commit/push/CI.
-Next action: hoàn thành commit/push và xác minh CI implementation.
+Status: **REVIEW**, chờ Tech Lead nghiệm thu. Runtime baseline `f5bbac6` giữ nguyên.
+[Implementation 43c55aa](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1) đã push main;
+[CI42976641605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42976641605) SUCCESS đúng SHA,213 Python PASS;
+Web/full regression SKIPPED. [Spec](tasks/EF/EF-CORE-02.md),
+[report](../docs/ef-core-02-graph-ablation-quality-evaluation.md).
+60 primary +20 replacements/80 independent assessments;52 clean slots/23 clean pairs,
+không đủ hai clean repetitions cho mọi câu. ON14/23 vs OFF11/23 CWC;
+completeness84/111 vs82/111; mean tokens+60,22%/latency+61,23%.
+Graph giúp source/context visibility hẹp, không thêm financial facts; chưa chứng minh
+relations cải thiện accuracy. G3/G5/period-policy/AttributeError/M6 caveats đã chẩn đoán.
+230Gateway/679767known tokens/18unknown;198oracle-fact/62metric/89citation checks0 mismatch.
+169runtime Python/10670protected/19unrelated files unchanged;3local evaluator tests,
+staged Ruff/planning/diff PASS. Giữ local edits ngoài task; không M8/runtime changes.
+Next action: Tech Lead review EF-CORE-02 và các limitations trong report.
 
 ## EF-CORE-01 — EF-EG trong M5 Lite
 

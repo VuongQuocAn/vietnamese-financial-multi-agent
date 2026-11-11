@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: EF
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: EF-CORE-01
 - Estimated Complexity: M
@@ -52,7 +52,7 @@ lượt đã lưu, provider failures không tính lỗi chất lượng.
 - [x] Repeated controlled OFF/ON và chấm độc lập M6.
 - [x] Correctness/completeness/grounding/citations/graph contribution/efficiency.
 - [x] Chẩn đoán G3/G5 và semantic grounding; limitations và M8 hypothesis.
-- [ ] Tests/checks, commit/push main, CI SUCCESS đúng SHA; dừng REVIEW.
+- [x] Tests/checks, commit/push main, CI SUCCESS đúng SHA; dừng REVIEW.
 
 ## Required Tests
 
@@ -66,7 +66,9 @@ Graph use/ACCEPT không đồng nghĩa added value; không dùng ON answer làm 
 
 ## Implementation Evidence
 
-Chưa commit tại checkpoint trước implementation commit. 60 primary +20 bounded
+Implementation [43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1) đã push main;
+[CI42976641605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42976641605) SUCCESS đúng SHA,213 Python tests PASS;
+Web/full regression SKIPPED. Dừng REVIEW, chờ Tech Lead nghiệm thu. 60 primary +20 bounded
 replacements/Gemini thật,80 assessments;52 clean slots/23 clean pairs. Không có
 hai clean repetitions cho mọi câu; giữ rõ attrition và mọi failure/cost.
 ON14/23 vs OFF11/23 CWC, completeness84/111 vs82/111; không có financial facts mới.
@@ -74,10 +76,10 @@ Tokens mean +60,22%, latency mean +61,23%; graph setup/traversal chiếm phần 
 230 Gateway calls/679767 known tokens/18 logical usage unknown; comparison218
 provider attempts. 198 fact/62 metric/89 citation occurrences audit0 mismatch.
 169 baseline Python files/10670 protected/19 unrelated pre-existing files unchanged.
-3 evaluator tests PASS; Ruff/planning/diff PASS trước staged validation. CI chờ.
+3 evaluator tests/staged Ruff check/format/planning/diff PASS; CI213 PASS.
 [Report](../../../docs/ef-core-02-graph-ablation-quality-evaluation.md);
 raw traces/oracle/assessments/question appendix ignored. Không sửa runtime/M8.
 
 ## Handoff Notes
 
-Next action: hoàn thành commit/push và xác minh CI implementation.
+Next action: Tech Lead review EF-CORE-02 và các limitations trong report.

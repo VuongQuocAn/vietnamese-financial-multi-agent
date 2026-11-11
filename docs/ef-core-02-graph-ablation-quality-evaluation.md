@@ -1,11 +1,11 @@
 # EF-CORE-02 — Controlled EF-EG Ablation & Quality Evaluation
 
-Ngày 11/11/2026 (Asia/Bangkok). Development evaluation trên BBS 2025, **không phải M8**. Status: **IN_PROGRESS**, thực nghiệm xong, đang validation/CI.
+Ngày 11/11/2026 (Asia/Bangkok). Development evaluation trên BBS 2025, **không phải M8**. Status: **REVIEW**, chờ Tech Lead nghiệm thu.
 Runtime cố định tại `f5bbac6b6d5befd0b3021654b48218feeab54942`.
 
 ## 1. Executive Summary
 
-**Thực nghiệm hoàn tất, còn technical attrition; đang validation/CI.**
+**REVIEW — development evaluation hoàn tất, còn technical attrition.**
 60 primary +20 bounded replacements trên15 câu/BBS scan thật, Gemini thật,
 M5/M6/M7 giữ nguyên accepted baseline. Có23 clean pairs;52/60 slots có execution
 clean, không đủ hai clean repetitions cho mọi câu.
@@ -409,15 +409,27 @@ thiện source projection; nếu còn, mới điều tra contribution riêng c�
 
 ## 14. Implementation/CI Evidence
 
-Checkpoint trước commit: experiment/assessment80 lượt hoàn tất;3 targeted evaluator
-tests PASS trên staged tree, Ruff check/format toàn staged tree, planning và
-diff checks PASS. CI sẽ ghi ở checkpoint sau. Runtime169 Python files đúng frozen baseline;10.670 protected
-files và19 unrelated pre-existing files giữ hash. Không sửa runtime hoặc nguồn.
-Engineering tests không chứng minh financial quality. Runner/summarizer/tests và
-CI focused selection thuộc EF-CORE-02;
-raw artifacts lưu dưới `artifacts/evidence/EF-CORE-02/` (ignored).
+Implementation [`43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/43c55aa3ac7b3f9cb6dc9c6b35fcbb6a61d117e1) đã push main.
+[CI42976641605](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42976641605) completed/**SUCCESS** đúng SHA: **213 Python tests PASS**,
+lint/format/planning PASS; Web smoke và full regression SKIPPED đúng phạm vi.
+Không gán CI này cho documentation checkpoint sau implementation.
 
-Artifacts gồm task Owner, freeze, oracle, graph-oracle, source-review, PDF binding,
-plans, mỗi run/ledger riêng, full provider requests/responses, compact review-pack,
-manual assessments, paired/aggregate summary và integrity receipts. Raw IDs không
-đưa vào bảng kết luận. Giữ pre-existing local edits ngoài phạm vi.
+Local staged tree:3 targeted evaluator tests PASS, Ruff check/format toàn tree,
+planning checker và diff check PASS. 169 runtime Python files đúng frozen baseline;
+10.670 protected files và19 unrelated pre-existing files giữ hash. PDF digest khớp
+cả tám canonical document identities. Không OCR/extraction, source writes, model
+khác, benchmark M8 hoặc runtime changes. Engineering CI không chứng minh financial
+accuracy; research conclusions chỉ dựa trên nguồn/outputs được kiểm tra ở trên.
+
+Registry/spec ghi tối thiểu EF-CORE-01 DONE theo xác nhận nghiệm thu của Owner trong
+task EF-CORE-02 để dependency nhất quán. Các pending local approvals/code khác
+không đưa vào implementation commit. Giữ nguyên mọi local edits ngoài scope.
+
+Artifacts ignored tại `artifacts/evidence/EF-CORE-02/`: task Owner, freeze,
+questions/question-oracles, source oracle/graph oracle/PDF review, shared plans,
+80 run JSONs và ledgers riêng, full provider requests/responses, raw citations,
+80 independent assessments, paired summary,80-answer question appendix,
+supplemental COGS verification, integrity/final audit và implementation/CI receipt.
+Long identities/hashes nằm trong JSON; không dùng M6 verdict làm ground truth.
+
+Next action: Tech Lead review EF-CORE-02 cùng limitations về attrition và source projection.
