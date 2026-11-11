@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## MODEL-SERVE-01 — Colab T4 local API notebook
+
+Status: **REVIEW** — **STATIC VALIDATED — NOT GPU TESTED**.
+[Notebook](../notebooks/colab_qwen_t4_api.ipynb), [spec](tasks/MODEL/MODEL-SERVE-01.md).
+Hai GGUF Q4_K_M pin revision/hash; Drive cache và fallback; pinned CUDA build,
+start/stop/readiness; Vietnamese/JSON/financial/optional long-context tests.
+Implementation là commit thêm notebook; SHA sẽ được xác minh khi bàn giao.
+Static nbformat/AST, kiểm tra helpers offline, source/model metadata và planning/diff checks PASS.
+Không tải weights, build backend hoặc gọi model; chưa xác nhận GPU/context/API hoạt động.
+Next action: Project Owner mở notebook trên Colab Free, chọn model và chạy thử.
+
 ## MODEL-CTX-01 — LLM context profiling
 
 Status: **REVIEW**; implementation [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5). 20 scenarios/61 captured logical
