@@ -2,6 +2,17 @@
 
 Cập nhật 2026-11-10 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
+## M7-LITE-01 — Simplified Grounded Answer Generation
+
+Status: **REVIEW**, Owner giao11/11/2026; baseline `b9d0cdb88417a344f1269dbfb6cf7300b18824bd`.
+[Spec](tasks/M7/M7-LITE-01.md), [report](../docs/m7-lite-01-grounded-answer-runtime.md).
+Flag false mặc định; giữ legacy/M1–M6/local. 155targeted+17final PASS (overlap), realQ23 smoke0calls.
+Live đúng4calls:Q21HTTP503,Q23success,L08/L09HTTP429;317792known tokens/3unknown.
+12/12findings giữ,69refs/0binding errors;3PARTIAL/1CORRECT_WITH_CAVEAT, không natural-answer PASS.
+Payload live quá lớn; final scalar projection/48000chars cap chỉ offline replay, chưa live lại.
+10.087protected files/11unrelated local files giữ hash; chưa commit/CI.
+Next action: Tech Lead review M7-LITE-01, gồm chi phí và giới hạn paraphrase/live.
+
 ## FIX-02 — Final Live Acceptance
 
 Status: **BLOCKED — adapter đã khôi phục, chất lượng nghiệm thu chưa đạt**.

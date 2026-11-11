@@ -9,7 +9,7 @@ from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
 TASK_ID = re.compile(
-    r"(?:(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|QA-Q\d{2}|QA-Fix-\d{2})"
+    r"(?:(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|M7-LITE-\d{2}|QA-Q\d{2}|QA-Fix-\d{2})"
 )
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 

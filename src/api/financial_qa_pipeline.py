@@ -144,6 +144,8 @@ class FinancialQAPipeline:
         return {(d.document_id, d.company_id) for d in documents}
 
     def _context(self, request):
+        if request.m7_lite:
+            return self._lite_context(request)
         parsed, issues = understand(request.question)
         blocked = {
             "cross_document_comparison_blocked_D03_B10",
@@ -252,6 +254,47 @@ class FinancialQAPipeline:
         ):
             return None, "verification_blocked", ["no_usable_context_evidence"]
         return bound, None, []
+
+    def _lite_context(self, request):
+        """Resolve filing authority without legacy goal/formula coverage gates."""
+        from ..outputs.qa_lite import periods_for
+
+        parsed, issues = understand(request.question)
+        if set(issues) & {"invalid_period", "non_annual_period_unsupported"}:
+            return None, "clarification_required", ["requested_period_unresolved"]
+        years = periods_for(request)
+        year = int(next(iter(years))) if len(years) == 1 else None
+        identities = self._document_identities(request, year)
+        if len(identities) != 1:
+            return None, "clarification_required", ["document_company_binding_unresolved"]
+        document, company = next(iter(identities))
+        selection = self.catalog.select(document, request.snapshot_id)
+        if selection.status != "selected":
+            return None, "clarification_required", ["snapshot_" + selection.status]
+        snapshot = selection.candidates[0].descriptor.snapshot_id
+        if not years:
+            return None, "clarification_required", ["period_required"]
+        scope = request.reporting_scope or parsed.reporting_scope
+        if scope:
+            resolution = self.catalog.get_reporting_scope(document, snapshot)
+            if (
+                resolution.status != "resolved"
+                or resolution.evidence_status != "confirmed"
+                or resolution.reporting_scope != scope
+            ):
+                return None, "clarification_required", ["requested_scope_unconfirmed"]
+        return (
+            request.model_copy(
+                update=dict(
+                    document_id=document,
+                    company_id=company,
+                    snapshot_id=snapshot,
+                    reporting_scope=scope,
+                )
+            ),
+            None,
+            [],
+        )
 
     def _document_context(self, request):
         parsed, issues = understand(request.question)
@@ -602,9 +645,61 @@ class FinancialQAPipeline:
         recovery_seen = set() if recovery_seen is None else recovery_seen
         request = FinancialQARequest.model_validate_json(request.model_dump_json())
         started = perf_counter()
-        trace = PipelineTrace(request_id=request.request_id)
+        trace = PipelineTrace(
+            request_id=request.request_id, answer_mode="lite" if request.m7_lite else "legacy"
+        )
         response = FinancialQAResponse(trace=trace)
         current = "context"
+        bound, ledger, query = None, None, None
+        lite_releasing = False
+        lite_technical_failure = False
+
+        def release_lite():
+            nonlocal lite_releasing
+            from ..outputs.qa_lite import compose_lite, select_claims
+
+            lite_releasing = True
+            entries = ledger.find_claims(query).claims
+            current_ids = [o.verified_claim_id for o in trace.outcomes if o.verified_claim_id]
+            selected, excluded = select_claims(bound, entries, current_ids)
+            fields, metadata = stage(
+                "composer",
+                lambda: compose_lite(
+                    bound,
+                    selected,
+                    gateway=self.gateway,
+                    technical_errors=trace.errors if lite_technical_failure else (),
+                    source_available=any(
+                        (f.document_id, f.snapshot_id, f.company_id)
+                        == (bound.document_id, bound.snapshot_id, bound.company_id)
+                        for f in self.catalog.facts
+                    ),
+                ),
+            )
+            metadata.update(
+                input_claims=[e.identity.verified_claim_id for e in entries],
+                excluded_claims=excluded,
+            )
+            trace.m7_lite = metadata
+            trace.m7_status = fields["status"]
+            trace.firewall_decision = "LITE_INTEGRITY_RELEASE" if selected else "LITE_NO_FINDINGS"
+            trace.stages["citations"] = PipelineStage(status="COMPLETED")
+            trace.stages["firewall"] = PipelineStage(
+                status="NOT_EXECUTED", reasons=["lite_integrity_path"]
+            )
+            for key, value in fields.items():
+                setattr(response, key, value)
+            response.reused_claims = len(set(fields["used_verified_claim_ids"]) - set(current_ids))
+            if fields["used_verified_claim_ids"] and response.mode in {
+                "BLOCKED",
+                "CLARIFICATION_REQUIRED",
+                "PROVIDER_FAILURE",
+            }:
+                response.mode = "FRESH_M5_M6_M7" if current_ids else "PARTIAL_REUSE_ONLY"
+            trace.provider_calls += metadata["calls"]
+            trace.known_total_tokens += metadata["known_total_tokens"]
+            trace.calls_with_unknown_tokens += metadata["unknown_usage"]
+            return response
 
         def stage(name, call):
             nonlocal current
@@ -623,8 +718,14 @@ class FinancialQAPipeline:
             return value
 
         def stop(status, reasons=()):
+            nonlocal lite_technical_failure
             response.status = status
             trace.errors.extend(reasons)
+            if request.m7_lite and ledger is not None and not lite_releasing:
+                lite_technical_failure = status in {"internal_error", "provider_unavailable"}
+                # A stopped Planner/refresh must not erase independently admitted findings.
+                ledger.cache.clear()
+                return release_lite()
             if status == "clarification_required":
                 response.mode = "CLARIFICATION_REQUIRED"
                 response.answer_vi = (
@@ -683,14 +784,15 @@ class FinancialQAPipeline:
             from ..agents.fusion_contracts import is_mixed
             from .fusion_pipeline import run_fusion
 
-            if is_mixed(request.question):
+            if is_mixed(request.question) and not request.m7_lite:
                 return run_fusion(self, request, response, stage, stop, recovery_seen=recovery_seen)
-            if intent == "mixed":
+            if intent == "mixed" and not request.m7_lite:
                 _, issues = understand(request.question)
                 if "cross_document_comparison_blocked_D03_B10" in issues:
                     return stop("unsupported", ["cross_document_comparison_blocked_D03_B10"])
                 return stop("unsupported", ["mixed_decomposition_unresolved"])
             if intent == "document":
+                trace.answer_mode = "legacy"
                 return self._run_document(
                     request, requirements, response, stage, stop, recovery_seen
                 )
@@ -715,10 +817,21 @@ class FinancialQAPipeline:
                 company_id=bound.company_id,
                 document_id=bound.document_id,
                 snapshot_id=bound.snapshot_id,
-                period=bound.period or parsed.period,
+                period=None if request.m7_lite else bound.period or parsed.period,
             )
             entries = stage("ledger_lookup", lambda: ledger.find_claims(query).claims)
-            plan, coverage = request_inventory(qa_request, entries)
+            if request.m7_lite:
+                from ..outputs.qa_contracts import GroundedAnswerPlan
+                from ..outputs.qa_lite import select_claims
+
+                selected, _ = select_claims(bound, entries)
+                plan = GroundedAnswerPlan(
+                    selected_verified_claim_ids=[e.identity.verified_claim_id for e in selected]
+                )
+                # Reuse is not a completeness verdict. Lite diagnoses gaps in the answer.
+                coverage = "answered" if selected else "partial"
+            else:
+                plan, coverage = request_inventory(qa_request, entries)
             existing_ids = set(plan.selected_verified_claim_ids)
             response.reused_claims = len(existing_ids)
             if coverage == "clarification_required" and bound.execution_mode != "auto":
@@ -976,6 +1089,8 @@ class FinancialQAPipeline:
                     response.mode = "PARTIAL_REUSE_AND_REFRESH"
                     trace.limitations.append("refresh_stopped_preserved_verified_partial")
 
+            if request.m7_lite:
+                return release_lite()
             source = stage("composer", lambda: VietnameseQAComposer(ledger).compose(qa_request))
             trace.answer_requirements = source.plan.requirements
             trace.m7_status = source.status
