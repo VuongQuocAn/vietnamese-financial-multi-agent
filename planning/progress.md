@@ -33,7 +33,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | FIX | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
 | CORE | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
 | MODEL | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
-| TOTAL | 133 | 119 | 0 | 1 | 8 | 0 | 5 |
+| QWEN | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 134 | 119 | 0 | 1 | 8 | 0 | 6 |
 
 ## Implementation thực tế
 

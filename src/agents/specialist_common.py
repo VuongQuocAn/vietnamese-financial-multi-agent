@@ -109,6 +109,47 @@ class AnalysisProposal(FinancialModel):
     )
 
 
+def _prepare_analysis(raw, evidence_by_id):
+    """Keep source annotations in the backend; resolve declared operand handles."""
+    if isinstance(raw, dict) and isinstance(raw.get("evidence_ids"), list):
+        sources = [e for key, e in evidence_by_id.items() if key in raw["evidence_ids"]]
+        source_caveats = {note for source in sources for note in source.caveats}
+        if isinstance(raw.get("limitations"), list):
+            raw = dict(
+                raw,
+                limitations=[
+                    note
+                    for note in raw["limitations"]
+                    if not isinstance(note, str) or note not in source_caveats
+                ],
+            )
+    analysis = AnalysisProposal.model_validate(raw)
+    sources = [evidence_by_id[key] for key in analysis.evidence_ids if key in evidence_by_id]
+    if (
+        sources
+        and len(sources) == len(set(analysis.evidence_ids))
+        and all(source.kind == "metric" for source in sources)
+        and analysis.claim_type != "derived_fact"
+    ):
+        # Interpretation of an existing metric: M6 assesses the original statement
+        # against that metric, not a redundant model-declared recomputation.
+        analysis.operations = []
+    else:
+        ids = list(
+            dict.fromkeys(
+                analysis.evidence_ids
+                + [
+                    key
+                    for operation in analysis.operations
+                    for key in operation.inputs
+                    if key in evidence_by_id and evidence_by_id[key].kind == "fact"
+                ]
+            )
+        )
+        analysis = AnalysisProposal.model_validate(dict(analysis.model_dump(), evidence_ids=ids))
+    return analysis
+
+
 class SpecialistTrace(FinancialModel):
     stage: Literal["selection", "generation", "grounding"]
     outcome: str
@@ -649,7 +690,7 @@ def generate_candidates(
         analyses = []
     for raw in analyses:
         try:
-            analysis = AnalysisProposal.model_validate(raw)
+            analysis = _prepare_analysis(raw, evidence_by_id)
             if analysis.claim_type == "derived_fact" and not analysis.operations:
                 raise ValueError("derived_fact_requires_computation")
             if set(analysis.evidence_ids) - evidence_by_id.keys():
@@ -742,15 +783,7 @@ def generate_candidates(
                     caveats=sorted(set(c for s in sources for c in s.caveats)),
                 )
             )
-            if (
-                emit_derived
-                and computation
-                and reasoning.claim_type
-                not in {
-                    "conditional_inference",
-                    "derived_fact",
-                }
-            ):
+            if emit_derived and computation and reasoning.claim_type != "derived_fact":
                 derived = result.candidates[-1].model_copy(deep=True)
                 derived.candidate_id = prefix + "-derived-" + uuid4().hex
                 derived.content = render_dynamic(
@@ -758,6 +791,7 @@ def generate_candidates(
                 )
                 derived.reasoning.claim_type = "derived_fact"
                 derived.reasoning.assumptions = []
+                derived.reasoning.limitations = []
                 result.candidates.append(derived)
         except (ValidationError, ValueError, ArithmeticError) as error:
             result.trace.append(

@@ -431,6 +431,10 @@ class FinancialLiteOrchestrator:
                 "same hoặc across_periods. Không bịa giá trị/nguồn, không ACCEPT claim. "
                 "Các metric đã được Calculator tính có thể dùng trực tiếp làm evidence cho analyses "
                 "với operations rỗng. Không tính lại metric hoặc dùng metric làm DynamicOperand. "
+                "Source caveats do backend giữ trong sources/caveats; không chép chúng vào "
+                "analysis.limitations (chỉ giới hạn riêng của nhận định, tối đa 8). "
+                "Nếu dùng facts để tính, evidence_ids phải chứa các fact operands của operations; "
+                "chỉ tham chiếu evidence đã được giao hoặc operation trước đó. "
                 "Nếu không có evidence nhân quả, phân biệt biến động quan sát với nguyên nhân chưa chứng minh. "
                 "Không khẳng định thu hẹp hoạt động, tái cơ cấu, tuân thủ chuẩn mực, đã kiểm toán hay "
                 "số liệu phản ánh chính xác thực tế chỉ từ biến động các chỉ tiêu. Assumptions không "
@@ -489,7 +493,7 @@ class FinancialLiteOrchestrator:
             render=module._render,
             prefix="m5-lite-" + task.specialist,
             deterministic=deterministic,
-            emit_derived=False,
+            emit_derived=True,
         )
         for candidate in result.candidates:
             if candidate.reasoning:

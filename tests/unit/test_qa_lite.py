@@ -117,7 +117,7 @@ def test_relevance_and_multi_period_not_coverage(admitted):
 @pytest.mark.parametrize(
     "variant", ["unknown_id", "fabricated_number", "paraphrase", "invalid_json"]
 )
-def test_known_errors_fallback_and_natural_paraphrase_releases(admitted, variant):
+def test_known_errors_fallback_and_model_text_is_not_released(admitted, variant):
     request, entry = admitted
     key = entry.identity.verified_claim_id
     segment = dict(text=entry.content, claim_ids=[key])
@@ -132,8 +132,9 @@ def test_known_errors_fallback_and_natural_paraphrase_releases(admitted, variant
     fields, trace = compose_lite(request, [entry], gateway=gateway)
     assert len(calls) == 1 and calls[0].output_spec.schema_ref is None
     assert fields["used_verified_claim_ids"] == [key]
-    if variant == "paraphrase":
-        assert segment["text"] in fields["answer_vi"]
+    if variant in {"paraphrase", "fabricated_number"}:
+        assert entry.content in fields["answer_vi"]
+        assert segment["text"] not in fields["answer_vi"]
         assert trace["llm_segments_released"] == 1 and not trace["fallback"]
         return
     assert entry.content in fields["answer_vi"]
@@ -213,16 +214,16 @@ def test_valid_segment_survives_other_bad_segment_and_omission(admitted):
     assert fields["used_verified_claim_ids"] == [key, "other-accepted"]
 
 
-def test_natural_summary_does_not_require_enumerating_every_accepted_claim(admitted):
+def test_selected_findings_are_preserved_when_model_omits_one(admitted):
     request, entry = admitted
     other = entry.model_copy(deep=True)
     other.identity.verified_claim_id = "other-accepted"
     key = entry.identity.verified_claim_id
     gateway, _ = gateway_for(dict(segments=[dict(text=entry.content, claim_ids=[key])], gaps=[]))
     fields, trace = compose_lite(request, [entry, other], gateway=gateway)
-    assert fields["used_verified_claim_ids"] == [key]
+    assert fields["used_verified_claim_ids"] == [key, "other-accepted"]
     assert set(trace["selected_claims"]) == {key, "other-accepted"}
-    assert not trace["fallback"] and not trace["gaps"]
+    assert trace["fallback"] and not trace["gaps"]
 
 
 def test_empty_ledger_does_not_invent_sources_or_call_provider(admitted):

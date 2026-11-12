@@ -63,7 +63,7 @@ def test_admitted_steps_values_and_denominator_reach_m7_verbatim(tmp_path):
     assert step["expression"] == "(target - base) / base * 100"
     assert payload["calculation_display"] == entry.content
     assert fields["used_verified_claim_ids"] == [key] and not trace["rejected_segments"]
-    assert text in fields["answer_vi"] and fields["citations"]
+    assert entry.content in fields["answer_vi"] and fields["citations"]
     assert entry.model_dump_json() == before
 
 

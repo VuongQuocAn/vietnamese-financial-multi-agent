@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## QWEN-QA-01 — Calculator candidate và trình bày ACCEPT
+
+Ngày12/11/2026; **REVIEW**, chưa commit, baseline82781f9.
+M7 chỉ render mệnh đề/proof ACCEPT; M5 xuất derived độc lập và chuẩn bị source
+caveats/analysis/operands. M6 giữ nguyên.32targeted PASS;2BBS replay và2BCC controls
+đạt3criteria;0model calls, không fresh Qwen/semantic verdict.
+[Report](../docs/qwen-qa-01.md), [spec](tasks/QWEN/QWEN-QA-01.md).
+Next action: Tech Lead review code/evidence theo ba tiêu chí Owner duyệt.
+
+
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
 ## MODEL-SERVE-01 — Qwen3-8B-AWQ + vLLM, mục tiêu24K
