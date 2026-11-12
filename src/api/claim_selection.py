@@ -54,7 +54,7 @@ def _relevant(entry, question):
     return len({w for w in q & c if not w.isdigit()}) >= 2
 
 
-def select_claims(request, entries, current_ids=()):
+def select_claims(request, entries, current_ids=(), *, scope_resolution=None):
     selected, excluded = [], []
     current_ids = set(current_ids)
     years = periods_for(request)
@@ -79,7 +79,18 @@ def select_claims(request, entries, current_ids=()):
             and i.period != request.period
         ):
             reason = "period_out_of_scope"
-        elif request.reporting_scope and claim_scope(entry) != request.reporting_scope:
+        elif (
+            request.reporting_scope
+            and claim_scope(entry) != request.reporting_scope
+            and not (
+                scope_resolution is not None
+                and scope_resolution.status == "resolved"
+                and scope_resolution.evidence_status == "confirmed"
+                and (scope_resolution.document_id, scope_resolution.snapshot_id)
+                == (i.document_id, i.snapshot_id)
+                and scope_resolution.reporting_scope == request.reporting_scope
+            )
+        ):
             reason = "reporting_scope_unconfirmed"
         elif not entry.citations:
             reason = "missing_citations"

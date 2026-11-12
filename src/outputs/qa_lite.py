@@ -190,6 +190,8 @@ def _coverage(request, entries):
     # Numeric separators are not sentence/goal boundaries in a copied value.
     question = re.sub(r"(?<=\d)[.,](?=\d)", "", request.question)
     requirements = request.answer_requirements or understand_requirements(question)
+    if not request.answer_requirements:
+        requirements = _lite_requirements(question, requirements)
     goals = []
     for requirement in requirements:
         text = normalize(requirement.text)
@@ -258,8 +260,20 @@ def _coverage(request, entries):
                     )
                 )
             else:
+                matching_goal = goal
+                proof = entry.accepted_claim.reasoning
+                if (
+                    goal.interpretation_topic == "dynamic_calculation"
+                    and proof
+                    and proof.calculation
+                ):
+                    actual = [s.operation.operator for s in proof.calculation.steps]
+                    if goal.reasoning_operations and set(goal.reasoning_operations) <= set(actual):
+                        # Additional admitted steps do not erase the requested
+                        # operation. Source items and periods are still matched.
+                        matching_goal = goal.model_copy(update={"reasoning_operations": actual})
                 covered = goal.kind not in {"unsupported", "ambiguous"} and _matches_target(
-                    matching_entry, goal
+                    matching_entry, matching_goal
                 )
             if covered and goal.interpretation_topic == "dynamic_calculation":
                 covered = set(goal.required_indicators) == {
@@ -284,6 +298,104 @@ def _coverage(request, entries):
         and all(not row["required"] or row["verified_claim_ids"] for row in rows),
         requirements=rows,
     )
+
+
+def _lite_requirements(question, requirements):
+    """Retain inherited scalar/comparison goals within the bound filing.
+
+    The single-target baseline parser rejects multiple years before detecting
+    their targets. Reconstruct only explicit catalog goals, never unknown or
+    causal requests, and require accepted proof for every comparison endpoint.
+    """
+    all_targets = [key for kind, key in _targets(normalize(question)) if kind == "fact"]
+    periods = sorted(comparison_periods(question))
+    result = []
+    for r in requirements:
+        text = normalize(r.text)
+        targets = [key for kind, key in _targets(text) if kind == "fact"]
+        comparison = any(
+            w in text
+            for w in ("so voi", "chenh lech", "bien dong", "cao hon", "thap hon", "tang hay giam")
+        )
+        if (
+            r.kind == "unsupported"
+            and r.reason
+            in {
+                "cross_document_comparison_blocked_D03_B10",
+                "semantic_intent_requires_gateway",
+            }
+            and (targets or comparison and len(all_targets) == 1)
+        ):
+            targets = targets or all_targets
+            operation = (
+                "percentage_change"
+                if "phan tram" in text or "%" in r.text
+                else (
+                    "subtract"
+                    if any(w in text for w in ("chenh lech", "bao nhieu vnd", "phep tru"))
+                    else None
+                )
+            )
+            for target in targets:
+                if operation:
+                    result.append(
+                        QARequirement(
+                            requirement_id=r.requirement_id + target,
+                            text=r.text,
+                            kind="fact",
+                            target_id=target,
+                            interpretation=True,
+                            interpretation_topic="dynamic_calculation",
+                            required_indicators=[target],
+                            reasoning_operations=[operation],
+                            reasoning_periods=periods,
+                        )
+                    )
+                else:
+                    result.append(
+                        QARequirement(
+                            requirement_id=r.requirement_id + target,
+                            text=r.text,
+                            kind="fact",
+                            target_id=target,
+                            interpretation=True,
+                            interpretation_topic="metric_meaning",
+                            required_indicators=targets,
+                            reasoning_periods=periods,
+                        )
+                    )
+            continue
+        if r.kind == "unsupported" and not targets and result:
+            # Presentation follow-ups inherit targets; they add no unknown fact.
+            if re.match(r"^neu (?:so lieu|phep tinh|phep tru)\b", text):
+                continue
+            if re.search(r"\bdau (?:duong|am)\b", text):
+                parents = [g for g in result if g.kind == "fact" and g.target_id]
+                if len(parents) == 1:
+                    result.append(
+                        parents[0].model_copy(
+                            update=dict(
+                                requirement_id=r.requirement_id,
+                                text=r.text,
+                                interpretation=True,
+                                interpretation_topic="metric_meaning",
+                            )
+                        )
+                    )
+                    continue
+        result.append(r)
+    # A request for two years needs both facts, even when the first conjunct
+    # omits the years. Distinct source periods cannot satisfy each other.
+    expanded = []
+    for r in result:
+        if len(periods) >= 2 and r.kind == "fact" and not r.interpretation:
+            expanded.extend(
+                r.model_copy(update=dict(requirement_id=r.requirement_id + p, period=p))
+                for p in periods
+            )
+        else:
+            expanded.append(r)
+    return expanded
 
 
 def _projection(segments, selected):

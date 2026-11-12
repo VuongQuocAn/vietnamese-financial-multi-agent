@@ -689,7 +689,14 @@ class FinancialQAPipeline:
             lite_releasing = True
             entries = ledger.find_claims(query).claims
             current_ids = [o.verified_claim_id for o in trace.outcomes if o.verified_claim_id]
-            selected, excluded = select_claims(bound, entries, current_ids)
+            selected, excluded = select_claims(
+                bound,
+                entries,
+                current_ids,
+                scope_resolution=self.catalog.get_reporting_scope(
+                    bound.document_id, bound.snapshot_id
+                ),
+            )
             fields, metadata = stage(
                 "composer",
                 lambda: compose_lite(
@@ -852,7 +859,13 @@ class FinancialQAPipeline:
                 from ..outputs.qa_contracts import GroundedAnswerPlan
                 from .claim_selection import select_claims
 
-                selected, _ = select_claims(bound, entries)
+                selected, _ = select_claims(
+                    bound,
+                    entries,
+                    scope_resolution=self.catalog.get_reporting_scope(
+                        bound.document_id, bound.snapshot_id
+                    ),
+                )
                 plan = GroundedAnswerPlan(
                     selected_verified_claim_ids=[e.identity.verified_claim_id for e in selected]
                 )

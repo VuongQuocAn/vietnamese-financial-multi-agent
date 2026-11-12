@@ -194,7 +194,12 @@ def inventory(catalog, context):
             context.snapshot_id,
         ):
             continue
-        if context.reporting_scope and fact.context.reporting_scope != context.reporting_scope:
+        scope = catalog.get_reporting_scope(fact.document_id, fact.snapshot_id)
+        if context.reporting_scope and (
+            scope.status != "resolved"
+            or scope.evidence_status != "confirmed"
+            or scope.reporting_scope != context.reporting_scope
+        ):
             continue
         if years and fact.context.period[:4] not in years:
             continue
@@ -214,6 +219,31 @@ def inventory(catalog, context):
                 )
                 if role not in entry["roles"]:
                     entry["roles"].append(role)
+                if fact not in entry["records"]:
+                    entry["records"].append(fact)
+        # A Specialist's vocabulary is not the EF-EG coverage boundary. Route
+        # other mapped facts by their existing statement, retaining source labels.
+        if fact.canonical_item_id and not any(
+            fact.canonical_item_id in module.ITEM_LABELS for module, _ in DOMAINS.values()
+        ):
+            role = {
+                "B01": "liquidity_and_leverage",
+                "B02": "profitability",
+                "B03": "cash_flow_and_earnings_quality",
+            }.get(fact.context.statement_type)
+            if role:
+                key = ("fact", fact.canonical_item_id, fact.context.period)
+                entry = entries.setdefault(
+                    key,
+                    dict(
+                        kind="fact",
+                        item=fact.canonical_item_id,
+                        period=fact.context.period,
+                        label=fact.context.raw_item_label or fact.canonical_item_id,
+                        roles=[role],
+                        records=[],
+                    ),
+                )
                 if fact not in entry["records"]:
                     entry["records"].append(fact)
     for metric in catalog.metrics:
@@ -279,6 +309,9 @@ class SupervisorLite:
                 "không cần graph. Graph chỉ cung cấp structural/contextual relations, không chứng minh claim. "
                 "objective là công việc ngắn tiếng Việt; sources là handles phù hợp trong inventory. "
                 "Không DAG, approval, coverage hoặc suy đoán identities. Câu hỏi đơn giản một role; "
+                "Không có nguồn đúng mục tiêu thì tasks=[]; không thay bằng chỉ tiêu gần giống. "
+                "Nếu inventory có metric đúng tên câu hỏi, chọn metric đó; công thức/operands "
+                "đi kèm metric được Tools cung cấp. Không tự thay mẫu số hoặc đổi đơn vị %. "
                 "nhiều phần chọn các role cần thiết, không gọi tất cả mặc định. "
                 "Hiểu ý định ngữ nghĩa, không yêu cầu đúng tên chỉ tiêu. Tăng/giảm phần trăm cần "
                 "metric tăng trưởng và hai kỳ; tỷ trọng nguồn vốn cần metric nợ/tài sản. "
@@ -385,10 +418,18 @@ class FinancialLiteOrchestrator:
             "profitability": {"gross_margin": "revenue", "revenue_yoy": "current_revenue"},
             "liquidity_and_leverage": {"debt_to_assets": "assets"},
         }.get(task.specialist, {})
+        item_labels = dict(module.ITEM_LABELS)
+        for match in upstream.evidence_bundle.facts:
+            record = match.record
+            if record.canonical_item_id:
+                item_labels.setdefault(
+                    record.canonical_item_id,
+                    record.context.raw_item_label or record.canonical_item_id,
+                )
         select_evidence(
             upstream,
             result,
-            item_labels=module.ITEM_LABELS,
+            item_labels=item_labels,
             metric_labels=getattr(module, "METRIC_LABELS", {}),
             period_roles=roles,
             balance_sheet=task.specialist == "liquidity_and_leverage",

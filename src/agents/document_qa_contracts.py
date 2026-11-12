@@ -87,12 +87,23 @@ def document_intent(question):
         if not any(r.target == normalize_search(topic) for r in specs):
             add(topic, "source_excerpt", topic)
     outside_quotes = normalize_search(re.sub(r'["“][^"”]*["”]', "", question))
+    policy_question = bool(
+        re.search(r"\b(thuyet minh|chinh sach|noi dung b09)\b", outside_quotes)
+        and re.search(
+            r"\b(phuong phap|co so|quy dinh|phan loai|truong hop|dieu kien|ngoai le)\b",
+            outside_quotes,
+        )
+    )
     mixed = bool(
         re.search(
             r"\b(bao nhieu|so tien|gia tri|so du|ty le|ty suat|he so|roe|roa|ebitda|tinh toan)\b",
             outside_quotes,
         )
     )
+    if policy_question and not re.search(
+        r"\b(bao nhieu|so tien|so du|ty le|ty suat|he so|roe|roa|ebitda)\b", outside_quotes
+    ):
+        mixed = False
     if specs:
         from ..tools.question_understanding import understand
 
@@ -115,6 +126,17 @@ def document_intent(question):
 
         # A financial target in a separate conjunct must not be dropped.
         for clause in re.split(r"\b(?:va|dong thoi|kem theo)\b", outside_quotes)[1:]:
+            # In a policy question, a predicate/exception about the same topic
+            # is not an independent request for a financial scalar.
+            if (
+                re.search(r"\b(thuyet minh|chinh sach|noi dung b09)\b", outside_quotes)
+                and re.search(
+                    r"\b(phuong phap|co so|quy dinh|phan loai|truong hop|dieu kien|ngoai le)\b",
+                    outside_quotes,
+                )
+                and not re.search(r"\b(bao nhieu|so tien|so du|ty le|he so)\b", clause)
+            ):
+                continue
             parsed, _ = understand(clause)
             if parsed.canonical_item_id or parsed.formula_id:
                 mixed = True

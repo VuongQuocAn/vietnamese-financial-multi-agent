@@ -5,6 +5,7 @@ import unicodedata
 from dataclasses import dataclass
 from decimal import Context, Decimal, localcontext
 
+from ..accounting.item_mapping import ITEM_CATALOG
 from ..agents.cash_flow_earnings_quality_specialist import ITEM_LABELS as FLOW_LABELS
 from ..agents.liquidity_leverage_specialist import ITEM_LABELS as BALANCE_LABELS
 from ..agents.liquidity_leverage_specialist import METRIC_LABELS as DEBT_LABELS
@@ -52,6 +53,9 @@ class NumericAssertion:
 
 def extract_assertion(content: str) -> NumericAssertion | None:
     text = _text(content)
+    # Source table labels may retain a row ordinal. It is not part of the
+    # financial quantity or identity; only strip a leading list marker.
+    text = re.sub(r"^(?:\d+|[ivxlcdm]+)[.)]\s+", "", text)
     labels = [
         (k, _text(v))
         for d in (ITEM_LABELS, FLOW_LABELS, BALANCE_LABELS, METRIC_LABELS, DEBT_LABELS)
@@ -63,6 +67,12 @@ def extract_assertion(content: str) -> NumericAssertion | None:
         ("debt_to_assets", "debt to assets"),
         ("revenue_yoy", "revenue yoy"),
     ]
+    labels += [
+        (rule.canonical_item_id, re.sub(r"^(?:\d+|[ivxlcdm]+)[.)]\s+", "", _text(alias)))
+        for rule in ITEM_CATALOG
+        for alias in rule.aliases
+    ]
+    assertions = set()
     for target, label in sorted(set(labels), key=lambda entry: -len(entry[1])):
         pattern = (
             re.escape(label)
@@ -93,18 +103,24 @@ def extract_assertion(content: str) -> NumericAssertion | None:
         ]
         with localcontext(Context(prec=50)):
             scale *= Decimal(multiplier)
-        return NumericAssertion(
-            target,
-            number,
-            unit,
-            scale,
-            matched["period"],
-            "as_of"
-            if matched["ptype"] == "tai ngay"
-            else "fiscal_year"
-            if matched["period"]
-            else None,
+        assertions.add(
+            NumericAssertion(
+                target,
+                number,
+                unit,
+                scale,
+                matched["period"],
+                "as_of"
+                if matched["ptype"] == "tai ngay"
+                else "fiscal_year"
+                if matched["period"]
+                else None,
+            )
         )
+    if assertions:
+        # Shared labels (e.g. gross/net inventory) cannot select an accounting
+        # identity on wording alone. Never pick the first catalog entry.
+        return next(iter(assertions)) if len(assertions) == 1 else None
     # Accepted arithmetic paraphrases: only the numerical assertion is checked.
     matched = re.fullmatch(
         rf"(?:trong ky (?P<period>{PERIOD}),? )?(?:cu|voi moi|tren moi) 100 dong "
