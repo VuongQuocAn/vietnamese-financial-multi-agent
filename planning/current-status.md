@@ -1,5 +1,17 @@
 # Trạng thái hiện tại
 
+## E2E-GEN-01 — Multi-Agent integration
+
+**REVIEW**, ngày12/11/2026. Một pass12case:0PASS/5PARTIAL/7FAIL,
+7/35required points;19/22claims grounded,3falseACCEPT absence claimsC04.
+33evaluation calls/94806tokens +1preflight/23tokens,0transport/retry.
+3offline harness tests PASS;60retrieved facts/133citation sources khớp,
+778protected hashes vàreference/config unchanged; không sửa runtime/M8/Gemini.
+Baseline73525f6 + frozen existing local runtime; receipt ghiSHA task saupush.
+[Spec](tasks/E2E/E2E-GEN-01.md), [report](../docs/e2e-gen-01-multi-agent-integration.md).
+Next action: Tech Lead nghiệm thu báo cáo trước CHAT-02/REPORT-01.
+
+
 ## QWEN-GEN-02 — Pipeline Generalization Fix
 
 **DONE** theo điều kiện Tech Lead đã cho phép; implementation
