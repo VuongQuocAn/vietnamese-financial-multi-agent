@@ -51,6 +51,7 @@ M7 render từ entries ACCEPT; bật derived độc lập; chuẩn bị source c
 - [x] Replay tỷ lệ nợ/tài sản không phát hành diễn giải đảo chiều.
 - [x] Replay tăng trưởng có26,71% từ derived claim được M6 ACCEPT dù analysis26,8% sai.
 - [x] Control ngoài BBS xác nhận tổng quát, không hardcode figures/questions trong runtime.
+- [ ] Hai câu fresh Qwen đúng, đầy đủ và không phát hành nhận định sai (chờ auth hợp lệ).
 
 ## Required Tests
 
@@ -62,14 +63,19 @@ không full CI. Dùng config ngoài source và ledger riêng.
 
 Replay Q1 chưa có semantic verdict live; Q2 giữ gap lịch sử. BCC là nguồn thật
 nhưng agent payload control synthetic; không suy thành live financial accuracy.
+Hai lần fresh bị DNS11001 và HTTP401; chưa có Qwen output để xét DONE.
 
 ## Implementation Evidence
 
-Chưa commit. 32 targeted PASS; BBS ACCEPT1/INVESTIGATE1 và ACCEPT3/ABSTAIN1;
-hai BCC controls đều ACCEPT3/ABSTAIN1, completed_with_caveats.0model calls.
-Chi tiết/giới hạn tại báo cáo. Runtime M6 và original evidence giữ nguyên.
+Implementation local `019d85260b5fadf2d88c2bc4d605a1e7b3da9fee`, đúng12task files/hunks,
+chưa push. Isolated commit tree:32targeted/planning134/Ruff/diff PASS.
+Offline:2BBS replay,2BCC controls PASS. Fresh lần1:6attempts/DNS11001;
+lần2 theo URL Owner cập nhật:2attempts/HTTP401, Gateway ngừng model stages sau auth.
+Chưa có successful inference, usage UNKNOWN. M6 fallback Q1 ACCEPT3/ABSTAIN1,
+Q2 ACCEPT2; cả hai partial, thiếu interpretation/%tăng trưởng, không DONE.
+Full answers/latency/traces tại báo cáo; M6 và original evidence giữ nguyên.
 
 ## Handoff Notes
 
-Next action: chạy hai câu BBS fresh Qwen tại implementation commit rồi đối chiếu
-điều kiện DONE có điều kiện Owner vừa giao.
+Next action: Owner cung cấp API key hiện hành hoặc api_info.json mới để tiếp tục
+hai câu fresh còn chờ nghiệm thu.

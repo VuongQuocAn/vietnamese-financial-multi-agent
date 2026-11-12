@@ -2,15 +2,13 @@
 
 ## QWEN-QA-01 — Calculator candidate và trình bày ACCEPT
 
-Ngày12/11/2026; **REVIEW**, chưa commit, baseline82781f9.
-M7 chỉ render mệnh đề/proof ACCEPT; M5 xuất derived độc lập và chuẩn bị source
-caveats/analysis/operands. M6 giữ nguyên.32targeted PASS;2BBS replay và2BCC controls
-đạt3criteria;0model calls, không fresh Qwen/semantic verdict.
+Ngày12/11/2026; **REVIEW**, implementation local019d852, chưa push.
+Đúng12task files/hunks; isolated32tests/planning134/Ruff/diff PASS, edits khác giữ nguyên.
+Fresh lần1 DNS11001/6attempts; URL mới Owner phản hồiHTTP401/2attempts.
+Không Qwen output; M6 fallback Q1 ACCEPT3/ABSTAIN1, Q2 ACCEPT2; cả hai partial,
+chưa đủ DONE. Cần key hiện hành để chạy lại thật, không dùng replay nghiệm thu.
 [Report](../docs/qwen-qa-01.md), [spec](tasks/QWEN/QWEN-QA-01.md).
-Next action: Tech Lead review code/evidence theo ba tiêu chí Owner duyệt.
-
-
-Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
+Next action: Owner cung cấp key/config hiện hành để tiếp tục hai câu fresh còn chờ.
 
 ## MODEL-SERVE-01 — Qwen3-8B-AWQ + vLLM, mục tiêu24K
 
