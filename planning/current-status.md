@@ -2,11 +2,16 @@
 
 ## QWEN-GEN-01 — Generalization evaluation
 
-Ngày12/11/2026; **PAUSED — WAITING FOR OWNER** (registry BLOCKED).
-Một preflight Gateway trả provider_unavailable/0,094s; HTTP status/usage UNKNOWN.
-Dừng ngay,0/25cases,25NOT_RUN; chưa freeze reference; không retry/fallback/sửa pipeline.
-[Report](../docs/qwen-gen-01-generalization.md).
-Next action: Owner kiểm tra/khởi động lại API và thông báo đã hoạt động.
+Ngày12/11/2026; **REVIEW — chờ Tech Lead nghiệm thu báo cáo**.
+Owner cấp config mới; đã freeze25references từ13trangPDF rồi chạy một lượt25attempts.
+4PASS/7PARTIAL/10FAIL/4UNCERTAIN do snapshot binding harness;21evaluable,
+correct target/disposition8/21, completeness13/40; không coi M6ACCEPT là accuracy.
+61Qwen calls/133709tokens,0transport errors/retries;2/37released claims thiếu hỗ trợ.
+GapB/status tái xuất hiện ở4case trả đủ nội dung. Không sửa pipeline/data trong task.
+Runtime baseline837975a + local edits có sẵn, frozen hashes unchanged;
+checkpoint docs/planning SHA được xác minh trong receipt/bàn giao.
+[Report](../docs/qwen-gen-01-generalization.md), [spec](tasks/QWEN/QWEN-GEN-01.md).
+Next action: Tech Lead review kết quả và bốn harness confounds.
 
 ## QWEN-QA-01 — Calculator candidate và trình bày ACCEPT
 
