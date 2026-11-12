@@ -2,19 +2,17 @@
 
 Cập nhật 2026-11-11 (Asia/Bangkok); nguồn [Registry](tasks.md).
 
-## MODEL-SERVE-01 — Qwen3-14B-AWQ + vLLM
+## MODEL-SERVE-01 — Qwen3-8B-AWQ + vLLM, mục tiêu24K
 
 Status: **REVIEW** — **STATIC VALIDATED — NOT GPU TESTED**.
 [Notebook](../notebooks/colab_qwen_t4_api.ipynb), [spec](tasks/MODEL/MODEL-SERVE-01.md).
-Owner yêu cầu chuyển backend: Qwen/Qwen3-14B-AWQ, vLLM 0.10.2 trong Python 3.11 riêng,
-engine V0/XFormers/float16 activations cho T4; mục tiêu 16K, non-thinking, concurrency1.
-Bỏ GGUF/llama.cpp/apt/build; giữ cache Drive, HTTPS nếu khả dụng, api_info.json và test API.
-Implementation [20be7ca](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/20be7ca731cd1cc9cbc5ac2fdcd3a2244bc7f496); nbformat/AST, Ruff và 3 static controls PASS.
-Chưa install vLLM/tải weights/chạy model/GPU/tunnel trong Codex; chưa xác nhận 16K/T4/API.
-Diagnostics [27487c1](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/27487c1a53346fa7c4fbff2d3cb055ae09547bab): Owner log health/models200, first inference500; chưa rõ root cause. Hiện response body và traceback trước cleanup, 2 offline controls PASS; chưa GPU tested.
-T4 workaround [66f16ef](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/66f16ef35b7a16cba19c7b6ece9de58ce85e6053): log mới xác định OutOfResources shared memory 98304>65536, không phải VRAM OOM. Tắt chunked prefill/prefix caching, budget bằng context; sửa false OOM hint. 2 offline controls PASS; chưa xác nhận inference đã hết lỗi.
-KV-cache adjustment [7eb7ee5](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/7eb7ee5692ac407d986c25466504d43be58e9092): Owner log context16384 vượt KV capacity8512; đổi mặc định8192, vẫn cho chọn16K thử nghiệm. 2 offline controls PASS; chưa inference/GPU PASS, chưa chứng minh shared-memory fix thành công vì engine dừng trước inference.
-Next action: Owner đặt CONTEXT_SIZE=8192 rồi chạy lại Start API và gửi kết quả/log.
+Owner chuyển model ngày12/11/2026: Qwen/Qwen3-8B-AWQ, mặc định24576 tokens;
+manifest/revision/cache/alias8B riêng, giữ cache14B. vLLM0.10.2/Python3.11/V0/XFormers,
+half/eager/concurrency1/utilization0.90; tắt chunked prefill/prefix caching.
+Giữ HTTPS nếu khả dụng và tự cập nhật api_info.json với qwen3-8b-awq-t4.
+Implementation [b8d3cc9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b8d3cc9072a333b52dea702093cd98b28b38dbaf); nbformat/AST, Ruff và2 static controls PASS.
+Owner đã báo14B/8K chạy được; không suy thành8B/24K PASS. Codex không tải weights/chạy GPU.
+Next action: Owner chạy notebook mới từ cấu hình đến Test API trên Colab T4 và gửi kết quả/log8B/24K.
 
 ## MODEL-CTX-01 — LLM context profiling
 
