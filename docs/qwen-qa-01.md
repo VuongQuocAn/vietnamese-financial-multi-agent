@@ -115,8 +115,8 @@ Evidence riêng: `artifacts/evidence/QWEN-ADAPTER-01/qwen-qa-01-live-02/` có ng
 request/answer/M6/agent/tool/provider traces và ledger. Owner đã được yêu cầu
 API key hiện hành hoặc đường dẫn api_info.json mới; key/URL không ghi vào source.
 
-**Next action duy nhất:** Owner cung cấp API key hiện hành hoặc api_info.json
-mới để tiếp tục hai câu fresh còn chờ nghiệm thu.
+Sau HTTP401, Owner đã cung cấp đầy đủ cấu hình mới. Lần chạy thành công tiếp
+theo được ghi bên dưới; cấu hình mới chỉ lưu trong file được Git ignore.
 
 ### Final answers (fallback, HTTP 401)
 
@@ -149,6 +149,95 @@ mới để tiếp tục hai câu fresh còn chờ nghiệm thu.
 > Lưu ý: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.; Một bước xử lý chưa hoàn tất; chỉ trình bày phần đã xác minh.
 >
 > Lỗi kỹ thuật khi tạo câu trả lời; các findings đã xác minh được giữ bên dưới.
+>
+> Nguồn tham chiếu
+>
+> [1] Tài liệu nguồn 2025 — Trang PDF 7. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+
+## Lần kết nối ba — Fresh Qwen thành công
+
+10:14:37–10:16:31 Asia/Bangkok ngày12/11/2026, implementation `019d852` không đổi.
+Đúng hai câu BBS, ledger mới, force-refresh; không replay/cache response, không
+Gemini, không retry hoặc sửa code để tạo kết quả. **7 HTTP200**, không lỗi provider;
+model `qwen3-8b-awq-t4`. Usage provider-reported: **13435 input +1386 output =14821
+tokens**; cost UNKNOWN. Catalog/source runtime hashes giữ nguyên.
+
+| Câu | Kết quả tài chính đã phát hành | M6 verdict | Agent/tool trace | Latency E2E |
+| --- | --- | --- | --- | ---: |
+| Q1: nợ/tài sản và ý nghĩa | 59,06%; có diễn giải đã ACCEPT, không đảo chiều tài trợ | ACCEPT2: metric + interpretation; semantic_candidates1, semantic_calls1/SUPPORTED | Supervisor → liquidity_and_leverage → M6 semantic → M7; calculate_financial_metric, get_financial_fact, get_evidence_sources | 68,923s |
+| Q2: tăng trưởng doanh thu | Phép tính đã xác minh26,71%, hai doanh thu và kỳ gốc/mục tiêu | ACCEPT3:2facts +1derived; ABSTAIN1:statement model26,85% với lite_unbound_number; semantic_calls0 | Supervisor → profitability → deterministic M6 → M7; get_financial_fact, get_evidence_sources; execute_dynamic trong proof M5 | 43,975s |
+
+| Stage API | Latency (s) | Input/output tokens |
+| --- | ---: | ---: |
+| Q1 Supervisor | 5,829 | 1819/78 |
+| Q1 liquidity_and_leverage | 18,426 | 2814/352 |
+| Q1 M6 semantic | 10,593 | 1143/212 |
+| Q1 M7 | 9,943 | 1416/191 |
+| Q2 Supervisor | 5,052 | 1801/74 |
+| Q2 profitability | 12,262 | 1988/235 |
+| Q2 M7 | 13,451 | 2454/244 |
+
+Đối chiếu source-bound Decimal oracle: tỷ lệ59,05840875…% làm tròn59,06%; tăng
+trưởng26,71313349…% làm tròn26,71%. Q1 ledger có numeric metric và interpretation
+được M6 SUPPORTED. Q2 ledger có derived proof đúng dù statement26,85% vẫn bị
+ABSTAIN; không sửa statement sai để hợp thức hóa verdict. Không có semantic call
+Q2 là đúng routing. M7 không phát hành statement sai26,85% hoặc diễn giải đảo
+chiều của lần smoke cũ. Sources/caveats và citations trang5/6,7 được giữ.
+
+### Điểm còn chờ nghiệm thu
+
+**Cả hai vẫn `partial_verified_coverage` do gap B sai từ M7**, không do lỗi kết
+nối hoặc thiếu claim trong ledger:
+
+- Q1 M7 viết “Chưa có kết luận ACCEPT về ý nghĩa của tỷ lệ nợ phải trả trên tổng
+  tài sản”, dù interpretation đã được M6 ACCEPT và đang hiển thị.
+- Q2 M7 viết “Chưa có kết luận verified cho phép tính phần trăm thay đổi”, dù
+  derived26,71% đã ACCEPT, admitted và đang hiển thị.
+
+`compose_lite()` chuyển gap do model khai thành thông báo B chung; raw gaps này
+mâu thuẫn findings ACCEPT. Không phải M6 kiểm chứng sai hoặc lỗi provider.
+Hai lỗi tài chính trọng tâm đã phục hồi trong fresh run, nhưng câu trả lời cuối
+vẫn tự báo thiếu một phần mà nó đã trả lời, nên **giữ REVIEW, chưa chuyển DONE**
+theo điều kiện “đúng, đầy đủ, không phát hành nhận định sai” Owner giao. Không tự
+mở FIX, bỏ gap hoặc chạy thêm API trong phiên này.
+
+Full request/answer/M6/agent/tool/provider traces, oracle và ledger mới:
+`artifacts/evidence/QWEN-ADAPTER-01/qwen-qa-01-live-03/`. Source integrity và receipt
+ở `artifacts/evidence/QWEN-QA-01/live-handoff/`. Không thêm runtime change hoặc
+chạy lại tests/CI đã PASS; chỉ planning/diff checks cho cập nhật evidence.
+
+**Next action duy nhất:** Tech Lead review fresh outputs và quyết định xử lý
+mâu thuẫn gap B còn lại của M7.
+
+### Câu trả lời cuối nguyên văn — fresh Qwen
+
+#### Q1
+
+> Tỷ lệ nợ phải trả trên tổng tài sản tại ngày 2025-12-31 là 59,06%.
+> Công thức đã xác minh: (C - NỢ PHẢI TRẢ / TỔNG CỘNG TÀI SẢN) × 100.
+> C - NỢ PHẢI TRẢ: 157146559558 VND; hệ số đơn vị 1; kỳ 2025-12-31.
+> TỔNG CỘNG TÀI SẢN: 266086680765 VND; hệ số đơn vị 1; kỳ 2025-12-31. [1][2]
+>
+> Tỷ lệ nợ phải trả trên tổng tài sản của BBS tại ngày 31/12/2025 là 59.06%. Điều này cho thấy tỷ lệ nợ phải trả chiếm hơn một nửa tổng tài sản của công ty, cho thấy công ty có mức nợ cao so với tài sản. Tỷ lệ này có thể phản ánh mức độ phụ thuộc vào nợ để tài trợ hoạt động kinh doanh, đồng thời cũng cho thấy rủi ro tài chính có thể cao hơn nếu công ty không có khả năng thanh toán nợ trong tương lai. [1][2]
+>
+> Lưu ý: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+>
+> Chưa có đủ kết luận đã xác minh để xác nhận mọi phần của câu hỏi.
+>
+> Nguồn tham chiếu
+>
+> [1] Tài liệu nguồn 2025 — Trang PDF 6. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+> [2] Tài liệu nguồn 2025 — Trang PDF 5. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+
+#### Q2
+
+> Doanh thu thuần kỳ 2025 là 450.474.531.227 VND.
+> (Doanh thu thuần (kỳ 2025) − Doanh thu thuần (kỳ 2024)) / Doanh thu thuần (kỳ 2024) × 100: 26,71 %.
+> Doanh thu thuần kỳ 2024 là 355.507.372.286 VND. [1]
+>
+> Lưu ý: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+>
+> Chưa có đủ kết luận đã xác minh để xác nhận mọi phần của câu hỏi.
 >
 > Nguồn tham chiếu
 >

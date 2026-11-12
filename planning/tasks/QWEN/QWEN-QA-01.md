@@ -51,7 +51,7 @@ M7 render từ entries ACCEPT; bật derived độc lập; chuẩn bị source c
 - [x] Replay tỷ lệ nợ/tài sản không phát hành diễn giải đảo chiều.
 - [x] Replay tăng trưởng có26,71% từ derived claim được M6 ACCEPT dù analysis26,8% sai.
 - [x] Control ngoài BBS xác nhận tổng quát, không hardcode figures/questions trong runtime.
-- [ ] Hai câu fresh Qwen đúng, đầy đủ và không phát hành nhận định sai (chờ auth hợp lệ).
+- [ ] Hai câu fresh Qwen đúng, đầy đủ và không phát hành nhận định sai (đã có đáp án; còn gap B mâu thuẫn findings ACCEPT).
 
 ## Required Tests
 
@@ -63,19 +63,21 @@ không full CI. Dùng config ngoài source và ledger riêng.
 
 Replay Q1 chưa có semantic verdict live; Q2 giữ gap lịch sử. BCC là nguồn thật
 nhưng agent payload control synthetic; không suy thành live financial accuracy.
-Hai lần fresh bị DNS11001 và HTTP401; chưa có Qwen output để xét DONE.
+Fresh lần1/2 bị DNS11001 và HTTP401. Lần3 với config Owner mới:7HTTP200, có Qwen
+output và M6 semantic thật; cả hai vẫn partial do gap B sai ở M7, chưa đủ DONE.
 
 ## Implementation Evidence
 
 Implementation local `019d85260b5fadf2d88c2bc4d605a1e7b3da9fee`, đúng12task files/hunks,
 chưa push. Isolated commit tree:32targeted/planning134/Ruff/diff PASS.
 Offline:2BBS replay,2BCC controls PASS. Fresh lần1:6attempts/DNS11001;
-lần2 theo URL Owner cập nhật:2attempts/HTTP401, Gateway ngừng model stages sau auth.
-Chưa có successful inference, usage UNKNOWN. M6 fallback Q1 ACCEPT3/ABSTAIN1,
-Q2 ACCEPT2; cả hai partial, thiếu interpretation/%tăng trưởng, không DONE.
-Full answers/latency/traces tại báo cáo; M6 và original evidence giữ nguyên.
+lần2:2attempts/HTTP401; lần3 đủ config:7HTTP200/14821tokens,0provider errors.
+Q1:68,923s,ACCEPT2(metric+interpretation),1semantic call SUPPORTED, không đảo chiều.
+Q2:43,975s,ACCEPT3/ABSTAIN1; derived26,71% admitted và displayed dù model26,85% sai.
+Cả hai partial vì M7 gap B báo chưa có claim dù claim đã ACCEPT. Giữ REVIEW,
+không tự sửa code/thêm calls. Full answers/traces ở báo cáo; source không đổi.
 
 ## Handoff Notes
 
-Next action: Owner cung cấp API key hiện hành hoặc api_info.json mới để tiếp tục
-hai câu fresh còn chờ nghiệm thu.
+Next action: Tech Lead review fresh outputs và quyết định xử lý mâu thuẫn gap B
+còn lại của M7.
