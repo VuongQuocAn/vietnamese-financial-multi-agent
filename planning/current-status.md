@@ -2,14 +2,14 @@
 
 ## QWEN-QA-01 — Calculator candidate và trình bày ACCEPT
 
-Ngày12/11/2026; **REVIEW**, implementation local019d852, chưa push.
-Đúng12task files/hunks; isolated32tests/planning134/Ruff/diff PASS, edits khác giữ nguyên.
-Fresh lần1/2 DNS11001 và HTTP401; config mới lần3:7HTTP200/14821tokens/0provider errors.
-Q1 ACCEPT2,semantic1SUPPORTED,59,06%+ý nghĩa, không đảo chiều; Q2 ACCEPT3/ABSTAIN1,
-derived26,71% hiển thị dù model26,85% sai. Cả hai vẫn partial vì M7 gap B báo thiếu
-claim đã ACCEPT; giữ REVIEW, chưa DONE, không tự sửa runtime hoặc thêm calls.
+Ngày12/11/2026; **DONE — Owner nghiệm thu và yêu cầu push main**.
+Coverage a2d5e4a8a0697d402340539a310e8dc41c9519b5, base019d852.
+Theo Owner duyệt, Gap B/status dựa trên mục tiêu đã được ACCEPT và phát hành;
+raw model gaps chỉ là trace.28targeted PASS trên isolated commit tree;2saved live-03 BBS replays chuyển
+completed_with_caveats, CFO thiếu verified evidence vẫn partial/B.0API mới,
+không M6/new verifier. Giữ source/ledger/evidence gốc và local edits ngoài task.
 [Report](../docs/qwen-qa-01.md), [spec](tasks/QWEN/QWEN-QA-01.md).
-Next action: Tech Lead review fresh outputs và quyết định xử lý gap B còn lại của M7.
+Next action: chờ Owner giao nhiệm vụ mới.
 
 ## MODEL-SERVE-01 — Qwen3-8B-AWQ + vLLM, mục tiêu24K
 

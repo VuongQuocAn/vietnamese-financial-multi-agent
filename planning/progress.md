@@ -1,6 +1,6 @@
 # Progress Dashboard
 
-Cập nhật: **2026-11-11** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
+Cập nhật: **2026-11-12** (Asia/Bangkok). Nguồn duy nhất: [Registry](tasks.md).
 Đếm task đã đăng ký, không đo khối lượng hoặc chất lượng nghiên cứu bằng tỷ lệ.
 Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là phần trăm tiến
 độ của cha. Khi tách/thêm task, cập nhật cả registry và dashboard trong cùng thay đổi.
@@ -33,8 +33,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | FIX | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
 | CORE | 2 | 2 | 0 | 0 | 0 | 0 | 0 |
 | MODEL | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
-| QWEN | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-| TOTAL | 134 | 119 | 0 | 1 | 8 | 0 | 6 |
+| QWEN | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
+| TOTAL | 134 | 120 | 0 | 1 | 8 | 0 | 5 |
 
 ## Implementation thực tế
 

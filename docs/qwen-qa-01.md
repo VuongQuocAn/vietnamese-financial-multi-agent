@@ -1,8 +1,9 @@
 # QWEN-QA-01 — Claim Calculator độc lập và M7 trình bày ACCEPT
 
-Ngày12/11/2026; **REVIEW**. Implementation local
-`019d85260b5fadf2d88c2bc4d605a1e7b3da9fee`, chưa push; baseline `82781f9` và
-working-tree edits đã có. Chỉ sửa phạm vi Owner duyệt sau QWEN-DIAG-01.
+Ngày12/11/2026; **DONE — Owner đã nghiệm thu và yêu cầu push main**.
+Implementation ban đầu `019d85260b5fadf2d88c2bc4d605a1e7b3da9fee`; coverage
+[a2d5e4a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/a2d5e4a8a0697d402340539a310e8dc41c9519b5).
+Baseline `82781f9` và working-tree edits đã có; giữ cùng QWEN-QA-01.
 
 ## Thay đổi
 
@@ -184,7 +185,7 @@ ABSTAIN; không sửa statement sai để hợp thức hóa verdict. Không có 
 Q2 là đúng routing. M7 không phát hành statement sai26,85% hoặc diễn giải đảo
 chiều của lần smoke cũ. Sources/caveats và citations trang5/6,7 được giữ.
 
-### Điểm còn chờ nghiệm thu
+### Điểm còn chờ nghiệm thu ở live-03, trước coverage patch
 
 **Cả hai vẫn `partial_verified_coverage` do gap B sai từ M7**, không do lỗi kết
 nối hoặc thiếu claim trong ledger:
@@ -206,8 +207,7 @@ Full request/answer/M6/agent/tool/provider traces, oracle và ledger mới:
 ở `artifacts/evidence/QWEN-QA-01/live-handoff/`. Không thêm runtime change hoặc
 chạy lại tests/CI đã PASS; chỉ planning/diff checks cho cập nhật evidence.
 
-**Next action duy nhất:** Tech Lead review fresh outputs và quyết định xử lý
-mâu thuẫn gap B còn lại của M7.
+Handoff lịch sử: Owner sau đó đã phê duyệt coverage follow-up ở phần dưới.
 
 ### Câu trả lời cuối nguyên văn — fresh Qwen
 
@@ -242,3 +242,54 @@ mâu thuẫn gap B còn lại của M7.
 > Nguồn tham chiếu
 >
 > [1] Tài liệu nguồn 2025 — Trang PDF 7. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+
+## Coverage follow-up — theo phạm vi Owner duyệt, không task FIX mới
+
+Root cause: `compose_lite()` chuyển mọi gap model khai thành B; `if gaps` quyết
+định partial. Nó còn thêm B khi segment hỏng dù findings đã được fallback phục
+hồi đầy đủ. Những điều kiện này không kiểm tra phần câu hỏi nào còn chưa đáp ứng.
+
+Sửa focused tại `src/outputs/qa_lite.py`: giữ raw `proposed_gaps` để audit, không
+dùng làm authority cho coverage. Đối chiếu **mục tiêu câu hỏi với claim ACCEPT
+thực sự được phát hành**, tái sử dụng `QARequirement`, catalog target parsing và
+`_matches_target`. B chỉ được tạo khi còn mục tiêu bắt buộc chưa có claim phù hợp.
+Diễn giải cần interpretation ACCEPT; hai facts không thay thế derived proof cho
+yêu cầu phần trăm. Dynamic goal đối chiếu operator, canonical indicators và kỳ
+gốc/mục tiêu; không tự tính hoặc đổi verdict. A khi không có nguồn và C khi lỗi
+kỹ thuật vẫn giữ. Không thêm verifier, keyword gate cho prose, hay model call.
+
+Bổ sung hẹp cho Lite: deictic follow-up như “ý nghĩa tỷ lệ đó” dùng mục tiêu
+interpretation của parent đã nhận diện; percentage comparison nhiều kỳ dùng
+derived proof thay vì legacy single-period/cross-document unsupported flag.
+Numeric separators trong câu không tạo requirement mới. Unknown/unsupported
+goals vẫn được ghi thiếu, không coi có một số liệu là trả lời đủ mọi câu hỏi.
+
+| Replay saved live-03 / control | Trước | Sau |
+| --- | --- | --- |
+| BBS tỷ lệ nợ/tài sản và ý nghĩa | partial, gap B dù metric và interpretation ACCEPT | completed_with_caveats; đủ2goals, không gap B |
+| BBS tăng trưởng doanh thu | partial, gap B dù derived26,71% ACCEPT | completed_with_caveats; dynamic goal đủ proof/kỳ, không gap B |
+| Hỏi thêm CFO nhưng ledger chỉ có revenue/derived | Model khai gaps=[] | partial_verified_coverage, B; thiếu b03.operating_cash_flow |
+
+Hai BBS replays giữ nguyên answer/IDs/citations của live-03, chỉ bỏ dòng gap B
+mâu thuẫn; không thay M6, dữ liệu hoặc ledger. CFO control là thiếu **verified
+evidence** cho phần được hỏi, không khẳng định toàn bộ PDF không có CFO. Phần
+doanh thu đã có vẫn được trình bày, không bịa CFO hoặc chặn cả câu.
+
+**28 targeted tests PASS**, gồm3controls mới: gap giả, thiếu evidence thật và
+derived khác kỳ. Existing tests về fallback/C/provider/claim binding vẫn chạy;
+chỉ cập nhật expectation segment lỗi nhưng findings đã được phục hồi đủ.
+Evidence ignored: `artifacts/evidence/QWEN-QA-01/coverage/replay-01/`, source
+script `coverage/replay.py`; sockets bị chặn, **0 API calls**, không full CI/M8.
+Ruff/planning/diff checks dùng để bàn giao. Scope chỉ coverage financial Lite theo
+catalog và typed goals hiện có; không tuyên bố hiểu đủ mọi câu hỏi tự do.
+
+Coverage follow-up **DONE theo Owner nghiệm thu ngày12/11/2026**. Commit
+`a2d5e4a8a0697d402340539a310e8dc41c9519b5`, tree
+`0eb19b966d1fc1a939ec3f59e5a55661345c5da5`:28tests và3replay checks PASS trên
+isolated staged code, không phụ thuộc qa_composer local edits ngoài task. Projection
+chỉ đối chiếu metric đã ACCEPT từ supporting evidence với matcher root-field hiện
+có; không đổi claim/proof hoặc thêm verification. M6/source/ledger không sửa.
+Historical fresh-03 vẫn giữ trạng thái partial tại thời điểm cũ; không ghi replay
+thành fresh Qwen PASS. Push/remote SHA được ghi trong receipt ignored
+`artifacts/evidence/QWEN-QA-01/completion/`. Giữ các local edits khác ngoài commit.
+**Next action duy nhất:** chờ Owner giao nhiệm vụ mới.
