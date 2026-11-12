@@ -1,8 +1,8 @@
 # QWEN-GEN-02 — Pipeline Generalization Fix
 
-Ngày 12/11/2026; **REVIEW — focused numeric binding fix theo Tech Lead, chờ commit/receipt cuối**.
-Chưa commit/push; baseline `8f9fde9ae20a46515193183943a20fa47c77b4c8`
-cùng các local edits/dependencies có sẵn. Không tự chuyển DONE.
+Ngày 12/11/2026; **DONE — điều kiện focused numeric binding fix của Tech Lead đã đạt**.
+Implementation `451d9fd52bca3c32075cce867d832ff854f0ae1e` đã commit/push main, remote SHA verified; baseline `8f9fde9ae20a46515193183943a20fa47c77b4c8`
+cùng các local edits/dependencies có sẵn. DONE trong phạm vi Tech Lead cho phép sau focused regression, không phải nghiệm thu chất lượng tài chính tổng quát.
 
 ## Kết quả
 
@@ -107,7 +107,7 @@ không replay verdict SUPPORTED cũ như bằng chứng chất lượng của pr
 M7 coverage đã được kiểm tra trên bốn failures và missing-conclusion controls,
 không phải tất cả dạng diễn đạt. Chưa sửa quy tắc rounding một chữ số của Q09,
 quarterly-period capability, mọi alias/formula hoặc toàn bộ source/scope coverage.
-Không gán DONE cho QWEN-GEN-01 hay QWEN-GEN-02 và không mở task sửa tiếp.
+QWEN-GEN-01 giữ REVIEW. QWEN-GEN-02 được chốt DONE sau focused final fix theo điều kiện Tech Lead ở phần sau; không mở task sửa tiếp.
 
 ## Evidence và bàn giao
 
@@ -117,14 +117,13 @@ Không gán DONE cho QWEN-GEN-01 hay QWEN-GEN-02 và không mở task sửa ti�
 - `live-01/{Q05,Q13,Q20,Q25}.json`, ledgers, `provider-events.json`,
   `results.json`, `runtime-hashes.json`: answers, Tools, claims, verdicts,
   citations và usage có thể đọc lại offline, không cần API.
-- `completion-receipt.json`: hashes và validation cuối; chưa commit nên không
-  có implementation SHA mới. Chỉ baseline SHA đã được xác minh.
+- `completion-receipt.json`: hashes và validation cuối; implementation SHA và remote receipt được xác minh sau focused final fix.
 
 Harness dùng lại các loaders/pipeline hiện có:
 `scripts/smoke_qwen_generalization.py`; không xây evaluation framework mới.
 Giữ source provenance, dataset và local edits khác; không stage dữ liệu/secrets.
 
-Next action: **commit/push bản sửa đã kiểm tra và chốt DONE theo điều kiện Tech Lead**.
+Next action: **dừng chuỗi QWEN-GEN, chờ Owner giao nhiệm vụ mới**.
 
 
 ## Focused closure theo chỉ đạo Tech Lead
@@ -171,8 +170,11 @@ kết quả smoke lịch sử hoặc tuyên bố fresh live PASS.
 Local evidence bổ sung: `final-numeric-fix-02/{batch,verdicts,histories,m7,
 negative-controls}.json`, giữ claim IDs, source refs và checks. Diagnostic lần đầu
 đã qua assertions fact/M7 nhưng lỗi ghi Decimal ra JSON; lần02 sửa helper serializer,
-không sửa runtime hoặc nguồn và không gọi API. Staged Python blobs khớp byte-for-byte với isolated source đã test; planning isolated136tasks PASS. Implementation SHA
-được cập nhật sau commit. Không lặp lại25câu hoặc full CI.
+không sửa runtime hoặc nguồn và không gọi API. Staged Python blobs khớp byte-for-byte với isolated source đã test; planning isolated136tasks PASS. Implementation SHA `451d9fd52bca3c32075cce867d832ff854f0ae1e` đã xác minh sau commit/push. Không lặp lại25câu hoặc full CI.
 
 Giới hạn còn lại về độ chính xác semantic, rounding, alias mơ hồ, quý/năm và coverage
 ngoài controls vẫn giữ nguyên; không mở thêm chuỗi sửa QWEN-GEN.
+
+Tech Lead đã cho phép chốt DONE khi focused grammar/binding fix và negative controls đạt.
+Điều kiện đạt với71focused tests trên working/isolated source và actual Q05offline replay.
+Phiên chốt trạng thái chỉ docs/planning checks, không chạy lại tests hoặc API.

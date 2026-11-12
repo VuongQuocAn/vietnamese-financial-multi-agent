@@ -2,13 +2,15 @@
 
 ## QWEN-GEN-02 — Pipeline Generalization Fix
 
-**REVIEW**, focused final theo Tech Lead; baseline8f9fde9, chưa commit.
-Q05 bị thiếu label canonical và row ordinal2., không phải dấu phân cách số sai.
-71focused PASS;actual saved M5→Tools→M6→M7 offline:fact ACCEPT/phát hành đúng,
-analysis vẫn INVESTIGATE khi thiếu semantic;4wrong value/unit/period/item controls không ACCEPT.
-Không API thêm/rerun25câu/full CI. Smoke lịch sử3/4 giữ nguyên.
+**DONE** theo điều kiện Tech Lead đã cho phép; implementation
+`451d9fd52bca3c32075cce867d832ff854f0ae1e` đã push main/remote SHA verified.
+Q05 là lỗi canonical-label/row ordinal binding, không phải dấu phân cách số sai.
+71focused PASS working tree và71PASS isolated staged source;actualQ05offline:
+fact ACCEPT/M7completed_with_caveats;analysis thiếu semantic vẫn INVESTIGATE.
+4wrong value/unit/period/item controls không ACCEPT;0API mới, không rerun25câu/full CI.
+Giữ smoke lịch sử3/4 và các giới hạn semantic/coverage, không tối ưu theo câu nữa.
 [Report](../docs/qwen-gen-02-pipeline-generalization-fix.md).
-Next action: commit/push và chốt DONE theo điều kiện Tech Lead.
+Next action: dừng chuỗi QWEN-GEN, chờ Owner giao nhiệm vụ mới.
 
 ## QWEN-GEN-01 — Generalization evaluation
 
