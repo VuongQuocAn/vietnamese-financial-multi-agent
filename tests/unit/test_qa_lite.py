@@ -140,7 +140,12 @@ def test_known_errors_fallback_and_model_text_is_not_released(admitted, variant)
     assert entry.content in fields["answer_vi"]
     assert "999999999" not in fields["answer_vi"]
     assert "Do đó chất lượng" not in fields["answer_vi"]
-    assert trace["fallback"] and fields["status"] == "partial_verified_coverage"
+    assert trace["fallback"]
+    if variant == "invalid_json":
+        assert fields["status"] == "partial_verified_coverage"
+    else:
+        assert fields["status"] in {"completed", "completed_with_caveats"}
+        assert trace["coverage"]["complete"] and not trace["gaps"]
     assert fields["citations"][0].source_citations[0] in entry.citations
 
 

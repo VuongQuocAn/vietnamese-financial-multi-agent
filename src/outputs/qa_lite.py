@@ -1,7 +1,7 @@
 """M7 Lite: admitted findings, one Answer Agent call, local presentation integrity.
 
-No financial approval authority. Free paraphrases retain claim/source bindings;
-numeric integrity is not semantic verification. Only known errors trigger fallback.
+No financial approval authority. Present ACCEPT statements/proofs; coverage comes
+from requested goals and released claims, not model-authored gap assertions.
 """
 
 import json
@@ -19,10 +19,17 @@ from ..core.llm_contracts import (
     RequestConstraints,
 )
 from ..tools.financial_calculator import render_dynamic
-from ..tools.question_understanding import ITEM_RULES
+from ..tools.question_understanding import ITEM_RULES, comparison_periods, normalize
 from .citation_contracts import CitationReference
 from .citation_renderer import _digest, _identity, _locator, _reference_text
-from .qa_composer import _public_notes
+from .qa_composer import (
+    INTERPRETATION_TERMS,
+    _matches_target,
+    _public_notes,
+    _targets,
+    understand_requirements,
+)
+from .qa_contracts import QARequirement
 
 GAP_TEXT = {
     "A": "Chưa có dữ liệu nguồn khả dụng trong phạm vi đã chọn.",
@@ -176,6 +183,107 @@ def _verified_text(entry):
     """Present admitted statements/proofs; no model-authored financial prose."""
     proof = _proof_text(entry)
     return entry.content + ("\n" + proof if proof and proof not in entry.content else "")
+
+
+def _coverage(request, entries):
+    """Match presentation obligations to M6 ACCEPT; never approve a new claim."""
+    # Numeric separators are not sentence/goal boundaries in a copied value.
+    question = re.sub(r"(?<=\d)[.,](?=\d)", "", request.question)
+    requirements = request.answer_requirements or understand_requirements(question)
+    goals = []
+    for requirement in requirements:
+        text = normalize(requirement.text)
+        targets = [key for kind, key in _targets(text) if kind == "fact"]
+        periods = sorted(comparison_periods(requirement.text))
+        if (
+            requirement.kind == "unsupported"
+            and targets
+            and len(periods) >= 2
+            and ("%" in text or "phan tram" in text)
+        ):
+            # Explicit same-filing percentage comparison: a derived proof covers
+            # it; the legacy single-period parser's unsupported flag does not.
+            goals.extend(
+                QARequirement(
+                    requirement_id=f"{requirement.requirement_id}-{index}",
+                    text=requirement.text,
+                    kind="fact",
+                    target_id=target,
+                    interpretation=True,
+                    interpretation_topic="dynamic_calculation",
+                    required_indicators=[target],
+                    reasoning_operations=["percentage_change"],
+                    reasoning_periods=periods,
+                )
+                for index, target in enumerate(targets)
+            )
+        elif (
+            requirement.kind == "unsupported"
+            and not _targets(text)
+            and re.search(r"\b(?:ty le|chi so|ket qua) (?:do|nay)\b", text)
+            and any(term in text for term in INTERPRETATION_TERMS)
+            and any(r.interpretation and r.target_id for r in requirements)
+        ):
+            # A deictic explanation continues the typed interpretation goal
+            # already inferred from its parent, rather than an unknown formula.
+            continue
+        else:
+            goals.append(requirement)
+    rows = []
+    for goal in goals:
+        matches = []
+        for entry in entries:
+            matching_entry = entry
+            if goal.kind == "metric" and not entry.accepted_claim.calculation:
+                metric = next(
+                    (
+                        s.calculation
+                        for s in entry.accepted_claim.supporting_evidence
+                        if s.calculation and s.calculation.formula_id == goal.target_id
+                    ),
+                    None,
+                )
+                if metric is not None:
+                    # Existing matcher reads the root metric field. Project the
+                    # same admitted supporting metric, without mutating proof.
+                    matching_entry = entry.model_copy(deep=True)
+                    matching_entry.accepted_claim.calculation = metric
+            if goal.kind == "limitations":
+                covered = bool(
+                    entry.caveats
+                    or entry.accepted_claim.missing_information
+                    or (
+                        entry.accepted_claim.reasoning
+                        and entry.accepted_claim.reasoning.limitations
+                    )
+                )
+            else:
+                covered = goal.kind not in {"unsupported", "ambiguous"} and _matches_target(
+                    matching_entry, goal
+                )
+            if covered and goal.interpretation_topic == "dynamic_calculation":
+                covered = set(goal.required_indicators) == {
+                    s.canonical_item_id
+                    for s in entry.accepted_claim.supporting_evidence
+                    if s.kind == "fact"
+                }
+            if covered:
+                matches.append(entry.identity.verified_claim_id)
+        rows.append(
+            dict(
+                requirement_id=goal.requirement_id,
+                kind=goal.kind,
+                target_id=goal.target_id,
+                interpretation=goal.interpretation,
+                required=goal.required,
+                verified_claim_ids=matches,
+            )
+        )
+    return dict(
+        complete=bool(rows)
+        and all(not row["required"] or row["verified_claim_ids"] for row in rows),
+        requirements=rows,
+    )
 
 
 def _projection(segments, selected):
@@ -391,11 +499,9 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
                     )
             trace["proposed_gaps"] = body["gaps"]
             for gap in body["gaps"]:
-                # A model cannot establish source absence or provider failure.
-                # Preserve its diagnosis in trace, publish a bounded verification gap.
+                # Advisory only: the model cannot override coverage of ACCEPT.
                 if not isinstance(gap, dict) or gap.get("type") not in GAP_TEXT:
                     raise ValueError("invalid_gap")
-                gaps.append(dict(type="B", text=GAP_TEXT["B"]))
         except Exception as error:
             trace["fallback_reasons"].append(
                 str(error) if isinstance(error, ValueError) else type(error).__name__
@@ -448,12 +554,15 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
     if trace["rejected_segments"]:
         trace["fallback"] = True
         trace["fallback_reasons"].append("unsafe_segments_replaced_with_accepted_claims")
-        gaps.append(dict(type="B", text=GAP_TEXT["B"]))
     if trace["fallback"] and trace["llm_segments_released"]:
         trace["fallback_reasons"].append("omitted_verified_findings")
     if not selected:
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
+    released_ids = {key for segment in segments for key in segment["claim_ids"]}
+    trace["coverage"] = _coverage(request, [e for key, e in entries.items() if key in released_ids])
+    if selected and not trace["coverage"]["complete"]:
+        gaps.append(dict(type="B", text=GAP_TEXT["B"]))
     gaps = list({g["type"]: g for g in gaps}.values())
     text, references, bindings = _projection(segments, selected)
     caveats = list(
