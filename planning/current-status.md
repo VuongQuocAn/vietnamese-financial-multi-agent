@@ -1,5 +1,13 @@
 # Trạng thái hiện tại
 
+## QWEN-GEN-01 — Generalization evaluation
+
+Ngày12/11/2026; **PAUSED — WAITING FOR OWNER** (registry BLOCKED).
+Một preflight Gateway trả provider_unavailable/0,094s; HTTP status/usage UNKNOWN.
+Dừng ngay,0/25cases,25NOT_RUN; chưa freeze reference; không retry/fallback/sửa pipeline.
+[Report](../docs/qwen-gen-01-generalization.md).
+Next action: Owner kiểm tra/khởi động lại API và thông báo đã hoạt động.
+
 ## QWEN-QA-01 — Calculator candidate và trình bày ACCEPT
 
 Ngày12/11/2026; **DONE — Owner nghiệm thu và yêu cầu push main**.
