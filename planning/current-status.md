@@ -3,19 +3,15 @@
 ## V2-INT-01 — Minimal Integration Migration
 
 **REVIEW**, ngày13/11/2026; implementation `474cc218498512748aaaa96ab463c070b27f9228`
-trên main, V2 opt-in. Sửa source handle/canonical resolution tại M5, claim-local
-period tại M6 và canonical requirement→verified claim→rendered coverage/dedup tại M7.
-Raw Qwen C01:11ACCEPT/1ABSTAIN/2INVESTIGATE,3numeric requirements satisfied,
-26,71% một lần; debt/assets facts và ratio hết false ABSTAIN. C07:2financial facts
-ACCEPT qua numeric fallback sẵn có, document ACCEPT/PDF12 giữ nguyên, citations7/12.
-Source stage riêng46targeted PASS;1test M7 restoration baseline FAIL được giữ nguyên
-và deselect. RawC01/C07 + savedC04/C10 replay PASS,0API; không đổi source inputs.
-Chưa live xác nhận; C01 thiếu saved semantic verdict, synthesis/constraint còn giới hạn.
+trên main, V2 opt-in. Đã bỏ runner token pre-count/cap; không sửa M5/M6/M7.
+Live Qwen thật C01 một lượt:5calls/26599tokens API/0unknown/0retry/130,06s;
+pipeline completed_with_caveats,10ACCEPT/10releases,3numeric bindings satisfied.
+Gold QA **PARTIAL**: số/citations đúng, thiếu tổng hợp ba nhánh có giới hạn; ratio lặp.
+Answer Accuracy0/1; Claim Precision9/9=100%, Recall7/8=87,50%, F1=93,33%.
+Đã dừng theo điều kiện6; C07 NOT_RUN/metricsN/A, không sửa hoặc gọi tiếp.
+Ruff/compile runner, planning/diff đạt; không rerun tests/CI/OCR/Gemini.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Owner đã cấp1lượt C01/C07,6calls/câu,12calls/60000tokens; C10 hoãn. Lượt xác nhận
-dừng trước API: subprocess đếm token local timeout45s, `m5:TimeoutExpired`, pipeline
-provider_unavailable;0APIcalls/0tokens, C07 chưa chạy. Không sửa/rerun; chưa có Qwen verdict mới.
-Next action: Owner/Tech Lead review lỗi runner trước API và quyết định bước tiếp theo.
+Next action: Tech Lead/Owner review C01 live PARTIAL và quyết định bước tiếp theo.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

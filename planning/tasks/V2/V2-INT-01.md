@@ -35,6 +35,11 @@ thay boundary tối thiểu, nghiệm thu kiến trúc bằng offline invariants
 
 ## Inputs
 
+Chỉ đạo mới nhất: bỏ pre-count/token cap, chỉ ghi usage API; không sửa runtime hoặc
+full tests/CI. Live C01/C07 một lượt trên474cc21, giữ config và không retry; API lỗi
+dừng ngay, QA PARTIAL/FAIL thì lưu nguyên văn/traces, chấm Gold và dừng, không FIX.
+Kết quả: C01 live PARTIAL, đã dừng; C07 chưa chạy theo điều kiện6.
+
 Owner cấp phép sau offline: chỉ C01/C07,6calls/câu,12calls/60.000tokens tổng;
 không thay model/endpoint/config, không retry. API lỗi hoặc kết quả PARTIAL/FAIL
 thì dừng, không sửa tiếp. C10 hoãn. Lượt này dừng trước API do tokenizer subprocess
@@ -99,6 +104,14 @@ Snapshot cuối chưa live xác nhận; không dùng kết quả trước sửa 
 
 ## Implementation Evidence
 
+Live mới trên đúng `474cc218498512748aaaa96ab463c070b27f9228`: C01 một lượt,
+5calls/26599tokens provider-reported/0unknown/0retry/130,06s,0APIerrors.
+Pipeline completed_with_caveats,10ACCEPT/10ledger/10releases,3numeric bindings satisfied;
+Gold QA PARTIAL: thiếu tổng hợp ba nhánh có giới hạn, ratio còn lặp; số/citations đúng.
+Answer Accuracy0/1, Claim Precision9/9=100%, Recall7/8=87,50%, F1=93,33%.
+Đã lưu nguyên văn final/traces và dừng; C07 NOT_RUN/metricsN/A. Runner đã bỏ pre-count/
+hard token cap; không sửa runtime/rerun tests/CI. [Chi tiết](../../../docs/v2-int-01-qa-validation.md).
+
 Lượt xác nhận mới trên source main `811112a08c9f0d9cad9f37f5123c0c30aa4ecad3`
 dừng trước provider: local token-count subprocess timeout45s, `m5:TimeoutExpired`;
 pipeline provider_unavailable,0calls/0tokens/0releases, case51,76s. Đây là lỗi runner,
@@ -146,4 +159,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Owner/Tech Lead review lỗi runner trước API và quyết định bước tiếp theo.
+Next action: Tech Lead/Owner review C01 live PARTIAL và quyết định bước tiếp theo.

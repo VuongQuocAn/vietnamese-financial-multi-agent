@@ -1,21 +1,25 @@
-"""Owner-budgeted V2 smoke: three saved questions, one attempt, no provider retries."""
+"""One live C01/C07 pass on the approved source; usage is provider-reported only."""
 
 import argparse
 import hashlib
+import io
 import json
+import subprocess
+import sys
+import zipfile
 from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
 
-from evaluate_composition_graph import bbs_catalog
-from evaluate_generalization import pipeline
-from evaluate_multi_agent_integration import must_stop
-from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
-from vietnamese_financial_multi_agent.api.text_gateway import create_text_gateway
+IMPLEMENTATION = "474cc218498512748aaaa96ab463c070b27f9228"
 
 
 class ValidationStopped(BaseException):
-    pass
+    """Bypass pipeline fallbacks so a provider failure cannot trigger another call."""
+
+
+def read(path):
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def save(path, payload):
@@ -24,139 +28,156 @@ def save(path, payload):
 
 
 class BudgetedGateway:
-    def __init__(self, gateway, output):
-        self.gateway, self.output = gateway, output
-        self.events = []
-        self.tokens = 0
-        self.case = None
+    def __init__(self, gateway, output, events, case):
+        self.gateway, self.output, self.events, self.case = gateway, output, events, case
 
     def generate(self, request):
-        # UTF-8 bytes conservatively bound byte-level tokenization; include wire
-        # metadata and chat-template allowance before authorizing the next call.
-        reserve = len(json.dumps(request.export(), ensure_ascii=False).encode())
-        reserve += request.generation.max_output_tokens + 2048
-        if len(self.events) >= 18 or self.tokens + reserve > 180000:
-            raise ValidationStopped("total_budget_reservation_exhausted")
-        if sum(e["case"] == self.case for e in self.events) >= 6:
-            raise ValidationStopped("case_call_budget_exhausted")
+        if len(self.events) >= 12 or sum(e["case"] == self.case for e in self.events) >= 6:
+            raise ValidationStopped("call_budget_exhausted")
         event = dict(case=self.case, request=request.export(), status="STARTED")
         self.events.append(event)
         save(self.output / "provider-events.json", self.events)
+        started = perf_counter()
         response = self.gateway.generate(request)
-        event.update(status=response.status, response=response.export())
+        event.update(
+            status=response.status,
+            response=response.export(),
+            elapsed_seconds=perf_counter() - started,
+        )
         save(self.output / "provider-events.json", self.events)
-        if must_stop(response):
-            if response.usage.total_tokens is not None:
-                self.tokens += response.usage.total_tokens
-            raise ValidationStopped("provider_error_fail_stop")
-        used = response.usage.total_tokens
-        if used is None:
-            raise ValidationStopped("unknown_token_usage")
-        self.tokens += used
-        if self.tokens > 180000:
-            raise ValidationStopped("provider_usage_exceeded_reserved_budget")
+        print(self.case, "call", len(self.events), response.status, flush=True)
+        if response.status != "success" or response.error:
+            raise ValidationStopped("provider_non_success_fail_stop")
         return response
 
 
-def validate(root, config, output):
-    if (output / "manifest.json").exists():
-        raise ValueError("single_pass_already_started_no_automatic_resume")
-    if not (output.parent / "offline/replay.json").is_file():
-        raise ValueError("offline_replay_required")
-    old = root / "artifacts/evidence/E2E-GEN-01"
-    cases = [
-        ("C01", "BBS_2025"),
-        ("C07", "BBS_2025"),
-        ("C10", "BCC_2025"),
-    ]
-    originals = {
-        case: json.loads((old / f"execution/{case}.json").read_text(encoding="utf-8"))["request"]
-        for case, _ in cases
-    }
-    configured = create_text_gateway(root, provider="qwen", config_file=config)
-    settings = configured.adapter.settings
-    owner = json.loads(config.read_text(encoding="utf-8"))
-    if (settings.base_url, settings.api_key, settings.model) != (
-        owner["BASE_URL"],
-        owner["API_KEY"],
-        owner["MODEL_NAME"],
-    ):
-        configured.close()
-        raise ValueError("environment_configuration_differs_from_owner_config")
-    save(
-        output / "manifest.json",
-        dict(
-            started_utc=datetime.now(UTC).isoformat(),
-            cases=[case for case, _ in cases],
-            max_calls=18,
-            max_tokens=180000,
-            max_calls_per_case=6,
-            timeout_per_case_seconds=300,
-            retries=0,
-            model=configured.model.export(),
-            source_runtime={
-                str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in (root / "src").rglob("*.py")
-            },
-        ),
+def validate(root, output, case, owner):
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            [owner[k] for k in ("BASE_URL", "API_KEY", "MODEL_NAME")], separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+    previous = read(root / "artifacts/evidence/V2-INT-01/live-confirmation-20261113/manifest.json")
+    assert fingerprint == previous["provider_configuration_sha256"], "owner_configuration_changed"
+    manifest_path, state_path = output / "manifest.json", output / "results.json"
+    if not manifest_path.exists():
+        assert case == "C01" and not output.exists(), "fresh_output_required"
+        output.mkdir(parents=True)
+        archive = subprocess.check_output(
+            ["git", "archive", "--format=zip", IMPLEMENTATION, "src"], cwd=root
+        )
+        zipfile.ZipFile(io.BytesIO(archive)).extractall(output / "frozen")
+        references = read(root / "artifacts/evidence/E2E-GEN-01/references.json")
+        save(output / "gold-references.json", [r for r in references if r["id"] in {"C01", "C07"}])
+        save(
+            manifest_path,
+            dict(
+                started_utc=datetime.now(UTC).isoformat(),
+                implementation_commit=IMPLEMENTATION,
+                cases=["C01", "C07"],
+                max_calls=12,
+                max_calls_per_case=6,
+                token_precount=False,
+                max_total_tokens=None,
+                token_usage_source="provider_reported_when_available",
+                timeout_per_case_seconds=300,
+                retries=0,
+                provider_configuration_sha256=fingerprint,
+                model=owner["MODEL_NAME"],
+            ),
+        )
+        save(state_path, dict(status="PREPARED", cases=[]))
+        save(output / "provider-events.json", [])
+    state, manifest = read(state_path), read(manifest_path)
+    assert manifest["implementation_commit"] == IMPLEMENTATION
+    assert manifest["provider_configuration_sha256"] == fingerprint
+    assert not any(row["case"] == case for row in state["cases"]), "case_already_attempted_no_retry"
+    if case == "C07":
+        assert state["status"] == "AWAITING_QA_REVIEW"
+        assert read(output / "C01-review.json")["verdict"] == "PASS"
+    else:
+        assert state["status"] == "PREPARED"
+
+    # Import the approved implementation, never the unrelated local runtime edits.
+    import vietnamese_financial_multi_agent as package
+
+    package.__path__ = [str(output / "frozen/src")]
+    from evaluate_composition_graph import bbs_catalog
+    from evaluate_generalization import pipeline
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+    from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+    from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
+
+    events = read(output / "provider-events.json")
+    adapter = QwenAdapter(QwenSettings(owner["BASE_URL"], owner["API_KEY"], owner["MODEL_NAME"]))
+    gateway = BudgetedGateway(SharedLLMGateway({"qwen": adapter}), output, events, case)
+    # Only the original request is reused. Every provider response comes from live Qwen.
+    original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
+    catalog = bbs_catalog(root)
+    service, _ = pipeline(root, "BBS_2025", output / "inputs" / case, catalog)
+    service.gateway = gateway
+    request = FinancialQARequest.model_validate(original).model_copy(
+        update=dict(
+            integration_v2=True,
+            model=ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]),
+            force_refresh=True,
+            max_provider_calls=6,
+            request_timeout_seconds=300.0,
+        )
     )
-    save(output / "questions.json", originals)
-    gateway = BudgetedGateway(configured.gateway, output)
-    state = dict(status="IN_PROGRESS", cases=[], calls=0, tokens=0)
-    catalogs = bbs_catalog(root)
+    row = dict(case=case, status="STARTED")
+    state["cases"].append(row)
+    state["status"] = "IN_PROGRESS"
+    save(state_path, state)
+    save(output / f"request-{case}.json", request.model_dump(mode="json"))
+    started = perf_counter()
     try:
-        for case, label in cases:
-            gateway.case = case
-            row = dict(case=case, status="STARTED")
-            state["cases"].append(row)
-            save(output / "results.json", state)
-            service, _ = pipeline(root, label, output / "inputs" / case, catalogs)
-            service.gateway = gateway
-            request = FinancialQARequest.model_validate(originals[case]).model_copy(
-                update=dict(
-                    integration_v2=True,
-                    model=configured.model,
-                    force_refresh=True,
-                    max_provider_calls=6,
-                    request_timeout_seconds=300.0,
-                )
-            )
-            started = perf_counter()
-            response = service.run(request)
-            save(
-                output / f"execution/{case}.json",
-                dict(
-                    request=request.export()
-                    if hasattr(request, "export")
-                    else request.model_dump(mode="json"),
-                    response=response.model_dump(mode="json"),
-                    ledger=[e.model_dump(mode="json") for e in service.repository.list_all()],
-                ),
-            )
-            row.update(
-                status="COMPLETED",
-                pipeline_status=response.status,
-                elapsed_seconds=perf_counter() - started,
-                calls=response.trace.provider_calls,
-                released_claims=len(response.used_verified_claim_ids),
-            )
-            print(case, response.status, row["calls"], "calls", flush=True)
-        state["status"] = "COMPLETED"
+        response = service.run(request)
+        save(
+            output / f"execution/{case}.json",
+            dict(
+                request=request.model_dump(mode="json"),
+                response=response.model_dump(mode="json"),
+                ledger=[e.model_dump(mode="json") for e in service.repository.list_all()],
+            ),
+        )
+        row.update(status="COMPLETED", pipeline_status=response.status)
+        state["status"] = "AWAITING_QA_REVIEW"
+        print(case, "FINAL", response.status, flush=True)
     except ValidationStopped as error:
-        state["status"] = "STOPPED"
-        state["reason"] = str(error)
-        if state["cases"] and state["cases"][-1]["status"] == "STARTED":
-            state["cases"][-1]["status"] = "INTERRUPTED"
-        print("Validation STOPPED:", state["reason"], flush=True)
+        row["status"] = "INTERRUPTED"
+        state.update(status="STOPPED", reason=str(error))
+        print("STOPPED", str(error), flush=True)
+    except Exception as error:
+        row["status"] = "INTERRUPTED"
+        state.update(status="STOPPED", reason="local_exception", error_type=type(error).__name__)
+        print("STOPPED local_exception", type(error).__name__, flush=True)
     finally:
-        state.update(calls=len(gateway.events), tokens=gateway.tokens)
-        save(output / "results.json", state)
-        configured.close()
+        row["elapsed_seconds"] = perf_counter() - started
+        row["calls"] = sum(e["case"] == case for e in events)
+        state.update(
+            calls=len(events),
+            known_tokens=sum(
+                e.get("response", {}).get("usage", {}).get("total_tokens") or 0 for e in events
+            ),
+            unknown_usage_calls=sum(
+                e.get("response", {}).get("usage", {}).get("total_tokens") is None for e in events
+            ),
+        )
+        save(state_path, state)
+        adapter.close()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config-file", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("artifacts/evidence/V2-INT-01/live"))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--case", choices=["C01", "C07"], required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--config-file", type=Path)
     args = parser.parse_args()
-    validate(Path(__file__).resolve().parents[1], args.config_file, args.output)
+    owner = (
+        read(args.config_file)
+        if args.config_file
+        else json.loads(sys.stdin.readline().lstrip("\ufeff"))
+    )
+    validate(Path(__file__).resolve().parents[1], args.output.resolve(), args.case, owner)

@@ -1,5 +1,112 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## QA live thật sau sửa runner — C01 PARTIAL, dừng trước C07
+
+**REVIEW**, 13/11/2026. Theo chỉ đạo mới, `scripts/validate_v2_live.py` bỏ hoàn toàn
+pre-count/token reservation và giới hạn tổng token cứng; chỉ cộng usage API nếu có,
+ghi số calls usage unknown riêng. Vẫn6calls/câu,12calls tổng,300s/câu, không retry.
+Source được archive trực tiếp từ implementation **`474cc218498512748aaaa96ab463c070b27f9228`**;
+không sửa M5/M6/M7, không dùng local runtime ngoài commit. Giữ nguyên fingerprint
+model/endpoint/key của cấu hình Owner đã cấp. Credentials qua stdin, không ghi traces.
+
+**C01 đã chạy Qwen thật một lượt:5calls thành công,26.599tokens API báo,0unknown,
+0retry,130,06s pipeline.** Các stages: supervisor, liquidity, profitability, cash-flow,
+M6; không gọi Qwen M7 vì V2 trình bày deterministic. Không dùng saved provider responses
+để thay kết quả. Chỉ lấy lại nguyên question/context và Gold references đã đóng băng.
+
+Pipeline trả `completed_with_caveats`,10ACCEPT/10ledger entries/10released IDs,
+coverage3/3numeric requirements satisfied, không errors/gaps. **Đánh giá độc lập câu
+trả lời cuối là PARTIAL**: có đủ số và citations, thiếu nhận xét tổng hợp ba nhánh
+có giới hạn. Đã dừng theo điều kiện6 của Owner; **C07 NOT_RUN**, không tự gọi tiếp,
+sửa runtime hoặc chạy lại C01. Không gán pipeline status/M6ACCEPT thành QA accuracy.
+
+### Gold và metrics theo câu
+
+Rubric đóng băng trước call đầu trong `live-qa-gold-rubric.json`. Answer Accuracy
+là exact full-answer accuracy:1 chỉ khi đủ nội dung, nhận xét/giới hạn, số và citations
+đúng, không suy diễn; còn lại0. Đây là chấm một câu, không phải accuracy thống kê
+trên dataset. Precision = claims tài chính/chính sách phát hành đúng và grounded /
+tổng claims phát hành; Recall = gold atomic claims được thể hiện / tổng gold atoms;
+F1 là harmonic mean. Gộp claims lặp, không đếm caveats kỹ thuật/bibliography.
+
+| Câu | QA verdict | Answer Accuracy | Claim Precision | Claim Recall | Claim F1 |
+| --- | --- | --- | --- | --- | --- |
+| C01 | PARTIAL | 0/1 =0% | 9/9 =100% | 7/8 =87,50% | 93,33% |
+| C07 | NOT_RUN do fail-stop C01 | N/A | N/A | N/A | N/A |
+
+C01 gồm7gold atoms về số liệu/phép tính và1atom nhận xét tổng hợp có giới hạn.
+Cả7atoms số đạt: doanh thu2025/2024=450.474.531.227/355.507.372.286VND,
+tăng26,71%; nợ157.146.559.558VND/tài sản266.086.680.765VND tại2025-12-31;
+CFO dương14.319.681.754VND. Gold tỷ trọng nợ59,05840875%≈59,06%; proof live
+0,5905840875… đúng, output0,59lần là làm tròn2chữ số ở đơn vị ratio, được chấp nhận
+theo rubric đơn vị/độ chính xác hiển thị đã đóng băng; không giả output đã in59,06%.
+
+Hai claims đúng ngoài7atoms số: tỷ trọng nợ mô tả mức phụ thuộc vào nợ (không gán
+ngưỡng cao/thấp), và CFO dương thể hiện tiền tạo ra từ hoạt động kinh doanh **trong
+năm2025** (không suy khả năng tương lai hay sức khỏe toàn diện). Vì vậy9unique emitted
+claims được đánh giá đúng,0unsupported; duplicate formula/value chỉ tính một lần.
+Đây là chấm theo Gold/nguồn và phạm vi nội dung, không lấy10M6ACCEPT làm tử số.
+
+Citations khớp cùng document/snapshot: [1]PDF7 cho doanh thu/tăng trưởng, [2]PDF8
+cho CFO, [3]PDF6 cho nợ, [4]PDF5 cho tài sản; ratio dẫn [3][4]. Chỉ có page-level
+provenance, không tuyên bố cell-level. Hai trong ba required-point groups đầy đủ;
+groupCFO/tổng hợp mới có CFO, chưa có tổng hợp giới hạn. Caveat nguồn chung không
+thay thế nhận xét tài chính được hỏi. Chưa đủ cơ sở chấm C07, không điền0 hay suy PASS.
+
+### Nguyên văn câu trả lời cuối C01
+
+> (Doanh thu thuần (kỳ 2025) − Doanh thu thuần (kỳ 2024)) / Doanh thu thuần (kỳ 2024) × 100: 26,71 %. [1]
+>
+> Lưu chuyển tiền thuần từ hoạt động kinh doanh kỳ 2025 là 14.319.681.754 VND. [2]
+>
+> Tỷ trọng nợ trong tài sản cuối năm 2025 được tính bằng tỷ lệ giữa tổng nợ phải trả và tổng tài sản. Tỷ lệ này cho thấy mức độ phụ thuộc vào nợ của doanh nghiệp.
+> Tổng nợ phải trả (kỳ 2025-12-31) / Tổng tài sản (kỳ 2025-12-31): 0,59 lần (tỷ số đối chiếu). [3][4]
+>
+> Tổng nợ phải trả tại ngày 2025-12-31 là 157.146.559.558 VND. [3]
+>
+> Dòng tiền thuần từ hoạt động kinh doanh năm 2025 là 14.319.681.754 VND, cho thấy khả năng sinh tiền từ hoạt động kinh doanh chính của doanh nghiệp trong năm 2025. [2]
+>
+> Tổng nợ phải trả (kỳ 2025-12-31) / Tổng tài sản (kỳ 2025-12-31): 0,59 lần (tỷ số đối chiếu). [3][4]
+>
+> Tổng tài sản tại ngày 2025-12-31 là 266.086.680.765 VND. [4]
+>
+> Doanh thu thuần kỳ 2024 là 355.507.372.286 VND. [1]
+>
+> Doanh thu thuần kỳ 2025 là 450.474.531.227 VND. [1]
+>
+> Lưu ý: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+>
+> Nguồn tham chiếu
+>
+> [1] Tài liệu nguồn 2025 — Trang PDF 7. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+> [2] Tài liệu nguồn 2025 — Trang PDF 8. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+> [3] Tài liệu nguồn 2025 — Trang PDF 6. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+> [4] Tài liệu nguồn 2025 — Trang PDF 5. Giới hạn nguồn: Bằng chứng được lưu còn giới hạn về nguồn hoặc ngữ cảnh.
+
+### Nguyên nhân chính xác và điểm dừng
+
+1. Raw supervisor live chỉ tạo3requirements tính nợ/tài sản, tăng trưởng doanh thu
+   và CFO; không tạo synthesis/limitation requirement hoặc dependent synthesis task.
+   `lite_orchestrator._specialist` nhận assigned requirements và đặt user_question
+   bằng task.objective; ba responses chỉ có phân tích riêng, không có candidate tổng hợp.
+2. M6 đã ACCEPT các nhánh số/nhận xét riêng có căn cứ. M7 dùng đúng bindings3mục
+   nên coverage.complete=True; inventory của plan thiếu mục tiêu Gold tổng hợp.
+   V2 M7 không tự sinh nhận xét tài chính mới, nên final vẫn thiếu mục tiêu này.
+   Đây là thiếu goal/candidate tổng hợp, không phải mất ledger release hay lỗi kỳ.
+3. Phép tăng trưởng26,71% đã còn một lần. Ratio0,59lần vẫn lặp: một segment gồm prose
+   +proof và một segment proof riêng. Dedup trong `qa_lite.compose_lite` khóa theo
+   **toàn segment text+scope**, nên không gộp proof nằm bên trong hai segment khác nhau.
+   Đây là giới hạn presentation quan sát được; không sửa tiếp trong lượt QA này.
+
+Artifacts ignored `artifacts/evidence/V2-INT-01/live-qa-474cc21/` giữ provider requests/
+raw responses, `execution/C01.json`, `C01-answer.txt` nguyên byte UTF-8, Gold references,
+`C01-review.json`, `C07-review.json`, manifest và STOPPED results. Không sửa evidence cũ.
+Đã kiểm Ruff/compile runner, planning và diff; không chạy lại unit/full tests, CI,
+benchmark, OCR hoặc Gemini. Runtime giữ nguyên `474cc21`, `integration_v2` vẫn opt-in.
+
+**Next action:** Tech Lead/Owner review C01 live PARTIAL và quyết định bước tiếp theo;
+không tự mở FIX, chạy lại C01 hoặc gọi C07 sau điểm dừng.
+
 ## Lượt xác nhận được Owner cấp phép — dừng trước API
 
 **REVIEW — chưa có kết quả Qwen mới**, 13/11/2026. Owner cấp đúng một lượt
