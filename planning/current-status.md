@@ -1,5 +1,30 @@
 # Trạng thái hiện tại
 
+## V2-INT-01 — Minimal Integration Migration
+
+**REVIEW**, ngày13/11/2026; implementation `544d56abb6ff5ab9a64b67e3b22ce2c94533bf48`
+trên nhánh review/v2-int-01, baseline `3475a3a`; không thay runtime thêm hoặc push main.
+Opt-in V2: requirement/task IDs, request-local shared workspace, ba specialists,
+localized M6 policy/binding và M7 coverage sidecar; không refactor Ledger/M7 lớn.
+OfflineC01/C04/C10 đạt boundary controls;22historic entries nguyên vẹn,
+607non-runtime protected unchanged;3integration cuốiPASS,43API/fusionPASS,
+6M6/integrationPASS,planning143/Ruff/diffPASS (runs overlap).
+Live3case/8calls/15876tokens,0retry/APIerrors,0released claims; phát hiện prompt/lane
+integration errors, đã sửa offline và không rerun. Snapshot cuối chưa live xác nhận.
+Review checkout:7targeted + real-data replayPASS,planning139/Ruff/diffPASS.
+C07 child có1ACCEPT nhưng root không phát hành; mixed final binding vẫn còn trong code.
+[Report](../docs/v2-int-01-minimal-integration-migration.md), [spec](tasks/V2/V2-INT-01.md).
+Next action: Tech Lead review implementation, offline invariants và giới hạn live snapshot
+trước quyết định nghiệm thu V2-INT-01.
+
+## ARCH-RESET-01 — Architecture audit và Target V2
+
+**DONE — APPROVED**, Owner/Tech Lead ngày13/11/2026;
+[report-only3475a3a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3475a3af8a2d1635bfa6037c0743245ba2a3e9e5)
+đã push main/remote SHA verified. Duyệt V2 với workspace request-local, không
+refactor M7/Ledger diện rộng, tách architecture invariants khỏi Qwen/capability probes.
+Next action: thực hiện V2-INT-01 trong phạm vi migration tối thiểu Owner giao.
+
 ## E2E-GEN-01 — Multi-Agent integration
 
 **REVIEW**, ngày12/11/2026. Một pass12case:0PASS/5PARTIAL/7FAIL,

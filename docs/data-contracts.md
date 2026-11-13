@@ -1,5 +1,22 @@
 # Data contracts
 
+## V2-INT-01 — Request integration sidecar
+
+Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
+`integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng
+QARequirement với requested_unit; tasks giữ task/requirement/dependency IDs.
+Workspace chỉ trong request, evidence handles resolve về canonical reference,
+không đổi facts/snapshots/EF-EG. OrchestrationResult chỉ serialize integration_context
+khi có, giữ legacy digest serialization khi không dùng V2.
+
+M6 policy `verification_lite_v2` giữ source/operation replay, tách ACCEPT của claim
+khỏi supported requirement bindings. Sidecar candidate→requirement→verified IDs
+→rendered coverage không chèn vào ledger history cũ. Semantic binding nằm trong
+cùng M6 batch; M7 không verify lại hoặc truy xuất/tính thêm. V1 readers/proofs vẫn
+giữ, không migrate dữ liệu. JSONOutput optional transport_wrapper chỉ đánh dấu
+exact markdown JSON fence để giữ raw text/replay; không sửa JSON body/schema IDs.
+Xem [implementation và giới hạn](v2-int-01-minimal-integration-migration.md).
+
 REC-01 automatic region binding: ingest giữ `region_geometry_v1` sidecar trong
 record.geometry và unified source_references.region_geometry; DocumentEvidence
 giữ nguyên metadata này qua adapter, không nâng thành M6 financial authority.
