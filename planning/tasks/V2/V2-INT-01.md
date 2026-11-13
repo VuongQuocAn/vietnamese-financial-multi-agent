@@ -9,17 +9,20 @@
 - Estimated Complexity: M
 - Related Modules: Lite M5, API integration, M6 boundary, M7 coverage
 
-## Phiên tiếp tục QA thực tế — 13/11/2026
+## Phiên rà Gold C07, xác nhận C10 và profiling — 13/11/2026
 
-Source bàn giao `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, main/V2 opt-in.
-Live gần nhất `25f7316`: C01 PASS, C07 PARTIAL, C10 INTERRUPTED do adapter timeout;
-đã dừng, không retry/API mới. C01/C07 cùng mẫu: numeric 8/8, micro Claim F1
-91,67%→96%, citation18/18, Answer Accuracy0/2→1/2. C01 calls5→2, latency
-242,24→182,83s; C07 calls4→3 nhưng latency133,17→132,86s gần như không đổi.
-Không báo 13/13 trên bản cuối. `d5b91a7` sửa operand retrieval sau hồi quy C10 ở
-lượt đầu; đã kiểm offline, chưa live. 19staged V2/M6 trước sửa resolver;16V2 PASS
-working tree và3focused staged trên source cuối; real branch replay/negative control
-đạt. Không nới M6/thêm agent/full CI. [Báo cáo](../../../docs/v2-int-01-qa-validation.md).
+**REVIEW**, 13/11/2026; runtime giữ `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, main/V2 opt-in.
+Owner chấp nhận tiến triển C01; không sửa src hoặc gọi lại C01/C07. C07 sửa Gold:
+negative constraint không thuộc Recall; baseline b113136 và25f7316 đều PASS,
+F1/citations100%, không phải cải thiện runtime. C10 live3734eb9 đủ operands,
+numeric5/5, positive-gold6/6;4calls/23.370tokens/0error/retry,241,70s. Adjudication
+bảo thủ PARTIAL do2nhãn định tính cần review: ClaimF1=90%,citation9/11,Answer0.
+Non-provider82,03s C10 (imports52,99s,BBS thừa8,05s,nội bộ17,91s); C01 lịch sử
+non-provider113,15s gồm64,16s ngoài API trace và49,00s nội bộ. Offline profile chỉ
+ra deepcopy/lineage/ledger serialization; C01 paragraphs+citations giữ nguyên,
+exact ordering khác. Runner thêm single-case/timings/bỏBBS thừa choC10, chưa đo
+live sau sửa runner.3targeted runner/scoring PASS,Ruff/planning/diff;không fullCI.
+[Báo cáo](../../../docs/v2-int-01-qa-validation.md).
 
 ### Baseline và chỉ đạo trước phiên tối ưu
 
@@ -206,4 +209,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source 3734eb9 khi Qwen sẵn sàng; dừng REVIEW.
+Next action: Tech Lead review adjudication C10 và số đo hiệu năng trước khi quyết định phạm vi tối ưu tiếp trong V2-INT-01.

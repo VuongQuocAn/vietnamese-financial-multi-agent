@@ -1,5 +1,128 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Rà lại Gold C07, xác nhận C10 và phân rã latency — 13/11/2026
+
+**REVIEW**, tiếp tục trong V2-INT-01. Owner chấp nhận tiến triển C01; phiên này
+không sửa `src/`, không gọi lại C01/C07 và không thêm agent/tầng xử lý. C10 chạy
+riêng đúng source `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, 1 lượt, 4 Qwen calls,
+23.370 tokens API, 0 unknown/error/retry. C01 giữ kết quả live `25f7316` đã PASS.
+Các bảng bên dưới mục này giữ nguyên như lịch sử theo rubric cũ, không phải kết luận
+hiện hành về C07.
+
+### C07: sửa lỗi đánh giá, không sửa runtime
+
+Câu “Không suy ra số lãi vay vốn hóa thực tế từ chính sách” là **ràng buộc không
+được vi phạm**, không yêu cầu thêm một claim giải thích. Gold cũ đã sai khi đưa
+`no_actual_amount_inference` vào mẫu số Claim Recall. Gold v2 giữ bốn nội dung cần
+trả lời: LNST, ghi chi phí, điều kiện vốn hóa và ngoại lệ vay riêng; ràng buộc được
+kiểm riêng bằng `constraints_met`. Vi phạm vẫn làm Answer Accuracy = 0, kể cả
+khi trả đủ bốn nội dung; không cộng điểm chỉ vì viết lời nhắc phạm vi.
+
+Rà toàn bộ hai final answers xác nhận không bịa/suy ra số vốn hóa thực tế. Số tiền
+LNST, điều kiện thời gian, tỷ lệ/formula trong chính sách không phải số vốn hóa
+thực tế. Bốn nội dung đều có và đúng nguồn PDF7/12. **Cả baseline b113136 và live
+25f7316 đều PASS C07** theo rubric sửa đúng: Numeric1/1, Claim P7/7, Recall4/4,
+F1=100%, Citation7/7, AnswerAccuracy1. Điểm 88,89%/PARTIAL trước đây là lỗi Gold,
+không phải một thiếu sót runtime; quotation dài còn là hạn chế trình bày.
+
+Gold v2 được lưu riêng trước call C10 mới, SHA256
+`eee4bbea33955ff1a9b6fd093a17026dba5022cfd1d06c431b48be587bdc02f0`.
+Không ghi đè Gold/reviews/metrics cũ. Trên cùng C01/C07 với rubric mới, baseline
+ClaimF1=95,65%, AnswerAccuracy1/2; bản25f7316 ClaimF1=100%, AnswerAccuracy2/2;
+Numeric8/8 và citation16/16→18/18. C07 không có cải thiện runtime giữa hai bản.
+
+### C10: retrieval đã được xác nhận, tách completeness khỏi groundedness
+
+Supervisor lại khai đúng canonical operands nhưng chọn `sources=[S1,S18]` như lượt
+hồi quy. Bản3734eb9 đã resolve và lấy đủ current_assets, short_term_liabilities và
+CFO trước khi resolve tên kết quả động. Final phát hành đúng:
+
+- Vốn lưu động ròng −600.656.455.132 VND, current ratio0,56 lần, đúng toán hạng/kỳ.
+- CFO314.097.335.438 VND; tài sản ngắn hạn767.374.839.317 VND và nợ ngắn hạn
+  1.368.031.294.449 VND; PDF5/6/8 đúng document/snapshot.
+- Nhận xét thiếu hụt số dư cuối kỳ bên cạnh CFO dương cả năm và giới hạn không bảo
+  đảm thanh toán tương lai. Numeric5/5, EM1, positive-gold Recall6/6.
+
+M6 ACCEPT7/ABSTAIN1; cả7ledger IDs được phát hành. **Không lấy completeness hoặc
+M6 ACCEPT làm bằng chứng mọi prose đã grounded.** Candidate
+`candidate:149acfd13711ccb2293db2f2` còn thêm “Hệ số thanh toán hiện hành thấp có thể
+cho thấy khả năng thanh toán hiện tại hạn chế” và “Lưu chuyển tiền thuần dương là
+dấu hiệu tích cực”. Semantic verifier chủ yếu xác nhận các số và cho rằng toàn bộ
+limitations phù hợp; chưa giải thích chuẩn/tiêu chí cho hai nhãn định tính này.
+Phần giới hạn/tổng hợp có căn cứ cũng được ACCEPT độc lập ở
+`candidate:df226a85f0373230dc4858be`.
+
+Adjudication bảo thủ đếm11mệnh đề độc lập, không đếm lại số/nhận xét lặp ở caveats:
+9đủgrounding/2nhãn định tính chưa đủ rõ chuẩn. Claim Precision9/11=81,82%, Recall6/6,
+**F1=90%**, Citation Accuracy/Completeness9/11, AnswerAccuracy0 → **PARTIAL**, chờ
+Tech Lead review hai mệnh đề. Đây không phải bằng chứng số CFO/ratio sai; trang
+nguồn đúng chưa tự chứng minh một đánh giá định tính. Từ “thấp” có thể được hiểu là
+so với mức đủ bù nợ ngắn hạn, nhưng câu chưa nói rõ cách hiểu đó; báo nguyên văn và
+giữ adjudication để reviewer quyết định. Không sửa runtime hoặc chạy thêm live để
+ép PASS. Final vẫn lặp số/phép tính và limitations nhiều lần.
+
+So baseline C10: Numeric5/5→5/5, Recall5/6→6/6, F1 90,91%→90%, citations5/5→9/11,
+AnswerAccuracy0→0. So lượt hồi quy9eb0951, numeric1/5→5/5. Đã xác nhận retrieval
+fix nhưng chưa thể nói toàn bộ chất lượng C10 đã đạt. Không gộp số liệu mới với
+C01/C07 cũ thành một lượt ba câu cùng SHA/model-server condition.
+
+### Thời gian ngoài provider: số đo và điểm nóng
+
+Từ trace C01 đã có,182,83s E2E =69,67s provider +**113,15s ngoài provider**.
+API trace chiếm118,67s, trong đó49,00s ngoài provider;64,16s còn lại nằm ngoài
+API trace (imports/setup/ghi artifacts của runner). Trace cũ không đủ tách64,16s
+thành từng phần; không quy toàn bộ113s cho catalog hoặc LLM.
+
+Runner phiên này đo riêng từng phase. C10 trên3734eb9: E2E **241,70s**, provider
+**159,67s**, non-provider **82,03s**:
+
+| Phase | Giây | Phạm vi |
+| --- | ---: | --- |
+| Imports | 52,99 | Trước tạo request/catalog |
+| Adapter và request | 1,05 | Config không ghi ra log |
+| Dựng BBS catalog | 8,05 | Không được dùng bởi factory BCC |
+| Pipeline setup BCC | 0,99 | Catalog BCC/composition hiện có |
+| Pipeline run | 177,58 | Gồm159,67s provider và17,91s nội bộ |
+| Ghi execution/ledger/answer artifacts | 1,04 | Sau pipeline run |
+
+C10 calls5→4 so baseline, nhưng E2E210,99→241,70s **không cải thiện** trong lượt này.
+Khác server/load nên không quy tăng latency cho source. Diagnostic import ở process
+riêng sau khi files đã được đọc chỉ mất2,12s; đo cold52,99s chưa được giải thích
+dứt điểm, không khẳng định nguyên nhân antivirus/cache hoặc hứa giảm cố định50s.
+
+Một offline C01 saved-response replay,0API, cProfile: dựngBBS19,52s, setup4,92s,
+run102,93s. Đây là **số đo có overhead profiler**, không cộng chúng với live hoặc
+báo là benchmark latency. Điểm nóng theo cumulative time: deepcopy46,13s;
+M6 constructor18,17s; snapshot metric/lineage selection khoảng15,86s;
+ledger admission15,20s, ledger find15,02s, atomic JSON dump10,83s. Các số lồng nhau,
+không cộng tổng. Catalog init cũng copy records rồi retrieval lại copy, chiếm
+15,84/19,52s của setupBBS khi profile. Hướng tối ưu có căn cứ là tái sử dụng snapshot
+request-local đã có cho M6 và giảm copy/serialize lặp, giữ nguyên isolation/replay;
+phiên này **chưa thay runtime C01** hoặc bỏ kiểm chứng để làm nhanh.
+
+Kiểm tra exact-text replay C01 ban đầu FAIL do bốn fact paragraphs đổi thứ tự;
+đối chiếu multiset tất cả paragraphs (gồm citations) khớp hoàn toàn. Không che
+assertion fail, không báo byte-identical hoặc API quality rerun. C01 content/citations
+đã PASS vẫn giữ nguyên.
+
+Sửa nhỏ chỉ ở runner: cho phép manifest thật chỉ có C10, không giả chạy C01/C07;
+ghi phase timings và bỏ dựng BBS catalog cho C10. Test loader xác nhận C10 không gọi
+BBS, C01 vẫn dùng loader cũ. Lượt live trên đo trước tối ưu skipBBS:8,05s là chi phí
+đã quan sát có thể loại bỏ, **chưa có live sau sửa runner để công bố E2E giảm**.
+Không đổi FinancialQAPipeline, source3734eb9, M6 hoặc prompt C01/C07.
+
+### Bàn giao
+
+3targeted runner/scoring tests PASS (gồm constraint compliance không làm giảm Recall),
+Ruff/format/planning/diff đạt; không full CI/Gemini/OCR. Artifacts ignored ở
+`artifacts/evidence/V2-INT-01/qa-review-followup/`: gold-v2, C07 before/after reviews,
+`c10-live/` nguyên requests/provider-events/execution/ledger/answer/phase timings,
+C10 adjudication/citation audit và performance-review/profile summaries. Credentials
+không vào Git/log. Giữ local edits ngoài task; QA toàn task vẫn REVIEW.
+
+**Next action duy nhất:** Tech Lead review adjudication C10 và số đo hiệu năng trước
+khi quyết định phạm vi tối ưu tiếp trong V2-INT-01.
+
 ## Phiên tối ưu synthesis và hiệu năng — 13/11/2026
 
 **REVIEW — chưa đạt đầy đủ QA ba câu.** Source bàn giao `3734eb921e6fb0892a1d10ff6de37323cbded3ff`

@@ -44,6 +44,12 @@ def save(path, payload):
     temporary.replace(path)
 
 
+def case_catalog(root, case, load_bbs):
+    # The existing BCC factory hydrates its own approved catalog. No BBS record
+    # participates in that path; do not rebuild unrelated BBS evidence for C10.
+    return None if case == "C10" else load_bbs(root)
+
+
 class BudgetedGateway:
     def __init__(self, gateway, output, events, case):
         self.gateway, self.output, self.events, self.case = gateway, output, events, case
@@ -81,7 +87,8 @@ class BudgetedGateway:
         return response
 
 
-def validate(root, output, case, owner, implementation):
+def validate(root, output, case, owner, implementation, *, cases=("C01", "C07", "C10")):
+    assert cases and case in cases and len(set(cases)) == len(cases)
     implementation = subprocess.check_output(
         ["git", "rev-parse", implementation], cwd=root, text=True
     ).strip()
@@ -92,7 +99,7 @@ def validate(root, output, case, owner, implementation):
     ).hexdigest()
     manifest_path, state_path = output / "manifest.json", output / "results.json"
     if not manifest_path.exists():
-        assert case == "C01" and not output.exists(), "fresh_output_required"
+        assert case == cases[0] and not output.exists(), "fresh_output_required"
         output.mkdir(parents=True)
         archive = subprocess.check_output(
             ["git", "archive", "--format=zip", implementation, "src", "scripts"], cwd=root
@@ -108,8 +115,8 @@ def validate(root, output, case, owner, implementation):
             dict(
                 started_utc=datetime.now(UTC).isoformat(),
                 implementation_commit=implementation,
-                cases=["C01", "C07", "C10"],
-                max_calls=24,
+                cases=list(cases),
+                max_calls=8 * len(cases),
                 max_calls_per_case=8,
                 token_precount=False,
                 max_total_tokens=None,
@@ -126,12 +133,12 @@ def validate(root, output, case, owner, implementation):
         save(output / "provider-events.json", [])
     state, manifest = read(state_path), read(manifest_path)
     assert manifest["implementation_commit"] == implementation
+    assert manifest["cases"] == list(cases)
     assert manifest["provider_configuration_sha256"] == fingerprint
     assert not any(row["case"] == case for row in state["cases"]), "case_already_attempted_no_retry"
-    if case != "C01":
+    if case != cases[0]:
         assert state["status"] == "AWAITING_QA_REVIEW"
-        expected = ["C01"] if case == "C07" else ["C01", "C07"]
-        assert [row["case"] for row in state["cases"]] == expected
+        assert [row["case"] for row in state["cases"]] == list(cases[: cases.index(case)])
     else:
         assert state["status"] == "PREPARED"
 
@@ -141,6 +148,7 @@ def validate(root, output, case, owner, implementation):
     save(state_path, state)
     started = perf_counter()
     adapter = None
+    timings = {}
     events = read(output / "provider-events.json")
     try:
         # Import the approved implementation, never the unrelated local runtime edits.
@@ -154,6 +162,8 @@ def validate(root, output, case, owner, implementation):
         from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
         from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
 
+        timings["imports_seconds"] = perf_counter() - started
+        step_started = perf_counter()
         adapter = QwenAdapter(
             QwenSettings(owner["BASE_URL"], owner["API_KEY"], owner["MODEL_NAME"])
         )
@@ -161,13 +171,23 @@ def validate(root, output, case, owner, implementation):
         # Only the original request is reused. Every provider response comes from live Qwen.
         original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
         request = live_request(original, ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]))
-        catalog = bbs_catalog(root)
+        timings["adapter_and_request_seconds"] = perf_counter() - step_started
+        step_started = perf_counter()
+        catalog = case_catalog(root, case, bbs_catalog)
+        timings["bbs_catalog_seconds"] = perf_counter() - step_started
+        step_started = perf_counter()
         service, _ = pipeline(
             root, "BCC_2025" if case == "C10" else "BBS_2025", output / "inputs" / case, catalog
         )
         service.gateway = gateway
+        timings["pipeline_setup_seconds"] = perf_counter() - step_started
         save(output / f"request-{case}.json", request.model_dump(mode="json"))
-        response = service.run(request)
+        step_started = perf_counter()
+        try:
+            response = service.run(request)
+        finally:
+            timings["pipeline_run_seconds"] = perf_counter() - step_started
+        step_started = perf_counter()
         save(
             output / f"execution/{case}.json",
             dict(
@@ -177,6 +197,7 @@ def validate(root, output, case, owner, implementation):
             ),
         )
         (output / f"{case}-answer.txt").write_text(response.answer_vi, encoding="utf-8")
+        timings["output_serialization_seconds"] = perf_counter() - step_started
         row.update(status="COMPLETED", pipeline_status=response.status)
         state["status"] = "AWAITING_QA_REVIEW"
         print(case, "FINAL", response.status, flush=True)
@@ -191,6 +212,11 @@ def validate(root, output, case, owner, implementation):
     finally:
         row["elapsed_seconds"] = perf_counter() - started
         row["calls"] = sum(e["case"] == case for e in events)
+        timings["provider_seconds"] = sum(
+            e.get("elapsed_seconds", 0) for e in events if e["case"] == case
+        )
+        timings["non_provider_seconds"] = row["elapsed_seconds"] - timings["provider_seconds"]
+        row["timings"] = timings
         state.update(
             calls=len(events),
             known_tokens=sum(
@@ -218,17 +244,19 @@ if __name__ == "__main__":
         if args.config_file
         else json.loads(sys.stdin.readline().lstrip("\ufeff"))
     )
-    for case in ["C01", "C07", "C10"] if args.case == "all" else [args.case]:
+    selected_cases = ("C01", "C07", "C10") if args.case == "all" else (args.case,)
+    for case in selected_cases:
         status = validate(
             Path(__file__).resolve().parents[1],
             args.output.resolve(),
             case,
             owner,
             args.implementation,
+            cases=selected_cases,
         )
         if status == "STOPPED":
             sys.exit(2)
-    if args.case == "all":
+    if status != "STOPPED":
         state = read(args.output / "results.json")
         state["status"] = "COMPLETED_AWAITING_QA_REVIEW"
         save(args.output / "results.json", state)
