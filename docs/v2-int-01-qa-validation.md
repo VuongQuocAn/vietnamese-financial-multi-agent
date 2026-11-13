@@ -1,5 +1,109 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Tối ưu latency QA — source4074513, 13/11/2026
+
+**REVIEW**. Implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, trực tiếp main,
+V2 opt-in. Theo chỉ đạo mới nhất, Tech Lead đã chấp nhận PASS C01/C07/C10 ở các
+lượt trước; nhận xét bảo thủ C10 ở phần lịch sử bên dưới đã được review. Phiên này
+giữ rubric đó, C07 có4positive atoms và constraint riêng; không thêm nghĩa vụ trả lời.
+Baseline code trước tối ưu `a30b4fe`; baseline live là các lượt đã được chấp nhận
+C01/C07 trên25f7316, C10 trên3734eb9. Source runtime ba lượt này tương thích với
+baseline code; không giả chúng là một lượt live ba câu cùng SHA.
+
+### Thay đổi và bằng chứng không hồi quy
+
+- M6 V2 dùng chính snapshot request-local đã tách ở M5, thay vì copy catalog gốc
+  nhiều lần và dựng lại lineage caches. Vẫn kiểm lại canonical sources, phép tính,
+  semantic verdict, proof và admission. Không dùng M5 verdict làm bằng chứng ACCEPT.
+- Snapshot không deepcopy bản API cũ rồi vứt bỏ: chỉ copy records và dựng API mới
+  như trước. Khi tách một claim, bỏ các claims khác **trước** deepcopy; metadata
+  của từng proof vẫn độc lập. Không chia sẻ dữ liệu mutable giữa các request.
+- Atomic JSON dùng C encoder qua `json.dumps` và một lần write thay vì Python
+  ghi từng mảnh proof. JSON/Decimal wire, Unicode, rejectNaN, flush/fsync/replace và
+  kiểm tampered/stale proof giữ nguyên; không đổi schema hoặc bỏ ledger evidence.
+- Profile C07 graph context thực tế cho thấy nhiều so sánh page model không cần
+  thiết. Index anchors của fact theo đầy đủ source key, rồi vẫn đối chiếu toàn bộ
+  page identity. Không suy association từ cùng trang, không bỏ graph validation.
+
+44targeted tests PASS trên isolated source4074513, gồm request isolation, sửa proof
+không ảnh hưởng sibling, page year/symbol không được lọt qua selector index,
+wrong value/unit/period/source controls và ledger conflict/tampering/atomicity.
+Ruff/format/planning/diff đạt; không full CI, không thay M6 policy, agent, prompt,
+Calculator, corpus, gateway/model hay cách phối hợp Multi-Agent.
+
+Replay cả ba câu bằng nguyên saved Qwen responses xác nhận: financial clauses,
+M6 decisions, requirement coverage, citations và claim→source bindings không đổi;
+toàn bộ shared facts/calculations/lineage/graph contexts khớp. C10 chỉ khác thứ tự
+trình bày một số đoạn/notes đã có, không gọi đó là byte-identical. Live mới cũng
+khớp selected/executed agents, native decision counts và toàn bộ shared evidence/
+EF-EG với các lượt đã được chấp nhận. Không giảm calls hoặc né verification.
+
+### Số đo trước/sau
+
+Một lượt Qwen đủ3case trên **cùng4074513**: **9calls/35.845tokens API**,0unknown,
+0provider errors,0retry. Mỗi case force_refresh/fresh ledger; không dùng answer cache.
+
+| Case | E2E baseline → mới | Giảm quan sát | Calls trước → sau | Numeric | Claim P/R/F1 | Citation accuracy | Answer accuracy |
+| --- | ---: | ---: | ---: | --- | --- | --- | --- |
+| C01 | 182,83s → **119,64s** | 34,56% | 2→2 | 7/7 | 100%/100%/100% | 11/11 | 1 |
+| C07 | 132,86s → **90,46s** | 31,91% | 3→3 | 1/1 | 100%/100%/100% | 7/7 | 1 |
+| C10 | 241,70s → **167,47s** | 30,71% | 4→4 | 5/5 | 100%/100%/100% | 11/11 | 1 |
+
+Giữ **Numeric13/13, numeric EM3/3, ClaimP29/29/Recall18/18/F1=100%, Citation29/29,
+AnswerAccuracy3/3**, cả ba QA PASS theo rubric hiện hành. Reviewer kiểm các mệnh đề
+và document/snapshot/PDF pages, không dùng M6 ACCEPT làm gold; quote final answer
+giữ trong adjudication. C07 không suy số vốn hóa thực tế; C10 giữ giới hạn thanh
+khoản và các nhận xét có điều kiện đã được Tech Lead chấp nhận, không suy xu hướng
+dài hạn. Không nâng page-level/uncertain thành cell-level provenance.
+
+| Case | Provider trước → sau | API internal ngoài provider trước → sau | API total trước → sau |
+| --- | ---: | ---: | ---: |
+| C01 | 69,67→55,55s | **48,99→14,97s** | 118,67→70,52s |
+| C07 | 78,37→65,39s | **43,80→20,46s** | 122,16→85,85s |
+| C10 | 159,67→161,95s | **17,90→4,09s** | 177,57→166,04s |
+
+Không quy toàn bộ E2E gain cho code: provider C01/C07 cũng nhanh hơn; baseline
+C10 từng chạy process riêng với52,99s imports và8,05s BBS catalog thừa. Live mới
+chạy ba câu trong một process, cold import40,63s ở C01; C10 không dựng BBS theo sửa
+runner đã bàn giao trước phiên này. Vì vậy31% E2E C10 gồm khác cold-start/setup.
+API internal được tính từ API trace trừ provider wall; không cộng các stages con
+lồng nhau. Runner lưu riêng imports, adapter/request, catalog, pipeline setup/run,
+artifact serialization và toàn bộ M5/M6/graph/admission/reload/composer stages.
+
+Để tách provider và khác biệt startup, paired replay không gọi API trên chính
+production pipeline với cùng raw responses/fresh ledger cho kết quả:
+
+| Case | Baseline a30b4fe đo lại | Final4074513 | Giảm processing không LLM wait |
+| --- | ---: | ---: | ---: |
+| C01 | 20,42s | 14,43s | 29,33% |
+| C07 | 17,88s | 12,97s | 27,50% |
+| C10 | 8,55s | 3,58s | 58,16% |
+
+Giữ cả lần baseline đầu39,91/35,48/11,17s và các lượt trung gian trong artifacts;
+không chọn baseline chậm nhất để công bố mức giảm. Đo lại baseline vì host/load
+dao động, chỉ một pass mỗi phiên bản/lượt: chưa phải benchmark thống kê. Profile
+graph dùng dữ liệu thật, có overhead cProfile, chỉ để định vị; không gộp thời gian
+profile với latency live. Thử typed-wire clone ledger không nhanh hơn deepcopy ở
+entry thực tế4,14MB nên không triển khai hướng này.
+
+### Giới hạn và bàn giao
+
+Cold import/setup vẫn đáng kể; provider vẫn chiếm phần lớn thời gian, đặc biệt
+C10. JSON encoder dùng một buffer trong bộ nhớ; chưa đo peak RAM. Prose còn dài/
+lặp như baseline đã được chấp nhận. Kết quả giới hạn3known cases, một lượt live,
+chưa đánh giá PDF mới hoặc chứng minh tổng quát hóa/Multi-Agent superiority.
+Không có hồi quy tài chính/citations trong replay hoặc live đã chạy.
+
+Artifacts ignored: `artifacts/evidence/V2-INT-01/latency-optimization/`: frozenGold,
+baseline reviews/metrics, `before/`, `baseline-check/`, `final-paired/`, graph profile,
+comparisons và `live/` (manifest/source, raw events, execution, ledger, answers).
+`latency-summary.json`, `live-qa-summary.json`, `live-citation-audit.json` và
+`live-invariants.json` giữ số đo và đối chiếu; `scripts/qa_metrics.py` tái tính điểm.
+Credentials/dataset không commit; local edits ngoài task giữ nguyên.
+
+**Next action duy nhất:** Tech Lead nghiệm thu latency/QA trên4074513 và các giới
+hạn đo lường còn lại; dừng REVIEW, không tự DONE hoặc mở task mới.
+
 ## Rà lại Gold C07, xác nhận C10 và phân rã latency — 13/11/2026
 
 **REVIEW**, tiếp tục trong V2-INT-01. Owner chấp nhận tiến triển C01; phiên này

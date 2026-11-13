@@ -2,19 +2,20 @@
 
 ## V2-INT-01 — QA và hiệu năng
 
-**REVIEW**, 13/11/2026; runtime giữ `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, main/V2 opt-in.
-Owner chấp nhận tiến triển C01; không sửa src hoặc gọi lại C01/C07. C07 sửa Gold:
-negative constraint không thuộc Recall; baseline b113136 và25f7316 đều PASS,
-F1/citations100%, không phải cải thiện runtime. C10 live3734eb9 đủ operands,
-numeric5/5, positive-gold6/6;4calls/23.370tokens/0error/retry,241,70s. Adjudication
-bảo thủ PARTIAL do2nhãn định tính cần review: ClaimF1=90%,citation9/11,Answer0.
-Non-provider82,03s C10 (imports52,99s,BBS thừa8,05s,nội bộ17,91s); C01 lịch sử
-non-provider113,15s gồm64,16s ngoài API trace và49,00s nội bộ. Offline profile chỉ
-ra deepcopy/lineage/ledger serialization; C01 paragraphs+citations giữ nguyên,
-exact ordering khác. Runner thêm single-case/timings/bỏBBS thừa choC10, chưa đo
-live sau sửa runner.3targeted runner/scoring PASS,Ruff/planning/diff;không fullCI.
+**REVIEW**, 13/11/2026; implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, main/V2 opt-in.
+Live C01/C07/C10 cùng source:9calls/35.845tokens/0unknown/error/retry, QA3PASS;
+Numeric13/13,ClaimF1=100%,Citation29/29,AnswerAccuracy3/3 theo rubric Tech Lead
+đã chấp nhận (C07 constraint riêng, C10 bounded observations). E2E182,83→119,64s /
+132,86→90,46s /241,70→167,47s; calls giữ2/3/4. API internal ngoài provider
+48,99→14,97s /43,80→20,46s /17,90→4,09s; không quy startup/provider gains cho code.
+M6 dùng request snapshot, bỏ deepcopy claims/API thừa, C JSON encoder giữ atomicity,
+selector index vẫn kiểm full page identity. Replay giữ exact clauses/M6 decisions/
+citations/bindings/shared EF-EG. Paired no-API processing giảm29%/28%/58% so baseline
+đo lại; lưu cả lần baseline chậm và intermediate runs.44targeted isolated PASS,
+Ruff/planning/diff;không fullCI. Giữ caveats/page-level, không đổi agent/prompt/M6
+policy hoặc local edits ngoài task; còn cold imports, provider latency và prose lặp.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead review adjudication C10 và số đo hiệu năng trước khi quyết định phạm vi tối ưu tiếp trong V2-INT-01.
+Next action: Tech Lead nghiệm thu latency/QA trên4074513 và các giới hạn đo lường còn lại; dừng REVIEW.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 
