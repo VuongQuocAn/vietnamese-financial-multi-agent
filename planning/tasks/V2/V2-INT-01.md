@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: V2
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: ARCH-RESET-01
 - Estimated Complexity: M
@@ -11,7 +11,9 @@
 
 ## Phiên tối ưu latency QA — 13/11/2026
 
-**REVIEW**, 13/11/2026; implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, main/V2 opt-in.
+**DONE — APPROVED**. Owner/Tech Lead phê duyệt DONE ngày13/11/2026, phạm vi nghiệm thu chỉ ba trường hợp E2E thực tế C01/C07/C10 đã xác nhận.
+Giữ giới hạn về cold start/provider, prose và provenance; chưa suy rộng kết quả sang PDF/câu hỏi mới.
+Implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, main/V2 opt-in.
 Live C01/C07/C10 cùng source:9calls/35.845tokens/0unknown/error/retry, QA3PASS;
 Numeric13/13,ClaimF1=100%,Citation29/29,AnswerAccuracy3/3 theo rubric Tech Lead
 đã chấp nhận (C07 constraint riêng, C10 bounded observations). E2E182,83→119,64s /
@@ -123,7 +125,7 @@ Không gọi Qwen trước offline integration đạt và có ngân sách/điề
 - [x] Offline real-data replay kiểm requirements/evidence/claims/branch preservation; không coi synthetic PASS là financial quality.
 - [x] Planning checker/diff/lint và targeted tests liên quan đạt; live chỉ theo ngân sách duyệt.
 - [x] Bàn giao REVIEW, phân biệt lỗi kiến trúc/model/capability; không tự DONE.
-- [ ] Tech Lead nghiệm thu QA trên source cuối và các giới hạn còn lại.
+- [x] Tech Lead nghiệm thu QA trên source cuối và các giới hạn còn lại (phạm vi C01/C07/C10).
 - [x] Live C01/C07/C10 hoàn tất trên cùng implementation SHA; chấm final answer với Gold.
 
 - [x] QA live bản cuối đủ ba câu, đầy đủ nhận xét/tổng hợp/giới hạn có evidence.
@@ -210,4 +212,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu latency/QA trên4074513 và các giới hạn đo lường còn lại; dừng REVIEW.
+Next action: Chờ Owner/Tech Lead giao công việc tiếp theo; không tự mở task mới.

@@ -2,7 +2,9 @@
 
 ## Tối ưu latency QA — source4074513, 13/11/2026
 
-**REVIEW**. Implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, trực tiếp main,
+**DONE — APPROVED**. Owner/Tech Lead phê duyệt DONE ngày13/11/2026, phạm vi nghiệm thu chỉ ba trường hợp E2E thực tế C01/C07/C10 đã xác nhận.
+Giữ giới hạn về cold start/provider, prose và provenance; chưa suy rộng kết quả sang PDF/câu hỏi mới.
+Implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, trực tiếp main,
 V2 opt-in. Theo chỉ đạo mới nhất, Tech Lead đã chấp nhận PASS C01/C07/C10 ở các
 lượt trước; nhận xét bảo thủ C10 ở phần lịch sử bên dưới đã được review. Phiên này
 giữ rubric đó, C07 có4positive atoms và constraint riêng; không thêm nghĩa vụ trả lời.
@@ -101,8 +103,7 @@ comparisons và `live/` (manifest/source, raw events, execution, ledger, answers
 `live-invariants.json` giữ số đo và đối chiếu; `scripts/qa_metrics.py` tái tính điểm.
 Credentials/dataset không commit; local edits ngoài task giữ nguyên.
 
-**Next action duy nhất:** Tech Lead nghiệm thu latency/QA trên4074513 và các giới
-hạn đo lường còn lại; dừng REVIEW, không tự DONE hoặc mở task mới.
+**Next action duy nhất:** Chờ Owner/Tech Lead giao công việc tiếp theo; không tự mở task mới.
 
 ## Rà lại Gold C07, xác nhận C10 và phân rã latency — 13/11/2026
 

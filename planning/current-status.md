@@ -2,7 +2,9 @@
 
 ## V2-INT-01 — QA và hiệu năng
 
-**REVIEW**, 13/11/2026; implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, main/V2 opt-in.
+**DONE — APPROVED**. Owner/Tech Lead phê duyệt DONE ngày13/11/2026, phạm vi nghiệm thu chỉ ba trường hợp E2E thực tế C01/C07/C10 đã xác nhận.
+Giữ giới hạn về cold start/provider, prose và provenance; chưa suy rộng kết quả sang PDF/câu hỏi mới.
+Implementation `40745138e0c987fcfa05915726c2e530bbecab4d`, main/V2 opt-in.
 Live C01/C07/C10 cùng source:9calls/35.845tokens/0unknown/error/retry, QA3PASS;
 Numeric13/13,ClaimF1=100%,Citation29/29,AnswerAccuracy3/3 theo rubric Tech Lead
 đã chấp nhận (C07 constraint riêng, C10 bounded observations). E2E182,83→119,64s /
@@ -15,7 +17,7 @@ citations/bindings/shared EF-EG. Paired no-API processing giảm29%/28%/58% so b
 Ruff/planning/diff;không fullCI. Giữ caveats/page-level, không đổi agent/prompt/M6
 policy hoặc local edits ngoài task; còn cold imports, provider latency và prose lặp.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead nghiệm thu latency/QA trên4074513 và các giới hạn đo lường còn lại; dừng REVIEW.
+Next action: Chờ Owner/Tech Lead giao công việc tiếp theo; không tự mở task mới.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 
