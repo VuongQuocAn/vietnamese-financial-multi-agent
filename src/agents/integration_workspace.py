@@ -186,7 +186,8 @@ class IntegrationWorkspace:
             bindings[claim.candidate_id] = [
                 key
                 for key in by_id
-                if key in assigned and matches_requirement(claim, by_id[key], self.targets.get(key))
+                if (key in assigned or by_id[key].answer_goal == "value")
+                and matches_requirement(claim, by_id[key], self.targets.get(key))
             ]
         return dict(
             version="integration_v2",

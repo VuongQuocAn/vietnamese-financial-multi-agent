@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 
 from vietnamese_financial_multi_agent.agents.integration_workspace import (
     IntegrationRequirement,
+    IntegrationWorkspace,
     matches_requirement,
 )
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
@@ -584,3 +585,49 @@ def test_provider_goal_shorthand_and_catalog_operand_periods_survive_missing_mod
     }
     assert not result.errors
     assert any(r["answer_goal"] != "value" for r in result.integration_context["requirements"])
+
+
+def test_shared_proof_can_satisfy_numeric_goal_owned_by_another_task():
+    from vietnamese_financial_multi_agent.agents.orchestration_contracts import (
+        AggregatedCandidate,
+        CandidateOrigin,
+    )
+    from vietnamese_financial_multi_agent.agents.specialist_common import SpecialistCandidate
+
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    claim = batch.claims[0]
+    sources = inventory(SnapshotCatalog(**data), batch.context)
+    req = IntegrationRequirement(
+        requirement_id="R-value",
+        text="Tính tăng trưởng",
+        kind="metric",
+        target_id="revenue_yoy",
+        period=claim.period,
+        interpretation=True,
+        interpretation_topic="metric_meaning",
+        requested_unit="percent",
+    )
+    targets = resolve_requirements(LitePlan(requirements=[req]), sources)
+    aggregate = AggregatedCandidate(
+        **{k: getattr(claim, k) for k in SpecialistCandidate.model_fields},
+        origins=[
+            CandidateOrigin(
+                role="profitability",
+                execution_id="T-synthesis",
+                candidate_id=claim.candidate_id,
+                original_content=claim.content,
+                supporting_evidence=claim.supporting_evidence,
+            )
+        ],
+        origin_roles=["profitability"],
+        supporting_evidence=claim.supporting_evidence,
+        supporting_references=claim.fact_references,
+    )
+    workspace = IntegrationWorkspace(
+        [req], targets=targets, tasks={"T-synthesis": {"requirement_ids": ["R-comment"]}}
+    )
+    assert workspace.export([aggregate])["candidate_requirements"][claim.candidate_id] == [
+        "R-value"
+    ]
+    req.requested_unit = "USD"
+    assert workspace.export([aggregate])["candidate_requirements"][claim.candidate_id] == []
