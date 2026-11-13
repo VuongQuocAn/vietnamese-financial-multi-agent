@@ -111,6 +111,7 @@ class FinancialQAPipeline:
                 graph_enabled=request.m5_graph,
                 composition=matches[0] if len(matches) == 1 else None,
                 document_repository=self.document_repository,
+                integration_v2=request.integration_v2,
             )
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(
@@ -278,6 +279,10 @@ class FinancialQAPipeline:
         from .claim_selection import periods_for
 
         parsed, issues = understand(request.question)
+        if request.integration_v2 and not re.search(
+            r"\b(?:quý|tháng|bán niên)\b", request.question, flags=re.I
+        ):
+            issues = [reason for reason in issues if reason != "non_annual_period_unsupported"]
         if set(issues) & {"invalid_period", "non_annual_period_unsupported"}:
             return None, "clarification_required", ["requested_period_unresolved"]
         years = periods_for(request)
@@ -623,6 +628,8 @@ class FinancialQAPipeline:
         from ..core.request_gateway import RequestGateway
 
         request = FinancialQARequest.model_validate(request)
+        if request.integration_v2:
+            request = request.model_copy(update=dict(m5_lite=True, m6_lite=True, m7_lite=True))
         scoped = copy(self)
         if request.execution_mode == "auto" and self.gateway is None and request.allow_gateway:
             result = scoped._run(
@@ -697,13 +704,31 @@ class FinancialQAPipeline:
                     bound.document_id, bound.snapshot_id
                 ),
             )
+            if bound.integration_v2:
+                supported = trace.integration_context.get("supported_requirements", {})
+                bindings = {}
+                for outcome in trace.outcomes:
+                    if outcome.verified_claim_id:
+                        values = bindings.setdefault(outcome.verified_claim_id, [])
+                        values.extend(
+                            key
+                            for key in supported.get(outcome.candidate_id, [])
+                            if key not in values
+                        )
+                trace.integration_context["verified_requirements"] = bindings
             fields, metadata = stage(
                 "composer",
                 lambda: compose_lite(
-                    bound,
+                    bound.model_copy(update={"allow_gateway": False})
+                    if bound.integration_v2
+                    else bound,
                     selected,
                     gateway=self.gateway,
-                    technical_errors=trace.errors if lite_technical_failure else (),
+                    technical_errors=(
+                        trace.integration_context.get("technical_errors", [])
+                        or (trace.errors if lite_technical_failure else ())
+                    ),
+                    coverage_context=trace.integration_context if bound.integration_v2 else None,
                     source_available=any(
                         (f.document_id, f.snapshot_id, f.company_id)
                         == (bound.document_id, bound.snapshot_id, bound.company_id)
@@ -716,6 +741,14 @@ class FinancialQAPipeline:
                 excluded_claims=excluded,
             )
             trace.m7_lite = metadata
+            if (
+                bound.integration_v2
+                and not fields["used_verified_claim_ids"]
+                and trace.integration_context.get("technical_errors")
+                and not trace.provider_errors
+            ):
+                fields["status"] = "internal_error"
+                metadata["final_status"] = "internal_error"
             trace.m7_status = fields["status"]
             trace.firewall_decision = "LITE_INTEGRITY_RELEASE" if selected else "LITE_NO_FINDINGS"
             trace.stages["citations"] = PipelineStage(status="COMPLETED")
@@ -816,10 +849,19 @@ class FinancialQAPipeline:
 
         try:
             intent, requirements = document_intent(request.question)
+            if request.integration_lane == "financial":
+                intent = "other"
+            elif request.integration_lane == "document":
+                intent = "document"
             from ..agents.fusion_contracts import is_mixed
             from .fusion_pipeline import run_fusion
 
-            if is_mixed(request.question) and not request.m7_lite:
+            if request.integration_lane is None and (
+                request.integration_v2
+                and intent in {"document", "mixed"}
+                or is_mixed(request.question)
+                and not request.m7_lite
+            ):
                 return run_fusion(self, request, response, stage, stop, recovery_seen=recovery_seen)
             if intent == "mixed" and not request.m7_lite:
                 _, issues = understand(request.question)
@@ -870,7 +912,7 @@ class FinancialQAPipeline:
                     selected_verified_claim_ids=[e.identity.verified_claim_id for e in selected]
                 )
                 # Reuse is not a completeness verdict. Lite diagnoses gaps in the answer.
-                coverage = "answered" if selected else "partial"
+                coverage = "answered" if selected and not bound.integration_v2 else "partial"
             else:
                 plan, coverage = request_inventory(qa_request, entries)
             existing_ids = set(plan.selected_verified_claim_ids)
@@ -978,6 +1020,11 @@ class FinancialQAPipeline:
                         )
                     )
                     trace.financial_execution = output.model_dump(mode="json")
+                    if bound.integration_v2:
+                        trace.integration_context = output.integration_context
+                        trace.integration_context["technical_errors"] = [
+                            e.code for e in output.errors
+                        ]
                     if output.supervisor_result:
                         trace.tool_calls = [
                             dict(
@@ -1058,6 +1105,7 @@ class FinancialQAPipeline:
                                 if bound.allow_gateway and bound.execution_mode != "deterministic"
                                 else None,
                                 model=bound.model,
+                                **({"integration_v2": True} if bound.integration_v2 else {}),
                             )
                         )
                         histories = stage(
@@ -1065,12 +1113,35 @@ class FinancialQAPipeline:
                             lambda: (
                                 adaptive_histories
                                 if adaptive_histories is not None
-                                else runtime.verify(batch)
+                                else runtime.verify(
+                                    batch,
+                                    **(
+                                        {"integration_context": trace.integration_context}
+                                        if bound.integration_v2
+                                        else {}
+                                    ),
+                                )
                             ),
                         )
                         if bound.m6_lite:
                             trace.verification_mode = "lite"
                             trace.m6_lite = runtime.summary
+                            if bound.integration_v2:
+                                trace.integration_context["supported_requirements"] = (
+                                    runtime.summary.get("supported_requirements", {})
+                                )
+                                trace.integration_context["technical_errors"].extend(
+                                    reason
+                                    for finding in runtime.summary.get("findings", [])
+                                    for reason in finding["reasons"]
+                                    if reason
+                                    in {
+                                        "semantic_provider_failure",
+                                        "semantic_gateway_exception",
+                                        "semantic_verdict_missing_or_invalid",
+                                        "semantic_payload_limit",
+                                    }
+                                )
                         for name, metadata in runtime.provider_metadata:
                             usage("m6_" + name, metadata)
                         for name, latency in runtime.stage_latency_ms.items():

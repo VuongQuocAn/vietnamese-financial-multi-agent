@@ -155,7 +155,11 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
             continue
         # Every lane inherits the already checked original request context. No subrequest
         # can select a second filing, company, scope or latest snapshot.
-        updates = dict(question=part.original_span, document_snapshots=[])
+        updates = dict(
+            question=part.original_span,
+            document_snapshots=[],
+            integration_lane=part.lane,
+        )
         if part.lane == "financial":
             updates.update(
                 question=(part.execution_question or part.original_span) + f" năm {year}",
@@ -163,7 +167,12 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
                 composition_sha256=None,
             )
         else:
-            updates.update(snapshot_id=None, period=None, reporting_scope=None)
+            updates.update(
+                snapshot_id=None,
+                period=None,
+                reporting_scope=None,
+                integration_v2=False,
+            )
         child = stage(
             part.requirement_id,
             lambda updates=updates: scoped.run(

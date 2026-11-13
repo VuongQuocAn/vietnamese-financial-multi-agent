@@ -408,6 +408,19 @@
             }
           ],
           "default": null
+        },
+        "transport_wrapper": {
+          "anyOf": [
+            {
+              "const": "markdown_json_fence",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transport Wrapper"
         }
       },
       "required": [

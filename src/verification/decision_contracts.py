@@ -56,7 +56,7 @@ class LiteDecisionTrace(FinancialModel):
     verification_input_sha256: str
     validation_result_sha256: str
     semantic_result_sha256: str
-    policy_version: Literal["verification_lite_v1"] = "verification_lite_v1"
+    policy_version: Literal["verification_lite_v1", "verification_lite_v2"] = "verification_lite_v1"
 
 
 class VerificationDecisionRecord(FinancialModel):

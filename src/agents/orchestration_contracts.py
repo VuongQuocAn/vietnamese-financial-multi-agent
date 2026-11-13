@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
@@ -135,3 +135,11 @@ class OrchestrationResult(FinancialModel):
     stage_latency_ms: dict[str, float] = Field(default_factory=dict)
     latency_ms: float = 0.0
     financial_fact_verified: Literal[False] = False
+    integration_context: dict = Field(default_factory=dict)
+
+    @model_serializer(mode="wrap")
+    def serialize_integration(self, handler):
+        wire = handler(self)
+        if not self.integration_context:
+            wire.pop("integration_context", None)
+        return wire

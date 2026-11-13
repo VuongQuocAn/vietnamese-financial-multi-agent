@@ -8,7 +8,7 @@ from time import perf_counter
 from uuid import uuid4
 
 from ..agents.planner_contracts import PlannerLLMMetadata
-from ..agents.specialist_common import ReasoningProof, source_projection
+from ..agents.specialist_common import ReasoningProof, _number, source_projection
 from ..core.llm_contracts import (
     GenerationParameters,
     JSONOutput,
@@ -26,7 +26,7 @@ from .decision_contracts import (
 )
 from .evidence_context import EvidenceContextBuilder
 from .lite_contracts import LiteProof, LiteVerificationHistory, SemanticVerdict
-from .numeric import extract_assertion
+from .numeric import NumericAssertion, extract_assertion, fold
 from .validation_contracts import ClaimValidationResult, ValidationResult, verification_input_digest
 from .validators import DeterministicFinancialValidator
 
@@ -103,6 +103,8 @@ def deterministic_state(claim, validation):
     derived = claim.reasoning and claim.reasoning.claim_type == "derived_fact"
     if claim.kind == "supported_interpretation" and not derived:
         return "SEMANTIC", []
+    if any(c.check_id == "typed_assertion" and c.status == "pass" for c in checks):
+        return "ACCEPT", ["deterministic_source_and_calculation_verified"]
     # Parser proves one numerical clause only. Any extra prose needs semantics.
     if not derived:
         assertion = extract_assertion(claim.content)
@@ -172,6 +174,9 @@ def decide(proof):
         ),
         limitations=limitations,
         trace=LiteDecisionTrace(
+            policy_version="verification_lite_v2"
+            if any(c.check_id == "integration_v2" for c in validation.checks)
+            else "verification_lite_v1",
             source_result_sha256=batch.source_result_sha256,
             verification_input_sha256=verification_input_digest(batch),
             validation_result_sha256=verification_input_digest(proof.validation),
@@ -181,6 +186,46 @@ def decide(proof):
 
 
 class LiteFinancialValidator(DeterministicFinancialValidator):
+    def __init__(self, catalog, *, integration_v2=False):
+        super().__init__(catalog)
+        self.integration_v2 = integration_v2
+
+    def _assertion(self, claim, statement):
+        return self._typed_assertion(claim, statement) or super()._assertion(claim, statement)
+
+    def _typed_assertion(self, claim, statement):
+        if self.integration_v2 and claim.kind == "fact" and len(claim.supporting_evidence) == 1:
+            source = claim.supporting_evidence[0]
+            # Unknown prose is not a typed assertion. A source label outside the
+            # existing grammar must be the exact independently stored row label.
+            if extract_assertion(statement) is not None:
+                return None
+            labels = {
+                fact.context.raw_item_label
+                for fact in self._catalog.facts
+                if fact.observation_identity() == source.reference.observation
+            }
+            if source.label not in labels:
+                return None
+            ptype = "tại ngày" if len(source.period) > 4 else "kỳ"
+            value = _number(source.value)
+            scale = f" (hệ số đơn vị {source.scale})" if source.scale != "1" else ""
+            forms = {
+                f"{source.label} {ptype} {source.period} là {value} {source.unit}{scale}.",
+                f"{source.label} kỳ {source.period} là {value} {source.unit}{scale}.",
+            }
+            if statement in forms:
+                # _fact independently rehydrates identity/value/unit/period/citations.
+                return NumericAssertion(
+                    source.canonical_item_id,
+                    Decimal(source.value),
+                    source.unit,
+                    Decimal(source.scale),
+                    source.period,
+                    "as_of" if len(source.period) > 4 else "fiscal_year",
+                )
+        return None
+
     def _analysis(self, batch, claim, result):
         if claim.reasoning and claim.reasoning.claim_type == "derived_fact":
             return super()._analysis(batch, claim, result)
@@ -252,8 +297,11 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
 
 
 class LiteVerificationRuntime:
-    def __init__(self, catalog, gateway=None, *, model=None):
-        self.validator = LiteFinancialValidator(catalog)
+    def __init__(self, catalog, gateway=None, *, model=None, integration_v2=False):
+        self.validator = LiteFinancialValidator(catalog, integration_v2=integration_v2)
+        self.integration_v2 = integration_v2
+        self.integration_context = {}
+        self.requirement_support = {}
         self.builder = EvidenceContextBuilder(catalog)
         self.gateway = gateway
         self.model = model or ModelIdentity(provider="gemini", model="gemini-3.5-flash-lite")
@@ -261,7 +309,8 @@ class LiteVerificationRuntime:
         self.stage_latency_ms = {}
         self.summary = {}
 
-    def verify(self, batch, **_):
+    def verify(self, batch, *, integration_context=None, **_):
+        self.integration_context = integration_context or {}
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         start = perf_counter()
         proofs, pending = [], []
@@ -294,6 +343,22 @@ class LiteVerificationRuntime:
                 )
                 contexts = []
             checked = validation.claims[0]
+            if self.integration_v2:
+                self.validator._check(checked, "integration_v2", "pass", "typed_source_profile")
+                if self.validator._typed_assertion(claim, claim.content):
+                    self.validator._check(
+                        checked, "typed_assertion", "pass", "exact_typed_rendering"
+                    )
+                if re.search(
+                    r"\b(?:khong co|khong du|chua co|thieu) (?:du |day du )?(?:thong tin|du lieu|so lieu|bang chung)\b",
+                    fold(claim.content),
+                ):
+                    self.validator._check(
+                        checked,
+                        "absence_scope",
+                        "undetermined",
+                        "retrieval_miss_is_not_corpus_absence",
+                    )
             # Bind canonical source availability independently, even when values match.
             valid = bool(contexts) and all(c.available for c in contexts)
             valid = valid and claim.candidate_id not in duplicate_ids
@@ -312,7 +377,15 @@ class LiteVerificationRuntime:
                     )
             proof = LiteProof(batch=local, validation=validation)
             proofs.append(proof)
-            if deterministic_state(claim, checked)[0] == "SEMANTIC":
+            state = deterministic_state(claim, checked)[0]
+            needs_binding = (
+                self.integration_v2
+                and claim.kind == "supported_interpretation"
+                and self.integration_context.get("candidate_requirements", {}).get(
+                    claim.candidate_id
+                )
+            )
+            if state == "SEMANTIC" or state == "ACCEPT" and needs_binding:
                 pending.append(proof)
         self.stage_latency_ms["validators"] = (perf_counter() - start) * 1000
         if pending and self.gateway:
@@ -357,6 +430,19 @@ class LiteVerificationRuntime:
                 for h in histories
             ],
         )
+        if self.integration_v2:
+            proposed = self.integration_context.get("candidate_requirements", {})
+            self.summary["supported_requirements"] = {
+                h.outcome.final.candidate_id: (
+                    self.requirement_support.get(h.outcome.final.candidate_id, [])
+                    if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
+                    else []
+                    if h.outcome.final.original_claim.kind == "supported_interpretation"
+                    else proposed.get(h.outcome.final.candidate_id, [])
+                )
+                for h in histories
+                if h.outcome.final.decision == "ACCEPT"
+            }
         return histories
 
     def _semantic(self, proofs):
@@ -369,6 +455,17 @@ class LiteVerificationRuntime:
         for row, proof in zip(rows, proofs, strict=True):
             claim = proof.batch.claims[0]
             calculation = claim.reasoning.calculation if claim.reasoning else None
+            if self.integration_v2:
+                row = dict(row)
+                row.pop("question", None)
+                keys = self.integration_context.get("candidate_requirements", {}).get(
+                    claim.candidate_id, []
+                )
+                row["local_requirements"] = [
+                    r
+                    for r in self.integration_context.get("requirements", [])
+                    if r["requirement_id"] in keys
+                ]
             wire_rows.append(
                 dict(
                     row,
@@ -434,6 +531,15 @@ class LiteVerificationRuntime:
             output_spec=OutputSpec(format="json"),
             constraints=RequestConstraints(timeout_seconds=60),
         )
+        if self.integration_v2:
+            request.messages[0].content += (
+                " Kiểm chứng riêng từng statement, không đòi nó giải toàn câu hỏi. "
+                "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
+                "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "
+                "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
+                "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
+                "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
+            )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
         verdicts, error = {}, "semantic_provider_failure"
         try:
@@ -462,7 +568,17 @@ class LiteVerificationRuntime:
                     matches = [v for v in items if isinstance(v, dict) and v.get("claim_id") == cid]
                     if len(matches) == 1:
                         try:
-                            verdicts[cid] = SemanticVerdict.model_validate(matches[0])
+                            wire = dict(matches[0])
+                            if self.integration_v2:
+                                supported = wire.pop("supported_requirement_ids", [])
+                                allowed = self.integration_context.get(
+                                    "candidate_requirements", {}
+                                ).get(cid, [])
+                                if isinstance(supported, list) and all(
+                                    isinstance(key, str) and key in allowed for key in supported
+                                ):
+                                    self.requirement_support[cid] = list(dict.fromkeys(supported))
+                            verdicts[cid] = SemanticVerdict.model_validate(wire)
                         except ValueError:
                             pass
                 error = "semantic_verdict_missing_or_invalid"

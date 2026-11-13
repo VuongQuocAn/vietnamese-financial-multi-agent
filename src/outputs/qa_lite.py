@@ -468,7 +468,15 @@ def _projection(segments, selected):
     return "\n\n".join(paragraphs), references, bindings
 
 
-def compose_lite(request, selected, *, gateway=None, technical_errors=(), source_available=True):
+def compose_lite(
+    request,
+    selected,
+    *,
+    gateway=None,
+    technical_errors=(),
+    source_available=True,
+    coverage_context=None,
+):
     """Return public fields and auditable metadata; at most one generate(), no retry."""
     started = perf_counter()
     entries = {e.identity.verified_claim_id: e for e in selected}
@@ -672,9 +680,26 @@ def compose_lite(request, selected, *, gateway=None, technical_errors=(), source
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
     released_ids = {key for segment in segments for key in segment["claim_ids"]}
-    trace["coverage"] = _coverage(request, [e for key, e in entries.items() if key in released_ids])
+    released_entries = [e for key, e in entries.items() if key in released_ids]
+    if coverage_context is not None:
+        from ..agents.integration_workspace import answer_coverage
+
+        trace["coverage"] = answer_coverage(coverage_context, released_entries)
+    else:
+        trace["coverage"] = _coverage(request, released_entries)
     if selected and not trace["coverage"]["complete"]:
-        gaps.append(dict(type="B", text=GAP_TEXT["B"]))
+        missing = (
+            [
+                row["text"]
+                for row in trace["coverage"]["requirements"]
+                if row.get("required", True) and not row["verified_claim_ids"]
+            ]
+            if coverage_context is not None
+            else []
+        )
+        gaps.append(
+            dict(type="B", text="Chưa đáp ứng: " + "; ".join(missing) if missing else GAP_TEXT["B"])
+        )
     gaps = list({g["type"]: g for g in gaps}.values())
     text, references, bindings = _projection(segments, selected)
     caveats = list(

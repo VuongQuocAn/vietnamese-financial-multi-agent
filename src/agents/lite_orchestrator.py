@@ -31,6 +31,7 @@ from . import cash_flow_earnings_quality_specialist as cash
 from . import liquidity_leverage_specialist as liquidity
 from . import profitability_specialist as profit
 from .contracts import PlanValidation, SpecialistRole
+from .integration_workspace import IntegrationRequirement, IntegrationWorkspace, evidence_handle
 from .orchestration_contracts import (
     OrchestrationError,
     OrchestrationResult,
@@ -177,10 +178,57 @@ class LiteTask(FinancialModel):
     # Optional retrieval handles, never coverage obligations or claim approvals.
     sources: list[str] = Field(default_factory=list, max_length=16)
     use_graph: bool = False
+    task_id: str | None = None
+    requirement_ids: list[str] = Field(default_factory=list, max_length=16)
+    depends_on: list[str] = Field(default_factory=list, max_length=6)
 
 
 class LitePlan(FinancialModel):
     tasks: list[LiteTask] = Field(default_factory=list, max_length=6)
+    requirements: list[IntegrationRequirement] = Field(default_factory=list, max_length=16)
+
+
+def integration_plan(payload):
+    """Keep independently valid tasks; malformed goals remain visible, never approved."""
+    if not isinstance(payload, dict):
+        return LitePlan(), ["supervisor_invalid_envelope"]
+    requirements, tasks, errors = [], [], []
+    raw_requirements, raw_tasks = payload.get("requirements", []), payload.get("tasks", [])
+    if not isinstance(raw_requirements, list) or not isinstance(raw_tasks, list):
+        return LitePlan(), ["supervisor_invalid_envelope"]
+    if len(raw_requirements) > 16 or len(raw_tasks) > 6:
+        errors.append("supervisor_plan_limit_exceeded")
+    for raw in raw_requirements[:16]:
+        try:
+            requirement = IntegrationRequirement.model_validate(raw)
+            if not requirement.requirement_id.strip() or not requirement.text.strip():
+                raise ValueError("empty_requirement")
+            if any(r.requirement_id == requirement.requirement_id for r in requirements):
+                raise ValueError("duplicate_requirement")
+            requirements.append(requirement)
+        except (ValidationError, ValueError):
+            errors.append("supervisor_invalid_requirement")
+    ids = {r.requirement_id for r in requirements}
+    for index, raw in enumerate(raw_tasks[:6]):
+        try:
+            task = LiteTask.model_validate(raw)
+            task.task_id = task.task_id or f"T{index + 1}"
+            if not task.requirement_ids or set(task.requirement_ids) - ids:
+                raise ValueError("task_requirement_binding_missing")
+            if any(t.task_id == task.task_id for t in tasks):
+                raise ValueError("duplicate_task")
+            tasks.append(task)
+        except (ValidationError, ValueError):
+            errors.append(f"supervisor_invalid_task:T{index + 1}")
+    # Dependencies must point backward; no graph engine or recursive scheduling.
+    seen = set()
+    for task in tasks:
+        if set(task.depends_on) - seen:
+            errors.append("task_dependency_unresolved:" + task.task_id)
+        seen.add(task.task_id)
+    if not requirements or errors or not ids <= {r for t in tasks for r in t.requirement_ids}:
+        errors.append("requirement_plan_incomplete")
+    return LitePlan(tasks=tasks, requirements=requirements), errors
 
 
 def inventory(catalog, context):
@@ -293,13 +341,29 @@ def fallback_plan(question, sources):
 
 
 class SupervisorLite:
-    def __init__(self, gateway=None):
+    def __init__(self, gateway=None, *, integration_v2=False):
         self.gateway = gateway
+        self.integration_v2 = integration_v2
 
     def plan(self, question, context, sources):
         metadata = PlannerLLMMetadata(status="deterministic")
         if self.gateway is None or context.mode == "deterministic":
-            return fallback_plan(question, sources), metadata, []
+            plan = fallback_plan(question, sources)
+            if self.integration_v2:
+                from ..outputs.qa_composer import understand_requirements
+
+                plan.requirements = [
+                    IntegrationRequirement(**r.model_dump())
+                    for r in understand_requirements(question)
+                ]
+                for index, task in enumerate(plan.tasks, 1):
+                    task.task_id = f"T{index}"
+                    task.requirement_ids = [
+                        r.requirement_id
+                        for r in plan.requirements
+                        if any(sources[h]["item"] == r.target_id for h in task.sources)
+                    ]
+            return plan, metadata, []
         prompt = dict(
             instruction=(
                 "Supervisor tài chính. Chọn ít Specialist thực sự cần thiết từ roles trong nguồn. "
@@ -330,6 +394,30 @@ class SupervisorLite:
                 k: {n: v for n, v in s.items() if n != "records"} for k, s in sources.items()
             },
         )
+        if self.integration_v2:
+            prompt["integration_contract"] = dict(
+                instruction=(
+                    "Phân rã TẤT CẢ yêu cầu thành requirements độc lập. "
+                    "Viết tiếng Việt. Giữ original text, từng chỉ tiêu/kỳ/đơn vị và kết luận. "
+                    "Mỗi task phải có task_id, requirement_ids và depends_on:[task_id] nếu cần "
+                    "tổng hợp liên nhánh. Giao kết luận liên nhánh cho một trong ba specialist "
+                    "hiện có, sau task độc lập. Evidence được chia sẻ trong request; role không "
+                    "cấm đọc nguồn khác domain. Tối đa 4 tasks, một supervisor call. "
+                    "Không claim mọi yêu cầu đã đủ, không thay chỉ tiêu bằng mục gần giống. "
+                    "Requirement không hỗ trợ vẫn giữ kind=unsupported. Mỗi requirement chỉ "
+                    "một output; calculation dùng interpretation=true, "
+                    "interpretation_topic=dynamic_calculation, required_indicators, "
+                    "reasoning_operations, reasoning_periods; nhận xét dùng metric_meaning. "
+                    "target_id là canonical item/formula trong inventory; requested_unit là "
+                    "VND/ratio/percent hoặc null. Không quy % thành ratio. "
+                    "Trả {requirements:[...],tasks:[...]}, không field khác."
+                ),
+                requirement_schema=IntegrationRequirement.model_json_schema(),
+                task_schema=LiteTask.model_json_schema(),
+            )
+            contract = prompt.pop("integration_contract")
+            prompt["instruction"] = contract.pop("instruction")
+            prompt.update(contract)
         payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
             return fallback_plan(question, sources), metadata, ["supervisor_payload_limit_fallback"]
@@ -341,7 +429,9 @@ class SupervisorLite:
                 Message(role="system", content=payload),
                 Message(role="user", content=question),
             ],
-            generation=GenerationParameters(temperature=0.0, max_output_tokens=900),
+            generation=GenerationParameters(
+                temperature=0.0, max_output_tokens=2500 if self.integration_v2 else 900
+            ),
             output_spec=OutputSpec(format="json"),
             constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
         )
@@ -356,7 +446,12 @@ class SupervisorLite:
             provenance=response.provenance,
         )
         if response.status != "success" or not isinstance(response.output, JSONOutput):
+            if self.integration_v2:
+                return LitePlan(), metadata, ["supervisor_provider_failure"]
             return fallback_plan(question, sources), metadata, ["supervisor_provider_failure"]
+        if self.integration_v2:
+            plan, errors = integration_plan(response.output.payload)
+            return plan, metadata, errors
         try:
             plan = LitePlan.model_validate(response.output.payload)
         except ValidationError:
@@ -374,9 +469,11 @@ class FinancialLiteOrchestrator:
         graph_enabled=True,
         composition=None,
         document_repository=None,
+        integration_v2=False,
     ):
         self.catalog, self.gateway = catalog, gateway
-        self.supervisor = supervisor or SupervisorLite(gateway)
+        self.integration_v2 = integration_v2
+        self.supervisor = supervisor or SupervisorLite(gateway, integration_v2=integration_v2)
         self.graph_enabled = graph_enabled
         self.composition, self.document_repository = composition, document_repository
 
@@ -411,6 +508,22 @@ class FinancialLiteOrchestrator:
 
     def _specialist(self, task, upstream, question, context):
         module, proposal = DOMAINS[task.specialist]
+        render = module._render
+        if self.integration_v2:
+            from .specialist_common import _number
+
+            def render(selected, evidence):
+                if selected.meaning == "fact_value" and selected.kind == evidence.kind == "fact":
+                    if selected.period != evidence.period:
+                        raise ValueError("wrong_period")
+                    label = "tại ngày" if len(evidence.period) > 4 else "kỳ"
+                    scale = f" (hệ số đơn vị {evidence.scale})" if evidence.scale != "1" else ""
+                    return (
+                        f"{evidence.label} {label} {evidence.period} là "
+                        f"{_number(evidence.value)} {evidence.unit}{scale}."
+                    )
+                return module._render(selected, evidence)
+
         result = SpecialistResult(
             question=question, role=task.specialist, upstream_status=upstream.status
         )
@@ -419,6 +532,21 @@ class FinancialLiteOrchestrator:
             "liquidity_and_leverage": {"debt_to_assets": "assets"},
         }.get(task.specialist, {})
         item_labels = dict(module.ITEM_LABELS)
+        metric_labels = dict(getattr(module, "METRIC_LABELS", {}))
+        if self.integration_v2:
+            item_labels = {
+                key: value
+                for domain, _ in DOMAINS.values()
+                for key, value in domain.ITEM_LABELS.items()
+            }
+            metric_labels = {
+                key: value
+                for domain, _ in DOMAINS.values()
+                for key, value in getattr(domain, "METRIC_LABELS", {}).items()
+            }
+            roles.update(
+                gross_margin="revenue", revenue_yoy="current_revenue", debt_to_assets="assets"
+            )
         for match in upstream.evidence_bundle.facts:
             record = match.record
             if record.canonical_item_id:
@@ -430,10 +558,13 @@ class FinancialLiteOrchestrator:
             upstream,
             result,
             item_labels=item_labels,
-            metric_labels=getattr(module, "METRIC_LABELS", {}),
+            metric_labels=metric_labels,
             period_roles=roles,
             balance_sheet=task.specialist == "liquidity_and_leverage",
         )
+        if self.integration_v2:
+            for evidence in result.supporting_evidence:
+                evidence.evidence_id = evidence_handle(evidence)
         choices = _numeric_proposals(result.supporting_evidence)
         by_handle = {choice["evidence_id"]: choice for choice in choices}
         graph_context = compact_graph_context(
@@ -521,6 +652,21 @@ class FinancialLiteOrchestrator:
                 for e in result.supporting_evidence
             ],
         )
+        if self.integration_v2:
+            prompt["assigned_requirements"] = [
+                r.model_dump(mode="json")
+                for r in self.workspace.requirements
+                if r.requirement_id in task.requirement_ids
+            ]
+            prompt["shared_tasks"] = self.workspace.tasks
+            prompt["user_question"] = task.objective
+            prompt["instruction"] += (
+                " Chỉ thực hiện assigned_requirements; shared_tasks là kết quả các nhánh, "
+                "không phải verdict M6. Dùng shared evidence/proofs cho kết luận liên nhánh, "
+                "không tin claim nhánh khác như nguồn. Không báo thiếu phần của task khác. "
+                "goal phải là text của requirement đang giải; thiếu evidence chỉ ghi "
+                "missing_information trong scope lượt truy xuất, không khẳng định corpus thiếu."
+            )
         deterministic = self.gateway is None or context.mode == "deterministic"
         if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
             deterministic = True
@@ -531,7 +677,7 @@ class FinancialLiteOrchestrator:
             result=result,
             prompt=prompt,
             proposal_type=LiteProposal,
-            render=module._render,
+            render=render,
             prefix="m5-lite-" + task.specialist,
             deterministic=deterministic,
             emit_derived=True,
@@ -548,6 +694,28 @@ class FinancialLiteOrchestrator:
                                 reasons=[relation["id"], candidate.reasoning.goal],
                             )
                         )
+        if self.integration_v2:
+            # Numeric source candidates survive a failed/empty prose branch.
+            numeric = SpecialistResult(
+                question=task.objective,
+                role=task.specialist,
+                upstream_status=upstream.status,
+                supporting_evidence=result.supporting_evidence,
+            )
+            generate_candidates(
+                gateway=None,
+                model=context.model,
+                result=numeric,
+                prompt={},
+                proposal_type=proposal,
+                render=render,
+                prefix="m5-v2-numeric-" + task.specialist,
+                deterministic=True,
+            )
+            seen = {c.content for c in result.candidates}
+            result.candidates.extend(c for c in numeric.candidates if c.content not in seen)
+            if result.candidates and result.status == "abstained":
+                result.status = "partial"
         return result
 
     def run(self, *, question, context):
@@ -569,6 +737,19 @@ class FinancialLiteOrchestrator:
             )
         )
         output.caveats.extend(gaps)
+        workspace, prepared = None, []
+        if self.integration_v2:
+            requirements = plan.requirements or [
+                IntegrationRequirement(
+                    requirement_id="R-unresolved", text=question, kind="unsupported"
+                )
+            ]
+            workspace = self.workspace = IntegrationWorkspace(requirements)
+            if gaps:
+                output.errors.append(
+                    OrchestrationError(stage="planning", code="integration_plan_incomplete")
+                )
+                output.stop_conditions.extend(gaps)
         tools = FinancialRetrievalTools(self.catalog)
         calculator = FinancialCalculator(self.catalog)
         evidence_tools = EvidenceRetrievalTools(self.catalog)
@@ -593,9 +774,17 @@ class FinancialLiteOrchestrator:
         )
         for index, task in enumerate(plan.tasks):
             execution = SpecialistExecution(
-                execution_id=f"m5-lite-{index}", role=task.specialist, assigned_requirement_ids=[]
+                execution_id=task.task_id or f"m5-lite-{index}",
+                role=task.specialist,
+                assigned_requirement_ids=task.requirement_ids,
             )
             output.specialist_executions.append(execution)
+            if workspace is not None:
+                workspace.tasks[execution.execution_id] = dict(
+                    requirement_ids=task.requirement_ids,
+                    depends_on=task.depends_on,
+                    status="retrieving",
+                )
             bundle = ExecutionEvidenceBundle()
             upstream = all_upstream.model_copy(update={"evidence_bundle": bundle}, deep=True)
 
@@ -667,7 +856,9 @@ class FinancialLiteOrchestrator:
                 )
                 for handle in dict.fromkeys(selected):
                     source = sources.get(handle)
-                    if source is None or task.specialist not in source["roles"]:
+                    if source is None or (
+                        not self.integration_v2 and task.specialist not in source["roles"]
+                    ):
                         bundle.limitations.append("unknown_or_foreign_source:" + handle)
                         continue
                     for record in source["records"]:
@@ -751,6 +942,11 @@ class FinancialLiteOrchestrator:
                         bundle.graph_contexts.append(response)
                         if response.status != "found":
                             bundle.limitations.extend(response.reasons)
+                if workspace is not None:
+                    workspace.merge(bundle)
+                    workspace.tasks[execution.execution_id]["status"] = "retrieved"
+                    prepared.append((task, execution, bundle))
+                    continue
                 upstream.status = "partial" if bundle.limitations else "completed"
                 result = self._specialist(task, upstream, question, context)
                 result.limitations.extend(bundle.limitations)
@@ -771,6 +967,8 @@ class FinancialLiteOrchestrator:
                     role=task.specialist,
                 )
                 output.errors.append(execution.error)
+                if workspace is not None:
+                    workspace.tasks[execution.execution_id]["status"] = "technical_error"
             output.trace.append(
                 StageExecution(
                     stage="specialist_execution",
@@ -779,7 +977,65 @@ class FinancialLiteOrchestrator:
                     reasons=[task.objective, *bundle.limitations],
                 )
             )
+        if workspace is not None:
+            all_upstream.evidence_bundle = workspace.evidence
+            for task, execution, bundle in prepared:
+                state = workspace.tasks[execution.execution_id]
+                if not task.requirement_ids or any(
+                    workspace.tasks.get(key, {}).get("status") not in {"generated", "partial"}
+                    for key in task.depends_on
+                ):
+                    state["status"] = "dependency_unavailable"
+                    execution.missing_requirement_ids = task.requirement_ids
+                    continue
+                try:
+                    upstream = all_upstream.model_copy(deep=True)
+                    upstream.status = "partial" if bundle.limitations else "completed"
+                    result = self._specialist(task, upstream, task.objective, context)
+                    execution.result, execution.llm = result, result.llm
+                    execution.status = result.status
+                    state.update(
+                        status=result.status,
+                        candidate_statements=[c.content for c in result.candidates],
+                        candidate_proofs=[
+                            c.reasoning.model_dump(mode="json")
+                            for c in result.candidates
+                            if c.reasoning and c.reasoning.calculation
+                        ],
+                        missing_inputs=result.missing_evidence,
+                    )
+                    output.usage.stages[execution.execution_id] = result.llm
+                    output.missing_evidence.extend(
+                        result.missing_evidence + result.limitations + bundle.limitations
+                    )
+                    if "specialist_processing_failure" in result.limitations:
+                        output.errors.append(
+                            OrchestrationError(
+                                stage="specialist_execution",
+                                code="specialist_output_invalid",
+                                role=task.specialist,
+                            )
+                        )
+                except Exception as error:
+                    state["status"] = "technical_error"
+                    execution.error = OrchestrationError(
+                        stage="specialist_execution",
+                        code="specialist_execution_failed",
+                        error_type=type(error).__name__,
+                        role=task.specialist,
+                    )
+                    output.errors.append(execution.error)
+                output.trace.append(
+                    StageExecution(
+                        stage="specialist_execution",
+                        outcome=execution.status,
+                        role=task.specialist,
+                        reasons=[task.objective, *bundle.limitations],
+                    )
+                )
         output.candidates, output.conflicts = aggregate_candidates(output.specialist_executions)
+        if workspace is not None:
+            output.integration_context = workspace.export(output.candidates)
         output.status = (
             (
                 "partial"

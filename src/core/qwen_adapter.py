@@ -214,7 +214,7 @@ class QwenAdapter:
             raise ValueError
         spec = request.output_spec
         output = (
-            parse_json_output(text, schema_ref=spec.schema_ref)
+            parse_json_output(text, schema_ref=spec.schema_ref, allow_markdown_fence=True)
             if spec is not None and spec.format == "json"
             else TextOutput(format="text", text=text)
         )

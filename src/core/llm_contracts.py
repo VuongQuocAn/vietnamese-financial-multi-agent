@@ -16,6 +16,7 @@ from pydantic import (
     ValidationError,
     field_serializer,
     field_validator,
+    model_serializer,
     model_validator,
 )
 
@@ -216,11 +217,24 @@ class JSONOutput(ContractModel):
     ]
     schema_ref: SchemaReference | None = None
     validation: SchemaValidation | None = None
+    transport_wrapper: Literal["markdown_json_fence"] | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_transport(self, handler):
+        wire = handler(self)
+        if self.transport_wrapper is None:
+            wire.pop("transport_wrapper", None)
+        return wire
 
     @model_validator(mode="after")
     def consistent(self) -> "JSONOutput":
         try:
-            decoded = _decode(self.raw_text)
+            text = self.raw_text.strip()
+            if self.transport_wrapper == "markdown_json_fence":
+                if not text.startswith("```json\n") or not text.endswith("\n```"):
+                    raise ValueError("Transport wrapper does not match raw text")
+                text = text[8:-4]
+            decoded = _decode(text)
         except (ValueError, RecursionError):
             if self.validation_status != "invalid_json" or self.payload is not None:
                 raise ValueError("Invalid JSON requires invalid_json and null payload") from None
@@ -251,10 +265,15 @@ class JSONOutput(ContractModel):
         return self
 
 
-def parse_json_output(raw_text: str, *, schema_ref: SchemaReference | None = None) -> JSONOutput:
+def parse_json_output(
+    raw_text: str, *, schema_ref: SchemaReference | None = None, allow_markdown_fence: bool = False
+) -> JSONOutput:
     """Chỉ parse syntax; không bao giờ tự sinh schema_valid/schema_invalid."""
     try:
-        payload = _decode(raw_text)
+        text = raw_text.strip()
+        if allow_markdown_fence and text.startswith("```json\n") and text.endswith("\n```"):
+            text = text[8:-4]
+        payload = _decode(text)
         status = "unverified" if schema_ref else "json_valid"
     except (ValueError, RecursionError):
         payload, status = None, "invalid_json"
@@ -264,6 +283,9 @@ def parse_json_output(raw_text: str, *, schema_ref: SchemaReference | None = Non
         payload=payload,
         validation_status=status,
         schema_ref=schema_ref,
+        transport_wrapper="markdown_json_fence"
+        if allow_markdown_fence and text != raw_text.strip()
+        else None,
     )
 
 

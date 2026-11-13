@@ -11,6 +11,8 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 
 class FinancialQARequest(VietnameseQARequest):
+    integration_v2: bool = False
+    integration_lane: Literal["financial", "document"] | None = None
     m5_lite: bool = False
     m5_graph: bool = True
     m6_lite: bool = False
@@ -43,6 +45,7 @@ class CandidateOutcome(FinancialModel):
 
 
 class PipelineTrace(FinancialModel):
+    integration_context: dict = Field(default_factory=dict)
     verification_mode: Literal["legacy", "lite"] = "legacy"
     m6_lite: dict = Field(default_factory=dict)
     answer_mode: Literal["legacy", "lite"] = "legacy"

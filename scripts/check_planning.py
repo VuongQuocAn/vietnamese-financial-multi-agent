@@ -9,7 +9,7 @@ from urllib.parse import unquote
 
 STATUSES = {"TODO", "READY", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"}
 TASK_ID = re.compile(
-    r"(?:E2E-GEN-\d{2}|QWEN-(?:QA|GEN)-\d{2}|MODEL-(?:CTX|SERVE)-\d{2}|EF-CORE-\d{2}|CORE-(?:FLOW|PERIOD)-\d{2}|(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|(?:M[567]|E2E)-LITE-\d{2}|QA-Q\d{2}|QA-Fix-\d{2})"
+    r"(?:ARCH-RESET-\d{2}|V2-INT-\d{2}|E2E-GEN-\d{2}|QWEN-(?:QA|GEN)-\d{2}|MODEL-(?:CTX|SERVE)-\d{2}|EF-CORE-\d{2}|CORE-(?:FLOW|PERIOD)-\d{2}|(?:M[0-8]|W|D|E2E|GEN|ARCH|INT|QA|EXT|EF|PERF|REC|CHAT|FIX)-\d{2}[a-z]?|GEN-\d{2}-Fix-[A-Z]|(?:M[567]|E2E)-LITE-\d{2}|QA-Q\d{2}|QA-Fix-\d{2})"
 )
 COUNT_ORDER = ("DONE", "IN_PROGRESS", "BLOCKED", "TODO", "READY", "REVIEW")
 
@@ -124,6 +124,8 @@ def check(root: Path) -> int:
         milestones.append("MODEL")
     if any(task[2] == "QWEN" for task in tasks.values()):
         milestones.append("QWEN")
+    if any(task[2] == "V2" for task in tasks.values()):
+        milestones.append("V2")
     require(len(counts) == len(milestones) + 1, "Dashboard must contain milestones and TOTAL")
     for row, milestone in zip(counts, [*milestones, "TOTAL"], strict=True):
         subset = [task for task in tasks.values() if milestone == "TOTAL" or task[2] == milestone]

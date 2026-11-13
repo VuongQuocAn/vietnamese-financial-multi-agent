@@ -137,7 +137,7 @@ class DeterministicFinancialValidator:
         )
         if not claim.supporting_evidence:
             add("supporting_evidence", "undetermined", "supporting_evidence_missing")
-        assertion = extract_assertion(claim.content)
+        assertion = self._assertion(claim, claim.content)
         if claim.kind == "supported_interpretation" and claim.analysis_premises:
             self._analysis(batch, claim, result)
             if not claim.metric_ids and not any(
@@ -160,6 +160,9 @@ class DeterministicFinancialValidator:
             else "no_interpretation_conclusion",
             kind="unsupported_inference",
         )
+
+    def _assertion(self, claim, statement):
+        return extract_assertion(statement)
 
     def _analysis(self, batch, claim, result):
         if claim.reasoning is not None:
@@ -196,7 +199,7 @@ class DeterministicFinancialValidator:
                 ),
             )
             sub = ClaimValidationResult(candidate_id=claim.candidate_id, claim_kind=claim.kind)
-            self._fact(batch, local, sub, extract_assertion(statement))
+            self._fact(batch, local, sub, self._assertion(local, statement))
             for check in sub.checks:
                 check.finding_id += f":premise-{index}"
             result.checks.extend(sub.checks)
@@ -285,9 +288,9 @@ class DeterministicFinancialValidator:
                 local_batch.context.period = None
                 local_batch.context.reporting_year = None
             if source.calculation:
-                self._metric(local_batch, local, sub, extract_assertion(statement))
+                self._metric(local_batch, local, sub, self._assertion(local, statement))
             else:
-                self._fact(local_batch, local, sub, extract_assertion(statement))
+                self._fact(local_batch, local, sub, self._assertion(local, statement))
             for check in sub.checks:
                 check.finding_id += f":premise-{index}"
             result.checks.extend(sub.checks)
