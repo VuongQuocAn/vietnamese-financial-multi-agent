@@ -432,6 +432,25 @@ def resolve_requirements(plan, sources):
             requirement.reason, requirement.target_id = error, None
             continue
         requirement.required_indicators = list(dict.fromkeys(indicators))
+        if requirement.interpretation_topic == "dynamic_calculation":
+            requirement.requested_unit = {"lần": "ratio", "%": "percent", "đồng": "VND"}.get(
+                requirement.requested_unit, requirement.requested_unit
+            )
+            # A named result may be absent from the catalog; its explicitly
+            # declared operands still have independent canonical bindings.
+            for item in requirement.required_indicators:
+                for period in dict.fromkeys([requirement.period, *requirement.reasoning_periods]):
+                    operand_handle, operand_error = resolve_source(
+                        item, sources, [period] if period else []
+                    )
+                    if operand_error or sources[operand_handle]["kind"] != "fact":
+                        continue
+                    for task in plan.tasks:
+                        if (
+                            requirement.requirement_id in task.requirement_ids
+                            and operand_handle not in task.sources
+                        ):
+                            task.sources.append(operand_handle)
         if not requirement.target_id or requirement.kind not in {"fact", "metric", "explanation"}:
             continue
         handle, error = resolve_source(

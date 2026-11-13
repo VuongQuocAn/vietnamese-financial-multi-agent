@@ -467,7 +467,17 @@ def test_dynamic_goal_without_catalog_name_still_requires_m6_semantic_binding():
         required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
         requested_unit="ratio",
     )
-    resolve_requirements(LitePlan(requirements=[requirement]), sources)
+    task = LiteTask(
+        task_id="T",
+        specialist="liquidity_and_leverage",
+        objective=requirement.text,
+        requirement_ids=["dynamic"],
+        sources=[],
+    )
+    requirement.requested_unit = "lần"
+    resolve_requirements(LitePlan(requirements=[requirement], tasks=[task]), sources)
+    assert requirement.requested_unit == "ratio"
+    assert {sources[h]["item"] for h in task.sources} == set(requirement.required_indicators)
     assert requirement.target_id is None and requirement.reason == "source_unknown"
     assert matches_requirement(claim, requirement)
     for mutation in (
