@@ -146,6 +146,13 @@ def test_explicit_associations_and_unknown_financial_fact_preserved():
     assert association is not None
     assert association.fact == f.observation_identity()
     assert association.matching_sources == [table.member_sources[1]]
+    # Equal selector keys still require the complete page identity. Year/symbol
+    # are intentionally outside source_key and must not be lost by its index.
+    for field, value in (("year", "1900"), ("symbol", "foreign-symbol")):
+        altered = f.model_copy(deep=True)
+        setattr(altered.sources[0].reference.anchor.page, field, value)
+        assert altered.sources[0].source_key() == f.sources[0].source_key()
+        assert associate_fact(altered, table) is None
     assert associate_fact(f, text) is None  # Cùng trang chưa đủ.
     f.sources = [table.sources[0].model_copy(deep=True)]
     f.sources[0].reference.source_pointer = None

@@ -79,6 +79,10 @@ def associate_fact(
         for s in [*fact.sources, *sources]
     ):
         return None
+    fact_pages = {}
+    for other in fact.sources:
+        if other.reference is not None:
+            fact_pages.setdefault(other.source_key(), []).append(other.reference.anchor.page)
     matches = []
     for source in sources:
         ref = source.reference
@@ -89,12 +93,7 @@ def associate_fact(
             continue
         if not (ref.source_pointer or a.element_id or a.table_id or a.cell_id or a.line_id):
             continue
-        if any(
-            other.reference is not None
-            and a.page == other.reference.anchor.page
-            and source.source_key() == other.source_key()
-            for other in fact.sources
-        ):
+        if any(a.page == page for page in fact_pages.get(source.source_key(), ())):
             matches.append(source.model_copy(deep=True))
     if not matches:
         return None
