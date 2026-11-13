@@ -1,5 +1,16 @@
 # Trạng thái hiện tại
 
+## ViFinBench-P1A-Refine — Regenerate Single-hop QA
+
+**REVIEW**, ngày13/11/2026; [implementation d7a5b97](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d7a5b97f75d0fcd7e1ed08b5d7c7968b539b4a77).
+[Dataset](../ViFinBench/benchmark/single_hop/pilot.jsonl), [review/mapping](../docs/vifinbench-p1a-single-hop.md).
+15QA=5Easy/7Medium/3Hard;10natural/5formal;1KEEP/11REWRITE/3REPLACE;
+12doanh nghiệp/12tài liệu;10bảng/5văn bản. Answer object/số nguyên string/ngày ISO;
+quote đủ header/hàng/nhóm, row_label/column_header và key_points cho text nhiều ý.
+Focused schema/normalization/reference/ô đáp án PASS; planning/Ruff/diff PASS local.
+123neutral hashes/audit và local edits ngoài task giữ nguyên; không API/fullCI/runtime.
+Next action: Tech Lead review15QA đã refine và nghiệm thu P1A-Refine.
+
 ## ViFinBench-P1A — Single-hop QA Pilot
 
 **REVIEW**, ngày13/11/2026. [Implementation 5f2531f](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5f2531f8dfaaa4f999a4b90739d9ced6237fae97);
