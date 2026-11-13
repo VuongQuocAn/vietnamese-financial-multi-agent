@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## ViFinBench-P1A — Single-hop QA Pilot
+
+**REVIEW**, ngày13/11/2026. [Implementation 5f2531f](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5f2531f8dfaaa4f999a4b90739d9ced6237fae97);
+[dataset](../ViFinBench/benchmark/single_hop/pilot.jsonl), [review](../docs/vifinbench-p1a-single-hop.md).
+15QA=5Easy/7Medium/3Hard;12doanh nghiệp/12tài liệu/15trang; B01/B02/B03/B09.
+JSONL/schema/phân bố/nguồn/ô đáp án PASS local; đọc lại15mẫu Single-hop;
+planning/Ruff/diff PASS.123neutral hashes và audit giữ nguyên; local edits ngoài
+task giữ nguyên. Không fullCI/Gemini/API hoặc P1B/P1C; chờ Tech Lead nghiệm thu.
+Next action: Tech Lead review15QA và nghiệm thu P1A.
+
 ## ViFinBench-DATA-AUDIT-01 — Neutral Corpus
 
 **REVIEW**, ngày13/11/2026; [báo cáo](../docs/vifinbench-data-audit-01.md).
