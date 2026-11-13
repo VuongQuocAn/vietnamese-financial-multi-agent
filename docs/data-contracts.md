@@ -14,6 +14,10 @@ parser chuyển nguyên object sang `analyses`, giữ raw response và trace
 `analysis_envelope_normalized`. Không sửa text/giá trị/phép toán/nguồn, không cứu
 object sai schema. Grounding, Calculator, M6 và admission vẫn chạy như bình thường;
 V1 không bật chuẩn hóa này.
+Model-authored `limitations` của pure `derived_fact` chỉ giữ ở raw output, không
+đi kèm proof số đã render: kiểm số học không xác minh mệnh đề thiếu dữ liệu hoặc
+nhận xét trong notes. Source/tool caveats vẫn giữ; reasoned conclusions giữ toàn
+bộ limitations để M6 kiểm chứng.
 
 Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
 `integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng

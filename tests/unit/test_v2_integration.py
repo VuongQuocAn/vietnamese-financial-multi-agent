@@ -63,6 +63,22 @@ def test_v2_analysis_envelope_normalization_keeps_untrusted_content_and_strict_s
     assert normalize_candidate_envelope(invalid) is invalid
     unknown = dict(payload, claims=[dict(proposal, accepted=True)])
     assert normalize_candidate_envelope(unknown) is unknown
+    annotated = dict(
+        payload,
+        claims=[],
+        analyses=[
+            dict(
+                proposal,
+                limitations=["Unverified absence assertion must not accompany verified arithmetic"],
+            )
+        ],
+    )
+    clean = normalize_candidate_envelope(annotated)
+    assert clean["analyses"][0]["limitations"] == []
+    assert annotated["analyses"][0]["limitations"]  # retained verbatim in raw output
+    narrative = dict(annotated["analyses"][0], claim_type="reasoned_conclusion")
+    semantic = dict(payload, claims=[], analyses=[narrative])
+    assert normalize_candidate_envelope(semantic) is semantic  # M6 must assess its limits
 
 
 def balance_reasoning_case(formula, operator):

@@ -68,7 +68,9 @@ def normalize_candidate_envelope(payload):
     """Relocate strictly typed analyses from a provider's numeric claims slot.
 
     No text, values, operations or evidence IDs are repaired. The unchanged
-    analysis still passes ordinary grounding, Calculator and M6 gates.
+    analysis still passes ordinary grounding, Calculator and M6 gates. Model
+    limitations on a pure arithmetic proposal stay in raw output: deterministic
+    arithmetic does not verify those additional prose assertions.
     """
     if not isinstance(payload, dict) or not isinstance(payload.get("claims"), list):
         return payload
@@ -85,7 +87,19 @@ def normalize_candidate_envelope(payload):
             except ValueError:
                 pass
         remaining.append(raw)
-    return dict(payload, claims=remaining, analyses=[*analyses, *moved]) if moved else payload
+    cleaned = []
+    changed = bool(moved)
+    for raw in [*analyses, *moved]:
+        if isinstance(raw, dict) and raw.get("claim_type") == "derived_fact":
+            try:
+                AnalysisProposal.model_validate(raw)
+                if raw.get("limitations"):
+                    raw = dict(raw, limitations=[])
+                    changed = True
+            except ValueError:
+                pass
+        cleaned.append(raw)
+    return dict(payload, claims=remaining, analyses=cleaned) if changed else payload
 
 
 def compact_graph_context(contexts, evidence):
