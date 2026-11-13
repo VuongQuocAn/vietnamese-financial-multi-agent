@@ -323,6 +323,7 @@ class DeterministicFinancialValidator:
                         )
                     },
                     [s.operation for s in computation.steps],
+                    independent_branches=getattr(self, "integration_v2", False),
                 )
                 if computation != expected:
                     raise ValueError("dynamic_replay_mismatch")

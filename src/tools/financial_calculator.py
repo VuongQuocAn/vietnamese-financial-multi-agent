@@ -262,9 +262,9 @@ class FinancialCalculator:
         self._catalog = isolated_catalog(catalog)
         self._retrieval = FinancialRetrievalTools(self._catalog)
 
-    def calculate_dynamic(self, references, operations):
+    def calculate_dynamic(self, references, operations, *, independent_branches=False):
         """Hydrate operands from canonical sources, never caller-provided values."""
-        operands, contexts = {}, []
+        operands, contexts = {}, {}
         for key, reference in references.items():
             if reference.kind != "fact" or reference.observation is None:
                 raise ValueError("dynamic_fact_reference_required")
@@ -332,9 +332,9 @@ class FinancialCalculator:
                 )
             ):
                 raise ValueError("dynamic_operand_unverified")
-            contexts.append(
+            contexts[key] = {
                 (fact.context.period_type, fact.context.reporting_scope, fact.context.currency)
-            )
+            }
             operands[key] = DynamicOperand(
                 reference=reference,
                 value=str(fact.value.normalized_value),
@@ -345,7 +345,15 @@ class FinancialCalculator:
                 document_id=fact.document_id,
                 snapshot_id=fact.snapshot_id,
             )
-        if len(set(contexts)) != 1:
+        if independent_branches:
+            for operation in operations:
+                if any(key not in contexts for key in operation.inputs):
+                    raise ValueError("dynamic_dependency_invalid")
+                context = set().union(*(contexts[key] for key in operation.inputs))
+                if len(context) != 1:
+                    raise ValueError("dynamic_reporting_context_mismatch")
+                contexts[operation.operation_id] = context
+        elif len(set().union(*contexts.values())) != 1:
             raise ValueError("dynamic_reporting_context_mismatch")
         # Across-period operations are explicit and same-filing. Stock/flow mixing
         # and cross-document accounting comparability remain unavailable.

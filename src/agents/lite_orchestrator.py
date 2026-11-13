@@ -31,6 +31,7 @@ from . import cash_flow_earnings_quality_specialist as cash
 from . import liquidity_leverage_specialist as liquidity
 from . import profitability_specialist as profit
 from .contracts import PlanValidation, SpecialistRole
+from .grounded_observations import observation_proposal
 from .integration_workspace import (
     INTERPRETATION_TERMS,
     IntegrationRequirement,
@@ -448,7 +449,7 @@ def resolve_requirements(plan, sources):
         # provider set those flags. Explicit interpretation requests keep them.
         text = normalize(requirement.text)
         if (
-            source["kind"] == "fact"
+            source["kind"] in {"fact", "metric"}
             and not requirement.reasoning_operations
             and requirement.interpretation_topic != "dynamic_calculation"
             and re.match(r"^(?:tinh|tim|neu)\b", text)
@@ -457,6 +458,40 @@ def resolve_requirements(plan, sources):
             requirement.interpretation = False
             requirement.interpretation_topic = None
         targets[requirement.requirement_id] = source
+        if requirement.interpretation_topic != "dynamic_calculation":
+            # A resolved requested metric is already an executable catalog source.
+            # Models sometimes select only its operands in task.sources. Retrieve
+            # that same unambiguous target too, instead of asking another LLM to
+            # reconstruct the formula that M4 can execute and M6 replay.
+            for task in plan.tasks:
+                if (
+                    requirement.requirement_id in task.requirement_ids
+                    and handle not in task.sources
+                ):
+                    task.sources.append(handle)
+    # Narrative plans may name the numeric requirement IDs they depend on.
+    # Expand only resolved references, preserving unknown obligations visibly.
+    for requirement in plan.requirements:
+        if requirement.answer_goal == "value":
+            continue
+        indicators = []
+        for reference in requirement.required_indicators:
+            source = targets.get(reference)
+            if source is None:
+                matches = [
+                    s for h, s in sources.items() if h == reference or s["item"] == reference
+                ]
+                source = matches[0] if len({s["item"] for s in matches}) == 1 else None
+            if source is None:
+                indicators.append(reference)
+            elif source["kind"] == "fact":
+                indicators.append(source["item"])
+            else:
+                indicators.extend(
+                    o.canonical_item_id
+                    for o in source["records"][0].definition.compatibility.operands
+                )
+        requirement.required_indicators = list(dict.fromkeys(indicators))
     return targets
 
 
@@ -1061,10 +1096,16 @@ class FinancialLiteOrchestrator:
                 "Thiếu evidence chỉ báo missing_information trong scope được giao."
             )
         deterministic = self.gateway is None or context.mode == "deterministic"
+        observation = None
         if self.integration_v2:
             assigned = [
                 r for r in self.workspace.requirements if r.requirement_id in task.requirement_ids
             ]
+            observation = observation_proposal(
+                assigned, result.supporting_evidence, self.workspace.question
+            )
+            if observation is not None:
+                deterministic = True
             # The numeric path already emits these exact facts/approved metrics.
             # Reserve generation for new arithmetic or actual interpretation.
             if assigned and all(
@@ -1101,6 +1142,7 @@ class FinancialLiteOrchestrator:
             emit_derived=True,
             normalize_payload=normalize_candidate_envelope if self.integration_v2 else None,
             operation_inputs_only=self.integration_v2,
+            candidate_analyses=[observation] if observation is not None else None,
         )
         for candidate in result.candidates:
             if candidate.reasoning:

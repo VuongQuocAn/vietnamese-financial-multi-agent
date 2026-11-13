@@ -764,6 +764,32 @@ def test_numeric_only_specialist_reuses_typed_path_without_model_call():
     assert result.candidates
     engine.gateway.generate.assert_not_called()
     assert all(e.result.llm.status == "deterministic" for e in result.specialist_executions)
+    sources = inventory(catalog, context)
+    metric_handle, metric = next((h, s) for h, s in sources.items() if s["kind"] == "metric")
+    plan = LitePlan(
+        requirements=[
+            IntegrationRequirement(
+                requirement_id="R",
+                text=metric["label"],
+                kind="metric",
+                target_id=metric_handle,
+                period=metric["period"],
+            )
+        ],
+        tasks=[
+            LiteTask(
+                task_id="T",
+                specialist="profitability",
+                objective=metric["label"],
+                requirement_ids=["R"],
+                sources=[h for h, s in sources.items() if s["kind"] == "fact"],
+            )
+        ],
+    )
+    engine.supervisor.plan.return_value = (plan, PlannerLLMMetadata(), [])
+    result = engine.run(question="Numeric metric", context=context)
+    engine.gateway.generate.assert_not_called()
+    assert any(c.calculation is not None for c in result.candidates)
 
 
 def test_aggregation_keeps_declared_premise_order_and_m6_owner():
@@ -824,3 +850,37 @@ def test_v2_readable_arithmetic_preserves_sign_period_and_citations():
     assert "thay đổi" in fields["answer_vi"] and "so với kỳ" in fields["answer_vi"]
     assert fields["answer_vi"].count("thay đổi") == 1
     assert trace["released_claims"] == [key] and fields["citations"]
+
+    from types import SimpleNamespace
+
+    from vietnamese_financial_multi_agent.agents.grounded_observations import observation_proposal
+
+    items = ["b01.current_assets", "b01.short_term_liabilities", "b03.operating_cash_flow"]
+    evidence = [
+        SimpleNamespace(
+            evidence_id=f"E{i}",
+            kind="fact",
+            canonical_item_id=item,
+            value=value,
+            scale="1",
+            unit="VND",
+            company_id="C",
+            document_id="D",
+            snapshot_id="S",
+            period="2030" if i == 2 else "2030-12-31",
+        )
+        for i, (item, value) in enumerate(zip(items, ["100", "200", "50"], strict=True))
+    ]
+    goal = IntegrationRequirement(
+        requirement_id="R",
+        text="Nêu giới hạn thanh khoản",
+        kind="explanation",
+        answer_goal="synthesis",
+        required_indicators=items,
+    )
+    observation = observation_proposal([goal], evidence, goal.text)
+    assert "nhỏ hơn" in observation.statement and "dương" in observation.statement
+    assert "tương lai" in observation.statement and observation.claim_type == "reasoned_conclusion"
+    assert observation_proposal([goal], evidence[:-1], goal.text) is None
+    evidence[-1].period = "2029"
+    assert observation_proposal([goal], evidence, goal.text) is None

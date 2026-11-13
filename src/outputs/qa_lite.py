@@ -191,6 +191,9 @@ def _readable_verified_text(entry):
     Operand labels, periods and result come only from the accepted proof. Compound
     expressions retain the existing exact display. Interpretation stays verbatim.
     """
+    if entry.identity.kind == "approved_metric" and entry.accepted_claim.calculation:
+        # Exact admitted result; operand facts remain separate cited findings.
+        return entry.content
     proof = getattr(entry.accepted_claim, "reasoning", None)
     if not proof or proof.claim_type != "derived_fact" or not proof.calculation:
         return _verified_text(entry)
