@@ -13,6 +13,22 @@ from pathlib import Path
 from time import perf_counter
 
 
+def live_request(original, model):
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+
+    # Validate the changed fields now, before catalog preparation or any call.
+    return FinancialQARequest.model_validate(
+        dict(
+            original,
+            integration_v2=True,
+            model=model,
+            force_refresh=True,
+            max_provider_calls=8,
+            request_timeout_seconds=300.0,
+        )
+    )
+
+
 class ValidationStopped(BaseException):
     """Bypass pipeline fallbacks so a provider failure cannot trigger another call."""
 
@@ -98,7 +114,7 @@ def validate(root, output, case, owner, implementation):
                 token_precount=False,
                 max_total_tokens=None,
                 token_usage_source="provider_reported_when_available",
-                timeout_per_case_seconds=360,
+                timeout_per_case_seconds=300,
                 retries=0,
                 provider_configuration_sha256=fingerprint,
                 model=owner["MODEL_NAME"],
@@ -134,7 +150,6 @@ def validate(root, output, case, owner, implementation):
         sys.path.insert(0, str(output / "frozen/scripts"))
         from evaluate_composition_graph import bbs_catalog
         from evaluate_generalization import pipeline
-        from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
         from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
         from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
         from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
@@ -145,20 +160,12 @@ def validate(root, output, case, owner, implementation):
         gateway = BudgetedGateway(SharedLLMGateway({"qwen": adapter}), output, events, case)
         # Only the original request is reused. Every provider response comes from live Qwen.
         original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
+        request = live_request(original, ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]))
         catalog = bbs_catalog(root)
         service, _ = pipeline(
             root, "BCC_2025" if case == "C10" else "BBS_2025", output / "inputs" / case, catalog
         )
         service.gateway = gateway
-        request = FinancialQARequest.model_validate(original).model_copy(
-            update=dict(
-                integration_v2=True,
-                model=ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]),
-                force_refresh=True,
-                max_provider_calls=8,
-                request_timeout_seconds=360.0,
-            )
-        )
         save(output / f"request-{case}.json", request.model_dump(mode="json"))
         response = service.run(request)
         save(

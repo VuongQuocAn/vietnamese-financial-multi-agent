@@ -63,6 +63,11 @@ def test_numeric_equivalence_and_final_answer_scoring():
 
 def test_live_runner_persists_provider_failure_without_retry(tmp_path):
     runner = script("validate_v2_live")
+    request = runner.live_request(
+        {"question": "A financial question"}, {"provider": "qwen", "model": "model"}
+    )
+    assert request.integration_v2 and request.force_refresh
+    assert request.request_timeout_seconds <= 300
     response = SimpleNamespace(
         status="error",
         error=SimpleNamespace(category="timeout"),
