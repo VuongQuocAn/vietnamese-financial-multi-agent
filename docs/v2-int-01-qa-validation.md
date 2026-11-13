@@ -1,5 +1,30 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Lượt xác nhận được Owner cấp phép — dừng trước API
+
+**REVIEW — chưa có kết quả Qwen mới**, 13/11/2026. Owner cấp đúng một lượt
+C01/C07, tối đa6calls/câu,12calls/60.000tokens tổng; C10 hoãn. Giữ model,
+endpoint/key và generation/timeout hiện có; không retry, lỗi hoặc PARTIAL/FAIL thì dừng.
+Source chạy được đóng băng từ main `811112a08c9f0d9cad9f37f5123c0c30aa4ecad3`,
+implementation `474cc218498512748aaaa96ab463c070b27f9228`; không dùng local runtime ngoài commit.
+
+**Lượt này chưa gửi request tới Qwen:0API calls,0tokens; C07 chưa chạy.**
+Runner bổ sung bước đếm input tokens bằng cached Qwen tokenizer qua subprocess local
+để reserve ngân sách trước mỗi call. Subprocess này vượt timeout45giây trước khi
+gateway gọi provider. Pipeline bắt Exception và ghi `m5:TimeoutExpired`, trả
+`provider_unavailable`,0released claims; elapsed case51,76giây. Đây là lỗi runner
+kiểm thử trước API, **không phải API timeout và không phải verdict FAIL chất lượng Qwen**.
+Không có provider response, M6 decision hoặc câu trả lời tài chính mới để đánh giá.
+
+Đã dừng ngay khi thấy kết quả lỗi; không chạy C07, không sửa runner/runtime để rerun.
+Ngân sách API chưa sử dụng. Không chạy lại offline tests, OCR, benchmark hoặc CI.
+Artifacts riêng ignored: `artifacts/evidence/V2-INT-01/live-confirmation-20261113/`;
+`results.json`, `execution/C01.json`, manifest và `provider-events.json=[]` giữ bằng chứng.
+Credentials chỉ truyền trong bộ nhớ/stdin, không ghi file/traces. Planning/diff checks đạt.
+
+**Next action:** Owner/Tech Lead review lỗi runner trước API và quyết định bước tiếp theo;
+không kết luận các sửa đổi đã được live Qwen xác nhận.
+
 ## Bổ sung sửa source, claim-local period và coverage — 13/11/2026
 
 **REVIEW**, implementation `474cc218498512748aaaa96ab463c070b27f9228`, base `68c22ee` trên main;

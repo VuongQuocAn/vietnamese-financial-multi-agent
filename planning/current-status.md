@@ -12,7 +12,10 @@ Source stage riêng46targeted PASS;1test M7 restoration baseline FAIL được g
 và deselect. RawC01/C07 + savedC04/C10 replay PASS,0API; không đổi source inputs.
 Chưa live xác nhận; C01 thiếu saved semantic verdict, synthesis/constraint còn giới hạn.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead/Owner review offline và quyết định cấp phép một lượt live xác nhận.
+Owner đã cấp1lượt C01/C07,6calls/câu,12calls/60000tokens; C10 hoãn. Lượt xác nhận
+dừng trước API: subprocess đếm token local timeout45s, `m5:TimeoutExpired`, pipeline
+provider_unavailable;0APIcalls/0tokens, C07 chưa chạy. Không sửa/rerun; chưa có Qwen verdict mới.
+Next action: Owner/Tech Lead review lỗi runner trước API và quyết định bước tiếp theo.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

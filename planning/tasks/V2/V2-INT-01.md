@@ -35,6 +35,11 @@ thay boundary tối thiểu, nghiệm thu kiến trúc bằng offline invariants
 
 ## Inputs
 
+Owner cấp phép sau offline: chỉ C01/C07,6calls/câu,12calls/60.000tokens tổng;
+không thay model/endpoint/config, không retry. API lỗi hoặc kết quả PARTIAL/FAIL
+thì dừng, không sửa tiếp. C10 hoãn. Lượt này dừng trước API do tokenizer subprocess
+local timeout;0APIcalls/0tokens, C07 chưa chạy, chưa có kết quả Qwen mới.
+
 [Thiết kế](../../../docs/arch-reset-01-multi-agent-simplification-review.md),
 E2E-GEN-01 saved traces/catalogs/proofs, source hiện có và local edits đã ghi hashes.
 Qwen config Owner cung cấp giữ ngoài Git/log; Owner duyệt3case/18calls/180000tokens,
@@ -94,6 +99,12 @@ Snapshot cuối chưa live xác nhận; không dùng kết quả trước sửa 
 
 ## Implementation Evidence
 
+Lượt xác nhận mới trên source main `811112a08c9f0d9cad9f37f5123c0c30aa4ecad3`
+dừng trước provider: local token-count subprocess timeout45s, `m5:TimeoutExpired`;
+pipeline provider_unavailable,0calls/0tokens/0releases, case51,76s. Đây là lỗi runner,
+không phải API timeout hay FAIL chất lượng Qwen. Không chạy C07/sửa/rerun; giữ traces
+ở `artifacts/evidence/V2-INT-01/live-confirmation-20261113/`. [Báo cáo](../../../docs/v2-int-01-qa-validation.md).
+
 Implementation `474cc218498512748aaaa96ab463c070b27f9228` trên main, base `68c22ee`.
 Raw replay C01:11ACCEPT/1ABSTAIN/2INVESTIGATE,9unique releases,3numeric requirements
 satisfied,26,71%mộtlần; nợ/tài sản và ratio hết false ABSTAIN do global period.
@@ -135,4 +146,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead/Owner review offline và quyết định cấp phép một lượt live xác nhận.
+Next action: Owner/Tech Lead review lỗi runner trước API và quyết định bước tiếp theo.
