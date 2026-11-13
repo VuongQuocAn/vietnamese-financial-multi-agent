@@ -1,5 +1,139 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Cải thiện QA thực tế — kết quả và giới hạn bàn giao
+
+**REVIEW**, 13/11/2026. Source cuối: `5f717726f0e16010f1ce7a3335f249fa7ca369a3`,
+trực tiếp main; `integration_v2` opt-in. **Chưa đạt QA đầy đủ và chưa có xác nhận
+end-to-end hoàn tất trên SHA cuối.** Không lấy tests PASS/M6 ACCEPT làm chất lượng QA.
+
+### Code đã sửa trong V2 hiện tại
+
+- M5 giữ original question và `answer_goal` riêng cho số liệu, phân tích, tổng hợp,
+  giới hạn. Nếu plan chỉ có số, giữ thêm nghĩa vụ gốc và giao task phụ thuộc cho một
+  specialist hiện có. Shared proofs được rút gọn trong prompt; không thêm agent.
+- `integration_plan` chuẩn hóa shorthand calculation/analysis/synthesis/limitation
+  về schema hiện có; dependency task IDs không dùng làm sources. Alias chỉ tiêu rõ
+  trong câu hỏi được bổ sung khi đúng một nguồn/năm xác định được; không đoán source.
+  Không biến năm model tự thêm thành yêu cầu bắt buộc khi câu hỏi không yêu cầu so sánh.
+- `resolve_requirements/run` lấy operand periods từ metric inventory, giữ cột so sánh
+  dù Qwen bỏ reasoning_periods. Proof canonical có thể đáp ứng numeric goal ở task khác;
+  ownership của nhận xét và M6 semantic coverage vẫn được giữ.
+- M6 tiếp tục canonical replay/value/unit/period/type/snapshot/source/citation checks.
+  Nhận xét độc lập nhiều kỳ không bị bắt buộc có phép tính khi không tự tính số mới;
+  arithmetic vẫn replay riêng. Named dynamic goals phải có semantic goal support;
+  intermediate outputs đã replay được xét đúng unit. Ví dụ JSON M6 V2 giữ rõ field
+  `supported_requirement_ids`, không còn mâu thuẫn với hướng dẫn bổ sung phía sau.
+- API phân biệt ngày suy từ câu hỏi và period caller pin tường minh: V2 không áp ngày
+  suy ra cho toàn bộ annual/as-of claims. Explicit period pin vẫn được kiểm tra.
+- M7 gộp nguyên dòng text/proof trùng theo source scope, nhóm theo verified bindings,
+  giữ claim IDs/citations. Chỉ phát hành bound claims và fact operands của chúng;
+  không phát hành cả inventory chỉ vì từng fact ACCEPT. Không tạo prose tài chính
+  mới hoặc dùng M7 để kiểm chứng tài chính lần hai.
+
+Các đoạn chính: `lite_orchestrator.integration_plan/preserve_answer_goal/
+preserve_explicit_facts/retain_requested_periods/run/_specialist`,
+`integration_workspace.matches_requirement/export`, `validators._reasoning`,
+`lite_runtime.verify/_semantic`, `financial_qa_pipeline.execute`,
+`qa_lite._group_verified_segments/compose_lite`. Contracts sidecar ghi tại
+[data-contracts](data-contracts.md). Không sửa OCR, EF-EG, Financial Tools hoặc default V1.
+
+### QA live đã thực sự chạy
+
+Mỗi lượt dùng Gateway Qwen thật, cùng model/endpoint/key; không retry, không token
+pre-count/cap. Giữ6calls/câu,18calls/bộ3câu,300s/câu. PARTIAL/FAIL tiếp tục câu kế;
+chỉ dừng provider/hạ tầng. Không dùng saved responses thay kết quả live.
+
+| Lượt / source | C01 | C07 | C10 | Calls / tokens API |
+| --- | --- | --- | --- | --- |
+| A / d0f0e7c | PARTIAL | PARTIAL | FAIL, internal_error | 12 / 36.927 |
+| B / 9526fa0 | PARTIAL | PARTIAL | FAIL, verification_blocked | 16 / 57.305 |
+| C / 5f71772 | INTERRUPTED, chưa final | NOT_RUN sau điểm dừng | NOT_RUN sau điểm dừng | 5 / 20.703 |
+
+Tổng phiên **33calls,114.935tokens API báo,0usage unknown,0retry,0provider errors
+quan sát được**. Hai lượt đủ bộ được giữ nguyên, không chỉ chọn lượt đẹp. Lượt C
+không kết thúc: sau5provider responses thành công không còn process runner và chưa
+có `execution/C01.json`/final answer. State cuối còn IN_PROGRESS; khi resume đã kiểm
+không có process và ghi STOPPED/INTERRUPTED, giữ bản state trước đó. **Nguyên nhân
+process biến mất chưa xác định; không gọi đây là API timeout.** Dừng theo điều kiện
+hạ tầng, không chạy lại C01 hoặc gọi tiếp C07/C10 trên SHA cuối.
+
+### Metrics theo final answer, không theo ledger
+
+Rubric đóng băng trước live: C01 có8gold atoms, C07 có5, C10 có6. Answer Accuracy
+là binary đủ toàn câu (số, ý, nhận xét/giới hạn, citations, không suy diễn).
+Precision=unique claims phát hành đúng/unique claims phát hành; Recall=gold atoms
+được đáp ứng/tổng atoms; F1=harmonic mean. Không đếm lặp, bibliography/caveats kỹ thuật.
+Empty technical answer của một QA đã chạy chấm0; transport/process interruption
+không có final chấmN/A. Ratio/percent tương đương với làm tròn đúng precision được phép.
+
+| Source / câu | Answer Accuracy | Claim Precision | Claim Recall | Claim F1 |
+| --- | --- | --- | --- | --- |
+| A / C01 | 0/1 | 5/5=100% | 5/8=62,50% | 76,92% |
+| A / C07 | 0/1 | 22/22=100% | 4/5=80% | 88,89% |
+| A / C10 | 0/1 | 0 (empty) | 0/6=0% | 0% |
+| B / C01 | 0/1 | 4/4=100% | 4/8=50% | 66,67% |
+| B / C07 | 0/1 | 7/7=100% | 4/5=80% | 88,89% |
+| B / C10 | 0/1 | 0 (empty) | 0/6=0% | 0% |
+| C / C01,C07,C10 | N/A | N/A | N/A | N/A |
+
+**Không có bằng chứng live chất lượng tăng so với baseline C01 F1=93,33%.**
+Lượt B còn hồi quy phát hành do binding ownership/semantic contract; đã sửa code
+ở6d3f834/5f71772 nhưng lượt C bị ngắt trước final. Replay không sửa raw responses
+trên code mới khôi phục growth26,71% và hai revenue facts; đây là **offline evidence**,
+không thay thế QA live của bản cuối. C07 Precision cao không đồng nghĩa gọn/đủ ý:
+lượt A có14facts ngoài mục tiêu (grounded nhưng thừa), lượt B đã bỏ chúng và bỏ năm2024
+không được hỏi. Claim counts C07 tách6policy propositions,1LNST2025; lượt A thêm
+LNST2024 và14balance facts. Không dùng số M6 ACCEPT làm tử số Precision.
+
+### Nguyên nhân QA còn thiếu, có trace đối chiếu
+
+- **C01 A:** supervisor phát shorthand schema sai; model bỏ operand periods; backend
+  thiếu revenue2024 dù inventory có. Các model analyses sau đó khẳng định thiếu dữ liệu
+  hoặc dùng số/đơn vị sai, bị chặn. Không có tổng hợp hợp lệ.
+- **C01 B:** đã truy xuất đủ revenue2025/2024, debt/assets/CFO. Task tổng hợp vẫn trả
+  các analyses riêng: ghi growth26,6% thay26,71%; đổi ratio thành59,06%; nhận xét CFO
+  “ổn định” không đủ evidence. Chúng không thành nhận xét tổng hợp có M6 support.
+  Growth proof26,71% đúng được sinh tại task tổng hợp nhưng ownership cũ không bind
+  sang R002, nên M7 scope filtering loại cả growth/revenue operands. Đã sửa export
+  cho numeric cross-task; không tự cho các nhận xét sai ACCEPT.
+- **C07:** đúng LNST2025=7.249.557.946VND và literal policy đầy đủ điều kiện/ngoại lệ.
+  Fusion Qwen tách “Không suy ra số lãi vay vốn hóa thực tế…” thành một financial
+  subrequest unsupported thay vì giữ như ràng buộc nội dung. Lượt B không còn phát
+  hành inventory balance ngoài mục tiêu, nhưng vẫn chưa có claim giới hạn được bind;
+  final báo thiếu phần này. Mixed negative constraints chưa được xử lý trọn vẹn.
+  Policy còn là quotation dài, chưa có diễn giải ngắn đã M6 xác minh.
+- **C10 A:** kind calculation/synthesis/limitation làm toàn plan fail schema. B đã
+  chuẩn hóa, lấy assets767.374.839.317VND, liabilities1.368.031.294.449VND và đúng CFO
+  314.097.335.438VND; có proof working capital−600.656.455.132VND/current ratio0,56lần.
+  Final B vẫn không phát hành: Qwen M6 bỏ supported_requirement_ids; period từ ngày
+  trong câu hỏi còn làm CFO annual ABSTAIN. Intermediate-unit/ownership cũng cản goal
+  đầu trong proof nhiều outputs. Đã sửa các boundary này ở code cuối; chưa live xác
+  nhận bản cuối do process bị ngắt. Không suy rằng solvency future đã được chứng minh.
+
+### Agents/tools và citations quan sát ở lượt B
+
+| Câu | Provider stages thực gọi | Tools thực gọi |
+| --- | --- | --- |
+| C01 | Supervisor1; liquidity2 (gồm follow-up); profitability1; cash-flow1 | get_financial_fact5; get_evidence_sources5 |
+| C07 | fusion-planner1; Supervisor2; profitability1; M6 Lite1; document-planner1 | get_financial_fact15; get_evidence_sources20; search_document_evidence4; get_graph_context1 |
+| C10 | Supervisor1; liquidity2; cash-flow1; M6 Lite1 | get_financial_fact4; get_evidence_sources4 |
+
+M7 V2 deterministic, không có Qwen M7 call. C01 B phát hành nợ/tài sản/CFO với PDF6/5/8
+đúng, nhưng mất doanh thu/growth PDF7 ở output; không tính retrieval page như released
+citation. C07 B chỉ còn PDF7 cho LNST và PDF12 cho policy, đúng document/snapshot và
+binding. C10 B không có released claims/citations, nên citation quality N/A, không báo
+PASS chỉ vì tools lấy được trang. Tất cả provenance vẫn page-level, chưa cell-level.
+
+Artifacts riêng ignored `artifacts/evidence/V2-INT-01/qa-quality/`: từng lượt giữ
+provider events, execution/ledger, nguyên văn `Cxx-answer.txt`, Gold và review JSON;
+lượt C giữ5raw responses và trạng thái interruption. Không overwrite các evidence cũ.
+37targeted PASS trên source stage9526fa0,1shared-owner test sau đó; **15targeted PASS
+trên source bàn giao5f71772** (V2 integration/M6 Lite và embedded-proof/citation control).
+Không full tests/CI/OCR/Gemini/benchmark. Planning/diff/Ruff đạt.
+
+**Next action:** Tech Lead/Owner review các kết quả QA và interruption trước khi quyết
+định việc xác nhận live tiếp; dừng REVIEW, không tự mở task/milestone hoặc vòng chạy mới.
+
 ## QA live thật sau sửa runner — C01 PARTIAL, dừng trước C07
 
 **REVIEW**, 13/11/2026. Theo chỉ đạo mới, `scripts/validate_v2_live.py` bỏ hoàn toàn

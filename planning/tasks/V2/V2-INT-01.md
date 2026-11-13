@@ -35,6 +35,11 @@ thay boundary tối thiểu, nghiệm thu kiến trúc bằng offline invariants
 
 ## Inputs
 
+Chỉ đạo hiện hành: cải thiện giữ yêu cầu nhận xét/tổng hợp/giới hạn ở M5, M7 tự nhiên
+và không lặp bằng claims M6/citations; không thêm agent/đổi kiến trúc. Live C01/C07/C10
+trên dữ liệu thật; PARTIAL/FAIL tiếp tục câu kế, chỉ dừng API/hạ tầng. Sửa trong V2 có
+bằng chứng, targeted checks; không full CI/milestone mới; commit/push main, REVIEW.
+
 Chỉ đạo mới nhất: bỏ pre-count/token cap, chỉ ghi usage API; không sửa runtime hoặc
 full tests/CI. Live C01/C07 một lượt trên474cc21, giữ config và không retry; API lỗi
 dừng ngay, QA PARTIAL/FAIL thì lưu nguyên văn/traces, chấm Gold và dừng, không FIX.
@@ -88,6 +93,8 @@ Không gọi Qwen trước offline integration đạt và có ngân sách/điề
 - [x] Bàn giao REVIEW, phân biệt lỗi kiến trúc/model/capability; không tự DONE.
 - [ ] Tech Lead nghiệm thu implementation và giới hạn snapshot cuối chưa được live xác nhận.
 
+- [ ] QA live bản cuối đủ ba câu, đầy đủ nhận xét/tổng hợp/giới hạn có evidence.
+
 ## Required Tests
 
 Focused integration controls cho plan/requirements/shared evidence/failure isolation,
@@ -103,6 +110,17 @@ offline, không rerun; mixed final target/pin/inventory binding vẫn còn trong
 Snapshot cuối chưa live xác nhận; không dùng kết quả trước sửa làm quality bản cuối.
 
 ## Implementation Evidence
+
+Source cuối `5f717726f0e16010f1ce7a3335f249fa7ca369a3` (trước đó d0f0e7c,
+9526fa0,6d3f834). M5 giữ discourse goals/dependencies/shared canonical evidence;
+M6 giữ truth/goal binding và request period pin; M7 group/dedup, chỉ bound claims + operands.
+Hai lượt live đủ3câu còn PARTIAL/PARTIAL/FAIL. LượtB9526fa0: Answer Accuracy0/3;
+Claim F1 C01=66,67%,C07=88,89%,C10=0%. Đã sửa code cho ownership/named-goal contract/
+inferred-date failures nhưng lượtC5f71772 bị ngắt process sau5success responsesC01,
+chưa final, C07/C10NOT_RUN/metricsN/A. Tổng33calls/114935tokens/0unknown/0retry,
+0provider errors quan sát. Dừng do hạ tầng, không rerun; chưa xác nhận quality bản cuối.
+37targeted stagePASS,1shared-owner control và targeted cuối; Ruff/planning/diffPASS,
+không fullCI/Gemini/OCR/benchmark. [QA và nguyên nhân còn lại](../../../docs/v2-int-01-qa-validation.md).
 
 Live mới trên đúng `474cc218498512748aaaa96ab463c070b27f9228`: C01 một lượt,
 5calls/26599tokens provider-reported/0unknown/0retry/130,06s,0APIerrors.
@@ -159,4 +177,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead/Owner review C01 live PARTIAL và quyết định bước tiếp theo.
+Next action: Tech Lead/Owner review QA gaps và runner interruption trước quyết định xác nhận tiếp.

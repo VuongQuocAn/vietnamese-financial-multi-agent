@@ -2,16 +2,19 @@
 
 ## V2-INT-01 — Minimal Integration Migration
 
-**REVIEW**, ngày13/11/2026; implementation `474cc218498512748aaaa96ab463c070b27f9228`
-trên main, V2 opt-in. Đã bỏ runner token pre-count/cap; không sửa M5/M6/M7.
-Live Qwen thật C01 một lượt:5calls/26599tokens API/0unknown/0retry/130,06s;
-pipeline completed_with_caveats,10ACCEPT/10releases,3numeric bindings satisfied.
-Gold QA **PARTIAL**: số/citations đúng, thiếu tổng hợp ba nhánh có giới hạn; ratio lặp.
-Answer Accuracy0/1; Claim Precision9/9=100%, Recall7/8=87,50%, F1=93,33%.
-Đã dừng theo điều kiện6; C07 NOT_RUN/metricsN/A, không sửa hoặc gọi tiếp.
-Ruff/compile runner, planning/diff đạt; không rerun tests/CI/OCR/Gemini.
+**REVIEW**, ngày13/11/2026; source cuối `5f717726f0e16010f1ce7a3335f249fa7ca369a3`
+trên main, V2 opt-in. Sửa giữ original analysis goals/dependent specialist, canonical
+operand periods, cross-task numeric binding, M6 goal response contract/period context
+và M7 scope/dedup; không thêm agents hoặc đổi OCR/EF-EG/tools.
+Hai lượt live đủ C01/C07/C10 còn PARTIAL/PARTIAL/FAIL. LượtB9526fa0: Answer Accuracy
+0/3; Claim F1 C01=66,67%,C07=88,89%,C10=0%; chưa đạt nhận xét/giới hạn đầy đủ.
+Code cuối đã sửa thêm binding/period lỗi B, nhưng lượt xác nhận cuối bị ngắt process
+sau5responsesC01success, chưa final; C07/C10cuối NOT_RUN, metricsN/A.
+Tổng33calls/114935tokens/0unknown/0retry,0provider errors quan sát; dừng hạ tầng,
+không retry. Source cuối chưa live E2E xác nhận; không tuyên bố quality tăng.
+Targeted/Ruff/planning/diff đạt; không fullCI/OCR/Gemini/benchmark.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead/Owner review C01 live PARTIAL và quyết định bước tiếp theo.
+Next action: Tech Lead/Owner review QA gaps và runner interruption trước quyết định xác nhận tiếp.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 
