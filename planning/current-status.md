@@ -1,5 +1,16 @@
 # Trạng thái hiện tại
 
+## ViFinBench-DATA-AUDIT-01 — Neutral Corpus
+
+**REVIEW**, ngày13/11/2026; [báo cáo](../docs/vifinbench-data-audit-01.md).
+Implementation `b613c5894acc4258ad0693ddeb56350dd60c07c3` đã push main/remote verified.
+15doanh nghiệp/41tài liệu/1.488trang/9.861.632bytes;3partial thiếu4trang;
+BCC2025là2trang công văn, khácPDFriêng30trang.358probe:354khớp/4mâu thuẫn;
+173hàngragged, mất ôBED2025đã đối chiếu ảnh. READY_WITH_CAVEATS cho Pilot
+có kiểm nguồn, chưa đủ bằng chứng Full600;3targeted/Ruff/planning/diff PASS local.
+Không sinh QA/API hoặc đổi pipeline;123corpus hashes/local edits ngoài task giữ nguyên.
+Next action: Tech Lead review audit và quyết định phạm vi ViFinBench-P1.
+
 ## V2-INT-01 — QA và hiệu năng
 
 **DONE — APPROVED**. Owner/Tech Lead phê duyệt DONE ngày13/11/2026, phạm vi nghiệm thu chỉ ba trường hợp E2E thực tế C01/C07/C10 đã xác nhận.

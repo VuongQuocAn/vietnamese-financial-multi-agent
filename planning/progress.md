@@ -35,7 +35,8 @@ Ba task cha M1-02/03/04 cũng được đếm; task con không được coi là 
 | MODEL | 2 | 0 | 0 | 0 | 0 | 0 | 2 |
 | QWEN | 3 | 2 | 0 | 0 | 0 | 0 | 1 |
 | V2 | 1 | 1 | 0 | 0 | 0 | 0 | 0 |
-| TOTAL | 139 | 123 | 0 | 1 | 8 | 0 | 7 |
+| ViFinBench | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
+| TOTAL | 140 | 123 | 0 | 1 | 8 | 0 | 8 |
 
 ## Implementation thực tế
 

@@ -120,7 +120,7 @@ ngoặc/số âm được giữ ở nhiều mẫu, nhưng ôtrống/gạch khôn
 | BED_2023 PNG p28 | Bảng vốn chủ sở hữu xoay 90 độ: ảnh có 6 cột kể cả nhãn, JSON có 6 header nhưng 7 ô/hàng do thừa một ôtrống; số quỹ/LNST/tổng bị lệch nếu đọc theo index header |
 | BED_2025 PNG p10 | **Lỗi mất số đã xác minh:** hàng mã 22, kỳ 2024 trên ảnh là 21.200.004 VND, JSON làchuỗi rỗng; mã 23 cùng kỳ vẫn giữ 21.200.004. Bảng rectangular và vài tổng khớp không phát hiện được mất ô này |
 | BED_2025 PNG p15 | Đoạn chính sách và bảng khấu hao đọc tốt; phải phân biệt khoảng năm với phép trừ và số kế toán |
-| BCC_2025 PNG p1,2 | Công văn 933/935, công bố và giải trình BCTChợp nhất; p2 có số làm tròn 25,48 tỷ/33,61 tỷ và tỷ lệ, không có báo cáo chính |
+| BCC_2025 PNG p1,2 | Công văn 933/935, công bố và giải trình BCTC hợp nhất; p2 có số làm tròn 25,48 tỷ/33,61 tỷ và tỷ lệ, không có báo cáo chính |
 | BCC_2025 PDF p1–3 | PDF 30 trang làBCTC **riêng**, cover/mục lục/báo cáo BGĐ khác PNG/neutral 2 trang. Cùng mã/năm không đủ để bind nguồn |
 
 Không xác nhận được nội dung Gemini bịa thêm trong các đoạn đã đối chiếu; cũng
@@ -153,7 +153,7 @@ PNG local có cho 11 tài liệu trùng key: BBS 2023–25,BCC 2021–25,BED 202
 tổng 365 trang, tương ứng 10 BCTC và 1 công văn. **Chỉ 14 PNG đã được xem trực quan**;
 sự hiện diện file không chứng nhận mọi trang đã bind đúng. 30 keycòn lại chưa
 thấy nguồn trực quan trong storage đã khảo sát. Có 7 PDF trong storage: BBS 2021–25,
-BCC 2024–25; BBS 2021/22 không thuộc neutral. BCC 2025 đã xác nhận mismatch; bốnPDF
+BCC 2024–25; BBS 2021/22 không thuộc neutral. BCC 2025 đã xác nhận mismatch; bốn PDF
 cùng keycòn lại chưa xác minh đầy đủ association trong audit này. Không truy
 cập tài khoản Drive, không tải thêm dữ liệu và không quét toàn bộ ổ đĩa cá nhân.
 
@@ -191,7 +191,7 @@ Một số phép tính tham chiếu từ mẫu có ảnh, không tạo thành b�
 - BBS 2025 p7:450.474.531.227−417.992.011.559=32.482.519.668 VND.
   Tăng doanh thu so 2024=26,7131%; biên gộp2025=7,2107%,2024=10,2480%,
   giảm 3,0373**điểm phần trăm**. Doanh thu tăng không có nghĩa biên lợi nhuận tăng.
-- BBS 2025 p8:CFO 14.319.681.754−LNSTp7 7.249.557.946=7.070.123.808 VND;
+- BBS 2025 p8: CFO 14.319.681.754−LNST p7 7.249.557.946=7.070.123.808 VND;
   không suy nguyên nhân dòng tiền nếu chưa đọc các khoản điều chỉnh.
 - BBS 2025 p18:107.335.623.456+412.590.165.180−412.029.033.352
   =107.896.755.284 VND; tổng đi vay/trả gốc còn đối ứng p8.
@@ -225,7 +225,7 @@ lượng;200 mỗi subset vẫn là mục tiêu nghiên cứu, không phải k�
 
 Điểm mạnh: hàng nghìn hàng bảng, mã chỉ tiêu và các thuyết minh đặc thù. Chất
 lượng tốt nhất là lấy một giá trị/chính sách có ngữ cảnh duy nhất, phân biệt
-giá gốc/dự phòng/giá trị ròng, khoản vay/hạn mức, LNSThợp nhất/mẹ/NCI,
+giá gốc/dự phòng/giá trị ròng, khoản vay/hạn mức, LNST hợp nhất/mẹ/NCI,
 ngày cuối kỳ/số so sánh. Hard có thể dựa vào bảng dài/nhiều header và chi tiết
 đảm bảo vay BBS p19, nhưng khó truy xuất không được thay cho câu hỏi mơ hồ.
 Phải kiểm chứng riêng mục tiêu 40 Hard; không mặc định đủ bằng số trang.
@@ -243,7 +243,7 @@ partial; nhiều số kỳ trước đã có ngay một bảng nên không cần
 ARM có `Trình bày lại`, ALT có`đã điều chỉnh`; phải khóa phiên bản số liệu khi
 so sánh. Liên doanh nghiệp dễ tạo so sánh cơ học nhưng không chứng minh suy
 luận mới; scope hợp nhất/riêng, ngành và đơn vị khác nhau có thể làm câu hỏi
-không hợp lệ. BCC 2025 không nối vớiPDFriêng để hoàn thiện chuỗi hợp nhất.
+không hợp lệ. BCC 2025 không nối với PDF riêng để hoàn thiện chuỗi hợp nhất.
 
 ### Numerical
 
@@ -277,7 +277,7 @@ chất lượng cao mà không rà nguồn/review.
 | Công nhận Gold | Cần bước kiểm chứng tách và Tech Lead review | Không lấy tự tin của model hoặc tổng số khớp làm chuẩn |
 
 Lỗi dễ mắc: lẫn kỳ/mã số giữa các báo cáo, trượt header khi ragged, coi ôtrống
-là 0, mất ngoặc âm, nhầm chi nhánh/hợp đồng, LNSTmẹ với toàn tập đoàn, áp số
+là 0, mất ngoặc âm, nhầm chi nhánh/hợp đồng, LNST mẹ với toàn tập đoàn, áp số
 trước điều chỉnh vào câu hỏi sau điều chỉnh, bịa nguyên nhân biến động, suy
 vắng mặt từ trang thiếu, paraphrase thành mẫu mới và ghi đúng giá trị nhưng
 dẫn sai trang. BED/AMC/ALT/ARM/BCC nêu trên là lý do thực tế cần các bước kiểm.
@@ -288,8 +288,8 @@ do phải giữ nhiều nguồn và kiểm từng liên kết. Hard/nhiều ản
 thể làm thứ tự thay đổi. Chưa cópilotđo nên không ước lượng token, chi phí,
 thời gian hoặc số lượt Codex cho 600 mẫu.
 
-Chưa cần bổ sung doanh nghiệp để bắt đầuPilot hẹp. Trước Full cần ưu tiên nguồn
-trực quan tương ứng 30 key, trang thiếu 4 vị trí và đúng BCTChợp nhấtBCC 2025 nếu
+Chưa cần bổ sung doanh nghiệp để bắt đầu Pilot hẹp. Trước Full cần ưu tiên nguồn
+trực quan tương ứng 30 key, trang thiếu 4 vị trí và đúng BCTC hợp nhất BCC 2025 nếu
 muốn dùng kỳ này; metadata tối thiểu gồm danh tính/scope, hashảnh/PDF, trang
 export↔trang in, kỳ/đơn vị và phiên bản điều chỉnh. Không xây schema/framework
 mới trong audit; ghi mapping ngoài raw khi được giao tiếp.
@@ -298,7 +298,7 @@ mới trong audit; ghi mapping ngoài raw khi được giao tiếp.
 
 **Có thể bắt đầu tuyển chọn có kiểm chứng sau Tech Lead review**, dùng 10 BCTC
 cóPNG local: BBS 2023–25,BED 2023–25,BCC 2021–24. Chưa gọi corpus nguyên khối là
-Gold-ready; chưa tự bắt đầuViFinBench-P 1.
+Gold-ready; chưa tự bắt đầu ViFinBench-P1.
 
 1. Chọn trang/evidence từ 10 BCTC; xác nhận danh tính, scope, kỳ, đơn vị và các
    operand trực tiếp trên ảnh. Tạm loại ôBED 2025 mã 22 kỳ 2024, bảngBED 2023 p28 và
@@ -311,7 +311,7 @@ Gold-ready; chưa tự bắt đầuViFinBench-P 1.
 4. Với mỗi candidate lưu câu, đáp án, doc/scope/kỳ/đơn vị, trang/table/row/col
    hoặc đoạn trích, nguyên văn giá trị và ảnh nguồn; Multi-hop lưu chuỗi hỗ trợ,
    Numerical lưu công thức/operand/rounding và kết quả Python. Đây là thông tin
-   cần choGold, chưa áp đặt định dạng dữ liệu mới.
+   cần cho Gold, chưa áp đặt định dạng dữ liệu mới.
 5. Đọc kiểm chứng tách khỏi lượt soạn; kiểm cả con số và mức hỗ trợ của mỗi
    câu trả lời. Loại câu không thể xác minh; không bù quota bằng paraphrase.
    Chỉ đưa vào Gold saureview, ghi rõ chưa giải quyết nếu còn mâu thuẫn.
@@ -320,36 +320,41 @@ Gold-ready; chưa tự bắt đầuViFinBench-P 1.
    tính trước khi thiết kế split. Dùng kết quả này quyết định lại Full 200/subset
    và phân bổ 60 Easy/100 Medium/40 Hard.
 
-Rào cản Full: nguồn không đầy đủ/khácscope; số sai/mất ô; mapping phức tạp;
-thiếu bằng chứng 200 Multi-hopthực chất và 200 Numericalđa dạng; chưa đo yield
-Gold. Những điểm này không chặn mộtPilot có giới hạn, có kiểm trực tiếp.
+Rào cản Full: nguồn không đầy đủ/khác scope; số sai/mất ô; mapping phức tạp;
+thiếu bằng chứng 200 Multi-hop thực chất và 200 Numerical đa dạng; chưa đo yield
+Gold. Những điểm này không chặn một Pilot có giới hạn, có kiểm trực tiếp.
 
 ## 10. Git và validation
 
-Owner cho phép riêng corpusneutralvào Git trong task này. Trước stage đã kiểm
+Owner cho phép riêng corpus neutral vào Git trong task này. Trước stage đã kiểm
 123 file/9.861.632 bytes, file lớn nhất `C69_2025/document_PARTIAL.md`
-160.851 bytes; phù hợp Git thông thường, không cầnLFS. `.gitignore` hiện có
-không bỏ qua neutral; không sửa ignore để mở rộng quyền vớidata/raw/processed.
-Không cóPDF/PNG, cache/log/.env/credentials/filetạm trong corpus. Quét các mẫu
-Google/GitHub/AWSkey, privatekey và credentialJSONfield không có finding; đây
+160.851 bytes; phù hợp Git thông thường, không cần LFS. `.gitignore` hiện có
+không bỏ qua neutral; không sửa ignore để mở rộng quyền với data/raw/processed.
+Không có PDF/PNG, cache/log/.env/credentials/file tạm trong corpus. Quét các mẫu
+Google/GitHub/AWS key, private key và credential JSON field không có finding; đây
 là kiểm tra theo pattern, không chứng nhận tuyệt đối mọi dạng secret.
 
-Giữ nguyên 123 file và hashnguồn; manifestSHA 256 theo JSON sort_keys/separators
-compact của trường`manifest` tronginventory:
+Giữ nguyên 123 file và hash nguồn; manifest SHA256 theo JSON sort_keys/separators
+compact của trường `manifest` trong inventory:
 `0689379042a006c2e16c4d9b6faa42d9bf923c41f7581f2d70cc89b18038b8ad`.
-Mọi file corpus cóLF; `.gitattributes` đặt `-text` riêng neutral để checkout
+Mọi file corpus có LF; `.gitattributes` đặt `-text` riêng neutral để checkout
 không đổi newline/byte, đồng thời bỏ kiểm trailing whitespace/blank EOF của
 snapshot gốc. Lần diffcheck đầu báo whitespace có sẵn; không trim dữ liệu để
-làm sạch check. Cácfilecode/docs vẫn kiểm whitespace bình thường. Tách riêng các thay
+làm sạch check. Các file code/docs vẫn kiểm whitespace bình thường. Tách riêng các thay
 đổi planning/checker của task khi stage vì working tree có local edits từ task
 khác; không stage notebooks/runtime/.env.example/.gitignore hoặc evidence cũ.
 
-Validation cuối và trạng thái commit/push ghi tại registry/bàn giao.3 targeted
+Implementation commit **`b613c5894acc4258ad0693ddeb56350dd60c07c3`** đã push
+`main`; remote SHA đã xác minh. Commit kế tiếp chỉ cập nhật tracking/checker
+và nội dung bàn giao của audit, không sửa corpus hoặc pipeline.
+
+Validation local: **3 targeted tests PASS, Ruff PASS, planning checker PASS,
+git diff --check PASS** sau áp dụng thuộc tính snapshot nêu trên. Các targeted
 engineering tests kiểm signs/grouping/unknown, cột mã động và mismatch, giữ ô
-thừa khi render; **không phải financial accuracy tests**. Chạy Ruff cácfilePython
-đã sửa, planning checker, diffcheck và đối chiếu hash sau audit. Không fullCI,
+thừa khi render; **không phải financial accuracy tests**. Đối chiếu 123 hash
+working/index khớp inventory; các local edits ngoài task được giữ nguyên. Không full CI,
 không pipeline/Gemini/re-extraction, không sinh 45 QA.
 
-**Kết luận:** READY_WITH_CAVEATS cho quy trình tuyển chọnPilotcóảnh vàreview;
-chưa đủ cơ sở nghiệm thuFull 600. Next action: **Tech Lead review audit và
-quyết định phạm vi ViFinBench-P 1**.
+**Kết luận:** READY_WITH_CAVEATS cho quy trình tuyển chọn Pilot có ảnh và review;
+chưa đủ cơ sở nghiệm thu Full 600. Next action: **Tech Lead review audit và
+quyết định phạm vi ViFinBench-P1**.
