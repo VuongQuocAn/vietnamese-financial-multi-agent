@@ -11,7 +11,7 @@
 
 ## Phiên tiếp tục QA thực tế — 13/11/2026
 
-Source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`, main/V2 opt-in.
+Source bàn giao `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, main/V2 opt-in.
 Live gần nhất `25f7316`: C01 PASS, C07 PARTIAL, C10 INTERRUPTED do adapter timeout;
 đã dừng, không retry/API mới. C01/C07 cùng mẫu: numeric 8/8, micro Claim F1
 91,67%→96%, citation18/18, Answer Accuracy0/2→1/2. C01 calls5→2, latency
@@ -206,4 +206,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source d5b91a7 khi Qwen sẵn sàng; dừng REVIEW.
+Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source 3734eb9 khi Qwen sẵn sàng; dừng REVIEW.

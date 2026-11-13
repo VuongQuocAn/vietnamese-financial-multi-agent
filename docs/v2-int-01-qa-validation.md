@@ -2,12 +2,16 @@
 
 ## Phiên tối ưu synthesis và hiệu năng — 13/11/2026
 
-**REVIEW — chưa đạt đầy đủ QA ba câu.** Source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`
+**REVIEW — chưa đạt đầy đủ QA ba câu.** Source bàn giao `3734eb921e6fb0892a1d10ff6de37323cbded3ff`
 trên main; live gần nhất dùng `25f73161b829dcc4162b006d4404a11644bf459b`.
 Qwen timeout tại call đầu C10, adapter `timeout/not_retryable`, 60,14s;
 runner dừng ngay, không retry hoặc gọi thêm API. Bản sửa operands `d5b91a7` đã kiểm
 offline nhưng **chưa live**. Các phiên dưới mục này là lịch sử, không phải kết quả
 live của source bàn giao mới.
+
+`3734eb9` chỉ sửa định dạng hai đoạn mới trong `specialist_common.py`; logic giữ
+nguyên `d5b91a7`, không gọi lại API. Format check cuối phát hiện hai đoạn này chưa
+đạt; đã sửa và kiểm lại thành công trước bàn giao.
 
 ### So trực tiếp với baseline b113136
 
@@ -93,8 +97,8 @@ source/semantic requirement binding đạt. **Chưa có final C10 sau sửa**, v
 `25f7316` dừng tại Supervisor timeout trước retrieval. Không chạy lượt thứ ba.
 
 Lượt gần nhất: 6 attempts, 5 success + 1 timeout; **12.475 known tokens + 1 unknown**,
-0 retry. Toàn phiên: **17 attempts/50.964 known tokens + 1 unknown**. Không sửa runtime
-hoặc gọi API sau khi quan sát timeout; chỉ hoàn tất chấm điểm, tài liệu và bàn giao.
+0 retry. Toàn phiên: **17 attempts/50.964 known tokens + 1 unknown**. Không sửa logic
+hoặc gọi API sau khi quan sát timeout; chỉ hoàn tất chấm điểm, định dạng, tài liệu và bàn giao.
 
 ### Bằng chứng và nghiệm thu
 

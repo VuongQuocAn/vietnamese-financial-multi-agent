@@ -2,7 +2,7 @@
 
 ## V2-INT-01 — QA và hiệu năng
 
-**REVIEW**, 13/11/2026; source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`, main/V2 opt-in.
+**REVIEW**, 13/11/2026; source bàn giao `3734eb921e6fb0892a1d10ff6de37323cbded3ff`, main/V2 opt-in.
 Live gần nhất `25f7316`: C01 PASS, C07 PARTIAL, C10 INTERRUPTED (adapter timeout,
 dừng/0retry). Trên C01/C07: numeric8/8, microClaimF1 91,67%→96%, citation18/18,
 AnswerAccuracy0/2→1/2. C01 5→2calls,242,24→182,83s; C07 4→3calls, latency gần như
@@ -11,7 +11,7 @@ không đổi132,86s. Không báo bản cuối đạt13/13 hoặc đủba câu. 
 resolver;16V2 working tree +3focused staged cuối PASS; real branch replay/negative
 control đạt; giữ M6, không thêm agent/full CI/local edits ngoài task.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source d5b91a7 khi Qwen sẵn sàng; dừng REVIEW.
+Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source 3734eb9 khi Qwen sẵn sàng; dừng REVIEW.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 
