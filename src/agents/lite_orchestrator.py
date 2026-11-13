@@ -64,6 +64,30 @@ DOMAINS = {
 }
 
 
+def normalize_candidate_envelope(payload):
+    """Relocate strictly typed analyses from a provider's numeric claims slot.
+
+    No text, values, operations or evidence IDs are repaired. The unchanged
+    analysis still passes ordinary grounding, Calculator and M6 gates.
+    """
+    if not isinstance(payload, dict) or not isinstance(payload.get("claims"), list):
+        return payload
+    analyses = payload.get("analyses", [])
+    if not isinstance(analyses, list):
+        return payload
+    moved, remaining = [], []
+    for raw in payload["claims"]:
+        if isinstance(raw, dict) and {"statement", "evidence_ids"} <= raw.keys():
+            try:
+                AnalysisProposal.model_validate(raw)
+                moved.append(raw)
+                continue
+            except ValueError:
+                pass
+        remaining.append(raw)
+    return dict(payload, claims=remaining, analyses=[*analyses, *moved]) if moved else payload
+
+
 def compact_graph_context(contexts, evidence):
     """Bounded relations; raw tool traces retain complete original records."""
     from ..evidence.composition_graph import node_reference
@@ -946,6 +970,27 @@ class FinancialLiteOrchestrator:
                 if key in task.depends_on
             }
             prompt["user_question"] = self.workspace.question
+            analysis_schema = AnalysisProposal.model_json_schema()
+            narrative_only = bool(prompt["assigned_requirements"]) and all(
+                r["answer_goal"] != "value" for r in prompt["assigned_requirements"]
+            )
+            prompt["response_schema"] = dict(
+                type="object",
+                properties=dict(
+                    claims=dict(
+                        type="array",
+                        items=dict(enum=list(by_handle)),
+                        maxItems=0 if narrative_only else 32,
+                    ),
+                    analyses=dict(
+                        type="array", items=analysis_schema, maxItems=1 if narrative_only else 8
+                    ),
+                    missing_information=dict(type="array", items=dict(type="string")),
+                ),
+                required=["claims", "analyses", "missing_information"],
+                additionalProperties=False,
+            )
+            prompt["response_schema"]["$defs"] = analysis_schema.pop("$defs", {})
             # V2 has typed goals and shared evidence. A second, legacy instruction
             # manual mixed numeric generation with commentary and obscured that
             # distinction for the small model. Give one task-local contract.
@@ -985,6 +1030,7 @@ class FinancialLiteOrchestrator:
             prefix="m5-lite-" + task.specialist,
             deterministic=deterministic,
             emit_derived=True,
+            normalize_payload=normalize_candidate_envelope if self.integration_v2 else None,
         )
         for candidate in result.candidates:
             if candidate.reasoning:

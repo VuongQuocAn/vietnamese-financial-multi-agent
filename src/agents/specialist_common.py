@@ -564,6 +564,7 @@ def generate_candidates(
     prefix,
     deterministic=False,
     emit_derived=True,
+    normalize_payload=None,
 ):
     if deterministic:
         # Existing typed numeric renderers; no model, interpretation or new calculation.
@@ -640,6 +641,13 @@ def generate_candidates(
             }
         else:
             payload = result.raw_output
+    if normalize_payload is not None:
+        normalized = normalize_payload(payload)
+        if normalized is not payload:
+            result.trace.append(
+                SpecialistTrace(stage="generation", outcome="analysis_envelope_normalized")
+            )
+        payload = normalized
     if (
         set(payload)
         not in ({"claims", "missing_information"}, {"claims", "missing_information", "analyses"})

@@ -8,6 +8,13 @@ trong `integration_context.response_constraints`. Một FusionRequirement chỉ 
 “Phạm vi trả lời”, không tạo claim/citation hoặc cấp semantic coverage. Nhận xét
 tài chính vẫn phải có candidate, M6 support và Ledger admission như trước.
 
+Specialist V2 công bố root `response_schema` cho numeric handles và analyses.
+Nếu provider đặt một object hợp lệ hoàn toàn theo `AnalysisProposal` vào `claims`,
+parser chuyển nguyên object sang `analyses`, giữ raw response và trace
+`analysis_envelope_normalized`. Không sửa text/giá trị/phép toán/nguồn, không cứu
+object sai schema. Grounding, Calculator, M6 và admission vẫn chạy như bình thường;
+V1 không bật chuẩn hóa này.
+
 Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
 `integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng
 QARequirement với requested_unit; tasks giữ task/requirement/dependency IDs.

@@ -15,6 +15,7 @@ from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     SupervisorLite,
     integration_plan,
     inventory,
+    normalize_candidate_envelope,
     preserve_answer_goal,
     resolve_requirements,
     resolve_source,
@@ -36,6 +37,32 @@ from .test_financial_qa import gateway_for
 from .test_m4_execution import fixture
 from .test_m6_lite import semantic_gateway
 from .test_multihop_reasoning import reasoning_case
+
+
+def test_v2_analysis_envelope_normalization_keeps_untrusted_content_and_strict_schema():
+    proposal = dict(
+        statement="A candidate calculation, not a verified result",
+        evidence_ids=["left", "right"],
+        claim_type="derived_fact",
+        operations=[
+            dict(
+                operation_id="op",
+                operator="subtract",
+                inputs=["left", "right"],
+                period_relation="same",
+            )
+        ],
+    )
+    payload = dict(claims=[proposal, "left"], analyses=[], missing_information=[])
+    original = json.dumps(payload)
+    normalized = normalize_candidate_envelope(payload)
+    assert normalized["claims"] == ["left"] and normalized["analyses"] == [proposal]
+    assert json.dumps(payload) == original  # raw provider output is not rewritten
+    malformed = dict(proposal, operations=[dict(operator="direct_value")])
+    invalid = dict(payload, claims=[malformed])
+    assert normalize_candidate_envelope(invalid) is invalid
+    unknown = dict(payload, claims=[dict(proposal, accepted=True)])
+    assert normalize_candidate_envelope(unknown) is unknown
 
 
 def balance_reasoning_case(formula, operator):
