@@ -330,7 +330,13 @@ class LiteVerificationRuntime:
             if sum(x.candidate_id == c.candidate_id for x in batch.claims) > 1
         }
         for claim in batch.claims:
-            local = batch.model_copy(deep=True, update={"claims": [claim]})
+            local = (
+                batch.model_copy(
+                    update={"claims": [claim], "context": batch.context.model_copy(deep=True)}
+                )
+                if self.integration_v2
+                else batch.model_copy(deep=True, update={"claims": [claim]})
+            )
             if len({c.period[:4] for c in batch.claims}) > 1:
                 # Preserve the multi-period guard's meaning when validating one
                 # candidate at a time; reporting year belongs to the filing.

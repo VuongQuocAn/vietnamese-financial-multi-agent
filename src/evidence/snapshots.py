@@ -174,7 +174,9 @@ class SnapshotCatalog:
         leave tool boundaries as detached models; current release policy remains
         independently checked by verification/admission, outside these caches.
         """
-        snapshot = deepcopy(self)
+        # The API is rebuilt below from the detached records. Copying its old
+        # duplicate records/lineage first would only allocate and discard them.
+        snapshot = deepcopy(self, {id(self.api): None})
         # Catalog records are mutable at public boundaries; rebuild once from
         # this exact detached state rather than trust a possibly older API view.
         snapshot.api = EvidenceRetrieval(

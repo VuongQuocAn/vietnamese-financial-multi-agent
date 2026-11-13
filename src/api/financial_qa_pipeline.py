@@ -1103,7 +1103,7 @@ class FinancialQAPipeline:
                             controller
                             if adaptive_histories is not None
                             else runtime_type(
-                                self.catalog,
+                                snapshot if bound.integration_v2 else self.catalog,
                                 self.gateway
                                 if bound.allow_gateway and bound.execution_mode != "deterministic"
                                 else None,

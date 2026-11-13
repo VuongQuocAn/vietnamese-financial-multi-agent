@@ -10,7 +10,10 @@ def atomic_json(path, payload):
     descriptor, name = tempfile.mkstemp(prefix=".snapshot-", dir=path.parent)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            json.dump(payload, stream, ensure_ascii=False, allow_nan=False)
+            # dumps uses the C encoder and one stream write. dump iterates and
+            # writes every nested proof fragment in Python. Keep identical JSON
+            # semantics and the existing flush/fsync/atomic replace boundary.
+            stream.write(json.dumps(payload, ensure_ascii=False, allow_nan=False))
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(name, path)

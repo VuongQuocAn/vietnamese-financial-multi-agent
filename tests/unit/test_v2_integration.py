@@ -336,6 +336,68 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
     assert failed.trace.integration_context["technical_errors"]
 
 
+def test_v2_m6_reuses_detached_request_catalog_and_preserves_input(tmp_path):
+    catalog, context, engine, _ = setup_engine()
+    before = [f.model_dump_json() for f in catalog.facts]
+    seen = []
+
+    def runtime_factory(snapshot, *args, **kwargs):
+        assert snapshot is not catalog and snapshot._request_snapshot
+        runtime = LiteVerificationRuntime(snapshot, *args, **kwargs)
+        assert runtime.validator._catalog is snapshot
+        assert runtime.builder._tools._catalog is snapshot
+        seen.append(snapshot)
+        return runtime
+
+    service = FinancialQAPipeline(
+        catalog=catalog,
+        orchestrator=engine,
+        repository=VerifiedClaimRepository(tmp_path),
+        documents=[
+            QADocument(
+                document_id=context.document_id,
+                company_id=context.company_id,
+                company_aliases=["TEST"],
+                reporting_year=2030,
+            )
+        ],
+    )
+    with patch(
+        "vietnamese_financial_multi_agent.verification.lite_runtime.LiteVerificationRuntime",
+        side_effect=runtime_factory,
+    ):
+        response = service.run(
+            FinancialQARequest(
+                question="Doanh thu thuần và lợi nhuận gộp TEST năm 2030?",
+                document_id=context.document_id,
+                snapshot_id=context.snapshot_id,
+                integration_v2=True,
+                execution_mode="deterministic",
+                allow_gateway=False,
+            )
+        )
+    assert seen and response.used_verified_claim_ids
+    assert before == [f.model_dump_json() for f in catalog.facts]
+    seen[0].facts[0].context.raw_item_label = "changed after request"
+    assert before == [f.model_dump_json() for f in catalog.facts]
+
+
+def test_atomic_json_preserves_wire_and_previous_snapshot_on_encoding_error(tmp_path):
+    from vietnamese_financial_multi_agent.core.persistence import atomic_json
+
+    path = tmp_path / "snapshot.json"
+    payload = {"claims": [{"text": "Nguồn tiếng Việt", "values": [1, 0.56, None]}]}
+    atomic_json(path, payload)
+    expected = json.dumps(payload, ensure_ascii=False, allow_nan=False)
+    assert path.read_text(encoding="utf-8") == expected
+    import pytest
+
+    with pytest.raises(ValueError):
+        atomic_json(path, {"invalid": float("nan")})
+    assert path.read_text(encoding="utf-8") == expected
+    assert not list(tmp_path.glob(".snapshot-*"))
+
+
 def test_inventory_resolution_uses_period_and_pins_without_role_ownership():
     data = fixture("revenue_yoy")
     catalog = SnapshotCatalog(**data)
