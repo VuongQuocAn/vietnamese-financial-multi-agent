@@ -1,5 +1,16 @@
 # Trạng thái hiện tại
 
+## ViFinBench-P1A-Finalize — DONE, APPROVED WITH CAVEATS
+
+Tech Lead phê duyệt ngày13/11/2026; phạm vi nghiệm thu **Single-hop Pilot**.
+[Implementation f44e208](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/f44e20828a85546f8fe1492902b0dcbd7d642fa5) đã push main/remote verified;
+[báo cáo và quyết định](../docs/vifinbench-p1a-single-hop.md#6-nghiệm-thu-tech-lead).
+15QA và metadata giữ nguyên; Schema v1 được giữ làm quy ước chung.
+Hai cải thiện về nguồn đơn vị và loại tài liệu chuyển sang lúc chuẩn bị P1B;
+không yêu cầu làm lại15QA hoặc mở vòng Finalize mới. Phiên nghiệm thu chỉ cập nhật
+tài liệu/tracking, planning/Ruff/diff PASS; không chạy lại QA/API/fullCI.
+Next action: Chờ Owner/Tech Lead giao task chuẩn bị P1B.
+
 ## ViFinBench-P1A-Refine — Regenerate Single-hop QA
 
 **REVIEW**, ngày13/11/2026; [implementation d7a5b97](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d7a5b97f75d0fcd7e1ed08b5d7c7968b539b4a77).

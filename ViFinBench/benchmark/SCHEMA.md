@@ -1,7 +1,9 @@
 # ViFinBench — Schema v1
 
 **Khóa quy ước dữ liệu v1 ngày 13/11/2026.** Áp dụng các trường chung cho mọi
-subset; P1A-Finalize chờ Tech Lead nghiệm thu REVIEW. JSON/JSONL dùng UTF-8;
+subset; P1A-Finalize **DONE — APPROVED WITH CAVEATS**, Tech Lead ngày13/11/2026,
+phạm vi Single-hop Pilot. Caveats về nguồn đơn vị và loại tài liệu được xử lý khi
+chuẩn bị P1B theo nhiệm vụ được giao. JSON/JSONL dùng UTF-8;
 mỗi dòng JSONL là một item, không có dòng trống. Metadata nằm ngoài từng item.
 
 ## 1. Item chung

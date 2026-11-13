@@ -1,6 +1,6 @@
 # ViFinBench-P1A-Finalize — Gold QA Normalization & Schema v1 Freeze
 
-Ngày thực hiện: **13/11/2026** (Asia/Bangkok). Trạng thái: **REVIEW**, chờ Tech Lead nghiệm thu phần chuẩn hóa/schema.
+Ngày thực hiện: **13/11/2026** (Asia/Bangkok). Trạng thái: **DONE — APPROVED WITH CAVEATS**, Tech Lead phê duyệt ngày 13/11/2026, phạm vi Single-hop Pilot.
 Chất lượng nội dung P1A đã được Tech Lead phê duyệt theo brief Finalize; baseline [d7a5b97](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d7a5b97f75d0fcd7e1ed08b5d7c7968b539b4a77).
 
 ## 1. Kết quả
@@ -419,8 +419,17 @@ Focused checks local PASS: JSONL/JSON parse; đúng 15 ID và phân bố 5/7/3, 
 
 Metadata có 41 key trùng toàn bộ corpus và bao phủ 12 document Pilot; tên/năm đối chiếu nội dung từng tài liệu, scope không suy từ ô checkbox bỏ trống hoặc từ năm khác. Unknown được liệt kê ở mục 3. 123 neutral hashes, audit và mọi local changes ngoài task giữ nguyên. `git diff --check` PASS; không full CI, Gemini/API, evaluator hoặc sửa pipeline. Không sửa planning/checker vì brief giới hạn đúng bốn file.
 
-Giới hạn: phạm vi unknown cần xác minh bổ sung khi dùng cho câu hỏi phụ thuộc riêng/hợp nhất; lượt này không mở rộng xác minh ảnh/PDF hoặc tính đầy đủ của corpus. Chất lượng nội dung được duyệt trong brief không đồng nghĩa accuracy toàn corpus hay kết quả chạy mô hình. Schema v1 là quy ước đã được ghi thành tài liệu, Finalize vẫn chờ nghiệm thu REVIEW.
+Giới hạn: phạm vi unknown cần xác minh bổ sung khi dùng cho câu hỏi phụ thuộc riêng/hợp nhất; lượt này không mở rộng xác minh ảnh/PDF hoặc tính đầy đủ của corpus. Chất lượng nội dung được duyệt trong brief không đồng nghĩa accuracy toàn corpus hay kết quả chạy mô hình. Schema v1 là quy ước đã được ghi thành tài liệu; Tech Lead đã nghiệm thu Finalize với caveats trong phạm vi Single-hop Pilot.
 
-Implementation là commit chứa đúng bốn file đầu ra; SHA được xác minh trong bàn giao Git.
+Implementation chuẩn hóa là `f44e20828a85546f8fe1492902b0dcbd7d642fa5`, chứa đúng bốn file đầu ra; quyết định nghiệm thu và phiên đồng bộ tracking được ghi ở mục 6.
 
-**Next action:** Tech Lead nghiệm thu P1A-Finalize và Schema v1.
+## 6. Nghiệm thu Tech Lead
+
+Ngày **13/11/2026**: **APPROVED WITH CAVEATS — P1A-Finalize DONE**.
+Phạm vi nghiệm thu là **Single-hop Pilot** tại [implementation f44e208](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/f44e20828a85546f8fe1492902b0dcbd7d642fa5), đã xác minh local main/remote cùng SHA trước cập nhật nghiệm thu.
+
+Hai cải thiện về nguồn xác nhận đơn vị và loại tài liệu được giữ làm caveats để xử lý gọn khi chuẩn bị P1B. Quyết định không yêu cầu làm lại 15 QA, không mở vòng Finalize mới và không mở rộng nghiệm thu sang P1B/P1C hoặc Full QA.
+
+Phiên nghiệm thu chỉ đồng bộ trạng thái báo cáo/schema và registry/dashboard/current-status; checker nhận Task ID Finalize. Planning checker, Ruff cho checker và diff checks PASS local; không chạy lại data validation, QA, Gemini/API hoặc full CI. Dataset, document metadata, neutral và audit giữ nguyên; local changes ngoài task được bảo toàn.
+
+**Next action:** Chờ Owner/Tech Lead giao task chuẩn bị P1B.
