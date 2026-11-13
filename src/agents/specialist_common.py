@@ -653,7 +653,9 @@ def generate_candidates(
     if candidate_analyses is not None:
         payload = dict(payload, analyses=[a.model_dump(mode="json") for a in candidate_analyses])
         result.trace.append(
-            SpecialistTrace(stage="generation", outcome="grounded_observation_candidates_pending_M6")
+            SpecialistTrace(
+                stage="generation", outcome="grounded_observation_candidates_pending_M6"
+            )
         )
     if (
         set(payload)
@@ -727,7 +729,8 @@ def generate_candidates(
                         **{k: getattr(s, k) for k in DynamicOperand.model_fields}
                     )
                     for s in sources
-                    if s.kind == "fact" and (not operation_inputs_only or s.evidence_id in input_ids)
+                    if s.kind == "fact"
+                    and (not operation_inputs_only or s.evidence_id in input_ids)
                 }
                 valid_operations = []
                 for operation in analysis.operations:
