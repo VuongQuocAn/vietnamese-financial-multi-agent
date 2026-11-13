@@ -380,6 +380,16 @@ def test_v2_m6_reuses_detached_request_catalog_and_preserves_input(tmp_path):
     assert before == [f.model_dump_json() for f in catalog.facts]
     seen[0].facts[0].context.raw_item_label = "changed after request"
     assert before == [f.model_dump_json() for f in catalog.facts]
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    sibling = batch.claims[0].model_copy(deep=True)
+    sibling.candidate_id += "-sibling"
+    sibling.provenance.m5_candidate_id = sibling.candidate_id
+    batch.claims.append(sibling)
+    histories = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True).verify(batch)
+    assert all(h.outcome.final.decision == "ACCEPT" for h in histories)
+    histories[0].proof.batch.caveats.append("mutated by caller")
+    assert "mutated by caller" not in histories[1].proof.batch.caveats
+    assert "mutated by caller" not in batch.caveats
 
 
 def test_atomic_json_preserves_wire_and_previous_snapshot_on_encoding_error(tmp_path):

@@ -331,8 +331,8 @@ class LiteVerificationRuntime:
         }
         for claim in batch.claims:
             local = (
-                batch.model_copy(
-                    update={"claims": [claim], "context": batch.context.model_copy(deep=True)}
+                batch.model_copy(update={"claims": []}).model_copy(
+                    deep=True, update={"claims": [claim]}
                 )
                 if self.integration_v2
                 else batch.model_copy(deep=True, update={"claims": [claim]})
