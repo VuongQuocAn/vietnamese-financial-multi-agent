@@ -2,17 +2,17 @@
 
 ## V2-INT-01 — Minimal Integration Migration
 
-**REVIEW**, ngày13/11/2026; implementation `2783e7dd71b1a53db91c1a363d757fff67630622`
-trên main, V2 opt-in. C07 child released IDs nối current ledger→M7 trực tiếp,
-không lookup lại target; không đổi M6/policy/tools hoặc thêm agent/verifier.
-OfflineC01/C04/C07/C10 đạt boundary controls;22historic entries và607protected
-non-runtime unchanged; targeted cuối27PASS,Ruff/planning/diff đạt.
-Live đúng1lượt: C01PARTIAL5calls/26802tokens; C07PARTIAL5calls/8851tokens,
-document1/1ACCEPT giữ ởroot nhưng thiếuLNST; C10INTERRUPTED doAPI timeout tại call1.
-Tổng11attempts,35653knowntokens+1unknown,0retry; dừng ngay, không sửa/rerun sau live.
-Còn lỗi target/source handles, M6globalcomparisonperiod, thiếu synthesis/constraint.
-[Report QA thật](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead nghiệm thu phần đã kiểm chứng và các giới hạn QA còn lại.
+**REVIEW**, ngày13/11/2026; implementation `474cc218498512748aaaa96ab463c070b27f9228`
+trên main, V2 opt-in. Sửa source handle/canonical resolution tại M5, claim-local
+period tại M6 và canonical requirement→verified claim→rendered coverage/dedup tại M7.
+Raw Qwen C01:11ACCEPT/1ABSTAIN/2INVESTIGATE,3numeric requirements satisfied,
+26,71% một lần; debt/assets facts và ratio hết false ABSTAIN. C07:2financial facts
+ACCEPT qua numeric fallback sẵn có, document ACCEPT/PDF12 giữ nguyên, citations7/12.
+Source stage riêng46targeted PASS;1test M7 restoration baseline FAIL được giữ nguyên
+và deselect. RawC01/C07 + savedC04/C10 replay PASS,0API; không đổi source inputs.
+Chưa live xác nhận; C01 thiếu saved semantic verdict, synthesis/constraint còn giới hạn.
+[Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
+Next action: Tech Lead/Owner review offline và quyết định cấp phép một lượt live xác nhận.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

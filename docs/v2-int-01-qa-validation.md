@@ -1,5 +1,101 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Bổ sung sửa source, claim-local period và coverage — 13/11/2026
+
+**REVIEW**, implementation `474cc218498512748aaaa96ab463c070b27f9228`, base `68c22ee` trên main;
+`integration_v2` vẫn opt-in. Owner giao sửa tiếp đúng V2-INT-01, không mở task/nhánh,
+không gọi Qwen. Các phần phía dưới giữ bằng chứng lịch sử của lượt live trước sửa.
+
+### Nguyên nhân và code sửa
+
+- `lite_orchestrator.resolve_source/resolve_requirements/run`: source lookup cũ chỉ
+  nhận S handles; requirements lại dùng chính handles như canonical target. Python
+  nay resolve handle/canonical item trong inventory đã ghim company/document/snapshot/
+  reporting scope, chọn đúng kỳ từ assigned requirements và operand periods. Không
+  dùng requirement ID làm source ID; unknown, period mismatch và ambiguous có reason
+  riêng, không chọn một record tùy ý. Metric inventory cần operands cùng pinned scope.
+  Role không cấm đọc nguồn hợp lệ của domain khác. Giữ requirement IDs/text và refs.
+- `integration_workspace._matches_metric_expression/matches_requirement/export`:
+  normalize targets/indicators trước binding; đối chiếu cấu trúc biểu thức với
+  definition và ordered canonical operands/kỳ trong inventory, cùng requested unit.
+  Vì vậy percentage_change hợp lệ có thể đáp ứng revenue_yoy, nhưng quotient của chỉ
+  tiêu khác, đảo operands hoặc sai kỳ/đơn vị không đáp ứng. Không thêm formula/policy.
+  Scalar retrieval bị model gắn nhầm kind=metric/interpretation được chuẩn hóa tại M5;
+  yêu cầu diễn giải rõ ràng vẫn cần semantic support.
+- `validators._requested_periods/_context/_reasoning`: V2 dùng kỳ của claim và sources,
+  thay comparison periods của toàn câu. Vẫn kiểm canonical period/type, exact request
+  pins, company/document/snapshot/scope, values/units, operands và citations. Legacy
+  giữ cách kiểm cũ. `lite_runtime.verify` giữ binding của derived proof đã ACCEPT mà
+  không đòi thêm semantic verdict; diễn giải vẫn đi cùng semantic batch hiện có.
+- `qa_lite.compose_lite`: chỉ với V2 sidecar, gộp segments có cùng nội dung và scope;
+  hợp nhất claim IDs/citations, giữ các findings khác nhau. M7 chỉ chiếu binding từ
+  verified claims thực sự phát hành, không diễn giải lại requirement hay kiểm tài chính.
+
+### Raw replay trước/sau
+
+Runner `scripts/replay_v2_raw.py` dùng **nguyên response** trong
+`qa-completion/live/provider-events.json` cho C01/C07, chạy lại pipeline thật bằng
+SavedGateway chỉ đọc file, không tạo provider adapter. Không sửa Qwen output, thêm
+verdict còn thiếu hoặc thay response bằng fixture. Trước là execution đã lưu cùng
+lượt live; sau là replay trên source đã stage riêng, tách khỏi local runtime ngoài task.
+
+| Case | Trước | Sau offline |
+| --- | --- | --- |
+| C01 | 7 ACCEPT / 6 ABSTAIN / 1 INVESTIGATE, 6 unique releases; 3 requirements unverified; 26,71% lặp 3 lần | 11 ACCEPT / 1 ABSTAIN / 2 INVESTIGATE, 9 unique releases; 3 numeric requirements satisfied; 26,71% đúng 1 lần |
+| C07 | 0 financial facts retrieved; 1 document ACCEPT/release PDF12 | LNST2025 và2024 được resolve/truy xuất đúng; 2 financial facts ACCEPT từ numeric fallback V2 sẵn có, cộng đúng document ACCEPT cũ; citations PDF7/12 |
+
+C07 không giả Qwen sinh numeric claims mới: hai responses specialist gốc vẫn claims=[],
+khai thiếu dữ liệu và analyses hỏng schema. Chỉ numeric source fallback **đã có từ trước**
+mới tạo candidates qua M6 sau khi retrieval được sửa; absence prose không được phát hành.
+Requirement2024 do model thêm vẫn còn, chưa sửa planning ngoài ba nguyên nhân được giao.
+
+| C01 candidate (suffix) | Trước → sau | Ý nghĩa |
+| --- | --- | --- |
+| `eb85321eafb8cfc367d7fb9a` | ABSTAIN → ACCEPT | Nợ phải trả tại2025-12-31 |
+| `37663657fb14968dbe7421b2` | ABSTAIN → ACCEPT | Tổng tài sản tại2025-12-31 |
+| `f3d5f7da6c87b5bccc13935f`, `01912929fd8e191bf2d18c29` | ABSTAIN → ACCEPT | Hai candidates cùng phép nợ/tài sản; một ledger identity/paragraph |
+| `af00458bddec0650bff909df` | ABSTAIN → INVESTIGATE | Hết lỗi kỳ; response M6 cũ không có verdict cho claim này, không tự bổ sung |
+| `2285c67b1361fd374c95e34f` | ABSTAIN → ABSTAIN | Prose59,06% dùng proof ratio; vẫn unbound number/unit |
+
+| Binding | Trước | Sau |
+| --- | --- | --- |
+| C01 R001 | S34, indicators S11/S9; không binding | debt_to_assets, total_liabilities/total_assets; verified derived ratio đã render |
+| C01 R002 | S35, indicators S15/S16; không binding | revenue_yoy, net_revenue với đúng2025/2024; verified percentage_change đã render |
+| C01 R003 | S25, kind metric; không binding | b03.operating_cash_flow, kind fact, kỳ2025/VND; verified CFO fact đã render |
+| C07 R1:R001/R002 | canonical target có nhưng sources canonical bị loại; không binding | sources resolve đúng2025/2024; hai verified LNST facts đã render |
+| C07 R2/R2:R1 | document ACCEPT đã phát hành | Giữ nguyên verified ID và citation PDF12 |
+
+C01 vẫn `partial_verified_coverage`: thiếu semantic verdict gốc cho claim nợ mới qua
+deterministic gates được ghi technical error; CFO inference vẫn INVESTIGATE. Cả ba
+numeric rows satisfied không đồng nghĩa đã có nhận xét tổng hợp đầy đủ. C07 replay
+`completed_with_caveats` không chứng minh Qwen sẽ tự dùng nguồn mới hoặc giữ negative
+constraint trong một lượt mới. Chưa xác nhận synthesis/constraint hoặc live quality.
+
+### Kiểm chứng và giới hạn bàn giao
+
+- Source stage riêng: **46 targeted PASS, 1 deselected** qua V2 integration, M5/M6 Lite,
+  M7 Lite và comparative-period controls. Ba tests mới kiểm source variants/pins/role,
+  công thức/ordered operands/units/kỳ/goal và claim-local negative controls. Đây là
+  counterfactual fixtures kiểm logic, tách biệt raw replay nêu trên.
+- Test deselected `test_m7_restores_omitted_accepted_comparison_without_new_verification`
+  đã FAIL cả với `qa_lite.py` trước task: restored_calculation_claims rỗng khi test mong
+  một ID. Giữ nguyên test, không sửa lỗi ngoài scope; không báo toàn suite xanh.
+- Saved C04: ba absence claims không ACCEPT khi retrieval chưa đủ. Saved C10: hai
+  proofs đúng và current-assets fact ACCEPT, phép trừ sai không ACCEPT. Không live C10.
+- Controls sai giá trị, nguồn, company/document/snapshot, kỳ/type, unit, thiếu citation,
+  tên chỉ tiêu và đảo operands vẫn bị chặn; ambiguous source giữ unresolved.
+- Raw provider/execution inputs giữ nguyên; artifacts mới riêng tại
+  `artifacts/evidence/V2-INT-01/source-period-coverage/staged-raw/`. Không OCR/Gemini,
+  benchmark, full CI hoặc dataset/hash audit diện rộng. Không ghi/lưu API key.
+- Ruff lint/format, planning checker và diff check đạt. Source ngoài task giữ local;
+  không gom dataset, notebooks hoặc credential/config vào commit. Các SHA verified IDs
+  mới phụ thuộc history/input digest; report JSON giữ toàn bộ bindings để đối chiếu.
+
+**Next action:** Tech Lead/Owner review bằng chứng offline và quyết định có cấp phép
+một lượt live xác nhận; chưa gọi Qwen và không tự nghiệm thu DONE.
+
+## Lịch sử QA trước lần sửa này
+
 **REVIEW — chờ Tech Lead nghiệm thu**, 13/11/2026 (Asia/Bangkok).
 Implementation: `2783e7dd71b1a53db91c1a363d757fff67630622`, baseline main
 `8b669be77f209a8cc0a6fb56ab36fa906a940092`. Tiếp tục V2-INT-01 theo Owner,

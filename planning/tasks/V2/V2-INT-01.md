@@ -15,6 +15,17 @@ Triển khai requirement IDs, shared evidence workspace trong một request và 
 ba specialists hiện có; nối M6/M7 bằng binding tối thiểu, không xây orchestration
 framework mới hoặc refactor Ledger/M7 diện rộng.
 
+Owner giao tiếp13/11/2026: hoàn thiện C07 mixed child→root binding, kiểm C01/C10;
+làm trực tiếp main, V2 opt-in, không tạo task/nhánh/agent/policy mới. Offline đạt
+mới chạy đúng một lượt C01/C07/C10, max6calls/câu/18tổng, không retry; API lỗi dừng.
+Không sửa runtime hoặc chạy lại sau khi live FAIL. Commit/push đúng phạm vi lên main.
+
+Owner giao tiếp13/11/2026: sửa ba nguyên nhân M5 source resolution, M6 claim-local
+verification và M6→M7 requirement coverage; giữ V2-INT-01, trực tiếp main, V2 opt-in.
+Dùng nguyên saved Qwen responses C01/C07, saved execution C04/C10 và negative controls.
+Không gọi Qwen trong task này; config được cấp không thay thế quyền live riêng.
+Commit/push thay đổi tối thiểu lên main; dừng REVIEW, không tự nghiệm thu DONE.
+
 ## Context
 
 Owner/Tech Lead APPROVED ARCH-RESET-01 ngày13/11/2026 trên báo cáo commit
@@ -37,10 +48,10 @@ Opt-in integration V2, focused offline controls/replay và báo cáo ngắn
 
 ## Allowed Changes
 
-Lite orchestration/requirements/workspace, request wiring, localized M6 numeric/
-semantic binding và M7 coverage sidecar, planning checker đăng ký ID, tests/docs.
-Giữ legacy readers và existing default paths tương thích. Owner yêu cầu commit/push
-riêng implementation và báo cáo lên nhánh review; không đưa vào main hoặc sửa runtime thêm.
+Lite orchestration/requirements/workspace, localized M6 numeric/semantic binding,
+M7 coverage/dedup, targeted tests/replay và docs/planning. Giữ legacy readers,
+contracts/module boundaries và default paths. Owner yêu cầu commit/push main đúng
+phạm vi; không gom local edits ngoài task.
 
 ## Out of Scope
 
@@ -83,6 +94,19 @@ Snapshot cuối chưa live xác nhận; không dùng kết quả trước sửa 
 
 ## Implementation Evidence
 
+Implementation `474cc218498512748aaaa96ab463c070b27f9228` trên main, base `68c22ee`.
+Raw replay C01:11ACCEPT/1ABSTAIN/2INVESTIGATE,9unique releases,3numeric requirements
+satisfied,26,71%mộtlần; nợ/tài sản và ratio hết false ABSTAIN do global period.
+C07:resolve đúng LNST2025/2024,2financial facts ACCEPT qua numeric fallback V2 sẵn có;
+document ACCEPT nguyên ID/citationPDF12,final citations7/12. Không sửa raw Qwen outputs.
+Source stage riêng46targetedPASS;1test M7 restoration đã FAIL ở baseline được giữ
+nguyên/deselect. SavedC04absence khôngACCEPT,C10đúngproof/factACCEPT/sốsai khôngACCEPT;
+negative source/value/period/type/unit/item/operand controls đạt. Ruff/planning/diffPASS.
+0API,không fullCI/OCR/benchmark. C01 thiếu saved semantic verdict; synthesis/constraint
+và live end-to-end chưa được chứng minh. [Chi tiết](../../../docs/v2-int-01-qa-validation.md).
+
+### Lịch sử trước lần sửa source/period/coverage
+
 Phiên hoàn thiện QA V2 theo Owner13/11: implementation
 `2783e7dd71b1a53db91c1a363d757fff67630622`, trực tiếp main, V2 opt-in.
 Offline giữ C07 child ACCEPT ở root/citations7+12, C01assignments/shared evidence,
@@ -111,4 +135,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu phần đã kiểm chứng và các giới hạn QA còn lại.
+Next action: Tech Lead/Owner review offline và quyết định cấp phép một lượt live xác nhận.
