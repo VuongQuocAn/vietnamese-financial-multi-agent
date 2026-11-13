@@ -205,6 +205,22 @@ def integration_plan(payload):
         errors.append("supervisor_plan_limit_exceeded")
     for raw in raw_requirements[:16]:
         try:
+            if isinstance(raw, dict):
+                raw = dict(raw)
+                # Provider shorthand for an existing goal, not new authority.
+                if raw.get("kind") == "calculation":
+                    raw["kind"] = "metric"
+                elif raw.get("kind") in {"analysis", "synthesis", "limitation"}:
+                    raw["answer_goal"] = raw["kind"]
+                    raw["kind"] = "explanation"
+                if raw.get("answer_goal", "value") != "value":
+                    raw.update(
+                        kind="explanation",
+                        aspect="value",
+                        target_id=None,
+                        requested_unit=None,
+                        interpretation=True,
+                    )
             requirement = IntegrationRequirement.model_validate(raw)
             if not requirement.requirement_id.strip() or not requirement.text.strip():
                 raise ValueError("empty_requirement")
@@ -216,6 +232,11 @@ def integration_plan(payload):
     ids = {r.requirement_id for r in requirements}
     for index, raw in enumerate(raw_tasks[:6]):
         try:
+            if isinstance(raw, dict):
+                raw = dict(raw)
+                raw["sources"] = [
+                    s for s in raw.get("sources", []) if s not in raw.get("depends_on", [])
+                ]
             task = LiteTask.model_validate(raw)
             task.task_id = task.task_id or f"T{index + 1}"
             if not task.requirement_ids or set(task.requirement_ids) - ids:
@@ -355,6 +376,8 @@ def resolve_requirements(plan, sources):
 
     targets = {}
     for requirement in plan.requirements:
+        if requirement.answer_goal != "value":
+            continue
         if not requirement.target_id or requirement.kind not in {"fact", "metric", "explanation"}:
             continue
         handle, error = resolve_source(
@@ -388,6 +411,7 @@ def resolve_requirements(plan, sources):
         if (
             source["kind"] == "fact"
             and not requirement.reasoning_operations
+            and requirement.interpretation_topic != "dynamic_calculation"
             and re.match(r"^(?:tinh|tim|neu)\b", text)
             and not any(term in text for term in INTERPRETATION_TERMS)
         ):
@@ -426,11 +450,11 @@ def preserve_answer_goal(plan, question, targets):
                 o.canonical_item_id for o in source["records"][0].definition.compatibility.operands
             )
     goals = [r for r in plan.requirements if r.answer_goal != "value"]
-    if not goals:
+    if not any(normalize(r.text) == text for r in goals):
         rid = "R-response"
         while any(r.requirement_id == rid for r in plan.requirements):
             rid += "-next"
-        goals = [
+        whole_goal = [
             IntegrationRequirement(
                 requirement_id=rid,
                 text=question,
@@ -441,7 +465,8 @@ def preserve_answer_goal(plan, question, targets):
                 depends_on=[r.requirement_id for r in plan.requirements],
             )
         ]
-        plan.requirements.extend(goals)
+        plan.requirements.extend(whole_goal)
+        goals.extend(whole_goal)
     task = next((t for t in plan.tasks if t.depends_on), None)
     if task is None:
         goal_ids = {r.requirement_id for r in goals}
@@ -470,7 +495,90 @@ def preserve_answer_goal(plan, question, targets):
         dict.fromkeys([*task.requirement_ids, *(r.requirement_id for r in goals)])
     )
     for goal in goals:
-        goal.required_indicators = sorted(set(goal.required_indicators) | indicators)
+        goal.required_indicators = sorted(indicators)
+
+
+def preserve_explicit_facts(plan, question, sources):
+    """Reuse the existing alias inventory to retain omitted explicit fact requests.
+
+    Only a unique fact in an explicitly named year is added; no fuzzy source or
+    accounting formula is inferred. Existing indicator/operand goals are kept.
+    """
+    from ..outputs.qa_composer import _targets
+
+    if not plan.tasks or not plan.requirements:
+        return
+    covered = {r.target_id for r in plan.requirements if r.answer_goal == "value"}
+    covered.update(
+        i for r in plan.requirements if r.answer_goal == "value" for i in r.required_indicators
+    )
+    covered = {sources.get(reference, {}).get("item", reference) for reference in covered}
+    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", question))
+    for kind, item in _targets(normalize(question)):
+        if kind != "fact" or item in covered:
+            continue
+        matches = [
+            (h, s)
+            for h, s in sources.items()
+            if s["kind"] == "fact"
+            and s["item"] == item
+            and s["period"][:4] in years
+            and len(s["records"]) == 1
+        ]
+        if len(matches) != 1 or len(plan.tasks) >= 6:
+            continue
+        handle, source = matches[0]
+        rid, tid = "R-explicit", "T-explicit"
+        while any(r.requirement_id == rid for r in plan.requirements):
+            rid += "-next"
+        while any(t.task_id == tid for t in plan.tasks):
+            tid += "-next"
+        req = IntegrationRequirement(
+            requirement_id=rid,
+            text=f"Nêu {source['label']} kỳ {source['period']}",
+            kind="fact",
+            target_id=item,
+            period=source["period"],
+            required_indicators=[item],
+        )
+        task = LiteTask(
+            task_id=tid,
+            specialist=source["roles"][0],
+            objective=req.text,
+            sources=[handle],
+            requirement_ids=[rid],
+        )
+        position = next((i for i, t in enumerate(plan.tasks) if t.depends_on), len(plan.tasks))
+        plan.tasks.insert(position, task)
+        for dependent in plan.tasks[position + 1 :]:
+            if dependent.depends_on:
+                dependent.depends_on.append(tid)
+        plan.requirements.append(req)
+        covered.add(item)
+
+
+def retain_requested_periods(plan, question):
+    """Do not turn unsolicited standalone model years into user obligations."""
+    text = normalize(question)
+    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", question))
+    if not years or any(w in text for w in ("so voi", "so sanh", "nam truoc", "tang", "giam")):
+        return
+    for req in plan.requirements:
+        if (
+            req.answer_goal == "value"
+            and not req.interpretation
+            and req.period
+            and req.period[:4] not in years
+        ):
+            req.required = False
+            req.reason = "period_not_requested"
+    optional = {r.requirement_id for r in plan.requirements if not r.required}
+    for task in plan.tasks:
+        task.requirement_ids = [rid for rid in task.requirement_ids if rid not in optional]
+    plan.tasks = [t for t in plan.tasks if t.requirement_ids]
+    ids = {t.task_id for t in plan.tasks}
+    for task in plan.tasks:
+        task.depends_on = [tid for tid in task.depends_on if tid in ids]
 
 
 def fallback_plan(question, sources):
@@ -852,6 +960,11 @@ class FinancialLiteOrchestrator:
                 "shared_tasks.candidate_proofs là phép tính backend đã chạy nhưng chưa ACCEPT; "
                 "nếu nêu kết quả tính trong statement phải khai operations tương ứng trên facts "
                 "để M6 replay. Giữ constraints của user_question, kể cả không suy diễn."
+                " Tổng hợp chỉ cần một analysis liên kết các quan sát và giới hạn; không cần "
+                "lặp các con số đã có numeric candidates. Không thêm kỳ so sánh hoặc chỉ tiêu "
+                "ngoài câu hỏi. Dùng chiều biến động/kết quả từ shared proofs; khi chỉ mô tả "
+                "các quan sát độc lập có thể operations=[], nhưng phải dẫn đủ evidence_ids. "
+                "Không đổi ratio thành phần trăm khi proof chỉ có đơn vị ratio."
             )
         deterministic = self.gateway is None or context.mode == "deterministic"
         if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
@@ -925,6 +1038,8 @@ class FinancialLiteOrchestrator:
         output.caveats.extend(gaps)
         workspace, prepared = None, []
         if self.integration_v2:
+            retain_requested_periods(plan, question)
+            preserve_explicit_facts(plan, question, sources)
             targets = resolve_requirements(plan, sources)
             preserve_answer_goal(plan, question, targets)
             requirements = plan.requirements or [
@@ -1054,6 +1169,12 @@ class FinancialLiteOrchestrator:
                             for period in [r.period, *r.reasoning_periods]
                             if period
                         }
+                        for rid in task.requirement_ids:
+                            target = workspace.targets.get(rid)
+                            if target and target["kind"] == "metric":
+                                periods.update(
+                                    target["records"][0].request.operand_periods.values()
+                                )
                         resolved, resolution_error = resolve_source(handle, sources, periods)
                         if resolution_error:
                             bundle.limitations.append(resolution_error + ":" + handle)

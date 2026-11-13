@@ -13,6 +13,13 @@ không tạo agent hay kết luận tự động. Chỉ reasoned_conclusion có 
 premises được đề xuất bind; cùng M6 semantic pass phải xác nhận truth và goal support.
 M7 nhóm theo verified bindings và gộp nguyên dòng trùng trong cùng source scope,
 giữ mọi claim IDs/citations; không sinh prose tài chính mới hoặc kiểm chứng lại.
+Tên kind shorthand của provider được chuẩn hóa trước schema hiện có; các IDs phụ
+thuộc task không bị dùng làm source handles. Kỳ toán hạng metric lấy từ inventory,
+không phụ thuộc model liệt kê đủ reasoning_periods. Alias fact rõ trong câu hỏi chỉ
+được bổ sung khi một source đúng năm xác định duy nhất; không fuzzy-match hay đoán nguồn.
+Dynamic-calculation binding cần semantic goal support trong M6 dù arithmetic đã đúng.
+M7 chỉ chọn claims có verified requirement binding và fact operands của chúng;
+ACCEPT của một fact ngoài mục tiêu không phải quyền phát hành toàn bộ inventory.
 Workspace chỉ trong request, evidence handles resolve về canonical reference,
 không đổi facts/snapshots/EF-EG. OrchestrationResult chỉ serialize integration_context
 khi có, giữ legacy digest serialization khi không dùng V2.

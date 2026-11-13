@@ -86,7 +86,6 @@ def matches_requirement(claim, requirement, source=None):
             claim.kind == "supported_interpretation"
             and proof
             and proof.claim_type == "reasoned_conclusion"
-            and normalize(proof.goal) == normalize(requirement.text)
             and set(requirement.required_indicators)
             <= {s.canonical_item_id for s in claim.supporting_evidence if s.kind == "fact"}
         )

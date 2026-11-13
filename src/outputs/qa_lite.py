@@ -525,6 +525,30 @@ def compose_lite(
 ):
     """Return public fields and auditable metadata; at most one generate(), no retry."""
     started = perf_counter()
+    if coverage_context is not None:
+        verified = coverage_context.get("verified_requirements", {})
+        supported = coverage_context.get("supported_requirements", {})
+        bound = [
+            e
+            for e in selected
+            if verified.get(
+                e.identity.verified_claim_id, supported.get(e.identity.accepted_candidate_id, [])
+            )
+        ]
+        refs = {
+            r.model_dump_json()
+            for e in bound
+            for r in getattr(e.accepted_claim, "fact_references", [])
+        }
+        selected = [
+            e
+            for e in selected
+            if e in bound
+            or (
+                e.identity.kind == "fact"
+                and any(r.model_dump_json() in refs for r in e.accepted_claim.fact_references)
+            )
+        ]
     entries = {e.identity.verified_claim_id: e for e in selected}
     trace = dict(
         selected_claims=list(entries),

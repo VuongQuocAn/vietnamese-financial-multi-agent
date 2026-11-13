@@ -480,7 +480,7 @@ def test_original_commentary_goal_has_dependent_owner_and_cannot_bind_a_number()
         claim.reasoning.claim_type = "reasoned_conclusion"
         claim.reasoning.goal = question
         assert matches_requirement(claim, goal)
-        claim.reasoning.goal = "another goal"
+        claim.supporting_evidence = claim.supporting_evidence[:1]
         assert not matches_requirement(claim, goal)
 
 
@@ -521,3 +521,66 @@ def test_multiperiod_commentary_still_requires_semantic_truth_and_goal_support()
     runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
     assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "ACCEPT"
     assert runtime.summary["supported_requirements"] == {claim.candidate_id: [req.requirement_id]}
+
+
+def test_provider_goal_shorthand_and_catalog_operand_periods_survive_missing_model_periods():
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    catalog = SnapshotCatalog(**data)
+    context = batch.context.model_copy(update={"mode": "deterministic"})
+    sources = inventory(catalog, context)
+    metric = next(h for h, s in sources.items() if s["kind"] == "metric")
+    facts = [h for h, s in sources.items() if s["kind"] == "fact"]
+    wire = dict(
+        requirements=[
+            dict(
+                requirement_id="R1",
+                text="Tính tăng trưởng",
+                kind="metric",
+                target_id=metric,
+                period="2030",
+                interpretation=True,
+                required_indicators=facts,
+            ),
+            dict(
+                requirement_id="R2",
+                text="Nhận xét",
+                kind="analysis",
+                aspect="analysis",
+                required_indicators=["R1"],
+                answer_goal="analysis",
+            ),
+        ],
+        tasks=[
+            dict(
+                task_id="T1",
+                specialist="profitability",
+                objective="Tính tăng trưởng",
+                requirement_ids=["R1"],
+                sources=facts,
+            ),
+            dict(
+                task_id="T2",
+                specialist="profitability",
+                objective="Nhận xét",
+                requirement_ids=["R2"],
+                sources=["T1"],
+                depends_on=["T1"],
+            ),
+        ],
+    )
+    plan, errors = integration_plan(wire)
+    assert not errors and plan.tasks[1].sources == []
+    engine = FinancialLiteOrchestrator(
+        catalog,
+        integration_v2=True,
+        supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
+    )
+    result = engine.run(
+        question="Nhận xét tăng trưởng doanh thu năm 2030 so với 2029", context=context
+    )
+    assert {f.record.context.period for f in result.supervisor_result.evidence_bundle.facts} == {
+        "2029",
+        "2030",
+    }
+    assert not result.errors
+    assert any(r["answer_goal"] != "value" for r in result.integration_context["requirements"])

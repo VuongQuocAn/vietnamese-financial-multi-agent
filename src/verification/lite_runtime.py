@@ -311,6 +311,16 @@ class LiteVerificationRuntime:
 
     def verify(self, batch, *, integration_context=None, **_):
         self.integration_context = integration_context or {}
+        dynamic_goals = {
+            r["requirement_id"]
+            for r in self.integration_context.get("requirements", [])
+            if r.get("interpretation_topic") == "dynamic_calculation"
+        }
+        semantic_bindings = {
+            cid
+            for cid, ids in self.integration_context.get("candidate_requirements", {}).items()
+            if dynamic_goals.intersection(ids)
+        }
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         start = perf_counter()
         proofs, pending = [], []
@@ -381,7 +391,10 @@ class LiteVerificationRuntime:
             needs_binding = (
                 self.integration_v2
                 and claim.kind == "supported_interpretation"
-                and not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
+                and (
+                    not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
+                    or claim.candidate_id in semantic_bindings
+                )
                 and self.integration_context.get("candidate_requirements", {}).get(
                     claim.candidate_id
                 )
@@ -442,6 +455,7 @@ class LiteVerificationRuntime:
                     and not (
                         h.outcome.final.original_claim.reasoning
                         and h.outcome.final.original_claim.reasoning.claim_type == "derived_fact"
+                        and h.outcome.final.candidate_id not in semantic_bindings
                     )
                     else proposed.get(h.outcome.final.candidate_id, [])
                 )
