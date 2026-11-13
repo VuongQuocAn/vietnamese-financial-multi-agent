@@ -11,6 +11,18 @@
 
 ## Phiên tiếp tục QA thực tế — 13/11/2026
 
+Source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`, main/V2 opt-in.
+Live gần nhất `25f7316`: C01 PASS, C07 PARTIAL, C10 INTERRUPTED do adapter timeout;
+đã dừng, không retry/API mới. C01/C07 cùng mẫu: numeric 8/8, micro Claim F1
+91,67%→96%, citation18/18, Answer Accuracy0/2→1/2. C01 calls5→2, latency
+242,24→182,83s; C07 calls4→3 nhưng latency133,17→132,86s gần như không đổi.
+Không báo 13/13 trên bản cuối. `d5b91a7` sửa operand retrieval sau hồi quy C10 ở
+lượt đầu; đã kiểm offline, chưa live. 19staged V2/M6 trước sửa resolver;16V2 PASS
+working tree và3focused staged trên source cuối; real branch replay/negative control
+đạt. Không nới M6/thêm agent/full CI. [Báo cáo](../../../docs/v2-int-01-qa-validation.md).
+
+### Baseline và chỉ đạo trước phiên tối ưu
+
 Owner cho phép chủ động lựa chọn kỹ thuật và kiểm Qwen miễn phí; trực tiếp main,
 giữ local edits, dừng khi API/hạ tầng lỗi, commit/push và bàn giao REVIEW. Chỉ đạo này
 thay các giới hạn live cũ bên dưới; các Inputs/Evidence trước phiên là lịch sử.
@@ -194,4 +206,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead nghiệm thu final answers, metrics và các giới hạn QA trên source b113136; dừng REVIEW.
+Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source d5b91a7 khi Qwen sẵn sàng; dừng REVIEW.

@@ -1,17 +1,17 @@
 # Trạng thái hiện tại
 
-## V2-INT-01 — Minimal Integration Migration
+## V2-INT-01 — QA và hiệu năng
 
-**REVIEW**, 13/11/2026; source `b113136f876b7fa2c1411c8295e0a09cdb97220c` trên main, V2 opt-in.
-Live đủ ba câu cùng source: 14calls/50.688tokens, 0unknown/retry/provider errors.
-Numeric Accuracy 5/13→13/13; micro Claim Recall 8/19→16/19, F1 59,26%→91,43%;
-Precision/citation accuracy final 21/21. C01/C07/C10 đều PARTIAL, Answer Accuracy 0/3:
-chưa đủ tổng hợp/giải thích giới hạn. C10 giữ được vốn lưu động ròng/current ratio/CFO;
-không nới numeric verification để phát hành nhận xét sai. Runner hoàn tất ba lượt bộ ba;
-giữ cả hồi quy và giới hạn mixed-period reasoning, prose/latency trong báo cáo.
-16isolated V2/M6 targeted PASS; runner/scoring/M7 controls và Ruff/planning/diff đạt.
+**REVIEW**, 13/11/2026; source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`, main/V2 opt-in.
+Live gần nhất `25f7316`: C01 PASS, C07 PARTIAL, C10 INTERRUPTED (adapter timeout,
+dừng/0retry). Trên C01/C07: numeric8/8, microClaimF1 91,67%→96%, citation18/18,
+AnswerAccuracy0/2→1/2. C01 5→2calls,242,24→182,83s; C07 4→3calls, latency gần như
+không đổi132,86s. Không báo bản cuối đạt13/13 hoặc đủba câu. Sửa operand retrieval
+`d5b91a7` sau hồi quy C10 lượt đầu: offline đạt, chưa live. 19staged V2/M6 trước sửa
+resolver;16V2 working tree +3focused staged cuối PASS; real branch replay/negative
+control đạt; giữ M6, không thêm agent/full CI/local edits ngoài task.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead nghiệm thu final answers, metrics và các giới hạn QA trên source b113136; dừng REVIEW.
+Next action: Tech Lead review thay đổi/metrics và giới hạn còn lại, quyết định lượt xác nhận source d5b91a7 khi Qwen sẵn sàng; dừng REVIEW.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

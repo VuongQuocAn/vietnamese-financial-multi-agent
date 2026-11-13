@@ -1,5 +1,121 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Phiên tối ưu synthesis và hiệu năng — 13/11/2026
+
+**REVIEW — chưa đạt đầy đủ QA ba câu.** Source bàn giao `d5b91a7be185abd57bbf8de8f50e1927a6672856`
+trên main; live gần nhất dùng `25f73161b829dcc4162b006d4404a11644bf459b`.
+Qwen timeout tại call đầu C10, adapter `timeout/not_retryable`, 60,14s;
+runner dừng ngay, không retry hoặc gọi thêm API. Bản sửa operands `d5b91a7` đã kiểm
+offline nhưng **chưa live**. Các phiên dưới mục này là lịch sử, không phải kết quả
+live của source bàn giao mới.
+
+### So trực tiếp với baseline b113136
+
+Giữ nguyên Gold 8/5/6 atoms, 7/1/5 numeric slots và rubric ở dưới. Gold hiện lưu
+CRLF, SHA256 bytes `4f81b77c629a720e699d1494b2e638342bd9315ac13caa4243395a048ed7e40c`;
+chuẩn hóa LF khớp SHA `665ce0e…` đã công bố. Toàn bộ atoms khớp baseline reviews.
+Chấm final answer, không cộng số chỉ có trong ACCEPT/ledger. Interruption là N/A.
+
+| Câu | Gold QA trước → sau | Numeric Accuracy trước → sau | Claim F1 trước → sau | Answer Accuracy trước → sau | Citation Accuracy trước → sau |
+| --- | --- | --- | --- | --- | --- |
+| C01 | PARTIAL → **PASS** | 7/7 → 7/7 | 93,33% → **100%** | 0 → **1** | 9/9 → 11/11 |
+| C07 | PARTIAL → PARTIAL | 1/1 → 1/1 | 88,89% → 88,89% | 0 → 0 | 7/7 → 7/7 |
+| C10 | PARTIAL → INTERRUPTED | 5/5 → N/A | 90,91% → N/A | 0 → N/A | 5/5 → N/A |
+
+Trên **cùng hai câu evaluable C01/C07**: Numeric 8/8 giữ nguyên, numeric EM 2/2;
+micro Claim F1 91,67% → **96,00%**, Precision 100%, Recall 11/13 → 12/13;
+Answer Accuracy 0/2 → **1/2**; citation accuracy/completeness 16/16 → **18/18**.
+Không so 96% của hai câu với 91,43% baseline ba câu như cùng mẫu; không báo bản cuối
+đạt 13/13 hoặc Answer Accuracy 2/3. Reviewer vẫn là người triển khai, không đánh giá mù.
+
+| Câu | Calls baseline → live gần nhất | E2E gồm setup baseline → live gần nhất |
+| --- | ---: | ---: |
+| C01 | 5 → **2** | 242,24s → **182,83s** (−24,53%) |
+| C07 | 4 → **3** | 133,17s → **132,86s** (gần như không đổi) |
+| C10 | 5 → 1 attempt lỗi | 210,99s → 66,89s tới interruption, **không so tốc độ** |
+
+C01 hai calls là Supervisor và M6 semantic; các specialists dùng số/metric và
+candidate quan sát có căn cứ. Tổng provider latency C01 162,14s → 69,67s;
+E2E vẫn còn chi phí nạp catalog, replay/admission và nguồn. Một lượt trên hai câu
+không đủ kết luận hiệu năng tổng quát; C07 chưa chứng minh giảm latency.
+
+### Nguyên nhân và sửa kỹ thuật
+
+- Aggregation lấy evidence theo inventory, trong khi owner và `analysis_premises`
+  theo thứ tự IDs do specialist khai báo. Sai thứ tự gây false owner/item/period
+  mismatch. Giữ thứ tự khai báo cho reasoning, không đổi nguồn hay giá trị.
+- Supervisor chọn operands dù target là metric đã có, khiến LLM dựng lại công thức.
+  Resolve target chính xác rồi đưa handle metric vào retrieval, dùng Calculator và
+  numeric renderer hiện có. Chuẩn hóa yêu cầu thuần tính số khỏi cờ interpretation
+  sai của model; yêu cầu nhận xét riêng vẫn giữ. Narrative references tới requirement
+  IDs được mở rộng thành canonical operands đã resolve, không tự tạo chỉ tiêu.
+- Calculator trước kiểm một reporting context cho toàn graph, làm hai nhánh độc lập
+  doanh thu theo năm và tỷ số số dư cuối năm bị bác cùng nhau. V2 chỉ truyền operands
+  thực sự dùng và kiểm context theo dependency của từng phép toán. Replay thật chấp
+  nhận hai nhánh độc lập; control phép toán trộn stock/flow vẫn bị bác. Default cũ giữ.
+- Qwen tiếp tục thêm “ổn định”, nhận định cao/thấp và số/phần trăm không có proof dù
+  prompt cấm. Hai dạng yêu cầu có đủ nguồn — nhận xét sức khỏe tài chính và thanh khoản —
+  dùng candidate quan sát từ dấu/quan hệ của facts, kỳ đo và giới hạn kết luận. Không
+  có ngưỡng đánh giá hay dự báo. Candidate đi qua generator, M6 semantic và ledger
+  hiện có; thiếu/khác kỳ/ambiguous sources hoặc mục tiêu ngoài phạm vi thì trả về
+  generator cũ. Đây là xử lý có giới hạn, chưa chứng minh tổng quát hóa.
+- M7 hiển thị phép tính đơn bước bằng câu tiếng Việt và bỏ phần công thức/operands
+  lặp của approved metric; source facts và citations vẫn giữ. Không phát hành prose
+  tự do chưa được M6 kiểm. Không thêm agent, đổi Gateway/EF-EG hoặc bật V2 mặc định.
+
+**C01:** đủ doanh thu hai kỳ, tăng 26,71%, nợ/tài sản 59,06%, CFO dương; nhận xét
+liên kết ba khía cạnh và nói rõ không dùng riêng một chỉ tiêu để kết luận toàn bộ
+sức khỏe tài chính/xu hướng dài hạn. M6 ACCEPT 8, ABSTAIN 2; 8 ledger/released IDs,
+coverage complete. Nhận xét mới qua M6 semantic, không nới gate để phát hành prose sai.
+
+**C07 còn thiếu:** LNST và chính sách/ngoại lệ đúng, PDF7/12; scope note giữ yêu cầu
+không suy số vốn hóa. Nhánh document hiện chỉ có exact-source claim/proof, không sinh
+và kiểm chứng riêng giải thích “chính sách không xác định số vốn hóa thực tế”. Do đó
+quotation vẫn dài, scope acknowledgement không được chấm thành gold atom còn thiếu.
+Pipeline completed_with_caveats không đồng nghĩa QA PASS. Không thêm đường phát hành
+paraphrase không được M6 kiểm để làm đẹp điểm.
+
+### Giữ cả hồi quy và phần chưa xác nhận
+
+Lượt đầu `9eb0951`: đủ ba final, **11 calls/38.489 tokens/0 provider errors**;
+C01/C07/C10 lần lượt 198,13/101,44/152,32s, đều QA PARTIAL. Numeric **9/13**,
+micro Claim F1 **77,42%**, citation 15/15, Answer Accuracy 0/3. C10 chỉ phát hành CFO
+(1/5 numeric slots), không giữ được mức 5/5 của baseline; không che hồi quy này.
+Supervisor khai đúng canonical nợ ngắn hạn trong requirement nhưng chọn sai source
+handle, đồng thời đặt tên kết quả bằng chuỗi biểu thức chưa có trong catalog. Retrieval
+không lấy operand đã khai; các phép tính không được tạo, fact tài sản ACCEPT cũng
+không có binding để phát hành. Không phải M6 bác một phép tính đúng đủ nguồn.
+
+Sửa tại `d5b91a7`: resolve/truy xuất canonical operands trước khi resolve tên kết quả
+dynamic, giữ period/ambiguity guards; chuẩn hóa unit alias `lần` → `ratio`. Không suy
+phép toán/tên chỉ tiêu từ giá trị. Control dynamic target chưa đăng ký, unit/period/
+source/semantic requirement binding đạt. **Chưa có final C10 sau sửa**, vì lượt
+`25f7316` dừng tại Supervisor timeout trước retrieval. Không chạy lượt thứ ba.
+
+Lượt gần nhất: 6 attempts, 5 success + 1 timeout; **12.475 known tokens + 1 unknown**,
+0 retry. Toàn phiên: **17 attempts/50.964 known tokens + 1 unknown**. Không sửa runtime
+hoặc gọi API sau khi quan sát timeout; chỉ hoàn tất chấm điểm, tài liệu và bàn giao.
+
+### Bằng chứng và nghiệm thu
+
+41 targeted V2/M6/M7 PASS trên staged source `9eb0951`; sau sửa observation/branch
+replay: 19 V2/M6 PASS trên staged source. Với `d5b91a7`: 16 V2 PASS working tree,
+3 controls liên quan PASS staged (dynamic operand/semantic binding, numeric reuse,
+readable arithmetic/observation guards). Real saved independent-branch arithmetic
+ACCEPT và cross-stock/flow control không ACCEPT, 0 model calls. Runner lịch sử
+`replay_v2_integration.py` dừng ở assertion cố định 3 tasks; không tính run đó là PASS.
+Ruff/format, planning checker và diff checks được kiểm trước bàn giao; không full CI.
+
+Artifacts ignored: `artifacts/evidence/V2-INT-01/qa-performance/`: `live/` và
+`final-live/` giữ nguyên final answers, requests, raw responses, ledger và elapsed;
+`*-Cxx-review.json`, `*-Cxx-metrics.json`, `*-summary.json`, `citation-audit.json` giữ
+adjudication tái tính bằng `scripts/qa_metrics.py`; `offline-proof.json` giữ replay.
+Citation audit đối chiếu document/snapshot/PDF page và released IDs, không nâng
+page-level/uncertain thành cell-level. Credentials/dataset không stage hoặc commit.
+
+**Next action duy nhất:** Tech Lead review thay đổi/metrics và giới hạn còn lại,
+quyết định lượt xác nhận source `d5b91a7` khi Qwen sẵn sàng; dừng REVIEW.
+
 ## Phiên tiếp tục QA thực tế — 13/11/2026
 
 **REVIEW**. Implementation đã kiểm chứng `b113136f876b7fa2c1411c8295e0a09cdb97220c`;
