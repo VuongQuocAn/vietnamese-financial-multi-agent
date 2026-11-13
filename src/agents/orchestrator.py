@@ -87,6 +87,11 @@ def aggregate_candidates(executions):
                 for e in result.supporting_evidence
                 if e.evidence_id in candidate.supporting_evidence_ids
             ]
+            if candidate.reasoning:
+                # Premises and the owner are emitted in the declared ID order.
+                # Inventory order can differ, especially for annual/as-of sources.
+                by_id = {e.evidence_id: e for e in evidence}
+                evidence = [by_id[k] for k in dict.fromkeys(candidate.supporting_evidence_ids)]
             if not evidence or len({e.evidence_id for e in evidence}) != len(
                 set(candidate.supporting_evidence_ids)
             ):

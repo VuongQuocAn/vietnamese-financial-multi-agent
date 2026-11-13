@@ -185,6 +185,44 @@ def _verified_text(entry):
     return entry.content + ("\n" + proof if proof and proof not in entry.content else "")
 
 
+def _readable_verified_text(entry):
+    """Render one admitted arithmetic step in Vietnamese, without new conclusions.
+
+    Operand labels, periods and result come only from the accepted proof. Compound
+    expressions retain the existing exact display. Interpretation stays verbatim.
+    """
+    proof = getattr(entry.accepted_claim, "reasoning", None)
+    if not proof or proof.claim_type != "derived_fact" or not proof.calculation:
+        return _verified_text(entry)
+    calc = proof.calculation
+    if len(calc.steps) != 1:
+        return _verified_text(entry)
+    step = calc.steps[0]
+    by_id = {e.evidence_id: e for e in entry.accepted_claim.supporting_evidence}
+    op = step.operation
+    if len(op.inputs) != 2 or any(key not in by_id for key in op.inputs):
+        return _verified_text(entry)
+    a, b = (by_id[key] for key in op.inputs)
+    from ..agents.specialist_common import _number
+
+    value = (
+        _number(step.result)
+        if step.unit == "VND"
+        else _number(str(Decimal(step.result).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)))
+    )
+    if op.operator == "percentage_change" and a.canonical_item_id == b.canonical_item_id:
+        return f"{a.label} kỳ {a.period} thay đổi {value}% so với kỳ {b.period}."
+    if a.period == b.period:
+        when = "tại ngày" if len(a.period) > 4 else "kỳ"
+        if op.operator == "subtract":
+            return f"{a.label} trừ {b.label.lower()} {when} {a.period} bằng {value} {step.unit}."
+        if op.operator in {"divide", "ratio"}:
+            return (
+                f"Tỷ số {a.label.lower()} trên {b.label.lower()} {when} {a.period} là {value} lần."
+            )
+    return _verified_text(entry)
+
+
 def _coverage(request, entries):
     """Match presentation obligations to M6 ACCEPT; never approve a new claim."""
     # Numeric separators are not sentence/goal boundaries in a copied value.
@@ -705,6 +743,11 @@ def compose_lite(
         )
         if request.allow_gateway and request.execution_mode != "deterministic":
             gaps.append(dict(type="C", text=GAP_TEXT["C"]))
+    if coverage_context is not None and not segments:
+        segments = [
+            dict(text=_readable_verified_text(entry), claim_ids=[key])
+            for key, entry in entries.items()
+        ]
     trace["llm_segments_released"] = len(segments)
     trace["llm_released_claims"] = list(dict.fromkeys(k for s in segments for k in s["claim_ids"]))
     # A cited finding can still omit its admitted calculation results. Restore

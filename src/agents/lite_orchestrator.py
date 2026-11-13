@@ -716,6 +716,9 @@ class SupervisorLite:
                     "một output; calculation dùng interpretation=true, "
                     "interpretation_topic=dynamic_calculation, required_indicators, "
                     "reasoning_operations, reasoning_periods; nhận xét dùng metric_meaning. "
+                    "Khi inventory có metric đúng định nghĩa, chọn source metric đó thay vì "
+                    "yêu cầu Specialist tự tính lại từ facts. Chỉ khai dynamic_calculation "
+                    "khi chưa có metric phù hợp. "
                     "target_id là canonical item/formula trong inventory; requested_unit là "
                     "VND/ratio/percent hoặc null. Không quy % thành ratio. "
                     "answer_goal=value cho số liệu/phép tính; analysis cho nhận xét, synthesis "
@@ -995,6 +998,17 @@ class FinancialLiteOrchestrator:
             narrative_only = bool(prompt["assigned_requirements"]) and all(
                 r["answer_goal"] != "value" for r in prompt["assigned_requirements"]
             )
+            required_items = {
+                item
+                for r in prompt["assigned_requirements"]
+                if r["answer_goal"] != "value"
+                for item in r["required_indicators"]
+            }
+            prompt["required_evidence_ids"] = [
+                e.evidence_id
+                for e in result.supporting_evidence
+                if e.kind == "fact" and e.canonical_item_id in required_items
+            ]
             prompt["response_schema"] = dict(
                 type="object",
                 properties=dict(
@@ -1027,6 +1041,7 @@ class FinancialLiteOrchestrator:
                 "đồng thời các mục tiêu nhận xét được giao. statement phải liên kết các nhánh "
                 "bằng quan sát cụ thể, sau đó nêu giới hạn kết luận. Dẫn evidence_ids từ TẤT CẢ "
                 "nhánh được nhận xét; claim_type=reasoned_conclusion, operations=[]. "
+                "evidence_ids phải chứa required_evidence_ids để M6 kiểm đủ các nhánh. "
                 "Không lặp số hoặc công thức; mô tả hướng biến động, dấu hoặc quan hệ từ "
                 "evidence/shared proofs. Không thay tổng hợp bằng các analyses riêng từng nhánh. "
                 "Không suy cao/thấp nếu thiếu chuẩn, nguyên nhân, ổn định dài hạn hoặc khả năng "
@@ -1034,10 +1049,43 @@ class FinancialLiteOrchestrator:
                 "goal dùng nguyên text requirement, limitations chỉ chứa giới hạn nhận định, "
                 "không chép source caveats. Không thêm năm/chỉ tiêu. "
                 "shared_tasks là candidates, không phải verdict; M6 kiểm lại mọi nhận định. "
+                "Đọc dấu/quan hệ của facts và shared proofs: dương chỉ có nghĩa thu vào ròng, "
+                "không có nghĩa ổn định hay tốt; chênh lệch âm chỉ là thiếu hụt tại ngày đó, "
+                "không phải giảm so với kỳ trước. Không gọi tỷ trọng nợ cao/thấp khi thiếu chuẩn. "
+                "Khi ghép số dư tại ngày cuối năm và dòng tiền cả năm, nói rõ hai thời điểm đo "
+                "khác nhau: dòng tiền dương không tự xóa thiếu hụt vốn lưu động hoặc đảm bảo "
+                "trả nợ tương lai. Doanh thu tăng, cơ cấu tài trợ và dòng tiền là các khía cạnh "
+                "riêng, không dùng một khía cạnh để kết luận sức khỏe tổng thể. Chỉ nêu quan sát "
+                "này nếu evidence tương ứng thực sự có. Không bịa xu hướng hay nguyên nhân. "
                 "Nguồn page-level vẫn có trang; graph chỉ thể hiện nguồn/cấu trúc, không nhân quả. "
                 "Thiếu evidence chỉ báo missing_information trong scope được giao."
             )
         deterministic = self.gateway is None or context.mode == "deterministic"
+        if self.integration_v2:
+            assigned = [
+                r for r in self.workspace.requirements if r.requirement_id in task.requirement_ids
+            ]
+            # The numeric path already emits these exact facts/approved metrics.
+            # Reserve generation for new arithmetic or actual interpretation.
+            if assigned and all(
+                r.answer_goal == "value"
+                and r.interpretation_topic != "dynamic_calculation"
+                and r.target_id
+                and any(
+                    r.target_id
+                    == (
+                        e.canonical_item_id
+                        if r.kind == "fact"
+                        else e.calculation.formula_id
+                        if e.calculation
+                        else None
+                    )
+                    and (not r.period or r.period == e.period)
+                    for e in result.supporting_evidence
+                )
+                for r in assigned
+            ):
+                deterministic = True
         if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
             deterministic = True
             result.limitations.append("specialist_payload_limit_numeric_fallback")
@@ -1052,6 +1100,7 @@ class FinancialLiteOrchestrator:
             deterministic=deterministic,
             emit_derived=True,
             normalize_payload=normalize_candidate_envelope if self.integration_v2 else None,
+            operation_inputs_only=self.integration_v2,
         )
         for candidate in result.candidates:
             if candidate.reasoning:

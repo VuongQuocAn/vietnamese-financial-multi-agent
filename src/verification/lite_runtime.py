@@ -477,6 +477,8 @@ class LiteVerificationRuntime:
             if self.integration_v2:
                 row = dict(row)
                 row.pop("question", None)
+                # Same scalar facts are carried below with stable evidence IDs.
+                row.pop("facts", None)
                 keys = self.integration_context.get("candidate_requirements", {}).get(
                     claim.candidate_id, []
                 )
@@ -509,6 +511,7 @@ class LiteVerificationRuntime:
                             value=s.value,
                             period=s.period,
                             unit=s.unit,
+                            scale=s.scale,
                         )
                         for s in claim.supporting_evidence
                     ],

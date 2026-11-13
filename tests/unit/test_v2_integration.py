@@ -754,3 +754,73 @@ def test_v2_inferred_question_date_is_not_an_explicit_pin_on_annual_facts(tmp_pa
     pinned = service.run(request.model_copy(update={"period": "2030-12-31", "force_refresh": True}))
     assert pinned.trace.financial_execution["context"]["period"] == "2030-12-31"
     assert not pinned.used_verified_claim_ids
+
+
+def test_numeric_only_specialist_reuses_typed_path_without_model_call():
+    catalog, context, engine, _ = setup_engine()
+    engine.gateway = Mock()
+    context.mode = "llm"
+    result = engine.run(question="N?u s? li?u", context=context)
+    assert result.candidates
+    engine.gateway.generate.assert_not_called()
+    assert all(e.result.llm.status == "deterministic" for e in result.specialist_executions)
+
+
+def test_aggregation_keeps_declared_premise_order_and_m6_owner():
+    from vietnamese_financial_multi_agent.agents.orchestration_contracts import SpecialistExecution
+    from vietnamese_financial_multi_agent.agents.orchestrator import aggregate_candidates
+    from vietnamese_financial_multi_agent.agents.specialist_common import (
+        SpecialistCandidate,
+        SpecialistResult,
+    )
+
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    claim = batch.claims[0]
+    candidate = SpecialistCandidate(
+        **claim.model_dump(include=set(SpecialistCandidate.model_fields))
+    )
+    result = SpecialistResult(
+        question=batch.question,
+        role="profitability",
+        upstream_status="completed",
+        candidates=[candidate],
+        supporting_evidence=list(reversed(claim.supporting_evidence)),
+    )
+    aggregated, _ = aggregate_candidates(
+        [
+            SpecialistExecution(
+                execution_id="T",
+                role="profitability",
+                status="generated",
+                result=result,
+                assigned_requirement_ids=[],
+            )
+        ]
+    )
+    assert aggregated[0].supporting_evidence == claim.supporting_evidence
+    batch.claims[0].supporting_evidence = aggregated[0].supporting_evidence
+    assert (
+        LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+        .verify(batch)[0]
+        .outcome.final.decision
+        == "ACCEPT"
+    )
+
+
+def test_v2_readable_arithmetic_preserves_sign_period_and_citations():
+    from vietnamese_financial_multi_agent.outputs.qa_lite import compose_lite
+    from vietnamese_financial_multi_agent.verification.ledger import build_verified_claim
+
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    entry = build_verified_claim(runtime.verify(batch)[0])
+    key = entry.identity.verified_claim_id
+    context = dict(
+        requirements=[dict(requirement_id="R", text="Tăng trưởng doanh thu")],
+        verified_requirements={key: ["R"]},
+    )
+    request = FinancialQARequest(question="Tăng trưởng doanh thu", allow_gateway=False)
+    fields, trace = compose_lite(request, [entry], coverage_context=context)
+    assert "thay đổi" in fields["answer_vi"] and "so với kỳ" in fields["answer_vi"]
+    assert fields["answer_vi"].count("thay đổi") == 1
+    assert trace["released_claims"] == [key] and fields["citations"]

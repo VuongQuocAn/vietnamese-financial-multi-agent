@@ -265,11 +265,7 @@ class DeterministicFinancialValidator:
         if (
             len(periods) > 1
             and not across
-            and (
-                not getattr(self, "integration_v2", False)
-                or proof.claim_type == "derived_fact"
-                or proof.calculation
-            )
+            and (not getattr(self, "integration_v2", False) or proof.claim_type == "derived_fact")
         ):
             self._check(result, "context", "fail", "reasoning_period_relation_missing")
         for index, (source, statement) in enumerate(
@@ -316,8 +312,16 @@ class DeterministicFinancialValidator:
         computation = proof.calculation
         if computation:
             try:
+                input_ids = {key for step in computation.steps for key in step.operation.inputs}
                 expected = self._calculator.calculate_dynamic(
-                    {s.evidence_id: s.reference for s in sources if s.kind == "fact"},
+                    {
+                        s.evidence_id: s.reference
+                        for s in sources
+                        if s.kind == "fact"
+                        and (
+                            not getattr(self, "integration_v2", False) or s.evidence_id in input_ids
+                        )
+                    },
                     [s.operation for s in computation.steps],
                 )
                 if computation != expected:

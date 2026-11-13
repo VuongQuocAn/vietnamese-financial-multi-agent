@@ -565,6 +565,7 @@ def generate_candidates(
     deterministic=False,
     emit_derived=True,
     normalize_payload=None,
+    operation_inputs_only=False,
 ):
     if deterministic:
         # Existing typed numeric renderers; no model, interpretation or new calculation.
@@ -714,12 +715,13 @@ def generate_candidates(
             computation = None
             failed_operations = False
             if analysis.operations:
+                input_ids = {key for op in analysis.operations for key in op.inputs}
                 operands = {
                     s.evidence_id: DynamicOperand(
                         **{k: getattr(s, k) for k in DynamicOperand.model_fields}
                     )
                     for s in sources
-                    if s.kind == "fact"
+                    if s.kind == "fact" and (not operation_inputs_only or s.evidence_id in input_ids)
                 }
                 valid_operations = []
                 for operation in analysis.operations:
