@@ -251,6 +251,7 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
     original = gateway.generate.side_effect
 
     def assess(request):
+        assert '"supported_requirement_ids":[]' in request.messages[0].content
         rows = json.loads(request.messages[-1].content)
         assert all("question" not in row and row["local_requirements"] for row in rows)
         response = original(request)
@@ -631,3 +632,35 @@ def test_shared_proof_can_satisfy_numeric_goal_owned_by_another_task():
     ]
     req.requested_unit = "USD"
     assert workspace.export([aggregate])["candidate_requirements"][claim.candidate_id] == []
+
+
+def test_v2_inferred_question_date_is_not_an_explicit_pin_on_annual_facts(tmp_path):
+    catalog, context, engine, _ = setup_engine()
+    service = FinancialQAPipeline(
+        catalog=catalog,
+        documents=[
+            QADocument(
+                document_id=context.document_id,
+                company_id=context.company_id,
+                company_aliases=["TEST"],
+                reporting_year=2030,
+            )
+        ],
+        repository=VerifiedClaimRepository(tmp_path),
+        orchestrator=engine,
+    )
+    request = FinancialQARequest(
+        question="Doanh thu thuần và lợi nhuận gộp TEST năm 2030, đối chiếu tại 31/12/2030?",
+        document_id=context.document_id,
+        snapshot_id=context.snapshot_id,
+        integration_v2=True,
+        execution_mode="deterministic",
+        allow_gateway=False,
+    )
+    response = service.run(request)
+    assert response.trace.financial_execution["context"]["period"] is None
+    assert response.used_verified_claim_ids
+    service.repository = VerifiedClaimRepository(tmp_path / "explicit-pin")
+    pinned = service.run(request.model_copy(update={"period": "2030-12-31", "force_refresh": True}))
+    assert pinned.trace.financial_execution["context"]["period"] == "2030-12-31"
+    assert not pinned.used_verified_claim_ids

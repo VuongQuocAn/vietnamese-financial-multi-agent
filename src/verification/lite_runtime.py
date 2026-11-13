@@ -551,11 +551,17 @@ class LiteVerificationRuntime:
             constraints=RequestConstraints(timeout_seconds=60),
         )
         if self.integration_v2:
+            request.messages[0].content = request.messages[0].content.replace(
+                '"reason":"..."}',
+                '"reason":"...","supported_requirement_ids":[]}',
+            )
             request.messages[0].content += (
                 " Kiểm chứng riêng từng statement, không đòi nó giải toàn câu hỏi. "
                 "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
                 "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "
                 "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
+                "Field supported_requirement_ids bắt buộc trong mọi verdict, dùng đúng IDs "
+                "từ local_requirements, không dùng IDs claim/evidence hoặc tự tạo ID. "
                 "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
                 "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
                 " answer_goal=analysis/synthesis/limitation yêu cầu nhận xét chứ không chỉ số "

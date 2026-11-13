@@ -950,10 +950,13 @@ class FinancialQAPipeline:
                             snapshot_id=bound.snapshot_id,
                             period=(
                                 None
-                                if bound.m5_lite
-                                and (
-                                    (bound.period and len(bound.period) == 4)
-                                    or (not bound.period and comparison_periods(bound.question))
+                                if (bound.integration_v2 and not bound.period)
+                                or (
+                                    bound.m5_lite
+                                    and (
+                                        (bound.period and len(bound.period) == 4)
+                                        or (not bound.period and comparison_periods(bound.question))
+                                    )
                                 )
                                 else bound.period or parsed.period
                             ),

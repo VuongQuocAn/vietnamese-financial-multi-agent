@@ -116,7 +116,11 @@ def matches_requirement(claim, requirement, source=None):
     if requirement.requested_unit:
         proof = claim.reasoning
         units = (
-            {s.unit for s in proof.calculation.steps[-1:]}
+            {s.unit for s in proof.calculation.steps}
+            if proof
+            and proof.calculation
+            and requirement.interpretation_topic == "dynamic_calculation"
+            else {s.unit for s in proof.calculation.steps[-1:]}
             if proof and proof.calculation
             else {s.unit for s in claim.supporting_evidence}
         )

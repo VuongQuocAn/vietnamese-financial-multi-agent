@@ -20,6 +20,11 @@ không phụ thuộc model liệt kê đủ reasoning_periods. Alias fact rõ tr
 Dynamic-calculation binding cần semantic goal support trong M6 dù arithmetic đã đúng.
 M7 chỉ chọn claims có verified requirement binding và fact operands của chúng;
 ACCEPT của một fact ngoài mục tiêu không phải quyền phát hành toàn bộ inventory.
+Phân công task giới hạn ownership của nhận xét, không ngăn proof số học canonical
+ở task khác đáp ứng goal số liệu. M6 response example V2 luôn có supported requirement
+IDs; thiếu binding không được tự suy từ ACCEPT. Các outputs trung gian đã replay của
+dynamic proof có thể được bind qua M6. Ngày suy từ câu hỏi không là request period pin;
+V2 vẫn giữ period pin do caller cấp tường minh và kiểm từng claim với canonical evidence.
 Workspace chỉ trong request, evidence handles resolve về canonical reference,
 không đổi facts/snapshots/EF-EG. OrchestrationResult chỉ serialize integration_context
 khi có, giữ legacy digest serialization khi không dùng V2.
