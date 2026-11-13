@@ -19,6 +19,7 @@ from ..verification.ledger_contracts import VerifiedClaimQuery
 
 def compose_fusion_v2(pipeline, bound, bundle, response):
     """Render exact child releases from the current ledger, without re-parsing goals."""
+    from ..agents.qa_planning import response_constraints
     from ..outputs.qa_lite import compose_lite
 
     ledger = VerifiedClaimLedger(pipeline.repository)
@@ -84,7 +85,10 @@ def compose_fusion_v2(pipeline, bound, bundle, response):
         if p.requirement_id not in done
     )
     context = dict(
-        requirements=requirements, verified_requirements=bindings, technical_errors=errors
+        requirements=requirements,
+        verified_requirements=bindings,
+        technical_errors=errors,
+        response_constraints=response_constraints(bound.question),
     )
     fields, metadata = compose_lite(
         bound.model_copy(update={"allow_gateway": False}),

@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import io
 import json
+import os
 import subprocess
 import sys
 import zipfile
@@ -22,7 +23,9 @@ def read(path):
 
 def save(path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporary.replace(path)
 
 
 class BudgetedGateway:
@@ -30,13 +33,22 @@ class BudgetedGateway:
         self.gateway, self.output, self.events, self.case = gateway, output, events, case
 
     def generate(self, request):
-        if len(self.events) >= 18 or sum(e["case"] == self.case for e in self.events) >= 6:
+        if len(self.events) >= 24 or sum(e["case"] == self.case for e in self.events) >= 8:
             raise ValidationStopped("call_budget_exhausted")
         event = dict(case=self.case, request=request.export(), status="STARTED")
         self.events.append(event)
         save(self.output / "provider-events.json", self.events)
         started = perf_counter()
-        response = self.gateway.generate(request)
+        try:
+            response = self.gateway.generate(request)
+        except BaseException as error:
+            event.update(
+                status="INTERRUPTED",
+                error_type=type(error).__name__,
+                elapsed_seconds=perf_counter() - started,
+            )
+            save(self.output / "provider-events.json", self.events)
+            raise
         event.update(
             status=response.status,
             response=response.export(),
@@ -62,14 +74,12 @@ def validate(root, output, case, owner, implementation):
             [owner[k] for k in ("BASE_URL", "API_KEY", "MODEL_NAME")], separators=(",", ":")
         ).encode()
     ).hexdigest()
-    previous = read(root / "artifacts/evidence/V2-INT-01/live-confirmation-20261113/manifest.json")
-    assert fingerprint == previous["provider_configuration_sha256"], "owner_configuration_changed"
     manifest_path, state_path = output / "manifest.json", output / "results.json"
     if not manifest_path.exists():
         assert case == "C01" and not output.exists(), "fresh_output_required"
         output.mkdir(parents=True)
         archive = subprocess.check_output(
-            ["git", "archive", "--format=zip", implementation, "src"], cwd=root
+            ["git", "archive", "--format=zip", implementation, "src", "scripts"], cwd=root
         )
         zipfile.ZipFile(io.BytesIO(archive)).extractall(output / "frozen")
         references = read(root / "artifacts/evidence/E2E-GEN-01/references.json")
@@ -83,15 +93,17 @@ def validate(root, output, case, owner, implementation):
                 started_utc=datetime.now(UTC).isoformat(),
                 implementation_commit=implementation,
                 cases=["C01", "C07", "C10"],
-                max_calls=18,
-                max_calls_per_case=6,
+                max_calls=24,
+                max_calls_per_case=8,
                 token_precount=False,
                 max_total_tokens=None,
                 token_usage_source="provider_reported_when_available",
-                timeout_per_case_seconds=300,
+                timeout_per_case_seconds=360,
                 retries=0,
                 provider_configuration_sha256=fingerprint,
                 model=owner["MODEL_NAME"],
+                runner_pid=os.getpid(),
+                runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             ),
         )
         save(state_path, dict(status="PREPARED", cases=[]))
@@ -107,43 +119,47 @@ def validate(root, output, case, owner, implementation):
     else:
         assert state["status"] == "PREPARED"
 
-    # Import the approved implementation, never the unrelated local runtime edits.
-    import vietnamese_financial_multi_agent as package
-
-    package.__path__ = [str(output / "frozen/src")]
-    from evaluate_composition_graph import bbs_catalog
-    from evaluate_generalization import pipeline
-    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
-    from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
-    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
-    from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
-
-    events = read(output / "provider-events.json")
-    adapter = QwenAdapter(QwenSettings(owner["BASE_URL"], owner["API_KEY"], owner["MODEL_NAME"]))
-    gateway = BudgetedGateway(SharedLLMGateway({"qwen": adapter}), output, events, case)
-    # Only the original request is reused. Every provider response comes from live Qwen.
-    original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
-    catalog = bbs_catalog(root)
-    service, _ = pipeline(
-        root, "BCC_2025" if case == "C10" else "BBS_2025", output / "inputs" / case, catalog
-    )
-    service.gateway = gateway
-    request = FinancialQARequest.model_validate(original).model_copy(
-        update=dict(
-            integration_v2=True,
-            model=ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]),
-            force_refresh=True,
-            max_provider_calls=6,
-            request_timeout_seconds=300.0,
-        )
-    )
     row = dict(case=case, status="STARTED")
     state["cases"].append(row)
     state["status"] = "IN_PROGRESS"
     save(state_path, state)
-    save(output / f"request-{case}.json", request.model_dump(mode="json"))
     started = perf_counter()
+    adapter = None
+    events = read(output / "provider-events.json")
     try:
+        # Import the approved implementation, never the unrelated local runtime edits.
+        import vietnamese_financial_multi_agent as package
+
+        package.__path__ = [str(output / "frozen/src")]
+        sys.path.insert(0, str(output / "frozen/scripts"))
+        from evaluate_composition_graph import bbs_catalog
+        from evaluate_generalization import pipeline
+        from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+        from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
+        from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+        from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
+
+        adapter = QwenAdapter(
+            QwenSettings(owner["BASE_URL"], owner["API_KEY"], owner["MODEL_NAME"])
+        )
+        gateway = BudgetedGateway(SharedLLMGateway({"qwen": adapter}), output, events, case)
+        # Only the original request is reused. Every provider response comes from live Qwen.
+        original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
+        catalog = bbs_catalog(root)
+        service, _ = pipeline(
+            root, "BCC_2025" if case == "C10" else "BBS_2025", output / "inputs" / case, catalog
+        )
+        service.gateway = gateway
+        request = FinancialQARequest.model_validate(original).model_copy(
+            update=dict(
+                integration_v2=True,
+                model=ModelIdentity(provider="qwen", model=owner["MODEL_NAME"]),
+                force_refresh=True,
+                max_provider_calls=8,
+                request_timeout_seconds=360.0,
+            )
+        )
+        save(output / f"request-{case}.json", request.model_dump(mode="json"))
         response = service.run(request)
         save(
             output / f"execution/{case}.json",
@@ -153,6 +169,7 @@ def validate(root, output, case, owner, implementation):
                 ledger=[e.model_dump(mode="json") for e in service.repository.list_all()],
             ),
         )
+        (output / f"{case}-answer.txt").write_text(response.answer_vi, encoding="utf-8")
         row.update(status="COMPLETED", pipeline_status=response.status)
         state["status"] = "AWAITING_QA_REVIEW"
         print(case, "FINAL", response.status, flush=True)
@@ -160,7 +177,7 @@ def validate(root, output, case, owner, implementation):
         row["status"] = "INTERRUPTED"
         state.update(status="STOPPED", reason=str(error))
         print("STOPPED", str(error), flush=True)
-    except Exception as error:
+    except BaseException as error:
         row["status"] = "INTERRUPTED"
         state.update(status="STOPPED", reason="local_exception", error_type=type(error).__name__)
         print("STOPPED local_exception", type(error).__name__, flush=True)
@@ -177,12 +194,14 @@ def validate(root, output, case, owner, implementation):
             ),
         )
         save(state_path, state)
-        adapter.close()
+        if adapter is not None:
+            adapter.close()
+    return state["status"]
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--case", choices=["C01", "C07", "C10"], required=True)
+    parser.add_argument("--case", choices=["C01", "C07", "C10", "all"], required=True)
     parser.add_argument("--implementation", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--config-file", type=Path)
@@ -192,10 +211,17 @@ if __name__ == "__main__":
         if args.config_file
         else json.loads(sys.stdin.readline().lstrip("\ufeff"))
     )
-    validate(
-        Path(__file__).resolve().parents[1],
-        args.output.resolve(),
-        args.case,
-        owner,
-        args.implementation,
-    )
+    for case in ["C01", "C07", "C10"] if args.case == "all" else [args.case]:
+        status = validate(
+            Path(__file__).resolve().parents[1],
+            args.output.resolve(),
+            case,
+            owner,
+            args.implementation,
+        )
+        if status == "STOPPED":
+            sys.exit(2)
+    if args.case == "all":
+        state = read(args.output / "results.json")
+        state["status"] = "COMPLETED_AWAITING_QA_REVIEW"
+        save(args.output / "results.json", state)

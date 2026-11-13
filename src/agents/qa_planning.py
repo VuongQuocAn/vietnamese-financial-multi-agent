@@ -1,6 +1,7 @@
 """Typed dynamic document/fusion planning through the shared Gateway."""
 
 import json
+import re
 from uuid import uuid4
 
 from pydantic import Field
@@ -16,6 +17,34 @@ from ..core.llm_contracts import (
 )
 from .document_qa_contracts import DocumentRequirement
 from .fusion_contracts import FusionPlan
+
+
+def response_constraints(question):
+    """Keep explicit no-inference imperatives as user scope, never source facts."""
+    return [
+        part.strip()
+        for part in re.split(r"(?<=[.!?])\s+", question)
+        if re.match(r"^Không\s+(?:suy ra|suy diễn|kết luận)\b", part.strip(), re.I)
+    ]
+
+
+def retain_response_constraints(plan, question):
+    """A pure prohibition is not a separate financial retrieval obligation.
+
+    Only remove spans identical to an original imperative. Mixed positive goals
+    remain obligations. M7 acknowledges the original scope independently.
+    """
+    constraints = {c.rstrip(".!? ").casefold() for c in response_constraints(question)}
+    removed = {
+        r.requirement_id
+        for r in plan.requirements
+        if r.original_span.rstrip(".!? ").casefold() in constraints
+    }
+    if removed and len(removed) < len(plan.requirements):
+        plan.requirements = [r for r in plan.requirements if r.requirement_id not in removed]
+        for requirement in plan.requirements:
+            requirement.dependencies = [d for d in requirement.dependencies if d not in removed]
+    return plan
 
 
 class DocumentPlan(FinancialModel):
@@ -111,6 +140,8 @@ def plan_fusion(gateway, request):
         ),
         "fusion-planner",
     )
+    if request.integration_v2:
+        plan = retain_response_constraints(plan, request.question)
     keys = {r.requirement_id for r in plan.requirements}
     if (
         plan.question != request.question

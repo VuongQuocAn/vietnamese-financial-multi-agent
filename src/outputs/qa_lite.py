@@ -774,6 +774,12 @@ def compose_lite(
         )
     gaps = list({g["type"]: g for g in gaps}.values())
     text, references, bindings = _projection(segments, selected)
+    # Verbatim acknowledgement of trusted user scope, not a financial finding.
+    # It supplies no source, claim ID or semantic M6 coverage.
+    constraints = (coverage_context or {}).get("response_constraints", [])
+    if selected and constraints:
+        text += "\n\nPhạm vi trả lời: " + " ".join(constraints)
+        trace["response_constraints"] = constraints
     caveats = list(
         dict.fromkeys(
             v

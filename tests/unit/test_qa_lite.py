@@ -88,6 +88,28 @@ def test_v2_embedded_proof_dedup_preserves_distinct_prose_and_all_citation_bindi
     assert sum(s["text"].count(proof) for s in grouped) == 2
 
 
+def test_v2_scope_acknowledgement_does_not_supply_verified_coverage(admitted):
+    request, entry = admitted
+    key = entry.identity.verified_claim_id
+    constraint = "Không suy ra nguyên nhân từ một chỉ tiêu."
+    fields, trace = compose_lite(
+        request.model_copy(update={"allow_gateway": False}),
+        [entry],
+        coverage_context=dict(
+            requirements=[
+                dict(requirement_id="value", text="Số liệu"),
+                dict(requirement_id="comment", text="Nhận xét"),
+            ],
+            verified_requirements={key: ["value"]},
+            response_constraints=[constraint],
+        ),
+    )
+    assert "Phạm vi trả lời: " + constraint in fields["answer_vi"]
+    assert fields["used_verified_claim_ids"] == [key]
+    assert not trace["coverage"]["complete"]
+    assert trace["coverage"]["requirements"][1]["verified_claim_ids"] == []
+
+
 @pytest.mark.parametrize(
     "mutation,reason",
     [

@@ -946,25 +946,30 @@ class FinancialLiteOrchestrator:
                 if key in task.depends_on
             }
             prompt["user_question"] = self.workspace.question
-            prompt["instruction"] += (
-                " Chỉ thực hiện assigned_requirements; shared_tasks là kết quả các nhánh, "
-                "không phải verdict M6. Dùng shared evidence/proofs cho kết luận liên nhánh, "
-                "không tin claim nhánh khác như nguồn. Không báo thiếu phần của task khác. "
-                "goal phải là text của requirement đang giải; thiếu evidence chỉ ghi "
-                "missing_information trong scope lượt truy xuất, không khẳng định corpus thiếu."
-                " Với answer_goal=analysis/synthesis/limitation, viết một đoạn nhận xét ngắn, "
-                "liên kết TẤT CẢ nhánh nguồn được giao và nêu giới hạn cụ thể của kết luận; "
-                "không chỉ định nghĩa phép tính hay chép lại số. Nhận xét phải bám dữ liệu "
-                "quan sát, không gán mức cao/thấp khi chưa có chuẩn, không suy nguyên nhân, "
-                "tính bền vững hay sức khỏe toàn diện. Dùng evidence_ids từ từng nhánh. "
-                "shared_tasks.candidate_proofs là phép tính backend đã chạy nhưng chưa ACCEPT; "
-                "nếu nêu kết quả tính trong statement phải khai operations tương ứng trên facts "
-                "để M6 replay. Giữ constraints của user_question, kể cả không suy diễn."
-                " Tổng hợp chỉ cần một analysis liên kết các quan sát và giới hạn; không cần "
-                "lặp các con số đã có numeric candidates. Không thêm kỳ so sánh hoặc chỉ tiêu "
-                "ngoài câu hỏi. Dùng chiều biến động/kết quả từ shared proofs; khi chỉ mô tả "
-                "các quan sát độc lập có thể operations=[], nhưng phải dẫn đủ evidence_ids. "
-                "Không đổi ratio thành phần trăm khi proof chỉ có đơn vị ratio."
+            # V2 has typed goals and shared evidence. A second, legacy instruction
+            # manual mixed numeric generation with commentary and obscured that
+            # distinction for the small model. Give one task-local contract.
+            prompt["instruction"] = (
+                "Bạn là Specialist tài chính. Chỉ giải assigned_requirements từ evidence. "
+                "Trả đúng JSON {claims:[],analyses:[],missing_information:[]}. "
+                "1. answer_goal=value: chọn evidence_id trong numeric_choices vào claims. "
+                "Nếu cần tính mới, đặt analysis claim_type=derived_fact, evidence_ids là "
+                "facts đầu vào, operations theo analysis_schema; backend tính và viết kết quả. "
+                "percentage_change dùng [kỳ mục tiêu,kỳ gốc], across_periods; ratio/subtract "
+                "giữ đúng thứ tự toán hạng. Không tự viết kết quả số trong statement. "
+                "2. answer_goal=analysis/synthesis/limitation: viết MỘT analysis ngắn đáp ứng "
+                "đồng thời các mục tiêu nhận xét được giao. statement phải liên kết các nhánh "
+                "bằng quan sát cụ thể, sau đó nêu giới hạn kết luận. Dẫn evidence_ids từ TẤT CẢ "
+                "nhánh được nhận xét; claim_type=reasoned_conclusion, operations=[]. "
+                "Không lặp số hoặc công thức; mô tả hướng biến động, dấu hoặc quan hệ từ "
+                "evidence/shared proofs. Không thay tổng hợp bằng các analyses riêng từng nhánh. "
+                "Không suy cao/thấp nếu thiếu chuẩn, nguyên nhân, ổn định dài hạn hoặc khả năng "
+                "thanh toán tương lai từ một kỳ. Giới hạn phải gắn với kết luận được hỏi. "
+                "goal dùng nguyên text requirement, limitations chỉ chứa giới hạn nhận định, "
+                "không chép source caveats. Không thêm năm/chỉ tiêu. "
+                "shared_tasks là candidates, không phải verdict; M6 kiểm lại mọi nhận định. "
+                "Nguồn page-level vẫn có trang; graph chỉ thể hiện nguồn/cấu trúc, không nhân quả. "
+                "Thiếu evidence chỉ báo missing_information trong scope được giao."
             )
         deterministic = self.gateway is None or context.mode == "deterministic"
         if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:

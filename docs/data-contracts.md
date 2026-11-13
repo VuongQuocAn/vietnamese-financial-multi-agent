@@ -2,6 +2,12 @@
 
 ## V2-INT-01 — Request integration sidecar
 
+Mixed V2 giữ mệnh lệnh nguyên văn bắt đầu câu “Không suy ra/suy diễn/kết luận”
+trong `integration_context.response_constraints`. Một FusionRequirement chỉ chứa
+đúng mệnh lệnh đó không trở thành lượt truy xuất financial riêng. M7 nhắc lại dưới
+“Phạm vi trả lời”, không tạo claim/citation hoặc cấp semantic coverage. Nhận xét
+tài chính vẫn phải có candidate, M6 support và Ledger admission như trước.
+
 Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
 `integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng
 QARequirement với requested_unit; tasks giữ task/requirement/dependency IDs.
