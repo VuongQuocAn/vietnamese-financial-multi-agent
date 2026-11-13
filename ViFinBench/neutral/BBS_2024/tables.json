@@ -1,0 +1,2345 @@
+{
+  "document_id": "BBS_2024",
+  "status": "complete",
+  "missing_pages": [],
+  "tables": [
+    {
+      "table_id": "BBS_2024_p004_t001",
+      "document_id": "BBS_2024",
+      "page": 4,
+      "table": {
+        "title": "",
+        "columns": [
+          "NỘI DUNG",
+          "TRANG"
+        ],
+        "rows": [
+          [
+            "BÁO CÁO CỦA BAN GIÁM ĐỐC",
+            "2"
+          ],
+          [
+            "BÁO CÁO KIỂM TOÁN ĐỘC LẬP",
+            "3"
+          ],
+          [
+            "BẢNG CÂN ĐỐI KẾ TOÁN",
+            "4 - 5"
+          ],
+          [
+            "BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH",
+            "6"
+          ],
+          [
+            "BÁO CÁO LƯU CHUYỂN TIỀN TỆ",
+            "7"
+          ],
+          [
+            "THUYẾT MINH BÁO CÁO TÀI CHÍNH",
+            "8 - 23"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p005_t001",
+      "document_id": "BBS_2024",
+      "page": 5,
+      "table": {
+        "title": "",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ"
+        ],
+        "rows": [
+          [
+            "Ông Hoàng Trung Chiến",
+            "Chủ tịch"
+          ],
+          [
+            "Ông Trần Ngọc Hưng",
+            "Thành viên"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "Thành viên"
+          ],
+          [
+            "Ông Phạm Văn Minh",
+            "Thành viên"
+          ],
+          [
+            "Ông Nguyễn Mạnh Hải",
+            "Thành viên"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p005_t002",
+      "document_id": "BBS_2024",
+      "page": 5,
+      "table": {
+        "title": "",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ"
+        ],
+        "rows": [
+          [
+            "Ông Trần Ngọc Hưng",
+            "Giám đốc"
+          ],
+          [
+            "Ông Dương Minh Tuấn",
+            "Phó Giám đốc kiêm Kế toán trưởng"
+          ],
+          [
+            "Ông Trần Ngọc Tuân",
+            "Phó Giám đốc (Bổ nhiệm ngày 01/07/2024)"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "Phó Giám đốc (Miễn nhiệm ngày 01/07/2024)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p007_t001",
+      "document_id": "BBS_2024",
+      "page": 7,
+      "table": {
+        "title": "BẢNG CÂN ĐỐI KẾ TOÁN",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "31/12/2024",
+          "01/01/2024"
+        ],
+        "rows": [
+          [
+            "A - TÀI SẢN NGẮN HẠN",
+            "100",
+            "",
+            "222.072.184.296",
+            "216.373.509.875"
+          ],
+          [
+            "I. Tiền và các khoản tương đương tiền",
+            "110",
+            "",
+            "2.503.093.254",
+            "638.088.747"
+          ],
+          [
+            "1. Tiền",
+            "111",
+            "5",
+            "2.503.093.254",
+            "638.088.747"
+          ],
+          [
+            "II. Các khoản phải thu ngắn hạn",
+            "130",
+            "",
+            "174.725.579.150",
+            "163.616.834.582"
+          ],
+          [
+            "1. Phải thu ngắn hạn của khách hàng",
+            "131",
+            "6",
+            "192.724.114.055",
+            "176.643.179.849"
+          ],
+          [
+            "2. Trả trước cho người bán ngắn hạn",
+            "132",
+            "",
+            "360.323.608",
+            "428.740.678"
+          ],
+          [
+            "3. Phải thu ngắn hạn khác",
+            "136",
+            "",
+            "-",
+            "652.856"
+          ],
+          [
+            "4. Dự phòng phải thu ngắn hạn khó đòi",
+            "137",
+            "8",
+            "(18.358.858.513)",
+            "(13.455.738.801)"
+          ],
+          [
+            "III. Hàng tồn kho",
+            "140",
+            "",
+            "44.422.418.035",
+            "50.483.888.838"
+          ],
+          [
+            "1. Hàng tồn kho",
+            "141",
+            "7",
+            "44.422.418.035",
+            "50.483.888.838"
+          ],
+          [
+            "IV. Tài sản ngắn hạn khác",
+            "150",
+            "",
+            "421.093.857",
+            "1.634.697.708"
+          ],
+          [
+            "1. Chi phí trả trước ngắn hạn",
+            "151",
+            "9",
+            "421.093.857",
+            "558.044.119"
+          ],
+          [
+            "2. Thuế GTGT được khấu trừ",
+            "152",
+            "",
+            "-",
+            "872.823.989"
+          ],
+          [
+            "3. Thuế và các khoản khác phải thu Nhà nước",
+            "153",
+            "12",
+            "-",
+            "203.829.600"
+          ],
+          [
+            "B - TÀI SẢN DÀI HẠN",
+            "200",
+            "",
+            "69.234.474.808",
+            "82.983.235.082"
+          ],
+          [
+            "I. Tài sản cố định",
+            "220",
+            "",
+            "69.234.474.808",
+            "82.979.235.082"
+          ],
+          [
+            "1. Tài sản cố định hữu hình",
+            "221",
+            "10",
+            "69.234.474.808",
+            "82.979.235.082"
+          ],
+          [
+            "- Nguyên giá",
+            "222",
+            "",
+            "332.011.700.880",
+            "331.430.900.880"
+          ],
+          [
+            "- Giá trị hao mòn luỹ kế",
+            "223",
+            "",
+            "(262.777.226.072)",
+            "(248.451.665.798)"
+          ],
+          [
+            "2. Tài sản cố định vô hình",
+            "227",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Nguyên giá",
+            "228",
+            "",
+            "681.600.000",
+            "681.600.000"
+          ],
+          [
+            "- Giá trị hao mòn luỹ kế",
+            "229",
+            "",
+            "(681.600.000)",
+            "(681.600.000)"
+          ],
+          [
+            "II. Tài sản dở dang dài hạn",
+            "240",
+            "",
+            "-",
+            "4.000.000"
+          ],
+          [
+            "1. Chi phí xây dựng cơ bản dở dang",
+            "242",
+            "",
+            "-",
+            "4.000.000"
+          ],
+          [
+            "TỔNG CỘNG TÀI SẢN",
+            "270",
+            "",
+            "291.306.659.104",
+            "299.356.744.957"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p008_t001",
+      "document_id": "BBS_2024",
+      "page": 8,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Mã số",
+          "Thuyết minh",
+          "31/12/2024",
+          "01/01/2024"
+        ],
+        "rows": [
+          [
+            "C - NỢ PHẢI TRẢ",
+            "300",
+            "",
+            "183.476.510.255",
+            "192.158.253.057"
+          ],
+          [
+            "I. Nợ ngắn hạn",
+            "310",
+            "",
+            "183.476.510.255",
+            "192.158.253.057"
+          ],
+          [
+            "1. Phải trả người bán ngắn hạn",
+            "311",
+            "11",
+            "53.901.556.128",
+            "40.142.689.617"
+          ],
+          [
+            "2. Người mua trả tiền trước ngắn hạn",
+            "312",
+            "",
+            "60.000.000",
+            "59.567.400"
+          ],
+          [
+            "3. Thuế và các khoản phải nộp Nhà nước",
+            "313",
+            "12",
+            "2.536.390.084",
+            "380.446.515"
+          ],
+          [
+            "4. Phải trả người lao động",
+            "314",
+            "",
+            "17.465.285.512",
+            "21.040.057.536"
+          ],
+          [
+            "5. Chi phí phải trả ngắn hạn",
+            "315",
+            "",
+            "691.574.208",
+            "234.162.459"
+          ],
+          [
+            "6. Phải trả ngắn hạn khác",
+            "319",
+            "15",
+            "1.252.394.914",
+            "918.404.878"
+          ],
+          [
+            "7. Vay và nợ thuê tài chính ngắn hạn",
+            "320",
+            "13",
+            "107.335.623.456",
+            "127.489.125.222"
+          ],
+          [
+            "8. Quỹ khen thưởng, phúc lợi",
+            "322",
+            "",
+            "233.685.953",
+            "1.893.799.430"
+          ],
+          [
+            "D - VỐN CHỦ SỞ HỮU",
+            "400",
+            "",
+            "107.830.148.849",
+            "107.198.491.900"
+          ],
+          [
+            "I. Vốn chủ sở hữu",
+            "410",
+            "14",
+            "107.830.148.849",
+            "107.198.491.900"
+          ],
+          [
+            "1. Vốn góp của chủ sở hữu",
+            "411",
+            "",
+            "60.000.000.000",
+            "60.000.000.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông có quyền biểu quyết",
+            "411a",
+            "",
+            "60.000.000.000",
+            "60.000.000.000"
+          ],
+          [
+            "2. Thặng dư vốn cổ phần",
+            "412",
+            "",
+            "6.822.153.091",
+            "6.822.153.091"
+          ],
+          [
+            "3. Vốn khác của chủ sở hữu",
+            "414",
+            "",
+            "28.692.249.838",
+            "28.692.249.838"
+          ],
+          [
+            "4. Quỹ đầu tư phát triển",
+            "418",
+            "",
+            "4.448.160.332",
+            "4.348.160.332"
+          ],
+          [
+            "5. Quỹ khác thuộc vốn chủ sở hữu",
+            "420",
+            "",
+            "1.678.000.000",
+            "1.678.000.000"
+          ],
+          [
+            "6. Lợi nhuận sau thuế chưa phân phối",
+            "421",
+            "",
+            "6.189.585.588",
+            "5.657.928.639"
+          ],
+          [
+            "- LNST chưa phân phối năm nay",
+            "421b",
+            "",
+            "6.189.585.588",
+            "5.657.928.639"
+          ],
+          [
+            "TỔNG CỘNG NGUỒN VỐN",
+            "440",
+            "",
+            "291.306.659.104",
+            "299.356.744.957"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p008_t002",
+      "document_id": "BBS_2024",
+      "page": 8,
+      "table": {
+        "title": "",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Giám đốc"
+        ],
+        "rows": [
+          [
+            "Phạm Thị Thanh Hòa",
+            "Dương Minh Tuấn",
+            "Trần Ngọc Hưng"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p009_t001",
+      "document_id": "BBS_2024",
+      "page": 9,
+      "table": {
+        "title": "BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Năm 2024",
+          "Năm 2023"
+        ],
+        "rows": [
+          [
+            "1. Doanh thu bán hàng và cung cấp dịch vụ",
+            "01",
+            "16",
+            "355.507.372.286",
+            "355.621.825.662"
+          ],
+          [
+            "2. Các khoản giảm trừ doanh thu",
+            "02",
+            "",
+            "–",
+            "–"
+          ],
+          [
+            "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ",
+            "10",
+            "",
+            "355.507.372.286",
+            "355.621.825.662"
+          ],
+          [
+            "4. Giá vốn hàng bán",
+            "11",
+            "17",
+            "319.074.961.905",
+            "320.729.593.181"
+          ],
+          [
+            "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
+            "20",
+            "",
+            "36.432.410.381",
+            "34.892.232.481"
+          ],
+          [
+            "6. Doanh thu hoạt động tài chính",
+            "21",
+            "",
+            "3.052.187",
+            "45.830.925"
+          ],
+          [
+            "7. Chi phí tài chính",
+            "22",
+            "",
+            "6.852.154.053",
+            "10.805.614.084"
+          ],
+          [
+            "- Trong đó: Chi phí lãi vay",
+            "23",
+            "",
+            "6.852.154.053",
+            "10.805.614.084"
+          ],
+          [
+            "8. Chi phí bán hàng",
+            "25",
+            "18",
+            "5.878.704.980",
+            "7.051.927.533"
+          ],
+          [
+            "9. Chi phí quản lý doanh nghiệp",
+            "26",
+            "18",
+            "14.788.196.837",
+            "10.344.171.443"
+          ],
+          [
+            "10. Lợi nhuận thuần từ hoạt động kinh doanh",
+            "30",
+            "",
+            "8.916.406.698",
+            "6.736.350.346"
+          ],
+          [
+            "11. Thu nhập khác",
+            "31",
+            "",
+            "158.749.959",
+            "462.890.099"
+          ],
+          [
+            "12. Chi phí khác",
+            "32",
+            "",
+            "377.348.594",
+            "95.557.528"
+          ],
+          [
+            "13. Lợi nhuận khác",
+            "40",
+            "",
+            "(218.598.635)",
+            "367.332.571"
+          ],
+          [
+            "14. Tổng lợi nhuận kế toán trước thuế",
+            "50",
+            "",
+            "8.697.808.063",
+            "7.103.682.917"
+          ],
+          [
+            "15. Chi phí thuế TNDN hiện hành",
+            "51",
+            "20",
+            "2.508.222.475",
+            "1.445.754.278"
+          ],
+          [
+            "16. Chi phí thuế TNDN hoãn lại",
+            "52",
+            "",
+            "–",
+            "–"
+          ],
+          [
+            "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
+            "60",
+            "",
+            "6.189.585.588",
+            "5.657.928.639"
+          ],
+          [
+            "18. Lãi cơ bản trên cổ phiếu",
+            "70",
+            "21",
+            "1.032",
+            "917"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p009_t002",
+      "document_id": "BBS_2024",
+      "page": 9,
+      "table": {
+        "title": "Chữ ký",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Giám đốc"
+        ],
+        "rows": [
+          [
+            "Pham Thị Thanh Hòa",
+            "Dương Minh Tuấn",
+            "Trần Ngọc Hưng"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p010_t001",
+      "document_id": "BBS_2024",
+      "page": 10,
+      "table": {
+        "title": "BÁO CÁO LƯU CHUYỂN TIỀN TỆ",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Năm 2024",
+          "Năm 2023"
+        ],
+        "rows": [
+          [
+            "I. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG KINH DOANH",
+            "",
+            "",
+            ""
+          ],
+          [
+            "1. Lợi nhuận trước thuế",
+            "01",
+            "8.697.808.063",
+            "7.103.682.917"
+          ],
+          [
+            "2. Điều chỉnh cho các khoản",
+            "",
+            "",
+            ""
+          ],
+          [
+            "- Khấu hao TSCĐ và BĐSĐT",
+            "02",
+            "14.325.560.274",
+            "28.766.572.299"
+          ],
+          [
+            "- Các khoản dự phòng",
+            "03",
+            "4.903.119.712",
+            "842.096.322"
+          ],
+          [
+            "- Lãi, lỗ từ hoạt động đầu tư",
+            "05",
+            "(3.052.187)",
+            "(325.384.711)"
+          ],
+          [
+            "- Chi phí lãi vay",
+            "06",
+            "6.852.154.053",
+            "10.805.614.084"
+          ],
+          [
+            "3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động",
+            "08",
+            "34.775.589.915",
+            "47.192.580.911"
+          ],
+          [
+            "- Tăng, giảm các khoản phải thu",
+            "09",
+            "(14.935.210.691)",
+            "3.237.169.265"
+          ],
+          [
+            "- Tăng, giảm hàng tồn kho",
+            "10",
+            "6.061.470.803",
+            "8.282.487.230"
+          ],
+          [
+            "- Tăng, giảm các khoản phải trả (Không kể lãi vay phải trả, thuế thu nhập doanh nghiệp phải nộp)",
+            "11",
+            "11.848.140.821",
+            "(37.080.391)"
+          ],
+          [
+            "- Tăng, giảm chi phí trả trước",
+            "12",
+            "140.950.262",
+            "(220.659.884)"
+          ],
+          [
+            "- Tiền lãi vay đã trả",
+            "14",
+            "(6.881.578.618)",
+            "(10.925.855.006)"
+          ],
+          [
+            "- Thuế thu nhập doanh nghiệp đã nộp",
+            "15",
+            "(1.195.066.290)",
+            "(653.848.630)"
+          ],
+          [
+            "- Tiền chi khác cho hoạt động kinh doanh",
+            "17",
+            "(1.818.042.116)",
+            "(2.414.455.670)"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động kinh doanh",
+            "20",
+            "27.996.254.086",
+            "44.460.337.825"
+          ],
+          [
+            "II. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG ĐẦU TƯ",
+            "",
+            "",
+            ""
+          ],
+          [
+            "1. Tiền chi để mua sắm, xây dựng TSCĐ và các TSDH khác",
+            "21",
+            "(580.800.000)",
+            "(865.035.000)"
+          ],
+          [
+            "2. Tiền thu từ thanh lý, nhượng bán TSCĐ và các TSDH khác",
+            "22",
+            "-",
+            "286.363.636"
+          ],
+          [
+            "3. Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia",
+            "27",
+            "3.052.187",
+            "39.021.075"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động đầu tư",
+            "30",
+            "(577.747.813)",
+            "(539.650.289)"
+          ],
+          [
+            "III. LƯU CHUYỂN TIỀN TỪ HOẠT ĐỘNG TÀI CHÍNH",
+            "",
+            "",
+            ""
+          ],
+          [
+            "1. Tiền thu từ đi vay",
+            "33",
+            "303.358.074.040",
+            "292.791.111.400"
+          ],
+          [
+            "2. Tiền trả nợ gốc vay",
+            "34",
+            "(323.511.575.806)",
+            "(332.759.249.038)"
+          ],
+          [
+            "3. Cổ tức, lợi nhuận đã trả cho chủ sở hữu",
+            "36",
+            "(5.400.000.000)",
+            "(7.200.000.000)"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động tài chính",
+            "40",
+            "(25.553.501.766)",
+            "(47.168.137.638)"
+          ],
+          [
+            "Lưu chuyển tiền thuần trong năm",
+            "50",
+            "1.865.004.507",
+            "(3.247.450.102)"
+          ],
+          [
+            "Tiền và tương đương tiền đầu năm",
+            "60",
+            "638.088.747",
+            "3.885.538.849"
+          ],
+          [
+            "Tiền và tương đương tiền cuối năm",
+            "70",
+            "2.503.093.254",
+            "638.088.747"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p010_t002",
+      "document_id": "BBS_2024",
+      "page": 10,
+      "table": {
+        "title": "Chữ ký",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Giám đốc"
+        ],
+        "rows": [
+          [
+            "Phạm Thị Thanh Hòa",
+            "Dương Minh Tuấn",
+            "Trần Ngọc Hưng"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p013_t001",
+      "document_id": "BBS_2024",
+      "page": 13,
+      "table": {
+        "title": "",
+        "columns": [
+          "Loại tài sản",
+          "Năm"
+        ],
+        "rows": [
+          [
+            "Nhà cửa, vật kiến trúc",
+            "05 - 25"
+          ],
+          [
+            "Máy móc thiết bị",
+            "05 - 12"
+          ],
+          [
+            "Phương tiện vận tải, truyền dẫn",
+            "06 - 10"
+          ],
+          [
+            "Thiết bị quản lý",
+            "03 - 05"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p017_t001",
+      "document_id": "BBS_2024",
+      "page": 17,
+      "table": {
+        "title": "8. NỢ XÁU VÀ DỰ PHÒNG PHẢI THU KHÓ ĐÒI",
+        "columns": [
+          "Chỉ tiêu",
+          "Thời gian quá hạn (31/12/2024)",
+          "Giá gốc (31/12/2024)",
+          "Giá trị có thể thu hồi (31/12/2024)",
+          "Dự phòng (31/12/2024)",
+          "Thời gian quá hạn (01/01/2024)",
+          "Giá gốc (01/01/2024)",
+          "Giá trị có thể thu hồi (01/01/2024)",
+          "Dự phòng (01/01/2024)"
+        ],
+        "rows": [
+          [
+            "Ông Trần Văn Khởi",
+            "> 3 năm",
+            "295.000.000",
+            "28.000.000",
+            "267.000.000",
+            "> 3 năm",
+            "350.000.000",
+            "31.000.000",
+            "319.000.000"
+          ],
+          [
+            "Công ty Cổ phần Thành An 77",
+            "> 3 năm",
+            "290.000.000",
+            "_",
+            "290.000.000",
+            "> 3 năm",
+            "290.000.000",
+            "_",
+            "290.000.000"
+          ],
+          [
+            "Công ty Cổ phần Bao bì Xi măng Tam Điệp",
+            "> 3 năm",
+            "686.045.200",
+            "_",
+            "686.045.200",
+            "> 3 năm",
+            "686.045.200",
+            "_",
+            "686.045.200"
+          ],
+          [
+            "Công ty Cổ phần Thương mại và Đầu tư Việt HP",
+            "> 3 năm",
+            "109.050.000",
+            "_",
+            "109.050.000",
+            "> 3 năm",
+            "109.050.000",
+            "_",
+            "109.050.000"
+          ],
+          [
+            "Công ty Cổ phần Xi măng Tiên Sơn",
+            "> 3 năm",
+            "150.000.000",
+            "_",
+            "150.000.000",
+            "> 3 năm",
+            "150.000.000",
+            "_",
+            "150.000.000"
+          ],
+          [
+            "Công ty TNHH MTV Khoáng sản Vôi Tam Điệp",
+            "> 3 năm",
+            "1.235.236.600",
+            "_",
+            "1.235.236.600",
+            "> 3 năm",
+            "1.235.236.600",
+            "_",
+            "1.235.236.600"
+          ],
+          [
+            "Công ty Cổ phần Xi măng Vicem Bút Sơn",
+            "> 6 tháng",
+            "18.484.589.989",
+            "8.183.150.901",
+            "10.301.439.088",
+            "> 6 tháng",
+            "23.355.178.020",
+            "13.024.629.773",
+            "10.330.548.247"
+          ],
+          [
+            "Công ty Cổ phần Xi măng Hạ Long",
+            "> 6 tháng",
+            "11.098.706.164",
+            "7.469.094.315",
+            "3.629.611.849",
+            "> 6 tháng",
+            "633.829.780",
+            "443.680.846",
+            "190.148.934"
+          ],
+          [
+            "Công ty Cổ phần Thương mại Xi măng Thái Bình",
+            "",
+            "",
+            "",
+            "",
+            "> 6 tháng",
+            "485.699.400",
+            "339.989.580",
+            "145.709.820"
+          ],
+          [
+            "Công ty TNHH NĐ Minh Dương",
+            "> 6 tháng",
+            "4.537.619.254",
+            "2.847.143.478",
+            "1.690.475.776",
+            "",
+            "_",
+            "_",
+            "_"
+          ],
+          [
+            "Các công ty khác",
+            "",
+            "_",
+            "_",
+            "_",
+            "> 3 năm",
+            "129.840.357",
+            "129.840.357",
+            "_"
+          ],
+          [
+            "Cộng",
+            "",
+            "36.886.247.207",
+            "18.527.388.694",
+            "18.358.858.513",
+            "",
+            "27.424.879.357",
+            "13.969.140.556",
+            "13.455.738.801"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p017_t002",
+      "document_id": "BBS_2024",
+      "page": 17,
+      "table": {
+        "title": "9. CHI PHÍ TRẢ TRƯỚC NGẮN HẠN",
+        "columns": [
+          "Chỉ tiêu",
+          "31/12/2024 (VND)",
+          "01/01/2024 (VND)"
+        ],
+        "rows": [
+          [
+            "Công cụ, dụng cụ xuất dùng",
+            "71.566.673",
+            "9.910.494"
+          ],
+          [
+            "Chi phí bảo hiểm",
+            "121.425.961",
+            "141.746.896"
+          ],
+          [
+            "Chi phí đào tạo",
+            "176.677.054",
+            "129.822.369"
+          ],
+          [
+            "Chi phí sửa chữa tài sản",
+            "_",
+            "239.999.991"
+          ],
+          [
+            "Chi phí trả trước khác",
+            "51.424.169",
+            "36.564.369"
+          ],
+          [
+            "Cộng",
+            "421.093.857",
+            "558.044.119"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p018_t001",
+      "document_id": "BBS_2024",
+      "page": 18,
+      "table": {
+        "title": "10. TÀI SẢN CỐ ĐỊNH HỮU HÌNH",
+        "columns": [
+          "Chỉ tiêu",
+          "Nhà xưởng và vật kiến trúc VND",
+          "Máy móc thiết bị VND",
+          "Phương tiện vận tải VND",
+          "Thiết bị quản lý VND",
+          "Cộng VND"
+        ],
+        "rows": [
+          [
+            "NGUYÊN GIÁ",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tại ngày 01/01/2024",
+            "57.484.592.361",
+            "261.277.248.719",
+            "12.156.887.981",
+            "512.171.819",
+            "331.430.900.880"
+          ],
+          [
+            "Mua sắm trong năm",
+            "-",
+            "-",
+            "580.800.000",
+            "-",
+            "580.800.000"
+          ],
+          [
+            "Tại ngày 31/12/2024",
+            "57.484.592.361",
+            "261.277.248.719",
+            "12.737.687.981",
+            "512.171.819",
+            "332.011.700.880"
+          ],
+          [
+            "GIÁ TRỊ HAO MÒN LŨY KẾ",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tại ngày 01/01/2024",
+            "30.222.924.869",
+            "207.369.339.115",
+            "10.347.229.995",
+            "512.171.819",
+            "248.451.665.798"
+          ],
+          [
+            "Khấu hao trong năm",
+            "2.361.940.038",
+            "11.511.206.755",
+            "452.413.481",
+            "-",
+            "14.325.560.274"
+          ],
+          [
+            "Tại ngày 31/12/2024",
+            "32.584.864.907",
+            "218.880.545.870",
+            "10.799.643.476",
+            "512.171.819",
+            "262.777.226.072"
+          ],
+          [
+            "GIÁ TRỊ CÒN LẠI",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tại ngày 01/01/2024",
+            "27.261.667.492",
+            "53.907.909.604",
+            "1.809.657.986",
+            "-",
+            "82.979.235.082"
+          ],
+          [
+            "Tại ngày 31/12/2024",
+            "24.899.727.454",
+            "42.396.702.849",
+            "1.938.044.505",
+            "-",
+            "69.234.474.808"
+          ],
+          [
+            "Nguyên giá TSCĐ hết khấu hao còn sử dụng",
+            "17.913.806.346",
+            "161.470.929.803",
+            "9.377.243.946",
+            "512.171.819",
+            "189.274.151.914"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p019_t001",
+      "document_id": "BBS_2024",
+      "page": 19,
+      "table": {
+        "title": "11. PHẢI TRẢ NGƯỜI BÁN NGẮN HẠN",
+        "columns": [
+          "Chỉ tiêu",
+          "31/12/2024 - Giá trị",
+          "31/12/2024 - Số có khả năng trả nợ",
+          "01/01/2024 - Giá trị",
+          "01/01/2024 - Số có khả năng trả nợ"
+        ],
+        "rows": [
+          [
+            "Bên liên quan",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tổng công ty Xi măng Việt Nam",
+            "196.861.932",
+            "196.861.932",
+            "233.527.975",
+            "233.527.975"
+          ],
+          [
+            "Phải trả người bán khác",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Công ty Cổ phần KVN Logistics",
+            "-",
+            "-",
+            "13.464.000.000",
+            "13.464.000.000"
+          ],
+          [
+            "Công ty Cổ phần Kanetora Việt Nam",
+            "-",
+            "-",
+            "8.316.000.000",
+            "8.316.000.000"
+          ],
+          [
+            "Công ty TNHH Sản xuất và Thương mại Ngọc Minh Giang",
+            "3.963.998.828",
+            "3.963.998.828",
+            "5.558.799.960",
+            "5.558.799.960"
+          ],
+          [
+            "Công ty Cổ phần Nhựa xanh Bạch Đằng",
+            "39.271.777.164",
+            "39.271.777.164",
+            "3.640.836.600",
+            "3.640.836.600"
+          ],
+          [
+            "Các nhà cung cấp khác",
+            "10.468.918.204",
+            "10.468.918.204",
+            "8.929.525.082",
+            "8.929.525.082"
+          ],
+          [
+            "Cộng",
+            "53.901.556.128",
+            "53.901.556.128",
+            "40.142.689.617",
+            "40.142.689.617"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p019_t002",
+      "document_id": "BBS_2024",
+      "page": 19,
+      "table": {
+        "title": "12. THUẾ VÀ CÁC KHOẢN PHẢI NỘP NHÀ NƯỚC",
+        "columns": [
+          "Chỉ tiêu",
+          "01/01/2024",
+          "Số phải nộp trong năm",
+          "Số đã nộp trong năm",
+          "31/12/2024"
+        ],
+        "rows": [
+          [
+            "Thuế giá trị gia tăng",
+            "-",
+            "4.813.126.087",
+            "3.963.205.855",
+            "849.920.232"
+          ],
+          [
+            "Thuế xuất, nhập khẩu",
+            "-",
+            "60.217.607",
+            "60.217.607",
+            "-"
+          ],
+          [
+            "Thuế thu nhập doanh nghiệp",
+            "321.464.278",
+            "2.508.222.475",
+            "1.195.066.290",
+            "1.634.620.463"
+          ],
+          [
+            "Thuế thu nhập cá nhân",
+            "58.982.237",
+            "323.583.293",
+            "330.716.141",
+            "51.849.389"
+          ],
+          [
+            "Tiền thuê đất, thuế nhà đất",
+            "(203.829.600)",
+            "697.963.000",
+            "494.133.400",
+            "-"
+          ],
+          [
+            "Phí, lệ phí và các khoản phải nộp khác",
+            "-",
+            "261.394.253",
+            "261.394.253",
+            "-"
+          ],
+          [
+            "Cộng",
+            "176.616.915",
+            "8.664.506.715",
+            "6.304.733.546",
+            "2.536.390.084"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p019_t003",
+      "document_id": "BBS_2024",
+      "page": 19,
+      "table": {
+        "title": "Trong đó:",
+        "columns": [
+          "Chỉ tiêu",
+          "01/01/2024",
+          "31/12/2024"
+        ],
+        "rows": [
+          [
+            "Thuế và các khoản phải thu nhà nước",
+            "203.829.600",
+            "-"
+          ],
+          [
+            "Thuế và các khoản phải nộp nhà nước",
+            "380.446.515",
+            "2.536.390.084"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p020_t001",
+      "document_id": "BBS_2024",
+      "page": 20,
+      "table": {
+        "title": "13. VAY VÀ NỢ THUÊ TÀI CHÍNH",
+        "columns": [
+          "Chỉ tiêu",
+          "01/01/2024 Giá trị",
+          "01/01/2024 Số có khả năng trả nợ",
+          "Trong năm Tăng",
+          "Trong năm Giảm",
+          "31/12/2024 Giá trị",
+          "31/12/2024 Số có khả năng trả nợ"
+        ],
+        "rows": [
+          [
+            "VNĐ",
+            "VNĐ",
+            "VNĐ",
+            "VNĐ",
+            "VNĐ",
+            "VNĐ",
+            "VNĐ"
+          ],
+          [
+            "Vay ngắn hạn",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Ngân hàng TNHH MTV Shinhan Việt Nam - Chi nhánh Hà Nam (1)",
+            "-",
+            "-",
+            "9.970.800.000",
+            "4.970.800.000",
+            "5.000.000.000",
+            "5.000.000.000"
+          ],
+          [
+            "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Thành Nam (2)",
+            "27.495.925.821",
+            "27.495.925.821",
+            "44.801.919.333",
+            "52.692.754.140",
+            "19.605.091.014",
+            "19.605.091.014"
+          ],
+          [
+            "Ngân hàng TMCP Ngoại thương Việt Nam - Chi nhánh Nam Định (3)",
+            "36.473.863.553",
+            "36.473.863.553",
+            "68.449.513.947",
+            "74.667.254.202",
+            "30.256.123.298",
+            "30.256.123.298"
+          ],
+          [
+            "Ngân hàng TMCP Công thương Việt Nam - Chi nhánh Nam Định (4)",
+            "49.508.502.424",
+            "49.508.502.424",
+            "146.770.889.948",
+            "143.804.983.228",
+            "52.474.409.144",
+            "52.474.409.144"
+          ],
+          [
+            "Ngân hàng TMCP Quân đội - Chi nhánh Nam Định",
+            "11.135.833.424",
+            "11.135.833.424",
+            "21.364.950.812",
+            "32.500.784.236",
+            "-",
+            "-"
+          ],
+          [
+            "Vay tổ chức khác",
+            "-",
+            "-",
+            "12.000.000.000",
+            "12.000.000.000",
+            "-",
+            "-"
+          ],
+          [
+            "Nợ dài hạn đến hạn trả",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Thành Nam",
+            "2.875.000.000",
+            "2.875.000.000",
+            "-",
+            "2.875.000.000",
+            "-",
+            "-"
+          ],
+          [
+            "Cộng",
+            "127.489.125.222",
+            "127.489.125.222",
+            "303.358.074.040",
+            "323.511.575.806",
+            "107.335.623.456",
+            "107.335.623.456"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p021_t001",
+      "document_id": "BBS_2024",
+      "page": 21,
+      "table": {
+        "title": "Chi tiết các khoản vay ngắn hạn của Công ty",
+        "columns": [
+          "Ngân hàng",
+          "Hợp đồng",
+          "Hạn mức (VND)",
+          "Thời hạn và mục đích vay",
+          "Tài sản đảm bảo"
+        ],
+        "rows": [
+          [
+            "(1) Ngân hàng TNHH Một thành viên Shinhan Việt Nam - Chi nhánh Hà Nam",
+            "Hợp đồng tín dụng số SHBVN/HNM/TD/2024/ 225 ngày 25/11/2024",
+            "5.000.000.000",
+            "Thời hạn cấp hạn mức tín dụng đến hết ngày 13/11/2025;\nMục đích: bổ sung vốn lưu động",
+            "Khoản vay không có tài sản đảm bảo"
+          ],
+          [
+            "(2) Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Thành Nam",
+            "Hợp đồng tín dụng số 01/2024/232490/HĐTD ngày 25/06/2024",
+            "30.000.000.000",
+            "Thời hạn cấp hạn mức tín dụng đến hết ngày 25/06/2025;\nMục đích: bổ sung vốn lưu động, bảo lãnh, mở L/C, thẻ tín dụng, chiết khấu, thấu chi",
+            "Tài sản đảm bảo bao gồm: Máy tạo ống Polytex; máy in quận 6 màu Servotex 850/6C; Máy dán bao đáy vuông Convertex CL 140 + bộ xăm lỗ siêu mịn; Máy rọc vải dệt Slittex 750; Máy tráng màng Lami Tex LX; và các hợp đồng tiền gửi có kỳ hạn của Công ty tại BIDV"
+          ],
+          [
+            "(3) Ngân hàng TMCP Ngoại thương Việt Nam - Chi nhánh Nam Định",
+            "Hợp đồng cấp tín dụng số 01/2024/VCB.NDI/718 9524/CTD, ngày 14/06/2024",
+            "40.000.000.000",
+            "Thời gian cấp hạn mức tín dụng 12 tháng kể từ ngày 14/06/2024 nhưng không quá 12 tháng kể từ ngày 24/05/2024;\nMục đích: bổ sung vốn lưu động, bảo lãnh, mở L/C",
+            "Tài sản đảm bảo bao gồm: 01 máy tráng màng PP hiệu Starlinger xuất xứ Châu Âu; Toàn bộ máy móc thiết bị hình thành từ vốn vay và vốn tự có theo hợp đồng thế chấp MMTB số 03/2017/TSĐB/7189524 ngày 15/09/2017; Quyền sở hữu tài sản gắn liền với đất số CB 224471; 01 máy dán đáy Starlinger xuất xứ Châu Âu; Dây chuyền thiết bị sản xuất bao dán đáy thương hiệu Starlinger xuất xứ châu Âu; 08 máy dệt tròn RX 6.0 hiệu Starlinger; Quyền đòi nợ phát sinh từ các hợp đồng kinh tế ký kết với Công ty Cổ phần Xi măng Vicem Hoàng Mai về việc mua bán vỏ bao xi măng, bao Sling Jumbo; Hàng hóa luân chuyển có giá trị tối thiểu bằng số dư cấp tín dụng ngắn hạn tại VietcomBank Nam Định."
+          ],
+          [
+            "(4) Ngân hàng TMCP Công thương Việt Nam - Chi nhánh Nam Định",
+            "Hợp đồng cho vay hạn mức số TD01/2024- HĐCVHM/NHCT380- VICEM ngày 16/09/2024",
+            "80.000.000.000",
+            "Thời hạn duy trì hạn mức đến hết ngày 15/09/2025;\nMục đích: bổ sung vốn lưu động phục vụ sản xuất kinh doanh",
+            "Tài sản đảm bảo bao gồm: Máy móc thiết bị phục vụ sản xuất bao bì xi măng; Nhà giới thiệu sản phẩm tại Km2 Đường 10 Xã Lộc An, TP Nam Định; 2 máy dệt tròn của hãng Lohia Corp Limited Ấn Độ; 10 máy dệt tròn Model Nova 6 (LF) 579 xuất xứ Ấn Độ, Hợp đồng tiền gửi có kì hạn số 380/2022/851 tại Vietinbank; Xe ô tô Nissan biển số 18C-12182, Hợp đồng thế chấp quyền phu thu từ các hợp đồng kinh tế với Công ty CP Xi măng Vicem Bút Sơn, Công ty TNHH MTV Xi măng Vicem Tam Điệp, Công ty Cổ phần Xi măng Bỉm Sơn, Công ty Cổ phần Thương mại NCL;\nHàng tồn kho luân chuyển của Công ty."
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p022_t001",
+      "document_id": "BBS_2024",
+      "page": 22,
+      "table": {
+        "title": "Bảng đối chiếu biến động vốn chủ sở hữu",
+        "columns": [
+          "Chỉ tiêu",
+          "Vốn góp của chủ sở hữu\nVND",
+          "Thặng dư vốn cổ phần\nVND",
+          "Vốn khác của chủ sở hữu\nVND",
+          "Quỹ đầu tư phát triển\nVND",
+          "Quỹ khác thuộc vốn chủ sở hữu\nVND",
+          "LNST chưa phân phối\nVND",
+          "Cộng\nVND"
+        ],
+        "rows": [
+          [
+            "Tại ngày 01/01/2023",
+            "60.000.000.000",
+            "6.822.153.091",
+            "28.692.249.838",
+            "4.035.561.401",
+            "1.678.000.000",
+            "7.812.598.931",
+            "109.040.563.261"
+          ],
+          [
+            "Lãi trong năm",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "5.657.928.639",
+            "5.657.928.639"
+          ],
+          [
+            "Trích lập các quỹ",
+            "_",
+            "_",
+            "_",
+            "312.598.931",
+            "_",
+            "(612.598.931)",
+            "(300.000.000)"
+          ],
+          [
+            "Chia cổ tức",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "(7.200.000.000)",
+            "(7.200.000.000)"
+          ],
+          [
+            "Tại ngày 01/01/2024",
+            "60.000.000.000",
+            "6.822.153.091",
+            "28.692.249.838",
+            "4.348.160.332",
+            "1.678.000.000",
+            "5.657.928.639",
+            "107.198.491.900"
+          ],
+          [
+            "Lãi trong năm",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "6.189.585.588",
+            "6.189.585.588"
+          ],
+          [
+            "Trích lập các quỹ (*)",
+            "_",
+            "_",
+            "_",
+            "100.000.000",
+            "_",
+            "(257.928.639)",
+            "(157.928.639)"
+          ],
+          [
+            "Chia cổ tức (*)",
+            "_",
+            "_",
+            "_",
+            "_",
+            "_",
+            "(5.400.000.000)",
+            "(5.400.000.000)"
+          ],
+          [
+            "Tại ngày 31/12/2024",
+            "60.000.000.000",
+            "6.822.153.091",
+            "28.692.249.838",
+            "4.448.160.332",
+            "1.678.000.000",
+            "6.189.585.588",
+            "107.830.148.849"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p022_t002",
+      "document_id": "BBS_2024",
+      "page": 22,
+      "table": {
+        "title": "Chi tiết cổ đông lớn của Công ty",
+        "columns": [
+          "Cổ đông",
+          "31/12/2024 - Cổ phiếu",
+          "31/12/2024 - Tỉ lệ",
+          "01/01/2024 - Cổ phiếu",
+          "01/01/2024 - Tỉ lệ"
+        ],
+        "rows": [
+          [
+            "Tổng công ty Xi măng Việt Nam",
+            "2.057.666",
+            "34,29%",
+            "2.057.666",
+            "34,29%"
+          ],
+          [
+            "Công ty Cổ phần Kanetora Việt Nam",
+            "295.800",
+            "4,93%",
+            "295.800",
+            "4,93%"
+          ],
+          [
+            "Ông Dương Minh Tuấn",
+            "454.727",
+            "7,58%",
+            "454.727",
+            "7,58%"
+          ],
+          [
+            "Ông Hoàng Trung Chiến",
+            "480.000",
+            "8,00%",
+            "480.000",
+            "8,00%"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "461.085",
+            "7,68%",
+            "461.085",
+            "7,68%"
+          ],
+          [
+            "Các cổ đông khác",
+            "2.250.722",
+            "37,51%",
+            "2.250.722",
+            "37,51%"
+          ],
+          [
+            "Cộng",
+            "6.000.000",
+            "100,00%",
+            "6.000.000",
+            "100,00%"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p023_t001",
+      "document_id": "BBS_2024",
+      "page": 23,
+      "table": {
+        "title": "Các giao dịch về vốn với các chủ sở hữu và phân phối cổ tức, chia lợi nhuận",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Vốn đầu tư của chủ sở hữu",
+            "",
+            ""
+          ],
+          [
+            "- Vốn góp đầu năm",
+            "60.000.000.000",
+            "60.000.000.000"
+          ],
+          [
+            "- Vốn góp tăng trong năm",
+            "-",
+            "-"
+          ],
+          [
+            "- Vốn góp giảm trong năm",
+            "-",
+            "-"
+          ],
+          [
+            "- Vốn góp cuối năm",
+            "60.000.000.000",
+            "60.000.000.000"
+          ],
+          [
+            "Cổ tức, lợi nhuận đã chia",
+            "5.400.000.000",
+            "7.200.000.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p023_t002",
+      "document_id": "BBS_2024",
+      "page": 23,
+      "table": {
+        "title": "Cổ phiếu",
+        "columns": [
+          "Chỉ tiêu",
+          "31/12/2024",
+          "01/01/2024"
+        ],
+        "rows": [
+          [
+            "Số lượng cổ phiếu đăng ký phát hành",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "Số lượng cổ phiếu đã bán ra công chúng",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "Số lượng cổ phiếu được mua lại (cổ phiếu quỹ)",
+            "-",
+            "-"
+          ],
+          [
+            "Số lượng cổ phiếu đang lưu hành",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "Mệnh giá cổ phiếu đang lưu hành (VND/cổ phiếu)",
+            "10.000",
+            "10.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p023_t003",
+      "document_id": "BBS_2024",
+      "page": 23,
+      "table": {
+        "title": "PHẢI TRẢ NGẮN HẠN KHÁC",
+        "columns": [
+          "Chỉ tiêu",
+          "31/12/2024\nVND",
+          "01/01/2024\nVND"
+        ],
+        "rows": [
+          [
+            "KPCĐ, BHXH, BHYT, BHTN",
+            "1.178.034.914",
+            "818.285.678"
+          ],
+          [
+            "Các khoản phải trả, phải nộp khác",
+            "74.360.000",
+            "100.119.200"
+          ],
+          [
+            "Cộng",
+            "1.252.394.914",
+            "918.404.878"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p023_t004",
+      "document_id": "BBS_2024",
+      "page": 23,
+      "table": {
+        "title": "DOANH THU THUẦN VỀ BÁN HÀNG VÀ CUNG CẤP DỊCH VỤ",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Doanh thu bán thành phẩm",
+            "346.628.094.872",
+            "353.710.178.562"
+          ],
+          [
+            "Doanh thu cung cấp dịch vụ",
+            "8.879.277.414",
+            "1.911.647.100"
+          ],
+          [
+            "Cộng",
+            "355.507.372.286",
+            "355.621.825.662"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p023_t005",
+      "document_id": "BBS_2024",
+      "page": 23,
+      "table": {
+        "title": "GIÁ VỐN HÀNG BÁN",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Giá vốn của thành phẩm đã bán",
+            "309.640.315.634",
+            "319.451.002.989"
+          ],
+          [
+            "Giá vốn cung cấp dịch vụ",
+            "9.434.646.271",
+            "1.278.590.192"
+          ],
+          [
+            "Cộng",
+            "319.074.961.905",
+            "320.729.593.181"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p024_t001",
+      "document_id": "BBS_2024",
+      "page": 24,
+      "table": {
+        "title": "18. CHI PHÍ BÁN HÀNG VÀ CHI PHÍ QUẢN LÝ DOANH NGHIỆP",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Chi phí bán hàng",
+            "5.878.704.980",
+            "7.051.927.533"
+          ],
+          [
+            "Chi phí nhân công",
+            "984.682.719",
+            "934.320.154"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "261.012.986",
+            "987.387.837"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "2.835.084.004",
+            "3.124.077.498"
+          ],
+          [
+            "Chi phí khác",
+            "1.797.925.271",
+            "2.006.142.044"
+          ],
+          [
+            "Chi phí quản lý doanh nghiệp",
+            "14.788.196.837",
+            "10.344.171.443"
+          ],
+          [
+            "Chi phí nhân công",
+            "4.097.015.448",
+            "3.808.462.908"
+          ],
+          [
+            "Chi phí vật liệu quản lý",
+            "689.143.929",
+            "628.675.420"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "554.953.860",
+            "1.114.082.093"
+          ],
+          [
+            "Thuế, phí và lệ phí",
+            "770.781.100",
+            "456.252.463"
+          ],
+          [
+            "Chi phí dự phòng",
+            "4.903.119.712",
+            "842.096.322"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "1.893.964.581",
+            "1.009.633.179"
+          ],
+          [
+            "Chi phí khác",
+            "1.879.218.207",
+            "2.484.969.058"
+          ],
+          [
+            "Cộng",
+            "20.666.901.817",
+            "17.396.098.976"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p024_t002",
+      "document_id": "BBS_2024",
+      "page": 24,
+      "table": {
+        "title": "19. CHI PHÍ SẢN XUẤT KINH DOANH THEO YẾU TỐ",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Chi phí nguyên liệu, vật liệu",
+            "222.790.322.571",
+            "209.861.368.218"
+          ],
+          [
+            "Chi phí nhân công",
+            "67.577.900.808",
+            "67.550.364.632"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "14.325.560.274",
+            "28.766.572.299"
+          ],
+          [
+            "Chi phí dự phòng",
+            "4.903.119.712",
+            "842.096.322"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "26.501.285.158",
+            "22.915.097.126"
+          ],
+          [
+            "Chi phí khác",
+            "5.592.962.190",
+            "6.090.655.102"
+          ],
+          [
+            "Cộng",
+            "341.691.150.713",
+            "336.026.153.699"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p024_t003",
+      "document_id": "BBS_2024",
+      "page": 24,
+      "table": {
+        "title": "20. CHI PHÍ THUẾ THU NHẬP DOANH NGHIỆP HIỆN HÀNH",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Lợi nhuận kế toán trước thuế TNDN",
+            "8.697.808.063",
+            "7.103.682.917"
+          ],
+          [
+            "Điều chỉnh cho thu nhập chịu thuế",
+            "",
+            ""
+          ],
+          [
+            "- Trừ: Thu nhập không chịu thuế",
+            "_",
+            "_"
+          ],
+          [
+            "- Cộng: Các khoản chi phí không được khấu trừ",
+            "475.294.253",
+            "103.638.475"
+          ],
+          [
+            "Thu nhập chịu thuế",
+            "9.173.102.316",
+            "7.207.321.392"
+          ],
+          [
+            "- Thuế suất",
+            "20%",
+            "20%"
+          ],
+          [
+            "Chi phí thuế TNDN phải nộp",
+            "1.834.620.463",
+            "1.441.464.278"
+          ],
+          [
+            "- Điều chỉnh thuế TNDN của các năm trước",
+            "673.602.012",
+            "4.290.000"
+          ],
+          [
+            "Tổng chi phí thuế thu nhập doanh nghiệp hiện hành",
+            "2.508.222.475",
+            "1.445.754.278"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p025_t001",
+      "document_id": "BBS_2024",
+      "page": 25,
+      "table": {
+        "title": "21. LÃI CƠ BẢN TRÊN CỔ PHIẾU",
+        "columns": [
+          "",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Lợi nhuận kế toán sau thuế thu nhập doanh nghiệp",
+            "6.189.585.588",
+            "5.657.928.639"
+          ],
+          [
+            "Trích quỹ khen thưởng phúc lợi",
+            "-",
+            "(157.928.639)"
+          ],
+          [
+            "Lợi nhuận phân bổ cho cổ đông sở hữu\ncổ phiếu phổ thông",
+            "6.189.585.588",
+            "5.500.000.000"
+          ],
+          [
+            "Cổ phiếu phổ thông đang lưu hành bình quân trong năm",
+            "6.000.000",
+            "6.000.000"
+          ],
+          [
+            "Lãi cơ bản trên cổ phiếu",
+            "1.032",
+            "917"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p025_t002",
+      "document_id": "BBS_2024",
+      "page": 25,
+      "table": {
+        "title": "22. THÔNG TIN VỚI CÁC BÊN LIÊN QUAN",
+        "columns": [
+          "Bên liên quan",
+          "Mối liên hệ"
+        ],
+        "rows": [
+          [
+            "Tổng công ty Xi măng Việt Nam",
+            "Cổ đông chiếm 34,29% vốn điều lệ"
+          ],
+          [
+            "Ông Hoàng Trung Chiến",
+            "Chủ tịch Hội đồng quản trị,\nCổ đông chiếm 8% vốn điều lệ"
+          ],
+          [
+            "Ông Trần Ngọc Hưng",
+            "Thành viên Hội đồng quản trị, Giám đốc"
+          ],
+          [
+            "Ông Dương Minh Tuấn",
+            "Phó Giám đốc, Kế toán trưởng, Cổ đông chiếm 7,58%\nvốn điều lệ"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "Thành viên Hội đồng quản trị, Phó Giám đốc, Cổ đông\nchiếm 7,68% vốn điều lệ"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p025_t003",
+      "document_id": "BBS_2024",
+      "page": 25,
+      "table": {
+        "title": "22. THÔNG TIN VỚI CÁC BÊN LIÊN QUAN (Tiếp theo)",
+        "columns": [
+          "",
+          "Năm 2024\nVND",
+          "Năm 2023\nVND"
+        ],
+        "rows": [
+          [
+            "Phí tư vấn",
+            "",
+            ""
+          ],
+          [
+            "Tổng công ty Xi măng Việt Nam",
+            "121.046.544",
+            "134.658.960"
+          ],
+          [
+            "Chia cổ tức",
+            "",
+            ""
+          ],
+          [
+            "Tổng công ty Xi măng Việt Nam",
+            "1.851.899.400",
+            "2.469.199.200"
+          ],
+          [
+            "Ông Hoàng Trung Chiến",
+            "432.000.000",
+            "576.000.000"
+          ],
+          [
+            "Ông Dương Minh Tuấn",
+            "409.254.300",
+            "545.672.400"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "414.976.500",
+            "553.302.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p026_t001",
+      "document_id": "BBS_2024",
+      "page": 26,
+      "table": {
+        "title": "Tiền lương và thù lao của Thành viên Hội đồng quản trị, Ban Giám đốc",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ",
+          "Năm 2024 (VND)",
+          "Năm 2023 (VND)"
+        ],
+        "rows": [
+          [
+            "Ông Hoàng Trung Chiến",
+            "Chủ tịch HĐQT",
+            "529.800.000",
+            "526.004.956"
+          ],
+          [
+            "Ông Trần Ngọc Hưng",
+            "Thành viên HĐQT, Giám đốc",
+            "517.800.000",
+            "519.158.865"
+          ],
+          [
+            "Ông Dương Minh Tuấn",
+            "Phó Giám đốc, Kế toán trưởng",
+            "405.480.000",
+            "419.839.949"
+          ],
+          [
+            "Ông Dương Tuấn Linh",
+            "Thành viên HĐQT, Phó Giám đốc",
+            "204.580.000",
+            "404.548.815"
+          ],
+          [
+            "Ông Trần Ngọc Tuấn",
+            "Phó Giám đốc",
+            "178.080.000",
+            "-"
+          ],
+          [
+            "Ông Phạm Văn Minh",
+            "Thành viên HĐQT",
+            "53.500.000",
+            "38.000.000"
+          ],
+          [
+            "Ông Nguyễn Mạnh Hải",
+            "Thành viên HĐQT",
+            "53.500.000",
+            "38.000.000"
+          ],
+          [
+            "Cộng",
+            "",
+            "1.942.740.000",
+            "1.945.552.585"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p026_t002",
+      "document_id": "BBS_2024",
+      "page": 26,
+      "table": {
+        "title": "Thu nhập chi trả cho Ban kiểm soát trong năm",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ",
+          "Năm 2024 (VND)",
+          "Năm 2023 (VND)"
+        ],
+        "rows": [
+          [
+            "Ông Trần Đức Thiện",
+            "Trưởng BKS",
+            "336.202.742",
+            "324.917.288"
+          ],
+          [
+            "Bà Nguyễn Thị Thanh Hằng",
+            "Thành viên BKS",
+            "41.500.000",
+            "42.000.000"
+          ],
+          [
+            "Ông Trần Duy Đức",
+            "Thành viên BKS",
+            "262.999.805",
+            "214.225.085"
+          ],
+          [
+            "Cộng",
+            "",
+            "640.702.547",
+            "581.142.373"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "BBS_2024_p026_t003",
+      "document_id": "BBS_2024",
+      "page": 26,
+      "table": {
+        "title": "Chữ ký",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Giám đốc"
+        ],
+        "rows": [
+          [
+            "Phạm Thị Thanh Hòa",
+            "Dương Minh Tuấn",
+            "Trần Ngọc Hưng"
+          ]
+        ]
+      }
+    }
+  ]
+}

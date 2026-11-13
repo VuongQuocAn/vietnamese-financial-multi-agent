@@ -1,0 +1,648 @@
+[PAGE 1]
+Digitally signed by LÊ XUÂN CHIỀU
+DN: C=VN, S=NGHỆ AN, L=Thành phố Vinh, OU=LÊ XUÂN CHIỀU, T=GĐ, CN=LÊ XUÂN CHIỀU,
+OID.0.9.2342.19200300.100.1.1=CMND:182388234
+Reason: I am the author of this document
+Location:
+Date: 2025.03.25 13:42:50 +07'00'
+Foxit PDF Reader Version: 2023.2.0
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+(Thành lập tại nước Cộng hòa Xã hội Chủ nghĩa Việt Nam)
+BÁO CÁO TÀI CHÍNH ĐÃ ĐƯỢC KIỂM TOÁN
+CHO NĂM TÀI CHÍNH KẾT THÚC NGÀY 31 THÁNG 12 NĂM 2024
+Tháng 3 năm 2025
+
+[PAGE 2]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm, xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MỤC LỤC
+[TABLE: AMC_2024_p002_t001]
+
+[PAGE 3]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm, xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+BÁO CÁO CỦA BAN GIÁM ĐỐC
+Ban Giám đốc Công ty Cổ phần Khoáng sản Á Châu (gọi tắt là "Công ty") đệ trình báo cáo này cùng với Báo cáo tài chính của Công ty cho năm tài chính kết thúc ngày 31 tháng 12 năm 2024.
+HỘI ĐỒNG QUẢN TRỊ VÀ BAN GIÁM ĐỐC
+Các thành viên của Hội đồng Quản trị và Ban Giám đốc đã điều hành Công ty trong năm và đến ngày lập báo cáo này gồm:
+Hội đồng quản trị
+[TABLE: AMC_2024_p003_t001]
+Ban Giám đốc
+[TABLE: AMC_2024_p003_t002]
+Ban kiểm soát
+[TABLE: AMC_2024_p003_t003]
+Người đại diện theo pháp luật
+Người đại diện theo pháp luật của Công ty trong năm và cho đến ngày lập báo cáo này là Ông Lê Văn Chiến - Giám đốc Công ty.
+TRÁCH NHIỆM CỦA BAN GIÁM ĐỐC
+Ban Giám đốc Công ty có trách nhiệm lập Báo cáo tài chính phản ánh một cách trung thực và hợp lý tình hình tài chính của Công ty tại ngày 31 tháng 12 năm 2024 cũng như kết quả hoạt động kinh doanh và tình hình lưu chuyển tiền tệ của Công ty trong năm, phù hợp với Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính. Trong việc lập các Báo cáo tài chính này, Ban Giám đốc được yêu cầu phải:
+• Lựa chọn các chính sách kế toán thích hợp và áp dụng các chính sách đó một cách nhất quán;
+• Đưa ra các xét đoán và ước tính một cách hợp lý và thận trọng;
+• Nêu rõ các nguyên tắc kế toán thích hợp có được tuân thủ hay không, có những áp dụng sai lệch trọng yếu cần được công bố và giải thích trong Báo cáo tài chính hay không;
+• Lập Báo cáo tài chính trên cơ sở hoạt động liên tục trừ trường hợp không thể cho rằng Công ty sẽ tiếp tục hoạt động kinh doanh; và
+• Thiết kế và thực hiện hệ thống kiểm soát nội bộ một cách hữu hiệu cho mục đích lập và trình bày Báo cáo tài chính hợp lý nhằm hạn chế rủi ro và gian lận.
+Ban Giám đốc Công ty chịu trách nhiệm đảm bảo rằng sổ kế toán được ghi chép một cách phù hợp để phản ánh một cách hợp lý tình hình tài chính của Công ty ở bất kỳ thời điểm nào và đảm bảo rằng Báo cáo tài chính tuân thủ Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính. Ban Giám đốc cũng chịu trách nhiệm đảm bảo an toàn cho tài sản của Công ty và thực hiện các biện pháp thích hợp để ngăn chặn và phát hiện các hành vi gian lận và sai phạm khác.
+
+[PAGE 4]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm, xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+BÁO CÁO CỦA BAN GIÁM ĐỐC (TIẾP THEO)
+Ban Giám đốc xác nhận rằng Công ty đã tuân thủ các yêu cầu nêu trên trong việc lập Báo cáo tài chính.
+Thay mặt và đại diện cho Ban Giám đốc,
+Lê Văn Chiến
+Giám đốc
+Ngày 18 tháng 03 năm 2025
+
+[PAGE 5]
+CÔNG TY TNHH KIỂM TOÁN QUỐC TẾ
+Tầng 15, Tòa nhà Center Building - Hapulico Complex, Số 1 Nguyễn Huy Tưởng, Phường Thanh Xuân Trung, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+024.666 42 777 | contact@icpa.vn | www.icpa.vn
+Số: 031801/2025/BCKT-ICPA
+BÁO CÁO KIỂM TOÁN ĐỘC LẬP
+Kính gửi: Các Cổ đông,
+Hội đồng Quản trị và Ban Giám đốc
+Công ty Cổ phần Khoáng sản Á Châu
+Chúng tôi đã thực hiện kiểm toán Báo cáo tài chính kèm theo của Công ty Cổ phần Khoáng sản Á Châu (gọi tắt là "Công ty"), được lập ngày 18 tháng 03 năm 2025, từ trang 6 đến trang 33 bao gồm Bảng Cân đối kế toán tại ngày 31 tháng 12 năm 2024, Báo cáo Kết quả hoạt động kinh doanh, Báo cáo Lưu chuyển tiền tệ cho năm tài chính kết thúc cùng ngày và Bản thuyết minh báo cáo tài chính.
+Trách nhiệm của Ban Giám đốc
+Ban Giám đốc Công ty Cổ phần Khoáng sản Á Châu chịu trách nhiệm về việc lập và trình bày trung thực và hợp lý Báo cáo tài chính của Công ty theo Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính và chịu trách nhiệm về kiểm soát nội bộ mà Ban Giám đốc xác định là cần thiết để đảm bảo cho việc lập và trình bày Báo cáo tài chính không có sai sót trọng yếu do gian lận hoặc nhầm lẫn.
+Trách nhiệm của Kiểm toán viên
+Trách nhiệm của chúng tôi là đưa ra ý kiến về báo cáo tài chính dựa trên kết quả của cuộc kiểm toán. Chúng tôi đã tiến hành kiểm toán theo các chuẩn mực kiểm toán Việt Nam. Các chuẩn mực này yêu cầu chúng tôi tuân thủ chuẩn mực và các quy định về đạo đức nghề nghiệp, lập kế hoạch và thực hiện cuộc kiểm toán để đạt được sự đảm bảo hợp lý về việc liệu báo cáo tài chính của Công ty có còn sai sót trọng yếu hay không.
+Công việc kiểm toán bao gồm thực hiện các thủ tục nhằm thu thập các bằng chứng kiểm toán về các số liệu và thuyết minh trên báo cáo tài chính. Các thủ tục kiểm toán được lựa chọn dựa trên xét đoán của kiểm toán viên, bao gồm đánh giá rủi ro có sai sót trọng yếu trong báo cáo tài chính do gian lận hoặc nhầm lẫn. Khi thực hiện đánh giá các rủi ro này, kiểm toán viên đã xem xét kiểm soát nội bộ của Công ty liên quan đến việc lập và trình bày báo cáo tài chính trung thực, hợp lý nhằm thiết kế các thủ tục kiểm toán phù hợp với tình hình thực tế, tuy nhiên không nhằm mục đích đưa ra ý kiến về hiệu quả của kiểm soát nội bộ của Công ty. Công việc kiểm toán cũng bao gồm đánh giá tính thích hợp của các chính sách kế toán được áp dụng và tính hợp lý của các ước tính kế toán của Ban Giám đốc cũng như đánh giá việc trình bày tổng thể báo cáo tài chính.
+Chúng tôi tin tưởng rằng các bằng chứng kiểm toán mà chúng tôi đã thu thập được là đầy đủ và thích hợp làm cơ sở cho ý kiến kiểm toán của chúng tôi.
+Ý kiến của Kiểm toán viên
+Theo ý kiến của chúng tôi, báo cáo tài chính đã phản ánh trung thực và hợp lý, trên các khía cạnh trọng yếu tình hình tài chính của Công ty tại ngày 31 tháng 12 năm 2024, cũng như kết quả hoạt động kinh doanh và tình hình lưu chuyển tiền tệ cho năm tài chính kết thúc cùng ngày, phù hợp với chuẩn mực kế toán, chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính.
+Thành viên Hãng kiểm toán AGN International 1990
+Dịch vụ chuyên ngành: Kiểm toán, kế toán, Tư vấn thuế, Tài chính
+
+[PAGE 6]
+BÁO CÁO KIỂM TOÁN ĐỘC LẬP (TIẾP THEO)
+Vấn đề cần nhấn mạnh
+Chúng tôi xin lưu ý người đọc báo cáo tới Thuyết minh số V.8 trong bản Thuyết minh Báo cáo tài chính: Công ty đang hoạt động khai thác tại mỏ đá Châu Quang theo Giấy phép khai thác khoáng sản số 1116/GP-BTNMT ngày 31/08/2004 được cấp bởi Bộ Tài nguyên và Môi trường, cấp phép cho Tổng Công ty Hợp tác Kinh tế - cổ đông lớn của Công ty. Thời gian khai thác từ ngày 31/08/2004 đến ngày 31/08/2034. Đây là tài sản Công ty nhận góp vốn từ cổ đông này. Mỏ Châu Quang đã được bàn giao cho Công ty theo Biên bản giao nhận Tài sản và vốn góp thành lập Công ty Cổ phần Khoáng sản Á Châu số 312/BB-CP ngày 22/02/2008; giá trị quyền khai thác mỏ đã làm thủ tục xuất hóa đơn và kê khai thuế, Công ty vẫn đang tiến hành hoàn tất các thủ tục pháp lý cần thiết để chuyển tên quyền khai thác mỏ đá này trong thời gian tới.
+Ý kiến kiểm toán của chúng tôi không liên quan đến vấn đề này.
+Lê Quốc Anh
+Phó Tổng Giám đốc
+Giấy chứng nhận đăng ký hành nghề kiểm toán số 3384-2025-072-1
+Thay mặt và đại diện cho
+Công ty TNHH Kiểm toán Quốc tế (icPA)
+Hà Nội, ngày 18 tháng 03 năm 2025
+Dư Thị Kiều Anh
+Kiểm toán viên
+Giấy chứng nhận đăng ký hành nghề kiểm toán số 5193-2025-072-1
+
+[PAGE 7]
+MẪU SỐ B 01 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+BẢNG CÂN ĐỐI KẾ TOÁN
+Tại ngày 31 tháng 12 năm 2024
+Đơn vị: VND
+[TABLE: AMC_2024_p007_t001]
+Các thuyết minh từ trang 10 đến trang 33 là một bộ phận hợp thành của báo cáo tài chính
+
+[PAGE 8]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 01 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+Tại ngày 31 tháng 12 năm 2024
+Đơn vị: VND
+[TABLE: AMC_2024_p008_t001]
+Hoàng Thị Oanh
+Người lập biểu
+Ngày 18 tháng 03 năm 2025
+Quế Minh Hoàng
+Kế toán trưởng
+Lê Văn Chiến
+Giám đốc
+Các thuyết minh từ trang 10 đến trang 33 là một bộ phận hợp thành của báo cáo tài chính                        7
+
+[PAGE 9]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 02 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2024
+Đơn vị: VND
+[TABLE: AMC_2024_p009_t001]
+Hoàng Thị Oanh
+Người lập biểu
+Ngày 18 tháng 03 năm 2025
+Quế Minh Hoàng
+Kế toán trưởng
+Lê Văn Chiến
+Giám đốc
+Các thuyết minh từ trang 10 đến trang 33 là một bộ phận hợp thành của báo cáo tài chính
+8
+
+[PAGE 10]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm, Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 03 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+BÁO CÁO LƯU CHUYỂN TIỀN TỆ
+(Phương pháp trực tiếp)
+Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2024
+Đơn vị: VND
+[TABLE: AMC_2024_p010_t001]
+Hoàng Thị Oanh - Người lập biểu
+Quế Minh Hoàng - Kế toán trưởng
+Lê Văn Chiến - Giám đốc
+Ngày 18 tháng 03 năm 2025
+Các thuyết minh từ trang 10 đến trang 33 là một bộ phận hợp thành của báo cáo tài chính
+
+[PAGE 11]
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+I. THÔNG TIN KHÁI QUÁT
+Hình thức sở hữu vốn
+Công ty Cổ phần Khoáng sản Á Châu (gọi tắt là “Công ty”) là công ty cổ phần được thành lập và hoạt động theo giấy chứng nhận đăng ký kinh doanh số 2703001715 ngày 28 tháng 12 năm 2007 do Sở Kế hoạch và Đầu tư tỉnh Nghệ An cấp. Ngày 29 tháng 05 năm 2015, Công ty được Sở Kế hoạch và Đầu tư tỉnh Nghệ An cấp Giấy chứng nhận đăng ký doanh nghiệp thay đổi lần thứ nhất với mã số doanh nghiệp là 2900859599. Hiện tại, Công ty đang hoạt động theo Giấy chứng nhận đăng ký doanh nghiệp thay đổi lần thứ 5 ngày 19 tháng 08 năm 2022.
+Địa chỉ Công ty tại Lô 32, khu C, Khu Công Nghiệp Nam Cấm, xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam.
+Vốn điều lệ của Công ty tại thời điểm 31 tháng 12 năm 2024 là 28.500.000.000 đồng (Bằng chữ: Hai mươi tám tỷ năm trăm triệu đồng chẵn) tương ứng 2.850.000 cổ phần.
+Lĩnh vực kinh doanh
+Lĩnh vực hoạt động kinh doanh chính của Công ty là khai thác, chế biến khoáng sản, sản xuất, mua bán sản phẩm bột đá vôi trắng siêu mịn.
+Ngành nghề kinh doanh
+Hoạt động kinh doanh của Công ty theo Giấy chứng nhận đăng ký kinh doanh bao gồm:
+- Khai thác đá, cát, sỏi, đất sét;
+- Sản xuất sản phẩm từ chất khoáng phi kim loại khác chưa được phân vào đâu, chi tiết: Sản xuất và chế biến sản phẩm bột đá trắng siêu mịn các loại làm phụ gia trong các ngành công nghiệp như sơn, nhựa, giấy, cao su, thức ăn chăn nuôi...;
+- Bán buôn chuyên doanh khác chưa được phân vào đâu, chi tiết: Mua bán sản phẩm bột đá CaCO3 các loại;
+- Bán lẻ hình thức khác chưa được phân vào đâu, chi tiết: Bán lẻ sản phẩm bột đá CaCO3 các loại (Bán trực tiếp tại nhà máy, chuyển phát theo địa chỉ, giao trực tiếp tới nhà người sử dụng, bán lẻ đại lý hưởng hoa hồng);
+- Vận tải hàng hóa bằng đường bộ;
+- Sản xuất khác chưa được phân vào đâu, chi tiết: Sản xuất bột trát tường;
+- Cắt tạo dáng và hoàn thiện đá, chi tiết: Sản xuất sản phẩm bột đá CaCO3 và sản xuất đá xẻ;
+- Bán buôn vật liệu, thiết bị lắp đặt khác trong xây dựng, chi tiết: Bán buôn đá xẻ và các loại vật liệu xây dựng;
+- Kinh doanh bất động sản, quyền sử dụng đất thuộc chủ sở hữu, chủ sử dụng hoặc đi thuê, chi tiết: Cho thuê mặt bằng;
+- Cho thuê xe có động cơ; và
+- Cho thuê máy móc, thiết bị và đồ dùng hữu hình khác không kèm người điều khiển.
+Chu kỳ sản xuất, kinh doanh thông thường
+Chu kỳ sản xuất, kinh doanh thông thường của Công ty được thực hiện trong thời gian không quá 12 tháng.
+Nhân viên
+Tổng số nhân viên của Công ty tại ngày 31 tháng 12 năm 2024 là 108 người (tại ngày 31 tháng 12 năm 2023 là 106 người).
+
+[PAGE 12]
+MẪU SỐ B 09 - DN
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+II. CƠ SỞ LẬP BÁO CÁO TÀI CHÍNH VÀ NĂM TÀI CHÍNH
+Cơ sở lập Báo cáo tài chính
+Báo cáo tài chính kèm theo được trình bày bằng Đồng Việt Nam (VND), theo nguyên tắc giá gốc và phù hợp với Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính. Báo cáo tài chính kèm theo không nhằm phản ánh tình hình tài chính, kết quả hoạt động kinh doanh và tình hình lưu chuyển tiền tệ theo các nguyên tắc và thông lệ kế toán được chấp nhận chung tại các nước khác ngoài Việt Nam.
+Năm tài chính
+Năm tài chính của Công ty bắt đầu từ ngày 01 tháng 01 và kết thúc vào ngày 31 tháng 12.
+III. CHUẨN MỰC VÀ CHẾ ĐỘ KẾ TOÁN ÁP DỤNG
+Ban Giám đốc Công ty đảm bảo đã tuân thủ yêu cầu của các Chuẩn mực kế toán Việt Nam, Chế độ kế toán doanh nghiệp Việt Nam được ban hành theo Thông tư số 200/2014/TT-BTC ("Thông tư 200") ngày 22 tháng 12 năm 2014 của Bộ Tài chính, Thông tư số 53/2016/TT-BTC ngày 21 tháng 03 năm 2016 của Bộ Tài chính về việc sửa đổi, bổ sung một số điều của Thông tư số 200/2014/TT-BTC cũng như các Thông tư hướng dẫn thực hiện chuẩn mực kế toán của Bộ Tài chính trong việc lập và trình bày báo cáo tài chính.
+Hình thức kế toán áp dụng: Chứng từ ghi sổ trên máy vi tính.
+IV. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU
+Sau đây là các chính sách kế toán chủ yếu được Công ty áp dụng trong việc lập Báo cáo tài chính:
+Ước tính kế toán
+Việc lập Báo cáo tài chính tuân thủ theo Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính yêu cầu Ban Giám đốc phải có những ước tính và giả định ảnh hưởng đến số liệu báo cáo về công nợ, tài sản và việc trình bày các khoản công nợ và tài sản tiềm tàng tại ngày lập Báo cáo tài chính cũng như các số liệu báo cáo về doanh thu và chi phí trong suốt năm tài chính. Mặc dù các ước tính kế toán được lập bằng tất cả sự hiểu biết của Ban Giám đốc, số thực tế phát sinh có thể khác với các ước tính, giả định đặt ra.
+Tiền và các khoản tương đương tiền
+Tiền và các khoản tương đương tiền bao gồm tiền mặt tại quỹ, các khoản tiền gửi không kỳ hạn, các khoản đầu tư ngắn hạn có thời hạn gốc không quá 03 tháng, có khả năng thanh khoản cao, dễ dàng chuyển đổi thành tiền và ít rủi ro liên quan đến việc biến động giá trị.
+Nợ phải thu
+Nợ phải thu là số tiền có thể thu hồi của khách hàng hoặc các đối tượng khác. Nợ phải thu được trình bày theo giá trị ghi sổ trừ đi các khoản dự phòng phải thu khó đòi.
+Dự phòng phải thu khó đòi thể hiện phần giá trị của các khoản phải thu mà Công ty dự kiến không có khả năng thu hồi tại ngày kết thúc kỳ kế toán. Tăng hoặc giảm số dư tài khoản dự phòng được hạch toán vào chi phí quản lý doanh nghiệp trên Báo cáo kết quả hoạt động kinh doanh.
+
+[PAGE 13]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+IV. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU (TIẾP THEO)
+Hàng tồn kho
+Hàng tồn kho được xác định trên cơ sở giá thấp hơn giữa giá gốc và giá trị thuần có thể thực hiện được. Giá gốc hàng tồn kho bao gồm chi phí nguyên vật liệu trực tiếp, chi phí lao động trực tiếp và chi phí sản xuất chung, nếu có, để có được hàng tồn kho ở địa điểm và trạng thái hiện tại. Giá gốc của hàng tồn kho được xác định theo phương pháp bình quân gia quyền. Giá trị thuần có thể thực hiện được được xác định bằng giá bán ước tính trừ các chi phí ước tính để hoàn thành sản phẩm cùng chi phí tiếp thị, bán hàng và phân phối phát sinh.
+Dự phòng giảm giá hàng tồn kho của Công ty được trích lập theo các quy định kế toán hiện hành. Theo đó, Công ty được phép trích lập dự phòng giảm giá hàng tồn kho trong trường hợp giá gốc của hàng tồn kho cao hơn giá trị thuần có thể thực hiện được tại ngày kết thúc năm tài chính.
+Các khoản trả trước
+Chi phí trả trước bao gồm các chi phí thực tế đã phát sinh nhưng có liên quan đến kết quả hoạt động sản xuất kinh doanh của nhiều kỳ kế toán. Chi phí trả trước bao gồm tiền phí cấp quyền khai thác mỏ, chi phí sửa chữa và chi phí công cụ, dụng cụ xuất dùng.
+Phi cấp quyền khai thác mỏ phân bổ theo thời gian khai thác mỏ căn cứ theo Giấy phép khai thác khoáng sản và có điều chỉnh theo Thông báo của cơ quan thuế hằng năm.
+Các khoản chi phí trả trước khác bao gồm giá trị công cụ, dụng cụ, linh kiện loại nhỏ đã xuất dùng, được phân bổ vào Báo cáo kết quả hoạt động kinh doanh, sử dụng phương pháp đường thẳng theo các quy định kế toán hiện hành.
+Tài sản cố định hữu hình và khấu hao
+Tài sản cố định hữu hình được trình bày theo nguyên giá trừ giá trị hao mòn lũy kế.
+Nguyên giá tài sản cố định hữu hình bao gồm giá mua và toàn bộ các chi phí khác liên quan trực tiếp đến việc đưa tài sản vào trạng thái sẵn sàng sử dụng.
+Nguyên giá tài sản cố định hữu hình do tự làm, tự xây dựng bao gồm chi phí xây dựng, chi phí sản xuất thực tế phát sinh cộng chi phí lắp đặt và chạy thử.
+Tài sản cố định hữu hình được khấu hao theo phương pháp đường thẳng dựa trên thời gian hữu dụng ước tính. Thời gian khấu hao cụ thể như sau:
+[TABLE: AMC_2024_p013_t001]
+Tài sản cố định vô hình và khấu hao
+Tài sản cố định vô hình được trình bày theo nguyên giá trừ giá trị hao mòn lũy kế. Tài sản cố định vô hình tại Công ty bao gồm:
+Quyền khai thác mỏ
+Quyền khai thác mỏ là toàn bộ các chi phí mà Công ty đã chi ra để có quyền khai thác mỏ đã.
+Chứng nhận hệ thống quản lý chất lượng (ISO)
+Chứng nhận hệ thống quản lý chất lượng là toàn bộ các chi phí mà công ty đã chi ra để được cấp Giấy chứng nhận hệ thống quản lý chất lượng.
+Tài sản cố định vô hình được khấu hao theo phương pháp đường thẳng dựa trên thời gian hữu dụng ước tính. Tỷ lệ khấu hao cụ thể như sau:
+[TABLE: AMC_2024_p013_t002]
+12
+
+[PAGE 14]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+MẪU SỐ B 09 - DN
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+Ngày 22/12/2014 của Bộ Tài chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+IV. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU (TIẾP THEO)
+Chi phí xây dựng cơ bản dở dang
+Các tài sản đang trong quá trình xây dựng phục vụ mục đích sản xuất, cho thuê, quản trị hoặc cho bất kỳ mục đích nào khác được ghi nhận theo giá gốc. Chi phí này bao gồm chi phí dịch vụ và chi phí lãi vay có liên quan phù hợp với chính sách kế toán của Công ty. Việc tính khấu hao của các tài sản này được áp dụng giống như với các tài sản khác, bắt đầu từ khi tài sản ở vào trạng thái sẵn sàng sử dụng.
+Các khoản dự phòng phải trả
+Các khoản dự phòng phải trả được ghi nhận khi Công ty có nghĩa vụ nợ hiện tại do kết quả từ một sự kiện đã xảy ra, và Công ty có khả năng phải thanh toán nghĩa vụ này. Các khoản dự phòng được xác định trên cơ sở ước tính của Ban Giám đốc về các khoản chi phí cần thiết để thanh toán nghĩa vụ nợ này tại ngày kết thúc kỳ hoạt động. Dự phòng phải trả tại Công ty bao gồm: chi phí hoàn nguyên môi trường mỏ Châu Hồng và Châu Quang.
+Ghi nhận doanh thu
+Doanh thu bán hàng được ghi nhận khi đồng thời thỏa mãn tất cả năm (5) điều kiện sau:
+(a) Công ty đã chuyển giao phần lớn rủi ro và lợi ích gắn liền với quyền sở hữu sản phẩm hoặc hàng hóa cho người mua;
+(b) Công ty không còn nắm giữ quyền quản lý hàng hóa như người sở hữu hàng hóa hoặc quyền kiểm soát hàng hóa;
+(c) Doanh thu được xác định tương đối chắc chắn. Khi hợp đồng quy định người mua được quyền trả lại sản phẩm, hàng hoá, đã mua theo những điều kiện cụ thể, doanh thu chỉ được ghi nhận khi những điều kiện cụ thể đó không còn tồn tại và người mua không được quyền trả lại sản phẩm, hàng hoá (trừ trường hợp khách hàng có quyền trả lại hàng hóa dưới hình thức đổi lại để lấy hàng hóa, dịch vụ khác);
+(d) Công ty đã thu được hoặc sẽ thu được lợi ích kinh tế từ giao dịch bán hàng; và
+(e) Xác định được chi phí liên quan đến giao dịch bán hàng.
+Doanh thu của giao dịch về cung cấp dịch vụ được ghi nhận khi kết quả của giao dịch đó được xác định một cách đáng tin cậy. Trường hợp giao dịch về cung cấp dịch vụ liên quan đến nhiều kỳ thì doanh thu được ghi nhận trong năm theo kết quả phần công việc đã hoàn thành tại ngày của Bảng cân đối kế toán của kỳ đó. Kết quả của giao dịch cung cấp dịch vụ được xác định khi thỏa mãn tất cả bốn (4) điều kiện sau:
+(a) Doanh thu được xác định tương đối chắc chắn. Khi hợp đồng quy định người mua được quyền trả lại dịch vụ đã mua theo những điều kiện cụ thể, doanh thu chỉ được ghi nhận khi những điều kiện cụ thể đó không còn tồn tại và người mua không được quyền trả lại dịch vụ đã cung cấp;
+(b) Có khả năng thu được lợi ích kinh tế từ giao dịch cung cấp dịch vụ đó;
+(c) Xác định được phần công việc đã hoàn thành tại ngày của Bảng cân đối kế toán; và
+(d) Xác định được chi phí phát sinh cho giao dịch và chi phí để hoàn thành giao dịch cung cấp dịch vụ đó.
+Chi phí đi vay
+Chi phí đi vay được ghi nhận vào chi phí sản xuất, kinh doanh trong năm khi phát sinh, trừ khi được vổn hoá theo quy định của Chuẩn mực kế toán “Chi phí đi vay”. Theo đó, chi phí đi vay liên quan trực tiếp đến việc mua, đầu tư xây dựng hoặc sản xuất những tài sản cần một thời gian tương đối dài để hoàn thành đưa vào sử dụng hoặc kinh doanh được cộng vào nguyên giá tài sản cho đến khi tài sản đó được đưa vào sử dụng hoặc kinh doanh. Các khoản thu nhập phát sinh từ việc đầu tư tạm thời các khoản vay được ghi giảm nguyên giá tài sản có liên quan. Đối với khoản vay riêng phục vụ việc xây dựng tài sản cố định, bất động sản đầu tư; lãi vay được vốn hóa kể cả khi thời gian xây dựng dưới 12 tháng.
+
+[PAGE 15]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+IV. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU (TIẾP THEO)
+Ngoại tệ
+Các giao dịch phát sinh bằng ngoại tệ được chuyển đổi theo tỷ giá tại ngày phát sinh giao dịch. Số dư các khoản mục tiền tệ có gốc ngoại tệ tại ngày kết thúc năm tài chính được quy đổi theo tỷ giá tại ngày này. Chênh lệch tỷ giá phát sinh trong năm từ các giao dịch bằng ngoại tệ được ghi nhận vào doanh thu hoạt động tài chính hoặc chi phí tài chính. Chênh lệch tỷ giá do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ tại ngày kết thúc năm tài chính sau khi bù trừ chênh lệch tăng và chênh lệch giảm được ghi nhận vào doanh thu hoạt động tài chính hoặc chi phí tài chính.
+Tỷ giá sử dụng để quy đổi các giao dịch phát sinh bằng ngoại tệ là tỷ giá giao dịch thực tế tại thời điểm phát sinh giao dịch. Tỷ giá giao dịch thực tế đối với các giao dịch bằng ngoại tệ được xác định như sau:
+- Tỷ giá giao dịch thực tế khi mua bán ngoại tệ (hợp đồng mua bán ngoại tệ giao ngay, hợp đồng kỳ hạn, hợp đồng tương lai, hợp đồng quyền chọn, hợp đồng hoán đổi): tỷ giá ký kết trong hợp đồng mua, bán ngoại tệ giữa Công ty và ngân hàng.
+- Nếu hợp đồng không quy định tỷ giá thanh toán:
++ Đối với các khoản góp vốn hoặc nhận vốn góp: tỷ giá mua ngoại tệ của ngân hàng nơi Công ty mở tài khoản để nhận vốn của nhà đầu tư tại ngày góp vốn.
++ Đối với nợ phải thu: tỷ giá mua của ngân hàng thương mại nơi Công ty chỉ định khách hàng thanh toán tại thời điểm giao dịch phát sinh.
++ Đối với nợ phải trả: tỷ giá bán của ngân hàng thương mại nơi Công ty dự kiến giao dịch tại thời điểm giao dịch phát sinh.
++ Đối với các giao dịch mua sắm tài sản hoặc các khoản chi phí được thanh toán ngay bằng ngoại tệ (không qua các tài khoản phải trả): tỷ giá mua của ngân hàng thương mại nơi Công ty thực hiện thanh toán.
+Tỷ giá sử dụng để đánh giá lại số dư các khoản mục tiền tệ có gốc ngoại tệ tại ngày kết thúc năm tài chính được xác định theo nguyên tắc sau:
+- Đối với các khoản ngoại tệ gửi ngân hàng: tỷ giá mua ngoại tệ của ngân hàng nơi Công ty mở tài khoản ngoại tệ.
+- Đối với các khoản mục tiền tệ có gốc ngoại tệ được phân loại là tài sản khác: tỷ giá mua ngoại tệ của Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam (Ngân hàng Công ty thường xuyên có giao dịch).
+- Đối với các khoản mục tiền tệ có gốc ngoại tệ được phân loại là nợ phải trả: tỷ giá bán ngoại tệ của Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam (Ngân hàng Công ty thường xuyên có giao dịch).
+Thuế
+Thuế thu nhập doanh nghiệp thể hiện tổng giá trị của số thuế phải trả hiện tại và số thuế hoãn lại.
+Số thuế phải trả hiện tại được tính dựa trên thu nhập chịu thuế trong năm. Thu nhập chịu thuế khác với lợi nhuận thuần được trình bày trên Báo cáo kết quả hoạt động kinh doanh vì thu nhập chịu thuế không bao gồm các khoản thu nhập hay chi phí tính thuế hoặc được khấu trừ trong các năm khác (bao gồm cả lỗ mang sang, nếu có) và ngoài ra không bao gồm các chỉ tiêu không chịu thuế hoặc không được khấu trừ.
+Thuế thu nhập hoãn lại được tính trên các khoản chênh lệch giữa giá trị ghi sổ và cơ sở tính thuế thu nhập của các khoản mục tài sản hoặc công nợ trên báo cáo tài chính và được ghi nhận theo phương pháp Bảng cân đối kế toán. Thuế thu nhập hoãn lại phải trả phải được ghi nhận cho tất cả các khoản chênh lệch tạm thời còn tài sản thuế thu nhập hoãn lại chỉ được ghi nhận khi chắc chắn có đủ lợi nhuận tính thuế trong tương lai để khấu trừ các khoản chênh lệch tạm thời.
+
+[PAGE 16]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+IV. TÓM TẮT CÁC CHÍNH SÁCH KẾ TOÁN CHỦ YẾU (TIẾP THEO)
+Thuế (Tiếp theo)
+Thuế thu nhập hoãn lại được xác định theo thuế suất dự tính sẽ áp dụng cho năm tài sản được thu hồi hay nợ phải trả được thanh toán. Thuế thu nhập hoãn lại được ghi nhận vào Báo cáo kết quả hoạt động kinh doanh và chỉ ghi vào vốn chủ sở hữu khi khoản thuế đó có liên quan đến các khoản mục được ghi thẳng vào vốn chủ sở hữu.
+Tài sản thuế thu nhập hoãn lại và nợ thuế thu nhập hoãn lại phải trả được bù trừ khi Công ty có quyền hợp pháp để bù trừ giữa tài sản thuế thu nhập hiện hành với thuế thu nhập hiện hành phải nộp và khi các tài sản thuế thu nhập hoãn lại và nợ thuế thu nhập hoãn lại phải trả liên quan tới thuế thu nhập doanh nghiệp được quản lý bởi cùng một cơ quan thuế và Công ty có dự định thanh toán thuế thu nhập hiện hành trên cơ sở thuần.
+Thuế suất thuế Thu nhập doanh nghiệp:
+Theo Quyết định số 85/2007/QĐ-TTg ngày 11/6/2007 của Thủ tướng Chính phủ về việc thành lập và ban hành Quy chế hoạt động của Khu kinh tế Đông Nam Nghệ An, tỉnh Nghệ An, Khu kinh tế được hưởng các ưu đãi áp dụng đối với địa bàn có điều kiện kinh tế - xã hội đặc biệt khó khăn, Công ty có thể nghĩa vụ nộp thuế thu nhập doanh nghiệp với thuế suất 10% trên thu nhập chịu thuế trong vòng 15 năm kể từ khi dự án đầu tư bắt đầu hoạt động kinh doanh. Công ty được miễn thuế thu nhập doanh nghiệp trong bốn (04) năm đầu tiên kể từ khi có thu nhập chịu thuế (2008 đến hết năm 2011) và giảm 50% trong chín (09) năm tiếp theo (từ năm 2012 trở đi).
+Việc xác định thuế thu nhập của Công ty căn cứ vào các quy định hiện hành về thuế. Tuy nhiên, những quy định này thay đổi theo từng thời kỳ và việc xác định sau cùng về thuế thu nhập doanh nghiệp tùy thuộc vào kết quả kiểm tra của cơ quan thuế có thẩm quyền.
+Các loại thuế khác được áp dụng theo các luật thuế hiện hành tại Việt Nam.
+Lãi trên cổ phiếu
+Lãi cơ bản trên cổ phiếu được tính bằng cách chia lợi nhuận hoặc lỗ sau thuế phân bổ cho cổ đông sở hữu cổ phiếu phổ thông của Công ty (sau khi đã điều chỉnh cho việc trích lập quỹ khen thưởng, phúc lợi) cho số lượng bình quân gia quyền của cổ phiếu phổ thông đang lưu hành trong năm.
+Lãi suy giảm trên cổ phiếu được tính bằng cách chia lợi nhuận (hoặc lỗ) sau thuế phân bổ cho cổ đông sở hữu cổ phiếu phổ thông của Công ty (sau khi đã điều chỉnh cho cổ tức của cổ phiếu ưu đãi có quyền chuyển đổi) cho số lượng bình quân gia quyền của cổ phiếu phổ thông đang lưu hành trong năm và số lượng bình quân gia quyền của cổ phiếu phổ thông sẽ được phát hành trong trường hợp tất cả các cổ phiếu phổ thông tiềm năng có tác động suy giảm đều được chuyển thành cổ phiếu phổ thông.
+Các bên liên quan
+Được coi là các bên liên quan là các doanh nghiệp - kể cả công ty mẹ, công ty con, công ty liên kết - các cá nhân, trực tiếp hay gián tiếp qua một hoặc nhiều trung gian, có quyền kiểm soát Công ty hoặc chịu sự kiểm soát của Công ty, hoặc cùng chung kiểm soát với Công ty. Các bên liên kết, các cá nhân nào trực tiếp hoặc gián tiếp nắm quyền biểu quyết của Công ty mà có ảnh hưởng đáng kể đối với Công ty, những chức trách quản lý chủ chốt như giám đốc, viên chức của Công ty, những thành viên thân cận trong gia đình của các cá nhân hoặc các bên liên kết này hoặc những công ty liên kết với các cá nhân này cũng được coi là bên liên quan.
+Trong việc xem xét mối quan hệ của từng bên liên quan, bản chất của mối quan hệ được chú ý chứ không phải là hình thức pháp lý.
+
+[PAGE 17]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, Khu C, Khu Công Nghiệp Nam Cấm, Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN
+[TABLE: AMC_2024_p017_t001]
+[TABLE: AMC_2024_p017_t002]
+[TABLE: AMC_2024_p017_t003]
+[TABLE: AMC_2024_p017_t004]
+
+[PAGE 18]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MÃU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+5. NỢ XẤU
+[TABLE: AMC_2024_p018_t001]
+6. HÀNG TỒN KHO
+[TABLE: AMC_2024_p018_t002]
+
+[PAGE 19]
+MẪU SỐ B 09 - DN
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+7. TÀI SẢN CỐ ĐỊNH HỮU HÌNH
+[TABLE: AMC_2024_p019_t001]
+Giá trị còn lại của tài sản cố định hữu hình tại ngày 31 tháng 12 năm 2024 dùng để đảm bảo cho các khoản tiền vay ngân hàng là 4.363.339.672 đồng (tại ngày 31 tháng 12 năm 2023 là 6.109.255.575 đồng).
+Nguyên giá của các tài sản cố định hữu hình đã khấu hao hết nhưng vẫn còn sử dụng tại ngày 31 tháng 12 năm 2024 với giá trị là 39.715.125.954 đồng (tại ngày 31 tháng 12 năm 2023 là 29.576.423.489 đồng).
+18
+
+[PAGE 20]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+8. TÀI SẢN CỐ ĐỊNH VÔ HÌNH
+[TABLE: AMC_2024_p020_t001]
+Nguyên giá của các tài sản cố định vô hình đã khấu hao hết nhưng vẫn còn sử dụng tại ngày 31 tháng 12 năm 2024 với giá trị là 31.818.182 đồng (tại ngày 31 tháng 12 năm 2023 là 31.818.182 đồng).
+(*) Bao gồm quyền khai thác mỏ đá Châu Hồng và mỏ đá Châu Quang:
+- Quyền khai thác mỏ đá Châu Quang theo Giấy phép khai thác khoáng sản số 1116/GP-BTNMT ngày 31/08/2004 được cấp bởi Bộ Tài nguyên và Môi trường, cấp phép cho Tổng Công ty Hợp tác Kinh tế - cổ đông lớn của Công ty. Thời gian khai thác từ ngày 31/08/2004 đến ngày 31/08/2034. Đây là tài sản Công ty Cổ phần Khoáng sản Á Châu nhận góp vốn từ cổ đông này. Việc bàn giao mỏ Châu Quang đã được thực hiện theo Biên bản giao nhận Tài sản và vốn góp thành lập Công ty Cổ phần Khoáng sản Á Châu số 312/BB-CP ngày 22/02/2008, Tổng Công ty Hợp tác Kinh tế đã xuất hóa đơn giá trị quyền khai thác mỏ cho Công ty và Công ty đã thực hiện kê khai thuế giá trị gia tăng đầy đủ. Đến nay, Công ty vẫn đang tiến hành các thủ tục pháp lý cần thiết để chuyển đổi tên trên Giấy phép khai thác mỏ từ Tổng Công ty Hợp tác Kinh tế sang Công ty.
+- Quyền khai thác mỏ đá Châu Hồng theo Giấy phép khai thác khoáng sản số 1136/GP-BTNMT ngày 15/05/2015 được cấp bởi Bộ Tài nguyên và Môi trường, cấp phép cho Công ty Cổ phần Khoáng sản Á Châu. Thời gian khai thác 22 năm kể từ ngày ký Giấy phép.
+19
+
+[PAGE 21]
+MẪU SỐ B 09 - DN
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+9. CHI PHÍ TRẢ TRƯỚC
+[TABLE: AMC_2024_p021_t001]
+(i) Bao gồm tiền cấp quyền khai thác khoáng sản tại mỏ đá Châu Hồng và mỏ đá Châu Quang.
+10. CHI PHÍ XÂY DỰNG CƠ BẢN DỞ DANG
+[TABLE: AMC_2024_p021_t002]
+Dự án đầu tư dây chuyền máy móc thiết bị, xây dựng hệ thống nhà xưởng, nhà kho và các công trình phụ trợ,... cho 02 dây chuyền sản xuất bột đá trắng siêu mịn và 01 dây chuyền tráng phủ nhằm tăng năng lực sản xuất với tổng công suất bình quân 31.300 tấn/năm tại Lô 32, khu C, KCN Nam Cấm, huyện Nghi Lộc, tỉnh Nghệ An. Thời gian thực hiện dự kiến là 6 tháng kể từ ngày dự án được phê duyệt. Đến ngày 31/12/2024, dự án đã cơ bản xây dựng hệ thống nhà xưởng và các công trình phụ trợ, đang trong giai đoạn lắp đặt, nghiệm thu đưa máy móc vào sử dụng.
+20
+
+[PAGE 22]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+MÃU SỐ B 09 - DN
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+[TABLE: AMC_2024_p022_t001]
+[TABLE: AMC_2024_p022_t002]
+
+[PAGE 23]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài chính
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+13. CHI PHÍ PHẢI TRẢ NGẮN HẠN
+[TABLE: AMC_2024_p023_t001]
+14. PHẢI TRẢ NGẮN HẠN KHÁC
+[TABLE: AMC_2024_p023_t002]
+15. DỰ PHÒNG PHẢI TRẢ DÀI HẠN
+[TABLE: AMC_2024_p023_t003]
+22
+
+[PAGE 24]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+16. VAY VÀ NỢ THUÊ TÀI CHÍNH NGẮN HẠN
+[TABLE: AMC_2024_p024_t001]
+{i} Hợp đồng cho vay theo hạn mức số 05/2024/HMTD/VND/AMC2 ngày 06/02/2024, hạn mức cho vay là 20.000.000.000 đồng. Thời hạn duy trì hạn mức cho vay là đến ngày 05/05/2024, nếu hết thời hạn duy trì hạn mức cho vay mà không sử dụng hoặc sử dụng hết hạn mức cho vay thì không được tiếp tục sử dụng hạn mức cho vay. Thời hạn cho vay của mỗi khoản nợ tối đa là 6 tháng kể từ ngày tiếp theo của ngày giải ngân vốn vay và được ghi nhận trên từng giấy nhận nợ. Mục đích sử dụng vốn vay là để tài trợ các nhu cầu cần tín dụng ngắn hạn hợp pháp, hợp lý, lệp phục vụ hoạt động sản xuất kinh doanh. Lãi suất cho vay được xác định tại thời điểm giải ngân vốn vay theo thông báo lãi suất cho vay của ngân hàng trong từng thời kỳ được ghi nhận trên từng giấy nhận nợ.
+Các khoản vay ngắn hạn và dài hạn với Ngân hàng TMCP Ngoại thương Việt Nam - Chi nhánh Vinh được đảm bảo bởi các tài sản sau:
+Tài sản gắn liền với thửa đất tại xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An theo Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản khác gắn liền với đất số BM 621731 do UBND tỉnh Nghệ An cấp ngày 31/07/2013 theo Hợp đồng thế chấp số 05/2015/AMC/TCBDS1 ký ngày 14/10/2015.
+Máy móc thiết bị theo Hợp đồng thế chấp số 05/2018/AMC/TC và 05/2020/AMC/TC ký ngày 28/08/2020.
+Xe ô tô theo Hợp đồng thế chấp số 05/2018/AMC/TC ký ngày 26/07/2018.
+Toàn bộ tài sản máy móc thiết bị hình thành từ dự án đầu tư mở rộng dây chuyền nghiền siêu mịn và tráng phủ bột đá CaCO3 tăng năng lực sản xuất theo Hợp đồng thế chấp số 05/2024/TC/MMTB/TSHTTTL/AMC ký ngày 29/05/2024.
+23
+
+[PAGE 25]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài chính
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+17. VAY VÀ NỢ THUÊ TÀI CHÍNH DÀI HẠN
+[TABLE: AMC_2024_p025_t001]
+{i} Hợp đồng cho vay từng lần trung dài hạn số 05/2024/TDH/AMC ngày 30/05/2024; trong đó: số tiền cam kết cho vay tối đa là 17.000.000.000 đồng; thời hạn vay 60 tháng; lãi suất cho vay được xác định tại thời điểm giải ngân vốn cho vay theo thông báo lãi suất cho vay của ngân hàng hang trong từng thời kỳ được ghi nhận trên từng giấy nhận nợ; nhằm mục đích thanh toán các chi phí hợp lý, hợp lệ và hợp pháp liên quan đến việc đầu tư thực hiện Phương án "Đầu tư mở rộng dây chuyền nghiền siêu mịn và tráng phủ bột đá CaCO3 tăng năng lực sản xuất".
+Tài sản đảm bảo khoản vay được hoàn trả theo thuyết minh số V.16i.
+Các khoản vay dài hạn được hoàn trả theo lịch biểu sau:
+[TABLE: AMC_2024_p025_t002]
+24
+
+[PAGE 26]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm, 
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN (TIẾP THEO)
+18. VỐN CHỦ SỞ HỮU
+a. Thay đổi trong vốn chủ sở hữu
+[TABLE: AMC_2024_p026_t001]
+(*) Công ty thực hiện phân phối lợi nhuận theo Nghị quyết số 01/NQ-ĐHĐCĐ ngày 25 tháng 04 năm 2024 của Đại hội đồng cổ đông năm 2024.
+b. Cổ phiếu
+[TABLE: AMC_2024_p026_t002]
+Mệnh giá cổ phiếu đang lưu hành: 10.000 đồng/cổ phần.
+19. CÁC KHOẢN MỤC NGOÀI BẢNG CÂN ĐỐI KẾ TOÁN
+Ngoại tệ các loại:
+[TABLE: AMC_2024_p026_t003]
+25
+
+[PAGE 27]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+VI. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRÊN BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+[TABLE: AMC_2024_p027_t001]
+[TABLE: AMC_2024_p027_t002]
+[TABLE: AMC_2024_p027_t003]
+[TABLE: AMC_2024_p027_t004]
+[TABLE: AMC_2024_p027_t005]
+26
+
+[PAGE 28]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài chính
+VI. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRÊN BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH (TIẾP THEO)
+[TABLE: AMC_2024_p028_t001]
+[TABLE: AMC_2024_p028_t002]
+27
+
+[PAGE 29]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công nghiệp Nam Cấm,
+	Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+	Ngày 22/12/2014 của Bộ Tài chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+(Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo)
+VI. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRÊN BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH (TIẾP THEO)
+8. LÃI CƠ BẢN/SUY GIẢM TRÊN CỔ PHIẾU
+[TABLE: AMC_2024_p029_t001]
+(*) Tại thời điểm lập báo cáo tài chính, Công ty ước tính quỹ khen thưởng, phúc lợi để tính lãi cơ bản/suy giảm trên cổ phiếu căn cứ vào tỷ lệ trích quỹ Khen thưởng, phúc lợi năm 2023 và tiền thưởng Ban điều hành năm 2023 theo Nghị quyết số 01/NQ-ĐHĐCĐ ngày 25 tháng 04 năm 2024 của Đại hội đồng cổ đông thường niên năm 2024.
+
+Lãi cơ bản/suy giảm trên cổ phiếu năm trước được điều chỉnh lại theo số liệu trích quỹ Khen thưởng, phúc lợi và tiền thưởng Ban điều hành năm 2023 theo Nghị quyết số 01/NQ-ĐHĐCĐ ngày 25 tháng 04 năm 2024 của Đại hội đồng cổ đông thường niên năm 2024. Theo đó, Công ty thực hiện điều chỉnh hồi tố chỉ tiêu lãi cơ bản/suy giảm trên cổ phiếu năm 2023 phù hợp với hướng dẫn tại Chuẩn mực Việt Nam số 30 “Lãi cơ bản trên cổ phiếu”.
+[TABLE: AMC_2024_p029_t002]
+9. CHI PHÍ SẢN XUẤT KINH DOANH THEO YẾU TỐ
+[TABLE: AMC_2024_p029_t003]
+VII. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BÁO CÁO LƯU CHUYỂN TIỀN TỆ
+Số tiền đi vay thực thu trong năm:
+- Tiền thu từ đi vay theo khế ước thông thường:
+Số tiền đã thực trả gốc vay trong năm:
+- Tiền trả nợ gốc vay theo khế ước thông thường:
+	18.685.503.445 đồng
+	18.685.503.445 đồng
+	5.438.309.417 đồng
+	5.438.309.417 đồng
+
+[PAGE 30]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+VIII. THÔNG TIN KHÁC
+1. NGHIỆP VỤ VÀ SỐ DƯ VỚI CÁC BÊN LIÊN QUAN
+Danh sách các bên liên quan:
+[TABLE: AMC_2024_p030_t001]
+Trong năm, Công ty đã có các giao dịch chủ yếu sau với các bên liên quan:
+[TABLE: AMC_2024_p030_t002]
+
+[PAGE 31]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+MẪU SỐ B 09 - DN
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+Ngày 22/12/2014 của Bộ Tài Chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+VIII. THÔNG TIN KHÁC (TIẾP THEO)
+1. NGHỆP VỤ VÀ SỐ DƯ VỚI CÁC BÊN LIÊN QUANG (TIẾP THEO)
+Số dư chủ yếu với các bên liên quan tại ngày kết thúc năm tài chính:
+[TABLE: AMC_2024_p031_t001]
+Thu nhập của Hội đồng Quản trị, Ban Giám đốc và Ban Kiểm soát trong năm như sau:
+[TABLE: AMC_2024_p031_t002]
+30
+
+[PAGE 32]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài chính
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+VIII. THÔNG TIN KHÁC (TIẾP THEO)
+2. BÁO CÁO BỘ PHẬN THEO LĨNH VỰC KINH DOANH VÀ BỘ PHẬN THEO KHU VỰC ĐỊA LÝ
+Theo quy định của Chuẩn mực kế toán số 28 và Thông tư hướng dẫn chuẩn mực này thì Công ty cần lập báo cáo bộ phận. Theo đó, bộ phận là một phân có thể xác định riêng biệt của Công ty tham gia vào việc cung cấp các sản phẩm hoặc dịch vụ liên quan (bộ phận theo lĩnh vực kinh doanh) hoặc cung cấp sản phẩm hoặc dịch vụ trong một môi trường kinh tế cụ thể (bộ phận theo khu vực địa lý), mỗi bộ phận này chịu rủi ro và thu được lợi ích kinh tế khác với các bộ phận khác.
+Khu vực địa lý
+Hoạt động của Công ty được phân bổ chủ yếu ở khu vực trong nước và khu vực nước ngoài.
+Thông tin về kết quả kinh doanh, tài sản cố định và các tài sản dài hạn khác và giá trị các khoản chi phí lớn không bằng tiền của bộ phận theo khu vực địa lý dựa trên vị trí của khách hàng của Công ty như sau:
+[TABLE: AMC_2024_p032_t001]
+31
+
+[PAGE 33]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu Công Nghiệp Nam Cấm,
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+MẪU SỐ B 09 - DN
+Ban hành kèm theo Thông tư số 200/2014/TT-BTC
+Ngày 22/12/2014 của Bộ Tài Chính
+VIII. THÔNG TIN KHÁC (TIẾP THEO)
+2. BÁO CÁO BỘ PHẬN THEO LĨNH VỰC KINH DOANH VÀ BỘ PHẬN THEO KHU VỰC ĐỊA LÝ (TIẾP THEO)
+[TABLE: AMC_2024_p033_t001]
+Lĩnh vực kinh doanh
+Ban Giám đốc đánh giá rằng Công ty hoạt động trong một bộ phận kinh doanh chủ yếu là khai thác đá và sản xuất, mua bán sản phẩm bột đá siêu mịn. Do vậy, Công ty không lập báo cáo bộ phận theo lĩnh vực kinh doanh.
+
+[PAGE 34]
+CÔNG TY CỔ PHẦN KHOÁNG SẢN Á CHÂU
+Lô 32, khu C, Khu công nghiệp Nam Cấm
+Xã Nghi Xá, huyện Nghi Lộc, tỉnh Nghệ An, Việt Nam
+THUYẾT MINH BÁO CÁO TÀI CHÍNH (TIẾP THEO)
+Các thuyết minh này là một bộ phận hợp thành và cần được đọc đồng thời với báo cáo tài chính kèm theo
+VIII. THÔNG TIN KHÁC (TIẾP THEO)
+3. CAM KẾT HOẠT ĐỘNG
+Công ty đã ký Hợp đồng thuê đất nộp tiền hàng năm số 242/HĐ-TĐ ngày 31/12/2015 với Ủy ban nhân dân tỉnh Nghệ An, thuê đất tại xã Châu Hồng, huyện Quỳ Hợp, tỉnh Nghệ An với mục đích khai thác khoáng sản (đá hoa). Thời hạn thuê đất đến ngày 15/05/2037. Diện tích đất thuê là 120.360 m2.
+Ngoài ra, Công ty đã thực hiện ký Hợp đồng thuê đất nộp tiền hàng năm số 40/HĐ-TĐ ngày 22/04/2021 với Ủy ban nhân dân tỉnh Nghệ An, thuê đất tại xã Châu Hồng, huyện Quỳ Hợp, tỉnh Nghệ An với mục đích xây dựng công trình phụ trợ và bãi thải phục vụ khai thác mỏ đá hoa tại bản Ngọc, xã Châu Hồng. Thời hạn thuê đất đến ngày 01/07/2037. Diện tích đất thuê là 16.434,4 m2.
+4. SỰ KIỆN SAU NGÀY KẾT THÚC NĂM TÀI CHÍNH
+Không có sự kiện trọng yếu nào phát sinh sau ngày 31 tháng 12 năm 2024 đòi hỏi phải được điều chỉnh hay trình bày trong Báo cáo tài chính.
+5. SỐ LIỆU SO SÁNH
+Số liệu so sánh là số liệu trên báo cáo tài chính cho năm tài chính kết thúc ngày 31 tháng 12 năm 2023 đã được kiểm toán.
+Hoàng Thị Oanh
+Người lập biểu
+Ngày 18 tháng 03 năm 2025
+
+Quế Minh Hoàng
+Kế toán trưởng
+
+Lê Văn Chiến
+Giám đốc

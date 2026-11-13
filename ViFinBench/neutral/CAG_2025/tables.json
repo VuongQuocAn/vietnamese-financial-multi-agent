@@ -1,0 +1,3487 @@
+{
+  "document_id": "CAG_2025",
+  "status": "complete",
+  "missing_pages": [],
+  "tables": [
+    {
+      "table_id": "CAG_2025_p002_t001",
+      "document_id": "CAG_2025",
+      "page": 2,
+      "table": {
+        "title": "",
+        "columns": [
+          "Nội dung",
+          "Trang"
+        ],
+        "rows": [
+          [
+            "1. Mục lục",
+            "1"
+          ],
+          [
+            "2. Báo cáo của Ban Tổng Giám đốc",
+            "2 - 3"
+          ],
+          [
+            "3. Báo cáo kiểm toán độc lập",
+            "4"
+          ],
+          [
+            "4. Bảng cân đối kế toán tại ngày 31 tháng 12 năm 2025",
+            "5 - 8"
+          ],
+          [
+            "5. Báo cáo kết quả hoạt động kinh doanh cho năm tài chính kết thúc ngày 31 tháng 12 năm 2025",
+            "9"
+          ],
+          [
+            "6. Báo cáo lưu chuyển tiền tệ cho năm tài chính kết thúc ngày 31 tháng 12 năm 2025",
+            "10 - 11"
+          ],
+          [
+            "7. Bản thuyết minh Báo cáo tài chính cho năm tài chính kết thúc ngày 31 tháng 12 năm 2025",
+            "12 - 31"
+          ],
+          [
+            "8. Phụ lục",
+            "32 - 34"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p003_t001",
+      "document_id": "CAG_2025",
+      "page": 3,
+      "table": {
+        "title": "Hội đồng quản trị",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ",
+          "Ngày bổ nhiệm/miễn nhiệm"
+        ],
+        "rows": [
+          [
+            "Ông Lê Việt Thành",
+            "Chủ tịch",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021"
+          ],
+          [
+            "Ông Bùi Thành Hiệp",
+            "Phó chủ tịch",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021\nMiễn nhiệm ngày 05 tháng 01 năm 2026"
+          ],
+          [
+            "Ông Nguyễn Văn Phú",
+            "Thành viên",
+            "Bổ nhiệm ngày 05 tháng 01 năm 2026"
+          ],
+          [
+            "Ông Phan Thành Tiến",
+            "Thành viên",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021"
+          ],
+          [
+            "Ông Nguyễn Văn Linh",
+            "Thành viên",
+            "Bổ nhiệm ngày 17 tháng 5 năm 2024"
+          ],
+          [
+            "Ông Trần Văn Cam",
+            "Thành viên",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021\nMiễn nhiệm ngày 05 tháng 01 năm 2026"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p003_t002",
+      "document_id": "CAG_2025",
+      "page": 3,
+      "table": {
+        "title": "Ban kiểm soát",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ",
+          "Ngày bổ nhiệm"
+        ],
+        "rows": [
+          [
+            "Bà Trần Thị Thu Trà",
+            "Trưởng ban",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021"
+          ],
+          [
+            "Bà Trần Thị Thúy Hạnh",
+            "Thành viên",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021"
+          ],
+          [
+            "Ông Phạm Văn Thành",
+            "Thành viên",
+            "Bổ nhiệm ngày 13 tháng 5 năm 2021"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p003_t003",
+      "document_id": "CAG_2025",
+      "page": 3,
+      "table": {
+        "title": "Ban Tổng Giám đốc",
+        "columns": [
+          "Họ và tên",
+          "Chức vụ",
+          "Ngày bổ nhiệm/bãi nhiệm"
+        ],
+        "rows": [
+          [
+            "Ông Bùi Thành Hiệp",
+            "Tổng Giám đốc",
+            "Bổ nhiệm ngày 15 tháng 7 năm 2021\nBãi nhiệm ngày 20 tháng 11 năm 2025"
+          ],
+          [
+            "Ông Nguyễn Văn Phú",
+            "Phó Tổng Giám đốc",
+            "Bổ nhiệm ngày 20 tháng 11 năm 2025"
+          ],
+          [
+            "Ông Trần Tấn Phong",
+            "Phó Tổng Giám đốc",
+            "Bổ nhiệm ngày 15 tháng 7 năm 2021"
+          ],
+          [
+            "Ông Trần Văn Cam",
+            "Phó Tổng Giám đốc",
+            "Bổ nhiệm ngày 15 tháng 7 năm 2021\nBãi nhiệm ngày 20 tháng 11 năm 2025"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p006_t001",
+      "document_id": "CAG_2025",
+      "page": 6,
+      "table": {
+        "title": "Bảng cân đối kế toán",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "A - TÀI SẢN NGẮN HẠN",
+            "100",
+            "",
+            "95.309.034.148",
+            "90.633.594.474"
+          ],
+          [
+            "I. Tiền và các khoản tương đương tiền",
+            "110",
+            "",
+            "16.339.059.623",
+            "10.824.353.350"
+          ],
+          [
+            "1. Tiền",
+            "111",
+            "V.1",
+            "16.339.059.623",
+            "10.824.353.350"
+          ],
+          [
+            "2. Các khoản tương đương tiền",
+            "112",
+            "",
+            "",
+            ""
+          ],
+          [
+            "II. Đầu tư tài chính ngắn hạn",
+            "120",
+            "",
+            "50.000.000.000",
+            "52.000.000.000"
+          ],
+          [
+            "1. Chứng khoán kinh doanh",
+            "121",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Dự phòng giảm giá chứng khoán kinh doanh",
+            "122",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Đầu tư nắm giữ đến ngày đáo hạn",
+            "123",
+            "V.2a",
+            "50.000.000.000",
+            "52.000.000.000"
+          ],
+          [
+            "III. Các khoản phải thu ngắn hạn",
+            "130",
+            "",
+            "24.984.663.249",
+            "21.943.987.613"
+          ],
+          [
+            "1. Phải thu ngắn hạn của khách hàng",
+            "131",
+            "V.3",
+            "14.029.472.134",
+            "10.495.861.227"
+          ],
+          [
+            "2. Trả trước cho người bán ngắn hạn",
+            "132",
+            "V.4a",
+            "308.468.200",
+            "422.435.000"
+          ],
+          [
+            "3. Phải thu nội bộ ngắn hạn",
+            "133",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Phải thu theo tiến độ kế hoạch hợp đồng xây dựng",
+            "134",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Phải thu về cho vay ngắn hạn",
+            "135",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Phải thu ngắn hạn khác",
+            "136",
+            "V.5",
+            "12.231.244.069",
+            "12.610.212.540"
+          ],
+          [
+            "7. Dự phòng phải thu ngắn hạn khó đòi",
+            "137",
+            "V.6",
+            "(1.584.521.154)",
+            "(1.584.521.154)"
+          ],
+          [
+            "8. Tài sản thiếu chờ xử lý",
+            "139",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "IV. Hàng tồn kho",
+            "140",
+            "",
+            "1.666.276.685",
+            "2.568.144.454"
+          ],
+          [
+            "1. Hàng tồn kho",
+            "141",
+            "V.7",
+            "1.666.276.685",
+            "2.568.144.454"
+          ],
+          [
+            "2. Dự phòng giảm giá hàng tồn kho",
+            "149",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "V. Tài sản ngắn hạn khác",
+            "150",
+            "",
+            "2.319.034.591",
+            "3.297.109.057"
+          ],
+          [
+            "1. Chi phí trả trước ngắn hạn",
+            "151",
+            "V.8a",
+            "624.672.115",
+            "358.905.285"
+          ],
+          [
+            "2. Thuế giá trị gia tăng được khấu trừ",
+            "152",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Thuế và các khoản khác phải thu Nhà nước",
+            "153",
+            "V.13",
+            "1.694.362.476",
+            "2.938.203.772"
+          ],
+          [
+            "4. Giao dịch mua bán lại trái phiếu Chính phủ",
+            "154",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Tài sản ngắn hạn khác",
+            "155",
+            "",
+            "-",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p007_t001",
+      "document_id": "CAG_2025",
+      "page": 7,
+      "table": {
+        "title": "Bảng cân đối kế toán (tiếp theo)",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "B- TÀI SẢN DÀI HẠN",
+            "200",
+            "",
+            "53.095.455.314",
+            "57.485.236.423"
+          ],
+          [
+            "I. Các khoản phải thu dài hạn",
+            "210",
+            "",
+            "526.902.200",
+            "526.902.200"
+          ],
+          [
+            "1. Phải thu dài hạn của khách hàng",
+            "211",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Trả trước cho người bán dài hạn",
+            "212",
+            "V.4b",
+            "526.902.200",
+            "526.902.200"
+          ],
+          [
+            "3. Vốn kinh doanh ở đơn vị trực thuộc",
+            "213",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Phải thu nội bộ dài hạn",
+            "214",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Phải thu về cho vay dài hạn",
+            "215",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Phải thu dài hạn khác",
+            "216",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "7. Dự phòng phải thu dài hạn khó đòi",
+            "219",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "II. Tài sản cố định",
+            "220",
+            "",
+            "45.158.585.518",
+            "49.084.657.048"
+          ],
+          [
+            "1. Tài sản cố định hữu hình",
+            "221",
+            "V.9",
+            "42.107.009.804",
+            "46.033.081.334"
+          ],
+          [
+            "- Nguyên giá",
+            "222",
+            "",
+            "191.531.106.536",
+            "188.346.597.736"
+          ],
+          [
+            "- Giá trị hao mòn lũy kế",
+            "223",
+            "",
+            "(149.424.096.732)",
+            "(142.313.516.402)"
+          ],
+          [
+            "2. Tài sản cố định thuê tài chính",
+            "224",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Nguyên giá",
+            "225",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Giá trị hao mòn lũy kế",
+            "226",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Tài sản cố định vô hình",
+            "227",
+            "V.10",
+            "3.051.575.714",
+            "3.051.575.714"
+          ],
+          [
+            "- Nguyên giá",
+            "228",
+            "",
+            "3.051.575.714",
+            "3.051.575.714"
+          ],
+          [
+            "- Giá trị hao mòn lũy kế",
+            "229",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "III. Bất động sản đầu tư",
+            "230",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Nguyên giá",
+            "231",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Giá trị hao mòn lũy kế",
+            "232",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "IV. Tài sản dở dang dài hạn",
+            "240",
+            "",
+            "41.037.037",
+            "643.405.800"
+          ],
+          [
+            "1. Chi phí sản xuất, kinh doanh dở dang dài hạn",
+            "241",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Chi phí xây dựng cơ bản dở dang",
+            "242",
+            "V.11",
+            "41.037.037",
+            "643.405.800"
+          ],
+          [
+            "V. Đầu tư tài chính dài hạn",
+            "250",
+            "",
+            "2.849.589.466",
+            "3.120.708.813"
+          ],
+          [
+            "1. Đầu tư vào công ty con",
+            "251",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Đầu tư vào công ty liên doanh, liên kết",
+            "252",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Đầu tư góp vốn vào đơn vị khác",
+            "253",
+            "V.2b",
+            "4.320.000.000",
+            "4.320.000.000"
+          ],
+          [
+            "4. Dự phòng đầu tư tài chính dài hạn",
+            "254",
+            "V.2b",
+            "(1.470.410.534)",
+            "(1.199.291.187)"
+          ],
+          [
+            "5. Đầu tư nắm giữ đến ngày đáo hạn",
+            "255",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "VI. Tài sản dài hạn khác",
+            "260",
+            "",
+            "4.519.341.093",
+            "4.109.562.562"
+          ],
+          [
+            "1. Chi phí trả trước dài hạn",
+            "261",
+            "V.8b",
+            "4.519.341.093",
+            "4.109.562.562"
+          ],
+          [
+            "2. Tài sản thuế thu nhập hoãn lại",
+            "262",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Thiết bị, vật tư, phụ tùng thay thế dài hạn",
+            "263",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Tài sản dài hạn khác",
+            "268",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "TỔNG CỘNG TÀI SẢN",
+            "270",
+            "",
+            "148.404.489.462",
+            "148.118.830.897"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p008_t001",
+      "document_id": "CAG_2025",
+      "page": 8,
+      "table": {
+        "title": "",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "C - NỢ PHẢI TRẢ",
+            "300",
+            "",
+            "4.407.664.671",
+            "4.896.817.406"
+          ],
+          [
+            "I. Nợ ngắn hạn",
+            "310",
+            "",
+            "2.907.774.671",
+            "3.666.927.406"
+          ],
+          [
+            "1. Phải trả người bán ngắn hạn",
+            "311",
+            "V.12",
+            "446.069.700",
+            "199.914.750"
+          ],
+          [
+            "2. Người mua trả tiền trước ngắn hạn",
+            "312",
+            "",
+            "27.136",
+            "47.135"
+          ],
+          [
+            "3. Thuế và các khoản phải nộp Nhà nước",
+            "313",
+            "V.13",
+            "218.259.544",
+            "202.288.091"
+          ],
+          [
+            "4. Phải trả người lao động",
+            "314",
+            "V.14",
+            "1.741.403.691",
+            "2.135.100.461"
+          ],
+          [
+            "5. Chi phí phải trả ngắn hạn",
+            "315",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Phải trả nội bộ ngắn hạn",
+            "316",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "7. Phải trả theo tiến độ kế hoạch hợp đồng xây dựng",
+            "317",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "8. Doanh thu chưa thực hiện ngắn hạn",
+            "318",
+            "V.15",
+            "360.000.000",
+            "270.000.000"
+          ],
+          [
+            "9. Phải trả ngắn hạn khác",
+            "319",
+            "V.16a",
+            "40.286.470",
+            "183.765.171"
+          ],
+          [
+            "10. Vay và nợ thuê tài chính ngắn hạn",
+            "320",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "11. Dự phòng phải trả ngắn hạn",
+            "321",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "12. Quỹ khen thưởng, phúc lợi",
+            "322",
+            "V.17",
+            "101.728.130",
+            "675.811.798"
+          ],
+          [
+            "13. Quỹ bình ổn giá",
+            "323",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "14. Giao dịch mua bán lại trái phiếu Chính phủ",
+            "324",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "II. Nợ dài hạn",
+            "330",
+            "",
+            "1.499.890.000",
+            "1.229.890.000"
+          ],
+          [
+            "1. Phải trả người bán dài hạn",
+            "331",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Người mua trả tiền trước dài hạn",
+            "332",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Chi phí phải trả dài hạn",
+            "333",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Phải trả nội bộ về vốn kinh doanh",
+            "334",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Phải trả nội bộ dài hạn",
+            "335",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Doanh thu chưa thực hiện dài hạn",
+            "336",
+            "V.15",
+            "270.000.000",
+            "-"
+          ],
+          [
+            "7. Phải trả dài hạn khác",
+            "337",
+            "V.16b",
+            "1.229.890.000",
+            "1.229.890.000"
+          ],
+          [
+            "8. Vay và nợ thuê tài chính dài hạn",
+            "338",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "9. Trái phiếu chuyển đổi",
+            "339",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "10. Cổ phiếu ưu đãi",
+            "340",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "11. Thuế thu nhập hoãn lại phải trả",
+            "341",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "12. Dự phòng phải trả dài hạn",
+            "342",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "13. Quỹ phát triển khoa học và công nghệ",
+            "343",
+            "",
+            "-",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p009_t001",
+      "document_id": "CAG_2025",
+      "page": 9,
+      "table": {
+        "title": "",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "D - VỐN CHỦ SỞ HỮU",
+            "400",
+            "",
+            "143.996.824.791",
+            "143.222.013.491"
+          ],
+          [
+            "I. Vốn chủ sở hữu",
+            "410",
+            "",
+            "143.996.824.791",
+            "143.222.013.491"
+          ],
+          [
+            "1. Vốn góp của chủ sở hữu",
+            "411",
+            "V.18a",
+            "138.000.000.000",
+            "138.000.000.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông có quyền biểu quyết",
+            "411a",
+            "",
+            "138.000.000.000",
+            "138.000.000.000"
+          ],
+          [
+            "- Cổ phiếu ưu đãi",
+            "411b",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Thặng dư vốn cổ phần",
+            "412",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Quyền chọn chuyển đổi trái phiếu",
+            "413",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Vốn khác của chủ sở hữu",
+            "414",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Cổ phiếu quỹ",
+            "415",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Chênh lệch đánh giá lại tài sản",
+            "416",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "7. Chênh lệch tỷ giá hối đoái",
+            "417",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "8. Quỹ đầu tư phát triển",
+            "418",
+            "V.18a",
+            "5.883.586.660",
+            "5.883.586.660"
+          ],
+          [
+            "9. Quỹ hỗ trợ sắp xếp doanh nghiệp",
+            "419",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "10. Quỹ khác thuộc vốn chủ sở hữu",
+            "420",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "11. Lợi nhuận sau thuế chưa phân phối",
+            "421",
+            "V.18a",
+            "113.238.131",
+            "(661.573.169)"
+          ],
+          [
+            "- Lợi nhuận sau thuế chưa phân phối lũy kế đến cuối kỳ trước",
+            "421a",
+            "",
+            "(661.573.169)",
+            "(661.573.169)"
+          ],
+          [
+            "- Lợi nhuận sau thuế chưa phân phối kỳ này",
+            "421b",
+            "",
+            "774.811.300",
+            "-"
+          ],
+          [
+            "12. Nguồn vốn đầu tư xây dựng cơ bản",
+            "422",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "II. Nguồn kinh phí và quỹ khác",
+            "430",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "1. Nguồn kinh phí",
+            "431",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Nguồn kinh phí đã hình thành tài sản cố định",
+            "432",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "TỔNG CỘNG NGUỒN VỐN",
+            "440",
+            "",
+            "148.404.489.462",
+            "148.118.830.897"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p010_t001",
+      "document_id": "CAG_2025",
+      "page": 10,
+      "table": {
+        "title": "BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH",
+        "columns": [
+          "Mã số",
+          "CHỈ TIÊU",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "01",
+            "1. Doanh thu bán hàng và cung cấp dịch vụ",
+            "VI.1",
+            "46.725.011.895",
+            "38.371.820.418"
+          ],
+          [
+            "02",
+            "2. Các khoản giảm trừ doanh thu",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "10",
+            "3. Doanh thu thuần về bán hàng và cung cấp dịch vụ",
+            "",
+            "46.725.011.895",
+            "38.371.820.418"
+          ],
+          [
+            "11",
+            "4. Giá vốn hàng bán",
+            "VI.2",
+            "39.802.723.187",
+            "36.662.394.003"
+          ],
+          [
+            "20",
+            "5. Lợi nhuận gộp về bán hàng và cung cấp dịch vụ",
+            "",
+            "6.922.288.708",
+            "1.709.426.415"
+          ],
+          [
+            "21",
+            "6. Doanh thu hoạt động tài chính",
+            "VI.3",
+            "2.781.701.312",
+            "3.131.740.610"
+          ],
+          [
+            "22",
+            "7. Chi phí tài chính",
+            "VI.4",
+            "271.119.347",
+            "52.745.561"
+          ],
+          [
+            "25",
+            "8. Chi phí bán hàng",
+            "VI.5",
+            "800.690.108",
+            "1.263.540.135"
+          ],
+          [
+            "26",
+            "9. Chi phí quản lý doanh nghiệp",
+            "VI.6",
+            "7.677.551.438",
+            "8.752.243.668"
+          ],
+          [
+            "30",
+            "10. Lợi nhuận thuần từ hoạt động kinh doanh",
+            "",
+            "954.629.127",
+            "(5.227.362.339)"
+          ],
+          [
+            "31",
+            "11. Thu nhập khác",
+            "VI.7",
+            "744",
+            "4.439.990.301"
+          ],
+          [
+            "32",
+            "12. Chi phí khác",
+            "VI.8",
+            "21.853.839",
+            "32.820.800"
+          ],
+          [
+            "40",
+            "13. Lợi nhuận khác",
+            "",
+            "(21.853.095)",
+            "4.407.169.501"
+          ],
+          [
+            "50",
+            "14. Tổng lợi nhuận kế toán trước thuế",
+            "",
+            "932.776.032",
+            "(820.192.838)"
+          ],
+          [
+            "51",
+            "15. Chi phí thuế thu nhập doanh nghiệp hiện hành",
+            "V.13",
+            "157.964.732",
+            "(158.619.669)"
+          ],
+          [
+            "52",
+            "16. Chi phí thuế thu nhập doanh nghiệp hoãn lai",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "60",
+            "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
+            "",
+            "774.811.300",
+            "(661.573.169)"
+          ],
+          [
+            "70",
+            "18. Lãi cơ bản trên cổ phiếu",
+            "VI.9a,b",
+            "56",
+            "(48)"
+          ],
+          [
+            "71",
+            "19. Lãi suy giảm trên cổ phiếu",
+            "VI.9a,b",
+            "56",
+            "(48)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p010_t002",
+      "document_id": "CAG_2025",
+      "page": 10,
+      "table": {
+        "title": "Chữ ký",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Phó Tổng Giám đốc"
+        ],
+        "rows": [
+          [
+            "Nguyễn Thị Kim Chi",
+            "Nguyễn Văn Cơ",
+            "Nguyễn Văn Phú"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p011_t001",
+      "document_id": "CAG_2025",
+      "page": 11,
+      "table": {
+        "title": "Lưu chuyển tiền tệ từ hoạt động kinh doanh",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "I. Lưu chuyển tiền từ hoạt động kinh doanh",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "1. Lợi nhuận trước thuế",
+            "01",
+            "",
+            "932.776.032",
+            "(820.192.838)"
+          ],
+          [
+            "2. Điều chỉnh cho các khoản:",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "- Khấu hao tài sản cố định và bất động sản đầu tư",
+            "02",
+            "V.9",
+            "7.110.580.330",
+            "7.142.502.902"
+          ],
+          [
+            "- Các khoản dự phòng",
+            "03",
+            "V.2b, V.6",
+            "271.119.347",
+            "27.745.561"
+          ],
+          [
+            "- Lãi, lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ",
+            "04",
+            "VI.3",
+            "(354.402)",
+            "(13.848)"
+          ],
+          [
+            "- Lãi, lỗ từ hoạt động đầu tư",
+            "05",
+            "VI.3",
+            "(2.765.808.218)",
+            "(3.117.720.545)"
+          ],
+          [
+            "- Chi phí lãi vay",
+            "06",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Các khoản điều chỉnh khác",
+            "07",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động",
+            "08",
+            "",
+            "5.548.313.089",
+            "3.232.321.232"
+          ],
+          [
+            "- Tăng, giảm các khoản phải thu",
+            "09",
+            "",
+            "(1.892.376.807)",
+            "(2.680.580.364)"
+          ],
+          [
+            "- Tăng, giảm hàng tồn kho",
+            "10",
+            "",
+            "901.867.769",
+            "34.590.890"
+          ],
+          [
+            "- Tăng, giảm các khoản phải trả",
+            "11",
+            "",
+            "(362.580.249)",
+            "(235.134.133)"
+          ],
+          [
+            "- Tăng, giảm chi phí trả trước",
+            "12",
+            "",
+            "(675.545.361)",
+            "(499.733.708)"
+          ],
+          [
+            "- Tăng, giảm chứng khoán kinh doanh",
+            "13",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Tiền lãi vay đã trả",
+            "14",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Thuế thu nhập doanh nghiệp đã nộp",
+            "15",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Tiền thu khác từ hoạt động kinh doanh",
+            "16",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "- Tiền chi khác cho hoạt động kinh doanh",
+            "17",
+            "V.17",
+            "(574.083.668)",
+            "(578.321.622)"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động kinh doanh",
+            "20",
+            "",
+            "2.945.594.773",
+            "(726.857.705)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p011_t002",
+      "document_id": "CAG_2025",
+      "page": 11,
+      "table": {
+        "title": "Lưu chuyển tiền từ hoạt động đầu tư",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "II. Lưu chuyển tiền từ hoạt động đầu tư",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "1. Tiền chi để mua sắm, xây dựng tài sản cố định và các tài sản dài hạn khác",
+            "21",
+            "V.9, V.11",
+            "(2.288.380.037)",
+            "-"
+          ],
+          [
+            "2. Tiền thu từ thanh lý, nhượng bán tài sản cố định và các tài sản dài hạn khác",
+            "22",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Tiền chi cho vay, mua các công cụ nợ của đơn vị khác",
+            "23",
+            "",
+            "(50.000.000.000)",
+            "(52.000.000.000)"
+          ],
+          [
+            "4. Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác",
+            "24",
+            "",
+            "52.000.000.000",
+            "52.000.000.000"
+          ],
+          [
+            "5. Tiền chi đầu tư góp vốn vào đơn vị khác",
+            "25",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Tiền thu hồi đầu tư góp vốn vào đơn vị khác",
+            "26",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "7. Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia",
+            "27",
+            "VI.3, V.5",
+            "2.861.350.685",
+            "4.317.364.384"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động đầu tư",
+            "30",
+            "",
+            "2.572.970.648",
+            "4.317.364.384"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p012_t001",
+      "document_id": "CAG_2025",
+      "page": 12,
+      "table": {
+        "title": "",
+        "columns": [
+          "CHỈ TIÊU",
+          "Mã số",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "1. Tiền thu từ phát hành cổ phiếu, nhận vốn góp của chủ sở hữu",
+            "31",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "2. Tiền trả lại vốn góp cho các chủ sở hữu, mua lại cổ phiếu của doanh nghiệp đã phát hành",
+            "32",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "3. Tiền thu từ đi vay",
+            "33",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "4. Tiền trả nợ gốc vay",
+            "34",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "5. Tiền trả nợ gốc thuê tài chính",
+            "35",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "6. Cổ tức, lợi nhuận đã trả cho chủ sở hữu",
+            "36",
+            "V.16a, V.18",
+            "(4.213.550)",
+            "(2.312.409.080)"
+          ],
+          [
+            "Lưu chuyển tiền thuần từ hoạt động tài chính",
+            "40",
+            "",
+            "(4.213.550)",
+            "(2.312.409.080)"
+          ],
+          [
+            "Lưu chuyển tiền thuần trong năm",
+            "50",
+            "",
+            "5.514.351.871",
+            "1.278.097.599"
+          ],
+          [
+            "Tiền và tương đương tiền đầu năm",
+            "60",
+            "V.1",
+            "10.824.353.350",
+            "9.546.241.903"
+          ],
+          [
+            "Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ",
+            "61",
+            "",
+            "354.402",
+            "13.848"
+          ],
+          [
+            "Tiền và tương đương tiền cuối năm",
+            "70",
+            "V.1",
+            "16.339.059.623",
+            "10.824.353.350"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p012_t002",
+      "document_id": "CAG_2025",
+      "page": 12,
+      "table": {
+        "title": "",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Phó Tổng Giám đốc"
+        ],
+        "rows": [
+          [
+            "Nguyễn Thị Kim Chi",
+            "Nguyễn Văn Cơ",
+            "Nguyễn Văn Phú"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p017_t001",
+      "document_id": "CAG_2025",
+      "page": 17,
+      "table": {
+        "title": "",
+        "columns": [
+          "Loại tài sản cố định",
+          "Số năm"
+        ],
+        "rows": [
+          [
+            "Nhà cửa, vật kiến trúc",
+            "10 - 30"
+          ],
+          [
+            "Máy móc và thiết bị",
+            "05 - 20"
+          ],
+          [
+            "Phương tiện vận tải, truyền dẫn",
+            "06 - 15"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p021_t001",
+      "document_id": "CAG_2025",
+      "page": 21,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Tiền mặt",
+            "",
+            "450.250.000",
+            "203.923.900"
+          ],
+          [
+            "Tiền gửi ngân hàng không kỳ hạn",
+            "",
+            "15.888.809.623",
+            "10.620.429.450"
+          ],
+          [
+            "Cộng",
+            "",
+            "16.339.059.623",
+            "10.824.353.350"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p021_t002",
+      "document_id": "CAG_2025",
+      "page": 21,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm - Giá gốc",
+          "Số cuối năm - Giá trị ghi sổ",
+          "Số đầu năm - Giá gốc",
+          "Số đầu năm - Giá trị ghi sổ"
+        ],
+        "rows": [
+          [
+            "Ngắn hạn",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tiền gửi có kỳ hạn gốc 12 - 13 tháng (đến hạn thu hồi dưới 12 tháng)",
+            "50.000.000.000",
+            "50.000.000.000",
+            "52.000.000.000",
+            "52.000.000.000"
+          ],
+          [
+            "Cộng",
+            "50.000.000.000",
+            "50.000.000.000",
+            "52.000.000.000",
+            "52.000.000.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p021_t003",
+      "document_id": "CAG_2025",
+      "page": 21,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm - Giá gốc",
+          "Số cuối năm - Dự phòng",
+          "Số đầu năm - Giá gốc",
+          "Số đầu năm - Dự phòng"
+        ],
+        "rows": [
+          [
+            "Công ty Cổ phần Dầu khí Mêkông",
+            "4.320.000.000",
+            "(1.470.410.534)",
+            "4.320.000.000",
+            "(1.199.291.187)"
+          ],
+          [
+            "Cộng",
+            "4.320.000.000",
+            "(1.470.410.534)",
+            "4.320.000.000",
+            "(1.199.291.187)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p022_t001",
+      "document_id": "CAG_2025",
+      "page": 22,
+      "table": {
+        "title": "Tình hình biến động dự phòng cho các khoản đầu tư góp vốn vào đơn vị khác",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Số đầu năm",
+            "1.199.291.187",
+            "1.146.545.626"
+          ],
+          [
+            "Trích lập dự phòng bổ sung",
+            "271.119.347",
+            "52.745.561"
+          ],
+          [
+            "Số cuối năm",
+            "1.470.410.534",
+            "1.199.291.187"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p022_t002",
+      "document_id": "CAG_2025",
+      "page": 22,
+      "table": {
+        "title": "Phải thu ngắn hạn của khách hàng",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Công ty TNHH MTV Vận tải đa phương thức Ngô Đạm",
+            "4.473.593.486",
+            "3.105.250.037"
+          ],
+          [
+            "Công ty Cổ phần Phân bón Dầu khí Cà Mau",
+            "2.782.078.752",
+            "1.304.672.797"
+          ],
+          [
+            "Công ty Cổ phần Tiếp vận Phước Tạo",
+            "1.992.617.443",
+            "707.129.922"
+          ],
+          [
+            "Ông Vũ Việt Phong",
+            "-",
+            "1.313.310.458"
+          ],
+          [
+            "Các khách hàng khác",
+            "4.781.182.453",
+            "14.065.498.013"
+          ],
+          [
+            "Cộng",
+            "14.029.472.134",
+            "10.495.861.227"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p022_t003",
+      "document_id": "CAG_2025",
+      "page": 22,
+      "table": {
+        "title": "Trả trước cho người bán ngắn hạn",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Chi nhánh Công ty Cổ phần Tư vấn Xây dựng Công trình Hàng Hải",
+            "-",
+            "253.000.000"
+          ],
+          [
+            "Công ty TNHH MTV Thương mại Dịch vụ Xây dựng 5239",
+            "79.695.000",
+            "79.695.000"
+          ],
+          [
+            "Công ty TNHH Xây dựng - Điện tử Phú Quí",
+            "135.733.200",
+            "-"
+          ],
+          [
+            "Các nhà cung cấp khác",
+            "93.040.000",
+            "89.740.000"
+          ],
+          [
+            "Cộng",
+            "308.468.200",
+            "422.435.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p022_t004",
+      "document_id": "CAG_2025",
+      "page": 22,
+      "table": {
+        "title": "Trả trước cho người bán dài hạn",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Công ty Cổ phần Tư vấn Xây dựng Công trình Hàng Hải",
+            "108.660.000",
+            "108.660.000"
+          ],
+          [
+            "Chi nhánh Công ty Cổ phần Tư vấn Xây dựng Công trình Hàng Hải",
+            "355.000.000",
+            "355.000.000"
+          ],
+          [
+            "Trung tâm Phát triển Quỹ đất tỉnh An Giang",
+            "63.242.200",
+            "63.242.200"
+          ],
+          [
+            "Cộng",
+            "526.902.200",
+            "526.902.200"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p023_t001",
+      "document_id": "CAG_2025",
+      "page": 23,
+      "table": {
+        "title": "Phải thu ngắn hạn khác",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm - Giá trị",
+          "Số cuối năm - Dự phòng",
+          "Số đầu năm - Giá trị",
+          "Số đầu năm - Dự phòng"
+        ],
+        "rows": [
+          [
+            "Lãi dự thu tiền gửi có kỳ hạn",
+            "1.759.369.863",
+            "-",
+            "1.854.912.330",
+            "-"
+          ],
+          [
+            "Tạm ứng",
+            "172.752.031",
+            "-",
+            "446.651.052",
+            "-"
+          ],
+          [
+            "Các khoản đặt cọc, ký cược, ký quỹ ngắn hạn",
+            "8.000.000",
+            "-",
+            "8.000.000",
+            "-"
+          ],
+          [
+            "Phải thu khoản tạm nộp tiền sử dụng đất (*)",
+            "10.000.000.000",
+            "-",
+            "10.000.000.000",
+            "-"
+          ],
+          [
+            "Các khoản phải thu ngắn hạn khác",
+            "291.122.175",
+            "-",
+            "300.649.158",
+            "-"
+          ],
+          [
+            "Cộng",
+            "12.231.244.069",
+            "-",
+            "12.610.212.540",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p023_t002",
+      "document_id": "CAG_2025",
+      "page": 23,
+      "table": {
+        "title": "Nợ xấu",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm - Thời gian quá hạn",
+          "Số cuối năm - Giá gốc",
+          "Số cuối năm - Giá trị có thể thu hồi",
+          "Số đầu năm - Thời gian quá hạn",
+          "Số đầu năm - Giá gốc",
+          "Số đầu năm - Giá trị có thể thu hồi"
+        ],
+        "rows": [
+          [
+            "Công ty TNHH Dịch vụ Thương mại Hải Châu - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "160.933.487",
+            "-",
+            "Trên 03 năm",
+            "160.933.487",
+            "-"
+          ],
+          [
+            "Công ty TNHH Vận tải Thủy bộ An Hải - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "181.200.000",
+            "-",
+            "Trên 03 năm",
+            "181.200.000",
+            "-"
+          ],
+          [
+            "Công ty TNHH Vận tải biển Kim Ngưu - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "145.400.000",
+            "-",
+            "Trên 03 năm",
+            "145.400.000",
+            "-"
+          ],
+          [
+            "Công ty Cổ phần Vận tải biển và Thương mại - Kỹ thuật Trung Hưng - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "350.160.000",
+            "-",
+            "Trên 03 năm",
+            "350.160.000",
+            "-"
+          ],
+          [
+            "Công ty TNHH MTV Thương mại Dịch vụ Vận tải Tấn Sơn - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "159.500.000",
+            "-",
+            "Trên 03 năm",
+            "159.500.000",
+            "-"
+          ],
+          [
+            "Các tổ chức khác - Phải thu tiền bán hàng",
+            "Trên 03 năm",
+            "587.327.667",
+            "-",
+            "Trên 03 năm",
+            "587.327.667",
+            "-"
+          ],
+          [
+            "Cộng",
+            "",
+            "1.584.521.154",
+            "-",
+            "",
+            "1.584.521.154",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p024_t001",
+      "document_id": "CAG_2025",
+      "page": 24,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Số đầu năm",
+            "1.584.521.154",
+            "1.609.521.154"
+          ],
+          [
+            "Hoàn nhập dự phòng",
+            "-",
+            "(25.000.000)"
+          ],
+          [
+            "Số cuối năm",
+            "1.584.521.154",
+            "1.584.521.154"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p024_t002",
+      "document_id": "CAG_2025",
+      "page": 24,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm - Giá gốc",
+          "Số cuối năm - Dự phòng",
+          "Số đầu năm - Giá gốc",
+          "Số đầu năm - Dự phòng"
+        ],
+        "rows": [
+          [
+            "Nguyên liệu, vật liệu",
+            "605.065.833",
+            "-",
+            "1.282.096.282",
+            "-"
+          ],
+          [
+            "Công cụ, dụng cụ",
+            "1.055.165.831",
+            "-",
+            "1.265.123.151",
+            "-"
+          ],
+          [
+            "Hàng hóa",
+            "6.045.021",
+            "-",
+            "20.925.021",
+            "-"
+          ],
+          [
+            "Cộng",
+            "1.666.276.685",
+            "-",
+            "2.568.144.454",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p024_t003",
+      "document_id": "CAG_2025",
+      "page": 24,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Công cụ, dụng cụ",
+            "272.962.070",
+            "103.862.647"
+          ],
+          [
+            "Chi phí bảo hiểm",
+            "150.219.780",
+            "42.951.619"
+          ],
+          [
+            "Chi phí sửa chữa tài sản cố định",
+            "125.032.265",
+            "120.255.767"
+          ],
+          [
+            "Các chi phí trả trước ngắn hạn khác",
+            "76.458.000",
+            "91.835.252"
+          ],
+          [
+            "Cộng",
+            "624.672.115",
+            "358.905.285"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p024_t004",
+      "document_id": "CAG_2025",
+      "page": 24,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Công cụ, dụng cụ",
+            "957.743.270",
+            "337.003.370"
+          ],
+          [
+            "Chi phí sửa chữa tài sản cố định",
+            "2.415.991.077",
+            "3.764.645.441"
+          ],
+          [
+            "Các chi phí trả trước dài hạn khác",
+            "1.145.606.746",
+            "7.913.751"
+          ],
+          [
+            "Cộng",
+            "4.519.341.093",
+            "4.109.562.562"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p024_t005",
+      "document_id": "CAG_2025",
+      "page": 24,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số đầu năm",
+          "Chi phí phát sinh trong năm",
+          "Kết chuyển sang chi phí trả trước",
+          "Số cuối năm"
+        ],
+        "rows": [
+          [
+            "Xây dựng cơ bản dở dang",
+            "639.405.800",
+            "41.037.037",
+            "-",
+            "41.037.037"
+          ],
+          [
+            "- Công trình dự án đầu tư và mở rộng Cảng Mỹ Thới",
+            "639.405.800",
+            "-",
+            "(639.405.800)",
+            "-"
+          ],
+          [
+            "- Công trình hệ thống phòng cháy chữa cháy",
+            "-",
+            "41.037.037",
+            "-",
+            "41.037.037"
+          ],
+          [
+            "Sửa chữa lớn tài sản cố định",
+            "4.000.000",
+            "997.301.852",
+            "(1.001.301.852)",
+            "-"
+          ],
+          [
+            "Cộng",
+            "643.405.800",
+            "1.038.338.889",
+            "(1.640.707.652)",
+            "41.037.037"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p025_t001",
+      "document_id": "CAG_2025",
+      "page": 25,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Công ty Cổ phần Đầu tư và Xây dựng Thuận Trung",
+            "49.588.500",
+            "199.914.750"
+          ],
+          [
+            "Công ty Cổ phần Kỹ thuật Thương mại Dịch vụ Cảng Sài Gòn (*)",
+            "293.760.000",
+            "-"
+          ],
+          [
+            "Công ty Bảo hiểm Bưu điện An Giang",
+            "54.450.000",
+            "-"
+          ],
+          [
+            "Các nhà cung cấp khác",
+            "48.271.200",
+            "-"
+          ],
+          [
+            "Cộng",
+            "446.069.700",
+            "199.914.750"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p025_t002",
+      "document_id": "CAG_2025",
+      "page": 25,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Tổng lợi nhuận kế toán trước thuế",
+            "932.776.032",
+            "(820.192.838)"
+          ],
+          [
+            "Các khoản điều chỉnh tăng, giảm lợi nhuận kế toán để xác định lợi nhuận chịu thuế thu nhập doanh nghiệp:",
+            "",
+            ""
+          ],
+          [
+            "- Các khoản điều chỉnh tăng",
+            "438.989.106",
+            "236.820.800"
+          ],
+          [
+            "- Các khoản điều chỉnh giảm",
+            "-",
+            "-"
+          ],
+          [
+            "Thu nhập chịu thuế",
+            "1.371.765.138",
+            "(583.372.038)"
+          ],
+          [
+            "Thu nhập được miễn thuế",
+            "-",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p026_t001",
+      "document_id": "CAG_2025",
+      "page": 26,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Lỗ các năm trước được chuyển",
+            "",
+            "(583.372.038)",
+            "-"
+          ],
+          [
+            "Thu nhập tính thuế",
+            "",
+            "788.393.100",
+            "-"
+          ],
+          [
+            "Thuế suất thuế thu nhập doanh nghiệp",
+            "",
+            "20%",
+            "20%"
+          ],
+          [
+            "Thuế thu nhập doanh nghiệp phải nộp",
+            "",
+            "157.678.620",
+            "-"
+          ],
+          [
+            "Điều chỉnh thuế thu nhập doanh nghiệp phải nộp của các năm trước",
+            "",
+            "286.112",
+            "(158.619.999)"
+          ],
+          [
+            "Thuế thu nhập doanh nghiệp còn phải nộp",
+            "",
+            "157.964.732",
+            "(158.619.669)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p026_t002",
+      "document_id": "CAG_2025",
+      "page": 26,
+      "table": {
+        "title": "",
+        "columns": [
+          "Vị trí đất",
+          "Mức tiền thuê"
+        ],
+        "rows": [
+          [
+            "Thửa số 64, Bản đồ 23, Trần Hưng Đạo, phường Mỹ Thới, tỉnh An Giang, diện tích 1.957,6 m²",
+            "120.960 VND/m²/năm"
+          ],
+          [
+            "Thửa số 64, Bản đồ 23, Trần Hưng Đạo, phường Mỹ Thới, tỉnh An Giang, diện tích 1.927,5 m²",
+            "72.576 VND/m²/năm"
+          ],
+          [
+            "Thửa số 64, Bản đồ 23, Trần Hưng Đạo, phường Mỹ Thới, tỉnh An Giang, diện tích 1.974,6 m²",
+            "48.384 VND/m²/năm"
+          ],
+          [
+            "Thửa số 64, Bản đồ 23, Trần Hưng Đạo, phường Mỹ Thới, tỉnh An Giang, diện tích 36.725,5 m²",
+            "24.192 VND/m²/năm"
+          ],
+          [
+            "Thửa đất tại xã Châu Phú, tỉnh An Giang, diện tích 18.860,5 m²",
+            "12.015 VND/m²/năm"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p026_t003",
+      "document_id": "CAG_2025",
+      "page": 26,
+      "table": {
+        "title": "16a. Phải trả ngắn hạn khác",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Nhận ký quỹ, ký cược ngắn hạn",
+            "-",
+            "150.600.000"
+          ],
+          [
+            "Cổ tức phải trả",
+            "18.577.570",
+            "22.791.120"
+          ],
+          [
+            "Các khoản phải trả ngắn hạn khác",
+            "21.708.900",
+            "10.374.051"
+          ],
+          [
+            "Cộng",
+            "40.286.470",
+            "183.765.171"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p027_t001",
+      "document_id": "CAG_2025",
+      "page": 27,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số đầu năm",
+          "Chi quỹ trong năm",
+          "Số cuối năm"
+        ],
+        "rows": [
+          [
+            "Quỹ khen thưởng",
+            "313.998.850",
+            "(288.165.000)",
+            "25.833.850"
+          ],
+          [
+            "Quỹ phúc lợi",
+            "296.679.538",
+            "(220.785.258)",
+            "75.894.280"
+          ],
+          [
+            "Quỹ thưởng Ban quản lý, điều hành",
+            "65.133.410",
+            "(65.133.410)",
+            "-"
+          ],
+          [
+            "Cộng",
+            "675.811.798",
+            "(574.083.668)",
+            "101.728.130"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p027_t002",
+      "document_id": "CAG_2025",
+      "page": 27,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Tổng Công ty Đầu tư và Kinh doanh vốn Nhà nước",
+            "73.116.000.000",
+            "73.116.000.000"
+          ],
+          [
+            "Ông Nguyễn Văn Linh",
+            "25.313.000.000",
+            "25.313.000.000"
+          ],
+          [
+            "Các cổ đông khác",
+            "39.571.000.000",
+            "39.571.000.000"
+          ],
+          [
+            "Cộng",
+            "138.000.000.000",
+            "138.000.000.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p027_t003",
+      "document_id": "CAG_2025",
+      "page": 27,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Số lượng cổ phiếu đăng ký phát hành",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "Số lượng cổ phiếu đã phát hành",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "- Cổ phiếu ưu đãi",
+            "-",
+            "-"
+          ],
+          [
+            "Số lượng cổ phiếu được mua lại",
+            "-",
+            "-"
+          ],
+          [
+            "- Cổ phiếu phổ thông",
+            "-",
+            "-"
+          ],
+          [
+            "- Cổ phiếu ưu đãi",
+            "-",
+            "-"
+          ],
+          [
+            "Số lượng cổ phiếu đang lưu hành",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "- Cổ phiếu phổ thông",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "- Cổ phiếu ưu đãi",
+            "-",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p027_t004",
+      "document_id": "CAG_2025",
+      "page": 27,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Từ 01 năm trở xuống",
+            "1.587.292.786",
+            "1.494.367.102"
+          ],
+          [
+            "Trên 01 năm đến 05 năm",
+            "6.349.171.144",
+            "5.977.468.410"
+          ],
+          [
+            "Trên 05 năm",
+            "48.724.672.267",
+            "47.737.541.734"
+          ],
+          [
+            "Cộng",
+            "56.661.136.197",
+            "55.209.377.246"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p028_t001",
+      "document_id": "CAG_2025",
+      "page": 28,
+      "table": {
+        "title": "Doanh thu bán hàng và cung cấp dịch vụ",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Doanh thu bán hàng hóa",
+            "",
+            "147.047.618",
+            "35.809.524"
+          ],
+          [
+            "Doanh thu cung cấp dịch vụ",
+            "",
+            "46.577.964.277",
+            "38.336.010.894"
+          ],
+          [
+            "Cộng",
+            "",
+            "46.725.011.895",
+            "38.371.820.418"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p028_t002",
+      "document_id": "CAG_2025",
+      "page": 28,
+      "table": {
+        "title": "Giá vốn hàng bán",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Giá vốn của hàng hóa đã bán",
+            "",
+            "126.480.000",
+            "29.140.000"
+          ],
+          [
+            "Giá vốn của dịch vụ đã cung cấp",
+            "",
+            "39.676.243.187",
+            "36.633.254.003"
+          ],
+          [
+            "Cộng",
+            "",
+            "39.802.723.187",
+            "36.662.394.003"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p028_t003",
+      "document_id": "CAG_2025",
+      "page": 28,
+      "table": {
+        "title": "Doanh thu hoạt động tài chính",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Lãi tiền gửi ngân hàng có kỳ hạn",
+            "",
+            "2.765.808.218",
+            "3.117.720.545"
+          ],
+          [
+            "Lãi tiền gửi ngân hàng không kỳ hạn",
+            "",
+            "13.776.513",
+            "10.340.487"
+          ],
+          [
+            "Lãi chênh lệch tỷ giá phát sinh",
+            "",
+            "1.762.179",
+            "3.665.730"
+          ],
+          [
+            "Lãi chênh lệch tỷ giá do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ",
+            "",
+            "354.402",
+            "13.848"
+          ],
+          [
+            "Cộng",
+            "",
+            "2.781.701.312",
+            "3.131.740.610"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p029_t001",
+      "document_id": "CAG_2025",
+      "page": 29,
+      "table": {
+        "title": "5. Chi phí bán hàng",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Chi phí cho nhân viên",
+            "",
+            "489.689.720",
+            "1.023.372.410"
+          ],
+          [
+            "Chi phí vật liệu, bao bì",
+            "",
+            "40.710.424",
+            "18.838.735"
+          ],
+          [
+            "Chi phí dụng cụ, đồ dùng",
+            "",
+            "1.850.000",
+            "4.226.367"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "",
+            "60.682.268",
+            "60.682.260"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "",
+            "150.201.159",
+            "132.653.802"
+          ],
+          [
+            "Các chi phí khác",
+            "",
+            "57.556.537",
+            "23.766.561"
+          ],
+          [
+            "Cộng",
+            "",
+            "800.690.108",
+            "1.263.540.135"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p029_t002",
+      "document_id": "CAG_2025",
+      "page": 29,
+      "table": {
+        "title": "6. Chi phí quản lý doanh nghiệp",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Chi phí cho nhân viên",
+            "",
+            "4.405.730.255",
+            "4.603.730.315"
+          ],
+          [
+            "Chi phí vật liệu quản lý",
+            "",
+            "103.144.885",
+            "184.881.769"
+          ],
+          [
+            "Chi phí đồ dùng văn phòng",
+            "",
+            "65.358.185",
+            "61.164.380"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "",
+            "327.362.001",
+            "429.216.352"
+          ],
+          [
+            "Thuế, phí và lệ phí",
+            "",
+            "1.269.378.066",
+            "1.668.258.389"
+          ],
+          [
+            "Hoàn nhập dự phòng phải thu khó đòi",
+            "",
+            "-",
+            "(25.000.000)"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "",
+            "342.501.899",
+            "590.498.739"
+          ],
+          [
+            "Các chi phí khác",
+            "",
+            "1.164.076.147",
+            "1.239.493.724"
+          ],
+          [
+            "Cộng",
+            "",
+            "7.677.551.438",
+            "8.752.243.668"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p029_t003",
+      "document_id": "CAG_2025",
+      "page": 29,
+      "table": {
+        "title": "7. Thu nhập khác",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Thu nhập điều chỉnh giảm đơn giá thuê đất",
+            "",
+            "-",
+            "3.788.742.686"
+          ],
+          [
+            "Thu xử lý công nợ",
+            "",
+            "-",
+            "600.860.000"
+          ],
+          [
+            "Thu nhập hủy bỏ quyết định xử phạt vi phạm hành chính về thuế đã nộp",
+            "",
+            "-",
+            "41.050.771"
+          ],
+          [
+            "Thu nhập khác",
+            "",
+            "744",
+            "9.336.844"
+          ],
+          [
+            "Cộng",
+            "",
+            "744",
+            "4.439.990.301"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p029_t004",
+      "document_id": "CAG_2025",
+      "page": 29,
+      "table": {
+        "title": "8. Chi phí khác",
+        "columns": [
+          "Chỉ tiêu",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Thuế bị phạt, bị truy thu",
+            "",
+            "1.366.199",
+            "-"
+          ],
+          [
+            "Chi phí tiền bồi thường",
+            "",
+            "20.373.196",
+            "32.754.800"
+          ],
+          [
+            "Chi phí khác",
+            "",
+            "114.414",
+            "66.000"
+          ],
+          [
+            "Cộng",
+            "",
+            "21.853.839",
+            "32.820.800"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p030_t001",
+      "document_id": "CAG_2025",
+      "page": 30,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Mã số",
+          "Thuyết minh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Lợi nhuận kế toán sau thuế thu nhập doanh nghiệp",
+            "",
+            "11",
+            "774.811.300",
+            "(661.573.169)"
+          ],
+          [
+            "Trích quỹ khen thưởng, phúc lợi và quỹ thưởng ban quản lý, điều hành",
+            "",
+            "",
+            "-",
+            "-"
+          ],
+          [
+            "Lợi nhuận tính lãi cơ bản/suy giảm trên cổ phiếu",
+            "",
+            "11",
+            "774.811.300",
+            "(661.573.169)"
+          ],
+          [
+            "Số lượng bình quân gia quyền của cổ phiếu phổ thông đang lưu hành trong năm",
+            "",
+            "",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "Lãi cơ bản/suy giảm trên cổ phiếu",
+            "",
+            "",
+            "56",
+            "(48)"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p030_t002",
+      "document_id": "CAG_2025",
+      "page": 30,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Số lượng bình quân gia quyền của cổ phiếu phổ thông đang lưu hành trong năm",
+            "13.800.000",
+            "13.800.000"
+          ],
+          [
+            "Ảnh hưởng của cổ phiếu phổ thông tiềm năng có tác động suy giảm",
+            "-",
+            "-"
+          ],
+          [
+            "Số lượng cổ phiếu phổ thông sử dụng để tính lãi cơ bản/suy giảm trên cổ phiếu",
+            "13.800.000",
+            "13.800.000"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p030_t003",
+      "document_id": "CAG_2025",
+      "page": 30,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Chi phí nguyên liệu, vật liệu",
+            "6.240.810.418",
+            "5.618.321.367"
+          ],
+          [
+            "Chi phí nhân công",
+            "23.689.034.375",
+            "22.220.815.225"
+          ],
+          [
+            "Chi phí khấu hao tài sản cố định",
+            "7.110.580.330",
+            "7.142.502.902"
+          ],
+          [
+            "Chi phí dịch vụ mua ngoài",
+            "17.329.134.441",
+            "9.473.302.126"
+          ],
+          [
+            "Chi phí khác",
+            "3.488.020.312",
+            "1.912.493.619"
+          ],
+          [
+            "Cộng",
+            "47.857.579.876",
+            "46.367.435.239"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p030_t004",
+      "document_id": "CAG_2025",
+      "page": 30,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số cuối năm",
+          "Số đầu năm"
+        ],
+        "rows": [
+          [
+            "Từ 01 năm trở xuống",
+            "1.566.724.800",
+            "1.566.724.800"
+          ],
+          [
+            "Trên 01 năm đến 05 năm",
+            "4.839.130.800",
+            "5.517.855.600"
+          ],
+          [
+            "Trên 05 năm",
+            "5.879.280.000",
+            "6.767.280.000"
+          ],
+          [
+            "Cộng",
+            "12.285.135.600",
+            "13.851.860.400"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p031_t001",
+      "document_id": "CAG_2025",
+      "page": 31,
+      "table": {
+        "title": "Thu nhập của các thành viên quản lý chủ chốt và Ban kiểm soát",
+        "columns": [
+          "Họ và tên",
+          "Chức danh",
+          "Năm nay",
+          "Năm trước"
+        ],
+        "rows": [
+          [
+            "Ông Lê Việt Thành",
+            "Chủ tịch Hội đồng quản trị",
+            "72.000.000",
+            "72.000.000"
+          ],
+          [
+            "Ông Nguyễn Văn Phú",
+            "Thành viên Hội đồng quản trị kiêm Phó Tổng Giám đốc (bổ nhiệm ngày 20/11/2025)",
+            "26.859.000",
+            "-"
+          ],
+          [
+            "Ông Bùi Thành Hiệp",
+            "Phó Chủ tịch Hội đồng quản trị kiêm Tổng Giám đốc (bãi nhiệm ngày 20/11/2025)",
+            "502.823.500",
+            "601.928.000"
+          ],
+          [
+            "Ông Trần Văn Cam",
+            "Thành viên Hội đồng quản trị kiêm Phó Tổng Giám đốc (bãi nhiệm ngày 20/11/2025)",
+            "318.816.000",
+            "343.650.000"
+          ],
+          [
+            "Ông Phan Thành Tiến",
+            "Thành viên Hội đồng quản trị",
+            "48.000.000",
+            "48.000.000"
+          ],
+          [
+            "Ông Nguyễn Văn Linh",
+            "Thành viên Hội đồng quản trị",
+            "48.000.000",
+            "30.000.000"
+          ],
+          [
+            "Ông Nguyễn Quốc Bảo",
+            "Thành viên Hội đồng quản trị (miễn nhiệm ngày 17/5/2024)",
+            "-",
+            "18.000.000"
+          ],
+          [
+            "Ông Trần Tấn Phong",
+            "Phó Tổng Giám đốc",
+            "280.939.000",
+            "295.650.000"
+          ],
+          [
+            "Bà Trần Thị Thu Trà",
+            "Trưởng Ban kiểm soát",
+            "36.000.000",
+            "36.000.000"
+          ],
+          [
+            "Bà Trần Thị Thúy Hạnh",
+            "Thành viên Ban kiểm soát",
+            "149.909.000",
+            "154.372.750"
+          ],
+          [
+            "Ông Phạm Văn Thành",
+            "Thành viên Ban kiểm soát",
+            "177.145.000",
+            "182.731.500"
+          ],
+          [
+            "Cộng",
+            "",
+            "1.660.491.500",
+            "1.782.332.250"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p031_t002",
+      "document_id": "CAG_2025",
+      "page": 31,
+      "table": {
+        "title": "Các bên liên quan khác",
+        "columns": [
+          "Bên liên quan khác",
+          "Mối quan hệ"
+        ],
+        "rows": [
+          [
+            "Tổng Công ty Đầu tư và Kinh doanh vốn Nhà nước",
+            "Cổ đông lớn"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p033_t001",
+      "document_id": "CAG_2025",
+      "page": 33,
+      "table": {
+        "title": "Bảng tăng, giảm tài sản cố định hữu hình",
+        "columns": [
+          "Chỉ tiêu",
+          "Nhà cửa, vật kiến trúc (*)",
+          "Máy móc và thiết bị",
+          "Phương tiện vận tải, truyền dẫn",
+          "Cộng"
+        ],
+        "rows": [
+          [
+            "Nguyên giá",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Số đầu năm",
+            "83.925.433.728",
+            "6.944.059.376",
+            "97.477.104.632",
+            "188.346.597.736"
+          ],
+          [
+            "Mua trong năm",
+            "-",
+            "-",
+            "3.184.508.800",
+            "3.184.508.800"
+          ],
+          [
+            "Số cuối năm",
+            "83.925.433.728",
+            "6.944.059.376",
+            "100.661.613.432",
+            "191.531.106.536"
+          ],
+          [
+            "Trong đó:",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Đã khấu hao hết nhưng vẫn còn sử dụng",
+            "1.144.854.633",
+            "5.938.423.012",
+            "33.040.606.515",
+            "40.123.884.160"
+          ],
+          [
+            "Chờ thanh lý",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "Giá trị hao mòn",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Số đầu năm",
+            "59.790.765.464",
+            "6.579.710.545",
+            "75.943.040.393",
+            "142.313.516.402"
+          ],
+          [
+            "Khấu hao trong năm",
+            "2.448.229.512",
+            "121.254.199",
+            "4.541.096.619",
+            "7.110.580.330"
+          ],
+          [
+            "Số cuối năm",
+            "62.238.994.976",
+            "6.700.964.744",
+            "80.484.137.012",
+            "149.424.096.732"
+          ],
+          [
+            "Giá trị còn lại",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Số đầu năm",
+            "24.134.668.264",
+            "364.348.831",
+            "21.534.064.239",
+            "46.033.081.334"
+          ],
+          [
+            "Số cuối năm",
+            "21.686.438.752",
+            "243.094.632",
+            "20.177.476.420",
+            "42.107.009.804"
+          ],
+          [
+            "Trong đó:",
+            "",
+            "",
+            "",
+            ""
+          ],
+          [
+            "Tạm thời chưa sử dụng",
+            "-",
+            "-",
+            "-",
+            "-"
+          ],
+          [
+            "Đang chờ thanh lý",
+            "-",
+            "-",
+            "-",
+            "-"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p034_t001",
+      "document_id": "CAG_2025",
+      "page": 34,
+      "table": {
+        "title": "",
+        "columns": [
+          "Chỉ tiêu",
+          "Số đầu năm - Phải nộp",
+          "Số đầu năm - Phải thu",
+          "Số phát sinh trong năm - Số phải nộp",
+          "Số phát sinh trong năm - Số đã thực nộp",
+          "Số cuối năm - Phải nộp",
+          "Số cuối năm - Phải thu"
+        ],
+        "rows": [
+          [
+            "Thuế GTGT hàng bán nội địa",
+            "190.480.591",
+            "-",
+            "2.489.402.873",
+            "(2.473.634.135)",
+            "206.249.329",
+            "-"
+          ],
+          [
+            "Thuế thu nhập doanh nghiệp",
+            "-",
+            "148.354.517",
+            "157.964.732",
+            "-",
+            "9.610.215",
+            "-"
+          ],
+          [
+            "Thuế thu nhập cá nhân",
+            "11.807.500",
+            "-",
+            "108.607.893",
+            "(118.015.393)",
+            "2.400.000",
+            "-"
+          ],
+          [
+            "Thuế nhà đất",
+            "-",
+            "-",
+            "48.298.037",
+            "(48.298.037)",
+            "-",
+            "-"
+          ],
+          [
+            "Tiền thuê đất",
+            "-",
+            "2.789.849.255",
+            "1.095.486.779",
+            "-",
+            "-",
+            "1.694.362.476"
+          ],
+          [
+            "Phí, lệ phí và các khoản phải nộp khác",
+            "-",
+            "-",
+            "125.620.260",
+            "(125.620.260)",
+            "-",
+            "-"
+          ],
+          [
+            "Cộng",
+            "202.288.091",
+            "2.938.203.772",
+            "4.025.380.574",
+            "(2.765.567.825)",
+            "218.259.544",
+            "1.694.362.476"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p034_t002",
+      "document_id": "CAG_2025",
+      "page": 34,
+      "table": {
+        "title": "",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Phó Tổng Giám đốc"
+        ],
+        "rows": [
+          [
+            "Nguyễn Thị Kim Chi",
+            "Nguyễn Văn Cơ",
+            "Nguyễn Văn Phú"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p035_t001",
+      "document_id": "CAG_2025",
+      "page": 35,
+      "table": {
+        "title": "Bảng đối chiếu biến động của vốn chủ sở hữu",
+        "columns": [
+          "Chỉ tiêu",
+          "Vốn góp của chủ sở hữu",
+          "Quỹ đầu tư phát triển",
+          "Lợi nhuận sau thuế chưa phân phối",
+          "Cộng"
+        ],
+        "rows": [
+          [
+            "Số dư đầu năm trước",
+            "138.000.000.000",
+            "5.728.924.468",
+            "3.093.243.831",
+            "146.822.168.299"
+          ],
+          [
+            "Lợi nhuận trong năm trước",
+            "-",
+            "-",
+            "(661.573.169)",
+            "(661.573.169)"
+          ],
+          [
+            "Trích lập các quỹ trong năm trước",
+            "-",
+            "154.662.192",
+            "(774.843.831)",
+            "(620.181.639)"
+          ],
+          [
+            "Chia cổ tức trong năm trước",
+            "-",
+            "-",
+            "(2.318.400.000)",
+            "(2.318.400.000)"
+          ],
+          [
+            "Số dư cuối năm trước",
+            "138.000.000.000",
+            "5.883.586.660",
+            "(661.573.169)",
+            "143.222.013.491"
+          ],
+          [
+            "Số dư đầu năm nay",
+            "138.000.000.000",
+            "5.883.586.660",
+            "(661.573.169)",
+            "143.222.013.491"
+          ],
+          [
+            "Lợi nhuận trong năm nay",
+            "-",
+            "-",
+            "774.811.300",
+            "774.811.300"
+          ],
+          [
+            "Số dư cuối năm nay",
+            "138.000.000.000",
+            "5.883.586.660",
+            "113.238.131",
+            "143.996.824.791"
+          ]
+        ]
+      }
+    },
+    {
+      "table_id": "CAG_2025_p035_t002",
+      "document_id": "CAG_2025",
+      "page": 35,
+      "table": {
+        "title": "Chữ ký",
+        "columns": [
+          "Người lập",
+          "Kế toán trưởng",
+          "Phó Tổng Giám đốc"
+        ],
+        "rows": [
+          [
+            "Nguyễn Thị Kim Chi",
+            "Nguyễn Văn Cơ",
+            "Nguyễn Văn Phú"
+          ]
+        ]
+      }
+    }
+  ]
+}

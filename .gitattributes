@@ -6,3 +6,6 @@
 .gitignore text eol=lf
 .gitattributes text eol=lf
 .env.example text eol=lf
+
+# Snapshot neutral read-only: giữ byte và whitespace gốc qua checkout.
+ViFinBench/neutral/** -text whitespace=-blank-at-eol,-blank-at-eof

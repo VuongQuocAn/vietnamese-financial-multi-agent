@@ -1,0 +1,1774 @@
+<!-- document=AME_2023; page=1 -->
+
+## Trang 1
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+### BÁO CÁO TÀI CHÍNH
+
+cho năm tài chính kết thúc tại ngày 31 tháng 12 năm 2023
+đã được kiểm toán
+
+
+
+<!-- document=AME_2023; page=2 -->
+
+## Trang 2
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+### MỤC LỤC
+
+| Nội dung | Trang |
+| --- | --- |
+| Báo cáo của Ban Tổng Giám đốc | 2 - 3 |
+| Báo cáo kiểm toán độc lập | 4 - 5 |
+| Báo cáo tài chính đã được kiểm toán | 6 - 41 |
+| Bảng cân đối kế toán | 7 - 8 |
+| Báo cáo kết quả hoạt động kinh doanh | 9 |
+| Báo cáo lưu chuyển tiền tệ | 10 - 11 |
+| Bản thuyết minh Báo cáo tài chính | 12 - 41 |
+
+
+
+<!-- document=AME_2023; page=3 -->
+
+## Trang 3
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+### BÁO CÁO CỦA BAN TỔNG GIÁM ĐỐC
+
+Ban Tổng Giám đốc Công ty Cổ phần Alphanam E&C (sau đây gọi tắt là “Công ty”) trình bày Báo cáo này cùng với Báo cáo tài chính của Công ty cho năm tài chính kết thúc tại ngày 31 tháng 12 năm 2023 đã được kiểm toán bởi các kiểm toán viên độc lập.
+
+### KHÁI QUÁT VỀ CÔNG TY
+
+Công ty Cổ phần Alphanam E&C (trước đây là Công ty Cổ phần Alphanam Cơ Điện) tiền thân là Công ty TNHH Alphanam, hoạt động theo Giấy chứng nhận đăng ký kinh doanh số 051581 ngày 17 tháng 8 năm 1995 do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp.
+
+Công ty chính thức chuyển đổi từ Công ty TNHH sang hình thức Công ty Cổ phần theo Giấy chứng nhận đăng ký doanh nghiệp số 0103014620 ngày 17 tháng 11 năm 2006, do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp.
+
+Công ty đổi tên từ Công ty Cổ phần Alphanam Cơ Điện thành Công ty Cổ phần Alphanam E&C theo Giấy chứng nhận đăng ký kinh doanh thay đổi lần 04 ngày 10 tháng 9 năm 2013 do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp.
+
+Trong quá trình hoạt động, Công ty đã thay đổi Giấy chứng nhận đăng ký kinh doanh thành Giấy chứng nhận đăng ký doanh nghiệp với mã số 0100520683 và các Giấy chứng nhận đăng ký doanh nghiệp thay đổi do Sở Kế hoạch và Đầu tư thành phố Hà Nội cấp.
+
+Hoạt động chính của Công ty trong năm tài chính kết thúc tại ngày 31 tháng 12 năm 2023:
+
+- Xây dựng và lắp đặt các công trình hạ tầng xã hội, hạ tầng kỹ thuật trong các khu công nghiệp, đô thị;
+- Hoạt động xây dựng chuyên dụng khác (xây dựng các công trình dân dụng);
+- Thi công xây lắp các công trình điện có cấp điện áp từ 110KV trở lên;
+- Buôn bán vật liệu, thiết bị lắp đặt khác trong xây dựng;
+- Bán buôn máy móc, thiết bị và phụ tùng máy khác (thang máy);
+- Buôn bán tư liệu sản xuất (chủ yếu là hàng vật liệu xây dựng, thiết bị điện và vật liệu điện);
+- Kinh doanh bất động sản, quyền sử dụng đất thuộc chủ sở hữu, chủ sử dụng hoặc đi thuê (đầu tư, xây dựng và kinh doanh phát triển nhà; cho thuê mặt bằng, nhà xưởng sản xuất);
+- Cho thuê xe có động cơ (xe ô tô, phương tiện vận chuyển);
+- Các ngành nghề kinh doanh khác đã quy định cụ thể tại Giấy Chứng nhận đăng ký doanh nghiệp.
+
+Trụ sở chính của Công ty đặt tại Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam.
+
+### HỘI ĐỒNG QUẢN TRỊ
+
+Các thành viên của Hội đồng quản trị trong năm và đến thời điểm lập báo cáo này gồm:
+
+| Họ và tên | Chức vụ |
+| --- | --- |
+| Ông Bùi Hoàng Tuấn | Chủ tịch |
+| Ông Nguyễn Minh Nhật | Thành viên HĐQT |
+| Ông Nguyễn Anh Quân | Thành viên HĐQT |
+
+### BAN TỔNG GIÁM ĐỐC VÀ KẾ TOÁN TRƯỞNG
+
+Các thành viên của Ban Tổng Giám đốc và Kế toán trưởng trong năm và đến thời điểm lập báo cáo này gồm:
+
+| Họ và tên | Chức vụ | Ghi chú |
+| --- | --- | --- |
+| Bà Trương Thị Thu Hiền | Tổng Giám đốc |  |
+| Ông Lâm Sơn Tùng | Phó Tổng Giám đốc |  |
+| Bà Nguyễn Hải Yến | Kế toán trưởng | Bổ nhiệm từ ngày 01/4/2023 |
+| Ông Nguyễn Văn Trường | Kế toán trưởng | Miễn nhiệm từ ngày 01/4/2023 |
+
+
+
+<!-- document=AME_2023; page=4 -->
+
+## Trang 4
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Báo cáo của Ban Tổng Giám đốc (tiếp theo)
+
+### KIỂM TOÁN VIÊN
+
+Công ty TNHH Dịch vụ Tư vấn Tài chính Kế toán và Kiểm toán Nam Việt – Chi nhánh phía Bắc (AASCN) đã kiểm toán Báo cáo tài chính cho năm tài chính kết thúc tại ngày 31 tháng 12 năm 2023.
+
+### CÔNG BỐ TRÁCH NHIỆM CỦA BAN TỔNG GIÁM ĐỐC
+
+Ban Tổng Giám đốc Công ty chịu trách nhiệm về việc lập Báo cáo tài chính phản ánh trung thực, hợp lý tình hình tài chính, kết quả hoạt động kinh doanh và tình hình lưu chuyển tiền tệ của Công ty trong năm. Trong quá trình lập Báo cáo tài chính, Ban Tổng Giám đốc Công ty cam kết đã tuân thủ các yêu cầu sau:
+
+- Lựa chọn các chính sách kế toán thích hợp và áp dụng các chính sách này một cách nhất quán;
+- Thực hiện các đánh giá và các ước tính một cách hợp lý và thận trọng;
+- Nêu rõ các chuẩn mực kế toán áp dụng cho Công ty có được tuân thủ hay không và tất cả các sai lệch trọng yếu đã được trình bày và giải thích trong Báo cáo tài chính;
+- Lập Báo cáo tài chính dựa trên cơ sở hoạt động kinh doanh liên tục, trừ trường hợp không thể cho rằng Công ty sẽ tiếp tục hoạt động liên tục;
+- Thiết lập và thực hiện hệ thống kiểm soát nội bộ một cách hữu hiệu nhằm hạn chế rủi ro có sai sót trọng yếu do gian lận hoặc nhầm lẫn trong việc lập và trình bày Báo cáo tài chính.
+
+Ban Tổng Giám đốc Công ty đảm bảo rằng các sổ kế toán được lưu giữ để phản ánh tình hình tài chính của Công ty với mức độ trung thực, hợp lý tại bất cứ thời điểm nào và đảm bảo rằng Báo cáo tài chính tuân thủ các quy định hiện hành của Nhà nước, đồng thời có trách nhiệm trong việc bảo đảm an toàn tài sản của Công ty và thực hiện các biện pháp thích hợp để ngăn chặn, phát hiện các hành vi gian lận và các vi phạm khác.
+Ban Tổng Giám đốc Công ty cam kết đã tuân thủ các yêu cầu nêu trên trong việc lập Báo cáo tài chính.
+
+Hà Nội, ngày 30 tháng 03 năm 2024
+TM. Ban Tổng Giám đốc
+Tổng Giám đốc
+CÔNG TY CỔ PHẦN
+ALPHANAM E&C
+Trương Thị Thu Hiền
+
+
+
+<!-- document=AME_2023; page=5 -->
+
+## Trang 5
+
+### CÔNG TY TNHH DỊCH VỤ TƯ VẤN TÀI CHÍNH KẾ TOÁN VÀ KIỂM TOÁN NAM VIỆT
+NAM VIET AUDITING AND ACCOUNTING FINANCIAL CONSULTING SERVICES CO., LTD
+
+Số: 39/2024/BCKT/AASCN.PB
+
+### BÁO CÁO KIỂM TOÁN ĐỘC LẬP
+
+Kính gửi: HỘI ĐỒNG QUẢN TRỊ VÀ BAN TỔNG GIÁM ĐỐC
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Chúng tôi đã kiểm toán Báo cáo tài chính kèm theo của Công ty Cổ phần Alphanam E&C, được lập ngày 30 tháng 03 năm 2024, từ trang 06 đến trang 41, bao gồm: Bảng cân đối kế toán tại ngày 31 tháng 12 năm 2023, Báo cáo kết quả hoạt động kinh doanh, Báo cáo lưu chuyển tiền tệ cho năm tài chính kết thúc cùng ngày và Bản thuyết minh báo cáo tài chính.
+
+### Trách nhiệm của Ban Tổng Giám đốc
+
+Ban Tổng Giám đốc Công ty chịu trách nhiệm về việc lập và trình bày trung thực và hợp lý báo cáo tài chính của Công ty theo chuẩn mực kế toán, chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày báo cáo tài chính và chịu trách nhiệm về kiểm soát nội bộ mà Ban Tổng Giám đốc xác định là cần thiết để đảm bảo cho việc lập và trình bày báo cáo tài chính không có sai sót trọng yếu do gian lận hoặc nhầm lẫn.
+
+### Trách nhiệm của Kiểm toán viên
+
+Trách nhiệm của chúng tôi là đưa ra ý kiến về báo cáo tài chính dựa trên kết quả của cuộc kiểm toán. Chúng tôi đã tiến hành kiểm toán theo các chuẩn mực kiểm toán Việt Nam. Các chuẩn mực này yêu cầu chúng tôi tuân thủ chuẩn mực và các quy định về đạo đức nghề nghiệp, lập kế hoạch và thực hiện cuộc kiểm toán để đạt được sự đảm bảo hợp lý về việc liệu báo cáo tài chính của Công ty có còn sai sót trọng yếu hay không.
+
+Công việc kiểm toán bao gồm thực hiện các thủ tục nhằm thu thập các bằng chứng kiểm toán về các số liệu và thuyết minh trên báo cáo tài chính. Các thủ tục kiểm toán được lựa chọn dựa trên xét đoán của kiểm toán viên, bao gồm đánh giá rủi ro có sai sót trọng yếu trong báo cáo tài chính do gian lận hoặc nhầm lẫn. Khi thực hiện đánh giá các rủi ro này, kiểm toán viên đã xem xét kiểm soát nội bộ của Công ty liên quan đến việc lập và trình bày báo cáo tài chính trung thực, hợp lý nhằm thiết kế các thủ tục kiểm toán phù hợp với tình hình thực tế, tuy nhiên không nhằm mục đích đưa ra ý kiến về hiệu quả của kiểm soát nội bộ của Công ty. Công việc kiểm toán cũng bao gồm đánh giá tính thích hợp của các chính sách kế toán được áp dụng và tính hợp lý của các ước tính kế toán của Ban Tổng Giám đốc cũng như đánh giá việc trình bày tổng thể báo cáo tài chính.
+
+Chúng tôi tin tưởng rằng các bằng chứng kiểm toán mà chúng tôi đã thu thập được là đầy đủ và thích hợp làm cơ sở cho ý kiến kiểm toán của chúng tôi.
+
+### Ý kiến của Kiểm toán viên
+
+Theo ý kiến của chúng tôi, báo cáo tài chính đã phản ánh trung thực và hợp lý, trên các khía cạnh trọng yếu tình hình tài chính của Công ty Cổ phần Alphanam E&C tại ngày 31 tháng 12 năm 2023, cũng như kết quả hoạt động kinh doanh và tình hình lưu chuyển tiền tệ cho năm tài chính kết thúc cùng ngày, phù hợp với chuẩn mực kế toán, chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày báo cáo tài chính.
+
+### Thông tin liên hệ
+
+| Trụ sở chính | Chi Nhánh Phía Bắc |
+| --- | --- |
+| 54/3 Nguyễn Bỉnh Khiêm, Phường Đakao, Quận 1, TP.HCM | Phòng 1704 nhà 17T4 Khu đô thị Trung Hòa, Nhân Chính, Phường Nhân Chính, Quận Thanh Xuân, Thành phố Hà Nội |
+| Điện thoại: 028 3910 3908 / Fax: 028 3910 4880 | Điện thoại: (84-24) 3994 7969 / Email: admin@namvietpb.vn |
+| Email: namviet@aascn.com.vn / Web: www.aascn.com.vn |  |
+
+
+
+<!-- document=AME_2023; page=6 -->
+
+## Trang 6
+
+### Báo cáo kiểm toán độc lập (tiếp theo)
+
+### Vấn đề cần nhấn mạnh
+
+Chúng tôi lưu ý người đọc báo cáo đến Thuyết minh số V.05 trong Bản thuyết minh Báo cáo tài chính; trong đó mô tả về các khoản phải thu liên quan đến các khoản trả trước cho người bán để thực hiện hợp đồng kinh tế nhưng không tiếp tục thực hiện và đã thanh lý hợp đồng. Các khoản phải thu nêu trên không có tài sản đảm bảo và không quy định tính lãi chậm thanh toán.
+
+Ý kiến kiểm toán của chúng tôi không liên quan đến vấn đề này.
+
+### Vấn đề khác
+
+Báo cáo tài chính của Công ty Cổ phần Alphanam E&C cho năm tài chính kết thúc ngày 31 tháng 12 năm 2022 đã được kiểm toán bởi kiểm toán viên và doanh nghiệp kiểm toán khác. Kiểm toán viên này đã đưa ra ý kiến chấp nhận toàn phần đối với báo cáo tài chính này lập tại ngày 24 tháng 03 năm 2023.
+
+Hà Nội, ngày 30 tháng 03 năm 2024
+
+| Công ty TNHH Dịch vụ Tư vấn Tài chính Kế toán và Kiểm toán Nam Việt – Chi nhánh phía Bắc | Kiểm toán viên |
+| --- | --- |
+| Giám đốc |  |
+| Phạm Văn Cường | Bùi Ngọc Hà |
+| Số Giấy CN ĐKHN kiểm toán: 2922-2024-152-1 | Số Giấy CN ĐKHN kiểm toán: 0662-2023-152-1 |
+
+
+
+<!-- document=AME_2023; page=7 -->
+
+## Trang 7
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+### BẢNG CÂN ĐỐI KẾ TOÁN
+Tại ngày 31 tháng 12 năm 2023
+
+Đơn vị tính: VND
+
+### BẢNG CÂN ĐỐI KẾ TOÁN
+
+| STT | TÀI SẢN | Mã số | Thuyết minh | Số cuối năm | Số đầu năm |
+| --- | --- | --- | --- | --- | --- |
+| A. | TÀI SẢN NGẮN HẠN | 100 |  | 2.439.675.877.440 | 2.065.307.834.040 |
+| I. | Tiền và các khoản tương đương tiền | 110 | V.01 | 8.657.099.514 | 34.969.766.460 |
+| 1. | Tiền | 111 |  | 7.937.099.514 | 34.969.766.460 |
+| 2. | Các khoản tương đương tiền | 112 |  | 720.000.000 |  |
+| II. | Đầu tư tài chính ngắn hạn | 120 |  | 12.560.000.000 | - |
+| 1. | Chứng khoán kinh doanh | 121 |  | - | - |
+| 2. | Dự phòng giảm giá chứng khoán kinh doanh | 122 |  | - | - |
+| 3. | Đầu tư nắm giữ đến ngày đáo hạn | 123 | V.02 | 12.560.000.000 | - |
+| III. | Các khoản phải thu ngắn hạn | 130 |  | 1.747.781.942.437 | 1.115.533.876.193 |
+| 1. | Phải thu ngắn hạn của khách hàng | 131 | V.03 | 860.281.539.673 | 426.069.930.467 |
+| 2. | Trả trước cho người bán ngắn hạn | 132 | V.04 | 348.350.805.411 | 681.927.965.857 |
+| 3. | Phải thu nội bộ ngắn hạn | 133 |  | - | - |
+| 4. | Phải thu theo tiến độ kế hoạch hợp đồng xây dựng | 134 |  | - | - |
+| 5. | Phải thu về cho vay ngắn hạn | 135 |  | - | - |
+| 6. | Phải thu ngắn hạn khác | 136 | V.05 | 545.694.152.993 | 14.080.535.509 |
+| 7. | Dự phòng phải thu ngắn hạn khó đòi (*) | 137 | V.06 | (6.544.555.640) | (6.544.555.640) |
+| 8. | Tài sản thiếu chờ xử lý | 139 |  | - | - |
+| IV. | Hàng tồn kho | 140 | V.07 | 668.564.048.602 | 879.905.486.436 |
+| 1. | Hàng tồn kho | 141 |  | 668.564.048.602 | 879.905.486.436 |
+| 2. | Dự phòng giảm giá hàng tồn kho (*) | 149 |  | - | - |
+| V. | Tài sản ngắn hạn khác | 150 |  | 2.112.786.887 | 34.898.704.951 |
+| 1. | Chi phí trả trước ngắn hạn | 151 | V.10 | 1.459.201.373 | 2.180.929.644 |
+| 2. | Thuế giá trị gia tăng được khấu trừ | 152 |  | 653.585.514 | 32.717.775.307 |
+| 3. | Thuế và các khoản khác phải thu Nhà nước | 153 | V.14 | - | - |
+| 4. | Giao dịch mua bán lại trái phiếu Chính phủ | 154 |  | - | - |
+| 5. | Tài sản ngắn hạn khác | 155 |  | - | - |
+
+
+
+<!-- document=AME_2023; page=8 -->
+
+## Trang 8
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bảng cân đối kế toán (tiếp theo)
+
+Đơn vị tính: VND
+
+### Bảng cân đối kế toán (tiếp theo)
+
+| STT | TÀI SẢN | Mã số | Thuyết minh | Số cuối năm | Số đầu năm |
+| --- | --- | --- | --- | --- | --- |
+| B. | TÀI SẢN DÀI HẠN | 200 |  | 76.366.032.101 | 79.946.874.035 |
+| I. | Các khoản phải thu dài hạn | 210 |  | - | - |
+| 1. | Phải thu dài hạn của khách hàng | 211 | V.03 | - | - |
+| 2. | Trả trước cho người bán dài hạn | 212 | V.04 | - | - |
+| II. | Tài sản cố định | 220 |  | 15.776.251.586 | 16.656.591.042 |
+| 1. | Tài sản cố định hữu hình | 221 | V.08 | 15.628.476.313 | 16.393.799.643 |
+|  | - Nguyên giá | 222 |  | 43.831.353.315 | 40.596.323.685 |
+|  | - Giá trị hao mòn lũy kế (*) | 223 |  | (28.202.877.002) | (24.202.524.042) |
+| 2. | Tài sản cố định thuê tài chính | 224 |  | - | - |
+|  | - Nguyên giá | 225 |  | - | - |
+|  | - Giá trị hao mòn lũy kế (*) | 226 |  | - | - |
+| 3. | Tài sản cố định vô hình | 227 | V.09 | 147.775.273 | 262.791.399 |
+|  | - Nguyên giá | 228 |  | 1.051.687.851 | 1.051.687.851 |
+|  | - Giá trị hao mòn lũy kế (*) | 229 |  | (903.912.578) | (788.896.452) |
+| III. | Bất động sản đầu tư | 230 |  | - | - |
+| 1. | Nguyên giá | 231 |  | - | - |
+| 2. | Giá trị hao mòn lũy kế (*) | 232 |  | - | - |
+| IV. | Tài sản dở dang dài hạn | 240 |  | - | - |
+| 1. | Chi phí sản xuất, kinh doanh dở dang dài hạn | 241 |  | - | - |
+| 2. | Chi phí xây dựng cơ bản dở dang | 242 |  | - | - |
+| V. | Đầu tư tài chính dài hạn | 250 |  | - | - |
+| 1. | Đầu tư vào công ty con | 251 |  | - | - |
+| 2. | Đầu tư vào công ty liên doanh, liên kết | 252 |  | - | - |
+| 3. | Đầu tư góp vốn vào đơn vị khác | 253 |  | - | - |
+| 4. | Dự phòng giảm giá đầu tư tài chính dài hạn (*) | 254 |  | - | - |
+| 5. | Đầu tư nắm giữ đến ngày đáo hạn | 255 |  | - | - |
+| VI. | Tài sản dài hạn khác | 260 |  | 60.589.780.515 | 63.290.282.993 |
+| 1. | Chi phí trả trước dài hạn | 261 | V.10 | 60.589.780.515 | 63.290.282.993 |
+| 2. | Tài sản thuế thu nhập hoãn lại | 262 |  | - | - |
+| 4. | Tài sản dài hạn khác | 268 |  | - | - |
+|  | TỔNG CỘNG TÀI SẢN | 270 |  | 2.516.041.909.541 | 2.145.254.708.075 |
+
+
+
+<!-- document=AME_2023; page=9 -->
+
+## Trang 9
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bảng cân đối kế toán (tiếp theo)
+
+Đơn vị tính: VND
+
+### Bảng cân đối kế toán (tiếp theo)
+
+| STT | NGUỒN VỐN | Mã số | Thuyết minh | Số cuối năm | Số đầu năm |
+| --- | --- | --- | --- | --- | --- |
+| C | NỢ PHẢI TRẢ | 300 |  | 1.729.144.510.179 | 1.379.554.863.704 |
+| I | Nợ ngắn hạn | 310 |  | 1.729.144.510.179 | 1.379.554.863.704 |
+| 1 | Phải trả người bán ngắn hạn | 311 | V.12 | 541.222.698.555 | 624.531.219.307 |
+| 2 | Người mua trả tiền trước ngắn hạn | 312 | V.13 | 65.206.077.705 | 158.148.715.064 |
+| 3 | Thuế và các khoản phải nộp Nhà nước | 313 | V.14 | 6.918.175.461 | 6.099.909.128 |
+| 4 | Phải trả người lao động | 314 |  | 8.337.160.012 | 6.170.279.599 |
+| 5 | Chi phí phải trả ngắn hạn | 315 | V.15 | 13.672.127.430 | 3.350.763.439 |
+| 8 | Doanh thu chưa thực hiện ngắn hạn | 318 | V.17 | 3.612.621.200 | 1.269.920.141 |
+| 9 | Phải trả ngắn hạn khác | 319 | V.16 | 82.553.257.823 | 6.537.177.620 |
+| 10 | Vay và nợ thuê tài chính ngắn hạn | 320 | V.11 | 1.007.622.391.993 | 573.446.879.406 |
+| II | Nợ dài hạn | 330 |  | - | - |
+| D | VỐN CHỦ SỞ HỮU | 400 |  | 786.897.399.362 | 765.699.844.371 |
+| I | Vốn chủ sở hữu | 410 | V.18 | 786.897.399.362 | 765.699.844.371 |
+| 1 | Vốn góp của chủ sở hữu | 411 |  | 652.000.000.000 | 652.000.000.000 |
+|  | - Cổ phiếu phổ thông có quyền biểu quyết | 411a |  | 652.000.000.000 | 652.000.000.000 |
+|  | - Cổ phiếu ưu đãi | 411b |  | - | - |
+| 2 | Thặng dư vốn cổ phần | 412 |  | (194.400.000) | (194.400.000) |
+| 8 | Quỹ đầu tư phát triển | 418 |  | 840.866.910 | 840.866.910 |
+| 11 | Lợi nhuận sau thuế chưa phân phối | 421 |  | 134.250.932.452 | 113.053.377.461 |
+|  | - Lợi nhuận sau thuế chưa phân phối lũy kế đến cuối năm trước | 421a |  | 113.053.377.461 | 92.207.697.344 |
+|  | - Lợi nhuận sau thuế chưa phân phối năm nay | 421b |  | 21.197.554.991 | 20.845.680.117 |
+| II | Nguồn kinh phí và quỹ khác | 430 |  | - | - |
+|  | TỔNG CỘNG NGUỒN VỐN | 440 |  | 2.516.041.909.541 | 2.145.254.708.075 |
+
+Hà Nội, ngày 30 tháng 03 năm 2024. Người lập biểu: Bùi Thị Thúy Hà. Kế toán trưởng: Nguyễn Hải Yến. Tổng Giám đốc: Trương Thị Thu Hiền.
+
+
+
+<!-- document=AME_2023; page=10 -->
+
+## Trang 10
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+### BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+Năm 2023
+
+Đơn vị tính: VND
+
+### Báo cáo kết quả hoạt động kinh doanh
+
+| STT | CHỈ TIÊU | Mã số | Thuyết minh | Năm nay | Năm trước |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Doanh thu bán hàng và cung cấp dịch vụ | 01 | VI.01 | 2.215.317.341.019 | 2.213.252.011.607 |
+| 2 | Các khoản giảm trừ doanh thu | 02 |  | - | - |
+| 3 | Doanh thu thuần về bán hàng và cung cấp dịch vụ | 10 |  | 2.215.317.341.019 | 2.213.252.011.607 |
+| 4 | Giá vốn hàng bán | 11 | VI.02 | 2.099.603.626.568 | 2.093.291.709.111 |
+| 5 | Lợi nhuận gộp về bán hàng và cung cấp dịch vụ | 20 |  | 115.713.714.451 | 119.960.302.496 |
+| 6 | Doanh thu hoạt động tài chính | 21 | VI.03 | 934.085.453 | 1.431.543.516 |
+| 7 | Chi phí tài chính | 22 | VI.04 | 64.917.520.658 | 56.558.951.468 |
+| 8 | Trong đó: Chi phí lãi vay | 23 |  | 63.257.134.950 | 54.758.965.719 |
+|  | Chi phí bán hàng | 25 | VI.07 | - | - |
+| 9 | Chi phí quản lý doanh nghiệp | 26 | VI.07 | 27.500.951.616 | 38.379.572.991 |
+| 10 | Lợi nhuận thuần từ hoạt động kinh doanh | 30 |  | 24.229.327.630 | 26.453.321.553 |
+| 11 | Thu nhập khác | 31 | VI.05 | 3.866.374.934 | 20.034.042 |
+| 12 | Chi phí khác | 32 | VI.06 | 984.780.438 | 7.104.279 |
+| 13 | Lợi nhuận khác | 40 |  | 2.881.594.496 | 12.929.763 |
+| 14 | Tổng lợi nhuận kế toán trước thuế | 50 |  | 27.110.922.126 | 26.466.251.316 |
+| 15 | Chi phí thuế TNDN hiện hành | 51 | VI.08 | 5.913.367.135 | 5.620.571.199 |
+| 16 | Chi phí thuế TNDN hoãn lại | 52 |  | - | - |
+| 17 | Lợi nhuận sau thuế TNDN | 60 |  | 21.197.554.991 | 20.845.680.117 |
+| 18 | Lãi cơ bản trên cổ phiếu | 70 | VI.09 | 325 | 428 |
+| 19 | Lãi suy giảm trên cổ phiếu | 71 | VI.10 | 325 | 428 |
+
+Hà Nội, ngày 30 tháng 03 năm 2024
+Người lập biểu: Bùi Thị Thúy Hà
+Kế toán trưởng: Nguyễn Hải Yến
+Tổng Giám đốc: Trương Thị Thu Hiền
+
+
+
+<!-- document=AME_2023; page=11 -->
+
+## Trang 11
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+BÁO CÁO LƯU CHUYỂN TIỀN TỆ
+(Theo phương pháp gián tiếp)
+Năm 2023
+Đơn vị tính: VND
+
+| STT | CHỈ TIÊU | Mã số | Thuyết minh | Năm nay | Năm trước |
+| --- | --- | --- | --- | --- | --- |
+| I. | Lưu chuyển tiền từ hoạt động kinh doanh |  |  |  |  |
+| 1. | Lợi nhuận trước thuế | 01 |  | 27.110.922.126 | 26.466.251.316 |
+| 2. | Điều chỉnh cho các khoản |  |  |  |  |
+| - | Khấu hao tài sản cố định và BĐSĐT | 02 |  | 4.115.369.086 | 3.108.199.049 |
+| - | Các khoản dự phòng | 03 |  | - | (805.731.823) |
+| - | Lãi, lỗ chênh lệch tỷ giá hối đoái do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ | 04 |  | - | 428.897.589 |
+| - | Lãi, lỗ từ hoạt động đầu tư | 05 |  | (272.075.403) | (60.762.606) |
+| - | Chi phí lãi vay | 06 |  | 63.257.134.950 | 54.758.965.719 |
+| - | Các khoản điều chỉnh khác | 07 |  | - | - |
+| 3. | Lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động | 08 |  | 94.211.350.759 | 83.895.819.244 |
+| - | Tăng, giảm các khoản phải thu | 09 |  | (600.164.044.037) | 1.086.199.224.377 |
+| - | Tăng, giảm hàng tồn kho | 10 |  | 211.341.437.834 | (316.050.497.086) |
+| - | Tăng, giảm các khoản phải trả (không kể lãi vay phải trả, thuế TNDN phải nộp) | 11 |  | (85.479.691.419) | (1.069.726.551.415) |
+| - | Tăng, giảm chi phí trả trước | 12 |  | 3.422.230.749 | 2.213.802.460 |
+| - | Tăng, giảm chứng khoán kinh doanh | 13 |  | - | - |
+| - | Tiền lãi vay đã trả | 14 |  | (62.830.870.289) | (54.598.930.652) |
+| - | Thuế thu nhập doanh nghiệp đã nộp | 15 |  | (5.445.806.489) | (5.747.137.348) |
+| - | Tiền thu khác từ hoạt động kinh doanh | 16 |  | - | - |
+| - | Tiền chi khác từ hoạt động kinh doanh | 17 |  | - | - |
+|  | Lưu chuyển tiền thuần từ hoạt động kinh doanh | 20 |  | (444.945.392.892) | (273.814.270.420) |
+| II. | Lưu chuyển tiền từ hoạt động đầu tư |  |  |  |  |
+| 1. | Tiền chi để mua sắm, xây dựng TSCĐ và các TS dài hạn khác | 21 |  | (3.235.029.630) | (5.757.173.455) |
+| 2. | Tiền thu từ thanh lý, nhượng bán TSCĐ và các TS dài hạn khác | 22 |  | - | - |
+| 3. | Tiền chi cho vay, mua các công cụ nợ của đơn vị khác | 23 |  | (32.960.000.000) | - |
+| 4. | Tiền thu hồi cho vay, bán lại các công cụ nợ của đơn vị khác | 24 |  | 20.446.370.914 | - |
+| 5. | Tiền chi đầu tư góp vốn vào đơn vị khác | 25 |  | - | - |
+| 6. | Tiền thu hồi đầu tư góp vốn vào đơn vị khác | 26 |  | - | - |
+| 7. | Tiền thu lãi cho vay, cổ tức và lợi nhuận được chia | 27 |  | 205.872.075 | 60.762.606 |
+|  | Lưu chuyển tiền thuần từ hoạt động đầu tư | 30 |  | (15.542.786.641) | (5.696.410.849) |
+
+
+
+<!-- document=AME_2023; page=12 -->
+
+## Trang 12
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Báo cáo lưu chuyển tiền tệ (tiếp theo)
+
+- Đơn vị tính: VND
+
+| STT | CHỈ TIÊU | Mã số | Thuyết minh | Năm nay | Năm trước |
+| --- | --- | --- | --- | --- | --- |
+| III | Lưu chuyển tiền từ hoạt động tài chính |  |  |  |  |
+| 1 | Tiền thu từ phát hành cổ phiếu, nhận vốn góp của chủ sở hữu | 31 |  | - | 399.805.600.000 |
+| 2 | Tiền trả lại vốn góp của chủ sở hữu, mua lại cổ phiếu của doanh nghiệp đã phát hành | 32 |  | - | - |
+| 3 | Tiền thu từ đi vay | 33 |  | 1.364.061.335.513 | 1.001.735.433.744 |
+| 4 | Tiền trả nợ gốc vay | 34 |  | (929.885.822.926) | (1.104.899.667.937) |
+| 5 | Tiền trả nợ gốc thuê tài chính | 35 |  | - | (7.597.239.053) |
+| 6 | Cổ tức, lợi nhuận đã trả cho chủ sở hữu | 36 |  | - | - |
+|  | Lưu chuyển tiền thuần từ hoạt động tài chính | 40 |  | 434.175.512.587 | 289.044.126.754 |
+|  | Lưu chuyển tiền thuần trong năm | 50 |  | (26.312.666.946) | 9.533.445.485 |
+|  | Tiền và tương đương tiền đầu năm | 60 |  | 34.969.766.460 | 25.436.013.725 |
+|  | Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ | 61 |  | - | 307.250 |
+|  | Tiền và tương đương tiền cuối năm | 70 |  | 8.657.099.514 | 34.969.766.460 |
+
+Hà Nội, ngày 30 tháng 03 năm 2024
+
+### Chữ ký
+
+| Người lập biểu | Kế toán trưởng | Tổng giám đốc |
+| --- | --- | --- |
+| Bùi Thị Thúy Hà | Nguyễn Hải Yến | Trương Thị Thu Hiền |
+
+
+
+<!-- document=AME_2023; page=13 -->
+
+## Trang 13
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+### BẢN THUYẾT MINH BÁO CÁO TÀI CHÍNH
+Năm 2023
+
+I. ĐẶC ĐIỂM HOẠT ĐỘNG CỦA DOANH NGHIỆP
+01. Hình thức sở hữu vốn
+Là Công ty Cổ phần.
+02. Lĩnh vực kinh doanh
+Sản xuất, xây dựng, thương mại và dịch vụ.
+03. Ngành nghề kinh doanh
+Hoạt động chính của Công ty trong năm tài chính kết thúc tại ngày 31 tháng 12 năm 2023 bao gồm:
+- Xây dựng và lắp đặt các công trình hạ tầng xã hội, hạ tầng kỹ thuật trong các khu công nghiệp đô thị;
+- Hoạt động xây dựng chuyên dụng khác (xây dựng các công trình dân dụng);
+- Thi công xây lắp các công trình điện có cấp điện áp từ 110KV trở lên;
+- Buôn bán vật liệu, thiết bị lắp đặt khác trong xây dựng;
+- Bán buôn máy móc, thiết bị và phụ tùng máy khác (thang máy);
+- Buôn bán tư liệu sản xuất (chủ yếu là hàng vật liệu xây dựng, thiết bị điện và vật liệu điện);
+- Kinh doanh bất động sản, quyền sử dụng đất thuộc chủ sở hữu, chủ sử dụng hoặc đi thuê (đầu tư; xây dựng và kinh doanh phát triển nhà; cho thuê mặt bằng, nhà xưởng sản xuất);
+- Cho thuê xe có động cơ (xe ô tô, phương tiện vận chuyển).
+- Các ngành nghề kinh doanh khác đã quy định cụ thể tại Giấy Chứng nhận đăng ký doanh nghiệp.
+04. Chu kỳ sản xuất, kinh doanh thông thường
+Chu kỳ sản xuất kinh doanh thông thường của Công ty không quá 12 tháng.
+05. Cấu trúc doanh nghiệp
+Tổng số nhân viên của Công ty tại ngày 31 tháng 12 năm 2023 là 181 người (tại ngày 31 tháng 12 năm 2022 là 170 người).
+
+II. NĂM TÀI CHÍNH, ĐƠN VỊ TIỀN TỆ SỬ DỤNG TRONG KẾ TOÁN
+01. Năm tài chính
+Năm tài chính của Công ty bắt đầu từ ngày 01 tháng 01 và kết thúc vào ngày 31 tháng 12 hàng năm.
+02. Đơn vị tiền tệ sử dụng trong kế toán
+Đơn vị tiền tệ sử dụng trong ghi chép kế toán là đồng Việt Nam (VND).
+
+III. CÁC CHUẨN MỰC VÀ CHẾ ĐỘ KẾ TOÁN ÁP DỤNG
+01. Chế độ kế toán áp dụng
+Công ty áp dụng chế độ kế toán doanh nghiệp Việt Nam ban hành theo Thông tư số 200/2014/TT-BTC ngày 22 tháng 12 năm 2014, Thông tư 53/2016/TT-BTC ngày 21 tháng 3 năm 2016 của Bộ Tài chính các chuẩn mực kế toán Việt Nam do Bộ Tài chính ban hành và các văn bản sửa đổi, bổ sung, hướng dẫn thực hiện kèm theo.
+
+
+
+<!-- document=AME_2023; page=14 -->
+
+## Trang 14
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+### 02. Tuyên bố về việc tuân thủ Chuẩn mực kế toán và chế độ kế toán
+
+Ban Tổng Giám đốc đảm bảo Báo cáo tài chính được lập và trình bày phù hợp với các chuẩn mực kế toán, chế độ kế toán doanh nghiệp Việt Nam hiện hành.
+
+### IV. CÁC CHÍNH SÁCH KẾ TOÁN ÁP DỤNG
+
+### 01. Các loại tỷ giá hối đoái áp dụng trong kế toán
+
+Tỷ giá giao dịch thực tế đối với các giao dịch bằng ngoại tệ phát sinh trong năm:
+- Tỷ giá giao dịch thực tế khi mua bán ngoại tệ là tỷ giá được quy định trong hợp đồng mua, bán ngoại tệ giữa Công ty và ngân hàng thương mại;
+- Tỷ giá khi ghi nhận nợ phải trả là tỷ giá bán của ngân hàng thương mại nơi Công ty dự kiến giao dịch tại thời điểm giao dịch phát sinh;
+Tỷ giá giao dịch thực tế khi đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ tại thời điểm lập Báo cáo tài chính:
+- Đối với tiền gửi ngoại tệ áp dụng tỷ giá mua của chính ngân hàng nơi Công ty mở tài khoản ngoại tệ;
+- Đối với khoản mục phân loại là nợ phải trả áp dụng tỷ giá bán ngoại tệ của ngân hàng thương mại nơi Công ty thường xuyên có giao dịch.
+Tất cả các khoản chênh lệch tỷ giá thực tế phát sinh trong năm và chênh lệch do đánh giá lại số dư các khoản mục tiền tệ có gốc ngoại tệ cuối năm được hạch toán vào kết quả hoạt động kinh doanh của năm tài chính.
+
+### 02. Nguyên tắc ghi nhận các khoản tiền và các khoản tương đương tiền
+
+Các khoản tiền bao gồm tiền mặt, tiền gửi ngân hàng, tiền đang chuyển.
+Các khoản tương đương tiền là các khoản đầu tư ngắn hạn không quá 03 tháng có khả năng chuyển đổi dễ dàng thành tiền và không có nhiều rủi ro trong chuyển đổi thành tiền kể từ ngày mua khoản đầu tư đó.
+
+### 03. Các khoản nợ phải thu
+
+Nợ phải thu là số tiền có thể thu hồi của khách hàng hoặc của các đối tượng khác. Nợ phải thu được trình bày theo giá trị ghi sổ trừ đi các khoản dự phòng phải thu khó đòi.
+Dự phòng nợ phải thu khó đòi được trích lập cho những khoản phải thu đã quá hạn thanh toán từ sáu tháng trở lên không có khả năng thu hồi hoặc cho các khoản mà tại ngày kết thúc năm tài chính Công ty dự kiến không có khả năng thu hồi như đối tượng nợ khó có khả năng thanh toán do bị thanh lý, phá sản hay các khó khăn tương tự.
+
+### 04. Nguyên tắc ghi nhận hàng tồn kho
+
+Hàng tồn kho được ghi nhận theo giá gốc. Trường hợp giá trị thuần có thể thực hiện được thấp hơn giá gốc thì phải tính theo giá trị thuần có thể thực hiện được. Giá gốc hàng tồn kho bao gồm chi phí mua, chi phí chế biến và các chi phí liên quan trực tiếp khác phát sinh để có được hàng tồn kho ở địa điểm và trạng thái hiện tại. Giá trị thuần có thể thực hiện được được xác định bằng giá bán ước tính trừ các chi phí ước tính để hoàn thành sản phẩm cùng chi phí tiếp thị, bán hàng và phân phối phát sinh.
+Giá trị hàng tồn kho được xác định theo phương pháp bình quân gia quyền.
+Hàng tồn kho được hạch toán theo phương pháp kê khai thường xuyên.
+
+
+
+<!-- document=AME_2023; page=15 -->
+
+## Trang 15
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+05. Nguyên tắc ghi nhận và khấu hao tài sản cố định
+Nguyên tắc ghi nhận TSCĐ hữu hình, TSCĐ vô hình
+Tài sản cố định hữu hình, vô hình được ghi nhận theo giá gốc. Trong quá trình sử dụng, tài sản cố định hữu hình, tài sản cố định vô hình được ghi nhận theo nguyên giá, giá trị hao mòn lũy kế và giá trị còn lại.
+Phương pháp khấu hao TSCĐ hữu hình, TSCĐ vô hình
+Tài sản cố định được khấu hao theo phương pháp đường thẳng dựa trên thời gian hữu dụng ước tính. Cụ thể như sau:
+
+### Thời gian khấu hao tài sản cố định
+
+| Loại tài sản | Thời gian |
+| --- | --- |
+| - Nhà cửa, vật kiến trúc | 06 - 25 năm |
+| - Máy móc, thiết bị | 03 - 08 năm |
+| - Phương tiện vận tải, truyền dẫn | 04 - 08 năm |
+| - Thiết bị, dụng cụ quản lý | 03 - 06 năm |
+| - Phần mềm máy tính | 03 năm |
+
+06. Nguyên tắc ghi nhận chi phí trả trước
+Các chi phí đã phát sinh liên quan đến kết quả hoạt động sản xuất kinh doanh của nhiều kỳ kế toán được hạch toán vào chi phí trả trước để phân bổ dần vào kết quả hoạt động kinh doanh trong các kỳ kế toán sau.
+Việc tính và phân bổ chi phí trả trước vào chi phí sản xuất kinh doanh từng kỳ kế toán được căn cứ vào tính chất, mức độ từng loại chi phí để lựa chọn phương pháp và tiêu thức phân bổ hợp lý. Chi phí trả trước được phân bổ dần vào chi phí sản xuất kinh doanh theo phương pháp đường thẳng.
+
+07. Tài sản thuê hoạt động
+Thuê tài sản được phân loại là thuê hoạt động nếu phần lớn rủi ro và lợi ích gắn liền với quyền sở hữu tài sản thuộc về người cho thuê. Chi phí thuê hoạt động được phản ánh vào chi phí theo phương pháp đường thẳng cho suốt thời hạn thuê tài sản, không phụ thuộc vào phương thức thanh toán tiền thuê.
+
+14
+
+
+
+<!-- document=AME_2023; page=16 -->
+
+## Trang 16
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+08. Nguyên tắc ghi nhận nợ phải trả và chi phí phải trả
+Các khoản nợ phải trả và chi phí phải trả được ghi nhận cho số tiền phải trả trong tương lai liên quan đến hàng hóa và dịch vụ đã nhận được. Chi phí phải trả được ghi nhận dựa trên các ước tính hợp lý về số tiền phải trả.
+Việc phân loại các khoản nợ phải trả là phải trả người bán, chi phí phải trả và phải trả khác được thực hiện theo nguyên tắc sau:
+- Phải trả người bán phản ánh các khoản phải trả mang tính chất thương mại phát sinh từ giao dịch mua hàng hóa, dịch vụ, tài sản và người bán là đơn vị độc lập với Công ty, bao gồm cả các khoản phải trả khi nhập khẩu thông qua người nhận ủy thác.
+- Chi phí phải trả phản ánh các khoản phải trả cho hàng hóa, dịch vụ đã nhận được từ người bán hoặc đã cung cấp cho người mua nhưng chưa chi trả do chưa có hóa đơn hoặc chưa đủ hồ sơ, tài liệu kế toán và các khoản phải trả cho người lao động về tiền lương nghỉ phép, các khoản chi phí sản xuất, kinh doanh phải trích trước.
+- Phải trả khác phản ánh các khoản phải trả không có tính thương mại, không liên quan đến giao dịch mua, bán, cung cấp hàng hóa dịch vụ.
+
+09. Nguyên tắc ghi nhận vay và nợ phải trả thuê tài chính
+Giá trị khoản nợ phải trả thuê tài chính là tổng số tiền phải trả được tính bằng giá trị hiện tại của khoản thanh toán tiền thuê tối thiểu hoặc giá trị hợp lý của tài sản thuê.
+Các khoản vay và nợ phải trả thuê tài chính được theo dõi theo từng đối tượng cho vay, từng khế ước vay nợ và kỳ hạn phải trả của các khoản vay, nợ thuê tài chính. Trường hợp vay, nợ bằng ngoại tệ thì thực hiện theo dõi chi tiết theo nguyên tệ.
+
+10. Nguyên tắc ghi nhận doanh thu chưa thực hiện
+Doanh thu chưa thực hiện là doanh thu nhận trước như: số tiền của khách hàng đã trả trước cho một hoặc nhiều kỳ kế toán về cho thuê văn phòng.
+Doanh thu chưa thực hiện được kết chuyển vào doanh thu bán hàng và cung cấp dịch vụ theo số tiền được xác định phù hợp với từng kỳ kế toán.
+
+11. Nguyên tắc ghi nhận vốn chủ sở hữu
+Vốn đầu tư của chủ sở hữu được ghi nhận theo số vốn thực góp của chủ sở hữu.
+Thặng dư vốn cổ phần được ghi nhận theo số chênh lệch lớn hơn hoặc nhỏ hơn giữa giá thực tế phát hành và mệnh giá cổ phiếu khi phát hành cổ phiếu lần đầu, phát hành bổ sung hoặc tái phát hành cổ phiếu quỹ.
+Lợi nhuận sau thuế chưa phân phối phản ánh kết quả kinh doanh (lãi, lỗ) sau thuế thu nhập doanh nghiệp và tình hình phân chia lợi nhuận hoặc xử lý lỗ của Công ty.
+Quỹ đầu tư phát triển trích lập từ lợi nhuận sau thuế thu nhập doanh nghiệp và được sử dụng vào việc đầu tư mở rộng quy mô sản xuất, kinh doanh hoặc đầu tư chiều sâu của doanh nghiệp.
+Cổ tức phải trả cho các cổ đông được ghi nhận là khoản phải trả trong Bảng Cân đối kế toán của Công ty sau khi có quyết định hoặc thông báo trả cổ tức được chia cho các cổ đông.
+
+12. Nguyên tắc và phương pháp ghi nhận doanh thu
+Doanh thu bán hàng hóa
+Doanh thu bán hàng được ghi nhận khi đồng thời thỏa mãn các điều kiện sau:
+- Phần lớn rủi ro và lợi ích gắn liền với quyền sở hữu sản phẩm hoặc hàng hóa đã được chuyển giao cho người mua;
+
+
+
+<!-- document=AME_2023; page=17 -->
+
+## Trang 17
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+- Công ty không còn nắm giữ quyền quản lý hàng hóa như người sở hữu hàng hóa hoặc quyền kiểm soát hàng hóa;
+- Doanh thu được xác định tương đối chắc chắn;
+- Công ty đã thu được hoặc sẽ thu được lợi ích kinh tế từ giao dịch bán hàng;
+- Xác định được chi phí liên quan đến giao dịch bán hàng.
+
+Doanh thu bán hàng được xác định theo giá trị hợp lý của các khoản tiền đã thu hoặc sẽ thu được theo nguyên tắc kế toán dồn tích. Các khoản nhận trước của khách hàng không được ghi nhận là doanh thu trong năm.
+
+### Doanh thu cung cấp dịch vụ
+
+Doanh thu cung cấp dịch vụ được ghi nhận khi kết quả của giao dịch đó được xác định một cách đáng tin cậy. Trường hợp việc cung cấp dịch vụ liên quan đến nhiều kỳ thì doanh thu được ghi nhận trong năm theo kết quả phần công việc đã hoàn thành vào ngày lập Bảng cân đối kế toán của kỳ đó. Kết quả của giao dịch cung cấp dịch vụ được xác định khi thỏa mãn tất cả các điều kiện sau:
+
+- Doanh thu được xác định tương đối chắc chắn;
+- Có khả năng thu được lợi ích kinh tế từ giao dịch cung cấp dịch vụ đó;
+- Xác định được phần công việc đã hoàn thành vào ngày lập Bảng cân đối kế toán;
+- Xác định được chi phí phát sinh cho giao dịch và chi phí để hoàn thành giao dịch cung cấp dịch vụ đó.
+
+### Doanh thu hợp đồng xây dựng
+
+Hợp đồng xây dựng mà Công ty đang thực hiện quy định nhà thầu được thanh toán theo giá trị khối lượng thực hiện, doanh thu hợp đồng xây dựng được ghi nhận tương ứng với phần công việc đã hoàn thành được khách hàng xác nhận trong năm. Kết quả thực hiện hợp đồng được ước tính đáng tin cậy dựa trên hồ sơ nghiệm thu thanh toán với chủ đầu tư.
+
+### Doanh thu kinh doanh bất động sản
+
+Doanh thu kinh doanh bất động sản của Công ty là doanh thu cho thuê Bất động sản đầu tư được ghi nhận khi kết quả của giao dịch đó được xác định đáng tin cậy. Trường hợp cho thuê bất động sản đầu tư có nhận trước tiền cho thuê của nhiều kỳ thì việc ghi nhận doanh thu được thực hiện theo nguyên tắc phân bổ số tiền cho thuê nhận trước phù hợp với thời gian cho thuê. Việc ghi nhận doanh thu kinh doanh bất động sản phải đảm bảo thỏa mãn đồng thời các điều kiện sau:
+
+- Doanh thu được xác định tương đối chắc chắn;
+- Doanh nghiệp đã thu được hoặc sẽ thu được lợi ích kinh tế từ giao dịch cho thuê bất động sản;
+- Xác định được chi phí liên quan đến giao dịch cho thuê bất động sản.
+
+### Doanh thu hoạt động tài chính
+
+Doanh thu phát sinh từ tiền lãi, tiền bản quyền, cổ tức, lợi nhuận được chia và các khoản doanh thu hoạt động tài chính khác được ghi nhận khi thỏa mãn đồng thời hai (02) điều kiện sau:
+
+- Có khả năng thu được lợi ích kinh tế từ giao dịch đó;
+- Doanh thu được xác định tương đối chắc chắn.
+
+### 13. Nguyên tắc ghi nhận giá vốn hàng bán
+
+Giá vốn hàng bán phản ánh trị giá vốn của sản phẩm, hàng hóa, dịch vụ, bất động sản đầu tư, giá thành sản xuất của sản phẩm xây lắp bán trong năm.
+Giá vốn hàng bán được ghi nhận phù hợp với doanh thu đã phát sinh bao gồm cả việc trích trước chi phí vào giá vốn hàng bán.
+
+
+
+<!-- document=AME_2023; page=18 -->
+
+## Trang 18
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+14. Nguyên tắc và phương pháp ghi nhận chi phí tài chính
+Khoản chi phí được ghi nhận vào chi phí tài chính là chi phí đi vay vốn và lỗ tỷ giá hối đoái phát sinh trong kỳ.
+Khoản chi phí tài chính trên được ghi nhận theo tổng số phát sinh trong kỳ, không bù trừ với doanh thu hoạt động tài chính.
+
+15. Nguyên tắc và phương pháp ghi nhận chi phí thuế thu nhập doanh nghiệp (TNDN) hiện hành
+Chi phí thuế thu nhập doanh nghiệp hiện hành được xác định trên cơ sở thu nhập chịu thuế và thuế suất thuế TNDN trong năm hiện hành.
+
+16. Thông tin về các bên liên quan
+Các bên được coi là bên liên quan của Công ty nếu một bên có khả năng, trực tiếp hoặc gián tiếp, kiểm soát bên kia hoặc gây ảnh hưởng đáng kể tới bên kia trong việc ra các quyết định tài chính và hoạt động, hoặc khi Công ty và bên kia cùng chịu sự kiểm soát chung hoặc ảnh hưởng đáng kể chung. Các bên liên quan nêu trên có thể là các công ty hoặc các cá nhân, bao gồm cả các thành viên mật thiết trong gia đình của họ.
+
+### V. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BẢNG CÂN ĐỐI KẾ TOÁN
+
+Đơn vị tính: VND
+
+01. Tiền và các khoản tương đương tiền
+
+### 01. Tiền và các khoản tương đương tiền
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| - Tiền | 7.937.099.514 | 34.969.766.460 |
+| + Tiền mặt | 25.038.343 | 9.437.438 |
+| + Tiền gửi ngân hàng không kỳ hạn | 7.912.061.171 | 34.960.329.022 |
+| + Tiền đang chuyển | - | - |
+| - Các khoản tương đương tiền (*) | 720.000.000 | - |
+| Cộng | 8.657.099.514 | 34.969.766.460 |
+
+(*) Các khoản tương đương tiền tại ngày 31 tháng 12 năm 2023 là các khoản tiền gửi ngân hàng có kỳ hạn 01 tháng tại các Ngân hàng TMCP với lãi suất 3,5%/năm.
+
+02. Đầu tư nắm giữ đến ngày đáo hạn
+
+### 02. Đầu tư nắm giữ đến ngày đáo hạn
+
+| Chỉ tiêu | Số cuối năm - Giá gốc | Số cuối năm - Giá trị ghi sổ | Số đầu năm - Giá gốc | Số đầu năm - Giá trị ghi sổ |
+| --- | --- | --- | --- | --- |
+| a. Ngắn hạn | 12.560.000.000 | 12.560.000.000 | - | - |
+| - Tiền gửi có kỳ hạn (*) | 12.560.000.000 | 12.560.000.000 | - | - |
+| b. Dài hạn | - | - | - | - |
+| Cộng | 12.560.000.000 | 12.560.000.000 | - | - |
+
+(*) Khoản đầu tư nắm giữ đến ngày đáo hạn tại ngày 31 tháng 12 năm 2023, là khoản tiền gửi ngân hàng có kỳ hạn từ 6 đến 12 tháng tại Ngân hàng TMCP với lãi suất từ 4,0% đến 5,3%/năm.
+
+
+
+<!-- document=AME_2023; page=19 -->
+
+## Trang 19
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+### 03. Phải thu của khách hàng
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Phải thu của khách hàng ngắn hạn | 860.281.539.673 | 426.069.930.467 |
+| - Công ty Cổ phần Đầu tư Delta Việt Nam Số 1 | 571.276.437.288 | - |
+| - Công ty Cổ phần Địa ốc Momota | 110.281.982.581 | 23.879.015.997 |
+| - Công ty Cổ phần Delta Việt Nam | 28.484.977.862 | 202.665.692.094 |
+| - Ban QLDA các Công trình điện miền Nam - Chi nhánh TCT truyền tải điện Quốc Gia | 12.312.526.275 | 47.906.601.445 |
+| - Ban QLDA các công trình điện miền Trung - Tổng công ty truyền tải điện quốc gia | 39.849.956.299 | 107.704.809.689 |
+| - Phải thu ngắn hạn của khách hàng khác | 98.075.659.368 | 43.913.811.242 |
+| b. Phải thu của khách hàng dài hạn | - | - |
+| Cộng | 860.281.539.673 | 426.069.930.467 |
+
+### 04. Trả trước cho người bán
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Trả trước cho người bán ngắn hạn | 348.350.805.411 | 681.927.965.857 |
+| - Công ty Cổ phần Hùng Tiến Kim Sơn | 114.561.774.881 | - |
+| - Công ty Cổ phần Virex | 75.413.125.988 | - |
+| - Công ty Cổ phần Foodinco Miền Trung | 31.184.428.547 | - |
+| - Công ty Cổ phần Đầu tư Xây dựng Hà Tây | 70.515.000.000 | 449.600.000.000 |
+| - Công ty Cổ phần Foodinco Quy Nhơn | - | 128.210.814.183 |
+| - Công ty Cổ phần Dịch vụ và Thương mại Đông Á | - | 25.040.000.000 |
+| - Trả trước cho người bán ngắn hạn khác | 56.676.475.995 | 79.077.151.674 |
+| b. Trả trước cho người bán dài hạn | - | - |
+| Cộng | 348.350.805.411 | 681.927.965.857 |
+
+### Trong đó:
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| Trả trước cho người bán ngắn hạn là các bên liên quan (chi tiết trình bày tại thuyết minh VIII.02) | - | 128.210.814.183 |
+| Cộng | - | 128.210.814.183 |
+
+
+
+<!-- document=AME_2023; page=20 -->
+
+## Trang 20
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+05. Các khoản phải thu khác
+
+### Các khoản phải thu khác
+
+| Chỉ tiêu | Số cuối năm - Giá trị | Số cuối năm - Dự phòng | Số đầu năm - Giá trị | Số đầu năm - Dự phòng |
+| --- | --- | --- | --- | --- |
+| a. Ngắn hạn | 545.694.152.993 | - | 14.080.535.509 | - |
+| - Tạm ứng | 1.309.511.096 | - | 201.157.438 | - |
+| - Ký quỹ, ký cược ngắn hạn | 10.096.634.684 | - | 13.563.800.000 | - |
+| + Tiền gửi thế chấp (*) | 7.031.984.684 | - | 10.513.800.000 | - |
+| + Các khoản khác | 3.064.650.000 | - | 3.050.000.000 | - |
+| - Phải thu khác (**) | 534.288.007.213 | - | 315.578.071 | - |
+| + Công ty Cổ phần Đầu tư Xây dựng Hà Tây (1) | 382.400.000.000 | - | - | - |
+| + Công ty Cổ phần Foodinco Quy Nhơn (2) | 107.341.742.247 | - | - | - |
+| + Công ty Cổ phần Dịch vụ và Thương mại Đông Á (3) | 13.640.000.000 | - | - | - |
+| + Công ty Cổ phần Foodinco Miền Trung (4) | 30.695.000.000 | - | - | - |
+| + Các khoản phải thu khác | 211.264.966 | - | 315.578.071 | - |
+| b. Dài hạn | - | - | - | - |
+| Cộng | 545.694.152.993 | - | 14.080.535.509 | - |
+
+(*) Là khoản tiền gửi có kỳ hạn 12 tháng tại Ngân hàng First Commercial Bank - chi nhánh Thành phố Hà Nội, lãi suất 1,1%/năm được dùng để thế chấp cho khoản vay tại Ngân hàng First Commercial Bank - chi nhánh Thành phố Hà Nội.
+(**) Các khoản phải thu liên quan đến các khoản trả trước cho người bán để thực hiện các hợp đồng thi công xây dựng nhưng không tiếp tục thực hiện và đã thanh lý hợp đồng, tổng số dư phải thu đến ngày 31 tháng 12 năm 2023 là 534.076.742.247 đồng. Các khoản phải thu này không có tài sản đảm bảo và không quy định tính lãi chậm thanh toán. Thời hạn hoàn trả của các khoản phải thu này như sau:
+(1) Thời hạn hoàn trả trong vòng 12 tháng kể từ ngày 01/07/2023.
+(2) Thời hạn hoàn trả trong vòng 12 tháng kể từ ngày 01/07/2023.
+(3) Thời hạn hoàn trả trong vòng 12 tháng kể từ ngày 01/11/2023.
+(4) Không quy định thời hạn hoàn trả.
+Ban Lãnh đạo Công ty đánh giá là các khoản công nợ phải thu khác có khả năng thu hồi do các đối tượng nêu trên vẫn đang thực hiện giao dịch với Công ty.
+
+
+
+<!-- document=AME_2023; page=21 -->
+
+## Trang 21
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+06. Nợ xấu
+
+### 06. Nợ xấu
+
+| Khoản mục | Số cuối năm - Giá gốc | Số cuối năm - Giá trị có thể thu hồi | Số đầu năm - Giá gốc | Số đầu năm - Giá trị có thể thu hồi |
+| --- | --- | --- | --- | --- |
+| Ban QLDA Đầu tư Xây dựng Hạ tầng cấp nước Sông Đà - VINACONEX | 1.385.095.467 | - | 1.385.095.467 | - |
+| Công ty TNHH Xây dựng Cao Bang - Đài Loan | 1.037.788.000 | - | 1.037.788.000 | - |
+| Công ty Cổ phần Đầu tư Xây dựng Địa Long | 680.000.000 | - | 680.000.000 | - |
+| Công ty Cổ phần Contrexim Hồng Hà | 651.420.000 | - | 651.420.000 | - |
+| Đối tượng khác | 2.790.252.173 | - | 2.790.252.173 | - |
+| Cộng | 6.544.555.640 | - | 6.544.555.640 | - |
+
+07. Hàng tồn kho
+
+### 07. Hàng tồn kho
+
+| Khoản mục | Số cuối năm - Giá gốc | Số cuối năm - Dự phòng | Số đầu năm - Giá gốc | Số đầu năm - Dự phòng |
+| --- | --- | --- | --- | --- |
+| - Công cụ, dụng cụ | 22.156.000 | - | 204.086.799 | - |
+| - Chi phí sản xuất, kinh doanh dở dang | 653.347.318.198 | - | 699.110.461.954 | - |
+| - Hàng hoá | 15.194.574.404 | - | 180.590.937.683 | - |
+| Cộng | 668.564.048.602 | - | 879.905.486.436 | - |
+
+
+
+<!-- document=AME_2023; page=22 -->
+
+## Trang 22
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+### 08. Tăng, giảm tài sản cố định hữu hình
+
+### 08. Tăng, giảm tài sản cố định hữu hình
+
+| Khoản mục | Nhà cửa, vật kiến trúc | Máy móc, thiết bị | Phương tiện vận tải, truyền dẫn | Thiết bị dụng cụ quản lý | Tổng cộng |
+| --- | --- | --- | --- | --- | --- |
+| I. Nguyên giá |  |  |  |  |  |
+| Số dư đầu năm | 1.078.509.040 | 6.464.253.320 | 29.762.275.926 | 3.291.285.399 | 40.596.323.685 |
+| - Mua trong năm | - | 2.610.029.630 | - | 625.000.000 | 3.235.029.630 |
+| - Thanh lý, nhượng bán | - | - | - | - | - |
+| Số dư cuối năm | 1.078.509.040 | 9.074.282.950 | 29.762.275.926 | 3.916.285.399 | 43.831.353.315 |
+| II. Giá trị hao mòn luỹ kế |  |  |  |  |  |
+| Số dư đầu năm | 1.078.509.040 | 4.573.862.402 | 15.381.679.374 | 3.168.473.226 | 24.202.524.042 |
+| - Khấu hao trong năm | - | 1.026.661.757 | 2.803.776.780 | 169.914.423 | 4.000.352.960 |
+| - Thanh lý, nhượng bán | - | - | - | - | - |
+| Số dư cuối năm | 1.078.509.040 | 5.600.524.159 | 18.185.456.154 | 3.338.387.649 | 28.202.877.002 |
+| III. Giá trị còn lại |  |  |  |  |  |
+| 1. Tại ngày đầu năm | - | 1.890.390.918 | 14.380.596.552 | 122.812.173 | 16.393.799.643 |
+| 2. Tại ngày cuối năm | - | 3.473.758.791 | 11.576.819.772 | 577.897.750 | 15.628.476.313 |
+
+Tại ngày 31 tháng 12 năm 2023, nguyên giá tài sản cố định hữu hình đã khấu hao hết nhưng vẫn sử dụng là 13.172.521.554 đồng.
+
+Tại ngày 31 tháng 12 năm 2023, nguyên giá và giá trị còn lại của tài sản cố định hữu hình đã dùng thế chấp, cầm cố bảo đảm các khoản vay lần lượt là 2.901.669.909 đồng và 1.193.266.939 đồng.
+
+
+
+<!-- document=AME_2023; page=23 -->
+
+## Trang 23
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+### 09. Tăng, giảm tài sản cố định vô hình
+
+### 09. Tăng, giảm tài sản cố định vô hình
+
+| Khoản mục | Phần mềm máy tính | Tổng cộng |
+| --- | --- | --- |
+| I. Nguyên giá |  |  |
+| Số dư đầu năm | 1.051.687.851 | 1.051.687.851 |
+| - Mua trong năm |  |  |
+| Số dư cuối năm | 1.051.687.851 | 1.051.687.851 |
+| II. Giá trị hao mòn luỹ kế |  |  |
+| Số dư đầu năm | 788.896.452 | 788.896.452 |
+| - Khấu hao trong năm | 115.016.126 | 115.016.126 |
+| Số dư cuối năm | 903.912.578 | 903.912.578 |
+| III. Giá trị còn lại |  |  |
+| 1. Tại ngày đầu năm | 262.791.399 | 262.791.399 |
+| 2. Tại ngày cuối năm | 147.775.273 | 147.775.273 |
+
+Tại ngày 31 tháng 12 năm 2023, nguyên giá tài sản cố định vô hình đã khấu hao hết nhưng vẫn sử dụng là 337.480.000 đồng.
+
+### 10. Chi phí trả trước
+
+### 10. Chi phí trả trước
+
+| Khoản mục | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Ngắn hạn | 1.459.201.373 | 2.180.929.644 |
+| - Giá trị còn lại của công cụ dụng cụ xuất dùng | 439.872.976 | 679.826.025 |
+| - Chi phí bảo hiểm | 187.857.366 | 383.158.465 |
+| - Chi phí phần mềm | 241.177.323 | 297.725.928 |
+| - Chi phí thuê nhà cho công nhân, BQL dự án | 118.063.226 | 108.700.000 |
+| - Chi phí sửa chữa | 376.488.377 | 450.005.423 |
+| - Chi phí tuyển dụng | 78.599.166 | 127.865.401 |
+| - Các khoản khác | 17.142.939 | 133.648.402 |
+| b. Dài hạn | 60.589.780.515 | 63.290.282.993 |
+| - Giá trị còn lại của công cụ dụng cụ xuất dùng | 1.700.612.135 | 1.636.851.324 |
+| - Chi phí thuê sàn tầng 2&3 tòa nhà Sakura Tower (a) | 38.224.242.550 | 39.187.878.910 |
+| - Chi phí thuê sàn tầng 3B tòa nhà Sakura Tower (b) | 18.751.515.200 | 19.224.242.468 |
+| - Thuê văn phòng 96 Định Công (c) | 1.794.114.033 | 1.931.012.433 |
+| - Chi phí sửa chữa | 27.446.995 | 51.098.709 |
+| - Chi phí phần mềm | 84.613.658 | 328.827.074 |
+| - Các khoản khác | 7.235.944 | 930.372.075 |
+| Cộng | 62.048.981.888 | 65.471.212.637 |
+
+- (a) Là chi phí thuê 2.081,7 m2 sàn tầng 2&3 tòa nhà Sakura Tower 47 Vũ Trọng Phụng trong thời hạn 50 năm kể từ ngày 14 tháng 9 năm 2013. Tổng chi phí thuê trong 50 năm là 48.181.818.182 đồng.
+(b) Là chi phí thuê 1.112,7 m2 sàn tầng 3B tòa nhà Sakura Tower 47 Vũ Trọng Phụng trong thời hạn 50 năm kể từ ngày 01 tháng 9 năm 2013. Tổng chi phí thuê trong 50 năm là 23.636.363.636 đồng.
+(c) Là chi phí thuê 1.782,70 m2 toàn bộ tầng hầm thuộc tòa nhà B số 96 Định Công trong thời hạn từ ngày 06 tháng 6 năm 2015 đến hết ngày 26 tháng 7 năm 2064.
+
+
+
+<!-- document=AME_2023; page=24 -->
+
+## Trang 24
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+11. Vay và nợ thuê tài chính
+
+### 11. Vay và nợ thuê tài chính
+
+| Khoản mục | Số đầu năm | Tăng trong năm | Giảm trong năm | Số cuối năm |
+| --- | --- | --- | --- | --- |
+| a. Vay ngắn hạn | 573.446.879.406 | 1.364.061.335.513 | 929.885.822.926 | 1.007.622.391.993 |
+| - Vay ngân hàng | 573.046.879.406 | 1.362.321.335.513 | 927.745.822.926 | 1.007.622.391.993 |
+| + Ngân hàng TMCP Sài Gòn - Hà Nội - Chi nhánh Ba Đình (a) | 247.387.769.207 | 249.777.941.218 | 249.840.769.177 | 247.324.941.248 |
+| + Ngân hàng TMCP Ngoại Thương Việt Nam - Chi nhánh Thanh Xuân | 24.973.651.701 | 34.362.555.875 | 59.336.207.576 | - |
+| + Ngân hàng TMCP Quân đội - Chi nhánh Hoàn Kiếm (b) | 30.000.000.000 | 120.227.502.311 | 55.282.600.715 | 94.944.901.596 |
+| + Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Ngọc Khánh (c) | 132.381.869.995 | 201.661.124.667 | 270.103.077.812 | 63.939.916.850 |
+| + Ngân hàng First Commercial Bank - Chi nhánh Hà Nội (d) | 35.046.000.000 | 58.379.256.764 | 70.285.256.764 | 23.140.000.000 |
+| + Ngân hàng TMCP Sài Gòn Thương Tín - Chi nhánh Thăng Long (e) | 103.257.588.503 | 619.941.803.798 | 216.199.910.882 | 506.999.481.419 |
+| + Ngân hàng TMCP Bảo Việt - Chi nhánh Sở Giao dịch (f) | - | 14.469.400.000 | 6.698.000.000 | 7.771.400.000 |
+| + Ngân hàng TMCP Bắc Á - Chi nhánh Cầu Giấy (g) | - | 48.501.750.880 | - | 48.501.750.880 |
+| + Ngân hàng TMCP Tiên Phong - Chi nhánh Thanh Trì (h) | - | 15.000.000.000 | - | 15.000.000.000 |
+| - Vay đối tượng khác | 400.000.000 | 1.740.000.000 | 2.140.000.000 | - |
+| + Công ty Cổ phần Bất Động Sản Hoa Anh Đào | 400.000.000 | - | 400.000.000 | - |
+| + Công ty Cổ phần Altara Hospitality Group (AHG) | - | 1.740.000.000 | 1.740.000.000 | - |
+| b. Vay và nợ thuê tài chính dài hạn | - | - | - | - |
+| Cộng | 573.446.879.406 | 1.364.061.335.513 | 929.885.822.926 | 1.007.622.391.993 |
+
+
+
+<!-- document=AME_2023; page=25 -->
+
+## Trang 25
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Thông tin chi tiết liên quan đến các khoản vay ngắn hạn:
+
+- (a) Khoản vay Ngân hàng Thương mại Cổ phần Sài Gòn - Hà Nội - Chi nhánh Ba Đình theo hợp đồng cấp hạn mức tín dụng số 24/2023/HDHM-PN/SHB.111100 ngày 15 tháng 03 năm 2023; mục đích là để bổ sung vốn lưu động phục vụ hoạt động thi công, cung cấp lắp đặt hệ thống cơ điện và hoạt động điện lực và hoạt động xây dựng của khách hàng. Hạn mức tín dụng là 500.000.000.000 đồng, trong đó hạn mức cho vay là 300.000.000.000 đồng và hạn mức bảo lãnh là 200.000.000.000 đồng. Thời hạn duy trì hạn mức tín dụng là 12 tháng. Lãi suất vay là 10,9% - 13,9%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản thuộc quyền sở hữu của bên thứ ba.
+
+- (b) Khoản vay Ngân hàng TMCP Quân đội - Chi nhánh Hoàn Kiếm theo hợp đồng cấp tín dụng số 145652.23.057.252308.TD ngày 22 tháng 12 năm 2023, mục đích là để bổ sung vốn lưu động phục vụ hoạt động cung cấp vật tư thiết bị và thi công xây lắp điện của Công ty. Hạn mức tín dụng là 400.000.000.000 đồng, trong đó: Hạn mức cho vay là 100.000.000.000 đồng, hạn mức bảo lãnh thanh toán là 45.000.000.000 đồng và hạn mức bảo lãnh ngoài bảo lãnh thanh toán là 300.000.000.000 đồng. Lãi suất vay là 6,67% - 7,80%/năm. Thời hạn duy trì hạn mức từ ngày ký hợp đồng cho đến hết ngày 23 tháng 11 năm 2024. Khoản vay được đảm bảo quyền đòi nợ hình thành từ các hợp đồng xây lắp, kinh doanh của Công ty; Hợp đồng tiền gửi của Công ty tại Ngân hàng TMCP Quân đội và phương tiện vận tải là xe ô tô thuộc quyền sở hữu của Công ty.
+
+- (c) Khoản vay Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Ngọc Khánh theo hợp đồng cấp tín dụng số 01/2023/408/HĐTD ngày 05 tháng 05 năm 2023, mục đích là để bổ sung vốn lưu động, bảo lãnh, mở L/C. Hạn mức 118.000.000.000 đồng, thời hạn 12 tháng kể từ ngày ký hợp đồng. Lãi suất vay là 5,6% - 8,7%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản của bên thứ ba.
+
+- (d) Khoản vay Ngân hàng First Commercial Bank - Chi nhánh Hà Nội theo hợp đồng cấp tín dụng số 30230066 ngày 12 tháng 10 năm 2023, mục đích là để bổ sung vốn lưu động phục vụ hoạt động mua nội địa nguyên vật liệu, hàng hóa nhằm mục đích sản xuất kinh doanh của Công ty. Hạn mức cho vay là 35.046.000.000 đồng. Thời hạn tín dụng là 01 năm (từ ngày 03 tháng 10 năm 2023). Lãi suất cho vay 7,5%/năm. Khoản vay được đảm bảo bằng bảo lãnh cá nhân và khoản tiền gửi có kỳ hạn có giá trị bằng 30% của số tiền ngân hàng đã giải ngân tại Ngân hàng First Commercial Bank - Chi nhánh Thành phố Hà Nội.
+
+- (e) Khoản vay Ngân hàng TMCP Sài Gòn Thương Tín - Chi nhánh Thăng Long theo hợp đồng tín dụng số 20222656375 ngày 22 tháng 06 năm 2022 và các thỏa thuận sửa đổi bổ sung hợp đồng tín dụng, mục đích là để bổ sung vốn lưu động, mở L/C, bảo lãnh. Hạn mức cấp tín dụng là 507.000.000.000 đồng. Thời hạn vay được gia hạn đến hết ngày 25 tháng 07 năm 2024. Lãi suất vay là 7,5% - 10,8%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản của bên thứ ba.
+
+- (f) Khoản vay Ngân hàng TMCP Bảo Việt - Chi nhánh Sở Giao dịch theo hợp đồng số Hợp đồng tín dụng nguyên tắc số 0002-2023-HDDTDI-BVB005 ngày 28 tháng 02 năm 2023, mục đích là để bổ sung vốn lưu động phục vụ hoạt động sản xuất kinh doanh của Công ty. Giới hạn tín dụng là 100.000.000.000 đồng, trong đó: Hạn mức cho vay tối đa là 100.000.000.000 đồng và Hạn mức cấp bảo lãnh tối đa là 40.000.000.000 đồng. Thời hạn duy trì giới hạn tín dụng tối đa là 12 tháng từ ngày ký (nhưng không quá 13 tháng kể từ ngày 20 tháng 12 năm 2022). Lãi suất vay là 10,05% - 10,60%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản thuộc quyền sở hữu của bên thứ ba.
+
+- (g) Khoản vay Ngân hàng TMCP Bắc Á - Chi nhánh Cầu Giấy theo hợp đồng cấp tín dụng số 0000414827/2023/HĐTD-BacABank.180 ngày 27 tháng 10 năm 2023, mục đích là để bổ sung vốn lưu động phục vụ hoạt động kinh doanh phù hợp với đăng ký kinh doanh (ngoại trừ kinh doanh bất động sản) của Công ty. Hạn mức cho vay là 50.000.000.000 đồng. Thời hạn tín dụng là 12 tháng (từ ngày 27 tháng 10 năm 2023 đến hết ngày 27 tháng 10 năm 2024). Lãi suất cho vay từ 8,6% - 8,7%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản thuộc quyền sở hữu của bên thứ ba.
+
+
+
+<!-- document=AME_2023; page=26 -->
+
+## Trang 26
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+(h) Khoản vay Ngân hàng TMCP Tiên Phong - Chi nhánh Thanh Trì theo hợp đồng cấp tín dụng số 186/2023/HDTD/TTI ngày 13 tháng 12 năm 2023, mục đích là để bổ sung vốn lưu động phục vụ hoạt động kinh doanh thi công xây lắp của Công ty. Hạn mức cho vay là 110.000.000.000 đồng. Thời hạn tín dụng là 12 tháng kể từ ngày ký Hợp đồng. Lãi suất cho vay từ 7,0% - 8,8%/năm. Khoản vay được đảm bảo bằng việc thế chấp tài sản của bên thứ ba.
+
+Đơn vị tính: VND
+
+12. Phải trả người bán
+
+### 12. Phải trả người bán
+
+| Chỉ tiêu | Số cuối năm - Giá trị | Số cuối năm - Số có khả năng trả nợ | Số đầu năm - Giá trị | Số đầu năm - Số có khả năng trả nợ |
+| --- | --- | --- | --- | --- |
+| a. Phải trả người bán ngắn hạn | 541.222.698.555 | 541.222.698.555 | 624.531.219.307 | 624.531.219.307 |
+| - Công ty Cổ phần Xây dựng và Ứng dụng Công nghệ Tri Delta-V | 127.665.814.375 | 127.665.814.375 | 92.739.576.953 | 92.739.576.953 |
+| - Công ty Cổ phần Kỹ thuật SIGMA | 70.936.172.771 | 70.936.172.771 | 72.441.629.952 | 72.441.629.952 |
+| - Công ty TNHH Tập đoàn Xây dựng Delta | 52.979.872.648 | 52.979.872.648 | 53.586.860.357 | 53.586.860.357 |
+| - SHENZHEN GOLD PHOENIX OVERALL ASSEMBLY FURNITURE CO.,LTD | 68.141.516.753 | 68.141.516.753 | 35.183.958.178 | 35.183.958.178 |
+| - Công ty Cổ phần Phát triển Hạ tầng Vương Thái Sơn | 7.182.789.058 | 7.182.789.058 | 77.315.042.339 | 77.315.042.339 |
+| - Phải trả ngắn hạn cho các người bán khác | 214.316.532.950 | 214.316.532.950 | 293.264.151.528 | 293.264.151.528 |
+| b. Phải trả người bán dài hạn | - | - | - | - |
+| Cộng | 541.222.698.555 | 541.222.698.555 | 624.531.219.307 | 624.531.219.307 |
+
+13. Người mua trả tiền trước
+
+### 13. Người mua trả tiền trước
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Người mua trả tiền trước ngắn hạn | 65.206.077.705 | 158.148.715.064 |
+| - Công ty Cổ Phần Zeta EC (Công ty TNHH TM XD và lắp đặt ZETA) | 53.707.498.345 | - |
+| - Công ty cổ phần Beda T&C | - | 53.914.129.252 |
+| - Công ty Cổ phần Bất Động Sản Hoa Anh Đào | - | 73.823.219.810 |
+| - Công ty Cổ phần Dịch vụ và Thương mại Đông Á | 1.208.097.239 | 17.031.991.202 |
+| - Người mua trả tiền trước ngắn hạn khác | 10.290.482.121 | 13.379.374.800 |
+| b. Người mua trả tiền trước dài hạn | - | - |
+| Cộng | 65.206.077.705 | 158.148.715.064 |
+
+
+
+<!-- document=AME_2023; page=27 -->
+
+## Trang 27
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+### 14. Thuế và các khoản phải nộp Nhà nước
+
+| Chỉ tiêu | Số phải thu đầu năm | Số phải nộp đầu năm | Số phải nộp trong năm | Số đã thực nộp trong năm | Số phải thu cuối năm | Số phải nộp cuối năm |
+| --- | --- | --- | --- | --- | --- | --- |
+| Thuế GTGT hàng nhập khẩu | - | - | 6.458.069.790 | 6.458.069.790 | - | - |
+| Thuế xuất nhập khẩu | - | - | 333.832.426 | 333.832.426 | - | - |
+| Thuế thu nhập doanh nghiệp | - | 5.445.806.489 | 5.913.367.135 | 5.445.806.489 | - | 5.913.367.135 |
+| Thuế thu nhập cá nhân | - | 654.102.639 | 2.819.599.878 | 2.468.894.191 | - | 1.004.808.326 |
+| Phí, lệ phí và các khoản khác | - | - | 3.000.000 | 3.000.000 | - | - |
+| Cộng | - | 6.099.909.128 | 15.527.869.229 | 14.709.602.896 | - | 6.918.175.461 |
+
+### 15. Chi phí phải trả
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Ngắn hạn | 13.672.127.430 | 3.350.763.439 |
+| - Chi phí lãi vay | 1.676.727.423 | 1.243.887.420 |
+| - Trích trước chi phí thi công trình | 11.995.400.007 | 2.106.876.019 |
+| b. Dài hạn | - | - |
+| Cộng | 13.672.127.430 | 3.350.763.439 |
+
+
+
+<!-- document=AME_2023; page=28 -->
+
+## Trang 28
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+16. Các khoản phải trả, phải nộp khác
+
+### 16. Các khoản phải trả, phải nộp khác
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Ngắn hạn | 82.553.257.823 | 6.537.177.620 |
+| - Kinh phí công đoàn | 190.977.530 | 1.892.645.741 |
+| - Bảo hiểm xã hội | 15.132.291 |  |
+| - Bảo hiểm y tế | 3.817.683 | 514.085 |
+| - Bảo hiểm thất nghiệp | 1.186.846 |  |
+| - Nhận ký quỹ, ký cược ngắn hạn | 2.486.688.414 | 3.791.600.000 |
+| - Các khoản phải trả, phải nộp khác | 79.855.455.059 | 852.417.794 |
+| + Ngân hàng TMCP Đầu tư và Phát triển Việt Nam - Chi nhánh Ngọc Khánh (*) | 78.837.601.292 |  |
+| + Các đối tượng khác | 1.017.853.767 | 852.417.794 |
+| b. Dài hạn | - | - |
+| Cộng | 82.553.257.823 | 6.537.177.620 |
+
+(*) Khoản phải trả Ngân hàng TMCP Đầu tư và Phát triển Việt Nam – Chi nhánh Ngọc Khánh liên quan đến khoản cấp LC bảo lãnh thanh toán cho nhà cung cấp về mua hàng hóa.
+
+17. Doanh thu chưa thực hiện
+
+### 17. Doanh thu chưa thực hiện
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| a. Ngắn hạn | 3.612.621.200 | 1.269.920.141 |
+| - Doanh thu nhận trước về cho thuê văn phòng | 3.612.621.200 | 1.269.920.141 |
+| a. Dài hạn | - | - |
+| Cộng | 3.612.621.200 | 1.269.920.141 |
+
+
+
+<!-- document=AME_2023; page=29 -->
+
+## Trang 29
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+18. Vốn chủ sở hữu
+a. Bảng đối chiếu biến động của Vốn chủ sở hữu
+
+| Chỉ tiêu | Vốn góp của chủ sở hữu | Thặng dư vốn cổ phần | Quỹ đầu tư phát triển | Lợi nhuận sau thuế chưa phân phối | Tổng cộng |
+| --- | --- | --- | --- | --- | --- |
+| Số dư đầu năm trước | 252.000.000.000 | - | 840.866.910 | 92.207.697.344 | 345.048.564.254 |
+| Tăng vốn trong năm trước | 400.000.000.000 | (194.400.000) | - | - | 399.805.600.000 |
+| Lãi/(Lỗ) trong năm trước | - | - | - | 20.845.680.117 | 20.845.680.117 |
+| Tăng khác | - | - | - | - | - |
+| Giảm vốn trong năm trước | - | - | - | - | - |
+| Phân phối lợi nhuận năm trước | - | - | - | - | - |
+| Giảm khác | - | - | - | - | - |
+| Số dư cuối năm trước | 652.000.000.000 | (194.400.000) | 840.866.910 | 113.053.377.461 | 765.699.844.371 |
+| Số dư đầu năm nay | - | - | - | - | - |
+| Tăng vốn trong năm | - | - | - | - | - |
+| Lãi/(Lỗ) trong năm | - | - | - | 21.197.554.991 | 21.197.554.991 |
+| Tăng khác | - | - | - | - | - |
+| Giảm vốn trong năm | - | - | - | - | - |
+| Phân phối lợi nhuận năm nay | - | - | - | - | - |
+| Giảm khác | - | - | - | - | - |
+| Số dư cuối năm nay | 652.000.000.000 | (194.400.000) | 840.866.910 | 134.250.932.452 | 786.897.399.362 |
+
+
+
+<!-- document=AME_2023; page=30 -->
+
+## Trang 30
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+b. Chi tiết vốn đầu tư của chủ sở hữu
+
+### Chi tiết vốn đầu tư của chủ sở hữu
+
+| Chỉ tiêu | Số cuối năm (VND) | Tỷ lệ (%) | Số đầu năm (VND) | Tỷ lệ (%) |
+| --- | --- | --- | --- | --- |
+| Công ty Cổ phần Đầu tư Alphanam | 541.202.100.000 | 83,01 | 541.202.100.000 | 83,01 |
+| Ông Nguyễn Minh Nhật | 28.168.150.000 | 4,32 | 28.168.150.000 | 4,32 |
+| Các đối tượng khác | 82.629.750.000 | 12,67 | 82.629.750.000 | 12,67 |
+| Cộng | 652.000.000.000 | 100,00 | 652.000.000.000 | 100,00 |
+
+c. Các giao dịch về vốn với các chủ sở hữu và phân phối cổ tức, chia lợi nhuận
+
+### Các giao dịch về vốn với các chủ sở hữu và phân phối cổ tức, chia lợi nhuận
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| Vốn đầu tư của chủ sở hữu |  |  |
+| + Vốn góp đầu năm | 652.000.000.000 | 252.000.000.000 |
+| + Vốn góp tăng trong năm | - | 400.000.000.000 |
+| + Vốn góp giảm trong năm | - | - |
+| + Vốn góp cuối năm | 652.000.000.000 | 652.000.000.000 |
+| - Cổ tức, lợi nhuận đã chia | - | - |
+
+d. Cổ phiếu
+
+### Cổ phiếu
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| - Số lượng cổ phiếu đăng ký phát hành | 65.200.000 | 65.200.000 |
+| - Số lượng cổ phiếu đã bán ra công chúng | 65.200.000 | 65.200.000 |
+| + Cổ phiếu phổ thông | 65.200.000 | 65.200.000 |
+| + Cổ phiếu ưu đãi | - | - |
+| - Số lượng cổ phiếu được mua lại | - | - |
+| + Cổ phiếu phổ thông | - | - |
+| + Cổ phiếu ưu đãi | - | - |
+| - Số lượng cổ phiếu đang lưu hành | 65.200.000 | 65.200.000 |
+| + Cổ phiếu phổ thông | 65.200.000 | 65.200.000 |
+| + Cổ phiếu ưu đãi | - | - |
+
+* Mệnh giá cổ phiếu đang lưu hành: 10.000 đồng/cổ phiếu.
+19. Các khoản mục ngoài bảng cân đối kế toán
+a. Ngoại tệ các loại
+
+### Ngoại tệ các loại
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| Ngoại tệ các loại |  |  |
+| - USD | - | 171,01 |
+| - EUR | - | 215,71 |
+
+b. Nợ khó đòi đã xử lý
+
+### Nợ khó đòi đã xử lý
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| - Trung tâm Kinh doanh Địa ốc và Đầu tư Phát triển Công nghệ 579 | 5.319.868.330 | 5.319.868.330 |
+| - Công ty Cổ phần Xây lắp Coma 25 | 1.284.246.975 | 1.284.246.975 |
+| - Công ty TNHH Khách sạn Kinh Đô | 15.418.000 | 15.418.000 |
+| - Công ty TNHH Thống Nhất | 850.800.000 | 850.800.000 |
+| Cộng | 7.470.333.305 | 7.470.333.305 |
+
+
+
+<!-- document=AME_2023; page=31 -->
+
+## Trang 31
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+### VI. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH
+
+### 01. Doanh thu bán hàng và cung cấp dịch vụ
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Doanh thu bán hàng | 1.471.772.477.692 | 1.582.422.996.189 |
+| - Doanh thu cung cấp dịch vụ | 2.166.117.205 | 1.822.200.000 |
+| - Doanh thu hoạt động xây lắp | 723.460.113.531 | 616.184.523.381 |
+| - Doanh thu kinh doanh bất động sản | 17.918.632.591 | 12.822.292.037 |
+| Cộng | 2.215.317.341.019 | 2.213.252.011.607 |
+
+### 02. Giá vốn hàng bán
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Giá vốn của hàng hóa đã bán | 1.449.716.998.851 | 1.478.220.799.941 |
+| - Giá vốn của dịch vụ đã cung cấp | 1.762.851.491 | 3.881.502.705 |
+| - Giá vốn của hoạt động xây lắp | 638.443.362.922 | 602.492.064.608 |
+| - Chi phí kinh doanh Bất động sản đầu tư | 9.680.413.304 | 8.697.341.857 |
+| Cộng | 2.099.603.626.568 | 2.093.291.709.111 |
+
+### 03. Doanh thu hoạt động tài chính
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Lãi tiền gửi, tiền cho vay | 272.075.403 | 60.762.606 |
+| - Lãi chênh lệch tỷ giá | 662.010.050 | 1.370.780.910 |
+| Cộng | 934.085.453 | 1.431.543.516 |
+
+### 04. Chi phí tài chính
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Lãi tiền vay | 63.257.134.950 | 54.758.965.719 |
+| - Lỗ chênh lệch tỷ giá | 1.660.385.708 | 1.799.985.749 |
+| Cộng | 64.917.520.658 | 56.558.951.468 |
+
+### 05. Thu nhập khác
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Tiền đặt cọc thu được do chấm dứt hợp đồng | 3.756.600.000 | - |
+| - Tiền thưởng được nhận | 100.000.000 | - |
+| - Các khoản khác | 9.774.934 | 20.034.042 |
+| Cộng | 3.866.374.934 | 20.034.042 |
+
+
+
+<!-- document=AME_2023; page=32 -->
+
+## Trang 32
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+### 06. Chi phí khác
+
+### 06. Chi phí khác
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| Các khoản bị phạt | 330.845.743 | 5.708.885 |
+| Các khoản khác | 653.934.695 | 1.395.394 |
+| Cộng | 984.780.438 | 7.104.279 |
+
+### 07. Chi phí bán hàng và chi phí quản lý doanh nghiệp
+
+### 07. Chi phí bán hàng và chi phí quản lý doanh nghiệp
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| a. Các khoản chi phí quản lý doanh nghiệp phát sinh | 27.500.951.616 | 38.379.572.991 |
+| - Chi phí nhân viên quản lý | 11.012.334.235 | 18.376.538.105 |
+| - Chi phí vật liệu quản lý | 362.360.438 | 972.747.864 |
+| - Chi phí khấu hao TSCĐ | 2.620.142.439 | 2.199.005.629 |
+| - Thuế, phí và lệ phí | 3.000.000 | 812.568.979 |
+| - Chi phí dịch vụ mua ngoài | 10.542.576.048 | 8.161.360.118 |
+| - Các khoản chi phí quản lý doanh nghiệp khác | 2.960.538.456 | 7.857.352.296 |
+| b. Các khoản chi phí bán hàng phát sinh | - | - |
+| Cộng | 27.500.951.616 | 38.379.572.991 |
+
+### 08. Chi phí thuế thu nhập doanh nghiệp hiện hành
+
+### 08. Chi phí thuế thu nhập doanh nghiệp hiện hành
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Chi phí thuế thu nhập doanh nghiệp tính trên thu nhập chịu thuế năm hiện hành (*) | 5.913.367.135 | 5.528.879.365 |
+| - Điều chỉnh chi phí thuế TNDN của các năm trước vào chi phí thuế TNDN hiện hành năm nay | - | 91.691.834 |
+| - Tổng chi phí thuế TNDN hiện hành | 5.913.367.135 | 5.620.571.199 |
+
+(*) Chi tiết cách xác định Chi phí thuế thu nhập doanh nghiệp hiện hành
+
+### Chi tiết cách xác định Chi phí thuế thu nhập doanh nghiệp hiện hành
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| Lợi nhuận kế toán trước thuế | 27.110.922.126 | 26.466.251.316 |
+| Các khoản điều chỉnh tăng | 2.455.913.553 | 1.178.145.508 |
+| - Chi phí phạt hành vi phạm hành chính | 330.558.573 | - |
+| - Chi phí không hợp lệ khác | 2.125.354.980 | 1.178.145.508 |
+| Các khoản điều chỉnh giảm | - | - |
+| Thu nhập tính thuế TNDN | 29.566.835.679 | 27.644.396.824 |
+| Thuế suất thuế TNDN | 20% | 20% |
+| Thuế TNDN | 5.913.367.135 | 5.528.879.365 |
+| Thuế TNDN được giảm | - | - |
+| Chi phí thuế thu nhập hiện hành | 5.913.367.135 | 5.528.879.365 |
+
+
+
+<!-- document=AME_2023; page=33 -->
+
+## Trang 33
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+Đơn vị tính: VND
+
+09. Lãi cơ bản trên cổ phiếu
+Việc tính toán lãi cơ bản trên cổ phiếu có thể phân phối cho các cổ đông sở hữu cổ phần phổ thông của Công ty được thực hiện dựa trên các số liệu sau:
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Lợi nhuận kế toán sau thuế TNDN của cổ đông | 21.197.554.991 | 20.845.680.117 |
+| - Các khoản điều chỉnh tăng hoặc giảm lợi nhuận kế toán để xác định lợi nhuận hoặc lỗ phân bổ cho cổ đông sở hữu CP phổ thông | - | - |
+| - Lợi nhuận hoặc lỗ phân bổ cho cổ đông sở hữu cổ phiếu phổ thông | 21.197.554.991 | 20.845.680.117 |
+| - Số trích quỹ khen thưởng, phúc lợi (*) | - | - |
+| - Cổ phiếu phổ thông đang lưu hành bình quân trong năm | 65.200.000 | 48.716.484 |
+| Lãi cơ bản trên cổ phiếu | 325 | 428 |
+
+(*) Công ty chưa có cơ sở để tạm tính quỹ khen thưởng, phúc lợi từ lợi nhuận năm 2023.
+
+10. Lãi suy giảm trên cổ phiếu
+Việc tính toán lãi suy giảm trên cổ phiếu có thể phân phối cho các cổ đông sở hữu cổ phần phổ thông của Công ty được thực hiện dựa trên các số liệu sau:
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Lợi nhuận kế toán sau thuế TNDN của cổ đông | 21.197.554.991 | 20.845.680.117 |
+| - Các khoản điều chỉnh tăng hoặc giảm lợi nhuận kế toán để xác định lợi nhuận hoặc lỗ phân bổ cho cổ đông sở hữu CP phổ thông | - | - |
+| - Lợi nhuận hoặc lỗ phân bổ cho cổ đông sở hữu cổ phiếu phổ thông | 21.197.554.991 | 20.845.680.117 |
+| - Cổ tức của cổ phiếu ưu đãi | - | - |
+| - Số trích quỹ khen thưởng, phúc lợi (*) | - | - |
+| - Cổ phiếu phổ thông đang lưu hành bình quân trong năm | 65.200.000 | 48.716.484 |
+| - Số lượng cổ phiếu phổ thông dự kiến được phát hành thêm | - | - |
+| Lãi suy giảm trên cổ phiếu | 325 | 428 |
+
+(*) Công ty chưa có cơ sở để tạm tính quỹ khen thưởng, phúc lợi từ lợi nhuận năm 2023.
+11. Chi phí sản xuất, kinh doanh theo yếu tố
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| - Chi phí nguyên liệu, vật liệu | 45.302.261.573 | 174.126.333.467 |
+| - Chi phí nhân công | 44.870.120.264 | 31.936.898.978 |
+| - Chi phí khấu hao tài sản cố định | 4.115.369.086 | 3.108.199.049 |
+| - Chi phí dịch vụ mua ngoài | 677.244.039.727 | 695.946.177.284 |
+| - Chi phí khác bằng tiền | 4.707.028.310 | 11.270.919.601 |
+| Cộng | 776.238.818.960 | 916.388.528.379 |
+
+
+
+<!-- document=AME_2023; page=34 -->
+
+## Trang 34
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, Số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+### VII. THÔNG TIN BỔ SUNG CHO CÁC KHOẢN MỤC TRÌNH BÀY TRONG BÁO CÁO LƯU CHUYỂN TIỀN TỆ
+
+1. Các giao dịch ảnh hưởng đến báo cáo lưu chuyển tiền tệ
+
+| Chỉ tiêu | Năm nay | Năm trước |
+| --- | --- | --- |
+| Lãi nhập gốc tiền gửi có kỳ hạn | 46.370.914 | - |
+
+### VIII. NHỮNG THÔNG TIN KHÁC
+
+01. Các sự kiện phát sinh sau ngày kết thúc năm tài chính
+Ban Tổng Giám đốc Công ty khẳng định không có sự kiện nào phát sinh sau ngày 31 tháng 12 năm 2023 cho đến thời điểm lập báo cáo này mà chưa được xem xét điều chỉnh số liệu hoặc công bố trong báo cáo tài chính.
+
+02. Giao dịch với các bên liên quan
+Các thành viên quản lý chủ chốt và các cá nhân có liên quan gồm: Các thành viên Hội đồng quản trị, Ban Tổng Giám đốc, Kế toán trưởng và các thành viên mật thiết trong gia đình các cá nhân này.
+Giao dịch với các thành viên quản lý chủ chốt và các cá nhân có liên quan như sau:
+Thu nhập của các thành viên quản lý chủ chốt như sau:
+
+### Thu nhập của các thành viên quản lý chủ chốt
+
+| Chức vụ | Tiền lương, thưởng | Thù lao | Cộng thu nhập |
+| --- | --- | --- | --- |
+| Năm nay |  |  |  |
+| Bà Trương Thị Thu Hiền - Tổng Giám đốc | 1.525.400.000 | - | 1.525.400.000 |
+| Ông Lâm Sơn Tùng - Phó Tổng Giám đốc | 520.400.000 | - | 520.400.000 |
+| Bà Nguyễn Hải Yến - Kế toán trưởng (Bổ nhiệm từ ngày 01/4/2023) | 524.744.000 | - | 524.744.000 |
+| Ông Nguyễn Văn Trường - Kế toán trưởng (Miễn nhiệm từ ngày 01/4/2023) | 95.500.000 | - | 95.500.000 |
+| Cộng | 2.666.044.000 | - | 2.666.044.000 |
+| Năm trước |  |  |  |
+| Ông Nguyễn Minh Nhật - Thành viên HĐQT kiêm Tổng Giám đốc (Miễn nhiệm từ ngày 03/3/2022) | 90.000.000 | - | 90.000.000 |
+| Bà Trương Thị Thu Hiền - Tổng Giám đốc (Bổ nhiệm từ ngày 28/02/2022) | 760.000.000 | - | 760.000.000 |
+| Ông Nguyễn Lâm Sơn Tùng - Phó Tổng Giám đốc | 440.000.000 | - | 440.000.000 |
+| Bà Âu Thiên Hương - Phó Tổng Giám đốc (Miễn nhiệm từ ngày 01/8/2022) | 101.500.000 | - | 101.500.000 |
+| Cộng | 1.391.500.000 | - | 1.391.500.000 |
+
+
+
+<!-- document=AME_2023; page=35 -->
+
+## Trang 35
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+1. Giao dịch với các bên liên quan khác
+Các bên liên quan khác với Công ty bao gồm: các công ty liên kết, cơ sở kinh doanh đồng kiểm soát, các cá nhân có quyền trực tiếp hoặc gián tiếp biểu quyết ở Công ty và các thành viên mật thiết trong gia đình của họ, các doanh nghiệp do các nhân viên quản lý chủ chốt và các cá nhân có quyền trực tiếp hoặc gián tiếp biểu quyết của Công ty và các thành viên mật thiết trong gia đình của họ.
+
+Các bên liên quan khác với Công ty gồm:
+
+### Các bên liên quan
+
+| Bên liên quan | Mối quan hệ |
+| --- | --- |
+| Công ty Cổ phần Foodinco Quy Nhơn | Công ty cùng Công ty mẹ |
+
+Tại ngày kết thúc năm tài chính, số dư công nợ với các bên liên quan khác như sau: Đơn vị tính: VND
+
+### Số dư công nợ với các bên liên quan
+
+| Chỉ tiêu | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| Trả trước cho người bán ngắn hạn | - | 128.210.814.183 |
+| - Công ty Cổ phần Foodinco Quy Nhơn | - | 128.210.814.183 |
+| Phải thu khác ngắn hạn | 107.341.742.247 | - |
+| - Công ty Cổ phần Foodinco Quy Nhơn | 107.341.742.247 | - |
+| Cộng nợ phải thu | 107.341.742.247 | 128.210.814.183 |
+
+### 03. Thuê hoạt động
+
+Các hợp đồng đi thuê
+Tại ngày kết thúc năm tài chính, tổng số tiền thuê tối thiểu trong tương lai của các hợp đồng thuê hoạt động không thể hủy ngang sẽ được thanh toán như sau:
+
+### Tổng số tiền thuê tối thiểu trong tương lai
+
+| Thời hạn | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| Từ 1 năm trở xuống | 1.573.262.028 | 1.573.262.028 |
+| Trên 1 năm đến 5 năm | 6.293.048.112 | 6.293.048.112 |
+| Trên 5 năm | 50.903.561.643 | 52.476.823.671 |
+| Cộng | 58.769.871.783 | 60.343.133.811 |
+
+- Công ty thuê toàn bộ toà nhà địa chỉ số 2 Đại Cổ Việt, phường Lê Đại Hành dưới hình thức thuê hoạt động. Hợp đồng thuê có hiệu lực trong khoảng thời gian từ ngày 01 tháng 4 năm 2012 đến ngày 01 tháng 4 năm 2015 và đã gia hạn thêm đến ngày 31 tháng 7 năm 2023 theo Phụ lục số 03 ngày 15 tháng 01 năm 2017. Chi phí thuê được điều chỉnh tăng lên hàng năm theo giá thuê trên thị trường.
+- Công ty thuê toàn bộ sàn tầng 02, tầng lửng (tầng 3B) và sàn tầng 3 thuộc dự án nhà ở cao tầng kết hợp dịch vụ công cộng Sakura Tower – 47 Vũ Trọng Phụng, quận Thanh Xuân, thành phố Hà Nội dưới hình thức thuê hoạt động. Thời hạn thuê 50 năm kể từ ngày 01 tháng 09 năm 2013 và có khả năng được gia hạn thêm. Tổng chi phí thuê là 71.818.181.818 đồng và không có điều chỉnh trong thời gian thực hiện hợp đồng.
+- Công ty thuê một phần sàn tầng 1 thuộc dự án nhà ở cao tầng kết hợp dịch vụ công cộng Sakura Tower – 47 Vũ Trọng Phụng, quận Thanh Xuân, thành phố Hà Nội dưới hình thức thuê hoạt động. Thời hạn thuê 9 năm kể từ ngày 01 tháng 07 năm 2018.
+- Công ty thuê 1.782,70 m2 toàn bộ tầng hầm thuộc tòa nhà B số 96 Định Công trong thời hạn từ ngày 06 tháng 6 năm 2015 đến hết ngày 26 tháng 7 năm 2064.
+
+
+
+<!-- document=AME_2023; page=36 -->
+
+## Trang 36
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+### Các hợp đồng cho thuê
+
+Tại ngày kết thúc năm tài chính, các khoản thanh toán tiền thuê tối thiểu trong tương lai thu được từ các hợp đồng cho thuê hoạt động không thể hủy ngang như sau:
+
+| Thời hạn | Số cuối năm | Số đầu năm |
+| --- | --- | --- |
+| Từ 1 năm trở xuống | 13.776.364.068 | 13.776.364.068 |
+| Trên 1 năm đến 5 năm | 50.163.126.572 | 52.858.942.772 |
+| Trên 5 năm | 8.804.966.370 | 2.598.726.438 |
+| Cộng | 72.744.457.010 | 69.234.033.278 |
+
+- Công ty cho thuê toàn bộ tòa nhà tại địa chỉ số 02 Đại Cồ Việt, phường Lê Đại Hành. Hợp đồng cho thuê có hiệu lực đến ngày 31 tháng 07 năm 2029.
+- Công ty đã cho thuê một phần tầng 3 và tầng lửng (tầng 3B) tòa nhà Sakura – 47 Vũ Trọng Phụng, quận Thanh Xuân, thành phố Hà Nội. Một phần diện tích cho thuê trong thời hạn 10 năm kể từ ngày 01 tháng 11 năm 2013 và một phần diện tích cho thuê trong thời hạn 10 năm kể từ ngày 01 tháng 7 năm 2020 và một phần cho thuê trong thời hạn 05 năm kể từ ngày 01 tháng 03 năm 2022.
+- Công ty đã cho thuê một phần tầng 2 tòa nhà Sakura – 47 Vũ Trọng Phụng, quận Thanh Xuân, thành phố Hà Nội dưới hình thức cho thuê hoạt động trong thời hạn 05 năm kể từ ngày 01 tháng 03 năm 2022.
+
+
+
+<!-- document=AME_2023; page=37 -->
+
+## Trang 37
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+04. Thông tin về bộ phận
+Thông tin bộ phận được trình bày theo lĩnh vực kinh doanh.
+Lĩnh vực kinh doanh:
+Công ty có các lĩnh vực kinh doanh chính sau:
+- Lĩnh vực 1: Hoạt động xây lắp thi công điện.
+- Lĩnh vực 2: Kinh doanh thương mại.
+- Lĩnh vực 3: Lĩnh vực khác: dịch vụ, cho thuê tài sản, kinh doanh bất động sản.
+
+Đơn vị tính: VND
+
+| Chỉ tiêu | Hoạt động thi công xây lắp điện | Kinh doanh thương mại | Lĩnh vực khác (dịch vụ, cho thuê, kinh doanh bất động sản) | Cộng |
+| --- | --- | --- | --- | --- |
+| Năm nay |  |  |  |  |
+| - Doanh thu thuần từ bán hàng ra bên ngoài | 723.460.113.531 | 1.471.772.477.692 | 20.084.749.796 | 2.215.317.341.019 |
+| - Doanh thu thuần từ bán hàng cho các bộ phận khác | - | - | - | - |
+| - Doanh thu tài chính | 305.045.943 | 620.570.803 | 8.468.707 | 934.085.453 |
+| - Chi phí phân bổ bộ phận | 668.624.627.342 | 1.511.116.312.351 | 12.281.159.149 | 2.192.022.098.842 |
+| - Lợi nhuận từ hoạt động KD | 55.140.532.132 | (38.723.263.856) | 7.812.059.354 | 24.229.327.630 |
+| - Tổng chi phí đã phát sinh để mua tài sản cố định và tài sản dài hạn | 1.332.172.894 | 2.710.108.497 | 36.983.876 | 4.079.265.267 |
+| - Tổng chi phí khấu hao tài sản cố định và phân bổ chi phí trả trước dài hạn | 2.501.574.796 | 5.089.083.512 | 69.448.893 | 7.660.107.201 |
+| Số dư cuối năm nay |  |  |  |  |
+| - Tài sản trực tiếp của bộ phận | 1.889.162.729.879 | 591.121.609.500 | 14.540.470.648 | 2.494.824.810.027 |
+| - Tài sản không phân bổ |  |  |  | 21.217.099.514 |
+| Tổng tài sản | 1.889.162.729.879 | 591.121.609.500 | 14.540.470.648 | 2.516.041.909.541 |
+| - Nợ phải trả bộ phận | 843.003.350.032 | 869.348.850.112 | 16.792.310.035 | 1.729.144.510.179 |
+| - Nợ phải trả không phân bổ |  |  |  | - |
+| Tổng nợ phải trả | 843.003.350.032 | 869.348.850.112 | 16.792.310.035 | 1.729.144.510.179 |
+
+
+
+<!-- document=AME_2023; page=38 -->
+
+## Trang 38
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+| Chỉ tiêu | Hoạt động thi công xây lắp điện | Kinh doanh thương mại | Lĩnh vực khác (dịch vụ; cho thuê, kinh doanh bất động sản) | Cộng |
+| --- | --- | --- | --- | --- |
+| Năm trước |  |  |  |  |
+| - Doanh thu thuần từ bán hàng ra bên ngoài | 616.184.523.381 | 1.582.422.996.189 | 14.644.492.037 | 2.213.252.011.607 |
+| - Doanh thu thuần từ bán hàng cho các bộ phận khác | - | - | - | - |
+| - Doanh thu tài chính | 398.551.523 | 1.023.519.856 | 9.472.138 | 1.431.543.516 |
+| - Chi phí phân bổ bộ phận | 633.496.306.940 | 1.541.294.340.144 | 13.439.586.486 | 2.188.230.233.570 |
+| - Lợi nhuận từ hoạt động kinh doanh | (16.913.232.037) | 42.152.175.901 | 1.214.377.689 | 26.453.321.553 |
+| - Tổng chi phí đã phát sinh để mua tài sản cố định và tài sản dài hạn | 5.226.156.922 | 13.421.289.535 | 124.206.971 | 18.771.653.428 |
+| - Tổng chi phí khấu hao tài sản cố định và phân bổ chi phí trả trước dài hạn | 2.358.912.276 | 6.057.920.784 | 56.062.869 | 8.472.895.929 |
+| Số dư cuối năm trước |  |  |  |  |
+| - Tài sản trực tiếp của bộ phận | 1.212.684.339.697 | 886.201.911.490 | 11.398.690.428 | 2.110.284.941.615 |
+| - Tài sản không phân bổ |  |  |  | 34.969.766.460 |
+| Tổng tài sản | 1.212.684.339.697 | 886.201.911.490 | 11.398.690.428 | 2.145.254.708.075 |
+| - Nợ phải trả bộ phận | 705.240.540.357 | 663.598.856.247 | 10.715.467.100 | 1.379.554.863.704 |
+| - Nợ phải trả không phân bổ |  |  |  |  |
+| Tổng nợ phải trả | 705.240.540.357 | 663.598.856.247 | 10.715.467.100 | 1.379.554.863.704 |
+
+
+
+<!-- document=AME_2023; page=39 -->
+
+## Trang 39
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Đơn vị tính: VND
+
+05. Giá trị hợp lý của tài sản và nợ phải trả tài chính
+
+### Tài sản tài chính
+
+| Chỉ tiêu | Giá trị ghi sổ (Số cuối năm) | Dự phòng (Số cuối năm) | Giá trị ghi sổ (Số đầu năm) | Dự phòng (Số đầu năm) | Giá trị hợp lý (Số cuối năm) | Giá trị hợp lý (Số đầu năm) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Tiền và các khoản tương đương tiền | 8.657.099.514 | - | 34.969.766.460 | - | (*) | (*) |
+| Phải thu về cho vay | - | - | - | - | (*) | (*) |
+| Phải thu khách hàng và phải thu khác | 1.405.975.692.666 | (6.544.555.640) | 440.150.465.976 | (6.544.555.640) | (*) | (*) |
+| Đầu tư tài chính ngắn hạn | 12.560.000.000 | - | - | - | (*) | (*) |
+| Đầu tư tài chính dài hạn | - | - | - | - | (*) | (*) |
+| Cộng | 1.427.192.792.180 | (6.544.555.640) | 475.120.232.436 | (6.544.555.640) |  |  |
+
+### Nợ phải trả tài chính
+
+| Chỉ tiêu | Giá trị sổ sách (Số cuối năm) | Giá trị sổ sách (Số đầu năm) | Giá trị hợp lý (Số cuối năm) | Giá trị hợp lý (Số đầu năm) |
+| --- | --- | --- | --- | --- |
+| Phải trả cho người bán | 541.222.698.555 | 624.531.219.307 | (*) | (*) |
+| Vay và nợ | 1.007.622.391.993 | 573.446.879.406 | (*) | (*) |
+| Chi phí phải trả | 13.672.127.430 | 3.350.763.439 | (*) | (*) |
+| Các khoản phải trả khác | 82.553.257.823 | 6.537.177.620 | (*) | (*) |
+| Cộng | 1.645.070.475.801 | 1.207.866.039.772 |  |  |
+
+(*): Công ty chưa xác định giá trị hợp lý của các công cụ tài chính do không có giá niêm yết trên thị trường và Chuẩn mực kế toán Việt Nam, Chế độ kế toán Doanh nghiệp Việt Nam hiện không có hướng dẫn về cách xác định giá trị hợp lý sử dụng các kỹ thuật định giá. Do vậy, Công ty không thuyết minh giá trị hợp lý của tài sản tài chính và nợ phải trả tài chính. Giá trị hợp lý của các công cụ tài chính này có thể khác với giá trị ghi sổ.
+
+
+
+<!-- document=AME_2023; page=40 -->
+
+## Trang 40
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+### 06. Tài sản đảm bảo
+
+Tài sản thế chấp cho đơn vị khác
+Công ty đã thế chấp tài sản cố định hữu hình, bất động sản đầu tư để đảm bảo cho các khoản vay của ngân hàng (xem thuyết minh số V.09 và V.12). Thông tin về việc thế chấp tài sản cho đơn vị khác như sau:
+
+### Đơn vị tính: VND
+
+| Tài sản thế chấp | Giá trị sổ sách | Điều khoản và điều kiện thế chấp |
+| --- | --- | --- |
+| Số cuối năm |  |  |
+| Xe ô tô Fortuner TGN156L-SDTMKU (30E-859.58) | 457.105.819 | Công ty thế chấp toàn bộ tài sản và chuyển giao giấy tờ sở hữu tài sản cho Ngân hàng TMCP Quân đội - Chi nhánh Hoàn Kiếm quản lý nhằm đảm bảo thế chấp cho khoản vay ngắn hạn. Ngân hàng được quyền kiểm tra và giám sát việc sử dụng tài sản thế chấp, nếu có rủi ro xảy ra thì được thụ hưởng số tiền bảo hiểm tài sản thế chấp. |
+| Xe ô tô Toyota Fortuner GUN156L-ISDTMHY (30F - 475.11) | 736.161.120 | Công ty thế chấp toàn bộ tài sản và chuyển giao giấy tờ sở hữu tài sản cho Ngân hàng TMCP Quân đội - Chi nhánh Hoàn Kiếm quản lý nhằm đảm bảo thế chấp cho khoản vay ngắn hạn. Ngân hàng được quyền kiểm tra và giám sát việc sử dụng tài sản thế chấp, nếu có rủi ro xảy ra thì được thụ hưởng số tiền bảo hiểm tài sản thế chấp. |
+| Cộng | 1.193.266.939 |  |
+
+### 07. Rủi ro tín dụng
+
+Rủi ro tín dụng là rủi ro mà một bên tham gia trong hợp đồng không có khả năng thực hiện được nghĩa vụ của mình dẫn đến tổn thất về tài chính cho Công ty.
+Công ty có các rủi ro tín dụng từ các hoạt động kinh doanh (chủ yếu đối với các khoản phải thu khách hàng) và hoạt động tài chính (tiền gửi ngân hàng, cho vay và các công cụ tài chính khác).
+Phải thu khách hàng
+Công ty giảm thiểu rủi ro tín dụng bằng cách chỉ giao dịch với các đơn vị có khả năng tài chính tốt và nhân viên kế toán công nợ thường xuyên theo dõi nợ phải thu để đôn đốc thu hồi. Trên cơ sở này và khoản phải thu của Công ty liên quan đến nhiều khách hàng khác nhau nên rủi ro tín dụng không tập trung vào một khách hàng nhất định.
+Tiền gửi ngân hàng
+Phần lớn tiền gửi ngân hàng của Công ty được gửi tại các ngân hàng lớn, có uy tín ở Việt Nam. Công ty nhận thấy mức độ tập trung rủi ro tín dụng đối với tiền gửi ngân hàng là thấp.
+
+### 08. Rủi ro thanh khoản
+
+Rủi ro thanh khoản là rủi ro Công ty gặp khó khăn khi thực hiện nghĩa vụ tài chính do thiếu tiền.
+Ban Tổng Giám đốc chịu trách nhiệm cao nhất trong quản lý rủi ro thanh khoản. Rủi ro thanh khoản của Công ty chủ yếu phát sinh từ việc các tài sản tài chính và nợ phải trả tài chính có các thời điểm đáo hạn lệch nhau.
+
+
+
+<!-- document=AME_2023; page=41 -->
+
+## Trang 41
+
+### CÔNG TY CỔ PHẦN ALPHANAM E&C
+
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+Công ty quản lý rủi ro thanh khoản thông qua việc duy trì một lượng tiền và các khoản tương đương tiền phù hợp và các khoản vay ở mức mà Ban Tổng Giám đốc cho là đủ để đáp ứng nhu cầu hoạt động của Công ty nhằm giảm thiểu ảnh hưởng của những biến động về luồng tiền.
+
+Thời hạn thanh toán của các khoản nợ phải trả tài chính dựa trên các khoản thanh toán dự kiến theo hợp đồng chưa được chiết khấu như sau:
+
+### Đơn vị tính: VND
+
+| Chỉ tiêu | Từ 1 năm trở xuống | Trên 1 năm đến 5 năm | Trên 5 năm | Cộng |
+| --- | --- | --- | --- | --- |
+| Số cuối năm |  |  |  |  |
+| Phải trả cho người bán | 541.222.698.555 | - | - | 541.222.698.555 |
+| Vay và nợ | 1.007.622.391.993 | - | - | 1.007.622.391.993 |
+| Chi phí phải trả | 13.672.127.430 | - | - | 13.672.127.430 |
+| Các khoản phải trả khác | 82.553.257.823 | - | - | 82.553.257.823 |
+| Cộng | 1.645.070.475.801 | - | - | 1.645.070.475.801 |
+| Số đầu năm |  |  |  |  |
+| Phải trả cho người bán | 624.531.219.307 | - | - | 624.531.219.307 |
+| Vay và nợ | 573.446.879.406 | - | - | 573.446.879.406 |
+| Chi phí phải trả | 3.350.763.439 | - | - | 3.350.763.439 |
+| Các khoản phải trả khác | 6.537.177.620 | - | - | 6.537.177.620 |
+| Cộng | 1.207.866.039.772 | - | - | 1.207.866.039.772 |
+
+Công ty cho rằng mức độ tập trung rủi ro đối với việc trả nợ là thấp. Công ty có khả năng thanh toán các khoản nợ đến hạn từ dòng tiền từ hoạt động kinh doanh và tiền thu từ các tài sản tài chính đáo hạn.
+
+09. Rủi ro thị trường
+Rủi ro thị trường là rủi ro mà giá trị hợp lý hoặc các luồng tiền trong tương lai của công cụ tài chính sẽ biến động theo những thay đổi của giá thị trường. Rủi ro thị trường bao gồm 3 loại: rủi ro ngoại tệ, rủi ro lãi suất và rủi ro về giá khác.
+
+Rủi ro ngoại tệ
+Rủi ro ngoại tệ là rủi ro mà giá trị hợp lý hoặc các luồng tiền trong tương lai của công cụ tài chính sẽ biến động theo những thay đổi của tỷ giá hối đoái.
+
+Rủi ro lãi suất
+Rủi ro lãi suất là rủi ro mà giá trị hợp lý hoặc các luồng tiền trong tương lai của công cụ tài chính sẽ biến động theo những thay đổi của lãi suất thị trường.
+Rủi ro lãi suất của Công ty chủ yếu liên quan đến tiền, các khoản tiền gửi ngắn hạn và các khoản vay.
+Công ty quản lý rủi ro lãi suất bằng cách phân tích tình hình thị trường để có được các lãi suất có lợi nhất và vẫn nằm trong giới hạn quản lý rủi ro của mình.
+Công ty không thực hiện phân tích độ nhạy đối với lãi suất vì rủi ro do thay đổi lãi suất tại ngày lập báo cáo là không đáng kể.
+
+Rủi ro về giá khác
+Rủi ro về giá khác là rủi ro mà giá trị hợp lý hoặc các luồng tiền trong tương lai của công cụ tài chính sẽ biến động theo những thay đổi của giá thị trường ngoài thay đổi của lãi suất và tỷ giá hối đoái.
+
+10. Thông tin so sánh
+Số liệu so sánh là số liệu trên Báo cáo tài chính cho năm tài chính kết thúc tại ngày 31 tháng 12 năm 2022 đã được kiểm toán bởi Công ty TNHH Kiểm toán TTP.
+
+
+
+<!-- document=AME_2023; page=42 -->
+
+## Trang 42
+
+CÔNG TY CỔ PHẦN ALPHANAM E&C
+Tầng 3, số 108 Nguyễn Trãi, Phường Thượng Đình, Quận Thanh Xuân, Thành phố Hà Nội, Việt Nam
+Bản thuyết minh Báo cáo tài chính (tiếp theo)
+
+11. Thông tin về hoạt động liên tục
+Trong kỳ kế toán, không có hoạt động hoặc sự kiện phát sinh nào có ảnh hưởng đáng kể đến khả năng hoạt động liên tục của Công ty. Vì vậy, Báo cáo tài chính giữa niên độ của Công ty được lập trên cơ sở giả định Công ty sẽ hoạt động liên tục.
+
+### Thông tin ký duyệt
+
+| Người lập biểu | Kế toán trưởng | Tổng Giám đốc |
+| --- | --- | --- |
+| Bùi Thị Thúy Hà | Nguyễn Hải Yến | Trương Thị Thu Hiền |
+
+Hà Nội, ngày 30 tháng 03 năm 2024
+
+41
+

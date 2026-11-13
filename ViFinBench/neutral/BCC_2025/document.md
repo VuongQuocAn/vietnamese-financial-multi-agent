@@ -1,0 +1,89 @@
+<!-- document=BCC_2025; page=1 -->
+
+## Trang 1
+
+### TỔNG CÔNG TY XI MĂNG VIỆT NAM
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+
+### CÔNG TY CP XI MĂNG BỈM SƠN
+Độc lập - Tự do - Hạnh phúc
+
+Số: 933 /XMBS-TCKT
+Thanh Hóa, ngày 12 tháng 03 năm 2026
+
+### V/v: Công bố thông tin
+
+Kính gửi: Ủy ban Chứng khoán Nhà nước
+
+- 1. Tên công ty: Công ty Cổ phần Xi măng Bỉm Sơn
+
+- 2. Mã chứng khoán: BCC
+
+- 3. Địa chỉ trụ sở chính: Phường Ba Đình - Thị xã Bỉm Sơn - Tỉnh Thanh Hoá
+
+- 4. Điện thoại: 02373.824.242 Fax: 02373.824.046
+
+- 5. Người thực hiện công bố thông tin:
+Ông: Nguyễn Đức Sơn - Kế toán trưởng Công ty
+
+- 6. Nội dung của thông tin công bố:
+6.1. Báo cáo tài chính hợp nhất sau kiểm toán năm 2025 của Công ty Cổ phần Xi măng Bỉm Sơn được lập ngày 10 tháng 03 năm 2026, bao gồm:
+- Bảng cân đối kế toán
+- Báo cáo kết quả kinh doanh
+- Báo cáo lưu chuyển tiền tệ
+- Thuyết minh Báo cáo tài chính.
+6.2. Công văn số 935 /XMBS-TCKT ngày 12 tháng 03 năm 2026 về việc giải trình chênh lệch lợi nhuận trên BCTC hợp nhất.
+
+- 7. Địa chỉ Website đăng tải toàn bộ Báo cáo tài chính: www.ximangbimson.com.vn
+
+Chúng tôi xin cam kết các thông tin công bố trên đây là đúng sự thật và hoàn toàn chịu trách nhiệm trước pháp luật về nội dung thông tin công bố.
+
+NGƯỜI THỰC HIỆN CBTT
+KẾ TOÁN TRƯỞNG
+(Ký, đóng dấu)
+Nguyễn Đức Sơn
+
+Nơi nhận:
+- Như trên
+- Lưu: Văn thư; TCKT.
+
+
+
+<!-- document=BCC_2025; page=2 -->
+
+## Trang 2
+
+### TỔNG CÔNG TY XI MĂNG VIỆT NAM
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+CÔNG TY CP XI MĂNG BỈM SƠN
+Độc lập - Tự do - Hạnh phúc
+
+Số: 935 /XMBS-TCKT
+Thanh Hóa, ngày 12 tháng 03 năm 2026
+
+### V/v: giải trình lợi nhuận trên BCTC hợp nhất sau kiểm toán năm 2025
+
+Kính gửi:
+- Uỷ ban Chứng khoán Nhà nước
+- Sở Giao dịch Chứng khoán Hà Nội
+
+Thực hiện văn bản của Sở giao dịch chứng khoán Hà Nội về việc công bố thông tin định kỳ của công ty niêm yết.
+
+Công ty Cổ phần Xi măng Bỉm Sơn (Công ty) giải trình về sự thay đổi lợi nhuận trên Báo cáo tài chính hợp nhất năm 2025 như sau:
+
+Lợi nhuận sau thuế năm 2025 sau kiểm bằng tăng 317.237 đồng so với lợi nhuận trước kiểm toán.
+
+Lợi nhuận sau thuế năm 2025 của Công ty Cổ phần Xi măng Bỉm Sơn dương 25,48 tỷ đồng, tăng 33,61 tỷ đồng so với năm 2024, nguyên nhân chủ yếu là do: Doanh thu bán hàng tăng 5,97% (tương ứng với 208,26 tỷ đồng); Giá vốn hàng bán tăng 4,62% (tương ứng với 147,28 tỷ đồng); Thu nhập khác giảm 28,74% (tương ứng với 5,5 tỷ đồng); Doanh thu tài chính tăng 13,11% (tương ứng với 0,37 tỷ đồng); Chi phí bán hàng tăng 3,55% (tương ứng với 6,27 tỷ đồng); Chi phí quản lý tăng 5,32% (tương ứng với 6,2 tỷ đồng); Chi phí khác tăng 1.909,46% (tương ứng với 13,84 tỷ đồng); Chi phí tài chính giảm 11,11% (tương ứng với 4,06 tỷ đồng). Tuy nhiên năm 2025 mức tăng doanh thu bán hàng, doanh thu hoạt động tài chính và mức giảm giá chi phí tài chính lớn hơn mức tăng chi phí quản lý doanh nghiệp, chi phí bán hàng, chi phí khác và mức giảm thu nhập khác
+
+Vì vậy lợi nhuận sau thuế năm 2025 tăng so với lợi nhuận sau thuế năm 2024 và chuyển từ lỗ cùng kỳ năm trước sang lãi cùng kỳ năm sau.
+
+Chúng tôi xin chân thành cảm ơn.
+
+- Nơi nhận:
+- Như trên;
+- Lưu: văn thư; TCKT
+
+NGƯỜI THỰC HIỆN CBTT
+KẾ TOÁN TRƯỞNG
+Nguyễn Đức Sơn
+
