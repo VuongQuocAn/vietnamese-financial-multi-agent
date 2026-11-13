@@ -9,6 +9,22 @@
 - Estimated Complexity: M
 - Related Modules: Lite M5, API integration, M6 boundary, M7 coverage
 
+## Phiên tiếp tục QA thực tế — 13/11/2026
+
+Owner cho phép chủ động lựa chọn kỹ thuật và kiểm Qwen miễn phí; trực tiếp main,
+giữ local edits, dừng khi API/hạ tầng lỗi, commit/push và bàn giao REVIEW. Chỉ đạo này
+thay các giới hạn live cũ bên dưới; các Inputs/Evidence trước phiên là lịch sử.
+
+Implementation `b113136f876b7fa2c1411c8295e0a09cdb97220c`. Sửa typed analysis envelope, tách notes chưa kiểm chứng
+khỏi pure arithmetic, dynamic goal/source-anchor binding và runner một process,
+atomic state, validate deadline 300s. Không thêm agent/đổi EF-EG/waive M6.
+Final live đủ3case cùng source:14calls/50.688tokens,0unknown/retry/provider errors.
+Numeric Accuracy13/13, numeric EM3/3; Claim P21/21, Recall16/19, microF1=91,43%;
+citation accuracy21/21, Answer Accuracy0/3. C01/C07/C10 PARTIAL do còn thiếu tổng hợp/
+giải thích giới hạn; mixed-period reasoning, prose và latency vẫn có giới hạn.
+16isolated V2/M6 targeted PASS, runner/scoring/M7 controls, Ruff/planning/diff;
+không full CI/OCR/Gemini. [Báo cáo](../../../docs/v2-int-01-qa-validation.md).
+
 ## Objective
 
 Triển khai requirement IDs, shared evidence workspace trong một request và phối hợp
@@ -91,7 +107,8 @@ Không gọi Qwen trước offline integration đạt và có ngân sách/điề
 - [x] Offline real-data replay kiểm requirements/evidence/claims/branch preservation; không coi synthetic PASS là financial quality.
 - [x] Planning checker/diff/lint và targeted tests liên quan đạt; live chỉ theo ngân sách duyệt.
 - [x] Bàn giao REVIEW, phân biệt lỗi kiến trúc/model/capability; không tự DONE.
-- [ ] Tech Lead nghiệm thu implementation và giới hạn snapshot cuối chưa được live xác nhận.
+- [ ] Tech Lead nghiệm thu QA trên source cuối và các giới hạn còn lại.
+- [x] Live C01/C07/C10 hoàn tất trên cùng implementation SHA; chấm final answer với Gold.
 
 - [ ] QA live bản cuối đủ ba câu, đầy đủ nhận xét/tổng hợp/giới hạn có evidence.
 
@@ -177,4 +194,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead/Owner review QA gaps và runner interruption trước quyết định xác nhận tiếp.
+Next action: Tech Lead nghiệm thu final answers, metrics và các giới hạn QA trên source b113136; dừng REVIEW.

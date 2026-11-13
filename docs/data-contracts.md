@@ -14,7 +14,7 @@ parser chuyển nguyên object sang `analyses`, giữ raw response và trace
 `analysis_envelope_normalized`. Không sửa text/giá trị/phép toán/nguồn, không cứu
 object sai schema. Grounding, Calculator, M6 và admission vẫn chạy như bình thường;
 V1 không bật chuẩn hóa này.
-Model-authored `limitations` của pure `derived_fact` chỉ giữ ở raw output, không
+Model-authored `limitations` của proposal khai `claim_type=derived_fact` chỉ giữ ở raw output, không
 đi kèm proof số đã render: kiểm số học không xác minh mệnh đề thiếu dữ liệu hoặc
 nhận xét trong notes. Source/tool caveats vẫn giữ; reasoned conclusions giữ toàn
 bộ limitations để M6 kiểm chứng.

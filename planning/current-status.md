@@ -2,19 +2,16 @@
 
 ## V2-INT-01 — Minimal Integration Migration
 
-**REVIEW**, ngày13/11/2026; source cuối `5f717726f0e16010f1ce7a3335f249fa7ca369a3`
-trên main, V2 opt-in. Sửa giữ original analysis goals/dependent specialist, canonical
-operand periods, cross-task numeric binding, M6 goal response contract/period context
-và M7 scope/dedup; không thêm agents hoặc đổi OCR/EF-EG/tools.
-Hai lượt live đủ C01/C07/C10 còn PARTIAL/PARTIAL/FAIL. LượtB9526fa0: Answer Accuracy
-0/3; Claim F1 C01=66,67%,C07=88,89%,C10=0%; chưa đạt nhận xét/giới hạn đầy đủ.
-Code cuối đã sửa thêm binding/period lỗi B, nhưng lượt xác nhận cuối bị ngắt process
-sau5responsesC01success, chưa final; C07/C10cuối NOT_RUN, metricsN/A.
-Tổng33calls/114935tokens/0unknown/0retry,0provider errors quan sát; dừng hạ tầng,
-không retry. Source cuối chưa live E2E xác nhận; không tuyên bố quality tăng.
-Targeted/Ruff/planning/diff đạt; không fullCI/OCR/Gemini/benchmark.
+**REVIEW**, 13/11/2026; source `b113136f876b7fa2c1411c8295e0a09cdb97220c` trên main, V2 opt-in.
+Live đủ ba câu cùng source: 14calls/50.688tokens, 0unknown/retry/provider errors.
+Numeric Accuracy 5/13→13/13; micro Claim Recall 8/19→16/19, F1 59,26%→91,43%;
+Precision/citation accuracy final 21/21. C01/C07/C10 đều PARTIAL, Answer Accuracy 0/3:
+chưa đủ tổng hợp/giải thích giới hạn. C10 giữ được vốn lưu động ròng/current ratio/CFO;
+không nới numeric verification để phát hành nhận xét sai. Runner hoàn tất ba lượt bộ ba;
+giữ cả hồi quy và giới hạn mixed-period reasoning, prose/latency trong báo cáo.
+16isolated V2/M6 targeted PASS; runner/scoring/M7 controls và Ruff/planning/diff đạt.
 [Báo cáo](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead/Owner review QA gaps và runner interruption trước quyết định xác nhận tiếp.
+Next action: Tech Lead nghiệm thu final answers, metrics và các giới hạn QA trên source b113136; dừng REVIEW.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

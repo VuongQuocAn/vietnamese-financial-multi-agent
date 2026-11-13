@@ -1,5 +1,189 @@
 # V2-INT-01 — Hoàn thiện và kiểm chứng QA V2
 
+## Phiên tiếp tục QA thực tế — 13/11/2026
+
+**REVIEW**. Implementation đã kiểm chứng `b113136f876b7fa2c1411c8295e0a09cdb97220c`;
+trực tiếp `main`, giữ V2 opt-in,
+EF-EG, Calculator và M6. Các mục từ “Cải thiện QA thực tế” bên dưới là lịch sử,
+không phải kết quả của source mới.
+
+### Kết quả cuối trên cùng source
+
+Qwen live hoàn tất C01/C07/C10 trên đúng SHA trên, **14 calls / 50.688 tokens API /
+0 unknown / 0 retry / 0 provider errors**. Không sửa runtime sau lượt cuối.
+Runner có final answers, ledger, raw provider events và exit 0 cho cả bộ ba.
+
+| Câu | Gold QA | Numeric Accuracy / EM | Claim Precision / Recall / F1 | Citation Accuracy / Completeness | Answer Accuracy |
+| --- | --- | --- | --- | --- | --- |
+| C01 | PARTIAL | 7/7 / 1 | 9/9=100% / 7/8=87,50% / **93,33%** | 9/9 / 9/9 | 0 |
+| C07 | PARTIAL | 1/1 / 1 | 7/7=100% / 4/5=80% / **88,89%** | 7/7 / 7/7 | 0 |
+| C10 | PARTIAL | 5/5 / 1 | 5/5=100% / 5/6=83,33% / **90,91%** | 5/5 / 5/5 | 0 |
+
+So với bộ B `9526fa0`, cùng Gold/rubric chấm lại: **Numeric Accuracy 5/13 → 13/13**,
+numeric EM 1/3 → 3/3; **micro Claim Recall 8/19 → 16/19**, micro F1 **59,26% → 91,43%**.
+Micro Precision giữ 100% (11/11 → 21/21); citation accuracy trên các mệnh đề đã phát
+hành giữ 100%, C10 từ không có citation thành 5/5. **Answer Accuracy vẫn 0/3**.
+C01 chỉ phục hồi mức F1 tốt nhất lịch sử 93,33% ở `474cc21`, chưa vượt mức đó.
+Đây là 3 case đã biết, một lượt/source, không chứng minh tổng quát hóa hoặc lợi ích
+Multi-Agent so với single-agent; không gọi toàn hệ thống đạt chất lượng tài chính.
+
+| Câu | Calls | Tokens API | E2E runner, gồm setup catalog |
+| --- | ---: | ---: | ---: |
+| C01 | 5 | 21.053 | 242,24s |
+| C07 | 4 | 7.733 | 133,17s |
+| C10 | 5 | 21.902 | 210,99s |
+
+Latency còn cao, chưa chứng minh cải thiện tốc độ. Toàn phiên tiếp tục này có
+3 lượt đủ bộ: **41 calls / 137.347 tokens**, 0 unknown/retry/provider errors;
+thêm một lần khởi động local lỗi cấu hình, 0 API. Không che lượt hồi quy ở bảng dưới.
+
+- **C01:** final đủ doanh thu hai kỳ, tăng 26,71%, nợ/tài sản 0,59 lần và CFO dương.
+  Gold tỷ trọng nợ 59,0584…% tương đương ratio 0,590584… được làm tròn 0,59;
+  không bắt câu dài khớp nguyên văn. Còn thiếu tổng hợp. Model vẫn viết CFO “ổn định”
+  từ một kỳ và đổi ratio proof thành %, đồng thời mixed annual/as-of reasoning còn
+  lỗi owner/context (`dynamic_reporting_context_mismatch`, `reasoning_owner_mismatch`).
+  Các candidate đó bị chặn; không giải quyết false narrative bằng cách nới M6.
+- **C07:** final đúng LNST 7.249.557.946 VND và policy/ngoại lệ PDF12, giữ scope note.
+  Không bịa số vốn hóa. Chưa có giải thích riêng “chính sách không xác định số vốn
+  hóa thực tế”, quotation dài chưa thành diễn giải gọn đã kiểm chứng. Pipeline
+  completed_with_caveats không được đổi thành QA PASS.
+- **C10:** final có đúng vốn lưu động ròng **−600.656.455.132 VND**, current ratio
+  **0,56 lần**, CFO **314.097.335.438 VND** và hai toán hạng; numeric bindings được M6
+  xác nhận, hết rơi ACCEPT ở M7. Chưa có tổng hợp/giới hạn thanh khoản. Model viết
+  “vốn lưu động ròng giảm… thanh khoản không cải thiện” khi không có kỳ gốc; nhận định
+  đó không được phát hành. Mixed-period reasoning vẫn báo context/period-relation
+  mismatch trước semantic pass; chưa chứng minh xử lý mọi nhận xét liên nhánh đúng.
+
+Đã đối chiếu **21/21 claim citations** trong final với Gold document/snapshot/PDF
+pages và released IDs: C01 PDF5/6/7/8, C07 PDF7/12, C10 PDF5/6/8. Đây là page-level,
+không nâng `source_reference_uncertain` hoặc locator unresolved thành cell-level.
+Source caveats vẫn hiển thị. Hai kết quả trung gian về doanh thu C01 đúng nhưng thừa;
+gaps còn dài/lặp và cách trình bày vẫn thiên về biểu thức, chưa đạt độ tự nhiên mục tiêu.
+
+Artifacts cuối: `qa-followup/verified-live/{manifest,results,provider-events}.json`,
+`execution/Cxx.json`, `Cxx-answer.txt`; adjudication `final-Cxx-review.json`,
+`final-Cxx-metrics.json`, `qa-summary.json`, `final-citation-audit.json` ở thư mục cha.
+Có thể tính lại bằng `python scripts/qa_metrics.py <final-Cxx-review.json>`.
+Gold/credentials/raw data không vào Git. Local edits ngoài task được giữ; phần sửa
+riêng `specialist_common.py` chỉ stage callback của V2, không gom local prompt edits.
+
+**Next action duy nhất:** Tech Lead nghiệm thu metrics/final answers và các giới hạn
+tổng hợp, semantic binding, trình bày, latency trên source `b113136`; dừng REVIEW.
+
+### Cách chấm được chuẩn hóa
+
+Gold độc lập giữ nguyên 8/5/6 atomic requirements của C01/C07/C10, từ PDF đã đọc
+trong E2E-GEN-01; không dùng M6 ACCEPT làm oracle. Rubric/Gold được đóng băng trước
+provider call mới tại `qa-followup/gold.json`, SHA256
+`665ce0ea0c78daa39b50cb798dd49a1ae9347906916a65fff34feb05203dd07c`.
+
+Theo nguyên tắc câu trả lời số và scale trong
+[metric chính thức TAT-QA](https://github.com/NExTplusplus/TAT-QA/blob/master/tatqa_metric.py),
+phiên này chấm **các slot số** và mệnh đề tương đương về nghĩa. Đây là rubric nội bộ
+cho 3 câu thực tế, không phải chạy benchmark TAT-QA/FinQA hoặc công bố điểm benchmark.
+Không dùng EM nguyên văn cho đoạn trả lời dài; không dùng token-overlap F1 để thay
+độ đúng của mệnh đề tài chính.
+
+- Numeric Accuracy: slot tài chính đúng/slot số bắt buộc (C01=7, C07=1, C10=5).
+  Numeric EM: toàn bộ slot số đúng, không có mệnh đề số sai được phát hành.
+  Reviewer kiểm item/kỳ/scope; `Decimal` kiểm quy đổi VND/scale, percent↔ratio và
+  làm tròn HALF_UP đúng độ chính xác hiển thị. Không có tolerance phần trăm tùy ý.
+- Claim Precision: unique propositions đúng/unique propositions phát hành.
+  Claim Recall: gold atoms thể hiện đúng/tổng gold atoms; F1 là harmonic mean.
+  Gộp mệnh đề lặp; policy quotation có nhiều mệnh đề phải tách để chấm.
+- Citation Accuracy: mệnh đề có citation hỗ trợ đúng toàn mệnh đề/tổng mệnh đề
+  có citation. Citation Completeness: mệnh đề có nguồn đúng/tổng mệnh đề cần nguồn.
+  Kiểm đúng tài liệu, snapshot và PDF page, gồm cả toán hạng của phép tính.
+  Thiếu câu trả lời/citations không được coi là 100%; interruption không có final là N/A.
+- Answer Accuracy vẫn là tiêu chí toàn câu nghiêm ngặt, gồm giới hạn/tổng hợp và
+  citations; không đồng nhất với numeric EM hay trạng thái pipeline.
+
+`scripts/qa_metrics.py` tính điểm từ adjudication có exact quote trong final answer,
+Gold slot IDs, giá trị/đơn vị và nhận xét nguồn. Đây là chấm thủ công có kiểm tra số
+và tái tính được; không tự động hiểu ngữ nghĩa hoặc tự chứng minh citation đúng.
+Reviewer cũng là người triển khai, chưa có đánh giá mù độc lập. Ghi chú phạm vi do
+user yêu cầu không là claim tài chính và không tự đáp ứng gold atom nhận xét/giới hạn.
+
+### Nguyên nhân đã sửa và phạm vi kiểm chứng
+
+- Rút gọn prompt V2 theo nhiệm vụ số liệu và tổng hợp; công bố root response schema,
+  giữ schema analyses riêng. Tác vụ nhận xét chỉ yêu cầu một analysis liên nhánh.
+- Qwen có thể đặt object `AnalysisProposal` đúng schema vào `claims`; trước đây nó
+  bị loại như numeric proposal, làm mất cả phép tính đúng. V2 chuyển nguyên object
+  đúng schema sang `analyses`, giữ raw response/trace, vẫn chạy grounding/Calculator/M6.
+  Không sửa sai số, toán tử, kỳ hoặc IDs do model sinh; V1 không bật bước này.
+- Mệnh lệnh thuần “Không suy ra/suy diễn/kết luận…” giữ như phạm vi trả lời, không
+  thành một financial retrieval mới. M7 nhắc nguyên văn, không cấp claim/citation/
+  coverage tài chính. C07 hết lỗi kỹ thuật do cố truy xuất phần bị cấm suy diễn.
+- Notes do model viết trong proposal khai `claim_type=derived_fact` giữ ở raw trace, không kèm
+  proof số học đã render: M6 kiểm số học không xác minh mệnh đề prose về thiếu dữ liệu.
+  Caveats từ nguồn/tools vẫn giữ, limitations của reasoned conclusions vẫn qua M6.
+- C10 có current ratio chưa được inventory đặt tên. Resolve canonical operands
+  trước khi resolve tên kết quả; dynamic goal không mất chỉ vì thiếu catalog name.
+  Source ambiguity, period/unit/operand guards giữ nguyên; binding vẫn cần M6 semantic
+  support. Payload M6 dùng định nghĩa trong text/kỳ/unit/phép toán, không nhầm source
+  anchor `current_assets` với tên kết quả “vốn lưu động ròng”. Whole-response goal giữ
+  cả required operand indicators, gồm nợ ngắn hạn, thay vì chỉ union nguồn đại diện.
+- Runner bỏ fingerprint ràng buộc endpoint cũ, archive `src` và helper scripts từ
+  một SHA; chạy cả ba case trong một process, lưu JSON nguyên tử và elapsed/calls
+  trong `finally`. Có fail-stop cho provider error, không retry/token pre-count.
+  Tự giới hạn 8 calls/câu, 24 calls/lượt, 300s/request; ghi tokens do provider báo.
+
+Khởi động đầu trên `53ca2a4` lỗi local do runner đặt 360s vượt contract 300s:
+0 API calls, không phải Qwen FAIL. Sửa tại `1f458a8`, validate request trước chuẩn bị
+catalog. Không xác định được nguyên nhân process lịch sử biến mất; phiên mới chỉ
+chứng minh runner đã hoàn tất được bộ ba, không chứng minh chống được hard kill.
+
+39 targeted tests trên isolated source trước normalization đạt; lần archive đầu
+thiếu `configs` nên fixture lỗi, bổ sung đúng input rồi mới có 39 PASS. Sau normalization:
+15 V2/M6 targeted PASS trên isolated staged source, bao gồm wrong value/unit/period/
+source/operand controls; 3 tests runner/scoring đạt sau sửa deadline. Ruff/format đạt.
+Source cuối: 16 V2/M6 targeted PASS trên isolated staged tree, thêm test dynamic goal
+không có catalog name không được phát hành khi thiếu M6 semantic goal binding.
+Planning checker đạt: 143 tasks trên working tree và 139 trên staged tree dùng checker
+committed; chênh lệch là local edits ngoài task được giữ nguyên. Diff checks đạt;
+local edits không liên quan giữ nguyên byte, phần local cũ trong shared module cũng
+giữ nguyên sau khi trừ đúng callback mới. Không có supplied API key trong task diff.
+Không chạy full CI/OCR/Gemini hoặc benchmark diện rộng.
+
+Replay nguyên responses C01 của lượt `1f458a8` trên source normalization khôi phục
+26,71%, 0,59 lần và CFO cùng facts nguồn; không sửa raw output. Một semantic request
+mới không có saved response được để thiếu/INVESTIGATE, 0 API mới; không lấy replay
+này làm bằng chứng synthesis đã đúng hoặc thay cho live.
+
+### Giữ cả lượt hồi quy, không chọn riêng kết quả đẹp
+
+Baseline so sánh là bộ cuối có đủ final answers trước phiên này: `9526fa0` (B).
+Source `5f71772` cũ không có final nên không dùng làm baseline accuracy. Lượt đầu mới
+`1f458a8` hoàn tất cả ba, 13 calls/38.461 tokens/0 unknown/0 retry/0 provider errors;
+E2E case gồm setup catalog: C01 214,06s, C07 108,01s, C10 174,81s.
+
+| Source/câu | Numeric Accuracy | Numeric EM | Claim P/R/F1 | Citation Accuracy | Answer Accuracy |
+| --- | --- | --- | --- | --- | --- |
+| B / C01 | 4/7 | 0 | 100% / 50% / 66,67% | 4/4 | 0 |
+| B / C07 | 1/1 | 1 | 100% / 80% / 88,89% | 7/7 | 0 |
+| B / C10 | 0/5 | 0 | 0% / 0% / 0% | N/A | 0 |
+| 1f458a8 / C01 | 1/7 | 0 | 100% / 12,50% / 22,22% | 1/1 | 0 |
+| 1f458a8 / C07 | 1/1 | 1 | 100% / 80% / 88,89% | 7/7 | 0 |
+| 1f458a8 / C10 | 1/5 | 0 | 100% / 16,67% / 28,57% | 1/1 | 0 |
+| 4ca965c / C01 | 7/7 | 1 | 81,82% / 87,50% / 84,56% | 9/9; completeness 9/11 | 0 |
+| 4ca965c / C07 | 1/1 | 1 | 100% / 80% / 88,89% | 7/7 | 0 |
+| 4ca965c / C10 | 1/5 | 0 | 100% / 16,67% / 28,57% | 1/1 | 0 |
+
+Lượt trung gian `4ca965c` khôi phục số C01 nhưng còn 2 mệnh đề data-availability trong
+notes chưa được kiểm chứng, đếm một lần dù xuất hiện lặp. Không bỏ chúng khỏi mẫu số
+Precision hoặc gọi citation accuracy 9/9 là toàn câu grounded. Đó là lý do tách model
+notes khỏi pure numeric proofs. C10 có 5 numeric ACCEPT nhưng chỉ CFO được render:
+working-capital semantic verdict thiếu supported IDs, current-ratio goal mất target;
+không cộng những ACCEPT không xuất hiện trong final vào Recall.
+
+Lượt đầu cho thấy rút gọn prompt đơn thuần chưa đủ: Qwen tiếp tục sai envelope,
+thêm số sai 26,4% hoặc diễn giải “phục hồi mạnh”, “sinh tiền tốt” thiếu chuẩn.
+Final C01/C10 chỉ còn CFO; không gọi đây là tiến bộ QA. C07 pipeline completed
+nhưng chấm PARTIAL: quote chính sách còn dài, scope note chưa giải thích giới hạn
+xác định số vốn hóa. Kết quả/source/Gold/review/raw responses được giữ riêng ở
+`artifacts/evidence/V2-INT-01/qa-followup/`, ignored; không commit credentials/dataset.
+
 ## Cải thiện QA thực tế — kết quả và giới hạn bàn giao
 
 **REVIEW**, 13/11/2026. Source cuối: `5f717726f0e16010f1ce7a3335f249fa7ca369a3`,
