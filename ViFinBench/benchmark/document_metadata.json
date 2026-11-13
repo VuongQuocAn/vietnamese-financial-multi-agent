@@ -1,0 +1,412 @@
+{
+  "ADC_2021": {
+    "ticker": "ADC",
+    "company_name": "Công ty Cổ phần Mĩ thuật và Truyền thông",
+    "aliases": [
+      "Mĩ thuật và Truyền thông",
+      "ADC"
+    ],
+    "fiscal_year": 2021,
+    "statement_scope": "unknown"
+  },
+  "ADC_2022": {
+    "ticker": "ADC",
+    "company_name": "Công ty Cổ phần Mĩ thuật và Truyền thông",
+    "aliases": [
+      "Mĩ thuật và Truyền thông",
+      "ADC"
+    ],
+    "fiscal_year": 2022,
+    "statement_scope": "unknown"
+  },
+  "ADC_2023": {
+    "ticker": "ADC",
+    "company_name": "Công ty Cổ phần Mĩ thuật và Truyền thông",
+    "aliases": [
+      "Mĩ thuật và Truyền thông",
+      "ADC"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "ADC_2024": {
+    "ticker": "ADC",
+    "company_name": "Công ty Cổ phần Mĩ thuật và Truyền thông",
+    "aliases": [
+      "Mĩ thuật và Truyền thông",
+      "ADC"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "unknown"
+  },
+  "ADC_2025": {
+    "ticker": "ADC",
+    "company_name": "Công ty Cổ phần Mĩ thuật và Truyền thông",
+    "aliases": [
+      "Mĩ thuật và Truyền thông",
+      "ADC"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "separate"
+  },
+  "ALT_2023": {
+    "ticker": "ALT",
+    "company_name": "Công ty Cổ phần Văn hóa Tân Bình",
+    "aliases": [
+      "Văn hóa Tân Bình",
+      "ALT"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "consolidated"
+  },
+  "ALT_2024": {
+    "ticker": "ALT",
+    "company_name": "Công ty Cổ phần Văn hóa Tân Bình",
+    "aliases": [
+      "Văn hóa Tân Bình",
+      "ALT"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "consolidated"
+  },
+  "ALT_2025": {
+    "ticker": "ALT",
+    "company_name": "Công ty Cổ phần Văn hóa Tân Bình",
+    "aliases": [
+      "Văn hóa Tân Bình",
+      "ALT"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "consolidated"
+  },
+  "AMC_2021": {
+    "ticker": "AMC",
+    "company_name": "Công ty Cổ phần Khoáng sản Á Châu",
+    "aliases": [
+      "Khoáng sản Á Châu",
+      "AMC"
+    ],
+    "fiscal_year": 2021,
+    "statement_scope": "unknown"
+  },
+  "AMC_2022": {
+    "ticker": "AMC",
+    "company_name": "Công ty Cổ phần Khoáng sản Á Châu",
+    "aliases": [
+      "Khoáng sản Á Châu",
+      "AMC"
+    ],
+    "fiscal_year": 2022,
+    "statement_scope": "unknown"
+  },
+  "AMC_2023": {
+    "ticker": "AMC",
+    "company_name": "Công ty Cổ phần Khoáng sản Á Châu",
+    "aliases": [
+      "Khoáng sản Á Châu",
+      "AMC"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "AMC_2024": {
+    "ticker": "AMC",
+    "company_name": "Công ty Cổ phần Khoáng sản Á Châu",
+    "aliases": [
+      "Khoáng sản Á Châu",
+      "AMC"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "unknown"
+  },
+  "AMC_2025": {
+    "ticker": "AMC",
+    "company_name": "Công ty Cổ phần Khoáng sản Á Châu",
+    "aliases": [
+      "Khoáng sản Á Châu",
+      "AMC"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  },
+  "AME_2023": {
+    "ticker": "AME",
+    "company_name": "Công ty Cổ phần Alphanam E&C",
+    "aliases": [
+      "Alphanam E&C",
+      "AME"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "AME_2024": {
+    "ticker": "AME",
+    "company_name": "Công ty Cổ phần Alphanam E&C",
+    "aliases": [
+      "Alphanam E&C",
+      "AME"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "consolidated"
+  },
+  "AME_2025": {
+    "ticker": "AME",
+    "company_name": "Công ty Cổ phần Alphanam E&C",
+    "aliases": [
+      "Alphanam E&C",
+      "AME"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "consolidated"
+  },
+  "ARM_2023": {
+    "ticker": "ARM",
+    "company_name": "Công ty Cổ phần Xuất nhập khẩu Hàng không",
+    "aliases": [
+      "Xuất nhập khẩu Hàng không",
+      "ARM"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "ARM_2024": {
+    "ticker": "ARM",
+    "company_name": "Công ty Cổ phần Xuất nhập khẩu Hàng không",
+    "aliases": [
+      "Xuất nhập khẩu Hàng không",
+      "ARM"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "unknown"
+  },
+  "ARM_2025": {
+    "ticker": "ARM",
+    "company_name": "Công ty Cổ phần Xuất nhập khẩu Hàng không",
+    "aliases": [
+      "Xuất nhập khẩu Hàng không",
+      "ARM"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "separate"
+  },
+  "ATS_2023": {
+    "ticker": "ATS",
+    "company_name": "Công ty Cổ phần Tập đoàn Dược phẩm ATESCO",
+    "aliases": [
+      "Tập đoàn Dược phẩm ATESCO",
+      "ATS"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "ATS_2024": {
+    "ticker": "ATS",
+    "company_name": "Công ty Cổ phần Tập đoàn Đầu tư ATS",
+    "aliases": [
+      "Tập đoàn Đầu tư ATS",
+      "ATS"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "unknown"
+  },
+  "ATS_2025": {
+    "ticker": "ATS",
+    "company_name": "Công ty Cổ phần Tập đoàn Đầu tư ATS",
+    "aliases": [
+      "Tập đoàn Đầu tư ATS",
+      "ATS"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  },
+  "BBS_2023": {
+    "ticker": "BBS",
+    "company_name": "Công ty Cổ phần Vicem Bao bì Bút Sơn",
+    "aliases": [
+      "Vicem Bao bì Bút Sơn",
+      "BBS"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "BBS_2024": {
+    "ticker": "BBS",
+    "company_name": "Công ty Cổ phần Vicem Bao bì Bút Sơn",
+    "aliases": [
+      "Vicem Bao bì Bút Sơn",
+      "BBS"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "separate"
+  },
+  "BBS_2025": {
+    "ticker": "BBS",
+    "company_name": "Công ty Cổ phần Vicem Bao bì Bút Sơn",
+    "aliases": [
+      "Vicem Bao bì Bút Sơn",
+      "BBS"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  },
+  "BCC_2021": {
+    "ticker": "BCC",
+    "company_name": "Công ty Cổ phần Xi măng Bỉm Sơn",
+    "aliases": [
+      "Xi măng Bỉm Sơn",
+      "BCC"
+    ],
+    "fiscal_year": 2021,
+    "statement_scope": "consolidated"
+  },
+  "BCC_2022": {
+    "ticker": "BCC",
+    "company_name": "Công ty Cổ phần Xi măng Bỉm Sơn",
+    "aliases": [
+      "Xi măng Bỉm Sơn",
+      "BCC"
+    ],
+    "fiscal_year": 2022,
+    "statement_scope": "consolidated"
+  },
+  "BCC_2023": {
+    "ticker": "BCC",
+    "company_name": "Công ty Cổ phần Xi măng Bỉm Sơn",
+    "aliases": [
+      "Xi măng Bỉm Sơn",
+      "BCC"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "consolidated"
+  },
+  "BCC_2024": {
+    "ticker": "BCC",
+    "company_name": "Công ty Cổ phần Xi măng Bỉm Sơn",
+    "aliases": [
+      "Xi măng Bỉm Sơn",
+      "BCC"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "consolidated"
+  },
+  "BCC_2025": {
+    "ticker": "BCC",
+    "company_name": "Công ty Cổ phần Xi măng Bỉm Sơn",
+    "aliases": [
+      "Xi măng Bỉm Sơn",
+      "BCC"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "consolidated"
+  },
+  "BED_2023": {
+    "ticker": "BED",
+    "company_name": "Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng",
+    "aliases": [
+      "Sách và Thiết bị trường học Đà Nẵng",
+      "BED"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "unknown"
+  },
+  "BED_2024": {
+    "ticker": "BED",
+    "company_name": "Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng",
+    "aliases": [
+      "Sách và Thiết bị trường học Đà Nẵng",
+      "BED"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "unknown"
+  },
+  "BED_2025": {
+    "ticker": "BED",
+    "company_name": "Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng",
+    "aliases": [
+      "Sách và Thiết bị trường học Đà Nẵng",
+      "BED"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  },
+  "BKC_2023": {
+    "ticker": "BKC",
+    "company_name": "Công ty Cổ phần Khoáng sản Bắc Kạn",
+    "aliases": [
+      "Khoáng sản Bắc Kạn",
+      "BKC"
+    ],
+    "fiscal_year": 2023,
+    "statement_scope": "separate"
+  },
+  "BKC_2024": {
+    "ticker": "BKC",
+    "company_name": "Công ty Cổ phần Khoáng sản Bắc Kạn",
+    "aliases": [
+      "Khoáng sản Bắc Kạn",
+      "BKC"
+    ],
+    "fiscal_year": 2024,
+    "statement_scope": "separate"
+  },
+  "BKC_2025": {
+    "ticker": "BKC",
+    "company_name": "Công ty Cổ phần Khoáng sản Bắc Kạn",
+    "aliases": [
+      "Khoáng sản Bắc Kạn",
+      "BKC"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "consolidated"
+  },
+  "BPC_2025": {
+    "ticker": "BPC",
+    "company_name": "Công ty Cổ phần Vicem Bao bì Bỉm Sơn",
+    "aliases": [
+      "Vicem Bao bì Bỉm Sơn",
+      "BPC"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  },
+  "BTS_2025": {
+    "ticker": "BTS",
+    "company_name": "Công ty Cổ phần Xi măng Vicem Bút Sơn",
+    "aliases": [
+      "Xi măng Vicem Bút Sơn",
+      "BTS"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "separate"
+  },
+  "BTW_2025": {
+    "ticker": "BTW",
+    "company_name": "Công ty Cổ phần Cấp nước Bến Thành",
+    "aliases": [
+      "Cấp nước Bến Thành",
+      "BTW"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "separate"
+  },
+  "C69_2025": {
+    "ticker": "C69",
+    "company_name": "Công ty Cổ phần Xây dựng 1369",
+    "aliases": [
+      "Xây dựng 1369",
+      "C69"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "consolidated"
+  },
+  "CAG_2025": {
+    "ticker": "CAG",
+    "company_name": "Công ty Cổ phần Cảng An Giang",
+    "aliases": [
+      "Cảng An Giang",
+      "CAG"
+    ],
+    "fiscal_year": 2025,
+    "statement_scope": "unknown"
+  }
+}

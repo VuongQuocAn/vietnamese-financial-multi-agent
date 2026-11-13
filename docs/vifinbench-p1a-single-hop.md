@@ -1,60 +1,96 @@
-# ViFinBench-P1A-Refine — Single-hop QA Pilot
+# ViFinBench-P1A-Finalize — Gold QA Normalization & Schema v1 Freeze
 
-Ngày thực hiện: **13/11/2026** (Asia/Bangkok). Trạng thái: **REVIEW**.
-Dataset: [pilot.jsonl](../ViFinBench/benchmark/single_hop/pilot.jsonl).
-Bản P1A trước refinement được giữ trong [commit 5f2531f](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/5f2531f8dfaaa4f999a4b90739d9ced6237fae97); mapping bên dưới so với bản đó.
+Ngày thực hiện: **13/11/2026** (Asia/Bangkok). Trạng thái: **REVIEW**, chờ Tech Lead nghiệm thu phần chuẩn hóa/schema.
+Chất lượng nội dung P1A đã được Tech Lead phê duyệt theo brief Finalize; baseline [d7a5b97](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/d7a5b97f75d0fcd7e1ed08b5d7c7968b539b4a77).
 
-## 1. Kết quả và quy tắc biên soạn
+## 1. Kết quả
 
-Đọc lại toàn bộ 15 mẫu cũ, báo cáo P1A và các trang neutral được dùng; đánh giá câu hỏi, thông tin đích, độ khó và khả năng đoán bằng kiến thức chung trước khi chuyển schema. Kết quả: **15 QA, 5 Easy / 7 Medium / 3 Hard; 10 natural / 5 formal; 1 KEEP / 11 REWRITE / 3 REPLACE**. Dùng **12 doanh nghiệp / 12 tài liệu / 15 trang**, tối đa hai câu mỗi tài liệu; năm 2021: 2, 2023: 4, 2024: 2, 2025: 7. Có B01/B02/B03/B09, **10 bằng chứng bảng / 5 bằng chứng văn bản**, đáp án 10 number / 3 text / 1 date / 1 entity.
+**15 QA giữ nguyên ID, nội dung cần hỏi, đáp án thực tế và độ khó: 5 Easy / 7 Medium / 3 Hard; 10 natural / 5 formal; 12 doanh nghiệp / 12 tài liệu.** Không tạo lại QA. Chỉ câu 0011 được mở rộng cách gọi ATS thành Công ty Cổ phần Tập đoàn Đầu tư ATS; các tên ARM, BCC/BPC, BBS/BTS còn lại đã tự phân biệt được.
 
-KEEP giữ câu hỏi và thông tin đích; vẫn chuyển schema và bổ sung ngữ cảnh bằng chứng. REWRITE giữ thông tin đích nhưng viết lại câu và bằng chứng. REPLACE thay thông tin cần hỏi. ID được giữ để dễ đối chiếu, không hàm ý nội dung cũ bất biến.
+Bổ sung **3 unit_evidence** (0002, 0010, 0012), **2 row_path** (0009, 0015). Chuyển 0006 thành range với min="2", max="7", unit="year", không có value, key_points rỗng; khoảng thực tế và display không đổi. Unit chuẩn: VND→vnd, employees→person, years→year. Các đáp án text 0007/0013 giữ đủ key_points. Phân bố answer mới: **10 number / 1 range / 2 text / 1 date / 1 entity**.
 
-Mỗi mẫu lấy đáp án từ một hàng/ô hoặc một đoạn của cùng hợp đồng/thuyết minh. Không có phép tính mới hay kết hợp nhiều bằng chứng độc lập. Với bảng, quote là **trích chọn các dòng nguyên văn theo thứ tự nguồn**: ngữ cảnh cần thiết, header đầy đủ, dòng phân cách, hàng phân nhóm nếu có và toàn bộ hàng chứa đáp án. Các hàng không liên quan được lược bỏ, không nối thành một trích dẫn liên tục giả định, không dùng dấu ba chấm. `row_label`/`column_header` giữ nhãn JSON; xuống dòng trong header JSON tương ứng dấu cách ở Markdown.
+Tạo metadata cho **41/41 tài liệu**, gồm 15 ticker (ATS có hai tên theo thời kỳ); không có company_name/fiscal_year chưa xác minh. Schema v1 được khóa ở mức quy ước dữ liệu; chỉ thay đổi đúng bốn file được giao, không sửa planning, neutral, audit hoặc runtime.
 
-Không gán ngành nghề/phạm vi bằng suy đoán. Nguồn BCC_2024 và ALT_2023 ghi rõ hợp nhất. Đơn vị VND được đọc từ trang/bảng hoặc chính sách tiền tệ trong báo cáo: AMC_2021 trang 11, ALT_2023 trang 14, CAG_2025 trang 13. Đây là ngữ cảnh đơn vị, không ghép dữ kiện để tạo đáp án. Số trang là trang neutral, không thêm page_printed.
+- [Dataset](../ViFinBench/benchmark/single_hop/pilot.jsonl)
+- [Document metadata](../ViFinBench/benchmark/document_metadata.json)
+- [Schema v1](../ViFinBench/benchmark/SCHEMA.md)
 
-## 2. Tổng hợp bộ QA mới
+## 2. Bằng chứng đơn vị và đường dẫn hàng
 
-| ID | Doanh nghiệp | Năm | Độ khó | Style | Chủ đề |
-| --- | --- | --- | --- | --- | --- |
-| VFB-SH-0001 | Vicem Bao bì Bút Sơn | 2025 | easy | natural | Tổng tài sản (B01) |
-| VFB-SH-0002 | Khoáng sản Á Châu | 2021 | easy | formal | Doanh thu thuần (B02) |
-| VFB-SH-0003 | Mĩ thuật và Truyền thông | 2021 | easy | natural | Đơn vị kiểm toán |
-| VFB-SH-0004 | Xi măng Bỉm Sơn | 2024 | easy | formal | Dòng tiền kinh doanh hợp nhất (B03) |
-| VFB-SH-0005 | Cảng An Giang | 2025 | easy | natural | Nhân sự cuối năm (B09) |
-| VFB-SH-0006 | Sách và Thiết bị trường học Đà Nẵng | 2025 | medium | natural | Thời gian khấu hao máy móc (B09) |
-| VFB-SH-0007 | Cấp nước Bến Thành | 2025 | medium | natural | Tài sản và mục đích thuê thực tế (B09) |
-| VFB-SH-0008 | Vicem Bao bì Bỉm Sơn | 2025 | medium | formal | Giá trị hợp lý chứng khoán (B09) |
-| VFB-SH-0009 | Xuất nhập khẩu Hàng không | 2023 | medium | natural | Công nợ ủy thác với ROHR (B09) |
-| VFB-SH-0010 | Văn hóa Tân Bình | 2023 | medium | formal | Thuế hiện hành tại công ty mẹ (B09) |
-| VFB-SH-0011 | Tập đoàn Đầu tư ATS | 2024 | medium | natural | Ngày hết hạn phụ lục thuê văn phòng (B09) |
-| VFB-SH-0012 | Cảng An Giang | 2025 | medium | natural | Tiền cho thuê sẽ thu trên 5 năm (B09) |
-| VFB-SH-0013 | Vicem Bao bì Bút Sơn | 2025 | hard | natural | Hai giới hạn thời gian cấp hạn mức (B09) |
-| VFB-SH-0014 | Khoáng sản Bắc Kạn | 2023 | hard | natural | Hạn mức tín dụng sau sửa đổi (B09) |
-| VFB-SH-0015 | Văn hóa Tân Bình | 2023 | hard | formal | Hao mòn lũy kế theo nhóm tài sản (B09) |
+Chín đáp án tiền đều là vnd. Sáu mẫu 0001/0004/0008/0009/0014/0015 đã có VND trong quote chính. Ba mẫu dưới dùng chính sách tiền tệ của cùng tài liệu; kiểm tra header/ngữ cảnh bảng không có chỉ dẫn trình bày triệu/nghìn hoặc đơn vị khác. Unit evidence chỉ xác nhận đơn vị, không bổ sung số liệu để suy ra đáp án.
 
-## 3. Đối chiếu 15 mẫu cũ và mới
+| QA | Nguồn đơn vị | Nội dung trích nguyên văn |
+| --- | --- | --- |
+| VFB-SH-0002 | AMC_2021, trang 11 | Báo cáo tài chính kèm theo được trình bày bằng Đồng Việt Nam (VND), theo nguyên tắc giá gốc và phù hợp với Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính. |
+| VFB-SH-0010 | ALT_2023, trang 14 | Đơn vị tiền tệ sử dụng trong ghi chép kế toán là đồng Việt Nam (VND). |
+| VFB-SH-0012 | CAG_2025, trang 13 | Đơn vị tiền tệ sử dụng trong kế toán là Đồng Việt Nam (VND) do phần lớn các nghiệp vụ được thực hiện bằng đơn vị tiền tệ VND. |
 
-| ID cũ → mới | Xử lý | Nội dung cũ | Thay đổi / căn cứ |
-| --- | --- | --- | --- |
-| VFB-SH-0001 → cùng ID | REWRITE | Tổng tài sản | Rút gọn câu hỏi; giữ chỉ tiêu có hai giá trị kỳ khác nhau; đưa header/đơn vị vào quote. |
-| VFB-SH-0002 → cùng ID | REWRITE | Doanh thu thuần | Giữ thuật ngữ chính thức, bỏ cấu trúc câu dài; quote gắn Năm nay với năm 2021. |
-| VFB-SH-0003 → cùng ID | KEEP | Tên kiểm toán | Câu hỏi sẵn rõ, tên kiểm toán đặc thù; giữ nguyên câu và thông tin đích, chuyển schema bắt buộc. |
-| VFB-SH-0004 → cùng ID | REWRITE | Dòng tiền kinh doanh hợp nhất | Giữ phạm vi hợp nhất và tên chỉ tiêu; bổ sung header cùng ngữ cảnh năm/đơn vị. |
-| VFB-SH-0005 → cùng ID | REPLACE | Cổ phiếu lưu hành, hai kỳ bằng nhau | Thay cổ phiếu 13.800.000 ở cả hai kỳ bằng nhân sự 120 cuối năm / 119 đầu năm trong một câu nguồn. |
-| VFB-SH-0006 → cùng ID | REPLACE | Bình quân gia quyền / kê khai thường xuyên | Thay chính sách tồn kho phổ biến bằng khoảng khấu hao cụ thể doanh nghiệp công bố; giữ đủ hai đầu khoảng. |
-| VFB-SH-0007 → cùng ID | REPLACE | Quy tắc ghi nhận doanh thu dịch vụ | Thay quy tắc ghi nhận doanh thu phổ biến bằng hợp đồng thuê mạng lưới cấp nước riêng của doanh nghiệp. |
-| VFB-SH-0008 → cùng ID | REWRITE | Giá trị hợp lý cổ phiếu | Viết gọn nhưng giữ cơ sở giá trị hợp lý; quote có tiêu đề ngày để phân biệt hai bảng cùng header. |
-| VFB-SH-0009 → cùng ID | REWRITE | Phải trả ROHR về ủy thác | Bỏ việc chép đường dẫn thuyết minh vào câu hỏi; giữ nhóm Ngắn hạn / Phải trả bên thứ ba / ủy thác trong quote. |
-| VFB-SH-0010 → cùng ID | REWRITE | Thuế hiện hành công ty mẹ | Rút gọn câu hỏi, giữ phần công ty mẹ trong BCTC hợp nhất; thêm header và phạm vi vào quote. |
-| VFB-SH-0011 → cùng ID | REWRITE | Ngày hết gia hạn thuê văn phòng | Hỏi trực tiếp ngày hết gia hạn; chuẩn hóa ISO và giữ ngày ký/ngày bắt đầu trong nguồn để tránh nhầm. |
-| VFB-SH-0012 → cùng ID | REWRITE | Tiền thuê sẽ thu trên 5 năm | Làm rõ dòng tiền sẽ thu và phần thời hạn, tránh hiểu thành tiền phải trả hoặc tổng mọi kỳ của hợp đồng trên 5 năm. |
-| VFB-SH-0013 → cùng ID | REWRITE | Thời gian cấp hạn mức Vietcombank | Bỏ mã hợp đồng dài khỏi câu hỏi, vẫn định danh được theo ngân hàng/ngày; key_points bắt buộc đủ hai điều kiện. |
-| VFB-SH-0014 → cùng ID | REWRITE | Hạn mức sau sửa đổi VietinBank | Hỏi hạn mức sau sửa đổi bằng ngôn ngữ nhu cầu vay vốn; giữ số gốc và số sửa đổi trong cùng đoạn trích. |
-| VFB-SH-0015 → cùng ID | REWRITE | Hao mòn lũy kế phương tiện vận tải | Bỏ phần dẫn dài, giữ phạm vi hợp nhất; quote đủ header, hàng phân nhóm hao mòn và hàng cuối năm. |
+| QA | row_path |
+| --- | --- |
+| VFB-SH-0009 | Ngắn hạn → Phải trả bên thứ ba → Các khoản phải trả, phải nộp về ủy thác → Công ty ROHR |
+| VFB-SH-0015 | Giá trị hao mòn lũy kế → Số dư cuối năm |
 
-## 4. Câu hỏi, đáp án và bằng chứng
+Các cấp trên có nhãn thật, theo thứ tự cha–con trong bảng; 0009 giữ cả cấp Ngắn hạn vì nguồn phân biệt ngắn/dài hạn. Các bảng còn lại đã định vị bằng table_id/row_label/column_header; không thêm cấp từ tiêu đề thuyết minh hoặc cấp giả. Hai trường mới hiện diện ở mọi mẫu, dùng null khi không áp dụng. Quote chính, row_label và column_header của cả 15 mẫu không đổi so với baseline.
+
+## 3. Document metadata và căn cứ corpus
+
+Tên được đối chiếu từng tài liệu, chuẩn hóa hoa/thường và khoảng trắng, không đổi chữ trong tên. Alias gồm tên bỏ tiền tố pháp lý và ticker; ticker giữ namespace document_id của corpus, không xác minh lại với sàn chứng khoán. Năm lấy từ kỳ báo cáo trong nội dung, không lấy ngày ký hoặc chỉ dựa tên thư mục. Không tự mang tên/scope ở năm này sang năm khác.
+
+Scope chỉ ghi separate/consolidated khi có tiêu đề BCTC, dòng công bố rõ phạm vi hoặc ô lựa chọn được đánh dấu. Ô không đánh dấu, tiêu đề BCTC chung và câu chuẩn mực nói về hợp nhất không đủ để gán phạm vi. unknown là chưa xác nhận rõ phạm vi, không phải dữ liệu tài chính sai. Cột nguồn ghi trang neutral; các dòng scope được dẫn đủ để kiểm quyết định.
+
+| Document ID | Tên đầy đủ | Trang tên / kỳ | Scope | Căn cứ scope |
+| --- | --- | --- | --- | --- |
+| ADC_2021 | Công ty Cổ phần Mĩ thuật và Truyền thông | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ADC_2022 | Công ty Cổ phần Mĩ thuật và Truyền thông | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ADC_2023 | Công ty Cổ phần Mĩ thuật và Truyền thông | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ADC_2024 | Công ty Cổ phần Mĩ thuật và Truyền thông | 2 / 2 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ADC_2025 | Công ty Cổ phần Mĩ thuật và Truyền thông | 1 / 4 | separate | Trang 1: - [X] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| ALT_2023 | Công ty Cổ phần Văn hóa Tân Bình | 1 / 1 | consolidated | Trang 1: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT |
+| ALT_2024 | Công ty Cổ phần Văn hóa Tân Bình | 1 / 1 | consolidated | Trang 1: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT |
+| ALT_2025 | Công ty Cổ phần Văn hóa Tân Bình | 1 / 1 | consolidated | Trang 1: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT |
+| AMC_2021 | Công ty Cổ phần Khoáng sản Á Châu | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AMC_2022 | Công ty Cổ phần Khoáng sản Á Châu | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AMC_2023 | Công ty Cổ phần Khoáng sản Á Châu | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AMC_2024 | Công ty Cổ phần Khoáng sản Á Châu | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AMC_2025 | Công ty Cổ phần Khoáng sản Á Châu | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AME_2023 | Công ty Cổ phần Alphanam E&C | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| AME_2024 | Công ty Cổ phần Alphanam E&C | 1 / 1 | consolidated | Trang 1: Báo cáo tài chính hợp nhất đã được kiểm toán cho năm tài chính kết thúc vào ngày 31 tháng 12 năm 2024 |
+| AME_2025 | Công ty Cổ phần Alphanam E&C | 1 / 1 | consolidated | Trang 1: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT |
+| ARM_2023 | Công ty Cổ phần Xuất nhập khẩu Hàng không | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ARM_2024 | Công ty Cổ phần Xuất nhập khẩu Hàng không | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ARM_2025 | Công ty Cổ phần Xuất nhập khẩu Hàng không | 1 / 3 | separate | Trang 1: [x] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| ATS_2023 | Công ty Cổ phần Tập đoàn Dược phẩm ATESCO | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ATS_2024 | Công ty Cổ phần Tập đoàn Đầu tư ATS | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| ATS_2025 | Công ty Cổ phần Tập đoàn Đầu tư ATS | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BBS_2023 | Công ty Cổ phần Vicem Bao bì Bút Sơn | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BBS_2024 | Công ty Cổ phần Vicem Bao bì Bút Sơn | 1 / 3 | separate | Trang 1: [X] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| BBS_2025 | Công ty Cổ phần Vicem Bao bì Bút Sơn | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BCC_2021 | Công ty Cổ phần Xi măng Bỉm Sơn | 1 / 2 | consolidated | Trang 2: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT ĐÃ ĐƯỢC KIỂM TOÁN |
+| BCC_2022 | Công ty Cổ phần Xi măng Bỉm Sơn | 1 / 1 | consolidated | Trang 1: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT ĐÃ ĐƯỢC KIỂM TOÁN |
+| BCC_2023 | Công ty Cổ phần Xi măng Bỉm Sơn | 1 / 5 | consolidated | Trang 1: [X] BCTC hợp nhất (TCNY có Công ty con); |
+| BCC_2024 | Công ty Cổ phần Xi măng Bỉm Sơn | 3 / 3 | consolidated | Trang 3: ### BÁO CÁO TÀI CHÍNH HỢP NHẤT |
+| BCC_2025 | Công ty Cổ phần Xi măng Bỉm Sơn | 1 / 1 | consolidated | Trang 1: 6.1. Báo cáo tài chính hợp nhất sau kiểm toán năm 2025 của Công ty Cổ phần Xi măng Bỉm Sơn được lập ngày 10 tháng 03 năm 2026, bao gồm: |
+| BED_2023 | Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BED_2024 | Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BED_2025 | Công ty Cổ phần Sách và Thiết bị trường học Đà Nẵng | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BKC_2023 | Công ty Cổ phần Khoáng sản Bắc Kạn | 1 / 3 | separate | Trang 1: ☑ BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| BKC_2024 | Công ty Cổ phần Khoáng sản Bắc Kạn | 1 / 3 | separate | Trang 1: [x] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| BKC_2025 | Công ty Cổ phần Khoáng sản Bắc Kạn | 1 / 3 | consolidated | Trang 1: (Báo cáo tài chính hợp nhất) |
+| BPC_2025 | Công ty Cổ phần Vicem Bao bì Bỉm Sơn | 3 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+| BTS_2025 | Công ty Cổ phần Xi măng Vicem Bút Sơn | 1 / 4 | separate | Trang 1: [x] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc); |
+| BTW_2025 | Công ty Cổ phần Cấp nước Bến Thành | 1 / 3 | separate | Trang 1: [X] BCTC riêng (TCNY không có công ty con và đơn vị kế toán cấp trên có đơn vị trực thuộc) |
+| C69_2025 | Công ty Cổ phần Xây dựng 1369 | 1 / 7 | consolidated | Trang 2: - BCTC hợp nhất 2025 / Consolidated financial statements 2025 |
+| CAG_2025 | Công ty Cổ phần Cảng An Giang | 1 / 1 | unknown | Chưa có chỉ dẫn phạm vi rõ trong lượt kiểm mục tiêu; giữ unknown. |
+
+Scope: **7 separate / 12 consolidated / 22 unknown**. Danh sách unknown: `ADC_2021`, `ADC_2022`, `ADC_2023`, `ADC_2024`, `AMC_2021`, `AMC_2022`, `AMC_2023`, `AMC_2024`, `AMC_2025`, `AME_2023`, `ARM_2023`, `ARM_2024`, `ATS_2023`, `ATS_2024`, `ATS_2025`, `BBS_2023`, `BBS_2025`, `BED_2023`, `BED_2024`, `BED_2025`, `BPC_2025`, `CAG_2025`.
+
+ATS_2023 giữ tên **Công ty Cổ phần Tập đoàn Dược phẩm ATESCO**, ATS_2024/2025 là **Công ty Cổ phần Tập đoàn Đầu tư ATS**; metadata theo document_id bảo toàn khác biệt. BPC dùng tên Bỉm Sơn đúng trong thân báo cáo (trang 3/4), không lấy lỗi chữ Bìm ở bìa. BBS/BTS và BCC/BPC có ticker và tên đầy đủ riêng, không dùng alias chung “Bút Sơn” hoặc “Bỉm Sơn”.
+
+**BCC_2025:** scope consolidated lấy đúng dòng công bố trang 1 về báo cáo được nhắc đến; export vẫn chỉ hai trang công bố/giải trình, không chứa bộ BCTC. Metadata không khẳng định tính đầy đủ, không bind PDF khác cùng key và không dùng tài liệu này để sinh QA. Đây là cùng nghĩa phạm vi báo cáo được công bố trong SCHEMA.md, không phải nhãn loại file hoặc chứng nhận nguồn đầy đủ.
+
+## 4. Bộ QA sau chuẩn hóa
+
+Trích dẫn bảng giữ các dòng nguyên văn đã chọn theo thứ tự trang, gồm header và hàng/nhóm cần thiết; không yêu cầu các dòng đó liền nhau trong bảng đầy đủ. Mỗi QA vẫn lấy thông tin đích từ một hàng/ô hoặc đoạn. Phần unit_evidence là ngữ cảnh đơn vị của cùng tài liệu.
 
 ### VFB-SH-0001 — easy / natural
 
@@ -62,10 +98,8 @@ Không gán ngành nghề/phạm vi bằng suy đoán. Nguồn BCC_2024 và ALT_
 
 **Đáp án:** 266.086.680.765 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "266086680765", "unit": "VND", "display": "266.086.680.765 VND", "key_points": []}
+{"type": "number", "value": "266086680765", "unit": "vnd", "display": "266.086.680.765 VND", "key_points": []}
 ```
 
 **Nguồn:** [BBS_2025, trang 5](../ViFinBench/neutral/BBS_2025/document.md); bảng `BBS_2025_p005_t001`; hàng `TỔNG CỘNG TÀI SẢN`; cột `31/12/2025`.
@@ -77,18 +111,14 @@ Không gán ngành nghề/phạm vi bằng suy đoán. Nguồn BCC_2024 và ALT_
 | TỔNG CỘNG TÀI SẢN | 270 |  | 266.086.680.765 | 291.306.659.104 |
 ```
 
-**Single-hop / độ khó:** Easy: một chỉ tiêu tổng rõ ràng, không cộng các phần tài sản.
-
 ### VFB-SH-0002 — easy / formal
 
 **Câu hỏi:** Doanh thu thuần về bán hàng và cung cấp dịch vụ của Khoáng sản Á Châu năm 2021 là bao nhiêu?
 
 **Đáp án:** 157.803.608.857 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "157803608857", "unit": "VND", "display": "157.803.608.857 VND", "key_points": []}
+{"type": "number", "value": "157803608857", "unit": "vnd", "display": "157.803.608.857 VND", "key_points": []}
 ```
 
 **Nguồn:** [AMC_2021, trang 9](../ViFinBench/neutral/AMC_2021/document.md); bảng `AMC_2021_p009_t001`; hàng `2. Doanh thu thuần về bán hàng và cung cấp dịch vụ`; cột `Năm nay`.
@@ -101,7 +131,11 @@ Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2021
 | 2. Doanh thu thuần về bán hàng và cung cấp dịch vụ | 10 | VI.1 | 157.803.608.857 | 153.539.180.123 |
 ```
 
-**Single-hop / độ khó:** Easy: tra trực tiếp mã 10 ở cột năm báo cáo, không tự tính doanh thu thuần.
+**unit_evidence — trang 11:**
+
+```text
+Báo cáo tài chính kèm theo được trình bày bằng Đồng Việt Nam (VND), theo nguyên tắc giá gốc và phù hợp với Chuẩn mực kế toán, Chế độ kế toán doanh nghiệp Việt Nam và các quy định pháp lý có liên quan đến việc lập và trình bày Báo cáo tài chính.
+```
 
 ### VFB-SH-0003 — easy / natural
 
@@ -109,13 +143,11 @@ Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2021
 
 **Đáp án:** Công ty TNHH Kiểm toán và Kế toán AAC
 
-**Đáp án chuẩn để chấm:**
-
 ```json
 {"type": "entity", "value": "Công ty TNHH Kiểm toán và Kế toán AAC", "unit": null, "display": "Công ty TNHH Kiểm toán và Kế toán AAC", "key_points": []}
 ```
 
-**Nguồn:** [ADC_2021, trang 7](../ViFinBench/neutral/ADC_2021/document.md); văn bản, `table_id`, `row_label`, `column_header` đều null.
+**Nguồn:** [ADC_2021, trang 7](../ViFinBench/neutral/ADC_2021/document.md); văn bản, các nhãn bảng null.
 
 ```text
 ### CÔNG TY CỔ PHẦN MĨ THUẬT VÀ TRUYỀN THÔNG
@@ -124,18 +156,14 @@ Cho năm tài chính kết thúc ngày 31/12/2021
 Báo cáo tài chính này được kiểm toán bởi Công ty TNHH Kiểm toán và Kế toán AAC
 ```
 
-**Single-hop / độ khó:** Easy: tên đơn vị được nêu trực tiếp; không thể xác định chỉ bằng chuẩn mực kế toán.
-
 ### VFB-SH-0004 — easy / formal
 
 **Câu hỏi:** Theo báo cáo lưu chuyển tiền tệ hợp nhất năm 2024 của Xi măng Bỉm Sơn, lưu chuyển tiền thuần từ hoạt động kinh doanh là bao nhiêu?
 
 **Đáp án:** 202.642.595.052 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "202642595052", "unit": "VND", "display": "202.642.595.052 VND", "key_points": []}
+{"type": "number", "value": "202642595052", "unit": "vnd", "display": "202.642.595.052 VND", "key_points": []}
 ```
 
 **Nguồn:** [BCC_2024, trang 12](../ViFinBench/neutral/BCC_2024/document.md); bảng `BCC_2024_p012_t001`; hàng `Lưu chuyển tiền thuần từ hoạt động kinh doanh`; cột `Năm nay`.
@@ -149,21 +177,17 @@ Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2024
 | Lưu chuyển tiền thuần từ hoạt động kinh doanh | 20 | 202.642.595.052 | 28.673.341.455 |
 ```
 
-**Single-hop / độ khó:** Easy: lấy tổng dòng tiền đã công bố, không cộng các dòng điều chỉnh.
-
 ### VFB-SH-0005 — easy / natural
 
 **Câu hỏi:** Cuối năm 2025, Cảng An Giang có bao nhiêu nhân viên đang làm việc?
 
 **Đáp án:** 120 nhân viên
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "120", "unit": "employees", "display": "120 nhân viên", "key_points": []}
+{"type": "number", "value": "120", "unit": "person", "display": "120 nhân viên", "key_points": []}
 ```
 
-**Nguồn:** [CAG_2025, trang 13](../ViFinBench/neutral/CAG_2025/document.md); văn bản, `table_id`, `row_label`, `column_header` đều null.
+**Nguồn:** [CAG_2025, trang 13](../ViFinBench/neutral/CAG_2025/document.md); văn bản, các nhãn bảng null.
 
 ```text
 ### CÔNG TY CỔ PHẦN CẢNG AN GIANG
@@ -172,18 +196,14 @@ Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2025
 Tại ngày kết thúc năm tài chính Công ty có 120 nhân viên đang làm việc (số đầu năm là 119 nhân viên).
 ```
 
-**Single-hop / độ khó:** Easy: số nhân sự cuối năm được nói rõ, có số đầu năm khác để kiểm tra đúng kỳ.
-
 ### VFB-SH-0006 — medium / natural
 
 **Câu hỏi:** Theo báo cáo tài chính năm 2025, Sách và Thiết bị trường học Đà Nẵng ước tính thời gian khấu hao máy móc thiết bị trong khoảng bao nhiêu năm?
 
 **Đáp án:** Từ 2 đến 7 năm
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "text", "value": "Từ 2 đến 7 năm", "unit": "years", "display": "Từ 2 đến 7 năm", "key_points": ["Thời gian tối thiểu 2 năm", "Thời gian tối đa 7 năm"]}
+{"type": "range", "min": "2", "max": "7", "unit": "year", "display": "Từ 2 đến 7 năm", "key_points": []}
 ```
 
 **Nguồn:** [BED_2025, trang 15](../ViFinBench/neutral/BED_2025/document.md); bảng `BED_2025_p015_t001`; hàng `Máy móc thiết bị`; cột `Năm 2025`.
@@ -196,21 +216,17 @@ Tại ngày kết thúc năm tài chính Công ty có 120 nhân viên đang làm
 | Máy móc thiết bị | 02 – 07 năm |
 ```
 
-**Single-hop / độ khó:** Medium: xác định ước tính của đúng nhóm máy móc trong chính sách tài sản hữu hình, phân biệt với nhà cửa, vận tải và dụng cụ quản lý.
-
 ### VFB-SH-0007 — medium / natural
 
 **Câu hỏi:** Năm 2025, Cấp nước Bến Thành thuê tài sản gì của Tổng Công ty Cấp nước Sài Gòn theo hợp đồng 2703/HĐ-TCT-KTTC, và dùng vào mục đích nào?
 
 **Đáp án:** Mạng lưới cấp nước do Tổng Công ty Cấp nước Sài Gòn TNHH MTV đầu tư, để cung cấp nước sạch trên địa bàn của Công ty.
 
-**Đáp án chuẩn để chấm:**
-
 ```json
 {"type": "text", "value": "Mạng lưới cấp nước do Tổng Công ty Cấp nước Sài Gòn TNHH MTV đầu tư, để cung cấp nước sạch trên địa bàn của Công ty.", "unit": null, "display": "Mạng lưới cấp nước do Tổng Công ty Cấp nước Sài Gòn TNHH MTV đầu tư, để cung cấp nước sạch trên địa bàn của Công ty.", "key_points": ["Mạng lưới cấp nước do Tổng Công ty Cấp nước Sài Gòn TNHH MTV đầu tư", "Sử dụng để cung cấp nước sạch trên địa bàn của Công ty"]}
 ```
 
-**Nguồn:** [BTW_2025, trang 43](../ViFinBench/neutral/BTW_2025/document.md); văn bản, `table_id`, `row_label`, `column_header` đều null.
+**Nguồn:** [BTW_2025, trang 43](../ViFinBench/neutral/BTW_2025/document.md); văn bản, các nhãn bảng null.
 
 ```text
 ### CÔNG TY CỔ PHẦN CẤP NƯỚC BẾN THÀNH
@@ -219,18 +235,14 @@ Cho năm tài chính kết thúc ngày 31/12/2025
 Theo hợp đồng thuê tài sản hoạt động số 2703/HĐ-TCT-KTTC ngày 09/05/2025, Công ty thuê tài sản là mạng lưới cấp nước của Tổng Công ty Cấp nước Sài Gòn TNHH MTV đầu tư để sử dụng cho mục đích cung cấp nước sạch trên địa bàn của Công ty, với tổng nguyên giá tài sản thuê là 10.010.334.699 đồng, thời hạn thuê từ ngày 01/01/2025 đến ngày 31/12/2025.
 ```
 
-**Single-hop / độ khó:** Medium: chọn hợp đồng thuê mạng lưới và mục đích sử dụng giữa các cam kết thuê tài sản/đất; cả hai ý cùng một câu nguồn.
-
 ### VFB-SH-0008 — medium / formal
 
 **Câu hỏi:** Tại ngày 31/12/2025, giá trị hợp lý của khoản đầu tư cổ phiếu Xi măng Vicem Hoàng Mai tại Vicem Bao bì Bỉm Sơn là bao nhiêu?
 
 **Đáp án:** 936.000.000 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "936000000", "unit": "VND", "display": "936.000.000 VND", "key_points": []}
+{"type": "number", "value": "936000000", "unit": "vnd", "display": "936.000.000 VND", "key_points": []}
 ```
 
 **Nguồn:** [BPC_2025, trang 14](../ViFinBench/neutral/BPC_2025/document.md); bảng `BPC_2025_p014_t002`; hàng `Cổ phiếu Công ty CP Xi măng Vicem Hoàng Mai`; cột `Giá trị hợp lý (VND)`.
@@ -242,21 +254,19 @@ Theo hợp đồng thuê tài sản hoạt động số 2703/HĐ-TCT-KTTC ngày 
 | Cổ phiếu Công ty CP Xi măng Vicem Hoàng Mai | 2.952.000.000 | 936.000.000 | (2.016.000.000) |
 ```
 
-**Single-hop / độ khó:** Medium: chọn bảng cuối năm và cột giá trị hợp lý, phân biệt giá gốc/dự phòng và bảng đầu năm.
-
 ### VFB-SH-0009 — medium / natural
 
 **Câu hỏi:** Cuối năm 2023, Xuất nhập khẩu Hàng không (ARM) còn phải trả Công ty ROHR bao nhiêu tiền liên quan đến hoạt động ủy thác?
 
 **Đáp án:** 5.135.627.375 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "5135627375", "unit": "VND", "display": "5.135.627.375 VND", "key_points": []}
+{"type": "number", "value": "5135627375", "unit": "vnd", "display": "5.135.627.375 VND", "key_points": []}
 ```
 
 **Nguồn:** [ARM_2023, trang 25](../ViFinBench/neutral/ARM_2023/document.md); bảng `ARM_2023_p025_t001`; hàng `Công ty ROHR`; cột `Tại ngày 31/12/2023 VND`.
+
+**row_path:** Ngắn hạn → Phải trả bên thứ ba → Các khoản phải trả, phải nộp về ủy thác → Công ty ROHR.
 
 ```text
 Cho năm tài chính kết thúc ngày 31/12/2023
@@ -269,18 +279,14 @@ Cho năm tài chính kết thúc ngày 31/12/2023
 | Công ty ROHR | 5.135.627.375 | 3.438.628.614 |
 ```
 
-**Single-hop / độ khó:** Medium: đúng đối tác, phân nhóm công nợ ủy thác và kỳ cuối năm.
-
 ### VFB-SH-0010 — medium / formal
 
 **Câu hỏi:** Theo báo cáo tài chính hợp nhất năm 2023 của Văn hóa Tân Bình, chi phí thuế thu nhập doanh nghiệp hiện hành tại Công ty mẹ là bao nhiêu?
 
 **Đáp án:** 1.314.130.355 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "1314130355", "unit": "VND", "display": "1.314.130.355 VND", "key_points": []}
+{"type": "number", "value": "1314130355", "unit": "vnd", "display": "1.314.130.355 VND", "key_points": []}
 ```
 
 **Nguồn:** [ALT_2023, trang 42](../ViFinBench/neutral/ALT_2023/document.md); bảng `ALT_2023_p042_t001`; hàng `Chi phí thuế TNDN hiện hành tại Công ty mẹ`; cột `Năm 2023`.
@@ -293,21 +299,23 @@ Báo cáo tài chính hợp nhất Cho năm tài chính kết thúc ngày 31/12/
 | Chi phí thuế TNDN hiện hành tại Công ty mẹ | 1.314.130.355 | 2.456.916.173 |
 ```
 
-**Single-hop / độ khó:** Medium: phân biệt phần công ty mẹ với công ty con, tổng chi phí thuế và số thuế phải nộp.
+**unit_evidence — trang 14:**
+
+```text
+Đơn vị tiền tệ sử dụng trong ghi chép kế toán là đồng Việt Nam (VND).
+```
 
 ### VFB-SH-0011 — medium / natural
 
-**Câu hỏi:** Trong báo cáo tài chính năm 2024, ATS cho biết hợp đồng thuê văn phòng TAC 20-F6/11 được gia hạn theo phụ lục số 06 đến ngày nào?
+**Câu hỏi:** Trong báo cáo tài chính năm 2024, Công ty Cổ phần Tập đoàn Đầu tư ATS cho biết hợp đồng thuê văn phòng TAC 20-F6/11 được gia hạn theo phụ lục số 06 đến ngày nào?
 
 **Đáp án:** 30/06/2025
-
-**Đáp án chuẩn để chấm:**
 
 ```json
 {"type": "date", "value": "2025-06-30", "unit": null, "display": "30/06/2025", "key_points": []}
 ```
 
-**Nguồn:** [ATS_2024, trang 22](../ViFinBench/neutral/ATS_2024/document.md); văn bản, `table_id`, `row_label`, `column_header` đều null.
+**Nguồn:** [ATS_2024, trang 22](../ViFinBench/neutral/ATS_2024/document.md); văn bản, các nhãn bảng null.
 
 ```text
 ### CÔNG TY CỔ PHẦN TẬP ĐOÀN ĐẦU TƯ ATS
@@ -316,18 +324,14 @@ Cho năm tài chính kết thúc ngày 31 tháng 12 năm 2024
 (*) Là khoản tiền đặt cọc để thuê văn phòng theo Hợp đồng thuê văn phòng và dịch vụ văn phòng số TAC 20-F6/11 ký ngày 01/07/2020 (kèm theo phụ lục gia hạn hợp đồng số 06 ký ngày 30/05/2024 với thời hạn từ 01/07/2024 đến ngày 30/06/2025) để làm văn phòng giao dịch tại Phòng 608, Tầng 6, Toà nhà Sky City Tower A số 88 Láng Hạ, Quận Đống Đa, Hà Nội.
 ```
 
-**Single-hop / độ khó:** Medium: tách ngày hết gia hạn khỏi ngày ký hợp đồng gốc, ngày ký phụ lục và ngày bắt đầu.
-
 ### VFB-SH-0012 — medium / natural
 
 **Câu hỏi:** Cuối năm 2025, Cảng An Giang công bố sẽ thu tối thiểu bao nhiêu tiền từ các hợp đồng cho thuê hoạt động không thể hủy ngang cho phần thời hạn trên 5 năm?
 
 **Đáp án:** 5.879.280.000 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "5879280000", "unit": "VND", "display": "5.879.280.000 VND", "key_points": []}
+{"type": "number", "value": "5879280000", "unit": "vnd", "display": "5.879.280.000 VND", "key_points": []}
 ```
 
 **Nguồn:** [CAG_2025, trang 30](../ViFinBench/neutral/CAG_2025/document.md); bảng `CAG_2025_p030_t004`; hàng `Trên 05 năm`; cột `Số cuối năm`.
@@ -342,15 +346,17 @@ Tại ngày kết thúc năm tài chính, các khoản thanh toán tiền thuê 
 | Trên 05 năm | 5.879.280.000 | 6.767.280.000 |
 ```
 
-**Single-hop / độ khó:** Medium: phân biệt bên cho thuê với bên đi thuê, đúng nhóm trên 5 năm và cột cuối năm.
+**unit_evidence — trang 13:**
+
+```text
+Đơn vị tiền tệ sử dụng trong kế toán là Đồng Việt Nam (VND) do phần lớn các nghiệp vụ được thực hiện bằng đơn vị tiền tệ VND.
+```
 
 ### VFB-SH-0013 — hard / natural
 
 **Câu hỏi:** Trong báo cáo tài chính năm 2025, Vicem Bao bì Bút Sơn cho biết Vietcombank Nam Định giới hạn thời gian cấp hạn mức của hợp đồng ngày 16/06/2025 như thế nào?
 
 **Đáp án:** 13 tháng kể từ ngày 30/05/2025 nhưng không quá 12 tháng kể từ ngày 16/06/2025.
-
-**Đáp án chuẩn để chấm:**
 
 ```json
 {"type": "text", "value": "13 tháng kể từ ngày 30/05/2025 nhưng không quá 12 tháng kể từ ngày 16/06/2025.", "unit": null, "display": "13 tháng kể từ ngày 30/05/2025 nhưng không quá 12 tháng kể từ ngày 16/06/2025.", "key_points": ["13 tháng kể từ ngày 30/05/2025", "Không quá 12 tháng kể từ ngày 16/06/2025"]}
@@ -365,21 +371,17 @@ Tại ngày kết thúc năm tài chính, các khoản thanh toán tiền thuê 
 | (2) Ngân hàng TMCP Ngoại thương Việt Nam - Chi nhánh Nam Định | Hợp đồng cấp tín dụng số 01/2025/VCB.NDI/7189524/CTD, ngày 16/06/2025 | 50.000.000.000 | Thời gian cấp hạn mức tín dụng 13 tháng kể từ ngày 30/05/2025 nhưng không quá 12 tháng kể từ ngày 16/06/2025; Mục đích: bổ sung vốn lưu động, bảo lãnh, mở L/C | Tài sản đảm bảo bao gồm: 01 máy tráng màng PP hiệu Starlinger xuất xứ Châu Âu; Toàn bộ máy móc thiết bị hình thành từ vốn vay và vốn tự có theo hợp đồng MMTB số 03/2017/TSĐB/7189524 ngày 15/09/2017; Quyền sở hữu tài sản gắn liền với đất sổ CB 224471; 01 máy dán đáy Starlinger xuất xứ Châu Âu; Dây chuyền thiết bị sản xuất bao dán đáy thương hiệu Starlinger xuất xứ Châu Âu; 08 máy dệt tròn RX 6.0 hiệu Starlinger; Quyền đòi nợ phát sinh từ các hợp đồng kinh tế ký kết với Công ty Cổ phần Xi măng Vicem Hoàng Mai về việc mua bán vỏ bao xi măng, bao Sling Jumbo; Hàng hóa luân chuyển có giá trị tối thiểu bằng số dư cấp tín dụng ngắn hạn tại VietcomBank Nam Định. |
 ```
 
-**Single-hop / độ khó:** Hard: một ô của bảng hợp đồng rộng chứa hai mốc bắt đầu và hai giới hạn lồng nhau, cạnh các thời hạn ngân hàng khác; không tính ngày hết hạn.
-
 ### VFB-SH-0014 — hard / natural
 
 **Câu hỏi:** Theo báo cáo tài chính năm 2023, VietinBank Bắc Kạn đã nâng hạn mức cho Khoáng sản Bắc Kạn lên bao nhiêu sau khi sửa đổi hợp đồng ngày 28/02/2023?
 
 **Đáp án:** 27.000.000.000 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "27000000000", "unit": "VND", "display": "27.000.000.000 VND", "key_points": []}
+{"type": "number", "value": "27000000000", "unit": "vnd", "display": "27.000.000.000 VND", "key_points": []}
 ```
 
-**Nguồn:** [BKC_2023, trang 30](../ViFinBench/neutral/BKC_2023/document.md); văn bản, `table_id`, `row_label`, `column_header` đều null.
+**Nguồn:** [BKC_2023, trang 30](../ViFinBench/neutral/BKC_2023/document.md); văn bản, các nhãn bảng null.
 
 ```text
 Cho năm tài chính kết thúc ngày 31/12/2023
@@ -387,21 +389,19 @@ Cho năm tài chính kết thúc ngày 31/12/2023
 Hợp đồng cho vay hạn mức số 05/2023-HĐCVHM/NHCT172-KHOANG SAN ngày 28/02/2023 giữa Ngân hàng TMCP Công thương Việt Nam - Chi nhánh Bắc Kạn (Bên cho vay) và Công ty Cổ phần Khoáng sản Bắc Kạn. Hạn mức cho vay 25.000.000.000 VND (Bằng chữ: Hai mươi lăm tỷ đồng Việt Nam) kèm theo văn bản sửa đổi, bổ sung hợp đồng cho vay hạn mức số 05/2023-HĐCVTL-SĐBS1/NHCT172-KHOANG SAN sửa đổi nâng hạn mức thành 27.000.000.000 VND (Bằng chữ: Hai mươi bảy tỷ đồng Việt Nam).
 ```
 
-**Single-hop / độ khó:** Hard: định vị hợp đồng và văn bản sửa đổi trong danh sách dài nhiều hợp đồng/mã gần giống; phân biệt hạn mức ban đầu 25 tỷ, sau sửa đổi 27 tỷ và dư nợ. Đáp án nằm trong một đoạn, không ghép trang bảng dư nợ.
-
 ### VFB-SH-0015 — hard / formal
 
 **Câu hỏi:** Trên báo cáo tài chính hợp nhất năm 2023 của Văn hóa Tân Bình, hao mòn lũy kế cuối năm của nhóm phương tiện vận tải, truyền dẫn là bao nhiêu?
 
 **Đáp án:** 11.137.916.671 VND
 
-**Đáp án chuẩn để chấm:**
-
 ```json
-{"type": "number", "value": "11137916671", "unit": "VND", "display": "11.137.916.671 VND", "key_points": []}
+{"type": "number", "value": "11137916671", "unit": "vnd", "display": "11.137.916.671 VND", "key_points": []}
 ```
 
 **Nguồn:** [ALT_2023, trang 29](../ViFinBench/neutral/ALT_2023/document.md); bảng `ALT_2023_p029_t001`; hàng `Số dư cuối năm`; cột `Phương tiện vận tải, truyền dẫn VND`.
+
+**row_path:** Giá trị hao mòn lũy kế → Số dư cuối năm.
 
 ```text
 Báo cáo tài chính hợp nhất
@@ -413,25 +413,14 @@ Cho năm tài chính kết thúc ngày 31/12/2023
 | Số dư cuối năm | 34.237.017.840 | 94.734.412.454 | 11.137.916.671 | 6.125.564.417 | 231.129.596 | 146.466.040.978 |
 ```
 
-**Single-hop / độ khó:** Hard: bảng bảy cột, ba phần và nhãn Số dư cuối năm lặp lại; chọn đồng thời phần hao mòn, nhóm tài sản và cuối kỳ, không tính từ biến động.
+## 5. Validation và bàn giao
 
-## 5. Vấn đề đã khắc phục và giới hạn
+Focused checks local PASS: JSONL/JSON parse; đúng 15 ID và phân bố 5/7/3, style 10/5; so sánh baseline xác nhận 14 câu nguyên văn và một câu chỉ mở rộng tên doanh nghiệp, display/đáp án thực tế giữ nguyên; answer types/number string/range min≤max/date ISO/unit hợp lệ; giữ key_points của text nhiều ý. Ba unit_evidence khớp nguyên văn đúng trang/cùng document; sáu quote tiền còn lại có VND. Hai row_path khớp hàng cha–con và thứ tự bảng; header/hàng/ô đáp án và references vẫn khớp neutral.
 
-- Thay 0005 bằng nhân sự cuối năm 120 người, khác số đầu năm 119; không còn thử phân biệt kỳ bằng hai ô cổ phiếu bằng nhau. Các mẫu bảng có hai kỳ được hỏi theo kỳ đều có giá trị so sánh khác nhau: 0001/0002/0004/0009/0010/0012. Mẫu 0008 có hai bảng cùng header nhưng khác ngày và giá trị hợp lý (936.000.000 cuối năm / 692.640.000 đầu năm); quote đã kèm tiêu đề ngày. Mẫu 0015 có nhiều phần/loại giá trị khác nhau. Mẫu 0006 chỉ có một cột năm, kiểm tra nhóm tài sản; không gán độ khó do phân biệt hai kỳ không tồn tại.
-- Thay 0006/0007 vì câu cũ quá gần kiến thức chuẩn mực phổ biến. Khoảng khấu hao 2–7 năm của BED và hợp đồng thuê mạng lưới cấp nước của BTW phải tra tài liệu doanh nghiệp. Các mẫu còn lại hỏi số, đơn vị kiểm toán, đối tác, điều khoản hoặc kỳ hạn cụ thể; không dùng câu trả lời theo chuẩn mực làm bằng chứng áp dụng thực tế. Không chạy closed-book test.
-- Header, hàng đáp án và phân nhóm cần thiết nằm ngay trong `evidence.quote` của cả 10 mẫu bảng. Mẫu 0009 có phân nhóm ủy thác bên thứ ba; 0015 có hàng hao mòn lũy kế. Mẫu 0012 ghi rõ tiền cho thuê sẽ thu, không dùng bảng tiền thuê phải trả. Mẫu 0013 giữ đủ năm cột của hàng hợp đồng, kể cả danh sách bảo đảm, để không tạo hàng trích bị thiếu ô.
-- Chuẩn hóa answer object cho tất cả mẫu: số là string số nguyên không dấu phân cách, ngày đầy đủ dùng ISO; unit tách khỏi value. Text 0006 có hai đầu khoảng, 0007 có tài sản và mục đích, 0013 có hai điều kiện thời gian; key_points đủ các ý này. Không viết evaluator.
-- Viết lại 11 câu theo nhu cầu tra cứu; giữ thuật ngữ trong 5 câu formal khi cần đảm bảo ý nghĩa. Natural không có nghĩa bỏ kỳ/phạm vi/đối tác. Không có cặp chỉ thay tên doanh nghiệp hoặc năm; các câu về thuê hỏi lần lượt tài sản/mục đích, ngày hết gia hạn và khoản thu tương lai.
-- Tiếp tục tránh các ô/vùng audit có vấn đề: dữ liệu thiếu, bảng ragged/sai ánh xạ, số mâu thuẫn và BCC_2025 không phải bộ BCTC. Không sửa neutral/audit hay lấy số tự tính làm Gold.
+Metadata có 41 key trùng toàn bộ corpus và bao phủ 12 document Pilot; tên/năm đối chiếu nội dung từng tài liệu, scope không suy từ ô checkbox bỏ trống hoặc từ năm khác. Unknown được liệt kê ở mục 3. 123 neutral hashes, audit và mọi local changes ngoài task giữ nguyên. `git diff --check` PASS; không full CI, Gemini/API, evaluator hoặc sửa pipeline. Không sửa planning/checker vì brief giới hạn đúng bốn file.
 
-Độ khó là đánh giá biên soạn, chưa hiệu chuẩn trên người dùng/mô hình. 0006 ở mức Medium do chọn đúng nhóm/ước tính, không do toán học; 0014 ở mức Hard do truy xuất đoạn hợp đồng dài và thông tin gốc/sửa đổi gần giống, cần Tech Lead xem xét khi hiệu chuẩn. Các trích đoạn cùng xuất phát từ neutral; đối ứng MD/JSON/TXT không phải kiểm chứng nguồn độc lập. Không đối chiếu PNG/PDF mới, không suy độ chính xác toàn corpus từ 15 mẫu. Cơ cấu 7/15 câu năm 2025 và 10/15 bằng chứng bảng vẫn là giới hạn của pilot; không ép cân bằng bằng cách thêm câu kém chất lượng.
+Giới hạn: phạm vi unknown cần xác minh bổ sung khi dùng cho câu hỏi phụ thuộc riêng/hợp nhất; lượt này không mở rộng xác minh ảnh/PDF hoặc tính đầy đủ của corpus. Chất lượng nội dung được duyệt trong brief không đồng nghĩa accuracy toàn corpus hay kết quả chạy mô hình. Schema v1 là quy ước đã được ghi thành tài liệu, Finalize vẫn chờ nghiệm thu REVIEW.
 
-## 6. Validation và bàn giao
+Implementation là commit chứa đúng bốn file đầu ra; SHA được xác minh trong bàn giao Git.
 
-Focused Python validation local: 15 dòng JSONL parse được, schema đúng; ID tuần tự/duy nhất; difficulty 5/7/3 và style 10/5; số/date chuẩn hóa; 15 document/page và 10 table references tồn tại, khớp JSON/TXT/Markdown; quote bảng đủ header và hàng đáp án; dòng trích nguyên văn theo đúng thứ tự trang, ô đáp án và giá trị so sánh đã đối chiếu. Đáp án text/key_points được đọc lại để kiểm tra đầy đủ ý. Không trùng câu hỏi rõ ràng; kiểm thủ công 15 mẫu về ý nghĩa, kỳ/đơn vị/phạm vi, khả năng đoán bằng kiến thức chung, Single-hop và không tính toán mới. Script không chứng nhận chất lượng ngữ nghĩa hoặc độ khó.
-
-123 file neutral và audit giữ nguyên hash; local changes ngoài task được giữ riêng. Planning checker, Ruff cho checker đã sửa và `git diff --check` được chạy local. Không gọi Gemini/API, không chạy full CI, mô hình thử nghiệm hoặc pipeline DACNTT. Không thêm metadata ngoài schema brief.
-
-Implementation SHA được ghi trong registry sau khi commit hai deliverables. Trạng thái **ViFinBench-P1A-Refine — REVIEW**; lịch sử P1A vẫn giữ trong Git, không tự đổi P1A thành DONE.
-
-**Next action:** Tech Lead review bộ 15 QA đã refine và nghiệm thu P1A-Refine.
+**Next action:** Tech Lead nghiệm thu P1A-Finalize và Schema v1.
