@@ -481,7 +481,20 @@ class LiteVerificationRuntime:
                     claim.candidate_id, []
                 )
                 row["local_requirements"] = [
-                    r
+                    {
+                        key: r.get(key)
+                        for key in (
+                            "requirement_id",
+                            "text",
+                            "answer_goal",
+                            "requested_unit",
+                            "period",
+                            "required_indicators",
+                            "reasoning_operations",
+                            "reasoning_periods",
+                            "interpretation_topic",
+                        )
+                    }
                     for r in self.integration_context.get("requirements", [])
                     if r["requirement_id"] in keys
                 ]
@@ -568,6 +581,10 @@ class LiteVerificationRuntime:
                 "hoặc định nghĩa công thức. Chỉ bind synthesis khi statement liên kết tất cả "
                 "các chỉ tiêu yêu cầu và có giới hạn cụ thể khi được hỏi; caveat nguồn chung "
                 "không thay nhận xét. Không bind giới hạn nếu câu không thể hiện giới hạn đó."
+                " Với dynamic_calculation, so định nghĩa/phép toán trong text yêu cầu với "
+                "operand_bindings và calculations. Statement do backend viết biểu thức có thể "
+                "đáp ứng tên chỉ tiêu khi biểu thức đúng định nghĩa được hỏi; không đòi khớp "
+                "nguyên văn tên gọi. Không bind chỉ vì cùng đơn vị hoặc cùng giá trị."
             )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
         verdicts, error = {}, "semantic_provider_failure"

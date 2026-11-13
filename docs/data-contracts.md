@@ -19,6 +19,13 @@ Model-authored `limitations` của pure `derived_fact` chỉ giữ ở raw outpu
 nhận xét trong notes. Source/tool caveats vẫn giữ; reasoned conclusions giữ toàn
 bộ limitations để M6 kiểm chứng.
 
+Dynamic-calculation goal được giữ khi tên kết quả chưa có trong inventory, nếu
+các required indicators resolve đúng canonical concepts. Không cho qua nguồn mơ hồ,
+sai kỳ/unit hoặc indicator chưa resolve. Candidate binding chỉ là đề xuất; M6 phải
+xác nhận định nghĩa/phép toán trong text requirement trước khi M7 dùng binding.
+Payload semantic goal giữ text/kỳ/unit/operands/operations, không dùng target anchor
+của một toán hạng như tên kết quả. Không đăng ký công thức hay suy quy tắc kế toán mới.
+
 Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
 `integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng
 QARequirement với requested_unit; tasks giữ task/requirement/dependency IDs.

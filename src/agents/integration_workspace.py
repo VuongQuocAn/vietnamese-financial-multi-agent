@@ -91,7 +91,11 @@ def matches_requirement(claim, requirement, source=None):
         )
     if requirement.kind in {"unsupported", "ambiguous", "document", "limitations"}:
         return False
-    if not requirement.target_id:
+    if not requirement.target_id and not (
+        requirement.interpretation_topic == "dynamic_calculation"
+        and requirement.required_indicators
+        and requirement.reason in {None, "source_unknown"}
+    ):
         return False
     matched = matches_financial_target(claim, requirement)
     if not matched and source and source["kind"] == "metric":

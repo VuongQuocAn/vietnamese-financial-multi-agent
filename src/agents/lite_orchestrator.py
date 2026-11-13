@@ -416,16 +416,7 @@ def resolve_requirements(plan, sources):
     for requirement in plan.requirements:
         if requirement.answer_goal != "value":
             continue
-        if not requirement.target_id or requirement.kind not in {"fact", "metric", "explanation"}:
-            continue
-        handle, error = resolve_source(
-            requirement.target_id, sources, [requirement.period] if requirement.period else []
-        )
-        if error:
-            requirement.reason = error
-            requirement.target_id = None
-            continue
-        source = sources[handle]
+        error = None
         indicators = []
         for reference in requirement.required_indicators:
             # Indicators identify a concept, not a particular source period.
@@ -439,10 +430,20 @@ def resolve_requirements(plan, sources):
         if error:
             requirement.reason, requirement.target_id = error, None
             continue
+        requirement.required_indicators = list(dict.fromkeys(indicators))
+        if not requirement.target_id or requirement.kind not in {"fact", "metric", "explanation"}:
+            continue
+        handle, error = resolve_source(
+            requirement.target_id, sources, [requirement.period] if requirement.period else []
+        )
+        if error:
+            requirement.reason = error
+            requirement.target_id = None
+            continue
+        source = sources[handle]
         requirement.target_id = source["item"]
         if requirement.kind in {"fact", "metric"}:
             requirement.kind = source["kind"]
-        requirement.required_indicators = list(dict.fromkeys(indicators))
         # A scalar retrieval is not a metric interpretation merely because the
         # provider set those flags. Explicit interpretation requests keep them.
         text = normalize(requirement.text)
@@ -480,6 +481,12 @@ def preserve_answer_goal(plan, question, targets):
     if not requested or not plan.tasks or not targets:
         return
     indicators = set()
+    for requirement in plan.requirements:
+        if (
+            requirement.answer_goal == "value"
+            and requirement.reason != "requirement_indicator_unresolved"
+        ):
+            indicators.update(requirement.required_indicators)
     for source in targets.values():
         if source["kind"] == "fact":
             indicators.add(source["item"])

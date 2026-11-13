@@ -435,6 +435,7 @@ def test_dynamic_requirement_binding_checks_formula_order_period_unit_and_goal()
         wrong = claim.model_copy(deep=True)
         wrong.reasoning.calculation.steps[-1].operation.inputs.reverse()
         assert not matches_requirement(wrong, req, target)
+
         other = target.copy()
         other["records"] = [target["records"][0].model_copy(deep=True)]
         other["records"][0].definition.compatibility.operands[0].canonical_item_id = "another.item"
@@ -449,6 +450,52 @@ def test_dynamic_requirement_binding_checks_formula_order_period_unit_and_goal()
             runtime.verify(batch, integration_context=context)[0].outcome.final.decision == "ACCEPT"
         )
         assert runtime.summary["supported_requirements"] == {claim.candidate_id: ["R1"]}
+
+
+def test_dynamic_goal_without_catalog_name_still_requires_m6_semantic_binding():
+    data, batch = balance_reasoning_case("debt_to_assets", "ratio")
+    claim = batch.claims[0]
+    sources = inventory(SnapshotCatalog(**data), batch.context)
+    requirement = IntegrationRequirement(
+        requirement_id="dynamic",
+        text="Tính tỷ số nợ phải trả chia tổng tài sản",
+        kind="metric",
+        target_id="unregistered_name",
+        period=claim.period,
+        interpretation=True,
+        interpretation_topic="dynamic_calculation",
+        required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
+        requested_unit="ratio",
+    )
+    resolve_requirements(LitePlan(requirements=[requirement]), sources)
+    assert requirement.target_id is None and requirement.reason == "source_unknown"
+    assert matches_requirement(claim, requirement)
+    for mutation in (
+        dict(requested_unit="USD"),
+        dict(period="1900"),
+        dict(reason="source_ambiguous"),
+        dict(required_indicators=["wrong.item"]),
+    ):
+        assert not matches_requirement(claim, requirement.model_copy(update=mutation))
+    ctx = dict(
+        requirements=[requirement.model_dump()],
+        candidate_requirements={claim.candidate_id: [requirement.requirement_id]},
+    )
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    runtime.verify(batch, integration_context=ctx)
+    assert not runtime.summary["supported_requirements"][claim.candidate_id]
+    gateway = semantic_gateway()
+    original = gateway.generate.side_effect
+
+    def confirm(request):
+        response = original(request)
+        response.output.payload["verdicts"][0]["supported_requirement_ids"] = ["dynamic"]
+        return response
+
+    gateway.generate.side_effect = confirm
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    runtime.verify(batch, integration_context=ctx)
+    assert runtime.summary["supported_requirements"][claim.candidate_id] == ["dynamic"]
 
 
 def test_claim_local_periods_keep_exact_source_and_content_guards():
