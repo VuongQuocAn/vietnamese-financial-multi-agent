@@ -62,6 +62,16 @@ class DeterministicFinancialValidator:
         self._retrieval = FinancialRetrievalTools(self._catalog)
         self._calculator = FinancialCalculator(self._catalog)
 
+    def _requested_periods(self, batch, claim):
+        if getattr(self, "integration_v2", False):
+            # The question may mix fiscal-year comparisons and closing balances.
+            # Canonical replay below still checks each declared source period,
+            # period type, operand relation and any explicit request pin.
+            return (
+                {s.period for s in claim.supporting_evidence} if claim.reasoning else {claim.period}
+            )
+        return comparison_periods(batch.question)
+
     def validate(self, batch: VerificationInput) -> ValidationResult:
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         output = ValidationResult(
@@ -238,7 +248,7 @@ class DeterministicFinancialValidator:
             sources[0].period,
         ):
             self._check(result, "context", "fail", "reasoning_owner_mismatch")
-        requested_periods = comparison_periods(batch.question)
+        requested_periods = self._requested_periods(batch, claim)
         periods = {s.period for s in sources}
         comparative = (
             bool(requested_periods)
@@ -428,7 +438,7 @@ class DeterministicFinancialValidator:
         }
         mismatch = [k for k, v in observed.items() if v and expected[k] and v != expected[k]]
         missing = [k for k, v in observed.items() if not v or not expected[k]]
-        requested_periods = comparison_periods(batch.question)
+        requested_periods = self._requested_periods(batch, claim)
         if requested_periods and period not in requested_periods:
             mismatch.append("requested_comparison_period")
         for field in ("company_id", "document_id", "snapshot_id", "period"):

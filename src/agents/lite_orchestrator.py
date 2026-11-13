@@ -294,10 +294,17 @@ def inventory(catalog, context):
                 )
                 if fact not in entry["records"]:
                     entry["records"].append(fact)
+    available = {(s["item"], s["period"]) for s in entries.values()}
     for metric in catalog.metrics:
         if (metric.request.document_id, metric.request.snapshot_id) != (
             context.document_id,
             context.snapshot_id,
+        ):
+            continue
+        if not all(
+            (operand.canonical_item_id, metric.request.operand_periods.get(operand.role))
+            in available
+            for operand in metric.definition.compatibility.operands
         ):
             continue
         for role, (module, _) in DOMAINS.items():
@@ -316,6 +323,73 @@ def inventory(catalog, context):
                 records=[metric],
             )
     return {f"S{i}": value for i, value in enumerate(entries.values(), 1)}
+
+
+def resolve_source(reference, sources, periods=()):
+    """Resolve only within the pinned inventory; a canonical item needs a unique period."""
+    choices = [
+        (handle, source)
+        for handle, source in sources.items()
+        if (handle == reference or source["item"] == reference)
+    ]
+    if not choices:
+        return None, "source_unknown"
+    choices = [
+        (handle, source) for handle, source in choices if not periods or source["period"] in periods
+    ]
+    if not choices:
+        return None, "source_period_mismatch"
+    if len(choices) != 1 or len(choices[0][1]["records"]) != 1:
+        return None, "source_ambiguous"
+    return choices[0][0], None
+
+
+def resolve_requirements(plan, sources):
+    """Normalize model identifiers, retaining IDs/text and unresolved obligations."""
+    from ..outputs.qa_composer import INTERPRETATION_TERMS
+
+    targets = {}
+    for requirement in plan.requirements:
+        if not requirement.target_id or requirement.kind not in {"fact", "metric", "explanation"}:
+            continue
+        handle, error = resolve_source(
+            requirement.target_id, sources, [requirement.period] if requirement.period else []
+        )
+        if error:
+            requirement.reason = error
+            requirement.target_id = None
+            continue
+        source = sources[handle]
+        indicators = []
+        for reference in requirement.required_indicators:
+            # Indicators identify a concept, not a particular source period.
+            items = {
+                s["item"] for h, s in sources.items() if h == reference or s["item"] == reference
+            }
+            if len(items) != 1:
+                error = "requirement_indicator_unresolved"
+                break
+            indicators.append(items.pop())
+        if error:
+            requirement.reason, requirement.target_id = error, None
+            continue
+        requirement.target_id = source["item"]
+        if requirement.kind in {"fact", "metric"}:
+            requirement.kind = source["kind"]
+        requirement.required_indicators = list(dict.fromkeys(indicators))
+        # A scalar retrieval is not a metric interpretation merely because the
+        # provider set those flags. Explicit interpretation requests keep them.
+        text = normalize(requirement.text)
+        if (
+            source["kind"] == "fact"
+            and not requirement.reasoning_operations
+            and re.match(r"^(?:tinh|tim|neu)\b", text)
+            and not any(term in text for term in INTERPRETATION_TERMS)
+        ):
+            requirement.interpretation = False
+            requirement.interpretation_topic = None
+        targets[requirement.requirement_id] = source
+    return targets
 
 
 def fallback_plan(question, sources):
@@ -739,12 +813,14 @@ class FinancialLiteOrchestrator:
         output.caveats.extend(gaps)
         workspace, prepared = None, []
         if self.integration_v2:
+            targets = resolve_requirements(plan, sources)
             requirements = plan.requirements or [
                 IntegrationRequirement(
                     requirement_id="R-unresolved", text=question, kind="unsupported"
                 )
             ]
             workspace = self.workspace = IntegrationWorkspace(requirements)
+            workspace.targets = targets
             if gaps:
                 output.errors.append(
                     OrchestrationError(stage="planning", code="integration_plan_incomplete")
@@ -855,7 +931,20 @@ class FinancialLiteOrchestrator:
                     [],
                 )
                 for handle in dict.fromkeys(selected):
-                    source = sources.get(handle)
+                    resolved = handle
+                    if self.integration_v2:
+                        periods = {
+                            period
+                            for r in workspace.requirements
+                            if r.requirement_id in task.requirement_ids
+                            for period in [r.period, *r.reasoning_periods]
+                            if period
+                        }
+                        resolved, resolution_error = resolve_source(handle, sources, periods)
+                        if resolution_error:
+                            bundle.limitations.append(resolution_error + ":" + handle)
+                            continue
+                    source = sources.get(resolved)
                     if source is None or (
                         not self.integration_v2 and task.specialist not in source["roles"]
                     ):

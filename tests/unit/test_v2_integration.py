@@ -3,7 +3,10 @@
 import json
 from unittest.mock import Mock, patch
 
-from vietnamese_financial_multi_agent.agents.integration_workspace import IntegrationRequirement
+from vietnamese_financial_multi_agent.agents.integration_workspace import (
+    IntegrationRequirement,
+    matches_requirement,
+)
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     FinancialLiteOrchestrator,
     LitePlan,
@@ -11,6 +14,8 @@ from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     SupervisorLite,
     integration_plan,
     inventory,
+    resolve_requirements,
+    resolve_source,
 )
 from vietnamese_financial_multi_agent.agents.planner_contracts import (
     PlannerContext,
@@ -29,6 +34,25 @@ from .test_financial_qa import gateway_for
 from .test_m4_execution import fixture
 from .test_m6_lite import semantic_gateway
 from .test_multihop_reasoning import reasoning_case
+
+
+def balance_reasoning_case(formula, operator):
+    from vietnamese_financial_multi_agent.agents.liquidity_leverage_specialist import ITEM_LABELS
+
+    from .test_financial_validators import ITEM_LABELS as labels
+
+    # The shared fixture renderer originally only knew profitability labels.
+    with patch.dict(labels, ITEM_LABELS):
+        data, batch = reasoning_case(formula=formula, operator=operator)
+    claim = batch.claims[0]
+    batch.context = PlannerContext(
+        company_id=claim.company_id,
+        document_id=claim.document_id,
+        snapshot_id=claim.snapshot_id,
+    )
+    if formula == "debt_to_assets":
+        claim.analysis_premises = [s.replace(" kỳ ", " tại ngày ") for s in claim.analysis_premises]
+    return data, batch
 
 
 def setup_engine():
@@ -264,3 +288,168 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
     )
     assert failed.status == "internal_error" and not failed.used_verified_claim_ids
     assert failed.trace.integration_context["technical_errors"]
+
+
+def test_inventory_resolution_uses_period_and_pins_without_role_ownership():
+    data = fixture("revenue_yoy")
+    catalog = SnapshotCatalog(**data)
+    fact = data["facts"][0]
+    context = PlannerContext(
+        company_id=fact.company_id,
+        document_id=fact.document_id,
+        snapshot_id=fact.snapshot_id,
+        mode="deterministic",
+    )
+    sources = inventory(catalog, context)
+    handle = next(
+        h for h, s in sources.items() if s["kind"] == "fact" and s["period"] == fact.context.period
+    )
+    assert resolve_source(fact.canonical_item_id, sources)[1] == "source_ambiguous"
+    assert resolve_source(handle, sources, ["1900"])[1] == "source_period_mismatch"
+    assert resolve_source("R1", sources)[1] == "source_unknown"
+    assert resolve_source("unknown.item", sources)[0] is None
+    assert resolve_source(fact.canonical_item_id, sources, [fact.context.period]) == (handle, None)
+    for field in ("company_id", "document_id", "snapshot_id"):
+        assert not inventory(catalog, context.model_copy(update={field: "foreign"}))
+    ambiguous = {**sources, "another": sources[handle]}
+    assert (
+        resolve_source(fact.canonical_item_id, ambiguous, [fact.context.period])[1]
+        == "source_ambiguous"
+    )
+    duplicate = {handle: {**sources[handle], "records": [fact, fact.model_copy(deep=True)]}}
+    assert resolve_source(handle, duplicate)[1] == "source_ambiguous"
+    req = IntegrationRequirement(
+        requirement_id="R1",
+        text="Tìm doanh thu",
+        kind="fact",
+        target_id=handle,
+        period=fact.context.period,
+    )
+    plan = LitePlan(
+        requirements=[req],
+        tasks=[
+            LiteTask(
+                task_id="T1",
+                specialist="cash_flow_and_earnings_quality",
+                objective=req.text,
+                requirement_ids=["R1"],
+                sources=[fact.canonical_item_id],
+            )
+        ],
+    )
+    engine = FinancialLiteOrchestrator(
+        catalog,
+        integration_v2=True,
+        supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
+    )
+    result = engine.run(question=req.text, context=context)
+    assert (
+        result.candidates
+        and result.integration_context["requirements"][0]["target_id"] == fact.canonical_item_id
+    )
+    assert {m.record.context.period for m in result.supervisor_result.evidence_bundle.facts} == {
+        fact.context.period
+    }
+    assert any(result.integration_context["candidate_requirements"].values())
+
+
+def test_dynamic_requirement_binding_checks_formula_order_period_unit_and_goal():
+    for formula, operator in (
+        ("debt_to_assets", "divide"),
+        ("revenue_yoy", "percentage_change"),
+        ("gross_margin", "ratio"),
+    ):
+        data, batch = balance_reasoning_case(formula, operator)
+        claim = batch.claims[0]
+        sources = inventory(
+            SnapshotCatalog(**data), batch.context.model_copy(update={"period": None})
+        )
+        handle = next(h for h, s in sources.items() if s["kind"] == "metric")
+        req = IntegrationRequirement(
+            requirement_id="R1",
+            text="Tính chỉ tiêu",
+            kind="metric",
+            target_id=handle,
+            period=claim.period,
+            interpretation=True,
+            interpretation_topic="metric_meaning",
+            requested_unit=claim.reasoning.calculation.steps[-1].unit,
+        )
+        plan = LitePlan(requirements=[req])
+        target = resolve_requirements(plan, sources)["R1"]
+        assert req.target_id == formula and matches_requirement(claim, req, target)
+        for update in (
+            dict(period="1900"),
+            dict(requested_unit="USD"),
+            dict(text="Diễn giải ý nghĩa chỉ tiêu"),
+            dict(required_indicators=["wrong.item"]),
+            dict(reasoning_periods=["1900"]),
+        ):
+            assert not matches_requirement(claim, req.model_copy(update=update), target)
+        wrong = claim.model_copy(deep=True)
+        wrong.reasoning.calculation.steps[-1].operation.inputs.reverse()
+        assert not matches_requirement(wrong, req, target)
+        other = target.copy()
+        other["records"] = [target["records"][0].model_copy(deep=True)]
+        other["records"][0].definition.compatibility.operands[0].canonical_item_id = "another.item"
+        assert not matches_requirement(claim, req, other)
+        # A numeric derived proof is bound in Python even without an extra
+        # semantic verdict; only M6 ACCEPT may make the proposed binding usable.
+        context = dict(
+            requirements=[req.model_dump()], candidate_requirements={claim.candidate_id: ["R1"]}
+        )
+        runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+        assert (
+            runtime.verify(batch, integration_context=context)[0].outcome.final.decision == "ACCEPT"
+        )
+        assert runtime.summary["supported_requirements"] == {claim.candidate_id: ["R1"]}
+
+
+def test_claim_local_periods_keep_exact_source_and_content_guards():
+    from .test_financial_validators import batch_for
+
+    data, batch = balance_reasoning_case("debt_to_assets", "divide")
+    batch.question = "So sánh doanh thu năm 2029 và 2030, nợ cuối năm và dòng tiền."
+    from vietnamese_financial_multi_agent.agents.liquidity_leverage_specialist import ITEM_LABELS
+
+    from .test_financial_validators import ITEM_LABELS as labels
+
+    with patch.dict(labels, ITEM_LABELS):
+        fact = batch_for(data).claims[0]
+    fact.content = fact.content.replace(" kỳ ", " tại ngày ")
+    fact.candidate_id = fact.provenance.m5_candidate_id = "F1"
+    batch.claims.append(fact)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    assert all(h.outcome.final.decision == "ACCEPT" for h in runtime.verify(batch))
+    for update in (
+        dict(period="2029-12-31"),
+        dict(company_id="foreign"),
+        dict(document_id="foreign"),
+        dict(snapshot_id="foreign"),
+        dict(content=fact.content.replace("2030-12-31", "2029-12-31")),
+        dict(content=fact.content.replace("VND", "USD")),
+        dict(content=fact.content.replace("1.234", "9.999")),
+        dict(content=fact.content.replace("tại ngày", "kỳ")),
+        dict(citations=[]),
+    ):
+        changed = batch.model_copy(deep=True)
+        changed.claims = [fact.model_copy(update=update)]
+        assert runtime.verify(changed)[0].outcome.final.decision != "ACCEPT"
+    wrong_source = batch.model_copy(deep=True)
+    wrong_source.claims = [fact.model_copy(deep=True)]
+    source = wrong_source.claims[0].supporting_evidence[0]
+    source.reference = source.reference.model_copy(
+        update={
+            "observation": source.reference.observation.model_copy(
+                update={"local_id": "foreign-source"}
+            )
+        }
+    )
+    assert runtime.verify(wrong_source)[0].outcome.final.decision != "ACCEPT"
+    wrong_pin = batch.model_copy(deep=True)
+    wrong_pin.context.period = "2029-12-31"
+    assert all(h.outcome.final.decision != "ACCEPT" for h in runtime.verify(wrong_pin))
+    wrong_name = batch.model_copy(deep=True)
+    wrong_name.claims = [batch.claims[0].model_copy(deep=True)]
+    wrong_name.claims[0].content = "Biên lợi nhuận gộp kỳ 2030 là 0,50 lần."
+    assert runtime.verify(wrong_name)[0].outcome.final.decision != "ACCEPT"

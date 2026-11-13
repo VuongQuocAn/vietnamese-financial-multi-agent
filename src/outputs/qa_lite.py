@@ -679,6 +679,32 @@ def compose_lite(
     if not selected:
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
+    # Identical admitted displays share one paragraph and retain every binding
+    # and citation. Different prose/findings remain separate even with one proof.
+    if coverage_context is not None:
+        unique = {}
+        for segment in segments:
+            scope = tuple(
+                sorted(
+                    {
+                        (
+                            e.identity.company_id,
+                            e.identity.document_id,
+                            e.identity.snapshot_id,
+                            e.identity.period,
+                        )
+                        for key in segment["claim_ids"]
+                        for e in [entries[key]]
+                    }
+                )
+            )
+            key = (segment["text"], scope)
+            if key not in unique:
+                unique[key] = dict(text=segment["text"], claim_ids=[])
+            unique[key]["claim_ids"] = list(
+                dict.fromkeys([*unique[key]["claim_ids"], *segment["claim_ids"]])
+            )
+        segments = list(unique.values())
     released_ids = {key for segment in segments for key in segment["claim_ids"]}
     released_entries = [e for key, e in entries.items() if key in released_ids]
     if coverage_context is not None:

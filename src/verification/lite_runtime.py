@@ -381,6 +381,7 @@ class LiteVerificationRuntime:
             needs_binding = (
                 self.integration_v2
                 and claim.kind == "supported_interpretation"
+                and not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
                 and self.integration_context.get("candidate_requirements", {}).get(
                     claim.candidate_id
                 )
@@ -438,6 +439,10 @@ class LiteVerificationRuntime:
                     if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
                     else []
                     if h.outcome.final.original_claim.kind == "supported_interpretation"
+                    and not (
+                        h.outcome.final.original_claim.reasoning
+                        and h.outcome.final.original_claim.reasoning.claim_type == "derived_fact"
+                    )
                     else proposed.get(h.outcome.final.candidate_id, [])
                 )
                 for h in histories

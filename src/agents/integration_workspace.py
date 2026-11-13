@@ -1,10 +1,13 @@
 """Request-local task/evidence bookkeeping; no storage or verification authority."""
 
+import ast
 import hashlib
+import re
 from dataclasses import dataclass, field
 
-from ..outputs.qa_composer import matches_financial_target
+from ..outputs.qa_composer import INTERPRETATION_TERMS, matches_financial_target
 from ..outputs.qa_contracts import QARequirement
+from ..tools.question_understanding import normalize
 from .supervisor import ExecutionEvidenceBundle
 
 
@@ -16,13 +19,86 @@ def evidence_handle(evidence):
     return "E-" + hashlib.sha256(evidence.reference.model_dump_json().encode()).hexdigest()[:20]
 
 
-def matches_requirement(claim, requirement):
+def _matches_metric_expression(claim, source):
+    """Bind a dynamic proof to the inventory formula, including ordered operands.
+
+    Structural matching only: M6 still independently replays values and sources.
+    A correct quotient of other indicators is not this accounting metric.
+    """
+    proof = claim.reasoning
+    if (
+        not proof
+        or not proof.calculation
+        or proof.claim_type != "derived_fact"
+        or proof.assumptions
+    ):
+        return False
+    metric = source["records"][0]
+    roles = {
+        operand.role: (operand.canonical_item_id, metric.request.operand_periods[operand.role])
+        for operand in metric.definition.compatibility.operands
+    }
+
+    def expression(node):
+        if isinstance(node, ast.Name):
+            return roles[node.id]
+        if isinstance(node, ast.BinOp) and isinstance(
+            node.op, (ast.Sub, ast.Div, ast.Add, ast.Mult)
+        ):
+            return (type(node.op).__name__, expression(node.left), expression(node.right))
+        raise ValueError("unsupported_formula_expression")
+
+    values = {}
+    for key, operand in proof.calculation.operands.items():
+        matches = [s for s in claim.supporting_evidence if s.reference == operand.reference]
+        if len(matches) != 1:
+            return False
+        values[key] = (matches[0].canonical_item_id, operand.period)
+    try:
+        for step in proof.calculation.steps:
+            operation = step.operation
+            args = [values[key] for key in operation.inputs]
+            if operation.operator in {"divide", "ratio"}:
+                value = ("Div", *args)
+            elif operation.operator in {"percentage_change", "relative_difference"}:
+                value = ("Div", ("Sub", *args), args[1])
+            elif operation.operator == "subtract":
+                value = ("Sub", *args)
+            else:
+                return False
+            values[operation.operation_id] = value
+        return values[proof.calculation.steps[-1].operation.operation_id] == expression(
+            ast.parse(metric.definition.expression, mode="eval").body
+        )
+    except (KeyError, ValueError, SyntaxError, IndexError):
+        return False
+
+
+def matches_requirement(claim, requirement, source=None):
     """Typed target matching only. Interpretation relevance is confirmed by M6."""
     if requirement.kind in {"unsupported", "ambiguous", "document", "limitations"}:
         return False
     if not requirement.target_id:
         return False
-    if not matches_financial_target(claim, requirement):
+    matched = matches_financial_target(claim, requirement)
+    if not matched and source and source["kind"] == "metric":
+        text = normalize(requirement.text)
+        numeric_goal = re.match(r"^(?:tinh|tim|neu)\b", text) and not any(
+            term in text for term in INTERPRETATION_TERMS
+        )
+        matched = (
+            numeric_goal
+            and (not requirement.period or requirement.period == claim.period)
+            and set(requirement.required_indicators)
+            <= {s.canonical_item_id for s in claim.supporting_evidence}
+            and (
+                not requirement.reasoning_periods
+                or set(requirement.reasoning_periods)
+                == {s.period for s in claim.supporting_evidence}
+            )
+            and _matches_metric_expression(claim, source)
+        )
+    if not matched:
         return False
     if requirement.requested_unit:
         proof = claim.reasoning
@@ -74,6 +150,7 @@ class IntegrationWorkspace:
     requirements: list[IntegrationRequirement]
     evidence: ExecutionEvidenceBundle = field(default_factory=ExecutionEvidenceBundle)
     tasks: dict[str, dict] = field(default_factory=dict)
+    targets: dict[str, dict] = field(default_factory=dict)
 
     def merge(self, bundle):
         for key in ("facts", "calculations", "citations", "sources_and_lineage", "graph_contexts"):
@@ -93,7 +170,9 @@ class IntegrationWorkspace:
                 for requirement_id in self.tasks[origin.execution_id]["requirement_ids"]
             }
             bindings[claim.candidate_id] = [
-                key for key in by_id if key in assigned and matches_requirement(claim, by_id[key])
+                key
+                for key in by_id
+                if key in assigned and matches_requirement(claim, by_id[key], self.targets.get(key))
             ]
         return dict(
             version="integration_v2",
