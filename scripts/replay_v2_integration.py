@@ -150,6 +150,73 @@ def replay(root, source, output):
             assert entry.model_dump(mode="json") == wire_entry
             history_count += 1
     report["historical_entries_unchanged"] = history_count
+    # Actual C07 document ACCEPT from the prior live run; financial branch below
+    # is explicitly a deterministic counterfactual, never a new model result.
+    from vietnamese_financial_multi_agent.agents.fusion_contracts import EvidenceFusionBundle
+    from vietnamese_financial_multi_agent.api.fusion_pipeline import compose_fusion_v2
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import (
+        FinancialQARequest,
+        FinancialQAResponse,
+        PipelineTrace,
+    )
+
+    c07 = json.loads(
+        (root / "artifacts/evidence/V2-INT-01/live/execution/C07.json").read_text(encoding="utf-8")
+    )
+    service = services["BBS_2025"]
+    for wire_entry in c07["ledger"]:
+        entry = TypeAdapter(LedgerEntry).validate_json(json.dumps(wire_entry))
+        service.repository.admit(entry.history)
+    bundle = EvidenceFusionBundle.model_validate(c07["response"]["trace"]["fusion_bundle"])
+    bound = FinancialQARequest.model_validate(
+        {k: v for k, v in bundle.context.items() if k in FinancialQARequest.model_fields}
+    ).model_copy(update={"integration_v2": True, "allow_gateway": False})
+    original_doc_ids = bundle.lane_results[1]["response"]["used_verified_claim_ids"]
+    recovered = compose_fusion_v2(
+        service,
+        bound,
+        bundle,
+        FinancialQAResponse(
+            trace=PipelineTrace(request_id="saved-c07"),
+        ),
+    )
+    assert set(original_doc_ids) <= set(recovered.used_verified_claim_ids)
+    assert any(c.pdf_page == 12 for c in recovered.citations)
+    financial = service.run(
+        bound.model_copy(
+            update=dict(
+                question="Lợi nhuận sau thuế BBS năm 2025",
+                integration_lane="financial",
+                execution_mode="deterministic",
+                composition_id=None,
+                composition_sha256=None,
+                document_snapshots=[],
+                force_refresh=True,
+            )
+        )
+    )
+    assert financial.used_verified_claim_ids, financial.trace.model_dump()
+    bundle.lane_results[0]["response"] = financial.model_dump(mode="json")
+    mixed = compose_fusion_v2(
+        service,
+        bound,
+        bundle,
+        FinancialQAResponse(
+            trace=PipelineTrace(request_id="counterfactual-c07"),
+        ),
+    )
+    assert set(financial.used_verified_claim_ids + original_doc_ids) <= set(
+        mixed.used_verified_claim_ids
+    )
+    assert {c.pdf_page for c in mixed.citations} >= {7, 12}
+    report["cases"]["C07"] = dict(
+        saved_document_ids=original_doc_ids,
+        recovered_ids=recovered.used_verified_claim_ids,
+        mixed_counterfactual_ids=mixed.used_verified_claim_ids,
+        citation_pages=sorted({c.pdf_page for c in mixed.citations}),
+        note="Saved document history; deterministic financial counterfactual; no Qwen calls.",
+    )
+    (output / "C07-composition.json").write_text(mixed.model_dump_json(indent=2), encoding="utf-8")
     report["source_json_unchanged"] = all(
         hashlib.sha256((source / name).read_bytes()).hexdigest() == digest
         for name, digest in input_hashes.items()
@@ -159,7 +226,7 @@ def replay(root, source, output):
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(
-        "Offline replay PASS: C01 shared context, C04 absence, C10 typed proofs, 22 historical entries; 0 model calls"
+        "Offline replay PASS: C01 shared context, C04 absence, C07 child retention/mixed citations, C10 typed proofs, 22 historical entries; 0 model calls"
     )
 
 

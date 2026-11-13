@@ -98,6 +98,10 @@ def plan_fusion(gateway, request):
                 "fact/metric/interpretation/document_summary/source_context; không phê duyệt hoặc tạo số. "
                 "Không thay công ty, filing hoặc scope, không thêm tên công ty/năm chưa nêu. "
                 "Các phần độc lập không phụ thuộc nhau. relation phụ thuộc requirements nguồn."
+                " Chính sách ghi nhận, điều kiện/ngoại lệ, chi phí/vốn hóa trong thuyết minh "
+                "là document lane, không là financial calculation. Gom cùng chủ đề vào "
+                "một document task; toàn bộ chỉ tiêu tài chính vào một financial task. "
+                "Yêu cầu không suy diễn là giới hạn, không truy xuất một con số không được hỏi."
             ),
             question=request.question,
             conversation=request.conversation_context,

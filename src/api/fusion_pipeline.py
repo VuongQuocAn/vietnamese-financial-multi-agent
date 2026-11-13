@@ -14,6 +14,94 @@ from ..outputs.qa_contracts import VietnameseQARequest
 from ..tools.graph_retrieval import GetGraphContextRequest, GraphRetrievalTools
 from ..tools.question_understanding import understand
 from ..verification.ledger import VerifiedClaimLedger
+from ..verification.ledger_contracts import VerifiedClaimQuery
+
+
+def compose_fusion_v2(pipeline, bound, bundle, response):
+    """Render exact child releases from the current ledger, without re-parsing goals."""
+    from ..outputs.qa_lite import compose_lite
+
+    ledger = VerifiedClaimLedger(pipeline.repository)
+    entries = ledger.find_claims(
+        VerifiedClaimQuery(
+            company_id=bound.company_id,
+            document_id=bound.document_id,
+            snapshot_id=bound.snapshot_id,
+        )
+    ).claims
+    entries += ledger.find_claims(
+        VerifiedClaimQuery(
+            company_id=bound.company_id,
+            document_id=bound.document_id,
+            kind="document",
+            composition_id=bound.composition_id,
+            composition_sha256=bound.composition_sha256,
+        )
+    ).claims
+    by_id = {e.identity.verified_claim_id: e for e in entries}
+    requested, bindings, requirements, errors = [], {}, [], []
+    parts = {p.requirement_id: p for p in bundle.plan.requirements}
+    for lane in bundle.lane_results:
+        child, rid = lane["response"], lane["requirement_id"]
+        trace = child["trace"]
+        ids = child["used_verified_claim_ids"]
+        for key in ids:
+            entry = by_id.get(key)
+            if entry is None or (
+                entry.identity.kind == "document"
+                and entry.identity.snapshot_id not in bound.document_snapshots
+            ):
+                errors.append("child_release_not_in_current_ledger:" + key)
+                continue
+            if key not in requested:
+                requested.append(key)
+        coverage = trace.get("m7_lite", {}).get("coverage", {})
+        rows = coverage.get("requirements", [])
+        if not rows:
+            rows = trace.get("document_release", {}).get("requirements", {}).get("requirements", [])
+        for row in rows:
+            requirement_id = rid + ":" + row["requirement_id"]
+            requirements.append(
+                dict(
+                    requirement_id=requirement_id,
+                    text=row.get("text", parts[rid].original_span),
+                    required=row.get("required", True),
+                )
+            )
+            for key in row.get("verified_claim_ids", []):
+                if key in ids and key in requested:
+                    bindings.setdefault(key, []).append(requirement_id)
+        requirements.append(dict(requirement_id=rid, text=parts[rid].original_span))
+        if ids and child["status"] in {"completed", "completed_with_caveats"}:
+            for key in ids:
+                if key in requested:
+                    bindings.setdefault(key, []).append(rid)
+        errors.extend(trace.get("integration_context", {}).get("technical_errors", []))
+    done = {lane["requirement_id"] for lane in bundle.lane_results}
+    requirements.extend(
+        dict(requirement_id=p.requirement_id, text=p.original_span)
+        for p in bundle.plan.requirements
+        if p.requirement_id not in done
+    )
+    context = dict(
+        requirements=requirements, verified_requirements=bindings, technical_errors=errors
+    )
+    fields, metadata = compose_lite(
+        bound.model_copy(update={"allow_gateway": False}),
+        [by_id[key] for key in requested],
+        coverage_context=context,
+        technical_errors=errors,
+    )
+    for key, value in fields.items():
+        setattr(response, key, value)
+    response.mode = "FRESH_M5_M6_M7" if requested else "BLOCKED"
+    response.trace.m7_lite = metadata
+    response.trace.integration_context = context
+    response.trace.answer_mode = "lite"
+    response.trace.m7_status = response.status
+    response.trace.firewall_decision = "LITE_INTEGRITY_RELEASE" if requested else "LITE_NO_FINDINGS"
+    response.trace.fusion_bundle = bundle.model_dump(mode="json")
+    return response
 
 
 def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
@@ -282,6 +370,8 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     trace.native_decisions = dict(Counter(o.final_decision for o in trace.outcomes))
     trace.selected_agents = list(dict.fromkeys(trace.selected_agents))
     trace.executed_agents = list(dict.fromkeys(trace.executed_agents))
+    if request.integration_v2:
+        return stage("composer", lambda: compose_fusion_v2(pipeline, bound, bundle, response))
     qa = VietnameseQARequest(**bound.model_dump(include=set(VietnameseQARequest.model_fields)))
     qa.allow_gateway = False
     if request.execution_mode != "deterministic" and request.allow_gateway:

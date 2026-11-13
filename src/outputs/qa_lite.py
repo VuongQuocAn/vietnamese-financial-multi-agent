@@ -158,7 +158,7 @@ def _proof_text(entry):
     if proof and proof.calculation:
         labels = {e.evidence_id: e.label for e in entry.accepted_claim.supporting_evidence}
         lines.append(render_dynamic(proof.calculation, labels))
-    calc = entry.accepted_claim.calculation
+    calc = getattr(entry.accepted_claim, "calculation", None)
     if not calc or not calc.trace or not calc.result:
         return "\n".join(lines)
     formula = calc.trace.formula
@@ -709,22 +709,33 @@ def compose_lite(
             for v in (
                 *e.caveats,
                 *e.accepted_claim.caveats,
-                *(v for evidence in e.accepted_claim.supporting_evidence for v in evidence.caveats),
+                *(
+                    v
+                    for evidence in getattr(e.accepted_claim, "supporting_evidence", [])
+                    for v in evidence.caveats
+                ),
                 *(v for citation in e.citations for v in citation.limitations),
             )
         )
     )
     limitations = list(
-        dict.fromkeys(v for e in selected for v in e.accepted_claim.missing_information)
+        dict.fromkeys(
+            v for e in selected for v in getattr(e.accepted_claim, "missing_information", [])
+        )
     )
     limitations += [
         v
         for e in selected
-        if e.accepted_claim.reasoning
+        if getattr(e.accepted_claim, "reasoning", None)
         for v in e.accepted_claim.reasoning.limitations
     ]
     limitations += [
-        v for e in selected for v in (*e.decision.limitations, *e.decision.unresolved_blockers)
+        v
+        for e in selected
+        for v in (
+            *getattr(e.decision, "limitations", []),
+            *getattr(e.decision, "unresolved_blockers", []),
+        )
     ]
     limitations = list(dict.fromkeys(limitations))
     for label, notes in (("Lưu ý", caveats), ("Giới hạn", limitations)):

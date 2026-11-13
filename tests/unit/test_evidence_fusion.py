@@ -95,6 +95,46 @@ def test_fusion_actual_tools_verification_release_restart_and_firewall(tmp_path)
     )
 
 
+def test_v2_fusion_keeps_child_releases_with_citations_and_partial_coverage(tmp_path):
+    service, request = setup(tmp_path)
+    result = service.run(request.model_copy(update={"integration_v2": True}))
+    assert result.used_verified_claim_ids, result.trace.model_dump()
+    children = result.trace.fusion_bundle["lane_results"]
+    expected = {key for lane in children for key in lane["response"]["used_verified_claim_ids"]}
+    assert set(result.used_verified_claim_ids) == expected
+    assert {c.snapshot_id for c in result.citations} == {"selected-0", "native"}
+    assert "Nguyễn Văn An" in result.answer_vi
+    assert all(c.bound_verified_claim_ids for c in result.citations)
+    from vietnamese_financial_multi_agent.agents.fusion_contracts import EvidenceFusionBundle
+    from vietnamese_financial_multi_agent.api.fusion_pipeline import compose_fusion_v2
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import (
+        FinancialQAResponse,
+        PipelineTrace,
+    )
+
+    bundle = EvidenceFusionBundle.model_validate(result.trace.fusion_bundle)
+    context = bundle.context
+    bound = FinancialQARequest.model_validate(
+        {k: v for k, v in context.items() if k in FinancialQARequest.model_fields}
+    )
+    # A wrong parent topic cannot erase the child's exact accepted role/quote.
+    doc_part = next(p for p in bundle.plan.requirements if p.lane == "document")
+    doc_part.target = "unrelated parent topic"
+    doc_part.document_requirement.target = "unrelated parent topic"
+    doc_part.support_status = "missing"
+    again = compose_fusion_v2(
+        service, bound, bundle, FinancialQAResponse(trace=PipelineTrace(request_id="offline"))
+    )
+    assert set(again.used_verified_claim_ids) == expected
+    # Unknown/foreign IDs cannot be promoted from a child response into M7.
+    bundle.lane_results[0]["response"]["used_verified_claim_ids"].append("verified:invented")
+    blocked_id = compose_fusion_v2(
+        service, bound, bundle, FinancialQAResponse(trace=PipelineTrace(request_id="offline"))
+    )
+    assert "verified:invented" not in blocked_id.used_verified_claim_ids
+    assert blocked_id.status == "partial_verified_coverage"
+
+
 @pytest.mark.parametrize(
     "patch",
     [

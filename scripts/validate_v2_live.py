@@ -37,20 +37,24 @@ class BudgetedGateway:
         reserve += request.generation.max_output_tokens + 2048
         if len(self.events) >= 18 or self.tokens + reserve > 180000:
             raise ValidationStopped("total_budget_reservation_exhausted")
+        if sum(e["case"] == self.case for e in self.events) >= 6:
+            raise ValidationStopped("case_call_budget_exhausted")
         event = dict(case=self.case, request=request.export(), status="STARTED")
         self.events.append(event)
         save(self.output / "provider-events.json", self.events)
         response = self.gateway.generate(request)
         event.update(status=response.status, response=response.export())
         save(self.output / "provider-events.json", self.events)
+        if must_stop(response):
+            if response.usage.total_tokens is not None:
+                self.tokens += response.usage.total_tokens
+            raise ValidationStopped("provider_error_fail_stop")
         used = response.usage.total_tokens
         if used is None:
             raise ValidationStopped("unknown_token_usage")
         self.tokens += used
         if self.tokens > 180000:
             raise ValidationStopped("provider_usage_exceeded_reserved_budget")
-        if must_stop(response):
-            raise ValidationStopped("provider_error_fail_stop")
         return response
 
 
@@ -62,8 +66,8 @@ def validate(root, config, output):
     old = root / "artifacts/evidence/E2E-GEN-01"
     cases = [
         ("C01", "BBS_2025"),
-        ("C10", "BCC_2025"),
         ("C07", "BBS_2025"),
+        ("C10", "BCC_2025"),
     ]
     originals = {
         case: json.loads((old / f"execution/{case}.json").read_text(encoding="utf-8"))["request"]
