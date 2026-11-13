@@ -494,7 +494,7 @@ class LiteVerificationRuntime:
                 )
             )
         payload = json.dumps(wire_rows, ensure_ascii=False)
-        if len(payload) > 16000 or len(rows) > 32:
+        if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
             for p in proofs:
                 p.semantic_error = "semantic_payload_limit"
             return
@@ -544,6 +544,10 @@ class LiteVerificationRuntime:
                 "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
                 "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
                 "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
+                " answer_goal=analysis/synthesis/limitation yêu cầu nhận xét chứ không chỉ số "
+                "hoặc định nghĩa công thức. Chỉ bind synthesis khi statement liên kết tất cả "
+                "các chỉ tiêu yêu cầu và có giới hạn cụ thể khi được hỏi; caveat nguồn chung "
+                "không thay nhận xét. Không bind giới hạn nếu câu không thể hiện giới hạn đó."
             )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
         verdicts, error = {}, "semantic_provider_failure"

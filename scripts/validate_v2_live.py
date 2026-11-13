@@ -1,4 +1,4 @@
-"""One live C01/C07 pass on the approved source; usage is provider-reported only."""
+"""One live C01/C07/C10 pass; QA gaps continue, infrastructure errors stop."""
 
 import argparse
 import hashlib
@@ -10,8 +10,6 @@ import zipfile
 from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
-
-IMPLEMENTATION = "474cc218498512748aaaa96ab463c070b27f9228"
 
 
 class ValidationStopped(BaseException):
@@ -32,7 +30,7 @@ class BudgetedGateway:
         self.gateway, self.output, self.events, self.case = gateway, output, events, case
 
     def generate(self, request):
-        if len(self.events) >= 12 or sum(e["case"] == self.case for e in self.events) >= 6:
+        if len(self.events) >= 18 or sum(e["case"] == self.case for e in self.events) >= 6:
             raise ValidationStopped("call_budget_exhausted")
         event = dict(case=self.case, request=request.export(), status="STARTED")
         self.events.append(event)
@@ -46,12 +44,19 @@ class BudgetedGateway:
         )
         save(self.output / "provider-events.json", self.events)
         print(self.case, "call", len(self.events), response.status, flush=True)
-        if response.status != "success" or response.error:
+        if response.error and response.error.category not in {
+            "structured_output_invalid",
+            "schema_mismatch",
+            "safety",
+        }:
             raise ValidationStopped("provider_non_success_fail_stop")
         return response
 
 
-def validate(root, output, case, owner):
+def validate(root, output, case, owner, implementation):
+    implementation = subprocess.check_output(
+        ["git", "rev-parse", implementation], cwd=root, text=True
+    ).strip()
     fingerprint = hashlib.sha256(
         json.dumps(
             [owner[k] for k in ("BASE_URL", "API_KEY", "MODEL_NAME")], separators=(",", ":")
@@ -64,18 +69,21 @@ def validate(root, output, case, owner):
         assert case == "C01" and not output.exists(), "fresh_output_required"
         output.mkdir(parents=True)
         archive = subprocess.check_output(
-            ["git", "archive", "--format=zip", IMPLEMENTATION, "src"], cwd=root
+            ["git", "archive", "--format=zip", implementation, "src"], cwd=root
         )
         zipfile.ZipFile(io.BytesIO(archive)).extractall(output / "frozen")
         references = read(root / "artifacts/evidence/E2E-GEN-01/references.json")
-        save(output / "gold-references.json", [r for r in references if r["id"] in {"C01", "C07"}])
+        save(
+            output / "gold-references.json",
+            [r for r in references if r["id"] in {"C01", "C07", "C10"}],
+        )
         save(
             manifest_path,
             dict(
                 started_utc=datetime.now(UTC).isoformat(),
-                implementation_commit=IMPLEMENTATION,
-                cases=["C01", "C07"],
-                max_calls=12,
+                implementation_commit=implementation,
+                cases=["C01", "C07", "C10"],
+                max_calls=18,
                 max_calls_per_case=6,
                 token_precount=False,
                 max_total_tokens=None,
@@ -89,12 +97,13 @@ def validate(root, output, case, owner):
         save(state_path, dict(status="PREPARED", cases=[]))
         save(output / "provider-events.json", [])
     state, manifest = read(state_path), read(manifest_path)
-    assert manifest["implementation_commit"] == IMPLEMENTATION
+    assert manifest["implementation_commit"] == implementation
     assert manifest["provider_configuration_sha256"] == fingerprint
     assert not any(row["case"] == case for row in state["cases"]), "case_already_attempted_no_retry"
-    if case == "C07":
+    if case != "C01":
         assert state["status"] == "AWAITING_QA_REVIEW"
-        assert read(output / "C01-review.json")["verdict"] == "PASS"
+        expected = ["C01"] if case == "C07" else ["C01", "C07"]
+        assert [row["case"] for row in state["cases"]] == expected
     else:
         assert state["status"] == "PREPARED"
 
@@ -115,7 +124,9 @@ def validate(root, output, case, owner):
     # Only the original request is reused. Every provider response comes from live Qwen.
     original = read(root / f"artifacts/evidence/E2E-GEN-01/execution/{case}.json")["request"]
     catalog = bbs_catalog(root)
-    service, _ = pipeline(root, "BBS_2025", output / "inputs" / case, catalog)
+    service, _ = pipeline(
+        root, "BCC_2025" if case == "C10" else "BBS_2025", output / "inputs" / case, catalog
+    )
     service.gateway = gateway
     request = FinancialQARequest.model_validate(original).model_copy(
         update=dict(
@@ -171,7 +182,8 @@ def validate(root, output, case, owner):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--case", choices=["C01", "C07"], required=True)
+    parser.add_argument("--case", choices=["C01", "C07", "C10"], required=True)
+    parser.add_argument("--implementation", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--config-file", type=Path)
     args = parser.parse_args()
@@ -180,4 +192,10 @@ if __name__ == "__main__":
         if args.config_file
         else json.loads(sys.stdin.readline().lstrip("\ufeff"))
     )
-    validate(Path(__file__).resolve().parents[1], args.output.resolve(), args.case, owner)
+    validate(
+        Path(__file__).resolve().parents[1],
+        args.output.resolve(),
+        args.case,
+        owner,
+        args.implementation,
+    )

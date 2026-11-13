@@ -4,6 +4,7 @@ import ast
 import hashlib
 import re
 from dataclasses import dataclass, field
+from typing import Literal
 
 from ..outputs.qa_composer import INTERPRETATION_TERMS, matches_financial_target
 from ..outputs.qa_contracts import QARequirement
@@ -13,6 +14,7 @@ from .supervisor import ExecutionEvidenceBundle
 
 class IntegrationRequirement(QARequirement):
     requested_unit: str | None = None
+    answer_goal: Literal["value", "analysis", "synthesis", "limitation"] = "value"
 
 
 def evidence_handle(evidence):
@@ -76,6 +78,18 @@ def _matches_metric_expression(claim, source):
 
 def matches_requirement(claim, requirement, source=None):
     """Typed target matching only. Interpretation relevance is confirmed by M6."""
+    if requirement.answer_goal != "value":
+        proof = claim.reasoning
+        # Proposed relevance still needs M6 semantic truth and goal coverage.
+        # A scalar or pure arithmetic proof cannot satisfy commentary.
+        return bool(
+            claim.kind == "supported_interpretation"
+            and proof
+            and proof.claim_type == "reasoned_conclusion"
+            and normalize(proof.goal) == normalize(requirement.text)
+            and set(requirement.required_indicators)
+            <= {s.canonical_item_id for s in claim.supporting_evidence if s.kind == "fact"}
+        )
     if requirement.kind in {"unsupported", "ambiguous", "document", "limitations"}:
         return False
     if not requirement.target_id:
@@ -148,6 +162,7 @@ def answer_coverage(context, entries):
 @dataclass
 class IntegrationWorkspace:
     requirements: list[IntegrationRequirement]
+    question: str = ""
     evidence: ExecutionEvidenceBundle = field(default_factory=ExecutionEvidenceBundle)
     tasks: dict[str, dict] = field(default_factory=dict)
     targets: dict[str, dict] = field(default_factory=dict)

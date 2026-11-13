@@ -14,6 +14,7 @@ from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     SupervisorLite,
     integration_plan,
     inventory,
+    preserve_answer_goal,
     resolve_requirements,
     resolve_source,
 )
@@ -453,3 +454,70 @@ def test_claim_local_periods_keep_exact_source_and_content_guards():
     wrong_name.claims = [batch.claims[0].model_copy(deep=True)]
     wrong_name.claims[0].content = "Biên lợi nhuận gộp kỳ 2030 là 0,50 lần."
     assert runtime.verify(wrong_name)[0].outcome.final.decision != "ACCEPT"
+
+
+def test_original_commentary_goal_has_dependent_owner_and_cannot_bind_a_number():
+    catalog, context, engine, _ = setup_engine()
+    sources = inventory(catalog, context)
+    for question in (
+        "Nhận xét hai chỉ tiêu và nêu giới hạn khi đánh giá.",
+        "Phân tích tổng hợp, không suy nguyên nhân từ biến động.",
+        "Đặt hai kết quả bên cạnh nhau và nêu hạn chế.",
+    ):
+        plan = engine.supervisor.plan.return_value[0].model_copy(deep=True)
+        targets = resolve_requirements(plan, sources)
+        preserve_answer_goal(plan, question, targets)
+        goal = plan.requirements[-1]
+        assert goal.text == question and goal.answer_goal == "synthesis"
+        assert set(goal.required_indicators) == {f.canonical_item_id for f in catalog.facts}
+        task = plan.tasks[-1]
+        assert task.depends_on == ["T1", "T2"] and goal.requirement_id in task.requirement_ids
+        preserve_answer_goal(plan, question, targets)
+        assert len(plan.tasks) == 3 and len(plan.requirements) == 3
+        data, batch = reasoning_case()
+        claim = batch.claims[0]
+        assert not matches_requirement(claim, goal)  # derived arithmetic is not commentary
+        claim.reasoning.claim_type = "reasoned_conclusion"
+        claim.reasoning.goal = question
+        assert matches_requirement(claim, goal)
+        claim.reasoning.goal = "another goal"
+        assert not matches_requirement(claim, goal)
+
+
+def test_multiperiod_commentary_still_requires_semantic_truth_and_goal_support():
+    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
+    claim = batch.claims[0]
+    claim.reasoning.claim_type = "reasoned_conclusion"
+    claim.reasoning.calculation = None
+    claim.content = "Hai kỳ doanh thu là các quan sát trong báo cáo; riêng chúng chưa xác định nguyên nhân biến động."
+    req = IntegrationRequirement(
+        requirement_id="R-comment",
+        text=claim.reasoning.goal,
+        kind="explanation",
+        interpretation=True,
+        answer_goal="analysis",
+        required_indicators=["b02.net_revenue"],
+    )
+    assert matches_requirement(claim, req)
+    ctx = dict(
+        requirements=[req.model_dump()],
+        candidate_requirements={claim.candidate_id: [req.requirement_id]},
+    )
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "INVESTIGATE"
+    gateway = semantic_gateway()
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "ACCEPT"
+    assert runtime.summary["supported_requirements"] == {claim.candidate_id: []}
+    # Correct statement alone is not full-answer coverage; M6 must affirm the goal too.
+    original = gateway.generate.side_effect
+
+    def confirm(request):
+        response = original(request)
+        response.output.payload["verdicts"][0]["supported_requirement_ids"] = [req.requirement_id]
+        return response
+
+    gateway.generate.side_effect = confirm
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "ACCEPT"
+    assert runtime.summary["supported_requirements"] == {claim.candidate_id: [req.requirement_id]}

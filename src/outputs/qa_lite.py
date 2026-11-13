@@ -468,6 +468,52 @@ def _projection(segments, selected):
     return "\n\n".join(paragraphs), references, bindings
 
 
+def _group_verified_segments(segments, entries, context):
+    """Group by existing M6 bindings; deduplicate complete lines, not numbers.
+
+    Only admitted text/proof lines are moved. No paraphrase, new accounting
+    assertion, arithmetic or relevance verdict is generated here.
+    """
+    bindings = context.get("verified_requirements", {})
+    requirements = context.get("requirements", [])
+    order = {r["requirement_id"]: i for i, r in enumerate(requirements)}
+    narrative = {
+        r["requirement_id"] for r in requirements if r.get("answer_goal", "value") != "value"
+    }
+    groups, line_owner = {}, {}
+    for segment in segments:
+        for key in segment["claim_ids"]:
+            entry = entries[key]
+            rids = bindings.get(key, [])
+            rid = next((r for r in rids if r not in narrative), next(iter(rids), None))
+            group_id = rid or ("unbound", entry.identity.verified_claim_id)
+            rank = len(order) + 1 if rid in narrative else order.get(rid, len(order))
+            group = groups.setdefault(group_id, dict(text=[], claim_ids=[], order=rank))
+            # Segment text may be shared by several accepted claims; the exact
+            # line map retains every claim/citation even when no new line remains.
+            for line in segment["text"].splitlines():
+                if not line.strip():
+                    continue
+                scope = (
+                    entry.identity.company_id,
+                    entry.identity.document_id,
+                    entry.identity.snapshot_id,
+                )
+                identity = (scope, line.strip())
+                owner = line_owner.get(identity)
+                if owner is None:
+                    group["text"].append(line.strip())
+                    line_owner[identity] = group
+                    owner = group
+                if key not in owner["claim_ids"]:
+                    owner["claim_ids"].append(key)
+    return [
+        dict(text=" ".join(g["text"]), claim_ids=g["claim_ids"])
+        for g in sorted(groups.values(), key=lambda g: g["order"])
+        if g["text"]
+    ]
+
+
 def compose_lite(
     request,
     selected,
@@ -679,32 +725,8 @@ def compose_lite(
     if not selected:
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
-    # Identical admitted displays share one paragraph and retain every binding
-    # and citation. Different prose/findings remain separate even with one proof.
     if coverage_context is not None:
-        unique = {}
-        for segment in segments:
-            scope = tuple(
-                sorted(
-                    {
-                        (
-                            e.identity.company_id,
-                            e.identity.document_id,
-                            e.identity.snapshot_id,
-                            e.identity.period,
-                        )
-                        for key in segment["claim_ids"]
-                        for e in [entries[key]]
-                    }
-                )
-            )
-            key = (segment["text"], scope)
-            if key not in unique:
-                unique[key] = dict(text=segment["text"], claim_ids=[])
-            unique[key]["claim_ids"] = list(
-                dict.fromkeys([*unique[key]["claim_ids"], *segment["claim_ids"]])
-            )
-        segments = list(unique.values())
+        segments = _group_verified_segments(segments, entries, coverage_context)
     released_ids = {key for segment in segments for key in segment["claim_ids"]}
     released_entries = [e for key, e in entries.items() if key in released_ids]
     if coverage_context is not None:

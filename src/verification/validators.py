@@ -262,7 +262,15 @@ class DeterministicFinancialValidator:
         across = proof.calculation and any(
             step.operation.period_relation == "across_periods" for step in proof.calculation.steps
         )
-        if len(periods) > 1 and not across:
+        if (
+            len(periods) > 1
+            and not across
+            and (
+                not getattr(self, "integration_v2", False)
+                or proof.claim_type == "derived_fact"
+                or proof.calculation
+            )
+        ):
             self._check(result, "context", "fail", "reasoning_period_relation_missing")
         for index, (source, statement) in enumerate(
             zip(sources, claim.analysis_premises, strict=True)

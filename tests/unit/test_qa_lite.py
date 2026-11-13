@@ -9,6 +9,7 @@ from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import Financial
 from vietnamese_financial_multi_agent.core.llm_contracts import JSONOutput
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway, _failure
 from vietnamese_financial_multi_agent.outputs.qa_lite import (
+    _group_verified_segments,
     _numbers_supported,
     compose_lite,
 )
@@ -62,6 +63,29 @@ def gateway_for(body=None, error=None, malformed=False):
         return response
 
     return SharedLLMGateway({"gemini": transport}), calls
+
+
+def test_v2_embedded_proof_dedup_preserves_distinct_prose_and_all_citation_bindings(admitted):
+    request, entry = admitted
+    first = entry.identity.verified_claim_id
+    other = entry.model_copy(deep=True)
+    other.identity.verified_claim_id = "another-accepted"
+    proof = "Phép đối chiếu đã xác minh: 0,59 lần."
+    prose = entry.content
+    segments = [
+        dict(text=prose + "\n" + proof, claim_ids=[first]),
+        dict(text=proof, claim_ids=[other.identity.verified_claim_id]),
+    ]
+    grouped = _group_verified_segments(segments, {first: entry, "another-accepted": other}, {})
+    assert sum(s["text"].count(proof) for s in grouped) == 1
+    assert prose in grouped[0]["text"] and set(grouped[0]["claim_ids"]) == {
+        first,
+        "another-accepted",
+    }
+    foreign = other.model_copy(deep=True)
+    foreign.identity.snapshot_id = "different-snapshot"
+    grouped = _group_verified_segments(segments, {first: entry, "another-accepted": foreign}, {})
+    assert sum(s["text"].count(proof) for s in grouped) == 2
 
 
 @pytest.mark.parametrize(

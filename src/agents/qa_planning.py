@@ -102,6 +102,9 @@ def plan_fusion(gateway, request):
                 "là document lane, không là financial calculation. Gom cùng chủ đề vào "
                 "một document task; toàn bộ chỉ tiêu tài chính vào một financial task. "
                 "Yêu cầu không suy diễn là giới hạn, không truy xuất một con số không được hỏi."
+                " Giữ nguyên cả giới hạn/không suy diễn trong original_span và execution_question "
+                "của phần liên quan, không bỏ clause cuối câu. Nhận xét hoặc kết luận tổng hợp "
+                "phải nằm trong mục tiêu của lane financial, không chỉ chia thành các số cần tìm."
             ),
             question=request.question,
             conversation=request.conversation_context,

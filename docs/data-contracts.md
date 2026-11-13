@@ -5,6 +5,14 @@
 Opt-in `FinancialQARequest.integration_v2` chọn Lite profile; fusion child giữ
 `integration_lane` để không phân rã đệ quy. `LitePlan.requirements` tái dùng
 QARequirement với requested_unit; tasks giữ task/requirement/dependency IDs.
+V2 bổ sung `answer_goal=value|analysis|synthesis|limitation` (default value) trong
+IntegrationRequirement. Câu hỏi gốc giữ trong workspace, nghĩa vụ nhận xét/giới hạn
+không biến thành scalar coverage. Khi model bỏ nghĩa vụ này, M5 giữ nguyên câu hỏi
+như một requirement và giao follow-up có dependencies cho specialist hiện có;
+không tạo agent hay kết luận tự động. Chỉ reasoned_conclusion có đủ canonical
+premises được đề xuất bind; cùng M6 semantic pass phải xác nhận truth và goal support.
+M7 nhóm theo verified bindings và gộp nguyên dòng trùng trong cùng source scope,
+giữ mọi claim IDs/citations; không sinh prose tài chính mới hoặc kiểm chứng lại.
 Workspace chỉ trong request, evidence handles resolve về canonical reference,
 không đổi facts/snapshots/EF-EG. OrchestrationResult chỉ serialize integration_context
 khi có, giữ legacy digest serialization khi không dùng V2.

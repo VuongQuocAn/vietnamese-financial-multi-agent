@@ -31,7 +31,12 @@ from . import cash_flow_earnings_quality_specialist as cash
 from . import liquidity_leverage_specialist as liquidity
 from . import profitability_specialist as profit
 from .contracts import PlanValidation, SpecialistRole
-from .integration_workspace import IntegrationRequirement, IntegrationWorkspace, evidence_handle
+from .integration_workspace import (
+    INTERPRETATION_TERMS,
+    IntegrationRequirement,
+    IntegrationWorkspace,
+    evidence_handle,
+)
 from .orchestration_contracts import (
     OrchestrationError,
     OrchestrationResult,
@@ -392,6 +397,82 @@ def resolve_requirements(plan, sources):
     return targets
 
 
+def preserve_answer_goal(plan, question, targets):
+    """Keep explicit discourse goals even when the model only planned numbers.
+
+    Language cues preserve an obligation, never infer an accounting conclusion.
+    """
+    text = normalize(question)
+    requested = any(
+        term in text
+        for term in (
+            *INTERPRETATION_TERMS,
+            "tong hop",
+            "dat hai ket qua",
+            "dat ben canh",
+            "gioi han",
+            "han che",
+            "khong suy",
+        )
+    )
+    if not requested or not plan.tasks or not targets:
+        return
+    indicators = set()
+    for source in targets.values():
+        if source["kind"] == "fact":
+            indicators.add(source["item"])
+        else:
+            indicators.update(
+                o.canonical_item_id for o in source["records"][0].definition.compatibility.operands
+            )
+    goals = [r for r in plan.requirements if r.answer_goal != "value"]
+    if not goals:
+        rid = "R-response"
+        while any(r.requirement_id == rid for r in plan.requirements):
+            rid += "-next"
+        goals = [
+            IntegrationRequirement(
+                requirement_id=rid,
+                text=question,
+                kind="explanation",
+                interpretation=True,
+                answer_goal="synthesis" if len(indicators) > 1 else "analysis",
+                required_indicators=sorted(indicators),
+                depends_on=[r.requirement_id for r in plan.requirements],
+            )
+        ]
+        plan.requirements.extend(goals)
+    task = next((t for t in plan.tasks if t.depends_on), None)
+    if task is None:
+        goal_ids = {r.requirement_id for r in goals}
+        task = next(
+            (t for t in plan.tasks if t.requirement_ids and set(t.requirement_ids) <= goal_ids),
+            None,
+        )
+        if task is not None:
+            plan.tasks.remove(task)
+            task.depends_on = [t.task_id for t in plan.tasks if t.task_id]
+            plan.tasks.append(task)
+    if task is None:
+        if len(plan.tasks) >= 6:
+            return  # Keep the obligation visibly unverified when no task slot remains.
+        tid = "T-response"
+        while any(t.task_id == tid for t in plan.tasks):
+            tid += "-next"
+        task = LiteTask(
+            task_id=tid,
+            specialist=plan.tasks[-1].specialist,
+            objective=question[:600],
+            depends_on=[t.task_id for t in plan.tasks if t.task_id],
+        )
+        plan.tasks.append(task)
+    task.requirement_ids = list(
+        dict.fromkeys([*task.requirement_ids, *(r.requirement_id for r in goals)])
+    )
+    for goal in goals:
+        goal.required_indicators = sorted(set(goal.required_indicators) | indicators)
+
+
 def fallback_plan(question, sources):
     """Conservative lexical routing; no guessed company, document or numbers."""
     text = normalize(question)
@@ -484,6 +565,11 @@ class SupervisorLite:
                     "reasoning_operations, reasoning_periods; nhận xét dùng metric_meaning. "
                     "target_id là canonical item/formula trong inventory; requested_unit là "
                     "VND/ratio/percent hoặc null. Không quy % thành ratio. "
+                    "answer_goal=value cho số liệu/phép tính; analysis cho nhận xét, synthesis "
+                    "cho tổng hợp liên nhánh, limitation cho giới hạn. Phải có requirement riêng "
+                    "cho yêu cầu nhận xét/tổng hợp/không suy diễn, giữ nguyên câu hỏi trong text. "
+                    "Không thay nhận xét bằng định nghĩa công thức. Task tổng hợp phụ thuộc các "
+                    "task nguồn và do một specialist hiện có đảm nhiệm; không thêm chỉ tiêu/năm. "
                     "Trả {requirements:[...],tasks:[...]}, không field khác."
                 ),
                 requirement_schema=IntegrationRequirement.model_json_schema(),
@@ -732,14 +818,40 @@ class FinancialLiteOrchestrator:
                 for r in self.workspace.requirements
                 if r.requirement_id in task.requirement_ids
             ]
-            prompt["shared_tasks"] = self.workspace.tasks
-            prompt["user_question"] = task.objective
+            prompt["shared_tasks"] = {
+                key: dict(
+                    status=state["status"],
+                    requirement_ids=state["requirement_ids"],
+                    candidate_statements=list(dict.fromkeys(state.get("candidate_statements", []))),
+                    candidate_proofs=[
+                        dict(
+                            operations=[s["operation"] for s in proof["calculation"]["steps"]],
+                            results=[
+                                {k: s[k] for k in ("result", "unit", "periods")}
+                                for s in proof["calculation"]["steps"]
+                            ],
+                        )
+                        for proof in state.get("candidate_proofs", [])
+                    ],
+                )
+                for key, state in self.workspace.tasks.items()
+                if key in task.depends_on
+            }
+            prompt["user_question"] = self.workspace.question
             prompt["instruction"] += (
                 " Chỉ thực hiện assigned_requirements; shared_tasks là kết quả các nhánh, "
                 "không phải verdict M6. Dùng shared evidence/proofs cho kết luận liên nhánh, "
                 "không tin claim nhánh khác như nguồn. Không báo thiếu phần của task khác. "
                 "goal phải là text của requirement đang giải; thiếu evidence chỉ ghi "
                 "missing_information trong scope lượt truy xuất, không khẳng định corpus thiếu."
+                " Với answer_goal=analysis/synthesis/limitation, viết một đoạn nhận xét ngắn, "
+                "liên kết TẤT CẢ nhánh nguồn được giao và nêu giới hạn cụ thể của kết luận; "
+                "không chỉ định nghĩa phép tính hay chép lại số. Nhận xét phải bám dữ liệu "
+                "quan sát, không gán mức cao/thấp khi chưa có chuẩn, không suy nguyên nhân, "
+                "tính bền vững hay sức khỏe toàn diện. Dùng evidence_ids từ từng nhánh. "
+                "shared_tasks.candidate_proofs là phép tính backend đã chạy nhưng chưa ACCEPT; "
+                "nếu nêu kết quả tính trong statement phải khai operations tương ứng trên facts "
+                "để M6 replay. Giữ constraints của user_question, kể cả không suy diễn."
             )
         deterministic = self.gateway is None or context.mode == "deterministic"
         if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
@@ -814,6 +926,7 @@ class FinancialLiteOrchestrator:
         workspace, prepared = None, []
         if self.integration_v2:
             targets = resolve_requirements(plan, sources)
+            preserve_answer_goal(plan, question, targets)
             requirements = plan.requirements or [
                 IntegrationRequirement(
                     requirement_id="R-unresolved", text=question, kind="unsupported"
@@ -821,6 +934,7 @@ class FinancialLiteOrchestrator:
             ]
             workspace = self.workspace = IntegrationWorkspace(requirements)
             workspace.targets = targets
+            workspace.question = question
             if gaps:
                 output.errors.append(
                     OrchestrationError(stage="planning", code="integration_plan_incomplete")
