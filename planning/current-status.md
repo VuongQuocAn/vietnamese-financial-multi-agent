@@ -2,20 +2,17 @@
 
 ## V2-INT-01 — Minimal Integration Migration
 
-**REVIEW**, ngày13/11/2026; implementation `544d56abb6ff5ab9a64b67e3b22ce2c94533bf48`
-trên nhánh review/v2-int-01, baseline `3475a3a`; không thay runtime thêm hoặc push main.
-Opt-in V2: requirement/task IDs, request-local shared workspace, ba specialists,
-localized M6 policy/binding và M7 coverage sidecar; không refactor Ledger/M7 lớn.
-OfflineC01/C04/C10 đạt boundary controls;22historic entries nguyên vẹn,
-607non-runtime protected unchanged;3integration cuốiPASS,43API/fusionPASS,
-6M6/integrationPASS,planning143/Ruff/diffPASS (runs overlap).
-Live3case/8calls/15876tokens,0retry/APIerrors,0released claims; phát hiện prompt/lane
-integration errors, đã sửa offline và không rerun. Snapshot cuối chưa live xác nhận.
-Review checkout:7targeted + real-data replayPASS,planning139/Ruff/diffPASS.
-C07 child có1ACCEPT nhưng root không phát hành; mixed final binding vẫn còn trong code.
-[Report](../docs/v2-int-01-minimal-integration-migration.md), [spec](tasks/V2/V2-INT-01.md).
-Next action: Tech Lead review implementation, offline invariants và giới hạn live snapshot
-trước quyết định nghiệm thu V2-INT-01.
+**REVIEW**, ngày13/11/2026; implementation `2783e7dd71b1a53db91c1a363d757fff67630622`
+trên main, V2 opt-in. C07 child released IDs nối current ledger→M7 trực tiếp,
+không lookup lại target; không đổi M6/policy/tools hoặc thêm agent/verifier.
+OfflineC01/C04/C07/C10 đạt boundary controls;22historic entries và607protected
+non-runtime unchanged; targeted cuối27PASS,Ruff/planning/diff đạt.
+Live đúng1lượt: C01PARTIAL5calls/26802tokens; C07PARTIAL5calls/8851tokens,
+document1/1ACCEPT giữ ởroot nhưng thiếuLNST; C10INTERRUPTED doAPI timeout tại call1.
+Tổng11attempts,35653knowntokens+1unknown,0retry; dừng ngay, không sửa/rerun sau live.
+Còn lỗi target/source handles, M6globalcomparisonperiod, thiếu synthesis/constraint.
+[Report QA thật](../docs/v2-int-01-qa-validation.md), [spec](tasks/V2/V2-INT-01.md).
+Next action: Tech Lead nghiệm thu phần đã kiểm chứng và các giới hạn QA còn lại.
 
 ## ARCH-RESET-01 — Architecture audit và Target V2
 

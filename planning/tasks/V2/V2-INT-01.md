@@ -83,6 +83,19 @@ Snapshot cuối chưa live xác nhận; không dùng kết quả trước sửa 
 
 ## Implementation Evidence
 
+Phiên hoàn thiện QA V2 theo Owner13/11: implementation
+`2783e7dd71b1a53db91c1a363d757fff67630622`, trực tiếp main, V2 opt-in.
+Offline giữ C07 child ACCEPT ở root/citations7+12, C01assignments/shared evidence,
+C04chặn3absence,C10đúngproof/chặnsốsai;22historic/607protected unchanged.
+Targeted cuối27PASS,Ruff/planning/diff đạt; không fullCI/API mới sau timeout.
+Live đúng1lượt: C01PARTIAL5calls/26802tokens/156,45s; C07PARTIAL5calls/8851tokens/
+107,40s,document1/1childACCEPT đếnroot nhưng thiếuLNST; C10INTERRUPTED1call timeout,
+usage/timeE2Eunknown. Tổng11attempts,35653knowntokens+1unknown,0retry.
+Đã dừng ngay API timeout, không sửa runtime hoặc rerun; giữ lỗi target/source handles,
+M6comparisonperiodscope và thiếu synthesis/constraint trong báo cáo.
+[Báo cáo QA thật](../../../docs/v2-int-01-qa-validation.md).
+
+
 Implementation [544d56abb6ff5ab9a64b67e3b22ce2c94533bf48](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/544d56abb6ff5ab9a64b67e3b22ce2c94533bf48)
 trên nhánh review/v2-int-01; baseline `3475a3af8a2d1635bfa6037c0743245ba2a3e9e5`.
 Qwen prerequisite riêng3edc7c0; không gom local edits ngoài task hoặc sửa runtime thêm.
@@ -98,5 +111,4 @@ Số143 phía trên thuộc working tree lịch sử, không phải số task tr
 
 ## Handoff Notes
 
-Next action: Tech Lead review implementation, offline invariants và giới hạn live snapshot
-trước quyết định nghiệm thu V2-INT-01.
+Next action: Tech Lead nghiệm thu phần đã kiểm chứng và các giới hạn QA còn lại.
