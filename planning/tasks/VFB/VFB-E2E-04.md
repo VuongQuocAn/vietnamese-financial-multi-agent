@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: VFB
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: VFB-IMPORT-03
 - Estimated Complexity: M
@@ -51,7 +51,8 @@ loại gates thiếu authority, push hoặc sửa artifacts cũ. Commit đã đ�
 - [x] RCA đủ15câu, xác định stage và evidence gap thực tế.
 - [x] Fix tổng quát, không Gold answering; nguyên nguồn/artifacts cũ bất biến.
 - [x] Có actual answers/citations/graph/tools/latency/usage trên nhóm đại diện.
-- [x] Nêu rõ kết quả, residuals, tests thực chạy và next action; chưa commit.
+- [x] Nêu rõ kết quả, residuals, tests thực chạy và next action.
+- [x] Owner chấp thuận, implementation đã commit và SHA được xác minh trước DONE.
 
 ## Required Tests
 
@@ -65,15 +66,19 @@ scalar facts. Graph structural không tự cấp semantic support; JSON chưa PD
 
 ## Implementation Evidence
 
-Chưa commit; baseline HEADf769a12 + local edits. [Report](../../../docs/vfb-e2e-04-targeted-fix.md).
+Implementation [`2a683faf02318809f6a40bf7cc9a3511fcb63c17`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/2a683faf02318809f6a40bf7cc9a3511fcb63c17)
+đã commit local/xác minh, chưa push; baseline HEADf769a12 + local edits.
+[Report](../../../docs/vfb-e2e-04-targeted-fix.md).
 RCA15/29anchors có nguồn; sửa Supervisor instruction/graph policy,2aliases,
 routing bằng/bảng tiền,JSONscope và scalar/semantic binding guard.5live trước
 0C/0P/1I/4N→2C/1P/0I/2N;8calls/41383tokens,5graph found, chưa multi-domain.
 28targeted tests/4context probes đạt;2projection/68JSON riêng,25citation pointers,
 1488hashes và72E2E03artifacts bất biến. Ruff/planning/diff kiểm tối thiểu.
 AMEliability thiếu kỳ, B09/join vàstock/flow policy còn; không Gold answering,
-full15/600/OCR/CI. Chờ Tech Lead review, không tự DONE.
+full15/600/OCR/CI. Owner chấp thuận kết quả và cho đóng DONE sau commit.
+Phiên đóng:29tests trên isolated staged source PASS, Ruff/planning/diff đạt;
+13runtime files commit khớp live receipt. Không API hoặc benchmark mới.
 
 ## Handoff Notes
 
-Next action: Tech Lead review và quyết định task hẹp source/period grounding cùng B09 retrieval.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự mở benchmark rộng.

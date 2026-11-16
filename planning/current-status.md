@@ -2,14 +2,18 @@
 
 ## VFB-E2E-04 — Root Cause Analysis & Targeted Fix
 
-**REVIEW**, Owner16/11/2026; chưa commit, HEAD `f769a12` cùng local edits.
+**DONE — Owner chấp thuận16/11/2026**. Implementation
+[`2a683faf02318809f6a40bf7cc9a3511fcb63c17`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/2a683faf02318809f6a40bf7cc9a3511fcb63c17)
+đã commit local/xác minh, chưa push; giữ riêng local edits ngoài task.
 [Report](../docs/vfb-e2e-04-targeted-fix.md):RCA15/29anchors có nguồn; sửa
 Supervisor/graph policy,aliases,cash routing,JSONscope và binding guard.
 5live trước0C/0P/1I/4N→2C/1P/0I/2N;8Qwen calls/41383tokens,5graph found,
 chưa multi-domain.28tests/4context probes/25citations/1488hashes và72old artifacts
 đạt; projection2filing/68JSON riêng. AMEliability thiếu kỳ, B09/join/stock-flow
 policy còn. Không full15/600/OCR/CI; các task trước giữ trạng thái.
-Next action: Tech Lead review và quyết định task hẹp source/period grounding cùng B09 retrieval.
+Phiên đóng29tests isolated staged PASS, Ruff/planning/diff đạt;13runtime files
+commit khớp live receipt. Không API/benchmark mới; trạng thái task trước giữ nguyên.
+Next action: chờ Owner/Tech Lead giao task tiếp theo; không tự mở benchmark rộng.
 
 ## VFB-IMPORT-03 — Full Corpus Import
 

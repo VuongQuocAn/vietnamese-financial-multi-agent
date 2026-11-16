@@ -1,7 +1,9 @@
 # VFB-E2E-04 — Root Cause Analysis & Targeted Fix
 
-Ngày16/11/2026, Asia/Bangkok. **REVIEW**, chưa commit; HEAD
-`f769a12e8f5cf62759018454e167ee9335153988` cùng local edits có trước.
+Ngày16/11/2026, Asia/Bangkok. **DONE — Owner chấp thuận**. Implementation
+[`2a683faf02318809f6a40bf7cc9a3511fcb63c17`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/2a683faf02318809f6a40bf7cc9a3511fcb63c17)
+đã commit local và xác minh; chưa push. Baseline live `f769a12e8f5cf62759018454e167ee9335153988`
+cùng local edits có trước.
 Đã phân tích15trace E2E03, sửa có giới hạn và chạy **5câu/8Qwen calls**.
 Trên đúng5câu này: **0CORRECT/0PARTIAL/1INCORRECT/4NO_ANSWER →
 2CORRECT/1PARTIAL/0INCORRECT/2NO_ANSWER**. Graph **0→5calls found**.
@@ -163,10 +165,9 @@ Evaluator chỉ đọc Gold sau đủ5results; không LLM judge.72artifacts E2E0
 1.488source JSON hashes/benchmark/pilot hashes và runtime receipt sau freeze đạt.
 Ruff/planning/diff là kiểm kỹ thuật; không fullsuite/CI hoặc API thêm.
 
-**Next action:** Tech Lead review bản sửa và quyết định task hẹp tiếp theo cho
-source/period grounding cùng B09 retrieval trước khi cấp ngân sách benchmark rộng.
+**Next action:** chờ Owner/Tech Lead giao task tiếp theo; không tự mở benchmark rộng.
 
-## Chấp thuận và chuẩn bị commit — 16/11/2026
+## Chấp thuận và đóng task — 16/11/2026
 
 Owner chấp thuận kết quả VFB-E2E-04 và cho đóng DONE sau khi commit.
 Commit giữ7runtime files sửa trong task và6dependency files cho JSON
@@ -175,3 +176,10 @@ handoff/citation, target matching từ local implementation trước đó, đún
 Không đổi trạng thái task trước, không gom legacy prompt/PDF discovery/frontend
 hoặc planning ngoài E2E04. Phần tracking được stage riêng theo task.
 Phiên đóng không gọi API, OCR hoặc benchmark; giữ nguyên kết quả live và28tests.
+Đã commit implementation `2a683faf02318809f6a40bf7cc9a3511fcb63c17`, xác minh
+13runtime files trong commit khớp live receipt (chuẩn hóa newline Git).
+Trước commit, bản stage tách biệt khỏi working tree đạt29tests (28controls/
+compatibility +1JSON citation regression), Ruff lint/format và planning checker.
+Registry committed chỉ stage phần E2E04,145tasks; local registry vẫn giữ158tasks
+cùng các thay đổi task khác chưa commit. Tracking đóng task ghi SHA implementation
+đã tồn tại; không thay đổi code hoặc chạy lại API/tests sau commit.
