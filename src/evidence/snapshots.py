@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from copy import deepcopy
 from typing import Literal
 
-from pydantic import Field, ValidationError
+from pydantic import Field, ValidationError, model_serializer, model_validator
 
 from ..accounting.contracts import FinancialModel
 from .analytical_readiness import AccountingBasisReview, assess_analytical_readiness
@@ -26,10 +26,29 @@ def isolated_catalog(catalog):
 
 class SnapshotDescriptor(FinancialModel):
     document_id: Identity
-    pdf_sha256: Identity
+    pdf_sha256: Identity | None
     snapshot_id: Identity
     parent_snapshot_id: Identity | None = None
     origin: Literal["original_extraction", "normalized_projection", "recovery"]
+    source_kind: Literal["pdf", "json"] = "pdf"
+    json_sha256: Identity | None = None
+    json_pages: dict[int, str] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def source_fields(self):
+        if self.source_kind == "pdf" and self.pdf_sha256 is None:
+            raise ValueError("pdf_snapshot_requires_pdf_hash")
+        if self.source_kind == "json" and self.pdf_sha256 is not None:
+            raise ValueError("json_snapshot_cannot_claim_pdf_hash")
+        return self
+
+    @model_serializer(mode="wrap")
+    def preserve_pdf_payload(self, handler):
+        value = handler(self)
+        if self.source_kind == "pdf":
+            for key in ("source_kind", "json_sha256", "json_pages"):
+                value.pop(key, None)
+        return value
 
 
 class ClosureIssue(FinancialModel):
@@ -112,6 +131,7 @@ class SnapshotCatalog:
         formula_approvals=(),
         execution_approval=None,
         reporting_scope_reviews=(),
+        json_sources=None,
     ):
         self.descriptors = [d.model_copy(deep=True) for d in descriptors]
         self.facts = [f.model_copy(deep=True) for f in facts]
@@ -124,12 +144,34 @@ class SnapshotCatalog:
         self.formula_approvals = list(formula_approvals)
         self.execution_approval = execution_approval
         self.scope_reviews = [r.model_copy(deep=True) for r in reporting_scope_reviews]
+        import hashlib
+        import json
+
+        self.json_sources = {}
+        for digest, raw in (json_sources or {}).items():
+            if not isinstance(raw, bytes) or hashlib.sha256(raw).hexdigest() != digest:
+                raise ValueError("json_source_hash_mismatch")
+            self.json_sources[digest] = json.loads(raw)
+        json_keys = {
+            (d.document_id, d.snapshot_id) for d in self.descriptors if d.source_kind == "json"
+        }
+        self.json_fact_pins = {
+            f.observation_identity().model_dump_json(): hashlib.sha256(
+                f.model_dump_json().encode()
+            ).hexdigest()
+            for f in self.facts
+            if (f.document_id, f.snapshot_id) in json_keys and f.observation_identity() is not None
+        }
         self.graph = graph.model_copy(deep=True) if graph is not None else None
         self.api = EvidenceRetrieval(
             self.facts, self.evidence, self.metrics, graph=graph, source_reviews=self.reviews
         )
 
     def ancestry(self, descriptor):
+        if descriptor.source_kind == "json":
+            from .json_catalog import json_snapshot_issues
+
+            return [descriptor.snapshot_id], json_snapshot_issues(self, descriptor)
         chain, issues, seen = [], [], set()
         current = descriptor
         while current is not None:
@@ -208,6 +250,25 @@ class SnapshotCatalog:
                 evidence_status="insufficient",
                 reasons=["scope_snapshot_missing_or_ambiguous"],
                 reviews=[],
+            )
+        if descriptors[0].source_kind == "json":
+            from .reporting_scope import ReportingScopeResolution
+
+            scopes = {
+                f.context.reporting_scope
+                for f in self.facts
+                if (f.document_id, f.snapshot_id) == (document_id, snapshot_id)
+                and f.context.reporting_scope is not None
+            }
+            resolved = len(scopes) == 1 and not self.ancestry(descriptors[0])[1]
+            return ReportingScopeResolution(
+                document_id=document_id,
+                snapshot_id=snapshot_id,
+                reporting_scope=next(iter(scopes)) if resolved else None,
+                status="resolved" if resolved else "unresolved",
+                evidence_status="json_bound" if resolved else "insufficient",
+                reviews=[],
+                reasons=["json_scope_not_pdf_reviewed"],
             )
         result = resolve_reporting_scope(descriptors[0], self.scope_reviews)
         _, issues = self.ancestry(descriptors[0])

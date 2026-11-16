@@ -142,7 +142,10 @@ class GraphRetrievalTools:
                     dict(
                         node_id=nid,
                         quality=tools._quality[nid].model_dump(mode="json"),
-                        source_metadata=deepcopy(record.source_metadata),
+                        # One owned copy per record; response serialization below
+                        # detaches public results. Avoid copying a whole table
+                        # again for every cell anchor in that table.
+                        source_metadata=tools._metadata[nid],
                     )
                 )
         # Every endpoint must belong to this exact snapshot. No ancestor fallback.

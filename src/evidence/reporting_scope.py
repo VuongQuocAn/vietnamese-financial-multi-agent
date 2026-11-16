@@ -36,7 +36,7 @@ class ReportingScopeResolution(FinancialModel):
     snapshot_id: Identity
     reporting_scope: Literal["separate", "consolidated"] | None = None
     status: Literal["resolved", "unresolved", "ambiguous", "conflicted"]
-    evidence_status: Literal["confirmed", "insufficient", "ambiguous", "conflicted"]
+    evidence_status: Literal["confirmed", "json_bound", "insufficient", "ambiguous", "conflicted"]
     reasons: list[str]
     reviews: list[ReportingScopeReview]
     context_resolution: ContextResolution | None = None

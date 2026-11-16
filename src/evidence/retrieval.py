@@ -12,6 +12,7 @@ from .contracts import (
     Identity,
     ObservationIdentity,
     assess_fact_consistency,
+    is_json_reference,
 )
 from .document_evidence import EvidenceIdentity, TableEvidence, TextEvidence, associate_fact
 from .graph import graph_id, record_sources
@@ -139,6 +140,10 @@ class EvidenceRetrieval:
         self._graph = graph.model_copy(deep=True) if graph is not None else None
         self._coverage = [c.model_copy(deep=True) for c in coverage]
         self._source_reviews = [r.model_copy(deep=True) for r in source_reviews]
+        self._evidence_source_index = {}
+        for index, record in enumerate(self._evidence):
+            for source in record_sources(record):
+                self._evidence_source_index.setdefault(source.source_key(), set()).add(index)
 
     def get_source_review(self, identity: ObservationIdentity) -> SourceReviewLookup:
         """Exact-bound overlay; original citations và quality không thay đổi."""
@@ -194,6 +199,8 @@ class EvidenceRetrieval:
         if owner and (source.document_id, source.snapshot_id) != owner:
             issues.append("source_identity_mismatch")
         if ref:
+            if is_json_reference(ref):
+                issues.append("json_source_not_pdf_verified")
             if ref.anchor.status != "resolved":
                 issues.append("source_reference_uncertain")
             if ref.provenance_level == "page":
@@ -202,7 +209,7 @@ class EvidenceRetrieval:
             anchor_id=graph_id("anchor", source.source_key()) if source.source_key() else None,
             document_id=source.document_id,
             snapshot_id=source.snapshot_id,
-            pdf_page=ref.anchor.page.page if ref else None,
+            pdf_page=ref.anchor.page.page if ref and not is_json_reference(ref) else None,
             provenance_level=ref.provenance_level if ref else None,
             source=source.model_copy(deep=True),
             limitations=issues,
@@ -219,7 +226,7 @@ class EvidenceRetrieval:
             has_source = any(
                 s.reference is not None
                 and s.reference.anchor.page.page > 0
-                and s.reference.anchor.page.image.strip()
+                and (s.reference.anchor.page.image.strip() or is_json_reference(s.reference))
                 and (s.document_id, s.snapshot_id) == (record.document_id, record.snapshot_id)
                 for s in record.sources
             )
@@ -233,8 +240,13 @@ class EvidenceRetrieval:
                 if len(decisions) == 1 and has_source
                 else "undetermined"
             )
+            candidates = set().union(
+                *(self._evidence_source_index.get(s.source_key(), set()) for s in record.sources)
+            )
             associations = [
-                a.evidence for e in self._evidence if (a := associate_fact(record, e)) is not None
+                a.evidence
+                for i in sorted(candidates)
+                if (a := associate_fact(record, self._evidence[i])) is not None
             ]
             if associations:
                 issues.append("association_is_not_verified_semantic_support")
@@ -490,7 +502,10 @@ class EvidenceRetrieval:
         if result.status == "found" and not any(
             c.source.source_key() is not None
             and c.source.reference.anchor.page.page > 0
-            and c.source.reference.anchor.page.image.strip()
+            and (
+                c.source.reference.anchor.page.image.strip()
+                or is_json_reference(c.source.reference)
+            )
             and "source_identity_mismatch" not in c.limitations
             for m in result.matches
             for c in m.citations

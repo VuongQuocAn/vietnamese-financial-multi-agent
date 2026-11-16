@@ -48,6 +48,7 @@ credentials*.json
 /data/processed/
 /data/normalized/
 /data/canonical/
+/ViFinBench/refined/
 
 # Chỉ theo dõi chỗ giữ thư mục mẫu; chưa có dữ liệu được duyệt để commit
 !/data/samples/

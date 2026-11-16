@@ -75,6 +75,13 @@ def _identity(item):
     documents = tuple(
         sorted({p.anchor.page.source_ref or p.anchor.page.image for p in result.provenance})
     )
+    json_context = ()
+    if item.source_metadata.get("source_kind") == "refined_json":
+        json_context = (
+            item.source_metadata.get("table_id"),
+            tuple(item.source_metadata.get("row_path", [])),
+            item.source_metadata.get("source_column") if c.period is None else None,
+        )
     return (
         documents,
         c.statement_type,
@@ -85,6 +92,7 @@ def _identity(item):
         c.currency,
         result.value.unit,
         c.scale,
+        *json_context,
     )
 
 

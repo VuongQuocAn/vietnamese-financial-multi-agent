@@ -310,11 +310,11 @@ def inventory(catalog, context):
         scope = catalog.get_reporting_scope(fact.document_id, fact.snapshot_id)
         if context.reporting_scope and (
             scope.status != "resolved"
-            or scope.evidence_status != "confirmed"
+            or scope.evidence_status not in {"confirmed", "json_bound"}
             or scope.reporting_scope != context.reporting_scope
         ):
             continue
-        if years and fact.context.period[:4] not in years:
+        if years and (fact.context.period or "")[:4] not in years:
             continue
         for role, (module, _) in DOMAINS.items():
             if fact.canonical_item_id in module.ITEM_LABELS:
@@ -694,7 +694,7 @@ def fallback_plan(question, sources):
         if not any(term in text for term in [label, *aliases]):
             continue
         years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", question))
-        if years and source["period"][:4] not in years:
+        if years and (source["period"] or "")[:4] not in years:
             continue
         role = source["roles"][0]
         task = tasks.setdefault(role, LiteTask(specialist=role, objective=question[:600]))
@@ -969,7 +969,9 @@ class FinancialLiteOrchestrator:
                 "Được phân tích quan hệ, so sánh và nêu giới hạn dựa trên nguồn, không chỉ điền số. "
                 "Phép tính mới chỉ khai báo operations để Financial Calculator thực thi: "
                 "{operation_id,operator,inputs:[evidence_id hoặc operation_id],period_relation}. "
-                "operator: sum,subtract,ratio,percentage_change,mean,greater,less,equal; period_relation "
+                "operator: sum,subtract,ratio,percentage_of,percentage_change,mean,greater,less,equal; period_relation "
+                "Biên/tỷ trọng theo phần trăm dùng percentage_of inputs=[tử số,mẫu số], tính tử/mẫu*100; "
+                "không dùng ratio (lần) hoặc percentage_change (biến động) để trả lời phần trăm tỷ trọng. "
                 "same hoặc across_periods. Không bịa giá trị/nguồn, không ACCEPT claim. "
                 "Các metric đã được Calculator tính có thể dùng trực tiếp làm evidence cho analyses "
                 "với operations rỗng. Không tính lại metric hoặc dùng metric làm DynamicOperand. "

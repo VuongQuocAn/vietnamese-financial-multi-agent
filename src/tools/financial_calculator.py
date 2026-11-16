@@ -27,6 +27,7 @@ class DynamicOperation(FinancialModel):
         "divide",
         "relative_difference",
         "percentage_change",
+        "percentage_of",
         "ratio",
         "greater",
         "less",
@@ -64,6 +65,17 @@ class DynamicCalculation(FinancialModel):
     operands: dict[str, DynamicOperand]
     steps: list[DynamicStep]
     standard_metric: Literal[False] = False
+
+
+def operations_for_output_unit(operations, unit):
+    """A terminal quotient requested as percent uses the same operands times100.
+
+    This is an explicit unit conversion in the replayable proof, not a claim
+    approval. Never convert growth, intermediate ratios or conflicting goals.
+    """
+    if operations and unit == "percent" and operations[-1].operator in {"ratio", "divide"}:
+        return [*operations[:-1], operations[-1].model_copy(update={"operator": "percentage_of"})]
+    return operations
 
 
 def execute_dynamic(operands: dict[str, DynamicOperand], operations: list[DynamicOperation]):
@@ -104,11 +116,17 @@ def execute_dynamic(operands: dict[str, DynamicOperand], operations: list[Dynami
                 raise ValueError("dynamic_boolean_operand")
             a, b = args[0][0], args[1][0]
             unit = args[0][1]
-            if op in {"divide", "ratio", "relative_difference", "percentage_change"}:
+            if op in {
+                "divide",
+                "ratio",
+                "relative_difference",
+                "percentage_change",
+                "percentage_of",
+            }:
                 if b == 0:
                     raise ValueError("dynamic_zero_denominator")
                 value = (a - b) / b if op in {"relative_difference", "percentage_change"} else a / b
-                unit = "percent" if op == "percentage_change" else "ratio"
+                unit = "percent" if op in {"percentage_change", "percentage_of"} else "ratio"
                 if unit == "percent":
                     value *= 100
             elif op == "multiply":
@@ -152,6 +170,7 @@ def render_dynamic(calculation, labels):
         "multiply": "×",
         "divide": "/",
         "ratio": "/",
+        "percentage_of": "/",
         "greater": ">",
         "less": "<",
         "equal": "=",
@@ -161,6 +180,8 @@ def render_dynamic(calculation, labels):
         args = [values[key] for key in operation.inputs]
         op = operation.operator
         expression = f" {symbols.get(op, ', ')} ".join(args)
+        if op == "percentage_of":
+            expression = f"({args[0]} / {args[1]}) × 100"
         if op in {"relative_difference", "percentage_change"}:
             expression = f"({args[0]} − {args[1]}) / {args[1]}" + (
                 " × 100" if op == "percentage_change" else ""
@@ -280,6 +301,15 @@ class FinancialCalculator:
                 raise ValueError("dynamic_operand_unavailable_or_conflicting")
             match = response.matches[0]
             fact = match.record
+            if (
+                any(
+                    d.source_kind == "json"
+                    and (d.document_id, d.snapshot_id) == (fact.document_id, fact.snapshot_id)
+                    for d in self._catalog.descriptors
+                )
+                and not match.json_source_bound
+            ):
+                raise ValueError("dynamic_json_operand_unbound")
             consistency = assess_fact_consistency(fact)
             if (
                 consistency.status == "inconsistent"
@@ -324,11 +354,16 @@ class FinancialCalculator:
                 or not decisions
                 or any(d in {"insufficient", "conflicted"} for d in decisions)
                 or not match.citations
-                or match.source_review.status != "found"
-                or not match.source_review.matches
-                or any(
-                    r.status in {"source_missing", "source_inconsistent"}
-                    for r in match.source_review.matches
+                or (
+                    not match.json_source_bound
+                    and (
+                        match.source_review.status != "found"
+                        or not match.source_review.matches
+                        or any(
+                            r.status in {"source_missing", "source_inconsistent"}
+                            for r in match.source_review.matches
+                        )
+                    )
                 )
             ):
                 raise ValueError("dynamic_operand_unverified")

@@ -21,6 +21,7 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..evidence.contracts import is_json_reference
 from ..evidence.graph import graph_id
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
 from ..tools.financial_calculator import (
@@ -29,6 +30,7 @@ from ..tools.financial_calculator import (
     DynamicOperation,
     FinancialCalculationResponse,
     execute_dynamic,
+    operations_for_output_unit,
     render_dynamic,
 )
 from .contracts import RiskSignal
@@ -190,11 +192,17 @@ def source_projection(evidence):
     """Project selected citation bindings without upgrading source precision."""
     groups = {}
     for citation in evidence.citations:
+        json_page = (
+            citation.source.reference.anchor.page.page
+            if (citation.source.reference and is_json_reference(citation.source.reference))
+            else None
+        )
         key = (
             citation.document_id,
             citation.snapshot_id,
             citation.pdf_page,
             citation.provenance_level,
+            json_page,
         )
         row = groups.setdefault(
             key,
@@ -209,6 +217,8 @@ def source_projection(evidence):
             ),
         )
         reference = citation.source.reference
+        if json_page is not None:
+            row.update(source_kind="json", json_page=json_page)
         row["selector_available"] |= bool(reference and reference.source_pointer)
         row["limitations"] = sorted(set(row["limitations"] + citation.limitations))
     return dict(
@@ -232,7 +242,10 @@ def _citations_valid(citations, document, snapshot, sources, bundle):
         and c.source.source_key() is not None
         and c.anchor_id == graph_id("anchor", c.source.source_key())
         and c.source.reference is not None
-        and c.pdf_page == c.source.reference.anchor.page.page
+        and (
+            c.pdf_page == c.source.reference.anchor.page.page
+            or (c.pdf_page is None and "json_source_not_pdf_verified" in c.limitations)
+        )
         and c.provenance_level == c.source.reference.provenance_level
         for c in citations
     )
@@ -240,6 +253,8 @@ def _citations_valid(citations, document, snapshot, sources, bundle):
 
 def _fact_error(match, bundle):
     fact = match.record
+    if fact.source_metadata.get("source_kind") == "refined_json" and not match.json_source_bound:
+        return "json_fact_unbound_or_ineligible"
     decisions = [q.decision for q in fact.quality_context if q.task_type == "direct_qa"]
     if (
         not fact.company_id
@@ -255,13 +270,18 @@ def _fact_error(match, bundle):
         match.display_status == "blocked"
         or not decisions
         or any(d in {"insufficient", "conflicted"} for d in decisions)
-        or match.source_review.status != "found"
-        or not match.source_review.matches
-        or any(
-            v.observation != fact.observation_identity()
-            or v.original_sources != fact.sources
-            or v.status in {"source_inconsistent", "source_missing"}
-            for v in match.source_review.matches
+        or (
+            not match.json_source_bound
+            and (
+                match.source_review.status != "found"
+                or not match.source_review.matches
+                or any(
+                    v.observation != fact.observation_identity()
+                    or v.original_sources != fact.sources
+                    or v.status in {"source_inconsistent", "source_missing"}
+                    for v in match.source_review.matches
+                )
+            )
         )
     ):
         return "fact_conflicted_or_unusable"
@@ -723,6 +743,14 @@ def generate_candidates(
             computation = None
             failed_operations = False
             if analysis.operations:
+                units = {
+                    r.get("requested_unit")
+                    for r in prompt.get("assigned_requirements", [])
+                    if r.get("interpretation_topic") == "dynamic_calculation"
+                }
+                operations = operations_for_output_unit(
+                    analysis.operations, next(iter(units)) if len(units) == 1 else None
+                )
                 input_ids = {key for op in analysis.operations for key in op.inputs}
                 operands = {
                     s.evidence_id: DynamicOperand(
@@ -733,7 +761,7 @@ def generate_candidates(
                     and (not operation_inputs_only or s.evidence_id in input_ids)
                 }
                 valid_operations = []
-                for operation in analysis.operations:
+                for operation in operations:
                     try:
                         computation = execute_dynamic(operands, [*valid_operations, operation])
                         valid_operations.append(operation)

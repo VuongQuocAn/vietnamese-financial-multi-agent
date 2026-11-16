@@ -8,7 +8,13 @@ from ..accounting.automated_extraction import ExtractionTable
 from ..accounting.contracts import FinancialModel
 from ..document_processing.contracts.document_understanding import UnderstoodTable
 from ..document_processing.contracts.unified_document import UnifiedTable
-from .contracts import CanonicalFinancialFact, EvidenceAnchor, Identity, ObservationIdentity
+from .contracts import (
+    CanonicalFinancialFact,
+    EvidenceAnchor,
+    Identity,
+    ObservationIdentity,
+    is_json_reference,
+)
 
 
 class EvidenceIdentity(ObservationIdentity):
@@ -89,7 +95,7 @@ def associate_fact(
         if ref is None:
             continue
         a = ref.anchor
-        if a.page.page < 1 or not a.page.image.strip():
+        if (a.page.page < 1 or not a.page.image.strip()) and not is_json_reference(ref):
             continue
         if not (ref.source_pointer or a.element_id or a.table_id or a.cell_id or a.line_id):
             continue

@@ -2,7 +2,7 @@
 
 from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..evidence.analytical_readiness import AccountingBasisReview
@@ -60,6 +60,14 @@ class FinancialFactMatch(RetrievalMatch):
     record: CanonicalFinancialFact
     source_review: SourceReviewLookup
     reporting_scope: ReportingScopeResolution
+    json_source_bound: bool = False
+
+    @model_serializer(mode="wrap")
+    def preserve_pdf_payload(self, handler):
+        value = handler(self)
+        if not self.json_source_bound:
+            value.pop("json_source_bound", None)
+        return value
 
 
 class FinancialMetricOperand(FinancialModel):
@@ -167,11 +175,14 @@ class FinancialRetrievalTools:
         return self._catalog.get_reporting_scope(descriptor.document_id, descriptor.snapshot_id)
 
     def _fact_matches(self, result, scope):
+        from ..evidence.json_catalog import json_fact_bound
+
         return [
             FinancialFactMatch(
                 **match.model_dump(),
                 source_review=self._api.get_source_review(match.reference.observation),
                 reporting_scope=scope,
+                json_source_bound=json_fact_bound(self._catalog, match.record),
             )
             for match in result.matches
         ]

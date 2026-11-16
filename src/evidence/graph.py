@@ -16,6 +16,7 @@ from .contracts import (
     Identity,
     ObservationIdentity,
     TaskQualityContext,
+    is_json_reference,
 )
 from .document_evidence import EvidenceIdentity, TableEvidence, TextEvidence, associate_fact
 from .metrics import DerivedMetric, build_metric
@@ -143,7 +144,7 @@ def _anchor_reasons(anchor):
     r = anchor.reference
     if r is not None:
         a = r.anchor
-        if a.page.page < 1 or not a.page.image.strip():
+        if (a.page.page < 1 or not a.page.image.strip()) and not is_json_reference(r):
             invalid.append("invalid_page_reference")
         if r.provenance_level == "cell" and not (a.table_id and a.cell_id):
             invalid.append("unsupported_cell_provenance")
@@ -162,6 +163,8 @@ def _grounding(sources):
         bad, missing = _anchor_reasons(source)
         reasons.update([*bad, *missing])
         if source.reference is not None:
+            if is_json_reference(source.reference):
+                reasons.add("json_source_not_pdf_verified")
             levels.add(source.reference.provenance_level)
             status = source.reference.anchor.status
             statuses.add(status)

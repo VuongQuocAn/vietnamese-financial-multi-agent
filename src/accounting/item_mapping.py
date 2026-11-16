@@ -287,6 +287,9 @@ def _text(value: str) -> str:
 def _label(value: str, *, strip_ordinal: bool = False, strip_numeric_ordinal: bool = False) -> str:
     # Bounded punctuation/ordinal normalization; no fuzzy match, dropped words or accents.
     value = _text(value).replace("–", "-").replace("—", "-")
+    # Whitespace around an already exact printed formula is presentation only.
+    # Preserve digits/operators/labels and the statement/source-code gates.
+    value = re.sub(r"\s*([=+])\s*", r"\1", value)
     if strip_ordinal:
         value = re.sub(r"^(?:[a-d]\s*-\s*|[ivxlcdm]+\.\s*|\d+\.\s*)", "", value)
     elif strip_numeric_ordinal:

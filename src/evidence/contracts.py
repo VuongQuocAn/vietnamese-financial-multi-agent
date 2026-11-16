@@ -1,5 +1,6 @@
 """Canonical observations và nguồn; không ingest, gộp hoặc xác minh số liệu."""
 
+import re
 from typing import Annotated, Literal
 
 from pydantic import Field
@@ -19,6 +20,34 @@ from vietnamese_financial_multi_agent.document_processing.contracts.document_und
 )
 
 Identity = Annotated[str, Field(min_length=1, pattern=r"\S")]
+
+
+def is_json_reference(reference: FinancialSourceReference) -> bool:
+    """JSON artifact + exact pointer; image remains empty, never a PDF binding.
+
+    source_ref has always been an opaque locator. This explicit URI convention
+    permits JSON-only evidence without inventing image IDs or changing wire types.
+    """
+    anchor = reference.anchor
+    return bool(
+        re.fullmatch(r"json:sha256:[0-9a-f]{64}", anchor.page.source_ref or "")
+        and not anchor.page.image
+        and anchor.page.page > 0
+        and reference.source_pointer
+        and reference.source_pointer.startswith("/")
+        and reference.provenance_level == "page"
+        and not any(
+            (
+                anchor.element_id,
+                anchor.table_id,
+                anchor.cell_id,
+                anchor.line_id,
+                anchor.observed_bbox,
+                anchor.proposed_bbox,
+            )
+        )
+        and anchor.status == "uncertain"
+    )
 
 
 class ObservationIdentity(FinancialModel):
@@ -173,8 +202,10 @@ def assess_fact_consistency(fact: CanonicalFinancialFact) -> FactConsistencyAsse
             continue
         r = source.reference
         a = r.anchor
-        if a.page.page < 1 or not a.page.image.strip():
+        if (a.page.page < 1 or not a.page.image.strip()) and not is_json_reference(r):
             issue("invalid_page_reference", path, conflict=True)
+        if is_json_reference(r):
+            issue("json_source_not_pdf_verified", path)
         if a.status != "resolved":
             issue("source_reference_uncertain", path)
         if r.provenance_level == "cell" and not (a.cell_id and a.table_id):
