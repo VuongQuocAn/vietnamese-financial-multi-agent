@@ -1,5 +1,21 @@
 # Trạng thái hiện tại
 
+## VFB-IMPORT-03 — Full Corpus Import
+
+**DONE — Tech Lead APPROVED ngày16/11/2026**. Implementation
+[b23bb807b70fecdabb69c94f6597bf8cd591f52a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b23bb807b70fecdabb69c94f6597bf8cd591f52a)
+đã commit local và xác minh; chưa push. Baseline `2b3c2ab`, kèm dependencies
+pilot JSON/M4/M5 cần thiết; local edits ngoài phạm vi giữ riêng.
+[Report](../docs/vfb-import-03-full-corpus.md),
+[coverage41](../docs/vfb-import-03-coverage.csv):41tài liệu/1488JSON;
+13.199Text/2.068Table/26.126obs/1270mapped/1043eligible trên37filing.
+1043lookups/31calculations;M5 36completed/1partial/2blocked/2clarification.
+Graph/restart/hash/fidelity và current projection41 đạt;13testsPASS.
+AME/ATS thiếuunit, BCC2025 text-only, C69 chưa company binding; JSON-only.
+Phiên đóng task chỉ planning/diff và Git/evidence, giữ nguyên13tests PASS;
+không chạy lại import/Gemini/benchmark/fullCI. Các task trước giữ trạng thái.
+Next action: chờ Owner/Tech Lead giao công việc tiếp theo.
+
 ## ViFinBench-P1A-Finalize — DONE, APPROVED WITH CAVEATS
 
 Tech Lead phê duyệt ngày13/11/2026; phạm vi nghiệm thu **Single-hop Pilot**.

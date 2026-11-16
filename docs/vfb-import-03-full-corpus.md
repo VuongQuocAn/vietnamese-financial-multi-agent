@@ -1,9 +1,10 @@
 # VFB-IMPORT-03 — Full Corpus Import
 
-Ngày16/11/2026 (Asia/Bangkok). **Chấp thuận về mặt chức năng** theo kết quả Codex
-báo cáo, người dùng xác nhận ngày16/11/2026. Tracking giữ **REVIEW** chờ
-implementation SHA; chưa commit, baseline `2b3c2ab`
-cùng local implementation IMPORT01/02/E2E02. Các task trước giữ REVIEW.
+Ngày16/11/2026 (Asia/Bangkok). **DONE — Tech Lead APPROVED**.
+Implementation [b23bb807b70fecdabb69c94f6597bf8cd591f52a](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/b23bb807b70fecdabb69c94f6597bf8cd591f52a)
+đã commit local và xác minh; chưa push. Baseline `2b3c2ab`; commit kèm các phần
+adapter/JSON catalog/Financial Tools/M5 của pilot cần cho full import.
+Trạng thái các task trước giữ nguyên; local edits ngoài phạm vi vẫn giữ riêng.
 
 ## Phạm vi và cách sử dụng
 
@@ -207,10 +208,10 @@ eligible facts rồi gọi đó là kết quả toàn corpus.
 có kiểm cover sau auditor sheets, provenance và negative cover không phải BCTC.
 Các nhóm được chạy lại sau sửa cover; không full regression/browser/CI.
 Ruff lint/format, planning checker và `git diff --check` PASS local trước bàn giao.
-Nguồn refined và artifacts có ignore rules, không nằm trong Git index; không stage,
-commit hoặc push. Runtime fingerprints và baseline đã ghi tại
-`artifacts/evidence/VFB-IMPORT-03/implementation.json`; không gán SHA baseline
-cho implementation chưa commit. Source hashes/fidelity và projection equivalence
+Nguồn refined và artifacts có ignore rules, không nằm trong Git index.
+Runtime fingerprints và baseline lúc chạy đã ghi tại
+`artifacts/evidence/VFB-IMPORT-03/implementation.json`; implementation SHA được
+ghi riêng khi chốt task, không dùng SHA baseline thay thế. Source hashes/fidelity và projection equivalence
 được kiểm trên dữ liệu thật; smoke PASS không chứng nhận chất lượng tài chính.
 
 ## Chấp thuận chức năng — 16/11/2026
@@ -222,8 +223,20 @@ benchmark600 hoặc nghiệm thu financial accuracy.
 
 Đã đối chiếu lại fingerprints runtime với evidence local: khớp code hiện tại;
 summary vẫn41tài liệu/1488trang/1043eligible. Không chạy lại tests/import/API.
-Git HEAD vẫn là baseline `2b3c2ab`; implementation chưa commit. Theo quy tắc
-nghiệm thu/tracking của repository, giữ REVIEW chờ SHA implementation để đóng
-DONE; không dùng SHA baseline làm bằng chứng implementation mới.
+Tại phiên chấp thuận chức năng ban đầu, Git HEAD còn ở baseline `2b3c2ab`, nên
+tracking giữ REVIEW chờ SHA. Quyết định đóng task bên dưới thay thế phần chờ này.
 
-**Next action:** chờ Owner giao bước chốt checkpoint Git/implementation SHA.
+## Đóng task — Tech Lead APPROVED ngày16/11/2026
+
+Theo chỉ đạo mới của người dùng, VFB-IMPORT-03 chuyển **DONE** và commit các thay
+đổi liên quan. Implementation SHA `b23bb807b70fecdabb69c94f6597bf8cd591f52a` đã
+xác minh bằng Git;10 runtime files trong fingerprint receipt khớp nội dung Git
+(chuẩn hóa newline). Commit giữ các dependencies JSON import/M4/M5 cần thiết,
+không gom thay đổi local về Qwen prompt, PDF discovery, API/frontend hoặc task khác.
+
+Giữ nguyên13tests PASS và toàn bộ kết quả import/fidelity/graph trước đó; phiên
+đóng task chỉ rà scope/index, fingerprints, planning và diff. Không chạy lại
+tests/import/Gemini/benchmark/fullCI; chưa push. Nghiệm thu giữ nguyên exclusions
+và JSON-grounded caveats, không mở thêm công việc.
+
+**Next action:** chờ Owner/Tech Lead giao công việc tiếp theo.
