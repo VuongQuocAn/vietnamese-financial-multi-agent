@@ -5,6 +5,7 @@ import json
 
 from ..agents.orchestration_contracts import OrchestrationResult
 from ..agents.specialist_common import SpecialistCandidate
+from ..evidence.contracts import is_json_reference
 from .contracts import CandidateClaim, ClaimProvenance, ConversionIssue, VerificationInput
 
 
@@ -43,10 +44,14 @@ def to_verification_input(result: OrchestrationResult) -> VerificationInput:
         if not citations:
             issue("missing_citations", path, candidate_id)
         for i, citation in enumerate(citations):
+            reference = citation.source.reference
+            json_source = (
+                reference is not None and is_json_reference(reference) and citation.pdf_page is None
+            )
             if (
                 citation.source.source_key() is None
                 or citation.anchor_id is None
-                or citation.pdf_page is None
+                or (citation.pdf_page is None and not json_source)
                 or citation.provenance_level is None
             ):
                 issue("incomplete_citation_metadata", [*path, i], candidate_id)
@@ -56,7 +61,7 @@ def to_verification_input(result: OrchestrationResult) -> VerificationInput:
                 != (citation.source.document_id, citation.source.snapshot_id)
                 or reference is not None
                 and (citation.pdf_page, citation.provenance_level)
-                != (reference.anchor.page.page, reference.provenance_level)
+                != (None if json_source else reference.anchor.page.page, reference.provenance_level)
             ):
                 issue("inconsistent_citation_metadata", [*path, i], candidate_id)
 

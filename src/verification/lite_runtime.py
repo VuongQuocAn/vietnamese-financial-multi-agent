@@ -18,6 +18,8 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..outputs.qa_composer import _targets
+from ..tools.question_understanding import normalize
 from .contracts import VerificationInput
 from .decision_contracts import (
     LiteDecisionTrace,
@@ -321,6 +323,29 @@ class LiteVerificationRuntime:
             for cid, ids in self.integration_context.get("candidate_requirements", {}).items()
             if dynamic_goals.intersection(ids)
         }
+        # A model's target_id is not proof that a true scalar answers its text.
+        # Exact public aliases can bind deterministically; other fact goals need
+        # the existing semantic batch, preserving factual ACCEPT independently.
+        requirements = {
+            r["requirement_id"]: r for r in self.integration_context.get("requirements", [])
+        }
+        for claim in batch.claims:
+            if claim.kind != "fact":
+                continue
+            for rid in self.integration_context.get("candidate_requirements", {}).get(
+                claim.candidate_id, []
+            ):
+                requirement = requirements.get(rid, {})
+                text = normalize(requirement.get("text", ""))
+                explicit = {item for kind, item in _targets(text) if kind == "fact"}
+                if not any(
+                    source.canonical_item_id in explicit
+                    or bool(normalize(source.label))
+                    and normalize(source.label) in text
+                    for source in claim.supporting_evidence
+                    if source.kind == "fact"
+                ):
+                    semantic_bindings.add(claim.candidate_id)
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         start = perf_counter()
         proofs, pending = [], []
@@ -396,10 +421,14 @@ class LiteVerificationRuntime:
             state = deterministic_state(claim, checked)[0]
             needs_binding = (
                 self.integration_v2
-                and claim.kind == "supported_interpretation"
                 and (
-                    not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
-                    or claim.candidate_id in semantic_bindings
+                    claim.kind == "fact"
+                    and claim.candidate_id in semantic_bindings
+                    or claim.kind == "supported_interpretation"
+                    and (
+                        not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
+                        or claim.candidate_id in semantic_bindings
+                    )
                 )
                 and self.integration_context.get("candidate_requirements", {}).get(
                     claim.candidate_id
@@ -457,7 +486,8 @@ class LiteVerificationRuntime:
                     self.requirement_support.get(h.outcome.final.candidate_id, [])
                     if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
                     else []
-                    if h.outcome.final.original_claim.kind == "supported_interpretation"
+                    if h.outcome.final.candidate_id in semantic_bindings
+                    or h.outcome.final.original_claim.kind == "supported_interpretation"
                     and not (
                         h.outcome.final.original_claim.reasoning
                         and h.outcome.final.original_claim.reasoning.claim_type == "derived_fact"
@@ -482,7 +512,9 @@ class LiteVerificationRuntime:
             calculation = claim.reasoning.calculation if claim.reasoning else None
             if self.integration_v2:
                 row = dict(row)
-                row.pop("question", None)
+                # Keep the user question: a rewritten local goal can itself be
+                # the Supervisor's semantic mistake (e.g. a different expense).
+                row["user_question"] = row.pop("question")
                 # Same scalar facts are carried below with stable evidence IDs.
                 row.pop("facts", None)
                 keys = self.integration_context.get("candidate_requirements", {}).get(
@@ -582,6 +614,8 @@ class LiteVerificationRuntime:
                 "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
                 "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "
                 "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
+                "Local requirement cũng phải đúng ý câu hỏi gốc; không bind một chỉ tiêu "
+                "khác mà Supervisor tự thêm/thay thế dù số đó có nguồn chính xác. "
                 "Field supported_requirement_ids bắt buộc trong mọi verdict, dùng đúng IDs "
                 "từ local_requirements, không dùng IDs claim/evidence hoặc tự tạo ID. "
                 "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "

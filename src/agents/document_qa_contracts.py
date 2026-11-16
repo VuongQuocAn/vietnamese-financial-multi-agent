@@ -1,6 +1,7 @@
 """Typed document lane shared by M5, M6 and M7."""
 
 import re
+import unicodedata
 from typing import Literal
 
 from pydantic import Field
@@ -79,7 +80,11 @@ def document_intent(question):
         add(ROLES[key], "entity_role", ROLES[key])
     if "nhan vien quan ly chu chot" in text:
         add("Nhân viên quản lý chủ chốt", "exact_text", "nhân viên quản lý chủ chốt")
-    if re.search(r"\b(bang tien|khoan muc tien)\b", text):
+    # Accent folding conflates 'bằng tiền' (payment) with 'bảng tiền' (table).
+    # Preserve this distinction before routing into the document/composition lane.
+    if re.search(r"\bbảng tiền\b", unicodedata.normalize("NFC", question), re.I) or re.search(
+        r"\bkhoan muc tien\b", text
+    ):
         add("Khoản mục trong bảng tiền", "table_labels", "tiền mặt")
     if "y kien kiem toan" in text:
         add("Ý kiến kiểm toán", "exact_text", "ý kiến kiểm toán")

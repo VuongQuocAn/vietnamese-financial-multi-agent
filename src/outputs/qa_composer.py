@@ -598,8 +598,16 @@ def _reasoning_matches(proof, requirement):
         "division": "divide",
         "multiplication": "multiply",
     }
-    expected = [aliases.get(op, op) for op in expected]
+    expected = [aliases.get(op.casefold(), op.casefold()) for op in expected]
     actual = [s.operation.operator for s in proof.calculation.steps]
+    # Percentage-of is division with an explicit output-unit conversion. Keep
+    # ordered operands/replay and the independent requested-unit checks intact.
+    if (
+        getattr(requirement, "requested_unit", None) == "percent"
+        or "phan tram" in normalize(requirement.text)
+        or "%" in requirement.text
+    ):
+        actual = ["divide" if op == "percentage_of" else op for op in actual]
     if expected == ["compare"]:
         return any(
             op
@@ -620,13 +628,17 @@ def matches_financial_target(claim, requirement, logic=None):
     )
     if claim.kind != expected:
         return False
+    calculations = [getattr(claim, "calculation", None)]
+    calculations.extend(getattr(e, "calculation", None) for e in claim.supporting_evidence)
+    calculations = [c for c in calculations if c is not None]
     indicators = {e.canonical_item_id for e in claim.supporting_evidence if e.kind == "fact"}
-    if getattr(claim, "calculation", None) and claim.calculation.evidence:
-        indicators.update(
-            match.record.canonical_item_id
-            for operand in claim.calculation.evidence.operands
-            for match in operand.facts.matches
-        )
+    for calculation in calculations:
+        if calculation.evidence:
+            indicators.update(
+                match.record.canonical_item_id
+                for operand in calculation.evidence.operands
+                for match in operand.facts.matches
+            )
     if not set(requirement.required_indicators) <= indicators:
         return False
     if requirement.interpretation:
@@ -636,12 +648,11 @@ def matches_financial_target(claim, requirement, logic=None):
         ):
             return False
         if requirement.reasoning_periods:
-            calculation = getattr(claim, "calculation", None)
             periods = (
                 {o.period for o in proof.calculation.operands.values()}
                 if proof and proof.calculation
-                else {o.context.period for o in calculation.trace.operands}
-                if calculation
+                else {o.context.period for c in calculations for o in c.trace.operands}
+                if calculations
                 else {e.period for e in claim.supporting_evidence}
             )
             if set(requirement.reasoning_periods) != periods:
@@ -693,7 +704,7 @@ def matches_financial_target(claim, requirement, logic=None):
             e.kind == "fact" and e.canonical_item_id == requirement.target_id
             for e in claim.supporting_evidence
         )
-    return bool(claim.calculation and claim.calculation.formula_id == requirement.target_id)
+    return any(c.formula_id == requirement.target_id for c in calculations)
 
 
 def _matches_target(entry, requirement):

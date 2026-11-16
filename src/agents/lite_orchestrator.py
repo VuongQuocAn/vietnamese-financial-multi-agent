@@ -411,7 +411,7 @@ def resolve_source(reference, sources, periods=()):
 
 def resolve_requirements(plan, sources):
     """Normalize model identifiers, retaining IDs/text and unresolved obligations."""
-    from ..outputs.qa_composer import INTERPRETATION_TERMS
+    from ..outputs.qa_composer import INTERPRETATION_TERMS, _targets
 
     targets = {}
     for requirement in plan.requirements:
@@ -467,13 +467,26 @@ def resolve_requirements(plan, sources):
         # A scalar retrieval is not a metric interpretation merely because the
         # provider set those flags. Explicit interpretation requests keep them.
         text = normalize(requirement.text)
-        if (
-            source["kind"] in {"fact", "metric"}
+        explicit_fact = ("fact", source["item"]) in _targets(text)
+        scalar_lookup = (
+            source["kind"] == requirement.kind == "fact"
+            and explicit_fact
+            and ("bao nhieu" in text or re.match(r"^(?:tinh|tim|neu)\b", text))
             and not requirement.reasoning_operations
-            and requirement.interpretation_topic != "dynamic_calculation"
-            and re.match(r"^(?:tinh|tim|neu)\b", text)
-            and not any(term in text for term in INTERPRETATION_TERMS)
-        ):
+            and len(requirement.required_indicators) <= 1
+            and not any(
+                t in text for t in ("so voi", "chenh lech", "bien dong", "ty le", "binh quan")
+            )
+        )
+        if (
+            scalar_lookup
+            or (
+                source["kind"] in {"fact", "metric"}
+                and not requirement.reasoning_operations
+                and requirement.interpretation_topic != "dynamic_calculation"
+                and re.match(r"^(?:tinh|tim|neu)\b", text)
+            )
+        ) and not any(term in text for term in INTERPRETATION_TERMS):
             requirement.interpretation = False
             requirement.interpretation_topic = None
         targets[requirement.requirement_id] = source
@@ -786,7 +799,52 @@ class SupervisorLite:
                 task_schema=LiteTask.model_json_schema(),
             )
             contract = prompt.pop("integration_contract")
-            prompt["instruction"] = contract.pop("instruction")
+            # V2 used to overwrite the graph/source instructions above entirely.
+            # Keep retrieval guidance, replacing only the V1 scheduling restriction.
+            prompt["instruction"] = (
+                prompt["instruction"].replace(
+                    "Không DAG, approval, coverage hoặc suy đoán identities.",
+                    "Không thêm agent, approval hoặc suy đoán identities.",
+                )
+                + " "
+                + contract.pop("instruction")
+            )
+            prompt["instruction"] += (
+                " Chỉ dùng enum đúng schema; aspect=value|formula|operands. "
+                "answer_goal CHỈ nằm trong requirement, không trong task. "
+                "depends_on của task CHỈ chứa task_id đã xuất hiện trước; không chứa R IDs. "
+                "Dùng đúng item/period/label từ inventory, không tự tạo equity_average/"
+                "beginning/ending IDs; bình quân lấy hai source cùng item ở hai kỳ. "
+                "Sources dùng S handles, không requirement IDs. Mỗi requirement bắt buộc "
+                "có task xử lý; chỉ tạo supporting requirement khi cần cho đáp án. "
+                "Tra số đã có: kind=fact, interpretation=false, interpretation_topic=null; "
+                "không biến câu hỏi 'bao nhiêu' về một fact thành yêu cầu nhận xét."
+            )
+            prompt["response_example"] = dict(
+                requirements=[
+                    dict(
+                        requirement_id="R1",
+                        text="Câu hỏi gốc",
+                        kind="fact",
+                        target_id="S1",
+                        period=None,
+                        interpretation=False,
+                        aspect="value",
+                        answer_goal="value",
+                    )
+                ],
+                tasks=[
+                    dict(
+                        task_id="T1",
+                        specialist="profitability",
+                        objective="Tra fact được hỏi",
+                        sources=["S1"],
+                        requirement_ids=["R1"],
+                        depends_on=[],
+                        use_graph=False,
+                    )
+                ],
+            )
             prompt.update(contract)
         payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
@@ -1226,6 +1284,19 @@ class FinancialLiteOrchestrator:
             preserve_explicit_facts(plan, question, sources)
             targets = resolve_requirements(plan, sources)
             preserve_answer_goal(plan, question, targets)
+            # Composite tasks need source/operand relations even if the model
+            # omits the optional flag. This is retrieval policy, not a verdict.
+            for task in plan.tasks:
+                assigned = [
+                    r for r in plan.requirements if r.requirement_id in task.requirement_ids
+                ]
+                if task.depends_on or any(
+                    r.interpretation_topic == "dynamic_calculation"
+                    or len(r.required_indicators) > 1
+                    or len(r.reasoning_periods) > 1
+                    for r in assigned
+                ):
+                    task.use_graph = True
             requirements = plan.requirements or [
                 IntegrationRequirement(
                     requirement_id="R-unresolved", text=question, kind="unsupported"

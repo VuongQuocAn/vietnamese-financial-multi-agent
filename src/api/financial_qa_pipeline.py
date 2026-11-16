@@ -262,7 +262,7 @@ class FinancialQAPipeline:
             resolution = self.catalog.get_reporting_scope(document, snapshot)
             if (
                 resolution.status != "resolved"
-                or resolution.evidence_status != "confirmed"
+                or resolution.evidence_status not in {"confirmed", "json_bound"}
                 or resolution.reporting_scope != scope
             ):
                 return None, "clarification_required", ["requested_scope_unconfirmed"]
@@ -309,7 +309,7 @@ class FinancialQAPipeline:
             resolution = self.catalog.get_reporting_scope(document, snapshot)
             if (
                 resolution.status != "resolved"
-                or resolution.evidence_status != "confirmed"
+                or resolution.evidence_status not in {"confirmed", "json_bound"}
                 or resolution.reporting_scope != scope
             ):
                 return None, "clarification_required", ["requested_scope_unconfirmed"]

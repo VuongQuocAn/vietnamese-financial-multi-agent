@@ -60,7 +60,7 @@ def _matches_metric_expression(claim, source):
         for step in proof.calculation.steps:
             operation = step.operation
             args = [values[key] for key in operation.inputs]
-            if operation.operator in {"divide", "ratio"}:
+            if operation.operator in {"divide", "ratio", "percentage_of"}:
                 value = ("Div", *args)
             elif operation.operator in {"percentage_change", "relative_difference"}:
                 value = ("Div", ("Sub", *args), args[1])

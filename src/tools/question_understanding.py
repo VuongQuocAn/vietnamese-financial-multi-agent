@@ -40,6 +40,7 @@ EXTRA_ALIASES = {
     "b01.total_liabilities": ("tổng nợ", "nợ phải trả"),
     "b02.net_revenue": ("doanh thu", "doanh thu thuần"),
     "b02.gross_profit": ("lợi nhuận gộp",),
+    "b02.profit_after_tax": ("lãi sau thuế", "lợi nhuận sau thuế", "LNST"),
     "b03.operating_cash_flow": (
         "dòng tiền kinh doanh",
         "dòng tiền thuần từ hoạt động kinh doanh",

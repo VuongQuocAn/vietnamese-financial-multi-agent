@@ -97,7 +97,7 @@ ITEM_CATALOG = (
         "b01.total_equity",
         "B01",
         "400",
-        ("D - VỐN CHỦ SỞ HỮU", "D- VỐN CHỦ SỞ HỮU", "VỐN CHỦ SỞ HỮU"),
+        ("D - VỐN CHỦ SỞ HỮU", "D- VỐN CHỦ SỞ HỮU", "D. VỐN CHỦ SỞ HỮU", "VỐN CHỦ SỞ HỮU"),
         "source-backed:DN/monetary-v1",
     ),
     ItemRule(
@@ -146,6 +146,7 @@ ITEM_CATALOG = (
             "17. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "16. Lợi nhuận sau thuế thu nhập doanh nghiệp",
             "Lợi nhuận sau thuế thu nhập doanh nghiệp",
+            "Lợi nhuận sau thuế TNDN",
             "(Lỗ) sau thuế thu nhập doanh nghiệp (60=50-51)",
         ),
         "source-backed:DN/monetary-v1",

@@ -2,6 +2,7 @@
 
 import json
 
+from ..evidence.contracts import is_json_reference
 from ..evidence.document_evidence import TableEvidence, TextEvidence
 from ..evidence.retrieval import RetrievalReference
 from ..tools.evidence_retrieval import (
@@ -141,7 +142,10 @@ class EvidenceContextBuilder:
             (c.document_id, c.snapshot_id) != (c.source.document_id, c.source.snapshot_id)
             or (c.document_id, c.snapshot_id) != (context.document_id, context.snapshot_id)
             or c.source.reference is None
-            or c.pdf_page != c.source.reference.anchor.page.page
+            or (
+                c.pdf_page != c.source.reference.anchor.page.page
+                and not (c.pdf_page is None and is_json_reference(c.source.reference))
+            )
             or c.provenance_level != c.source.reference.provenance_level
             or (c.anchor_id is None and not document)
             for c in context.citations

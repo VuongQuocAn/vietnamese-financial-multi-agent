@@ -85,7 +85,7 @@ def select_claims(request, entries, current_ids=(), *, scope_resolution=None):
             and not (
                 scope_resolution is not None
                 and scope_resolution.status == "resolved"
-                and scope_resolution.evidence_status == "confirmed"
+                and scope_resolution.evidence_status in {"confirmed", "json_bound"}
                 and (scope_resolution.document_id, scope_resolution.snapshot_id)
                 == (i.document_id, i.snapshot_id)
                 and scope_resolution.reporting_scope == request.reporting_scope

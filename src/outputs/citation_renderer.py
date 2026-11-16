@@ -12,6 +12,7 @@ import re
 from pydantic import ValidationError
 
 from ..agents.fusion_contracts import is_mixed
+from ..evidence.contracts import is_json_reference
 from .citation_contracts import (
     CitationBinding,
     CitationLocator,
@@ -56,7 +57,9 @@ def _locator(c):
             raise ValueError("location_without_source_reference")
         return CitationLocator(**fields, resolution_status="location_unavailable")
     a = r.anchor
-    if c.pdf_page != a.page.page or c.provenance_level != r.provenance_level:
+    if (
+        c.pdf_page != a.page.page and not (c.pdf_page is None and is_json_reference(r))
+    ) or c.provenance_level != r.provenance_level:
         raise ValueError("source_location_conflict")
     if r.provenance_level == "cell" and not (a.table_id and a.cell_id):
         raise ValueError("unsupported_cell_provenance")
@@ -200,6 +203,9 @@ def _source_parts(source):
 def _reference_text(ref):
     loc = ref.source_locator
     location = f"Trang PDF {ref.pdf_page}" if ref.pdf_page is not None else "Chưa có vị trí PDF"
+    original = ref.source_citations[0].source.reference
+    if original and is_json_reference(original):
+        location = f"Trang JSON {original.anchor.page.page} (chưa xác minh từ PDF)"
     selectors = []
     if ref.provenance_level in {"element", "cell"}:
         selectors += [

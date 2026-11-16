@@ -740,7 +740,7 @@ class DeterministicFinancialValidator:
         bad = (
             match.display_status != "display_with_caveat"
             or any(d in {"conflicted", "insufficient"} for d in decisions)
-            or match.source_review.status != "found"
+            or (not match.json_source_bound and match.source_review.status != "found")
             or any(
                 view.status in {"source_missing", "source_inconsistent"}
                 for view in match.source_review.matches
