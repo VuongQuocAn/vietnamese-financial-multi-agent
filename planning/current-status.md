@@ -2,13 +2,14 @@
 
 ## ARCH-01a — Adaptive Evidence-Guided Multi-Agent Framework Review
 
-**REVIEW**, ngày 17/11/2026. [Báo cáo](../docs/arch-01-adaptive-multi-agent-review.md)
-và tracking được publish riêng theo Owner; giữ ARCH-01 DONE cũ. Baseline phân tích
-là working tree local `966b73a` + edits; bản publication trên remote `2b3c2ab`
-chỉ chứa tài liệu, không đưa bốn commits local ngoài phạm vi lên main. Code/source
-reports chưa publish không thuộc commit này. Evidence review tại report/registry;
-phiên publish không chạy lại tests hoặc CI thủ công, không triển khai ARCH-02.
-Next action: Tech Lead review và chốt bốn quyết định §6 để giao đặc tả ARCH-02.
+**DONE — Tech Lead APPROVED ngày 17/11/2026**.
+[Accepted report3dbb48c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3dbb48c969567b01197ec18f4b6adac03e0aee05)
+đã push main, xác minh remote SHA; giữ ARCH-01 DONE cũ.
+[Báo cáo](../docs/arch-01-adaptive-multi-agent-review.md) được nghiệm thu trong phạm
+vi architecture/research review; giữ giới hạn novelty và evidence thực nghiệm.
+Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff, không sửa runtime,
+chạy lại tests/Qwen/benchmark hoặc CI thủ công. Chưa triển khai ARCH-02.
+Next action: chờ Owner/Tech Lead giao phạm vi đặc tả ARCH-02.
 
 ## ViFinBench-P1A-Finalize — DONE, APPROVED WITH CAVEATS
 

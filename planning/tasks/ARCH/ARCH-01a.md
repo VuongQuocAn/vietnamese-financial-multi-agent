@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: ARCH
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: -
 - Estimated Complexity: M
@@ -58,7 +58,7 @@ không triển khai ARCH-02, không sửa riêng câu benchmark hoặc tự nghi
 - [x] Nguồn nghiên cứu gốc; nêu MoCA-Agent/CLAIR-Fin/AuditFlow gần hướng đề xuất.
 - [x] Có hypotheses, fair baselines/ablations, held-out/PDF scan evaluation.
 - [x] Có decisions/acceptance cần đặc tả trong ARCH-02, chưa triển khai.
-- [ ] Tech Lead nghiệm thu thiết kế và chốt phạm vi bước tiếp theo.
+- [x] Tech Lead APPROVED báo cáo và cho chuyển DONE ngày 17/11/2026; chưa giao triển khai ARCH-02.
 
 ## Required Tests
 
@@ -76,9 +76,11 @@ chốt trong đặc tả tiếp theo. Không dùng replay làm bằng chứng se
 Baseline review đã xác minh ở Inputs. Bản publish chỉ tài liệu, đặt trên remote
 main `2b3c2ab` để giữ bốn commit local ngoài task chưa push. Chi tiết validation
 lịch sử/fingerprint tại report; phiên publish không chạy lại tests hoặc CI thủ công.
-Commit publication tra bằng Git history của báo cáo; trạng thái giữ REVIEW.
+Accepted report publication:
+[`3dbb48c969567b01197ec18f4b6adac03e0aee05`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3dbb48c969567b01197ec18f4b6adac03e0aee05),
+đã xác minh trên remote main. Tech Lead APPROVED ngày 17/11/2026.
 
 ## Handoff Notes
 
-REVIEW; không mở ARCH-02. Next action duy nhất: Tech Lead review báo cáo và chốt
-bốn quyết định tại §6 để giao phạm vi đặc tả ARCH-02.
+DONE — Tech Lead APPROVED; không mở ARCH-02.
+Next action duy nhất: chờ Owner/Tech Lead giao phạm vi đặc tả ARCH-02.
