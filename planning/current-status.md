@@ -1,5 +1,19 @@
 # Trạng thái hiện tại
 
+## M5-COORD-02 — Evidence-Guided Coordination
+
+**REVIEW**, ngày17/11/2026; chưa commit, baseline main `a12f0e9`.
+[Spec](tasks/M5/M5-COORD-02.md), [report](../docs/m5-coord-02-live-validation.md).
+Demand theo dependency output, selection/join records và bounded append patch;
+giữ raw/provenance/quality và M6/M7. 24targeted PASS;3câu mới+2retests,
+17Qwen calls/115085tokens. Final BBS chọn CFO2025→retrieve doanh thu cùng kỳ→
+resolve handle CFO2024 thành2025→Calculator3,18%→M6 3ACCEPT; M7 giữ
+verification_blocked vì thiếu verified goal bindings.178runtime/24JSON receipt
+cuối khớp,57source JSON bất biến. Chưa typed M6 selection obligations/raw-table
+entity joins/live positive expansion; không OCR/PDF/fullCI. Worktree riêng giữ
+local edits ngoài task, không tự nghiệm thu DONE.
+Next action: Tech Lead review implementation và live trace.
+
 ## M5-COORD-01 — Adaptive Coordinator & Task DAG
 
 **DONE — Tech Lead APPROVED ngày17/11/2026**. [Spec](tasks/M5/M5-COORD-01.md),

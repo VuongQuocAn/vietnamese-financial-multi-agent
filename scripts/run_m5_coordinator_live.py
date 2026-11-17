@@ -34,8 +34,8 @@ CASES = [
 ]
 
 
-def prepare(root, output, ids, call_cap):
-    cases = [c for c in CASES if not ids or c["id"] in ids]
+def prepare(root, output, ids, call_cap, cases=None):
+    cases = [c for c in (CASES if cases is None else cases) if not ids or c["id"] in ids]
     output.mkdir(parents=True, exist_ok=False)
     (output / "provider").mkdir()
     (output / "results").mkdir()

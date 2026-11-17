@@ -916,6 +916,10 @@ class SupervisorLite:
                 "after=[] cho task chỉ tra nguồn độc lập. Tuyệt đối không phụ thuộc chính task đó. "
                 "Trước khi trả, kiểm mọi after theo vị trí 0,1,2,... trong tasks và không có vòng lặp. "
                 "Đọc label và period của từng handle, không lấy số thứ tự gần đúng hoặc toàn inventory. "
+                "Khi cần chọn kỳ/thực thể trước rồi tìm chỉ tiêu khác: task đầu retrieve đủ miền so sánh; "
+                "task sau after:[index_task_đầu], input_handles:[] và objective nêu rõ dùng kết quả chọn "
+                "để truy xuất chỉ tiêu cùng kỳ. Backend có demand retrieval, selection max/min/max_abs "
+                "và exact context join; không cần dự đoán trước kỳ thắng. "
                 "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema."
             ),
             schema=proposal_schema(),
@@ -1214,6 +1218,8 @@ class FinancialLiteOrchestrator:
                 if key in task.depends_on
             }
             if self.adaptive_coordinator:
+                from .evidence_coordination import prompt_coordination, prompt_observation
+
                 prompt["dependency_results"] = {
                     tid: {
                         k: self.workspace.task_results[tid][k]
@@ -1228,9 +1234,18 @@ class FinancialLiteOrchestrator:
                             "verification",
                         )
                     }
-                    for tid in task.depends_on
+                    for tid in self.workspace.dependency_ids(task)
                     if tid in self.workspace.task_results
                 }
+                for tid, record in prompt["dependency_results"].items():
+                    full = self.workspace.task_results[tid]
+                    record["selected_observations"] = [
+                        prompt_observation(r) for r in full["selected_observations"]
+                    ]
+                    record["coordination"] = prompt_coordination(full["coordination"])
+                prompt["evidence_coordination"] = prompt_coordination(
+                    self.workspace.tasks[task.task_id].get("coordination", {})
+                )
                 prompt["instruction"] += (
                     " dependency_results chứa kết quả trung gian có version và đầy đủ nguồn/proof. "
                     "Dùng kết quả này để thực hiện objective; khi tính tiếp, replay các operations "
@@ -1315,6 +1330,12 @@ class FinancialLiteOrchestrator:
                 assigned, result.supporting_evidence, self.workspace.question
             )
             if observation is not None:
+                deterministic = True
+            if self.adaptive_coordinator and self.workspace.tasks[task.task_id].get(
+                "coordination", {}
+            ).get("selection"):
+                # Selection is already computed from the declared source domain.
+                # Emit the selected scalar as an unverified premise, not an LLM-authored extremum claim.
                 deterministic = True
             # The numeric path already emits these exact facts/approved metrics.
             # Reserve generation for new arithmetic or actual interpretation.
@@ -1594,6 +1615,13 @@ class FinancialLiteOrchestrator:
                     ),
                     [],
                 )
+                if (
+                    self.adaptive_coordinator
+                    and task.depends_on
+                    and self.gateway is not None
+                    and context.mode != "deterministic"
+                ):
+                    selected = []
                 for handle in dict.fromkeys(selected):
                     resolved = handle
                     if self.integration_v2:
@@ -1639,6 +1667,11 @@ class FinancialLiteOrchestrator:
                                     for fact in self.catalog.facts:
                                         if fact.observation_identity() == operand.observation:
                                             retrieve(fact)
+                if self.adaptive_coordinator:
+                    additions = self._coordinate_evidence(
+                        task, bundle, sources, context, output, retrieve
+                    )
+                    plan.tasks.extend(additions)
                 bundle.claim_fact_references = [f.reference for f in bundle.facts]
                 if self.graph_enabled and task.use_graph:
                     starts = list(
@@ -1652,7 +1685,7 @@ class FinancialLiteOrchestrator:
                             ]
                         )
                     )[:6]
-                    if not starts:
+                    if not starts and not (self.adaptive_coordinator and task.depends_on):
                         bundle.limitations.append("graph_no_valid_starting_nodes")
                     for node_id in starts:
                         request = (
@@ -1827,10 +1860,155 @@ class FinancialLiteOrchestrator:
         output.latency_ms = (perf_counter() - started) * 1000
         return output
 
+    def _coordinate_evidence(self, task, bundle, sources, context, output, retrieve):
+        from .evidence_coordination import (
+            expansion_tasks,
+            join_observations,
+            observation,
+            propose,
+            resolve_demands,
+            select_observations,
+        )
+
+        workspace = self.workspace
+        state = workspace.tasks[task.task_id]
+        for match in [*workspace.evidence.facts, *bundle.facts]:
+            row = observation(match)
+            workspace.observations[row["evidence_id"]] = row
+        current = [observation(f) for f in bundle.facts]
+        state["selected_observations"] = current
+        # Scalar roots retain the existing zero-extra-call path.
+        if (
+            self.gateway is None
+            or context.mode == "deterministic"
+            or not (task.depends_on or len(task.sources) > 1)
+        ):
+            return []
+        available = (
+            []
+            if workspace.expansion_used
+            else [f"T{i}" for i in range(1, 7) if f"T{i}" not in workspace.tasks]
+        )
+        try:
+            proposal, _ = propose(
+                self.gateway,
+                context,
+                task,
+                workspace,
+                sources,
+                list(workspace.observations.values()),
+                available,
+            )
+            handles, lineage = resolve_demands(proposal, task, workspace, sources)
+            additions = []
+            expansion_error = None
+            raw_expansion = state.get("expansion_proposal", [])
+            try:
+                additions = expansion_tasks(raw_expansion, task, workspace, sources, available)
+            except ValueError:
+                expansion_error = "expansion_patch_rejected"
+            state["coordination"] = dict(
+                proposal=proposal.model_dump(mode="json"),
+                retrieval_lineage=lineage,
+                selected_handles=handles,
+                joins=[],
+                expansion_error=expansion_error,
+                expansion_proposal=raw_expansion,
+            )
+            if proposal.selection:
+                # Demand-retrieve the entire declared domain rather than ranking a truncated prompt.
+                handles.extend(
+                    h
+                    for h, s in sources.items()
+                    if s["kind"] == "fact"
+                    and s["item"] == proposal.selection.item
+                    and s["period"] in proposal.selection.periods
+                )
+            for handle in dict.fromkeys(handles):
+                for fact in sources[handle]["records"]:
+                    if not any(
+                        f.reference.observation == fact.observation_identity()
+                        for f in [*workspace.evidence.facts, *bundle.facts]
+                    ):
+                        retrieve(fact)
+            for match in bundle.facts:
+                row = observation(match)
+                workspace.observations[row["evidence_id"]] = row
+            current_refs = {
+                f.observation_identity().model_dump_json()
+                for h in handles
+                for f in sources[h]["records"]
+            }
+            current = (
+                [
+                    r
+                    for r in workspace.observations.values()
+                    if json.dumps(r["reference"]["observation"], separators=(",", ":"))
+                    in current_refs
+                ]
+                if handles
+                else current
+            )
+            if proposal.selection:
+                current, record = select_observations(
+                    proposal.selection, list(workspace.observations.values()), sources
+                )
+                state["coordination"]["selection"] = record
+            for tid in dict.fromkeys(
+                d.period_from_task for d in proposal.retrieve if d.period_from_task
+            ):
+                record = join_observations(workspace.task_results[tid], current)
+                state["coordination"]["joins"].append(record)
+                if record["status"] != "matched":
+                    raise ValueError("join_" + record["status"])
+            state["selected_observations"] = current
+            if additions:
+                workspace.expansion_used = True
+                state["coordination"]["expansion"] = [t.model_dump(mode="json") for t in additions]
+                for added in additions:
+                    workspace.tasks[added.task_id] = dict(
+                        requirement_ids=added.requirement_ids,
+                        depends_on=added.depends_on,
+                        objective=added.objective,
+                        role=added.specialist,
+                        revision=1,
+                        status="pending",
+                    )
+            return additions
+        except Exception as error:
+            # Branch failure does not erase independent outputs.
+            state.update(
+                status="failed",
+                error=str(error) if isinstance(error, ValueError) else "coordination_failed",
+                selected_observations=[],
+            )
+            raise
+        finally:
+            if "coordination_usage" in state:
+                output.usage.stages[task.task_id + "_evidence_demand"] = (
+                    PlannerLLMMetadata.model_validate(state["coordination_usage"])
+                )
+
     def _execute_task(self, task, execution, bundle, all_upstream, context, output):
         state = self.workspace.tasks[execution.execution_id]
         try:
             upstream = all_upstream.model_copy(deep=True)
+            if state.get("coordination"):
+                selected = state.get("selected_observations", [])
+                parents = [
+                    r
+                    for tid in self.workspace.dependency_ids(task)
+                    for r in self.workspace.task_results[tid].get("selected_observations", [])
+                ]
+                permitted = {r["evidence_id"] for r in [*selected, *parents]}
+                if permitted:
+                    from .evidence_coordination import observation
+
+                    upstream.evidence_bundle.facts = [
+                        f
+                        for f in upstream.evidence_bundle.facts
+                        if observation(f)["evidence_id"] in permitted
+                    ]
             upstream.status = "partial" if bundle.limitations else "completed"
             result = self._specialist(task, upstream, task.objective, context)
             execution.result, execution.llm = result, result.llm

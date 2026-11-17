@@ -190,6 +190,19 @@ class IntegrationWorkspace:
     tasks: dict[str, dict] = field(default_factory=dict)
     targets: dict[str, dict] = field(default_factory=dict)
     task_results: dict[str, dict] = field(default_factory=dict)
+    observations: dict[str, dict] = field(default_factory=dict)
+    expansion_used: bool = False
+
+    def dependency_ids(self, task):
+        """Keep transitive input closure even if a consumer names only its direct parent."""
+        pending, found = list(task.depends_on), []
+        while pending:
+            tid = pending.pop(0)
+            if tid in found or tid not in self.task_results:
+                continue
+            found.append(tid)
+            pending.extend(r["task_id"] for r in self.task_results[tid]["input_results"])
+        return found
 
     def record_result(self, task, result):
         """Immutable revision-1 proposal refs; source/proof closure still goes to M6."""
@@ -227,6 +240,10 @@ class IntegrationWorkspace:
                 if e.evidence_id in state["candidate_evidence_ids"]
             ],
             verification="unverified_candidates",
+            selected_observations=state.get("selected_observations", [])
+            if result.candidates or state.get("coordination", {}).get("selection")
+            else [],
+            coordination=state.get("coordination", {}),
         )
         record["digest"] = hashlib.sha256(
             json.dumps(record, sort_keys=True, ensure_ascii=False).encode()
@@ -238,7 +255,10 @@ class IntegrationWorkspace:
     def dependencies_ready(self, task):
         return all(
             self.tasks.get(tid, {}).get("status") in {"completed", "partial"}
-            and self.task_results.get(tid, {}).get("candidate_ids")
+            and (
+                self.task_results.get(tid, {}).get("candidate_ids")
+                or self.task_results.get(tid, {}).get("selected_observations")
+            )
             for tid in task.depends_on
         )
 
@@ -263,6 +283,11 @@ class IntegrationWorkspace:
                 key
                 for key in by_id
                 if (key in assigned or by_id[key].answer_goal == "value")
+                and not any(
+                    key in state["requirement_ids"]
+                    and state.get("coordination", {}).get("selection")
+                    for state in self.tasks.values()
+                )
                 and matches_requirement(claim, by_id[key], self.targets.get(key))
             ]
         adaptive = self.task_results or any("revision" in t for t in self.tasks.values())
@@ -285,6 +310,7 @@ class IntegrationWorkspace:
                     "task_results": self.task_results,
                     "adaptive_coordinator": True,
                     "goal_errors": goal_errors,
+                    "observations": self.observations,
                 }
                 if adaptive
                 else {}

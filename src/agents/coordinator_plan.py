@@ -68,6 +68,22 @@ def adapt_plan(payload, sources):
         # Period/unit are not inferred from objective, source handle or filename.
         targets = _targets(normalize(goal.text)) if goal.mode == "value" else []
         target = targets[0] if len(targets) == 1 else None
+        selection_goal = any(
+            term in normalize(goal.text)
+            for term in (
+                "lon nhat",
+                "nho nhat",
+                "cao nhat",
+                "thap nhat",
+                "chon nam",
+                "nam nao",
+                "ky nao",
+            )
+        )
+        if selection_goal:
+            # A scalar's truth cannot certify an extremum over a comparison domain.
+            # Preserve a gap until M6 has selection obligations; do not change M6 here.
+            target = None
         years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", goal.text))
         periods = {
             s["period"]
@@ -87,12 +103,16 @@ def adapt_plan(payload, sources):
                 answer_goal=goal.mode,
                 interpretation=goal.mode == "analysis" or target is None,
                 interpretation_topic="dynamic_calculation"
-                if goal.mode == "value" and target is None
+                if goal.mode == "value" and target is None and not selection_goal
                 else None,
                 required_indicators=[item for kind, item in targets if kind == "fact"]
                 if target is None
                 else [],
-                reason=None if target else "goal_context_unresolved",
+                reason="selection_requires_obligations"
+                if selection_goal
+                else None
+                if target
+                else "goal_context_unresolved",
             )
         )
     tasks, blocked, errors = [], {}, []
