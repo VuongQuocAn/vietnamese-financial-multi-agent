@@ -1,9 +1,14 @@
 # E2E-REMED-02 — Planning & Evidence Routing
 
-Ngày17/11/2026 (Asia/Bangkok), **REVIEW**. Implementation
+Ngày17/11/2026 (Asia/Bangkok), **DONE có giới hạn — Owner/Tech Lead xác nhận**. Implementation
 [`78a5e67202429cdd76556f883597abed35c939e4`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/78a5e67202429cdd76556f883597abed35c939e4),
 baseline main9fec038, worktree riêng giữ local edits. M6/M7/Evidence Obligations,
 raw/canonical JSON/EF-EG không đổi. Không mở thêm Pilot hoặc Full600.
+
+Nghiệm thu phần planning/routing trong phạm vi bằng chứng bên dưới; giữ nguyên
+0/4 accuracy/coverage, fallback, thiếu canonical và M6 timeout. Không xác nhận
+readiness Pilot. Bàn giao f8d2b6a đã push main/remote verified. Phiên đóng chỉ
+tài liệu/tracking và planning/diff/Git, không sửa runtime hoặc chạy lại API/tests/CI.
 
 ## RCA và sửa trong phạm vi
 
@@ -117,10 +122,9 @@ không là Coordinator goals và được loại khỏi phép kiểm ownership n
 là14đáp án hoặc financial facts độc lập, không PDF-verified.
 
 Controls/SHA/hashes chứng minh engineering và provenance trong phạm vi task,
-không chứng nhận chất lượng tài chính hoặc lợi ích Multi-Agent. Research review
-vẫn cần Tech Lead, không tự DONE hoặc mở task sửa canonical/M6.
+không chứng nhận chất lượng tài chính hoặc lợi ích Multi-Agent. Giữ các giới hạn
+nghiên cứu theo nghiệm thu có giới hạn; không tự mở task sửa canonical/M6.
 
 ## Handoff
 
-Next action: Tech Lead review planning/routing fixes và lỗi còn lại trước khi cho
-phép tiếp tục ViFinBench Pilot.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

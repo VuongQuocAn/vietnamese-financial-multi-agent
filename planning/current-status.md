@@ -2,7 +2,8 @@
 
 ## E2E-REMED-02 — Planning & Evidence Routing
 
-**REVIEW**, implementation `78a5e67202429cdd76556f883597abed35c939e4`, baseline9fec038.
+**DONE có giới hạn — Owner/Tech Lead xác nhận ngày17/11/2026**;
+implementation `78a5e67202429cdd76556f883597abed35c939e4`, baseline9fec038.
 [Spec](tasks/E2E/E2E-REMED-02.md), [report](../docs/e2e-remed-02-planning-evidence-routing.md).
 Root schema/owned question fallback, exact S binding, demand batches/reuse và
 dependency D contexts/fusion handoff.4QA/4attempts,17calls/95473known tokens/
@@ -11,7 +12,11 @@ output cuối nhưng3câu fallback, raw model còn lỗi; MH0001 live T1→T2, c
 thay131 thiếu canonical/M6 timeout.3new controls/25compatibility/fusion recheck PASS.
 186runtime blobs/146JSON/28imported/3Pilot hashes verified;80local/evidence cũ bất
 biến; M6/M7/evidence không đổi. Không36Pilot/Full600/Gemini/OCR/fullCI; chưa readiness.
-Next action: Tech Lead review planning/routing fixes và lỗi còn lại trước khi cho phép tiếp tục ViFinBench Pilot.
+Nghiệm thu phần xử lý planning/routing trong phạm vi đã báo; giữ các giới hạn
+fallback, canonical và M6 timeout, không xác nhận readiness Pilot. Bàn giao
+f8d2b6a đã push main/remote verified; phiên đóng chỉ tracking/planning/diff/Git,
+không sửa runtime, gọi API hoặc chạy lại tests/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## E2E-REMED-01 — Source & Scope Readiness
 

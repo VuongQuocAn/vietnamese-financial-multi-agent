@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: E2E-ARCH-02
 - Estimated Complexity: S
@@ -54,7 +54,8 @@ Gold/QA/doanh nghiệp hardcode, OCR/Gemini/fullCI,36Pilot/Full600.
 
 Giới hạn nghiệm thu: raw model vẫn sai namespace/owner;3câu dùng fallback toàn
 câu hỏi nên chưa chứng minh phân rã/role assignment tốt. Accuracy/coverage vẫn0/4;
-chưa đáp ứng readiness Pilot, chờ Tech Lead review chứ không tự DONE.
+chưa đáp ứng readiness Pilot. Owner/Tech Lead xác nhận **DONE có giới hạn**
+ngày17/11/2026 trong phạm vi planning/routing và bằng chứng đã báo.
 
 ## Required Tests
 
@@ -81,7 +82,10 @@ parent context hoạt động nhưng target130 thay131 thiếu canonical, M6 tim
 và evidence hai task trước bất biến, M6/M7/evidence không đổi.5result digests,
 4owned Coordinator goals và14source-cell pointer occurrences khớp. Không36Pilot/Full600.
 Evidence local artifacts/evidence/E2E-REMED-02; raw model errors/fallbacks giữ riêng.
+Owner/Tech Lead nghiệm thu DONE có giới hạn; bàn giao f8d2b6a đã push main và
+remote verified. Giữ nguyên mọi số liệu/limits. Phiên đóng chỉ tài liệu/tracking
+và planning/diff/Git; không sửa runtime, chạy lại tests/API/benchmark/fullCI.
 
 ## Handoff Notes
 
-Next action: Tech Lead review planning/routing fixes và lỗi còn lại trước khi cho phép tiếp tục ViFinBench Pilot.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
