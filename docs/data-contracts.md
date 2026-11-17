@@ -1,5 +1,18 @@
 # Data contracts
 
+## E2E-REMED-01 — JSON source readiness
+
+Snapshot JSON giữ original bytes cùng parsed projection; scope đọc explicit title
+hoặc checkbox BCTC được chọn ở front matter, dùng ContextEvidence/pointer/hash.
+Unselected/unknown/conflict không tự thành separate. JSON composition tái dùng
+EvidenceComposition/EvidencePin trên đúng một snapshot, không có PageBinding giả
+hoặc PDF hash. `verified` ở source chỉ xác nhận byte/payload fidelity, không cấp
+financial/semantic approval; raw JSON/EF-EG và M6/M7 không đổi.
+Search dùng `source_page` cho JSON, `pdf_page=null`, row/column và pointer gốc của
+UnderstoodCell; PDF payload cũ giữ nguyên. M5 nhận context D handles qua tool search;
+đó không phải numeric evidence_ids/operands, không tự satisfy goals. Diagnostics
+raw presence/imported/mapped/eligible tách nhau; source thiếu unit/mapping vẫn gap.
+
 ## M6-PY-01 — Python replay và admission
 
 M6 adapter đọc `python_execution_proof_v1` từ Workspace task result thành pending

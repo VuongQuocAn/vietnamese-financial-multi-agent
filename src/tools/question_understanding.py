@@ -119,14 +119,17 @@ def comparison_periods(question: str) -> set[str]:
 
 def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     text = normalize(question)
+    # Named/listed entities are not a request for separate financial statements.
+    # Preserve existing shorthand such as "doanh thu ... riêng" for real scope requests.
+    scope_text = re.sub(r"\b(?:ten|neu|liet ke|trinh bay|hien thi) rieng\b", " ", text)
     years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
     parsed = QAUnderstanding(
         intent="unsupported",
         reporting_year=int(next(iter(years))) if len(years) == 1 else None,
         reporting_scope="consolidated"
-        if "hop nhat" in text
+        if "hop nhat" in scope_text
         else "separate"
-        if "rieng" in text
+        if "rieng" in scope_text
         else None,
     )
     if re.search(r"\b(quy|thang|ban nien)\b", re.sub(r"\bquy dinh\b", "", text)):
@@ -221,6 +224,6 @@ def understand(question: str) -> tuple[QAUnderstanding, list[str]]:
     # Không lấy một operand trong câu hỏi tỷ số chưa duyệt làm direct QA.
     if not formulas and any(p in text for p in ("ty le", "ty suat", "he so", "phan tram")):
         return parsed.model_copy(update={"intent": "unsupported"}), ["unsupported_formula"]
-    if "hop nhat" in text and "rieng" in text:
+    if "hop nhat" in scope_text and "rieng" in scope_text:
         return parsed, ["ambiguous_reporting_scope"]
     return parsed, []

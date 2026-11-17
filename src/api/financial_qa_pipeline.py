@@ -80,6 +80,16 @@ class FinancialQAPipeline:
         self.renderer = CitationRenderer()
         self.compositions = tuple(compositions)
         self.document_repository = document_repository
+        if (
+            not self.compositions
+            and self.document_repository is None
+            and len(catalog.descriptors) == 1
+            and catalog.descriptors[0].source_kind == "json"
+        ):
+            from ..evidence.json_catalog import json_document_composition
+
+            self.compositions = (json_document_composition(catalog),)
+            self.document_repository = catalog
         from ..evidence.release_activation import select_active_releases
 
         self.compositions, self.document_repository = select_active_releases(

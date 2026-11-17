@@ -45,7 +45,7 @@ class CompositionGraph(FinancialModel):
     version: Literal["composition_graph_v1"] = "composition_graph_v1"
     document_id: Identity
     composition_id: Identity
-    pdf_sha256: Identity
+    pdf_sha256: Identity | None
     graph: EvidenceGraph
     contextual_relations: list[ContextRelation]
     validation: GraphValidation
@@ -70,6 +70,15 @@ def select_financial_catalog(catalog, manifest):
     matches = [d for d in catalog.descriptors if (d.document_id, d.snapshot_id) == key]
     if matches != [descriptor]:
         raise ValueError("financial_descriptor_missing_or_conflicting")
+    if descriptor.source_kind == "json":
+        if (
+            catalog.descriptors != [descriptor]
+            or catalog.ancestry(descriptor)[1]
+            or catalog.graph is None
+        ):
+            raise ValueError("json_financial_snapshot_unbound")
+        # A view of the same pinned JSON snapshot; no PDF authority or graph rewrite.
+        return catalog
     facts = [f for f in catalog.facts if (f.document_id, f.snapshot_id) == key]
     evidence = [e for e in catalog.evidence if (e.document_id, e.snapshot_id) == key]
     metrics = [m for m in catalog.metrics if (m.request.document_id, m.request.snapshot_id) == key]

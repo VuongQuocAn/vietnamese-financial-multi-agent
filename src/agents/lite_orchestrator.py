@@ -1233,6 +1233,28 @@ class FinancialLiteOrchestrator:
                 for r in self.workspace.requirements
                 if r.requirement_id in task.requirement_ids
             ]
+            if (
+                len(self.catalog.descriptors) == 1
+                and self.catalog.descriptors[0].source_kind == "json"
+            ):
+                from ..evidence.json_catalog import json_document_composition
+                from ..tools.json_source_lookup import lookup_json_source_context
+
+                source_context = lookup_json_source_context(
+                    self.catalog,
+                    self.composition or json_document_composition(self.catalog),
+                    task.objective,
+                )
+                prompt["document_source_context"] = {
+                    k: v for k, v in source_context.items() if k != "tool_calls"
+                }
+                result.trace.append(
+                    SpecialistTrace(
+                        stage="selection",
+                        outcome="document_source_context",
+                        reasons=[json.dumps(source_context, ensure_ascii=False)],
+                    )
+                )
             prompt["shared_tasks"] = {
                 key: dict(
                     status=state["status"],

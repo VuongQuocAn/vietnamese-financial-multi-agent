@@ -7,7 +7,7 @@ from collections import defaultdict
 from time import perf_counter
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from .composition import load_composition
@@ -56,13 +56,21 @@ class DocumentSearchMatch(FinancialModel):
     evidence_ids: list[EvidenceIdentity]
     document_id: str
     snapshot_id: str
-    pdf_page: int
+    pdf_page: int | None
+    source_page: int | None = None
     snippet: str
     cells: list[SearchCell] = Field(default_factory=list)
     neighbors: list[SearchNeighbor] = Field(default_factory=list)
     matched_terms: list[str]
     ranking_reasons: list[str]
     limitations: list[str]
+
+    @model_serializer(mode="wrap")
+    def preserve_pdf_payload(self, handler):
+        value = handler(self)
+        if self.source_page is None:
+            value.pop("source_page", None)
+        return value
 
 
 class DocumentSearchResponse(FinancialModel):
@@ -109,9 +117,14 @@ def _cells(record):
             output.append(
                 SearchCell(
                     source_pointer=getattr(cell, "source_pointer", None)
+                    or (
+                        getattr(cell, "id", "")
+                        if getattr(cell, "id", "").startswith(pointer + "/")
+                        else None
+                    )
                     or f"{pointer}/{field}/{i}",
                     row=cell.row,
-                    column=cell.column,
+                    column=getattr(cell, "column", getattr(cell, "col", None)),
                     text=cell.text,
                 )
             )
@@ -280,7 +293,12 @@ class EvidenceSearchIndex:
                     ],
                     document_id=record.document_id,
                     snapshot_id=record.snapshot_id,
-                    pdf_page=_location(record)[0].page,
+                    pdf_page=None
+                    if record.source_metadata.get("source_kind") == "refined_json"
+                    else _location(record)[0].page,
+                    source_page=_location(record)[0].page
+                    if record.source_metadata.get("source_kind") == "refined_json"
+                    else None,
                     snippet=snippet,
                     cells=selected_cells,
                     neighbors=context,

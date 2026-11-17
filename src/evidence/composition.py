@@ -119,9 +119,13 @@ def load_composition(manifest, repository, *, document_id, composition_id):
     Repository vẫn là DocumentEvidenceRepository duy nhất. Financial facts/graph
     không được copy hoặc ghép vào document catalog này.
     """
-    manifest = EvidenceComposition.model_validate(manifest.model_dump(mode="json"))
+    manifest = EvidenceComposition.model_validate_json(manifest.model_dump_json())
     if (document_id, composition_id) != (manifest.logical_document_id, manifest.composition_id):
         raise ValueError("composition_selection_mismatch")
+    if manifest.financial_snapshot.source_kind == "json":
+        from .json_catalog import load_json_composition
+
+        return load_json_composition(manifest, repository)
     descriptors = {}
 
     def add(descriptor):

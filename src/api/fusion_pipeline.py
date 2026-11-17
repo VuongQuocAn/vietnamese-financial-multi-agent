@@ -189,7 +189,7 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
         resolution = pipeline.catalog.get_reporting_scope(document, snapshot)
         if (
             resolution.status != "resolved"
-            or resolution.evidence_status != "confirmed"
+            or resolution.evidence_status not in {"confirmed", "json_bound"}
             or resolution.reporting_scope != scope
         ):
             return stop("clarification_required", ["requested_scope_unconfirmed"])

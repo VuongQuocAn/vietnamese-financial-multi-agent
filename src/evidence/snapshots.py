@@ -148,6 +148,7 @@ class SnapshotCatalog:
         import json
 
         self.json_sources = {}
+        self.json_source_bytes = dict(json_sources or {})
         for digest, raw in (json_sources or {}).items():
             if not isinstance(raw, bytes) or hashlib.sha256(raw).hexdigest() != digest:
                 raise ValueError("json_source_hash_mismatch")
@@ -252,24 +253,9 @@ class SnapshotCatalog:
                 reviews=[],
             )
         if descriptors[0].source_kind == "json":
-            from .reporting_scope import ReportingScopeResolution
+            from .json_catalog import json_reporting_scope
 
-            scopes = {
-                f.context.reporting_scope
-                for f in self.facts
-                if (f.document_id, f.snapshot_id) == (document_id, snapshot_id)
-                and f.context.reporting_scope is not None
-            }
-            resolved = len(scopes) == 1 and not self.ancestry(descriptors[0])[1]
-            return ReportingScopeResolution(
-                document_id=document_id,
-                snapshot_id=snapshot_id,
-                reporting_scope=next(iter(scopes)) if resolved else None,
-                status="resolved" if resolved else "unresolved",
-                evidence_status="json_bound" if resolved else "insufficient",
-                reviews=[],
-                reasons=["json_scope_not_pdf_reviewed"],
-            )
+            return json_reporting_scope(self, descriptors[0])
         result = resolve_reporting_scope(descriptors[0], self.scope_reviews)
         _, issues = self.ancestry(descriptors[0])
         if issues:
@@ -277,6 +263,15 @@ class SnapshotCatalog:
             result.status, result.evidence_status = "unresolved", "insufficient"
             result.reasons = sorted(set([*result.reasons, *issues]))
         return result
+
+    def list_by_document(self, document_id, snapshot_id=None):
+        """Read-only document repository view, used by exact JSON composition pins."""
+        return [
+            e.model_copy(deep=True)
+            for e in self.evidence
+            if e.document_id == document_id
+            and (snapshot_id is None or e.snapshot_id == snapshot_id)
+        ]
 
     def assess_metric(self, descriptor, metric) -> MetricSnapshotClosure:
         issues, supplied = [], []
