@@ -6,11 +6,13 @@ import json
 import subprocess
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 
 from fastapi.encoders import jsonable_encoder
 from vietnamese_financial_multi_agent.agents.integration_workspace import answer_coverage
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.api.text_gateway import create_text_gateway
+from vietnamese_financial_multi_agent.core.llm_contracts import LLMResponse, ModelIdentity
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 from vietnamese_financial_multi_agent.core.persistence import atomic_json
 from vietnamese_financial_multi_agent.outputs.citation_renderer import _identity
@@ -26,12 +28,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cases", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--saved-provider-events", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     cases = json.loads(args.cases.read_text(encoding="utf-8"))
     assert 2 <= len(cases) <= 3
     args.output.mkdir(parents=True, exist_ok=False)
     inputs = {args.cases}
+    if args.saved_provider_events:
+        inputs.add(args.saved_provider_events)
     for case in cases:
         inputs.update([Path(case["trace"]), Path(case["ledger"]) / "verified-claims.json"])
         if case.get("saved_m5"):
@@ -40,7 +45,19 @@ def main():
     before = {str(p): sha(p) for p in inputs}
     runtime = {str(p.relative_to(root)): sha(p) for p in (root / "src").rglob("*.py")}
     events = []
-    configured = create_text_gateway(root, provider="qwen")
+    saved_events = (
+        json.loads(args.saved_provider_events.read_text(encoding="utf-8"))
+        if args.saved_provider_events
+        else None
+    )
+    configured = (
+        SimpleNamespace(
+            model=ModelIdentity.model_validate(saved_events[0]["request"]["model"]),
+            close=lambda: None,
+        )
+        if saved_events
+        else create_text_gateway(root, provider="qwen")
+    )
 
     def transport(request):
         assert len(events) < 3 and request.request_id.startswith("m7-lite-")
@@ -48,7 +65,16 @@ def main():
         event = dict(request=request.model_dump(mode="json"), response=None)
         events.append(event)
         atomic_json(args.output / "provider-events.json", events)
-        response = configured.adapter(request)
+        if saved_events:
+            saved_event = saved_events[len(events) - 1]
+            wire = request.model_dump(mode="json")
+            for key in ("model", "messages", "generation", "output_spec", "constraints"):
+                assert wire[key] == saved_event["request"][key], "saved_m7_input_changed:" + key
+            response = LLMResponse.model_validate(saved_event["response"]).model_copy(
+                update=dict(request_id=request.request_id, correlation=request.correlation)
+            )
+        else:
+            response = configured.adapter(request)
         event["response"] = response.model_dump(mode="json")
         atomic_json(args.output / "provider-events.json", events)
         print(json.dumps(dict(call=len(events), status=response.status)), flush=True)
@@ -140,7 +166,8 @@ def main():
                 implementation_sha=subprocess.check_output(
                     ["git", "rev-parse", "HEAD"], cwd=root, text=True
                 ).strip(),
-                calls=len(events),
+                calls=0 if saved_events else len(events),
+                replayed_calls=len(events) if saved_events else 0,
                 known_total_tokens=sum(s["tokens"] for s in summaries),
                 inputs_sha256=before,
                 runtime_sha256=runtime,

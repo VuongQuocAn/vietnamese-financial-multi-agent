@@ -74,6 +74,7 @@ def test_numbers_must_belong_to_cited_claim_and_model_cannot_emit_citation(admit
             segments=[
                 dict(text="Kết quả là 987654321 VND.", claim_ids=[key]),
                 dict(text=entry.content + " [123]", claim_ids=[key]),
+                dict(text=entry.content + " Số tiền là 987654321 VND.", claim_ids=[key]),
             ],
             gaps=[],
         )
@@ -82,6 +83,9 @@ def test_numbers_must_belong_to_cited_claim_and_model_cannot_emit_citation(admit
     assert [s["reason"] for s in trace["rejected_segments"]] == [
         "unsupported_number",
         "invalid_answer_text_or_citation",
+        "unsupported_number",
     ]
     assert entry.content in fields["answer_vi"] and "[123]" not in fields["answer_vi"]
+    assert trace["segments"][0] == dict(text=entry.content, claim_ids=[key])
+    assert trace["rendering_mode"] == "grounded_natural_answer"
     assert set(fields["used_verified_claim_ids"]) == {key, "different-number"}

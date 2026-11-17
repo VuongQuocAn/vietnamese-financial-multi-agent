@@ -732,6 +732,7 @@ def compose_lite(
                 raise ValueError("invalid_answer_json")
             for n, segment in enumerate(body["segments"]):
                 reason = None
+                retained = None
                 if (
                     not isinstance(segment, dict)
                     or set(segment) not in ({"claim_ids"}, {"text", "claim_ids"})
@@ -750,13 +751,24 @@ def compose_lite(
                         reason = "invalid_answer_text_or_citation"
                     elif not _numbers_supported(prose, [entries[k] for k in segment["claim_ids"]]):
                         reason = "unsupported_number"
+                        # Keep whole supported sentences verbatim. This is the
+                        # same numeric presentation check, not a new M6 verdict.
+                        sentences = re.split(r"(?<=[.!?])\s+", prose.strip())
+                        retained = " ".join(
+                            sentence
+                            for sentence in sentences
+                            if _numbers_supported(
+                                sentence, [entries[k] for k in segment["claim_ids"]]
+                            )
+                        )
                 if reason:
                     trace["rejected_segments"].append(dict(index=n, reason=reason))
-                else:
+                if reason is None or retained:
                     keys = list(dict.fromkeys(segment["claim_ids"]))
                     segments.append(
                         dict(
-                            text=segment.get("text", "").strip()
+                            text=retained
+                            or segment.get("text", "").strip()
                             or "\n".join(_verified_text(entries[k]) for k in keys),
                             claim_ids=keys,
                         )
@@ -826,7 +838,7 @@ def compose_lite(
             trace["fallback"] = True
     if trace["rejected_segments"]:
         trace["fallback"] = True
-        trace["fallback_reasons"].append("unsafe_segments_replaced_with_accepted_claims")
+        trace["fallback_reasons"].append("unsafe_answer_content_filtered")
     if trace["fallback"] and trace["llm_segments_released"]:
         trace["fallback_reasons"].append("omitted_verified_findings")
     if not selected:
