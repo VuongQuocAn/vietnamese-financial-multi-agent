@@ -9,7 +9,8 @@ DAG/result revision1; giữ M6/M7, chưa Python/feedback/task tiếp theo.
 Retest BBS hai specialist chia sẻ kết quả/nguồn→Calculator7.070.123.808VND→
 3ACCEPT/G1–G3→M7/12citations. Còn cycle/source selection ban đầu, ADC chưa
 retest, provenance JSON-only; không gọi đây là accuracy benchmark.
-Implementation SHA trong spec sau commit; worktree riêng giữ local edits ngoài scope.
+Implementation `05289a439f2d5248065f4b8cc727ac7ea2aac215` đã xác minh khớp
+receipt live-v2; worktree riêng giữ local edits ngoài scope.
 Next action: Tech Lead review M5-COORD-01 và bằng chứng phối hợp v2.
 
 ## ARCH-02 — Technical Architecture Specification

@@ -55,7 +55,7 @@ benchmark rộng, OCR/Gemini, thay M6/M7, xử lý toàn bộ local edits hoặc
 - [x] Downstream nhận và sử dụng kết quả trung gian kèm source/proof closure.
 - [x] Task lỗi/rỗng không xóa kết quả độc lập; M6/M7 và opt-out giữ đường cũ.
 - [x] Live Test câu mới single-hop/multi-hop, trace và hạn chế rõ; không gọi smoke PASS là accuracy.
-- [ ] Commit/push main, trạng thái REVIEW chờ Tech Lead.
+- [x] Implementation đã commit, trạng thái REVIEW; push/remote SHA xác minh khi bàn giao.
 
 ## Required Tests
 
@@ -70,7 +70,9 @@ OCR/canonical/unit/period và schema specialist cũ có thể giới hạn đáp
 
 ## Implementation Evidence
 
-Implementation SHA: chờ commit sau validation cuối; chưa nghiệm thu DONE.
+Implementation SHA đã xác minh:
+[`05289a439f2d5248065f4b8cc727ac7ea2aac215`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/05289a439f2d5248065f4b8cc727ac7ea2aac215).
+177file runtime trong commit khớp receipt live-v2; chưa nghiệm thu DONE.
 [Report](../../../docs/m5-coord-01-live-validation.md):21targeted/compatibility PASS;
 3câu mới+1retest,7Qwen calls/29459known tokens/0unknown. V2 cuối phối hợp hai
 specialist, Calculator7070123808VND,3ACCEPT có goal support và12M7citations.

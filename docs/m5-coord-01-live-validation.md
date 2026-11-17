@@ -108,9 +108,10 @@ trong retrieval bundle riêng; không làm mất output/M6/M7. Result chỉ revi
 chưa invalidation/patch/demand retrieval hoặc reuse interpretation đã ACCEPT.
 Những phần này giữ ngoài scope, không mở task kế tiếp.
 
-Git: implementation trên worktree riêng sau merge histories đã commit
+Git: [implementation05289a4](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/05289a439f2d5248065f4b8cc727ac7ea2aac215)
+trên worktree riêng sau merge histories đã commit
 `f3c326b`, bảo toàn toàn bộ local edits ngoài task; không đưa freeze VFB-E2E-05
-vào commit mới. SHA implementation được ghi trong spec sau commit và được
-đối chiếu receipt trước push main.
+vào commit mới. 177file runtime trong implementation commit được đối chiếu
+receipt v2 trước push main; checkpoint sau chỉ cập nhật SHA tài liệu/tracking.
 
 **Next action:** Tech Lead review M5-COORD-01 và bằng chứng phối hợp v2.
