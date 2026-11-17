@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M6
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-COORD-02
 - Estimated Complexity: S
@@ -50,7 +50,7 @@ Gemini, corpus mutation, full CI hoặc benchmark rộng.
 - [x] Saved binding v2 round-trip/admission; goal thay đổi không reuse; v1 đọc được.
 - [x] Non-ACCEPT/ACCEPT thiếu binding có feedback gắn claim/task/goal/evidence.
 - [x] M6 live2ACCEPT với2bindings→ledger v2→M7 phát hành; phần còn lại giữ gap.
-- [ ] Tech Lead nghiệm thu phạm vi và giới hạn live G1/ADC.
+- [x] Owner/Tech Lead xác nhận đạt phạm vi nghiệm thu, cho cập nhật DONE ngày17/11/2026; giữ giới hạn live G1/ADC.
 
 ## Required Tests
 
@@ -63,13 +63,16 @@ Ruff/planning/diff check; không full CI.2câu mới fresh và1exact saved M5/li
 G1 selection chưa live positive:Qwen false-negative dù deterministic replay PASS.
 ADC dừng trước M6 vì selection domain thiếu. BBS còn một nhánh M5 technical;
 M7 phát hành phần đã verify kèm gap hiện có. JSON-only provenance, chưa PDF-verified
-hoặc accuracy benchmark. REVIEW, không tự nghiệm thu DONE.
+hoặc accuracy benchmark. Owner/Tech Lead nghiệm thu DONE trong phạm vi task,
+không suy rộng thành nghiệm thu mọi trường hợp E2E.
 
 ## Implementation Evidence
 
 Implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`. [Report](../../../docs/m6-obl-01-live-validation.md).
 Code đúng hashes receipt verify-release; local artifacts không commit nguồn/secrets.
+Owner/Tech Lead xác nhận nghiệm thu ngày17/11/2026. Phiên đóng chỉ cập nhật tài liệu/
+tracking và kiểm planning/diff/Git; không sửa runtime hoặc chạy lại tests/API.
 
 ## Handoff Notes
 
-Next action: Tech Lead review implementation và giới hạn live G1/ADC.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

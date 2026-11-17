@@ -1,7 +1,10 @@
 # M6-OBL-01 — Evidence Obligations & Goal Binding
 
-**REVIEW — 17/11/2026. Implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`**, baseline `9a3adba`.
-Worktree riêng bảo toàn local edits ngoài task. Chưa Tech Lead nghiệm thu.
+**DONE — Owner/Tech Lead nghiệm thu phạm vi ngày17/11/2026. Implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`**, baseline `9a3adba`.
+Worktree riêng bảo toàn local edits ngoài task. Giữ nguyên kết quả và giới hạn
+G1/ADC bên dưới; nghiệm thu không mở rộng thành mọi trường hợp E2E.
+Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff/Git, không sửa
+runtime hoặc chạy lại tests/API/benchmark.
 
 M6 đã truyền được binding đã kiểm chứng qua persisted Ledger v2 tới M7:
 final probe có **2 ACCEPT, 2 bindings (G2/G3), 2 claims phát hành, 9 citations**;
@@ -77,4 +80,4 @@ Local root: `artifacts/evidence/M6-OBL-01/` tại worktree task.
 - `verify-release/implementation.json`:runtime/source hashes; receipt publication
   bổ sung liên kết SHA commit với đúng runtime đã live, không chạy lại API.
 
-Next action: Tech Lead review implementation và giới hạn live G1/ADC.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
