@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M7
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M7-LITE-02, M6-PY-01
 - Estimated Complexity: S
@@ -63,6 +63,11 @@ không thêm verifier M7 hoặc suy accuracy tổng quát. Giữ caveats JSON-on
 
 ## Implementation Evidence
 
+Owner xác nhận **M7-ANSWER-01 DONE ngày17/11/2026**. Nghiệm thu implementation
+và evidence tại bàn giao `0d6daf1`, đã push main và xác minh remote SHA; giữ nguyên
+các giới hạn dưới đây. Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm
+planning/diff/Git, không sửa runtime hoặc chạy lại tests/API.
+
 Implementation `5414b699e63758270d80cc36390ecc6eb7149134`;
 [report](../../../docs/m7-answer-01-live-validation.md).3actual Qwen calls/24442tokens,
 0retry/unknown.2full/1partial;30references/6exact bindings, coverage nguyên M6.
@@ -73,4 +78,4 @@ Giữ giới hạn semantic paraphrase, JSON-only và G2/G3 chưa verified; khô
 
 ## Handoff Notes
 
-Next action: Tech Lead review M7-ANSWER-01.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

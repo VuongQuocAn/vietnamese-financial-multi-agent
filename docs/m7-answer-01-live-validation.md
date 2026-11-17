@@ -1,6 +1,9 @@
 # M7-ANSWER-01 — Grounded Natural Answer Generation
 
-Trạng thái **REVIEW**, ngày17/11/2026. Implementation
+Trạng thái **DONE — Owner xác nhận ngày17/11/2026**. Nghiệm thu implementation và
+evidence đã bàn giao tại `0d6daf1`, đã push main và xác minh remote SHA; giữ nguyên
+các giới hạn đã báo. Phiên đóng chỉ tài liệu/tracking và planning/diff/Git,
+không sửa runtime hoặc chạy lại tests/API; chưa triển khai E2E-ARCH-02. Implementation
 `5414b699e63758270d80cc36390ecc6eb7149134`, sau bản đầu `45dca05`;
 baseline remote `fcd0675`. Worktree riêng giữ local edits của checkout gốc.
 
@@ -57,4 +60,4 @@ thiếu support M6. Nguồn giữ JSON-only/source_reference_uncertain/page-leve
 không nâng thành PDF-verified. References có thể trùng nhãn trang JSON vì giữ các
 source pointers khác nhau. Chưa fresh final Qwen sau sentence-filter fix.
 
-Next action: Tech Lead review M7-ANSWER-01.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

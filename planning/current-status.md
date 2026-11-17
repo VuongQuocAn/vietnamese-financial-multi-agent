@@ -2,7 +2,7 @@
 
 ## M7-ANSWER-01 — Grounded Natural Answer Generation
 
-**REVIEW**, Owner17/11/2026; implementation `5414b699e63758270d80cc36390ecc6eb7149134`,
+**DONE — Owner xác nhận ngày17/11/2026**; implementation `5414b699e63758270d80cc36390ecc6eb7149134`,
 baseline remote `fcd0675`, worktree riêng giữ local edits.
 [Spec](tasks/M7/M7-ANSWER-01.md), [report](../docs/m7-answer-01-live-validation.md).
 M7 Lite/Qwen phát hành prose tổng hợp với citations, giữ M6/Ledger/ACCEPT/bindings.
@@ -11,7 +11,10 @@ hợp lệ qua cùng numeric guard, exact saved-response replay0calls, chưa fre
 30references/6exact bindings, coverage nguyên M6;185runtime/24JSON hashes verified.
 28targeted PASS/Ruff/planning/diff; giữ semantic/JSON-only/G2G3 limits.
 Không fullCI/OCR/Gemini/PDF; không triển khai E2E-ARCH-02.
-Next action: Tech Lead review M7-ANSWER-01.
+Implementation đã push main, remote SHA verified tại bàn giao `0d6daf1`.
+Phiên đóng chỉ tài liệu/tracking và planning/diff/Git, không sửa runtime hoặc
+chạy lại tests/API; giữ nguyên evidence và các giới hạn đã báo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## M6-PY-01 — Python Proof Verification
 

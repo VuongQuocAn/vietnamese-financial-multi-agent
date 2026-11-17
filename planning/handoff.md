@@ -6,10 +6,11 @@ M7-ANSWER-01
 
 ## Status
 
-REVIEW
+DONE
 
 ## Last Verified State
 
+Owner xác nhận hoàn thành ngày17/11/2026.
 Implementation `5414b699e63758270d80cc36390ecc6eb7149134`; baseline remote `fcd0675`.
 185runtime hashes khớp final replay;24JSON nguồn bất biến; coverage/citations giữ nguyên.
 
@@ -22,7 +23,7 @@ final exact saved-response replay0calls giữ2câu hợp lệ.30references/6exac
 
 ## Remaining Work
 
-Chờ nghiệm thu M7; không tự triển khai E2E-ARCH-02.
+Không còn công việc M7 trong phạm vi đã nghiệm thu; chưa triển khai E2E-ARCH-02.
 
 ## Modified Files
 
@@ -31,7 +32,8 @@ Worktree riêng; local edits trong checkout gốc giữ nguyên.
 
 ## Tests
 
-28targeted PASS, Ruff lint/format/planning/diff đạt. Không fullCI/OCR/Gemini/PDF.
+28targeted PASS, Ruff lint/format/planning/diff đạt từ phiên triển khai.
+Phiên đóng chỉ planning/diff/Git; không chạy lại tests/API/fullCI/OCR/Gemini/PDF.
 
 ## Blockers
 
@@ -41,9 +43,9 @@ Bản cuối dùng saved-response replay, chưa fresh final Qwen.
 ## Git Checkpoint
 
 Implementation `5414b699e63758270d80cc36390ecc6eb7149134`, sau live baseline `45dca05`.
-Commit tracking riêng; publish fast-forward HEAD:main, giữ checkout gốc có local edits.
+Đã push main, remote SHA verified tại bàn giao `0d6daf1`; giữ checkout gốc có local edits.
 Evidence local: `artifacts/evidence/M7-ANSWER-01/live-v1/` và `final-replay/`.
 
 ## Exact Next Action
 
-Tech Lead review M7-ANSWER-01.
+Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
