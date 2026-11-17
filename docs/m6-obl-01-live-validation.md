@@ -1,6 +1,6 @@
 # M6-OBL-01 — Evidence Obligations & Goal Binding
 
-**REVIEW — 17/11/2026. Implementation chưa commit**, baseline `9a3adba`.
+**REVIEW — 17/11/2026. Implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`**, baseline `9a3adba`.
 Worktree riêng bảo toàn local edits ngoài task. Chưa Tech Lead nghiệm thu.
 
 M6 đã truyền được binding đã kiểm chứng qua persisted Ledger v2 tới M7:
@@ -60,7 +60,8 @@ serialized M5, không remap digest. Dừng API sau probe final, không lặp th�
 - Controls: goal thay text/kỳ/unit hoặc câu hỏi không reuse; wrong domain/source/
   join không ACCEPT; arithmetic đúng nhưng wrong goal không support; wrong formula
   semantic không ACCEPT; ledger v2 round-trip và M7 giữ phần chưa verify.
-- Ruff/planning/diff checks thực hiện trước bàn giao.57source JSON hashes của hai
+- Ruff/planning/diff PASS.179runtime hashes khớp receipt live M6,2saved semantic
+  payloads khớp đúng rows gửi Qwen và2entries reload/admission PASS.57source JSON hashes của hai
   filings bất biến; final saved-M5 receipt giữ24BBS JSON. Không commit raw trace,
   corpus, normalized/canonical data hoặc API config.
 

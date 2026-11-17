@@ -67,7 +67,7 @@ hoặc accuracy benchmark. REVIEW, không tự nghiệm thu DONE.
 
 ## Implementation Evidence
 
-Implementation chưa commit. [Report](../../../docs/m6-obl-01-live-validation.md).
+Implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`. [Report](../../../docs/m6-obl-01-live-validation.md).
 Code đúng hashes receipt verify-release; local artifacts không commit nguồn/secrets.
 
 ## Handoff Notes

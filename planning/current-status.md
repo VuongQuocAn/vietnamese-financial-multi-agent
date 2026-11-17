@@ -2,7 +2,7 @@
 
 ## M6-OBL-01 — Evidence Obligations & Goal Binding
 
-**REVIEW**, ngày17/11/2026; implementation chưa commit.
+**REVIEW**, ngày17/11/2026; implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`.
 [Spec](tasks/M6/M6-OBL-01.md), [report](../docs/m6-obl-01-live-validation.md).
 M6 replay selection/join và saved bindings v2; feedback theo claim/task/input,
 v1 tương thích.51targeted PASS;2câu mới fresh, final exact saved M5→live M6:
