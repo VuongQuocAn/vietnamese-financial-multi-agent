@@ -1,6 +1,10 @@
 # M6-PY-01 — Python Proof Verification
 
-Trạng thái **REVIEW**, ngày17/11/2026; chờ Owner/Tech Lead nghiệm thu.
+Trạng thái **DONE — Owner xác nhận hoàn thành ngày17/11/2026**.
+Nghiệm thu implementation và evidence đã bàn giao tại `dd16592`, đã push main và
+xác minh remote SHA; giữ nguyên các giới hạn đã báo. Phiên đóng chỉ cập nhật
+tài liệu/tracking và kiểm planning/diff/Git, không sửa runtime hoặc chạy lại
+tests/API/OCR/Gemini/PDF/full CI.
 Implementation `95229f83be55ad43c8e61f2a88bcb7e59c5db6b9`, sau bản đầu `0eff5c7`;
 baseline remote `cda39b0`. Worktree riêng bảo toàn local edits của checkout gốc.
 
@@ -60,4 +64,4 @@ unavailable, wrong dimensions, semantic rejection, thiếu goal support, restart
 M7 citations; synthetic controls không là financial accuracy. Ruff/format/planning/
 diff checks đạt; không fullCI/OCR/Gemini/PDF hoặc benchmark rộng.
 
-Next action: Owner/Tech Lead review implementation và trace cuối cùng các giới hạn đã nêu.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

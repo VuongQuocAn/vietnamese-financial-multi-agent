@@ -2,7 +2,7 @@
 
 ## M6-PY-01 — Python Proof Verification
 
-**REVIEW**, Owner giao17/11/2026; implementation
+**DONE — Owner xác nhận hoàn thành ngày17/11/2026**; implementation
 `95229f83be55ad43c8e61f2a88bcb7e59c5db6b9`, baseline remote `cda39b0`, worktree riêng
 giữ local edits. [Spec](tasks/M6/M6-PY-01.md), [report](../docs/m6-py-01-live-validation.md).
 2Qwen calls/18647tokens; final exact saved-semantic replay0calls. RMS replay khớp →
@@ -10,7 +10,9 @@ M6 ACCEPT/G3 → Ledger v2 → M7 partial/3claims/8citations. Ca bỏ sqrt từn
 false-positive; final dimension check chặn ABSTAIN/rejected.185runtime hashes khớp,
 24JSON bất biến;31targeted PASS. G1/G2 chưa có support; unknown AST giữ unverified,
 chưa fresh final Qwen/financial accuracy. Giữ M5/worker/Calculator/M7, không fullCI/OCR/PDF.
-Next action: Owner/Tech Lead review implementation và trace cuối cùng các giới hạn đã nêu.
+Implementation đã push main, remote SHA verified tại bàn giao `dd16592`.
+Phiên đóng chỉ tài liệu/tracking và planning/diff/Git, không sửa runtime hoặc chạy lại tests/API.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## M5-PY-01 — Python Agent
 
