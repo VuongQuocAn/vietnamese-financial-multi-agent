@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: E2E-REMED-03
 - Estimated Complexity: S
@@ -48,11 +48,12 @@ sửa M7/raw JSON/EF-EG/verified data, OCR/Gemini/fullCI/36Pilot/Full600.
 
 ## Acceptance Criteria
 
-- [ ] Goal đủ evidence được ghi nhận; scalar không tự thỏa comparison.
-- [ ] Specialist tạo candidate bảng để M6 replay nguồn/miền/kỳ.
-- [ ] Không phát hành từ raw context hoặc kết luận thiếu căn cứ.
-- [ ] Offline/live bằng chứng, giới hạn và runtime/corpus được pin.
-- [ ] Commit/push main, SHA verified, REVIEW chờ Tech Lead.
+- [x] Offline goal replay ghi nhận comparison, không cấp coverage cho scalar.
+- [x] Candidate bảng qua M6 replay nguồn/miền/kỳ; Specialist Gateway control đạt.
+- [x] Không phát hành từ raw context hoặc kết luận thiếu căn cứ.
+- [x] Offline/live bằng chứng và runtime/corpus pin; dừng RCA khi core live chưa đạt.
+- [ ] Xác nhận core đạt toàn luồng live: MH vẫn bị planning/payload/timeouts chặn.
+- [x] Implementation commit, bàn giao push main/SHA verified; REVIEW chờ Tech Lead.
 
 ## Required Tests
 
@@ -68,7 +69,12 @@ engineering controls không là financial accuracy benchmark.
 
 ## Implementation Evidence
 
-Chưa commit; baseline52237cf. Next action: hoàn tất offline replay trước freeze live.
+Implementation `bac7362e07a81ca0ab1f3c0812315df72e58a539`;
+[report](../../../docs/e2e-remed-04-goal-document.md).47unique PASS/1baseline FAIL,
+offline replay/document integration đạt;2QA14calls/103724known tokens/2unknown,
+accuracy/coverage50%→50%,7citations,wall559,595s. MH không đạt core live;
+không9QA hoặc vòng FIX tiếp. Runtime/source/imported/local/evidence hashes verified.
+Next action: Tech Lead review bản sửa và RCA planning/semantic payload/binding analysis.
 
 ## Handoff Notes
 
