@@ -2,10 +2,18 @@
 
 ## M5-PY-01 — Python Agent
 
-**IN_PROGRESS**, Owner giao17/11/2026; baseline `9a3adba`, worktree riêng giữ local edits.
-[Spec](tasks/M5/M5-PY-01.md). Gateway→Docker worker cô lập, manifest có nguồn và
-Python candidate trong Workspace; giữ M6/M7 và Calculator.
-Next action: hoàn tất targeted/live validation và bàn giao REVIEW.
+**REVIEW**, implementation `7992105dcbf8718222d6fc7e2220224256451830` đã push main,
+remote SHA verified;
+đã tích hợp remote baseline `83c21dc`, worktree riêng giữ local edits.
+[Spec](tasks/M5/M5-PY-01.md), [report](../docs/m5-py-01-live-validation.md).
+Gateway→Docker Linux cô lập, manifest có nguồn và Python candidate trong Workspace;
+giữ Calculator/M6/M7.14Qwen calls/73562tokens: RMS và dispersion chạy đúng;
+live Calculator ratio đúng nhưng nhánh% dùng literal100 sai bị loại.
+Live code_error→repair1→code_error dừng; retest diagnostic không tạo lỗi như yêu cầu.
+11targeted PASS/1known baseline smoke fail;183runtime/24source digests verified.
+Python chưa được admit; không OCR/Gemini/PDF/full CI.
+Next action: Tech Lead review M5-PY-01 cùng các giới hạn live Calculator/repair đã ghi.
+
 ## M6-GOAL-FIX-01 — Fix Incorrect Goal Binding
 
 **DONE — Owner xác nhận hoàn thành ngày17/11/2026**;
