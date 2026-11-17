@@ -2,7 +2,8 @@
 
 ## M5-COORD-03 — Verification-Driven Feedback
 
-**REVIEW**, chưa commit; baseline remote `7cb4a03`, worktree riêng giữ local edits.
+**REVIEW**, implementation `bfe1e0b43de3e34d4fa3998fbbcb75364f35e99f` đã push main,
+remote SHA verified; baseline `7cb4a03`, worktree riêng giữ local edits.
 [Spec](tasks/M5/M5-COORD-03.md), [report](../docs/m5-coord-03-live-validation.md).
 Một repair/request; final controlled live replay chỉT4 repair, reuse3M6 histories;
 3ACCEPT/2ABSTAIN→4ACCEPT→Ledger v2→M7 partial/18citations.3câu mới+1controlled

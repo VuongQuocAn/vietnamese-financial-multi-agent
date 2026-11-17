@@ -1,7 +1,9 @@
 # M5-COORD-03 — Verification-Driven Feedback
 
-**REVIEW, 17/11/2026**. Implementation chưa commit tại bản ghi này; baseline
-remote `7cb4a03`. Worktree riêng giữ local edits ngoài task. Chỉ Tech Lead nghiệm thu DONE.
+**REVIEW, 17/11/2026**. Implementation
+`bfe1e0b43de3e34d4fa3998fbbcb75364f35e99f` đã push main, remote SHA verified;
+baseline `7cb4a03`.180runtime files trong commit khớp receipt controlled replay.
+Worktree riêng giữ local edits ngoài task. Chỉ Tech Lead nghiệm thu DONE.
 
 ## Kết quả và implementation
 
@@ -82,7 +84,8 @@ Artifacts local, không commit corpus/config/secrets/raw traces:
   `trace.adaptive_rounds[0]` chứa feedback/routed issues, task/result snapshots,
   tools/evidence, candidate lineage, M6 trước/sau, reused IDs; trace M7 có bindings/citations.
 - `artifacts/evidence/M5-COORD-03/controlled-replay/ledger/verified-claims.json`:
- 4entries v2; `implementation.json`: runtime/source receipt.
+ 4entries v2; `implementation.json`: runtime/source receipt; `publication.json`:
+ implementation SHA đã đối chiếu hashes và thông tin publish.
 - `artifacts/evidence/M5-COORD-03/final-targeted-tests.log`: final targeted run.
 
 Next action: Tech Lead review selective-repair evidence và các giới hạn M6/G3 trước nghiệm thu.

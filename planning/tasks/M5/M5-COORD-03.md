@@ -50,7 +50,7 @@ full CI/benchmark hoặc task khác.
 - [x] Chỉ thực thi frontier bị ảnh hưởng, giữ nhánh độc lập và M6 history hợp lệ.
 - [x] Tối đa một repair/request; không đổi proposal hoặc hết budget thì dừng partial.
 - [x] Candidates sửa qua M6/Ledger/M7, không tự cấp ACCEPT hoặc goal support.
-- [ ] Targeted controls, live traces, SHA đã xác minh, commit/push main và REVIEW.
+- [x] Targeted controls, live traces, SHA đã xác minh, commit/push main và REVIEW.
 
 ## Required Tests
 
@@ -61,13 +61,15 @@ fresh câu hỏi hoặc retry transport; Ruff/planning/diff. Không full CI.
 
 ## Risks and Blockers
 
-M6 có thể false-negative; evidence thiếu giữ partial. JSON-only provenance,
+M6 có thể false-negative/false-positive; live đã thấy sai binding G2, giữ giới hạn
+đó để Tech Lead review, không tự sửa verdict trong Coordinator. JSON-only provenance,
 không phải PDF-verified hoặc accuracy benchmark. Token usage unknown thì không
 mở repair tùy chọn; dùng call/deadline budget chung hiện có.
 
 ## Implementation Evidence
 
-Chưa commit; [report](../../../docs/m5-coord-03-live-validation.md).
+Implementation `bfe1e0b43de3e34d4fa3998fbbcb75364f35e99f` đã push main và
+remote SHA verified; [report](../../../docs/m5-coord-03-live-validation.md).
 31targeted PASS trên final runtime.3câu mới+1controlled scalar-fault replay,
 20actual calls/178629known tokens/1unknown. Final replay chỉT4 được repair,
 3histories reuse; M6 từ3ACCEPT/2ABSTAIN thành4ACCEPT→Ledger v2→M7 partial/18citations.
