@@ -1,39 +1,42 @@
 # Handoff
 
 ## Active Task
-E2E-VAL-01 — ViFinBench Pilot
+E2E-REMED-01 — Source & Scope Readiness
 
 ## Status
 REVIEW
 
 ## Last Verified State
-Implementation2d96f1574551e4a38b80b668066be9940497da46; baseline d72f7c0.
-Gate9/45:1correct/8abstain, accuracy/coverage11,11%. Retest2SH vẫn abstain;
-candidate regression bị loại,185runtime files restored/khớp Git baseline.
+Implementation02093495863bec10424659bcad7175e69edad457; baseline f4d598e.
+JSON scope/composition/search và M5 source context có bindings.4QA duy nhất,
+18calls/102082tokens/0unknown; accuracy/coverage0/4→0/4,0citations phát hành.
 
 ## Completed Work
-Runner Pilot-only và evaluator Gold hậu kiểm; per-QA report/trace/Ledger local.
-Tổng27calls/145424tokens/0unknown;264JSON/3Pilot hashes và80local files bất biến.
-RCA planning/handles/obligations/binding/scope/eligibility; dừng mở rộng36Pilot.
+Sửa selected scope options/title, qualifier tên/nêu riêng, JSON composition và
+UnderstoodCell column/pointers; D contexts không cấp numeric authority.
+186runtime blobs khớp commit;143raw/28imported/3Pilot hashes bất biến.
+80local files/52parent evidence nguyên byte; M6/M7 không đổi.
 
 ## Remaining Work
-Tech Lead nghiệm thu gate9/45/RCA và thứ tự remediation; không tự chạy36/Full600.
+Tech Lead review binding/source fixes và phần readiness chưa giải quyết:
+planning/envelope/handles/query, canonical exclusion và JSON document authority.
+Không tự tiếp tục Pilot hoặc thay M6/M7.
 
 ## Modified Files
-Runner/evaluator/test mới và tracking; giữ80local files ngoài task.
+Evidence/scope/composition/search, source context tool/M5/API binding, retest runner,
+3controls, data-contracts và tracking/report. Không commit Gold/raw traces/dataset.
 
 ## Tests
-3new controls +2coordinator controls PASS.1legacy deterministic FAIL y hệt baseline.
-Ruff/planning/diff; không fullsuite/CI/model judge.
+3new controls PASS. Compatibility61PASS; QA/fusion71PASS/2legacy FAIL y hệt baseline.
+Ruff/planning/diff PASS; không fullsuite/fullCI/Gemini/OCR.
 
 ## Blockers
-Chưa sẵn sàng Full600: MH/NU0/6 phát hành; scope/composition, nguồn thuyết minh,
-handles/schema/eligibility và planning drift. JSON-only, chưa PDF-verified.
+Scope/composition gate đã qua nhưng cả4QA vẫn abstain. Chưa có financial readiness
+hoặc lợi ích Multi-Agent được chứng minh; JSON-only, chưa PDF-verified.
 
 ## Git Checkpoint
-Implementation2d96f1574551e4a38b80b668066be9940497da46 được publish main từ
-worktree riêng, cùng report/tracking REVIEW; SHA remote xác minh ở receipt bàn giao
-local. Checkout gốc9a3adba/local edits nguyên byte.
+Publish main từ worktree riêng; SHA remote được xác minh trong publication receipt
+local. Checkout gốc9a3adba và local edits không đổi.
 
 ## Exact Next Action
-Tech Lead review gate9/45, RCA và thứ tự remediation trước khi cho phép chạy tiếp36Pilot.
+Tech Lead review binding/source fixes và các lỗi Planning/query/source handles/canonical eligibility còn lại trước khi cho phép tiếp tục Pilot45.

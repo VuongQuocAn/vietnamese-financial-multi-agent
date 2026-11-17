@@ -1,5 +1,18 @@
 # Trạng thái hiện tại
 
+## E2E-REMED-01 — Source & Scope Readiness
+
+**REVIEW**, implementation `02093495863bec10424659bcad7175e69edad457`, baseline f4d598e.
+[Spec](tasks/E2E/E2E-REMED-01.md), [report](../docs/e2e-remed-01-source-scope-readiness.md).
+JSON checkbox/title scope, composition fidelity, exact cell pointers/columns và D
+source context; sửa false scope từ tên/nêu riêng. M6/M7/raw/EF-EG không đổi.
+4QA duy nhất/5attempts,18calls/102082tokens/0unknown;0/4→0/4,0released citations.
+Scope/composition đã qua; còn planning envelope/handles/query, canonical exclusion
+và structured output.3new controls PASS; compatibility61PASS,71PASS/2legacy FAIL
+y hệt baseline.186runtime blobs/143JSON/28imported files/3Pilot hashes verified;
+80local/52parent evidence files bất biến. Không36Pilot/Full600/Gemini/OCR/fullCI.
+Next action: Tech Lead review binding/source fixes và các lỗi Planning/query/source handles/canonical eligibility còn lại trước khi cho phép tiếp tục Pilot45.
+
 ## E2E-VAL-01 — ViFinBench Pilot
 
 **REVIEW**, implementation `2d96f1574551e4a38b80b668066be9940497da46`, baseline `d72f7c0`.
