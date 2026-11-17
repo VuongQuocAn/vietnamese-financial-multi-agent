@@ -1,9 +1,14 @@
 # E2E-REMED-03 — Canonical Mapping & Evidence Eligibility
 
-Ngày17/11/2026 (Asia/Bangkok), **REVIEW**. Implementation
+Ngày17/11/2026 (Asia/Bangkok), **DONE — Owner/Tech Lead xác nhận**. Implementation
 [`efc537ee6b92517465565a775681911b696ebf1f`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/efc537ee6b92517465565a775681911b696ebf1f),
 baseline origin/main5917ea9; worktree riêng bảo toàn local edits. Chỉ sửa tầng
 import/catalog/context và runner; giữ M6/M7/Evidence Obligations/eligibility gates.
+
+Nghiệm thu trong phạm vi canonical mapping/eligibility và bằng chứng đã bàn giao;
+giữ giới hạn MH0001/goal bindings/document lane, không xác nhận readiness Pilot45.
+Bàn giao9c19d8f đã push main/remote verified. Phiên đóng chỉ tài liệu/tracking và
+planning/diff/Git; không sửa runtime/artifacts hoặc chạy lại tests/Qwen/benchmark/CI.
 
 ## RCA và thay đổi
 
@@ -107,5 +112,4 @@ và `live-final/{receipt,provider,results,ledgers}`. Implementation và tài li�
 
 ## Handoff
 
-Next action: Tech Lead review mapping/eligibility và các giới hạn Planning/Verification
-để đánh giá readiness trước khi quyết định tiếp tục Pilot45.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; chưa tự tiếp tục Pilot45.

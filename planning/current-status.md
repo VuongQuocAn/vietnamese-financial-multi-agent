@@ -2,7 +2,7 @@
 
 ## E2E-REMED-03 — Canonical Mapping & Evidence Eligibility
 
-**REVIEW**, implementation `efc537ee6b92517465565a775681911b696ebf1f`, baseline5917ea9.
+**DONE — Owner/Tech Lead xác nhận ngày17/11/2026**; implementation `efc537ee6b92517465565a775681911b696ebf1f`, baseline5917ea9.
 [Spec](tasks/E2E/E2E-REMED-03.md), [report](../docs/e2e-remed-03-canonical-mapping-eligibility.md).
 Row-local import,131/130,ordinal/abbreviation/statement title; giữ eligibility/M6/M7.
 Projection riêng2filings:usable BBS46→48/ADC18→36;84lookups/fidelity/M5 đạt,
@@ -10,8 +10,10 @@ Projection riêng2filings:usable BBS46→48/ADC18→36;84lookups/fidelity/M5 đ�
 goal1/1;MH đúng131+inventory/3ACCEPT nhưng0/4 goal bindings và document unsupported.
 0/2→1/2 đúng/released trên2targeted QA, không là Pilot accuracy/readiness.
 186runtime/58JSON/14old-imported+index/132parent evidence/80local files verified.
-Commit/push main, remote verified tại bàn giao; không fullCI/OCR/Gemini/Pilot thêm.
-Next action: Tech Lead review readiness trước quyết định tiếp tục Pilot45.
+Bàn giao9c19d8f đã push main/remote verified; nghiệm thu mapping/eligibility, giữ
+giới hạn Planning/Verification và chưa readiness Pilot. Phiên đóng chỉ tài liệu/
+tracking, planning/diff/Git; không runtime/artifacts/tests/Qwen/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; chưa tự tiếp tục Pilot45.
 
 ## E2E-REMED-02 — Planning & Evidence Routing
 

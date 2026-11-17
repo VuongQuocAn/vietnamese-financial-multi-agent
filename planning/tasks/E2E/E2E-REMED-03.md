@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: E2E-REMED-02
 - Estimated Complexity: S
@@ -51,7 +51,7 @@ hardcode, OCR/Gemini/Pilot mở rộng/Full600/fullCI; không tự nghiệm thu 
 - [x]130/131 tách nghĩa; label/code/statement bất đồng giữ unresolved.
 - [x] Facts khôi phục qua Financial Tools/Agent với đúng kỳ/unit/pointer/hash.
 - [x] Offline before/after, targeted tests và tối đa2QA có traces/coverage/limits.
-- [x] Commit/push main, SHA verified, REVIEW chờ Tech Lead.
+- [x] Commit/push main, SHA verified; Owner/Tech Lead xác nhận DONE ngày17/11/2026.
 
 ## Required Tests
 
@@ -75,8 +75,11 @@ chưa document candidate.0of2→1of2 đúng/released, không Pilot accuracy.
 186runtime/58raw JSON/14old-imported+index/132parent evidence/80local files bất biến;
 M6/M7/Obligations/gates không đổi. Ruff/format/planning/diff đạt; không fullCI.
 Traces/projection local artifacts/evidence/E2E-REMED-03; không commit raw/Gold/secrets.
-Commit/push main và remote verified tại bàn giao; REVIEW chờ Tech Lead.
+Bàn giao9c19d8f đã push main/remote verified; Owner/Tech Lead xác nhận DONE
+ngày17/11/2026 trong phạm vi mapping/eligibility. Giữ giới hạn MH/goal bindings/
+document lane, chưa xác nhận readiness Pilot. Phiên đóng chỉ tài liệu/tracking và
+planning/diff/Git; không runtime/artifacts/tests/Qwen/benchmark/CI.
 
 ## Handoff Notes
 
-Next action: Tech Lead review readiness trước quyết định tiếp tục Pilot45.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo; chưa tự tiếp tục Pilot45.
