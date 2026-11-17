@@ -112,6 +112,12 @@ null/ties/max_abs, rejected patch giữ nhánh chính, consumer chưa prefetch v
 transitive input closure. Ruff lint/format, planning checker, diff check local.
 Không full unit/browser suite, full CI, Gemini, OCR hay PDF verification.
 
+Git: implementation đã push main, remote `6a7d8da14001e7705a5b04d88a3660509eefdf4d`
+được xác minh trước commit bàn giao tài liệu này; không suy CI từ local tests.
+Giữ74local files ngoài task nguyên byte, reverse-merge bốn file có sửa chồng
+khớp local patch cũ và recount dashboard theo registry local; không đưa local
+VFB-E2E-05 hoặc dữ liệu/secrets vào commit.
+
 Final live chứng minh selection→demand retrieval→join→computation và handoff
 M6/M7, chưa có câu trả lời phát hành. Chưa có typed M6 replay cho selection/join;
 source scope/JSON-only caveats, arbitrary raw-table/entity joins, model tự thêm

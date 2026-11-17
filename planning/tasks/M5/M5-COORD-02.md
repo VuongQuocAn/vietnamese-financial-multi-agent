@@ -50,7 +50,7 @@ OCR/PDF/manual verification, benchmark rộng, thay đổi raw/canonical corpus.
 - [x] Selection giữ domain/header/kỳ/selector/quality, ties/dấu/null; join exact keys, cardinality/unmatched.
 - [x] Không promote raw evidence; lỗi chỉ chặn nhánh phụ thuộc, giữ kết quả độc lập.
 - [x] Targeted controls và live Qwen câu mới; lưu tools/agents/evidence/M6/M7.
-- [ ] Commit/push main và xác minh SHA; REVIEW chờ Tech Lead.
+- [x] Commit/push main và xác minh SHA; REVIEW chờ Tech Lead.
 
 ## Required Tests
 

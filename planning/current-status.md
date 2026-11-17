@@ -3,7 +3,7 @@
 ## M5-COORD-02 — Evidence-Guided Coordination
 
 **REVIEW**, ngày17/11/2026; implementation `1874166c3506994926a87f993458543d76a50806`
-đã commit và xác minh178runtime hashes khớp receipt live-release.
+đã push main/remote verified và xác minh178runtime hashes khớp receipt live-release.
 [Spec](tasks/M5/M5-COORD-02.md), [report](../docs/m5-coord-02-live-validation.md).
 Demand theo dependency output, selection/join records và bounded append patch;
 giữ raw/provenance/quality và M6/M7. 24targeted PASS;3câu mới+2retests,
