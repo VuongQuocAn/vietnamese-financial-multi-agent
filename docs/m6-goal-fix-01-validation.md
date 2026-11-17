@@ -1,6 +1,6 @@
 # M6-GOAL-FIX-01 — Fix Incorrect Goal Binding
 
-**REVIEW, 17/11/2026**; implementation
+**DONE — Owner xác nhận hoàn thành ngày17/11/2026**; implementation
 `a3519778f8356bd394b059cef1229c5e6543ca6f` đã push main/remote SHA verified;
 baseline `1aec917`.180runtime files trong commit khớp receipt live.
 Worktree riêng giữ local edits; không sửa Coordinator/M7 hoặc G3 thiếu candidate.
@@ -59,4 +59,7 @@ gồm `saved-m5-input.json`, `historical-binding-replay.json`, `provider/001-req
 và `publication.json` (implementation SHA đã đối chiếu receipt).
 Final targeted log ở `artifacts/evidence/M6-GOAL-FIX-01/final-targeted-tests.log`.
 
-Next action: Tech Lead review implementation và trace để nghiệm thu M6-GOAL-FIX-01.
+Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff/Git, không sửa
+runtime hoặc chạy lại tests/API. Giữ giới hạn semantic/paraphrase và JSON-only ở trên.
+
+Next action: chờ Owner giao nhiệm vụ tiếp theo; không tự bắt đầu M5-PY-01.

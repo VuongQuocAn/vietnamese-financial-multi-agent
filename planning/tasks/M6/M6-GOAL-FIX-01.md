@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M6
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M6-OBL-01
 - Estimated Complexity: S
@@ -48,7 +48,7 @@ PDF/OCR/Gemini, full CI/benchmark và task khác.
 - [x] Sai item/year/selected period/formula không được cấp binding từ SUPPORTED.
 - [x] Claim đúng vẫn ACCEPT; bindings hợp lệ giữ nguyên.
 - [x] Saved Ledger/current support cùng áp dụng lọc; M7 chỉ phát hành phần hợp lệ.
-- [x] Targeted validation, live trace và implementation SHA đã xác minh; REVIEW.
+- [x] Targeted validation, live trace và implementation SHA đã xác minh; Owner xác nhận DONE ngày17/11/2026.
 
 ## Required Tests
 
@@ -69,8 +69,10 @@ SHA verified; [report](../../../docs/m6-goal-fix-01-validation.md).
 2G2 sai, M6 loại cả2; giữ G1/G4 và4truth ACCEPT→4Ledger v2→M7 2claims/12citations.
 4proof payloads khớp actual semantic input;180runtime/24source hashes verified.
 Encoder runner đã sửa và xuất M7 từ saved Ledger, không gọi API lại. Không sửa
-Coordinator/M7/G3, OCR/PDF/Gemini hoặc full CI. Chờ Tech Lead nghiệm thu REVIEW.
+Coordinator/M7/G3, OCR/PDF/Gemini hoặc full CI. Owner xác nhận hoàn thành ngày17/11/2026;
+giữ các giới hạn semantic/paraphrase và JSON-only đã báo. Phiên đóng chỉ cập nhật
+tracking/tài liệu và kiểm planning/diff/Git, không sửa runtime hoặc chạy lại tests/API.
 
 ## Handoff Notes
 
-Next action: Tech Lead review implementation và trace để nghiệm thu M6-GOAL-FIX-01.
+Next action: chờ Owner giao nhiệm vụ tiếp theo; không tự bắt đầu M5-PY-01.

@@ -2,7 +2,8 @@
 
 ## M6-GOAL-FIX-01 — Fix Incorrect Goal Binding
 
-**REVIEW**, implementation `a3519778f8356bd394b059cef1229c5e6543ca6f` đã push main,
+**DONE — Owner xác nhận hoàn thành ngày17/11/2026**;
+implementation `a3519778f8356bd394b059cef1229c5e6543ca6f` đã push main,
 remote SHA verified; baseline `1aec917`, worktree riêng giữ local edits.
 [Spec](tasks/M6/M6-GOAL-FIX-01.md), [report](../docs/m6-goal-fix-01-validation.md).
 M6 lọc binding sai item/kỳ/selection/formula/unit, giữ truth độc lập và lọc cả
@@ -10,7 +11,9 @@ old v2 khi đọc.36targeted PASS;1Qwen call/15918tokens,0unknown/retry: raw2G2 
 bị loại, G1/G4 giữ,4ACCEPT→4Ledger entries→M7 2claims/12citations.180runtime/
 24source hashes verified;4proof payloads khớp actual rows. Không Coordinator/M7/G3,
 OCR/Gemini/PDF/full CI. Runner export được hoàn tất từ Ledger, không thêm API call.
-Next action: Tech Lead review implementation và trace để nghiệm thu M6-GOAL-FIX-01.
+Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff/Git; không sửa
+runtime hoặc chạy lại tests/API, giữ các giới hạn đã báo.
+Next action: chờ Owner giao nhiệm vụ tiếp theo; không tự bắt đầu M5-PY-01.
 
 ## M5-COORD-03 — Verification-Driven Feedback
 
