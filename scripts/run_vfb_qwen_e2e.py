@@ -198,12 +198,13 @@ def run(root, output, identifiers):
                 allow_gateway=True,
                 execution_mode="auto",
                 integration_v2=True,
+                adaptive_coordinator=receipt["settings"].get("adaptive_coordinator", False),
                 m5_lite=True,
                 m6_lite=True,
                 m7_lite=True,
                 m5_graph=True,
                 force_refresh=True,
-                max_provider_calls=6,
+                max_provider_calls=receipt["settings"].get("max_calls_per_question", 6),
                 request_timeout_seconds=300,
             )
             first_attempt = used

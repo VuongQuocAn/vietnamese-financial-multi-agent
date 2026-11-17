@@ -230,6 +230,7 @@ class LiteTask(FinancialModel):
 class LitePlan(FinancialModel):
     tasks: list[LiteTask] = Field(default_factory=list, max_length=6)
     requirements: list[IntegrationRequirement] = Field(default_factory=list, max_length=16)
+    blocked_tasks: dict[str, str] = Field(default_factory=dict, exclude=True)
 
 
 def integration_plan(payload):
@@ -716,11 +717,18 @@ def fallback_plan(question, sources):
 
 
 class SupervisorLite:
-    def __init__(self, gateway=None, *, integration_v2=False):
+    def __init__(self, gateway=None, *, integration_v2=False, adaptive_coordinator=False):
         self.gateway = gateway
         self.integration_v2 = integration_v2
+        self.adaptive_coordinator = adaptive_coordinator
 
     def plan(self, question, context, sources):
+        if (
+            self.adaptive_coordinator
+            and self.gateway is not None
+            and context.mode != "deterministic"
+        ):
+            return self._adaptive_plan(question, context, sources)
         metadata = PlannerLLMMetadata(status="deterministic")
         if self.gateway is None or context.mode == "deterministic":
             plan = fallback_plan(question, sources)
@@ -886,6 +894,100 @@ class SupervisorLite:
             return fallback_plan(question, sources), metadata, ["supervisor_invalid_json_fallback"]
         return plan, metadata, []
 
+    def _adaptive_plan(self, question, context, sources):
+        from .coordinator_plan import adapt_plan, proposal_schema
+
+        prompt = dict(
+            instruction=(
+                "Lập một kế hoạch JSON {goals:[{text,mode}],tasks:[{goal_indexes,role,objective,input_handles,after}]}. "
+                "Chỉ goals là đầu ra người dùng hỏi; mode=value hoặc analysis. Giữ đủ các ý trong câu hỏi. "
+                "Mỗi goal một output: hai số liệu và một phép tính là ba goals, phép tính cũng mode=value. "
+                "Giữ ràng buộc không suy nguyên nhân trong text goal kết quả, không tạo goal riêng cho nó. "
+                "goal_indexes và after là indexes 0-based trong hai arrays gốc; có thể trỏ task phía sau. "
+                "after khai các task có kết quả cần dùng. input_handles chỉ dùng S handles từ inventory; "
+                "[] nếu chưa chọn nguồn, hoặc dùng evidence từ dependencies. Không sinh IDs, requirements, "
+                "metadata hay đáp án. Một task cho tra số đơn giản. Nhiều bước hoặc domains: giao từng phần "
+                "cho specialist phù hợp rồi task phụ thuộc dùng kết quả và bằng chứng của các task trước. "
+                "Role: profitability cho lợi nhuận/chi phí; liquidity_and_leverage cho tài sản/nợ/vốn; "
+                "cash_flow_and_earnings_quality cho dòng tiền. Không gọi domain không cần. "
+                "Task tổng hợp do một trong ba role này đảm nhiệm; không thêm agent. "
+                "Objective tiếng Việt nêu rõ việc cần làm, từng kỳ/chỉ tiêu; không đổi nghĩa câu hỏi. "
+                "Nếu inventory có metric đúng định nghĩa thì chọn metric; không thay công thức. "
+                "after=[] cho task chỉ tra nguồn độc lập. Tuyệt đối không phụ thuộc chính task đó. "
+                "Trước khi trả, kiểm mọi after theo vị trí 0,1,2,... trong tasks và không có vòng lặp. "
+                "Đọc label và period của từng handle, không lấy số thứ tự gần đúng hoặc toàn inventory. "
+                "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema."
+            ),
+            schema=proposal_schema(),
+            example=dict(
+                goals=[
+                    dict(text="Số liệu A đúng kỳ", mode="value"),
+                    dict(text="Số liệu B đúng kỳ", mode="value"),
+                    dict(text="Kết quả phép tính dùng A và B", mode="value"),
+                ],
+                tasks=[
+                    dict(
+                        goal_indexes=[0],
+                        role="profitability",
+                        objective="Tra số liệu A từ nguồn phù hợp",
+                        input_handles=[],
+                        after=[],
+                    ),
+                    dict(
+                        goal_indexes=[1],
+                        role="cash_flow_and_earnings_quality",
+                        objective="Tra số liệu B từ nguồn phù hợp",
+                        input_handles=[],
+                        after=[],
+                    ),
+                    dict(
+                        goal_indexes=[2],
+                        role="cash_flow_and_earnings_quality",
+                        objective="Dùng kết quả của task index0 và index1 để tính",
+                        input_handles=[],
+                        after=[0, 1],
+                    ),
+                ],
+            ),
+            context={
+                k: getattr(context, k)
+                for k in ("company_id", "document_id", "snapshot_id", "period", "reporting_scope")
+            },
+            inventory={
+                h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()
+            },
+        )
+        payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
+        if len(payload) + len(question) > 48000:
+            return LitePlan(), PlannerLLMMetadata(), ["supervisor_payload_limit"]
+        response = self.gateway.generate(
+            LLMRequest(
+                contract_version="llm_gateway_v1",
+                request_id="m5-coordinator-plan-" + uuid4().hex,
+                model=context.model,
+                messages=[
+                    Message(role="system", content=payload),
+                    Message(role="user", content=question),
+                ],
+                generation=GenerationParameters(temperature=0.0, max_output_tokens=1800),
+                output_spec=OutputSpec(format="json"),
+                constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
+            )
+        )
+        metadata = PlannerLLMMetadata(
+            calls=1,
+            model=context.model,
+            status=response.status,
+            usage=response.usage,
+            cost=response.cost,
+            error=response.error,
+            provenance=response.provenance,
+        )
+        if response.status != "success" or not isinstance(response.output, JSONOutput):
+            return LitePlan(), metadata, ["supervisor_provider_failure"]
+        plan, errors = adapt_plan(response.output.payload, sources)
+        return plan, metadata, errors
+
 
 class FinancialLiteOrchestrator:
     def __init__(
@@ -898,10 +1000,14 @@ class FinancialLiteOrchestrator:
         composition=None,
         document_repository=None,
         integration_v2=False,
+        adaptive_coordinator=False,
     ):
         self.catalog, self.gateway = catalog, gateway
         self.integration_v2 = integration_v2
-        self.supervisor = supervisor or SupervisorLite(gateway, integration_v2=integration_v2)
+        self.adaptive_coordinator = adaptive_coordinator and integration_v2
+        self.supervisor = supervisor or SupervisorLite(
+            gateway, integration_v2=integration_v2, adaptive_coordinator=self.adaptive_coordinator
+        )
         self.graph_enabled = graph_enabled
         self.composition, self.document_repository = composition, document_repository
 
@@ -1107,6 +1213,31 @@ class FinancialLiteOrchestrator:
                 for key, state in self.workspace.tasks.items()
                 if key in task.depends_on
             }
+            if self.adaptive_coordinator:
+                prompt["dependency_results"] = {
+                    tid: {
+                        k: self.workspace.task_results[tid][k]
+                        for k in (
+                            "handle",
+                            "task_id",
+                            "revision",
+                            "digest",
+                            "input_results",
+                            "candidate_ids",
+                            "evidence_ids",
+                            "verification",
+                        )
+                    }
+                    for tid in task.depends_on
+                    if tid in self.workspace.task_results
+                }
+                prompt["instruction"] += (
+                    " dependency_results chứa kết quả trung gian có version và đầy đủ nguồn/proof. "
+                    "Dùng kết quả này để thực hiện objective; khi tính tiếp, replay các operations "
+                    "từ nguồn fact có cùng evidence_id trước khi dùng output, không coi candidate là verified. "
+                    "Trong goal của analysis ghi task/result handle thực sự đã dùng và cách dùng. "
+                    "Diễn giải từ dependency là premise chưa verified, phải đưa đủ nguồn vào candidate để M6 kiểm."
+                )
             prompt["user_question"] = self.workspace.question
             analysis_schema = AnalysisProposal.model_json_schema()
             narrative_only = bool(prompt["assigned_requirements"]) and all(
@@ -1280,10 +1411,12 @@ class FinancialLiteOrchestrator:
         output.caveats.extend(gaps)
         workspace, prepared = None, []
         if self.integration_v2:
-            retain_requested_periods(plan, question)
-            preserve_explicit_facts(plan, question, sources)
+            if not self.adaptive_coordinator:
+                retain_requested_periods(plan, question)
+                preserve_explicit_facts(plan, question, sources)
             targets = resolve_requirements(plan, sources)
-            preserve_answer_goal(plan, question, targets)
+            if not self.adaptive_coordinator:
+                preserve_answer_goal(plan, question, targets)
             # Composite tasks need source/operand relations even if the model
             # omits the optional flag. This is retrieval policy, not a verdict.
             for task in plan.tasks:
@@ -1305,6 +1438,26 @@ class FinancialLiteOrchestrator:
             workspace = self.workspace = IntegrationWorkspace(requirements)
             workspace.targets = targets
             workspace.question = question
+            if self.adaptive_coordinator:
+                from .coordinator_plan import schedule_tasks
+
+                ordered, blocked = schedule_tasks(plan.tasks)
+                plan.blocked_tasks.update(blocked)
+                for task in plan.tasks:
+                    workspace.tasks[task.task_id] = dict(
+                        requirement_ids=task.requirement_ids,
+                        depends_on=task.depends_on,
+                        objective=task.objective,
+                        role=task.specialist,
+                        revision=1,
+                        status="blocked" if task.task_id in plan.blocked_tasks else "pending",
+                    )
+                for tid, reason in plan.blocked_tasks.items():
+                    workspace.tasks.setdefault(
+                        tid, dict(requirement_ids=[], depends_on=[], revision=1, status="blocked")
+                    )
+                    workspace.tasks[tid]["error"] = reason
+                plan.tasks = [*ordered, *(t for t in plan.tasks if t.task_id in blocked)]
             if gaps:
                 output.errors.append(
                     OrchestrationError(stage="planning", code="integration_plan_incomplete")
@@ -1339,23 +1492,50 @@ class FinancialLiteOrchestrator:
                 assigned_requirement_ids=task.requirement_ids,
             )
             output.specialist_executions.append(execution)
+            if self.adaptive_coordinator:
+                state = workspace.tasks[execution.execution_id]
+                if execution.execution_id in plan.blocked_tasks or not workspace.dependencies_ready(
+                    task
+                ):
+                    state.update(
+                        status="blocked", error=state.get("error", "dependency_output_unavailable")
+                    )
+                    execution.status = "abstained"
+                    execution.missing_requirement_ids = task.requirement_ids
+                    output.trace.append(
+                        StageExecution(
+                            stage="specialist_execution",
+                            outcome="blocked",
+                            role=task.specialist,
+                            reasons=[task.task_id, state["error"]],
+                        )
+                    )
+                    continue
+                state["status"] = "ready"
+                all_upstream.execution_order.append(task.task_id)
             if workspace is not None:
-                workspace.tasks[execution.execution_id] = dict(
-                    requirement_ids=task.requirement_ids,
-                    depends_on=task.depends_on,
-                    status="retrieving",
+                workspace.tasks.setdefault(
+                    execution.execution_id,
+                    dict(requirement_ids=task.requirement_ids, depends_on=task.depends_on),
                 )
+                workspace.tasks[execution.execution_id]["status"] = "running"
             bundle = ExecutionEvidenceBundle()
             upstream = all_upstream.model_copy(update={"evidence_bundle": bundle}, deep=True)
 
-            def call(operation, request, function):
+            def call(operation, request, function, execution=execution):
                 begin = perf_counter()
+                step_id = f"lite-tool-{len(all_upstream.tool_trace)}"
+                if self.adaptive_coordinator:
+                    step_id = execution.execution_id + "-" + step_id
+                    workspace.tasks[execution.execution_id].setdefault("tool_step_ids", []).append(
+                        step_id
+                    )
                 try:
                     response = function(request)
                 except Exception as error:
                     all_upstream.tool_trace.append(
                         StepExecutionResult(
-                            step_id=f"lite-tool-{len(all_upstream.tool_trace)}",
+                            step_id=step_id,
                             operation=operation,
                             bound_request=request.model_dump(mode="json"),
                             final_state="failed",
@@ -1365,7 +1545,7 @@ class FinancialLiteOrchestrator:
                     )
                     raise
                 event = StepExecutionResult(
-                    step_id=f"lite-tool-{len(all_upstream.tool_trace)}",
+                    step_id=step_id,
                     operation=operation,
                     bound_request=request.model_dump(mode="json"),
                     response=response,
@@ -1523,6 +1703,10 @@ class FinancialLiteOrchestrator:
                             bundle.limitations.extend(response.reasons)
                 if workspace is not None:
                     workspace.merge(bundle)
+                    if self.adaptive_coordinator:
+                        all_upstream.evidence_bundle = workspace.evidence
+                        self._execute_task(task, execution, bundle, all_upstream, context, output)
+                        continue
                     workspace.tasks[execution.execution_id]["status"] = "retrieved"
                     prepared.append((task, execution, bundle))
                     continue
@@ -1642,3 +1826,44 @@ class FinancialLiteOrchestrator:
             setattr(output.usage, key, sum(known) if known else None)
         output.latency_ms = (perf_counter() - started) * 1000
         return output
+
+    def _execute_task(self, task, execution, bundle, all_upstream, context, output):
+        state = self.workspace.tasks[execution.execution_id]
+        try:
+            upstream = all_upstream.model_copy(deep=True)
+            upstream.status = "partial" if bundle.limitations else "completed"
+            result = self._specialist(task, upstream, task.objective, context)
+            execution.result, execution.llm = result, result.llm
+            execution.status = result.status
+            self.workspace.record_result(task, result)
+            output.usage.stages[execution.execution_id] = result.llm
+            output.missing_evidence.extend(
+                result.missing_evidence + result.limitations + bundle.limitations
+            )
+            if "specialist_processing_failure" in result.limitations:
+                state.update(status="failed", error="specialist_output_invalid")
+                output.errors.append(
+                    OrchestrationError(
+                        stage="specialist_execution",
+                        code="specialist_output_invalid",
+                        role=task.specialist,
+                    )
+                )
+        except Exception as error:
+            state.update(status="failed", error="specialist_execution_failed")
+            execution.status = "failed"
+            execution.error = OrchestrationError(
+                stage="specialist_execution",
+                code="specialist_execution_failed",
+                error_type=type(error).__name__,
+                role=task.specialist,
+            )
+            output.errors.append(execution.error)
+        output.trace.append(
+            StageExecution(
+                stage="specialist_execution",
+                outcome=execution.status,
+                role=task.specialist,
+                reasons=[task.task_id, task.objective, *bundle.limitations],
+            )
+        )

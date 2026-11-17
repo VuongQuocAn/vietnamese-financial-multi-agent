@@ -112,6 +112,7 @@ class FinancialQAPipeline:
                 composition=matches[0] if len(matches) == 1 else None,
                 document_repository=self.document_repository,
                 integration_v2=request.integration_v2,
+                adaptive_coordinator=request.adaptive_coordinator,
             )
         return self.orchestrator or FinancialMultiAgentOrchestrator(
             planner=EvidenceAwareQueryPlanner(

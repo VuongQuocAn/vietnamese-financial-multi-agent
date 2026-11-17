@@ -12,6 +12,7 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 class FinancialQARequest(VietnameseQARequest):
     integration_v2: bool = False
+    adaptive_coordinator: bool = False
     integration_lane: Literal["financial", "document"] | None = None
     m5_lite: bool = False
     m5_graph: bool = True

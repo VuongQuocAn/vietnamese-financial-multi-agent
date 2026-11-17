@@ -1,5 +1,17 @@
 # Trạng thái hiện tại
 
+## M5-COORD-01 — Adaptive Coordinator & Task DAG
+
+**REVIEW**, ngày17/11/2026. [Spec](tasks/M5/M5-COORD-01.md),
+[report](../docs/m5-coord-01-live-validation.md). V2 opt-in schema goals/tasks,
+DAG/result revision1; giữ M6/M7, chưa Python/feedback/task tiếp theo.
+21targeted/compatibility PASS;3câu mới+1retest,7Qwen calls/29459tokens.
+Retest BBS hai specialist chia sẻ kết quả/nguồn→Calculator7.070.123.808VND→
+3ACCEPT/G1–G3→M7/12citations. Còn cycle/source selection ban đầu, ADC chưa
+retest, provenance JSON-only; không gọi đây là accuracy benchmark.
+Implementation SHA trong spec sau commit; worktree riêng giữ local edits ngoài scope.
+Next action: Tech Lead review M5-COORD-01 và bằng chứng phối hợp v2.
+
 ## ARCH-02 — Technical Architecture Specification
 
 **DONE — Owner/Tech Lead APPROVED ngày 17/11/2026**.

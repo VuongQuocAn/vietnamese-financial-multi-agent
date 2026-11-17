@@ -2,6 +2,7 @@
 
 import ast
 import hashlib
+import json
 import re
 from dataclasses import dataclass, field
 from typing import Literal
@@ -91,6 +92,13 @@ def matches_requirement(claim, requirement, source=None):
         )
     if requirement.kind in {"unsupported", "ambiguous", "document", "limitations"}:
         return False
+    if (
+        requirement.reason == "goal_context_unresolved"
+        and requirement.interpretation_topic == "dynamic_calculation"
+    ):
+        # Only a proposed binding: the existing M6 dynamic-goal semantic pass
+        # must confirm the operation actually answers this unresolved value goal.
+        return bool(claim.reasoning and claim.reasoning.calculation)
     if not requirement.target_id and not (
         requirement.interpretation_topic == "dynamic_calculation"
         and requirement.required_indicators
@@ -155,12 +163,20 @@ def answer_coverage(context, entries):
                 text=requirement["text"],
                 required=requirement.get("required", True),
                 verified_claim_ids=matches,
-                status="satisfied" if matches else "technical_error" if technical else "unverified",
+                status="satisfied"
+                if matches
+                else "technical_error"
+                if (
+                    context.get("goal_errors", {}).get(rid)
+                    if context.get("adaptive_coordinator")
+                    else technical
+                )
+                else "unverified",
             )
         )
     return dict(
         complete=bool(rows)
-        and not technical
+        and (not technical or context.get("adaptive_coordinator", False))
         and all(not row["required"] or row["verified_claim_ids"] for row in rows),
         requirements=rows,
     )
@@ -173,6 +189,58 @@ class IntegrationWorkspace:
     evidence: ExecutionEvidenceBundle = field(default_factory=ExecutionEvidenceBundle)
     tasks: dict[str, dict] = field(default_factory=dict)
     targets: dict[str, dict] = field(default_factory=dict)
+    task_results: dict[str, dict] = field(default_factory=dict)
+
+    def record_result(self, task, result):
+        """Immutable revision-1 proposal refs; source/proof closure still goes to M6."""
+        state = self.tasks[task.task_id]
+        state.update(
+            status="completed" if result.status == "generated" else result.status,
+            candidate_statements=[c.content for c in result.candidates],
+            candidate_evidence_ids=list(
+                dict.fromkeys(k for c in result.candidates for k in c.supporting_evidence_ids)
+            ),
+            candidate_proofs=[
+                c.reasoning.model_dump(mode="json")
+                for c in result.candidates
+                if c.reasoning and c.reasoning.calculation
+            ],
+            missing_inputs=result.missing_evidence,
+        )
+        candidates = [c.model_dump(mode="json") for c in result.candidates]
+        inputs = [
+            {k: self.task_results[tid][k] for k in ("handle", "task_id", "revision", "digest")}
+            for tid in task.depends_on
+        ]
+        record = dict(
+            handle=f"result:{task.task_id}:v1",
+            task_id=task.task_id,
+            revision=1,
+            input_results=inputs,
+            candidate_ids=[c.candidate_id for c in result.candidates],
+            evidence_ids=state["candidate_evidence_ids"],
+            # Full candidates keep source identities, citations and replayable proofs.
+            candidates=candidates,
+            evidence=[
+                e.model_dump(mode="json")
+                for e in result.supporting_evidence
+                if e.evidence_id in state["candidate_evidence_ids"]
+            ],
+            verification="unverified_candidates",
+        )
+        record["digest"] = hashlib.sha256(
+            json.dumps(record, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        self.task_results[task.task_id] = record
+        state["result_handle"] = record["handle"]
+        state["input_results"] = inputs
+
+    def dependencies_ready(self, task):
+        return all(
+            self.tasks.get(tid, {}).get("status") in {"completed", "partial"}
+            and self.task_results.get(tid, {}).get("candidate_ids")
+            for tid in task.depends_on
+        )
 
     def merge(self, bundle):
         for key in ("facts", "calculations", "citations", "sources_and_lineage", "graph_contexts"):
@@ -197,10 +265,28 @@ class IntegrationWorkspace:
                 if (key in assigned or by_id[key].answer_goal == "value")
                 and matches_requirement(claim, by_id[key], self.targets.get(key))
             ]
+        adaptive = self.task_results or any("revision" in t for t in self.tasks.values())
+        goal_errors = {}
+        if adaptive:
+            for rid in by_id:
+                owners = [t for t in self.tasks.values() if rid in t["requirement_ids"]]
+                if not owners:
+                    goal_errors[rid] = ["goal_owner_unresolved"]
+                elif all(t["status"] in {"failed", "blocked", "technical_error"} for t in owners):
+                    goal_errors[rid] = [t.get("error", t["status"]) for t in owners]
         return dict(
             version="integration_v2",
             requirements=[r.model_dump(mode="json") for r in self.requirements],
             tasks=self.tasks,
             candidate_requirements=bindings,
             evidence_references=[f.reference.model_dump(mode="json") for f in self.evidence.facts],
+            **(
+                {
+                    "task_results": self.task_results,
+                    "adaptive_coordinator": True,
+                    "goal_errors": goal_errors,
+                }
+                if adaptive
+                else {}
+            ),
         )
