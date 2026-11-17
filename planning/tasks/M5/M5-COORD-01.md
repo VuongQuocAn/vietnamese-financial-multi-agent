@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M5
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: ARCH-02
 - Estimated Complexity: S
@@ -55,7 +55,7 @@ benchmark rộng, OCR/Gemini, thay M6/M7, xử lý toàn bộ local edits hoặc
 - [x] Downstream nhận và sử dụng kết quả trung gian kèm source/proof closure.
 - [x] Task lỗi/rỗng không xóa kết quả độc lập; M6/M7 và opt-out giữ đường cũ.
 - [x] Live Test câu mới single-hop/multi-hop, trace và hạn chế rõ; không gọi smoke PASS là accuracy.
-- [x] Implementation đã commit, trạng thái REVIEW; push/remote SHA xác minh khi bàn giao.
+- [x] Implementation đã commit/push main, remote SHA xác minh; Tech Lead chấp thuận DONE ngày17/11/2026.
 
 ## Required Tests
 
@@ -72,14 +72,16 @@ OCR/canonical/unit/period và schema specialist cũ có thể giới hạn đáp
 
 Implementation SHA đã xác minh:
 [`05289a439f2d5248065f4b8cc727ac7ea2aac215`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/05289a439f2d5248065f4b8cc727ac7ea2aac215).
-177file runtime trong commit khớp receipt live-v2; chưa nghiệm thu DONE.
+177file runtime trong commit khớp receipt live-v2. Tech Lead chấp thuận DONE
+ngày17/11/2026: M5-COORD-01 hoàn thành mục tiêu phối hợp.
 [Report](../../../docs/m5-coord-01-live-validation.md):21targeted/compatibility PASS;
 3câu mới+1retest,7Qwen calls/29459known tokens/0unknown. V2 cuối phối hợp hai
 specialist, Calculator7070123808VND,3ACCEPT có goal support và12M7citations.
 Ruff lint/format, planning/diff local; không full CI/OCR/Gemini/benchmark.
 57source hashes lượt đầu và24retest unchanged, runtime receipt v2 khớp code cuối.
-Chờ Tech Lead review; giữ limitations/các task trước.
+Giữ limitations/các task trước. Phiên nghiệm thu chỉ cập nhật tài liệu/tracking,
+kiểm planning/diff và Git; không sửa runtime hoặc chạy lại tests/Qwen/benchmark/CI.
 
 ## Handoff Notes
 
-Next action: Tech Lead review M5-COORD-01 và bằng chứng phối hợp v2.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

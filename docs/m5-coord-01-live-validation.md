@@ -1,6 +1,10 @@
 # M5-COORD-01 — Adaptive Coordinator & Task DAG
 
-Ngày17/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead; chưa nghiệm thu DONE.
+Ngày17/11/2026 (Asia/Bangkok). **DONE — Tech Lead APPROVED.**
+Tech Lead xác nhận M5-COORD-01 hoàn thành mục tiêu và chấp thuận chuyển DONE.
+Nghiệm thu năng lực phối hợp trong phạm vi task; giữ nguyên kết quả và hạn chế
+bên dưới. Phiên nghiệm thu chỉ cập nhật tài liệu/tracking và kiểm planning/diff,
+Git; không sửa runtime hoặc chạy lại tests/Qwen/benchmark/CI.
 
 Mở rộng `FinancialLiteOrchestrator` V2 dưới cờ request
 `integration_v2=true, adaptive_coordinator=true` (default false).
@@ -114,4 +118,4 @@ trên worktree riêng sau merge histories đã commit
 vào commit mới. 177file runtime trong implementation commit được đối chiếu
 receipt v2 trước push main; checkpoint sau chỉ cập nhật SHA tài liệu/tracking.
 
-**Next action:** Tech Lead review M5-COORD-01 và bằng chứng phối hợp v2.
+**Next action:** chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
