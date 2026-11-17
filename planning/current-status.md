@@ -2,7 +2,8 @@
 
 ## M6-GOAL-FIX-01 — Fix Incorrect Goal Binding
 
-**REVIEW**, chưa commit; baseline main `1aec917`, worktree riêng giữ local edits.
+**REVIEW**, implementation `a3519778f8356bd394b059cef1229c5e6543ca6f` đã push main,
+remote SHA verified; baseline `1aec917`, worktree riêng giữ local edits.
 [Spec](tasks/M6/M6-GOAL-FIX-01.md), [report](../docs/m6-goal-fix-01-validation.md).
 M6 lọc binding sai item/kỳ/selection/formula/unit, giữ truth độc lập và lọc cả
 old v2 khi đọc.36targeted PASS;1Qwen call/15918tokens,0unknown/retry: raw2G2 sai

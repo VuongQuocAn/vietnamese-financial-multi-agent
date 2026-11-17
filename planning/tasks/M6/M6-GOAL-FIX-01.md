@@ -48,7 +48,7 @@ PDF/OCR/Gemini, full CI/benchmark và task khác.
 - [x] Sai item/year/selected period/formula không được cấp binding từ SUPPORTED.
 - [x] Claim đúng vẫn ACCEPT; bindings hợp lệ giữ nguyên.
 - [x] Saved Ledger/current support cùng áp dụng lọc; M7 chỉ phát hành phần hợp lệ.
-- [ ] Targeted validation, live trace và implementation SHA đã xác minh; REVIEW.
+- [x] Targeted validation, live trace và implementation SHA đã xác minh; REVIEW.
 
 ## Required Tests
 
@@ -63,7 +63,8 @@ paraphrase. Ties/selection mơ hồ giữ gap, không đoán kỳ. JSON-only pro
 
 ## Implementation Evidence
 
-Chưa commit; [report](../../../docs/m6-goal-fix-01-validation.md).
+Implementation `a3519778f8356bd394b059cef1229c5e6543ca6f` đã push main và remote
+SHA verified; [report](../../../docs/m6-goal-fix-01-validation.md).
 36targeted PASS;1actual Qwen call/15918tokens,0unknown/retry. Qwen vẫn trả
 2G2 sai, M6 loại cả2; giữ G1/G4 và4truth ACCEPT→4Ledger v2→M7 2claims/12citations.
 4proof payloads khớp actual semantic input;180runtime/24source hashes verified.
