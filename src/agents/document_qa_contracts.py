@@ -4,7 +4,7 @@ import re
 import unicodedata
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
@@ -16,7 +16,9 @@ from ..evidence.search import (
 from .document_topics import source_topics
 from .planner_contracts import PlannerOperation
 
-DocumentKind = Literal["exact_text", "entity_role", "table_labels", "source_excerpt"]
+DocumentKind = Literal[
+    "exact_text", "entity_role", "table_labels", "source_excerpt", "table_selection"
+]
 ROLES = {
     "nguoi lap": "Người lập",
     "ke toan truong": "Kế toán trưởng",
@@ -29,6 +31,14 @@ class DocumentRequirement(FinancialModel):
     label: str
     kind: DocumentKind
     query: str
+    selection_period: str | None = None
+
+    @model_serializer(mode="wrap")
+    def preserve_v1(self, handler):
+        value = handler(self)
+        if self.selection_period is None:
+            value.pop("selection_period", None)
+        return value
 
 
 class DocumentSearchOperation(PlannerOperation):
@@ -68,6 +78,20 @@ def document_intent(question):
     """Recognize supported source requests and preserve separate role requirements."""
     text = normalize_search(question)
     specs = []
+    named_selection = re.search(
+        r"\b(doi tuong|khach hang|cong ty|ten rieng)\b", text
+    ) and re.search(r"\b(lon nhat|nho nhat)\b", text)
+    if named_selection and "thuyet minh" in text:
+        subject = re.search(r"thuyết minh\s+(.+?)\s+cuối năm\s+(\d{4})", question, re.I)
+        return "document", [
+            DocumentRequirement(
+                target=text,
+                label=question,
+                kind="table_selection",
+                query=subject[1] if subject else question,
+                selection_period=subject[2] + "-12-31" if subject else None,
+            )
+        ]
 
     def add(label, kind, query):
         specs.append(

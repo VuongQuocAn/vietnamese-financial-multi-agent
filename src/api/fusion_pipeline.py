@@ -283,6 +283,19 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
                 reporting_scope=None,
                 integration_v2=False,
             )
+            from ..agents.document_dependency import comparison_subject
+
+            released = {key for prior in dependency_results for key in prior["verified_claim_ids"]}
+            subject = comparison_subject(
+                [
+                    e
+                    for e in pipeline.repository.list_all()
+                    if e.identity.verified_claim_id in released
+                ],
+                part.original_span,
+            )
+            if subject:
+                updates["question"] = subject
         child = stage(
             part.requirement_id,
             lambda updates=updates: scoped.run(

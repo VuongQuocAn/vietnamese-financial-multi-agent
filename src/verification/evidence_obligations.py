@@ -14,6 +14,7 @@ from ..agents.lite_orchestrator import inventory
 from ..agents.planner_contracts import PlannerContext
 from ..outputs.qa_composer import _reasoning_matches, _targets
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
+from ..tools.goal_targets import target_groups
 from ..tools.question_understanding import normalize
 
 
@@ -150,13 +151,17 @@ def goal_binding_issue(proof, requirement):
     text = normalize(requirement["text"])
     facts = [s for s in claim.supporting_evidence if s.kind == "fact"]
     targets = _targets(text)
-    items = set(requirement.get("required_indicators", [])) | {
-        key for kind, key in targets if kind == "fact"
-    }
+    items = set(requirement.get("required_indicators", []))
+    groups = [{key for kind, key in group if kind == "fact"} for group in target_groups(text)]
+    groups = [group for group in groups if group]
+    available = {s.canonical_item_id for s in facts}
+    if any(not group.intersection(available) for group in groups):
+        return "goal_indicator_mismatch"
     if requirement.get("kind") == "fact" and requirement.get("target_id"):
         items.add(requirement["target_id"])
-    if not items <= {s.canonical_item_id for s in facts}:
+    if not items <= available:
         return "goal_indicator_mismatch"
+    items.update(key for group in groups for key in group.intersection(available))
     calculation = claim.reasoning.calculation if claim.reasoning else None
     python = claim.python_execution
     periods = (
@@ -232,6 +237,14 @@ def goal_binding_issue(proof, requirement):
         return None  # Interpretation meaning remains with the existing semantic pass.
     operation = re.search(r"\b(tru|chia|cong|nhan)\b", text)
     dynamic = requirement.get("interpretation_topic") == "dynamic_calculation"
+    comparing = re.search(r"\b(lon hon|nho hon|cao hon|thap hon|bang nhau)\b", text) and (
+        " hay " in f" {text} " or re.search(r"\b(khoan muc|chi tieu) nao\b", text)
+    )
+    if comparing and (
+        not calculation
+        or calculation.steps[-1].operation.operator not in {"greater", "less", "equal"}
+    ):
+        return "goal_comparison_mismatch"
     if not dynamic and not calculation and len(items) < 2:
         operation = None
     if (dynamic or operation) and not python:

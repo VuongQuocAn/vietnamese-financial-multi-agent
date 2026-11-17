@@ -1,5 +1,8 @@
 """Bounded document replanning; literal quotations retain independent M6 replay."""
 
+from pydantic import Field
+
+from ..accounting.contracts import FinancialModel
 from ..verification.adaptive_judge import JudgeFeedback
 from ..verification.evidence_context import EvidenceContextBuilder
 from ..verification.runtime import VerificationRuntime
@@ -8,7 +11,64 @@ from .qa_planning import plan_document, structured_call
 from .supervisor import RiskAwareSupervisor
 
 
+class TableCandidateProposal(FinancialModel):
+    selected_index: int | None = Field(
+        description="Index của candidate đúng bảng/kỳ, null nếu thiếu nguồn"
+    )
+
+
+def _table_candidates(gateway, request, requirements, manifest, tools):
+    """Existing Specialist proposes one source-bound candidate; M6 replays the domain."""
+    bundles = [
+        RiskAwareSupervisor.execute_document(op, tools)
+        for op in document_operations(requirements, manifest, request.snapshot_id)
+    ]
+    candidates = [c for b in bundles for c in document_candidates(b, request.company_id, manifest)]
+    selected = []
+    if candidates:
+        proposal = structured_call(
+            gateway,
+            request.model,
+            TableCandidateProposal,
+            dict(
+                instruction=(
+                    "Bạn là Specialist. Chọn candidate đúng chủ đề, kỳ và yêu cầu chọn đối tượng "
+                    "nêu tên riêng trong question. Các candidate là đề xuất chưa xác minh; "
+                    "không cấp ACCEPT. Không sửa nguồn, số hay miền so sánh. Nếu không đủ trả null."
+                ),
+                question=request.question,
+                candidates=[
+                    dict(
+                        index=i,
+                        requirement=c.requirement.model_dump(mode="json"),
+                        content=c.content,
+                        quotations=c.quotations,
+                    )
+                    for i, c in enumerate(candidates)
+                ],
+            ),
+            "specialist-document-candidate",
+        )
+        if proposal.selected_index is not None and 0 <= proposal.selected_index < len(candidates):
+            selected = [candidates[proposal.selected_index]]
+    histories = VerificationRuntime.verify_document(
+        selected,
+        EvidenceContextBuilder(tools=tools),
+        manifest,
+        request.company_id,
+        request.snapshot_id,
+    )
+    return (
+        bundles,
+        selected,
+        histories,
+        [dict(revision=0, stop_reason="source_table_domain_M6_replay")],
+    )
+
+
 def run_document_adaptive(gateway, request, requirements, manifest, tools):
+    if requirements and all(r.kind == "table_selection" for r in requirements):
+        return _table_candidates(gateway, request, requirements, manifest, tools)
     cache, seen, rounds = {}, set(), []
     feedback, histories, bundles, candidates = None, [], [], []
     for revision in range(3):

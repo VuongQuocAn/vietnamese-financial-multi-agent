@@ -25,9 +25,19 @@ def complete_declared_list(texts):
     return declared is None or sum(is_list_item(t) for t in texts) == declared
 
 
-def document_projection(record):
+def document_projection(record, *, selection=False):
     if record.kind == "text":
         return {"text": record.raw_text} if record.raw_text and len(record.raw_text) <= 6000 else {}
+    if selection:
+        # Full saved table, including excluded aggregates. Never a cropped top-k row set.
+        table = record.source_metadata.get("original_table")
+        if (
+            table
+            and not record.structural_issues
+            and not record.source_metadata.get("ragged_row_indices")
+        ):
+            return {"selection_table": table}
+        return {}
     # Only labeled, indexed rows. Unplaced totals and numeric cells are excluded.
     labels = [cell.text for _, cell in _label_cells(record)]
     return {"labels": labels} if labels and sum(map(len, labels)) <= 6000 else {}
@@ -42,8 +52,10 @@ def _label_cells(record):
     ]
 
 
-def document_citations(record, citations):
+def document_citations(record, citations, *, selection=False):
     if record.kind == "text":
+        return citations
+    if selection:
         return citations
     primary = {a.reference.source_pointer for a in record.sources if a.reference}
     labels = {
@@ -84,6 +96,10 @@ def source_assertion(requirement, projections):
     """Return exact quotations, protected display and optional explicit relationship."""
     if not projections or any(not value for value in projections):
         return None
+    if requirement.kind == "table_selection":
+        from .document_table_selection import table_assertion
+
+        return table_assertion(requirement, projections)
     if requirement.kind == "table_labels":
         if len(projections) != 1:
             return None

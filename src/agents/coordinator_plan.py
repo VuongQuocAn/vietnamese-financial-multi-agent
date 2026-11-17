@@ -7,6 +7,7 @@ from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
 from ..outputs.qa_composer import _targets
+from ..tools.goal_targets import target_groups
 from ..tools.question_understanding import normalize
 from .contracts import SpecialistRole
 from .integration_workspace import IntegrationRequirement
@@ -137,8 +138,9 @@ def adapt_plan(payload, sources):
     for index, goal in enumerate(goals):
         # A uniquely named catalog concept may be bound by the existing resolver.
         # Period/unit are not inferred from objective, source handle or filename.
-        targets = _targets(normalize(goal.text)) if goal.mode == "value" else []
-        target = targets[0] if len(targets) == 1 else None
+        groups = target_groups(normalize(goal.text)) if goal.mode == "value" else []
+        targets = [next(iter(group)) for group in groups if len(group) == 1]
+        target = targets[0] if len(groups) == len(targets) == 1 else None
         selection_goal = any(
             term in normalize(goal.text)
             for term in (

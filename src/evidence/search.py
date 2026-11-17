@@ -168,7 +168,8 @@ class EvidenceSearchIndex:
                 cells = []
             else:
                 cells = _cells(record)
-                body = "\n".join(c.text for c in cells if c.text)
+                title = record.source_metadata.get("original_table", {}).get("title") or ""
+                body = "\n".join([title, *(c.text for c in cells if c.text)])
             context = "\n".join(n.raw_text or "" for _, n in neighbors)
             self._units.append((record, body, cells, neighbors))
             self._db.execute(
@@ -221,7 +222,9 @@ class EvidenceSearchIndex:
             phrase = f" {query} " in f" {normalized} "
             if record.kind == "table":
                 # Phrase không được tạo bằng cách nối hai cells không liên quan.
-                phrase = any(f" {query} " in f" {normalize_search(c.text or '')} " for c in cells)
+                labels = [record.source_metadata.get("original_table", {}).get("title") or ""]
+                labels.extend(c.text or "" for c in cells)
+                phrase = any(f" {query} " in f" {normalize_search(label)} " for label in labels)
             matched = [t for t in terms if t in normalized.split()]
             # Context supplies accompanying regions, never standalone unrelated matches.
             if len(matched) / len(terms) < 0.6 or (request.exact_phrase and not phrase):

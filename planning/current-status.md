@@ -1,5 +1,12 @@
 # Trạng thái hiện tại
 
+## E2E-REMED-04 — Goal Binding & Document Evidence
+
+**IN_PROGRESS**, Owner17/11/2026; baseline52237cf, chưa commit.
+[Spec](tasks/E2E/E2E-REMED-04.md). Worktree riêng giữ local edits; offline trước
+retest<=2QA, chỉ chạy9QA cố định khi core fix đạt; giữ M7/raw/EF-EG/Obligations.
+Next action: hoàn tất offline replay trước freeze live.
+
 ## E2E-REMED-03 — Canonical Mapping & Evidence Eligibility
 
 **DONE — Owner/Tech Lead xác nhận ngày17/11/2026**; implementation `efc537ee6b92517465565a775681911b696ebf1f`, baseline5917ea9.

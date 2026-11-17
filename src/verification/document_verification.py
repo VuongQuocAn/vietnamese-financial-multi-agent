@@ -7,6 +7,7 @@ from pydantic import Field
 from ..accounting.contracts import FinancialModel
 from ..agents.document_qa_contracts import DocumentCandidate
 from ..evidence.composition import payload_sha256
+from ..evidence.contracts import is_json_reference
 from ..evidence.document_claim_support import consecutive, source_assertion
 from .evidence_context import EvidenceContextBuilder
 from .evidence_contracts import EvidenceContext
@@ -53,7 +54,11 @@ def judge_document(claim, contexts):
                 (c.document_id, c.snapshot_id) == identity
                 and (c.source.document_id, c.source.snapshot_id) == identity
                 and c.source.reference is not None
-                and c.pdf_page == c.source.reference.anchor.page.page
+                and (
+                    c.pdf_page == c.source.reference.anchor.page.page
+                    or c.pdf_page is None
+                    and is_json_reference(c.source.reference)
+                )
                 for c in ctx.citations
             )
             for ref, ctx in zip(refs, contexts, strict=True)

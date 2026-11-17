@@ -1,5 +1,22 @@
 # Data contracts
 
+## E2E-REMED-04 — Goal alternatives và source-table candidate
+
+Goal parser giữ các aliases cùng span như các khả năng thay thế, không tự chọn
+nghĩa kế toán hoặc yêu cầu đồng thời mọi alias. Chỉ tiêu ghi rõ trong requirement
+vẫn bắt buộc. M6 độc lập kiểm text, operands/kỳ/unit/operation và semantic support;
+truth ACCEPT không cấp goal coverage cho scalar thiếu phép so sánh.
+
+DocumentRequirement thêm kind `table_selection` và optional `selection_period`;
+field null không serialize để giữ payload v1. Chỉ closed JSON table có title đúng
+chủ đề, cột ngày/VND duy nhất, mọi dòng phân loại được và tổng đối chiếu đủ mới
+tạo candidate. Giữ cả aggregates/exclusions/ties và toàn bảng trong source proof;
+không tạo canonical fact từ raw cells. Specialist chỉ chọn candidate, M6 resolve
+lại pinned references/composition, citations/hash và replay toàn miền bằng Decimal.
+JSON citations giữ `pdf_page=None` cùng source-page/hash, không giả PDF provenance.
+Dependency search subject chỉ lấy từ comparison đã release qua verified ledger,
+không dùng raw context hay scalar ACCEPT để xác định winner. M7 không đổi.
+
 ## E2E-REMED-02 — Planning/evidence routing
 
 Adaptive planner công bố root schema capped6tasks/16goals, S handles chỉ từ inventory.

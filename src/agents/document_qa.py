@@ -109,7 +109,7 @@ def document_operations(requirements, manifest, snapshot_id):
                 composition_id=manifest.composition_id,
                 snapshot_id=snapshot_id,
                 query=r.query,
-                evidence_type="table" if r.kind == "table_labels" else "text",
+                evidence_type="table" if r.kind in {"table_labels", "table_selection"} else "text",
                 top_k=5,
                 context_radius=12 if r.kind == "source_excerpt" else 3,
             ),
@@ -166,7 +166,8 @@ def document_candidates(bundle, company_id, manifest):
                 or not consecutive([e.citations for e in group])
             ):
                 continue
-            source = [document_projection(e.record) for e in group]
+            selection = requirement.kind == "table_selection"
+            source = [document_projection(e.record, selection=selection) for e in group]
             assertion = source_assertion(requirement, source)
             if assertion is None and (
                 requirement.kind != "entity_role"
@@ -191,7 +192,11 @@ def document_candidates(bundle, company_id, manifest):
                 composition_id=manifest.composition_id,
                 composition_sha256=payload_sha256(manifest.model_dump(mode="json")),
                 references=[e.reference for e in group],
-                citations=[c for e in group for c in document_citations(e.record, e.citations)],
+                citations=[
+                    c
+                    for e in group
+                    for c in document_citations(e.record, e.citations, selection=selection)
+                ],
                 quotations=quotes,
                 caveats=sorted({issue for e in group for issue in e.issues}),
             )
