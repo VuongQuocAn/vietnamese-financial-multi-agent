@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_serializer, model_validator
 
 from ..accounting.contracts import FinancialModel
 from ..agents.contracts import RiskSignal, SpecialistRole
@@ -54,6 +54,13 @@ class ClaimProvenance(FinancialModel):
     conflict_ids: list[str] = Field(default_factory=list)
 
 
+class PythonClaimProof(FinancialModel):
+    version: Literal["python_claim_proof_v1"] = "python_claim_proof_v1"
+    execution: dict
+    execution_sha256: str
+    output_key: str
+
+
 class CandidateClaim(SpecialistCandidate):
     """Original M5 proposition/status plus explicit pending M6 state."""
 
@@ -62,6 +69,14 @@ class CandidateClaim(SpecialistCandidate):
     verification_status: Literal["pending"] = "pending"
     decision: None = None
     findings: list[VerificationFinding] = Field(default_factory=list)
+    python_execution: PythonClaimProof | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_candidate(self, handler):
+        wire = super().serialize_candidate(handler)
+        if wire.get("python_execution") is None:
+            wire.pop("python_execution", None)
+        return wire
 
     @model_validator(mode="after")
     def stable_m5_identity(self):

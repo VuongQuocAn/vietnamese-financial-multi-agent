@@ -146,4 +146,8 @@ def to_verification_input(result: OrchestrationResult) -> VerificationInput:
         for j, cid in enumerate(conflict.candidate_ids):
             if cid not in candidate_ids:
                 issue("unresolved_conflict_candidate", ["conflicts", i, "candidate_ids", j], cid)
+    if source.integration_context.get("adaptive_coordinator"):
+        from .python_proof import project_python
+
+        batch.claims.extend(project_python(source.integration_context))
     return batch

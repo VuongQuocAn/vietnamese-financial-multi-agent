@@ -1,5 +1,27 @@
 # Data contracts
 
+## M6-PY-01 — Python replay và admission
+
+M6 adapter đọc `python_execution_proof_v1` từ Workspace task result thành pending
+`CandidateClaim.python_execution` có tag `python_claim_proof_v1`, execution digest
+và output key. Không giả `DynamicCalculation`, approved metric hoặc canonical fact.
+Khi không có Python, serializer bỏ field mới để bảo toàn wire v1.
+
+M6 dùng catalog pin để tái tạo toàn manifest, gồm raw/base values, scale, kỳ,
+parser, source digests, selectors và citations; chạy cùng code/image trong Docker
+Worker hiện có và so exact Decimal results. `LiteProofV2.python_replay` lưu input/
+code/execution digests, worker identity và results độc lập. Semantic payload có
+code, computation/constants, raw/base operands, source context và original/local
+goals; provenance lặp được compact, toàn record vẫn được hash và giữ trong proof.
+Replay thành công không cấp financial/goal authority. History/Ledger v2 lưu cả
+proof và verified support; admission đối chiếu replay bundle, policy/semantic
+digest và goal binding. V1 vẫn đọc được, không rewrite ledger cũ.
+
+Chỉ Python ACCEPT có verified goal binding mới được admit; thiếu support giữ truth
+decision độc lập và không phát hành. M7 đọc claim/citations như thường, không verifier
+mới. Missing proof/source hoặc worker failure giữ candidate chưa xác minh. Lineage
+là toàn manifest; chưa có dynamic tracing từng biến hoặc authority cho domain tùy ý.
+
 ## M6-OBL-01 — Saved goal support và obligations
 
 Adaptive coordinator V2 ghi `lite_verification_history_v2` với `LiteProofV2` và

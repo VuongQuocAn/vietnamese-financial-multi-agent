@@ -28,6 +28,8 @@ def goal_context(context, claim):
         closure[tid] = results.get(tid, {})
         pending.extend(tasks.get(tid, {}).get("depends_on", []))
     keys = context.get("candidate_requirements", {}).get(claim.candidate_id, [])
+    if claim.python_execution:
+        keys = list(dict.fromkeys(k for tid in owners for k in tasks[tid]["requirement_ids"]))
     return dict(
         proposed_requirement_ids=keys,
         local_requirements=[
@@ -156,7 +158,14 @@ def goal_binding_issue(proof, requirement):
     if not items <= {s.canonical_item_id for s in facts}:
         return "goal_indicator_mismatch"
     calculation = claim.reasoning.calculation if claim.reasoning else None
-    periods = {o.period for o in calculation.operands.values()} if calculation else {claim.period}
+    python = claim.python_execution
+    periods = (
+        {r["context"]["period"] for r in python.execution["operands"].values()}
+        if python
+        else {o.period for o in calculation.operands.values()}
+        if calculation
+        else {claim.period}
+    )
     pinned = requirement.get("period")
     years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
     if pinned and claim.period != pinned or years and any(p[:4] not in years for p in periods):
@@ -225,7 +234,7 @@ def goal_binding_issue(proof, requirement):
     dynamic = requirement.get("interpretation_topic") == "dynamic_calculation"
     if not dynamic and not calculation and len(items) < 2:
         operation = None
-    if dynamic or operation:
+    if (dynamic or operation) and not python:
         if not calculation or not _reasoning_matches(
             claim.reasoning,
             SimpleNamespace(
@@ -264,18 +273,26 @@ def goal_binding_issue(proof, requirement):
     calculations = [
         c for c in [claim.calculation, *(s.calculation for s in claim.supporting_evidence)] if c
     ]
-    if metric_targets and (
-        not calculations
-        and not calculation
-        or calculations
-        and not metric_targets.intersection(c.formula_id for c in calculations)
+    if (
+        metric_targets
+        and not python
+        and (
+            not calculations
+            and not calculation
+            or calculations
+            and not metric_targets.intersection(c.formula_id for c in calculations)
+        )
     ):
         return "goal_formula_mismatch"
     unit = requirement.get("requested_unit")
     if "phan tram" in text or "%" in requirement["text"]:
         unit = "percent"
     actual_units = (
-        {calculation.steps[-1].unit} if calculation else {s.unit for s in claim.supporting_evidence}
+        {python.execution["executions"][-1]["outputs"][python.output_key]}
+        if python
+        else {calculation.steps[-1].unit}
+        if calculation
+        else {s.unit for s in claim.supporting_evidence}
     )
     if unit and unit not in actual_units:
         return "goal_unit_mismatch"

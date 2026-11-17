@@ -96,6 +96,26 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
         history = type(history).model_validate_json(history.model_dump_json())
         proof, outcome = history.proof, history.outcome
         batch, validation = proof.batch, proof.validation
+        if batch.claims and batch.claims[0].python_execution:
+            from .evidence_obligations import supported_goals
+            from .python_proof import validate_python_history
+
+            try:
+                if not isinstance(history, LiteVerificationHistoryV2):
+                    raise ValueError("python_requires_v2_history")
+                validate_python_history(proof)
+                if not supported_goals(proof, outcome.final):
+                    raise ValueError("python_verified_goal_binding_required")
+                checks = validation.claims[0].checks
+                if not any(
+                    c.check_id == "python_execution"
+                    and c.status == "pass"
+                    and c.expected == proof.python_replay
+                    for c in checks
+                ):
+                    raise ValueError("python_replay_check_missing")
+            except (ValueError, KeyError, IndexError, TypeError) as error:
+                raise LedgerAdmissionError(str(error)) from error
         if (
             len(batch.claims) != 1
             or len(validation.claims) != 1

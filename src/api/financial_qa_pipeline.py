@@ -1226,6 +1226,11 @@ class FinancialQAPipeline:
                             )
                             trace.outcomes.append(outcome)
                             if final.decision == "ACCEPT":
+                                if final.original_claim.python_execution:
+                                    from ..verification.evidence_obligations import supported_goals
+
+                                    if not supported_goals(history.proof, final):
+                                        continue
                                 entry = build_verified_claim(history)
                                 signature = (
                                     entry.identity.verified_claim_id

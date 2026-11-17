@@ -19,6 +19,7 @@ from ..core.llm_contracts import (
     RequestConstraints,
 )
 from ..outputs.qa_composer import _targets
+from ..tools.python_execution import PythonExecutor
 from ..tools.question_understanding import normalize
 from .contracts import VerificationInput
 from .decision_contracts import (
@@ -117,6 +118,23 @@ def semantic_payload(batch, claim, goal_context=None):
             if proof and proof.calculation
             else {}
         )
+    if claim.python_execution:
+        # Generation responses/diagnostic executions are trace, not semantic authority.
+        record = claim.python_execution.execution
+        payload["python_execution"] = dict(
+            version=record["version"],
+            execution_sha256=claim.python_execution.execution_sha256,
+            # Exact citations/selectors are already bound in sources/observations;
+            # keep source hashes, identities, parser/context and raw/base values here.
+            operands={
+                key: {k: v for k, v in row.items() if k not in {"citations", "selectors"}}
+                for key, row in record["operands"].items()
+            },
+            execution=record["executions"][-1],
+            output_key=claim.python_execution.output_key,
+            rounding=record["rounding"],
+            lineage=record["lineage"],
+        )
     return payload
 
 
@@ -169,7 +187,7 @@ def decide(proof):
         state == "ACCEPT"
         and isinstance(proof, LiteProofV2)
         and (
-            bool(claim.reasoning and claim.reasoning.calculation)
+            bool(claim.python_execution or claim.reasoning and claim.reasoning.calculation)
             or any(
                 r.get("coordination", {}).get("selection") or r.get("coordination", {}).get("joins")
                 for r in proof.goal_context.get("task_results", {}).values()
@@ -280,6 +298,12 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
         return None
 
     def _analysis(self, batch, claim, result):
+        if claim.python_execution:
+            # Reuse source/context/numeric/quality/citation validators on every premise.
+            # Output arithmetic and statement are checked by the worker replay below.
+            local = batch.model_copy(deep=True)
+            local.context.reporting_year = None
+            return super()._analysis(local, claim.model_copy(update={"content": ""}), result)
         if claim.reasoning and claim.reasoning.claim_type == "derived_fact":
             return super()._analysis(batch, claim, result)
         # Validate premises/operations with the existing tools. Prose/causality is
@@ -350,7 +374,9 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
 
 
 class LiteVerificationRuntime:
-    def __init__(self, catalog, gateway=None, *, model=None, integration_v2=False):
+    def __init__(
+        self, catalog, gateway=None, *, model=None, integration_v2=False, python_executor=None
+    ):
         self.validator = LiteFinancialValidator(catalog, integration_v2=integration_v2)
         self.integration_v2 = integration_v2
         self.integration_context = {}
@@ -361,6 +387,7 @@ class LiteVerificationRuntime:
         self.provider_metadata = []
         self.stage_latency_ms = {}
         self.summary = {}
+        self.python_executor = python_executor or PythonExecutor()
 
     def verify(self, batch, *, integration_context=None, **_):
         self.integration_context = integration_context or {}
@@ -478,8 +505,47 @@ class LiteVerificationRuntime:
                     self.validator._catalog, local, context
                 ):
                     self.validator._check(checked, check, status, reason, expected={"task_id": tid})
-                proof = LiteProofV2(batch=local, validation=validation, goal_context=context)
+                replay = None
+                if claim.python_execution:
+                    from .python_proof import replay_python
+
+                    try:
+                        replay = replay_python(self.validator._catalog, claim, self.python_executor)
+                        self.validator._check(
+                            checked,
+                            "python_execution",
+                            "pass",
+                            "python_independent_replay_matches",
+                            expected=replay,
+                        )
+                    except (ValueError, KeyError, TypeError, IndexError, ArithmeticError) as error:
+                        reason = (
+                            str(error) if isinstance(error, ValueError) else "python_proof_invalid"
+                        )
+                        self.validator._check(
+                            checked,
+                            "python_execution",
+                            "undetermined"
+                            if reason.startswith("python_replay_")
+                            and reason != "python_replay_mismatch"
+                            else "fail",
+                            reason,
+                        )
+                proof = LiteProofV2(
+                    batch=local, validation=validation, goal_context=context, python_replay=replay
+                )
+                if replay:
+                    from .python_proof import validate_python_history
+
+                    try:
+                        validate_python_history(proof)
+                    except (ValueError, KeyError, TypeError, IndexError) as error:
+                        self.validator._check(checked, "python_execution", "fail", str(error))
             else:
+                if claim.python_execution:
+                    self.validator._check(
+                        checked, "python_execution", "undetermined", "python_goal_context_required"
+                    )
                 proof = LiteProof(batch=local, validation=validation)
             proofs.append(proof)
             state = deterministic_state(claim, checked)[0]
@@ -672,6 +738,13 @@ class LiteVerificationRuntime:
                 '"reason":"...","supported_requirement_ids":[]}',
             )
             request.messages[0].content += (
+                " python_execution chứa code/computation/constants/operands và output đã replay "
+                "trong Docker; replay chỉ chứng minh toán tái lập, KHÔNG chứng minh công thức "
+                "tài chính đúng. Phải đọc code, kiểm từng operand/cột/kỳ/scale, công thức, "
+                "constants, đơn vị đầu ra và nghĩa kết quả với câu hỏi gốc/local goal. "
+                "Bác code thực hiện công thức khác, kể cả computation prose tự khai đúng. "
+                "Không coi outputs label/objective là authority. Nếu cần selection/domain/join "
+                "mà evidence_obligations chưa đủ thì INSUFFICIENT. "
                 " Kiểm chứng riêng từng statement, không đòi nó giải toàn câu hỏi. "
                 "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
                 "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "

@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from ..accounting.contracts import FinancialModel
 from ..agents.planner_contracts import PlannerLLMMetadata
@@ -58,6 +58,14 @@ class GoalSemanticVerdict(SemanticVerdict):
 class LiteProofV2(LiteProof):
     goal_context: dict = Field(default_factory=dict)
     semantic: GoalSemanticVerdict | None = None
+    python_replay: dict | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_proof(self, handler):
+        wire = handler(self)
+        if wire.get("python_replay") is None:
+            wire.pop("python_replay", None)
+        return wire
 
 
 class LiteVerificationHistoryV2(LiteVerificationHistory):

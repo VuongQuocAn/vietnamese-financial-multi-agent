@@ -1,5 +1,12 @@
 # Trạng thái hiện tại
 
+## M6-PY-01 — Python Proof Verification
+
+**IN_PROGRESS**; Owner giao17/11/2026. Baseline remote `cda39b0`, worktree riêng
+giữ local edits. [Spec](tasks/M6/M6-PY-01.md). Saved real RMS replay Docker khớp;
+31targeted compatibility PASS. Chưa commit/live Qwen, cap2calls.
+Next action: hoàn tất live verification và bàn giao REVIEW.
+
 ## M5-PY-01 — Python Agent
 
 **DONE — Owner xác nhận hoàn thành ngày17/11/2026**;
