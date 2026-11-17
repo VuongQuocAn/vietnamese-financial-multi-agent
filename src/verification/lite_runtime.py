@@ -27,7 +27,13 @@ from .decision_contracts import (
     VerificationLoopResult,
 )
 from .evidence_context import EvidenceContextBuilder
-from .evidence_obligations import feedback, goal_context, replay_obligations, supported_goals
+from .evidence_obligations import (
+    feedback,
+    goal_binding_issue,
+    goal_context,
+    replay_obligations,
+    supported_goals,
+)
 from .lite_contracts import (
     GoalSemanticVerdict,
     LiteProof,
@@ -761,3 +767,12 @@ class LiteVerificationRuntime:
             proof.semantic = verdicts.get(row["claim_id"])
             proof.semantic_input_sha256 = payload_digest(row)
             proof.semantic_error = None if proof.semantic else error
+            if isinstance(proof, LiteProofV2) and proof.semantic:
+                requirements = {
+                    r["requirement_id"]: r for r in proof.goal_context["local_requirements"]
+                }
+                proof.semantic.supported_requirement_ids = [
+                    rid
+                    for rid in proof.semantic.supported_requirement_ids
+                    if not goal_binding_issue(proof, requirements.get(rid))
+                ]

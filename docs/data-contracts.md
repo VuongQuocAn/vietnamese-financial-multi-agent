@@ -16,6 +16,13 @@ không cấp selection/join/formula semantics. M5 chỉ đề xuất bindings; M
 M7 nhận binding từ history đã admit, chỉ reuse khi câu hỏi và local goal giữ nguyên.
 V1 tiếp tục đọc được, không tự nâng binding lịch sử; legacy non-adaptive giữ đường cũ.
 
+M6-GOAL-FIX-01: `SUPPORTED` về truth không cấp support trái chỉ tiêu/kỳ/selection,
+operation/ordered operands/formula hoặc requested unit có căn cứ rõ trong goal.
+M6 lọc `supported_requirement_ids` trước khi lưu proof mới; shared `supported_goals`
+cũng lọc bindings trong history v2 cũ khi đọc, giữ nguyên bytes/ACCEPT lịch sử.
+Raw provider verdict vẫn nằm trong trace; không đổi wire version, Coordinator
+hoặc M7. Nghĩa goal không thể resolve bằng anchors hiện có vẫn cần semantic pass.
+
 ## V2-INT-01 — Request integration sidecar
 
 Mixed V2 giữ mệnh lệnh nguyên văn bắt đầu câu “Không suy ra/suy diễn/kết luận”
