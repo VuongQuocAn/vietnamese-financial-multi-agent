@@ -1,9 +1,14 @@
 # E2E-REMED-04 — Goal Binding & Document Evidence
 
-Ngày17/11/2026 (Asia/Bangkok). **REVIEW — sửa được nguyên nhân offline, chưa
-giải quyết trọn luồng live MH0001**. Implementation
+Ngày17/11/2026 (Asia/Bangkok). **DONE có giới hạn — Owner/Tech Lead chấp nhận
+kết quả kỹ thuật và đóng task; chưa giải quyết trọn luồng live MH0001**. Implementation
 `bac7362e07a81ca0ab1f3c0812315df72e58a539`, baseline52237cf; worktree riêng giữ
 80local edits. Không sửa M7, raw JSON, EF-EG, ledger cũ hoặc nới ACCEPT/Obligations.
+
+Nghiệm thu phạm vi kỹ thuật và RCA theo xác nhận Owner/Tech Lead ngày17/11/2026;
+giữ các giới hạn bên dưới, không xác nhận readiness Pilot hoặc core live hoàn tất.
+Bàn giao d659971 đã push main/remote verified. Phiên đóng chỉ tài liệu/tracking,
+planning/diff và Git; không sửa runtime/artifacts hoặc chạy lại tests/Qwen/benchmark/CI.
 
 ## RCA và thay đổi
 
@@ -80,5 +85,4 @@ khớp receipt;80local files/185parent evidence files nguyên byte. M7 Git blobs
 không được stage. Implementation và handoff được push main, remote SHA ghi trong
 `publication.json`; không gán CI hoặc financial/PDF accuracy cho engineering tests.
 
-Next action: Tech Lead review bản sửa và RCA planning/semantic payload/binding
-analysis trước khi quyết định phạm vi tiếp theo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

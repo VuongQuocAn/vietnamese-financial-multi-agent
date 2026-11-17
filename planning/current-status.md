@@ -2,7 +2,8 @@
 
 ## E2E-REMED-04 — Goal Binding & Document Evidence
 
-**REVIEW**, implementation `bac7362e07a81ca0ab1f3c0812315df72e58a539`, baseline52237cf.
+**DONE có giới hạn — Owner/Tech Lead chấp nhận kết quả kỹ thuật ngày17/11/2026**;
+implementation `bac7362e07a81ca0ab1f3c0812315df72e58a539`, baseline52237cf.
 [Spec](tasks/E2E/E2E-REMED-04.md), [report](../docs/e2e-remed-04-goal-document.md).
 Offline3ACCEPT/only comparison G1, document table candidate M6 ACCEPT/31citations;
 47unique targeted PASS/1legacy FAIL y hệt baseline.2QA/14calls/103724known tokens/
@@ -10,7 +11,10 @@ Offline3ACCEPT/only comparison G1, document table candidate M6 ACCEPT/31citation
 Accuracy/coverage2câu50%→50%,wall559,595s. Dừng RCA, không9QA/36Pilot/Full600.
 189runtime/264JSON/115imported pins/3Pilot hashes/80local/185parent evidence verified;
 M7/raw/EF-EG/Obligations giữ nguyên. Chưa chứng minh core đạt toàn luồng live.
-Next action: Tech Lead review bản sửa và RCA planning/semantic payload/binding analysis.
+Nghiệm thu phạm vi kỹ thuật, giữ RCA/giới hạn live; không xác nhận readiness Pilot.
+Bàn giao d659971 đã push main/remote verified. Phiên đóng chỉ tài liệu/tracking,
+planning/diff và Git; không sửa runtime, chạy lại tests/Qwen/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## E2E-REMED-03 — Canonical Mapping & Evidence Eligibility
 

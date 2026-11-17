@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: E2E-REMED-03
 - Estimated Complexity: S
@@ -52,8 +52,10 @@ sửa M7/raw JSON/EF-EG/verified data, OCR/Gemini/fullCI/36Pilot/Full600.
 - [x] Candidate bảng qua M6 replay nguồn/miền/kỳ; Specialist Gateway control đạt.
 - [x] Không phát hành từ raw context hoặc kết luận thiếu căn cứ.
 - [x] Offline/live bằng chứng và runtime/corpus pin; dừng RCA khi core live chưa đạt.
-- [ ] Xác nhận core đạt toàn luồng live: MH vẫn bị planning/payload/timeouts chặn.
-- [x] Implementation commit, bàn giao push main/SHA verified; REVIEW chờ Tech Lead.
+- [x] Owner chấp nhận đóng phạm vi kỹ thuật với giới hạn live được ghi nhận;
+  việc xác nhận core đạt toàn luồng live nằm ngoài phạm vi nghiệm thu này.
+- [x] Implementation commit, bàn giao push main/SHA verified; Owner/Tech Lead
+  chấp nhận kết quả kỹ thuật và đóng task có giới hạn ngày17/11/2026.
 
 ## Required Tests
 
@@ -66,6 +68,9 @@ Không vòng FIX/retest kéo dài. Ruff/planning/diff.
 
 JSON-only chưa PDF-verified. Continuation/entity/layout/cột mơ hồ giữ gap;
 engineering controls không là financial accuracy benchmark.
+Tiêu chí core đạt toàn luồng live ban đầu chưa đạt: MH vẫn bị planning/payload/
+timeouts chặn. Owner chấp nhận đóng phạm vi kỹ thuật với giới hạn này;
+không chuyển kết quả chưa đạt thành PASS hoặc xác nhận readiness Pilot.
 
 ## Implementation Evidence
 
@@ -74,8 +79,13 @@ Implementation `bac7362e07a81ca0ab1f3c0812315df72e58a539`;
 offline replay/document integration đạt;2QA14calls/103724known tokens/2unknown,
 accuracy/coverage50%→50%,7citations,wall559,595s. MH không đạt core live;
 không9QA hoặc vòng FIX tiếp. Runtime/source/imported/local/evidence hashes verified.
-Next action: Tech Lead review bản sửa và RCA planning/semantic payload/binding analysis.
+Nghiệm thu kết quả kỹ thuật theo xác nhận Owner/Tech Lead ngày17/11/2026;
+giữ toàn bộ RCA và giới hạn live, chưa readiness Pilot. Bàn giao d659971 đã push
+main/remote verified. Phiên đóng chỉ tài liệu/tracking và planning/diff/Git;
+không sửa runtime/artifacts hoặc chạy lại tests/Qwen/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## Handoff Notes
 
-Registry là nguồn trạng thái chính; chưa nghiệm thu DONE.
+Registry là nguồn trạng thái chính; DONE trong phạm vi kỹ thuật được Owner chấp nhận,
+giữ các giới hạn đã ghi nhận và không tự mở nhiệm vụ hoặc benchmark tiếp theo.
