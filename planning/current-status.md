@@ -1,5 +1,27 @@
 # Trạng thái hiện tại
 
+## ARCH-02 — Technical Architecture Specification
+
+**DONE — Owner/Tech Lead APPROVED ngày 17/11/2026**.
+[Đặc tả](../docs/arch-02-technical-specification.md) tại commit
+[`cb65c92`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cb65c927fe2fc719d06fdd82cf904e3323a941cf)
+đã push main và xác minh remote SHA. Phạm vi nghiệm thu là thiết kế kiến trúc;
+giữ giới hạn worker readiness, caps calibration và chưa có research evidence mới.
+Phiên đóng chỉ tài liệu/tracking và kiểm planning/diff, không sửa runtime,
+chạy lại tests/model/benchmark hoặc CI thủ công; giữ thay đổi ngoài task.
+Next action: chờ Owner/Tech Lead giao M5-COORD-01.
+
+## ARCH-01a — Adaptive Evidence-Guided Multi-Agent Framework Review
+
+**DONE — Tech Lead APPROVED ngày 17/11/2026**.
+[Accepted report3dbb48c](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/3dbb48c969567b01197ec18f4b6adac03e0aee05)
+đã push main, xác minh remote SHA; giữ ARCH-01 DONE cũ.
+[Báo cáo](../docs/arch-01-adaptive-multi-agent-review.md) được nghiệm thu trong phạm
+vi architecture/research review; giữ giới hạn novelty và evidence thực nghiệm.
+Phiên đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff, không sửa runtime,
+chạy lại tests/Qwen/benchmark hoặc CI thủ công. Chưa triển khai ARCH-02.
+Next action: chờ Owner/Tech Lead giao phạm vi đặc tả ARCH-02.
+
 ## VFB-E2E-04 — Root Cause Analysis & Targeted Fix
 
 **DONE — Owner chấp thuận16/11/2026**. Implementation
