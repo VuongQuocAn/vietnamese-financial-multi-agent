@@ -77,7 +77,8 @@ Caps chưa calibration; chưa có kết quả live/research mới; novelty chưa
 
 ## Implementation Evidence
 
-- Implementation SHA: chưa commit; baseline publish và runtime tại Inputs.
+- Implementation SHA: [`cb65c927fe2fc719d06fdd82cf904e3323a941cf`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cb65c927fe2fc719d06fdd82cf904e3323a941cf),
+  đã xác minh commit chỉ năm file tài liệu/tracking; baseline tại Inputs.
 - Main Changes: chỉ đặc tả ARCH-02 và tracking; proposed follow-up IDs chưa mở task.
 - Test Results: planning PASS tại working tree (161 tasks) và cây publish (145
   tasks); diff check PASS. Fingerprint 182 file Python/JSON trong src/schema
