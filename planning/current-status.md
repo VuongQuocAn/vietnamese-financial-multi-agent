@@ -1,5 +1,17 @@
 # Trạng thái hiện tại
 
+## E2E-ARCH-02 — Full Pipeline Integration
+
+**REVIEW**, implementation `84ae70a9172dc63b105f57663a5dd2eb31d321f2`, baseline `28cabc4`.
+[Spec](tasks/E2E/E2E-ARCH-02.md), [report](../docs/e2e-arch-02-full-pipeline-integration.md).
+Sửa API ép tắt M7 Gateway trong V2;7câu mới/8lượt,36Qwen calls/243807known tokens/
+1unknown timeout. Final SH02 natural/full1/1/5refs; PY07 phối hợp2roles→Python→
+M6 replay/3ACCEPT/G1–G3→Ledger v2→M7 full3/3/8refs,99,037s. Còn overplanning,
+goal support, sai source handles, mapping/kỳ dữ liệu và timeout; không mở FIX tiếp.
+6targeted PASS;185runtime blobs khớp SHA,57JSON/80local files bất biến.
+Worktree riêng giữ checkout gốc; không Pilot/Full/OCR/Gemini/fullCI.
+Next action: Tech Lead review E2E-ARCH-02 trước quyết định chạy E2E-VAL-01.
+
 ## M7-ANSWER-01 — Grounded Natural Answer Generation
 
 **DONE — Owner xác nhận ngày17/11/2026**; implementation `5414b699e63758270d80cc36390ecc6eb7149134`,
