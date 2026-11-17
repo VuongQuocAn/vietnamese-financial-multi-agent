@@ -27,19 +27,27 @@ from .decision_contracts import (
     VerificationLoopResult,
 )
 from .evidence_context import EvidenceContextBuilder
-from .lite_contracts import LiteProof, LiteVerificationHistory, SemanticVerdict
+from .evidence_obligations import feedback, goal_context, replay_obligations, supported_goals
+from .lite_contracts import (
+    GoalSemanticVerdict,
+    LiteProof,
+    LiteProofV2,
+    LiteVerificationHistory,
+    LiteVerificationHistoryV2,
+    SemanticVerdict,
+)
 from .numeric import NumericAssertion, extract_assertion, fold
 from .validation_contracts import ClaimValidationResult, ValidationResult, verification_input_digest
 from .validators import DeterministicFinancialValidator
 
 
-def semantic_payload(batch, claim):
+def semantic_payload(batch, claim, goal_context=None):
     """Only verified scalar inputs; never nested lineage, ledger or full graph."""
     proof = claim.reasoning
-    return dict(
+    payload = dict(
         claim_id=claim.candidate_id,
         statement=claim.content,
-        question=batch.question[:1500],
+        question=batch.question if goal_context is not None else batch.question[:1500],
         scope={
             k: getattr(claim, k) for k in ("company_id", "document_id", "snapshot_id", "period")
         },
@@ -78,6 +86,32 @@ def semantic_payload(batch, claim):
             )
         ),
     )
+    if goal_context is not None:
+        from .evidence_obligations import semantic_goal_context
+
+        payload["evidence_bindings"] = [
+            dict(
+                evidence_id=e.evidence_id,
+                item=e.canonical_item_id,
+                label=e.label,
+                value=e.value,
+                period=e.period,
+                unit=e.unit,
+                scale=e.scale,
+            )
+            for e in claim.supporting_evidence
+        ]
+        payload.update(semantic_goal_context(goal_context))
+        payload["trusted_context"] = batch.context.model_dump(mode="json")
+        payload["operand_bindings"] = (
+            {
+                key: operand.model_dump(mode="json")
+                for key, operand in proof.calculation.operands.items()
+            }
+            if proof and proof.calculation
+            else {}
+        )
+    return payload
 
 
 def payload_digest(payload):
@@ -125,14 +159,25 @@ def decide(proof):
     claim = batch.claims[0]
     validation = proof.validation.claims[0]
     state, reasons = deterministic_state(claim, validation)
-    if state == "SEMANTIC":
+    if state == "SEMANTIC" or (
+        state == "ACCEPT"
+        and isinstance(proof, LiteProofV2)
+        and (
+            bool(claim.reasoning and claim.reasoning.calculation)
+            or any(
+                r.get("coordination", {}).get("selection") or r.get("coordination", {}).get("joins")
+                for r in proof.goal_context.get("task_results", {}).values()
+            )
+        )
+    ):
         semantic = proof.semantic
         if (
             semantic
             and semantic.claim_id == claim.candidate_id
             and proof.metadata.status == "success"
             and proof.metadata.calls == 1
-            and proof.semantic_input_sha256 == payload_digest(semantic_payload(batch, claim))
+            and proof.semantic_input_sha256
+            == payload_digest(semantic_payload(batch, claim, getattr(proof, "goal_context", None)))
         ):
             state = {
                 "SUPPORTED": "ACCEPT",
@@ -313,6 +358,7 @@ class LiteVerificationRuntime:
 
     def verify(self, batch, *, integration_context=None, **_):
         self.integration_context = integration_context or {}
+        self.requirement_support = {}
         dynamic_goals = {
             r["requirement_id"]
             for r in self.integration_context.get("requirements", [])
@@ -416,24 +462,40 @@ class LiteVerificationRuntime:
                     self.validator._check(
                         checked, "lite_scope", "undetermined", "requested_scope_unresolved"
                     )
-            proof = LiteProof(batch=local, validation=validation)
+            context = (
+                goal_context(self.integration_context, claim)
+                if self.integration_v2 and self.integration_context.get("adaptive_coordinator")
+                else None
+            )
+            if context is not None:
+                for check, status, reason, tid in replay_obligations(
+                    self.validator._catalog, local, context
+                ):
+                    self.validator._check(checked, check, status, reason, expected={"task_id": tid})
+                proof = LiteProofV2(batch=local, validation=validation, goal_context=context)
+            else:
+                proof = LiteProof(batch=local, validation=validation)
             proofs.append(proof)
             state = deterministic_state(claim, checked)[0]
-            needs_binding = (
-                self.integration_v2
-                and (
-                    claim.kind == "fact"
-                    and claim.candidate_id in semantic_bindings
-                    or claim.kind == "supported_interpretation"
+            needs_binding = bool(
+                context and (context["proposed_requirement_ids"] or context["task_results"])
+            )
+            if context is None:
+                needs_binding = (
+                    self.integration_v2
                     and (
-                        not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
-                        or claim.candidate_id in semantic_bindings
+                        claim.kind == "fact"
+                        and claim.candidate_id in semantic_bindings
+                        or claim.kind == "supported_interpretation"
+                        and (
+                            not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
+                            or claim.candidate_id in semantic_bindings
+                        )
+                    )
+                    and self.integration_context.get("candidate_requirements", {}).get(
+                        claim.candidate_id
                     )
                 )
-                and self.integration_context.get("candidate_requirements", {}).get(
-                    claim.candidate_id
-                )
-            )
             if state == "SEMANTIC" or state == "ACCEPT" and needs_binding:
                 pending.append(proof)
         self.stage_latency_ms["validators"] = (perf_counter() - start) * 1000
@@ -443,7 +505,11 @@ class LiteVerificationRuntime:
         for proof in proofs:
             decision = decide(proof)
             histories.append(
-                LiteVerificationHistory(
+                (
+                    LiteVerificationHistoryV2
+                    if isinstance(proof, LiteProofV2)
+                    else LiteVerificationHistory
+                )(
                     proof=proof,
                     outcome=VerificationLoopResult(
                         parent_candidate_id=decision.candidate_id,
@@ -480,87 +546,77 @@ class LiteVerificationRuntime:
             ],
         )
         if self.integration_v2:
-            proposed = self.integration_context.get("candidate_requirements", {})
             self.summary["supported_requirements"] = {
-                h.outcome.final.candidate_id: (
-                    self.requirement_support.get(h.outcome.final.candidate_id, [])
-                    if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
-                    else []
-                    if h.outcome.final.candidate_id in semantic_bindings
-                    or h.outcome.final.original_claim.kind == "supported_interpretation"
-                    and not (
-                        h.outcome.final.original_claim.reasoning
-                        and h.outcome.final.original_claim.reasoning.claim_type == "derived_fact"
-                        and h.outcome.final.candidate_id not in semantic_bindings
-                    )
-                    else proposed.get(h.outcome.final.candidate_id, [])
-                )
+                h.outcome.final.candidate_id: supported_goals(h.proof, h.outcome.final)
                 for h in histories
                 if h.outcome.final.decision == "ACCEPT"
             }
+            self.summary["feedback"] = [
+                feedback(h.proof, h.outcome.final)
+                for h in histories
+                if isinstance(h.proof, LiteProofV2)
+            ]
+            if not self.integration_context.get("adaptive_coordinator"):
+                proposed = self.integration_context.get("candidate_requirements", {})
+                self.summary["supported_requirements"] = {
+                    h.outcome.final.candidate_id: (
+                        self.requirement_support.get(h.outcome.final.candidate_id, [])
+                        if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
+                        else []
+                        if h.outcome.final.candidate_id in semantic_bindings
+                        or h.outcome.final.original_claim.kind == "supported_interpretation"
+                        and not (
+                            h.outcome.final.original_claim.reasoning
+                            and h.outcome.final.original_claim.reasoning.claim_type
+                            == "derived_fact"
+                            and h.outcome.final.candidate_id not in semantic_bindings
+                        )
+                        else proposed.get(h.outcome.final.candidate_id, [])
+                    )
+                    for h in histories
+                    if h.outcome.final.decision == "ACCEPT"
+                }
+
         return histories
 
     def _semantic(self, proofs):
         start = perf_counter()
-        rows = [semantic_payload(p.batch, p.batch.claims[0]) for p in proofs]
-        # Additional source-derived prompt context, not a new verdict contract.
-        # Keep the legacy semantic payload digest replayable for saved ledgers;
-        # these bindings are already covered by verification_input_sha256.
+        rows = [
+            semantic_payload(p.batch, p.batch.claims[0], getattr(p, "goal_context", None))
+            for p in proofs
+        ]
         wire_rows = []
-        for row, proof in zip(rows, proofs, strict=True):
-            claim = proof.batch.claims[0]
-            calculation = claim.reasoning.calculation if claim.reasoning else None
-            if self.integration_v2:
-                row = dict(row)
-                # Keep the user question: a rewritten local goal can itself be
-                # the Supervisor's semantic mistake (e.g. a different expense).
-                row["user_question"] = row.pop("question")
-                # Same scalar facts are carried below with stable evidence IDs.
-                row.pop("facts", None)
+        for row, p in zip(rows, proofs, strict=True):
+            wire = dict(row)
+            if self.integration_v2 and not isinstance(p, LiteProofV2):
                 keys = self.integration_context.get("candidate_requirements", {}).get(
-                    claim.candidate_id, []
+                    p.batch.claims[0].candidate_id, []
                 )
-                row["local_requirements"] = [
-                    {
-                        key: r.get(key)
-                        for key in (
-                            "requirement_id",
-                            "text",
-                            "answer_goal",
-                            "requested_unit",
-                            "period",
-                            "required_indicators",
-                            "reasoning_operations",
-                            "reasoning_periods",
-                            "interpretation_topic",
-                        )
-                    }
+                wire["user_question"] = wire.pop("question")
+                wire["local_requirements"] = [
+                    r
                     for r in self.integration_context.get("requirements", [])
                     if r["requirement_id"] in keys
                 ]
-            wire_rows.append(
-                dict(
-                    row,
-                    evidence_bindings=[
-                        dict(
-                            evidence_id=s.evidence_id,
-                            item=s.canonical_item_id,
-                            label=s.label,
-                            value=s.value,
-                            period=s.period,
-                            unit=s.unit,
-                            scale=s.scale,
-                        )
-                        for s in claim.supporting_evidence
-                    ],
-                    operand_bindings={
-                        key: operand.model_dump(mode="json")
-                        for key, operand in calculation.operands.items()
-                    }
-                    if calculation
-                    else {},
+                calc = p.batch.claims[0].reasoning
+                wire["operand_bindings"] = (
+                    {k: v.model_dump(mode="json") for k, v in calc.calculation.operands.items()}
+                    if calc and calc.calculation
+                    else {}
                 )
-            )
+            wire["evidence_bindings"] = [
+                dict(
+                    evidence_id=e.evidence_id,
+                    item=e.canonical_item_id,
+                    label=e.label,
+                    value=e.value,
+                    period=e.period,
+                    unit=e.unit,
+                    scale=e.scale,
+                )
+                for e in p.batch.claims[0].supporting_evidence
+            ]
+            wire_rows.append(wire)
         payload = json.dumps(wire_rows, ensure_ascii=False)
         if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
             for p in proofs:
@@ -618,6 +674,14 @@ class LiteVerificationRuntime:
                 "khác mà Supervisor tự thêm/thay thế dù số đó có nguồn chính xác. "
                 "Field supported_requirement_ids bắt buộc trong mọi verdict, dùng đúng IDs "
                 "từ local_requirements, không dùng IDs claim/evidence hoặc tự tạo ID. "
+                " Thêm issues:[{check,reason_code,input_refs}] khi thiếu/sai, check chỉ dùng "
+                "source|period|selection|entity_join|formula|goal_support|semantic_conclusion. "
+                "input_refs chỉ dùng evidence_id trong payload; reason_code ngắn dạng snake_case. "
+                "evidence_obligations là record selection/join đã replay nguồn và phép chọn; "
+                "kiểm item/domain/kỳ/comparator/join có đúng câu hỏi gốc và local goal không. "
+                "Scalar của năm được chọn chỉ hỗ trợ selection goal khi đúng toàn domain, comparator "
+                "và ties; không đòi statement scalar lặp chữ cao/thấp nhất khi record đã chứng minh. "
+                "Calculation downstream phải dùng đúng các rows được chọn/join và đúng công thức goal. "
                 "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
                 "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
                 " answer_goal=analysis/synthesis/limitation yêu cầu nhận xét chứ không chỉ số "
@@ -658,16 +722,33 @@ class LiteVerificationRuntime:
                     if len(matches) == 1:
                         try:
                             wire = dict(matches[0])
-                            if self.integration_v2:
-                                supported = wire.pop("supported_requirement_ids", [])
-                                allowed = self.integration_context.get(
-                                    "candidate_requirements", {}
-                                ).get(cid, [])
-                                if isinstance(supported, list) and all(
-                                    isinstance(key, str) and key in allowed for key in supported
-                                ):
-                                    self.requirement_support[cid] = list(dict.fromkeys(supported))
-                            verdicts[cid] = SemanticVerdict.model_validate(wire)
+                            if isinstance(p, LiteProofV2):
+                                verdict = GoalSemanticVerdict.model_validate(wire)
+                                allowed = p.goal_context["proposed_requirement_ids"]
+                                evidence_ids = {
+                                    s.evidence_id for s in p.batch.claims[0].supporting_evidence
+                                }
+                                evidence_ids.update(
+                                    row["evidence_id"]
+                                    for r in p.goal_context["task_results"].values()
+                                    for row in r.get("selected_observations", [])
+                                )
+                                if any(
+                                    key not in allowed for key in verdict.supported_requirement_ids
+                                ) or any(set(i.input_refs) - evidence_ids for i in verdict.issues):
+                                    raise ValueError("semantic_unknown_binding_or_input")
+                                verdicts[cid] = verdict
+                            else:
+                                if self.integration_v2:
+                                    supported = wire.pop("supported_requirement_ids", [])
+                                    allowed = self.integration_context.get(
+                                        "candidate_requirements", {}
+                                    ).get(cid, [])
+                                    if isinstance(supported, list) and all(
+                                        key in allowed for key in supported
+                                    ):
+                                        self.requirement_support[cid] = supported
+                                verdicts[cid] = SemanticVerdict.model_validate(wire)
                         except ValueError:
                             pass
                 error = "semantic_verdict_missing_or_invalid"

@@ -706,17 +706,23 @@ class FinancialQAPipeline:
                 ),
             )
             if bound.integration_v2:
-                supported = trace.integration_context.get("supported_requirements", {})
-                bindings = {}
-                for outcome in trace.outcomes:
-                    if outcome.verified_claim_id:
-                        values = bindings.setdefault(outcome.verified_claim_id, [])
-                        values.extend(
-                            key
-                            for key in supported.get(outcome.candidate_id, [])
-                            if key not in values
-                        )
-                trace.integration_context["verified_requirements"] = bindings
+                from ..verification.evidence_obligations import current_goal_support
+                from ..verification.lite_contracts import LiteVerificationHistoryV2
+
+                trace.integration_context["verified_requirements"] = {
+                    entry.identity.verified_claim_id: current_goal_support(
+                        entry, bound.question, trace.integration_context.get("requirements", [])
+                    )
+                    if isinstance(entry.history, LiteVerificationHistoryV2)
+                    and entry.history.proof.batch.question == bound.question
+                    else trace.integration_context.get("supported_requirements", {}).get(
+                        entry.identity.accepted_candidate_id, []
+                    )
+                    if not bound.adaptive_coordinator
+                    and entry.identity.verified_claim_id in current_ids
+                    else []
+                    for entry in selected
+                }
             fields, metadata = stage(
                 "composer",
                 lambda: compose_lite(
@@ -1185,7 +1191,11 @@ class FinancialQAPipeline:
                             trace.outcomes.append(outcome)
                             if final.decision == "ACCEPT":
                                 entry = build_verified_claim(history)
-                                signature = _assertion_signature(entry)
+                                signature = (
+                                    entry.identity.verified_claim_id
+                                    if bound.integration_v2
+                                    else _assertion_signature(entry)
+                                )
                                 if signature in signatures:
                                     outcome.admission_status = "idempotent"
                                     outcome.verified_claim_id = signatures[signature]

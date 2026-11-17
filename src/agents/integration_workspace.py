@@ -283,12 +283,11 @@ class IntegrationWorkspace:
                 key
                 for key in by_id
                 if (key in assigned or by_id[key].answer_goal == "value")
-                and not any(
-                    key in state["requirement_ids"]
-                    and state.get("coordination", {}).get("selection")
-                    for state in self.tasks.values()
+                and (
+                    key in assigned
+                    and bool(self.task_results)
+                    or matches_requirement(claim, by_id[key], self.targets.get(key))
                 )
-                and matches_requirement(claim, by_id[key], self.targets.get(key))
             ]
         adaptive = self.task_results or any("revision" in t for t in self.tasks.values())
         goal_errors = {}

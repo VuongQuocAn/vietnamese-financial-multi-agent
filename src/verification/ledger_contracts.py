@@ -11,7 +11,7 @@ from .contracts import VerificationInput
 from .decision_contracts import VerificationLoopResult
 from .document_verification import DocumentVerificationHistory
 from .evidence_contracts import EvidenceCriticResult
-from .lite_contracts import LiteVerificationHistory
+from .lite_contracts import LiteVerificationHistory, LiteVerificationHistoryV2
 from .logic_contracts import FinancialLogicCriticResult
 from .validation_contracts import ValidationResult
 
@@ -60,7 +60,7 @@ class VerifiedClaim(FinancialModel):
     version: Literal["verified_claim_v1"] = "verified_claim_v1"
     identity: VerifiedClaimIdentity
     verification_status: Literal["verified"] = "verified"
-    history: VerificationHistory | LiteVerificationHistory
+    history: VerificationHistory | LiteVerificationHistory | LiteVerificationHistoryV2
     payload_sha256: str
 
     @property
@@ -85,6 +85,11 @@ class VerifiedClaim(FinancialModel):
         return self.decision.caveats
 
 
+class VerifiedClaimV2(VerifiedClaim):
+    version: Literal["verified_claim_v2"] = "verified_claim_v2"
+    history: LiteVerificationHistoryV2
+
+
 class VerifiedDocumentIdentity(VerifiedClaimIdentity):
     period: None = None
     kind: Literal["document"] = "document"
@@ -102,7 +107,7 @@ class VerifiedDocumentClaim(VerifiedClaim):
         return self.history.final
 
 
-LedgerEntry = VerifiedDocumentClaim | VerifiedClaim
+LedgerEntry = VerifiedDocumentClaim | VerifiedClaim | VerifiedClaimV2
 
 
 class LedgerAdmissionResult(FinancialModel):

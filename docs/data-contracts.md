@@ -1,5 +1,21 @@
 # Data contracts
 
+## M6-OBL-01 — Saved goal support và obligations
+
+Adaptive coordinator V2 ghi `lite_verification_history_v2` với `LiteProofV2` và
+`verified_claim_v2`. Payload semantic đã hash chứa câu hỏi nguyên gốc, trusted
+context, local requirements/proposed bindings, ordered operands và projection
+selection/join/source theo đúng input đã gửi. Nguồn/headers/raw values/quality và
+full records lưu trong goal_context; replay canonical source, domain/comparator/
+ties, exact context join/cardinality/missing rows dùng helpers hiện có.
+
+Semantic verdict v2 giữ truth riêng với `supported_requirement_ids` và
+`issues[{check,reason_code,input_refs}]`. Backend gắn candidate/version/tasks/
+requirements/obligation/action/repairability; không thực thi repair. Arithmetic
+không cấp selection/join/formula semantics. M5 chỉ đề xuất bindings; M6 là authority.
+M7 nhận binding từ history đã admit, chỉ reuse khi câu hỏi và local goal giữ nguyên.
+V1 tiếp tục đọc được, không tự nâng binding lịch sử; legacy non-adaptive giữ đường cũ.
+
 ## V2-INT-01 — Request integration sidecar
 
 Mixed V2 giữ mệnh lệnh nguyên văn bắt đầu câu “Không suy ra/suy diễn/kết luận”

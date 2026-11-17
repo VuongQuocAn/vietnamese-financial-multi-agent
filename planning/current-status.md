@@ -1,5 +1,16 @@
 # Trạng thái hiện tại
 
+## M6-OBL-01 — Evidence Obligations & Goal Binding
+
+**REVIEW**, ngày17/11/2026; implementation chưa commit.
+[Spec](tasks/M6/M6-OBL-01.md), [report](../docs/m6-obl-01-live-validation.md).
+M6 replay selection/join và saved bindings v2; feedback theo claim/task/input,
+v1 tương thích.51targeted PASS;2câu mới fresh, final exact saved M5→live M6:
+2ACCEPT/G2–G3→ledger v2→M7 partial_verified_coverage/9citations;G1 INVESTIGATE.
+9actual Qwen calls/72284tokens;57source hashes giữ nguyên. ADC thiếu selection
+domain tại M5; chưa feedback loop/Python/M7 refactor/OCR/Gemini/full CI.
+Next action: Tech Lead review implementation và giới hạn live G1/ADC.
+
 ## M5-COORD-02 — Evidence-Guided Coordination
 
 **DONE — Owner/Tech Lead xác nhận ngày17/11/2026**; implementation `1874166c3506994926a87f993458543d76a50806`

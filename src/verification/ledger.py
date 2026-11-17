@@ -10,10 +10,11 @@ from .ledger_contracts import (
     VerifiedClaimIdentity,
     VerifiedClaimMatches,
     VerifiedClaimQuery,
+    VerifiedClaimV2,
     VerifiedDocumentClaim,
     VerifiedDocumentIdentity,
 )
-from .lite_contracts import LiteVerificationHistory
+from .lite_contracts import LiteVerificationHistory, LiteVerificationHistoryV2
 from .validation_contracts import verification_input_digest
 from .verification_loop import BoundedVerificationLoop
 
@@ -92,7 +93,7 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
     if isinstance(history, LiteVerificationHistory):
         from .lite_runtime import decide, payload_digest, semantic_payload
 
-        history = LiteVerificationHistory.model_validate_json(history.model_dump_json())
+        history = type(history).model_validate_json(history.model_dump_json())
         proof, outcome = history.proof, history.outcome
         batch, validation = proof.batch, proof.validation
         if (
@@ -110,7 +111,9 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
             or (
                 proof.semantic is not None
                 and proof.semantic_input_sha256
-                != payload_digest(semantic_payload(batch, batch.claims[0]))
+                != payload_digest(
+                    semantic_payload(batch, batch.claims[0], getattr(proof, "goal_context", None))
+                )
             )
             or outcome.final != decide(proof)
             or outcome.final.decision != "ACCEPT"
@@ -139,7 +142,9 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
     identity = seed.model_copy(
         update={"verified_claim_id": "verified:" + verification_input_digest(seed)}
     )
-    entry = VerifiedClaim(identity=identity, history=history, payload_sha256="")
+    entry = (VerifiedClaimV2 if isinstance(history, LiteVerificationHistoryV2) else VerifiedClaim)(
+        identity=identity, history=history, payload_sha256=""
+    )
     entry.payload_sha256 = verification_input_digest(entry)
     return entry
 
