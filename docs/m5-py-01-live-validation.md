@@ -1,9 +1,12 @@
 # M5-PY-01 — Python Agent
 
-Trạng thái **REVIEW**, ngày17/11/2026. Baseline local `9a3adba`, đã tích hợp
+Trạng thái **DONE — Owner xác nhận hoàn thành ngày17/11/2026**.
+Baseline local `9a3adba`, đã tích hợp
 remote main `83c21dc` trước release; giữ local edits ngoài task trong worktree gốc.
 Implementation `7992105dcbf8718222d6fc7e2220224256451830` đã push main, xác minh
-remote cùng SHA; không thay M6/M7. Commit sau chỉ ghi report/tracking REVIEW.
+remote cùng SHA; không thay M6/M7. Bàn giao REVIEW tại `461afd4` trước nghiệm thu.
+Giữ các giới hạn đã báo; phiên đóng chỉ tài liệu/tracking và planning/diff/Git,
+không sửa runtime hoặc chạy lại tests/API/benchmark.
 
 Coordinator dùng optional `python_requirement` cho primitive ngoài Calculator;
 backend đối chiếu cả câu hỏi gốc và objective. Gate bảo thủ theo tên capability,
@@ -76,4 +79,4 @@ hiện có. Image base pin digest trong Dockerfile; image thực nghiệm
 `sha256:73c636a1fd573b2ef90b57d98de19e7b7c9cad5e248d52791dc38688086b4687`.
 Chưa có image/config/preflight hợp lệ trả `python_unavailable`, Calculator vẫn dùng được.
 
-Next action: Tech Lead review M5-PY-01 cùng các giới hạn live Calculator/repair đã ghi.
+Next action: chờ Owner giao nhiệm vụ tiếp theo; không tự bắt đầu M6-PY-01.
