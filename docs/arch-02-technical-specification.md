@@ -1,6 +1,6 @@
 # ARCH-02 — Technical Architecture Specification
 
-Ngày 17/11/2026 (Asia/Bangkok). **REVIEW — chờ Tech Lead đánh giá thiết kế.**
+Ngày 17/11/2026 (Asia/Bangkok). **DONE — Owner/Tech Lead APPROVED.**
 Đầu vào được duyệt: [ARCH-01a](arch-01-adaptive-multi-agent-review.md), bản
 publish `3dbb48c969567b01197ec18f4b6adac03e0aee05`, nghiệm thu tại remote main
 `5eea640d7c1955f7a7454c4c9c5d29fede247d57`. Đối chiếu runtime trực tiếp tại
@@ -564,10 +564,17 @@ Kiểm bắt buộc: planning checker tại working tree và cây publish, `git 
 ghi tại registry/spec task sau khi chạy; không chạy Qwen/Gemini/OCR, pytest,
 benchmark hoặc CI lớn/thủ công. Commit docs dùng `[skip ci]`.
 
-Các quyết định chờ Tech Lead review: wire/internal split, caps và một repair
+Các quyết định đã được Owner/Tech Lead chấp thuận ngày 17/11/2026: wire/internal split, caps và một repair
 round; Docker Linux worker với fallback unavailable; source-bound observations
 và proof/history versioning; natural realization trước M6/composition sau M6.
 Formula/accounting definition chưa được duyệt vẫn TBD theo từng yêu cầu; không
 đưa định nghĩa benchmark thành registry rule.
 
-**Next action duy nhất:** Tech Lead review ARCH-02 trước khi giao M5-COORD-01.
+Nghiệm thu áp dụng cho đặc tả kiến trúc tại commit
+[`cb65c927fe2fc719d06fdd82cf904e3323a941cf`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cb65c927fe2fc719d06fdd82cf904e3323a941cf),
+đã publish lên main và xác minh remote SHA. Phiên đóng chỉ cập nhật trạng thái/
+tài liệu và kiểm planning/diff; không triển khai runtime, chạy lại tests/model/
+benchmark hoặc CI thủ công. Worker readiness, caps calibration và chất lượng
+thực nghiệm vẫn cần kiểm chứng trong các task implementation được giao sau.
+
+**Next action duy nhất:** chờ Owner/Tech Lead giao M5-COORD-01.

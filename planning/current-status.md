@@ -2,15 +2,14 @@
 
 ## ARCH-02 — Technical Architecture Specification
 
-**REVIEW**, ngày 17/11/2026. [Đặc tả](../docs/arch-02-technical-specification.md)
-trên coordinator V2: Task DAG/shared workspace, wire nhỏ, Python isolation/proof,
-M6 obligations/một vòng local repair và M7 composition của propositions đã verify.
-Runtime đối chiếu `966b73a` + local edits. Đặc tả commit
+**DONE — Owner/Tech Lead APPROVED ngày 17/11/2026**.
+[Đặc tả](../docs/arch-02-technical-specification.md) tại commit
 [`cb65c92`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/cb65c927fe2fc719d06fdd82cf904e3323a941cf)
-đã xác minh; publish docs-only trên remote main `5eea640`, giữ code/commits ngoài task.
-Planning PASS local161/publish145 tasks; diff/fingerprint182 code/schema PASS,
-79 files ngoài scope giữ nguyên. Không model/pytest/benchmark/CI; chưa mở implementation.
-Next action: Tech Lead review ARCH-02 trước khi giao M5-COORD-01.
+đã push main và xác minh remote SHA. Phạm vi nghiệm thu là thiết kế kiến trúc;
+giữ giới hạn worker readiness, caps calibration và chưa có research evidence mới.
+Phiên đóng chỉ tài liệu/tracking và kiểm planning/diff, không sửa runtime,
+chạy lại tests/model/benchmark hoặc CI thủ công; giữ thay đổi ngoài task.
+Next action: chờ Owner/Tech Lead giao M5-COORD-01.
 
 ## ARCH-01a — Adaptive Evidence-Guided Multi-Agent Framework Review
 

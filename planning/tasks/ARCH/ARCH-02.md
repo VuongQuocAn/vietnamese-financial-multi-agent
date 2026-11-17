@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: ARCH
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: ARCH-01a
 - Estimated Complexity: S
@@ -60,7 +60,7 @@ Gemini/OCR, benchmark, smoke/pytest/full CI; không tự bắt đầu task tiế
 - [x] Có obligations theo loại claim, truth/goal support riêng và M6 authority.
 - [x] M7 dùng propositions đã verify; không thêm semantic verification lần hai.
 - [x] Có task tiếp theo bắt đầu M5-COORD-01 và tiêu chí test dữ liệu scan thật.
-- [ ] Tech Lead đánh giá thiết kế trước khi giao implementation.
+- [x] Owner/Tech Lead chấp thuận ARCH-02 và cho chuyển DONE ngày 17/11/2026; chưa giao implementation.
 
 ## Required Tests
 
@@ -70,8 +70,7 @@ Không smoke/pytest/API/benchmark hoặc CI thủ công.
 
 ## Risks and Blockers
 
-REVIEW: cần Tech Lead đánh giá wire/internal split, bounded repair, Docker worker,
-source-bound observations/proof versioning và realization trước M6. Docker CLI
+Đã được Owner/Tech Lead chấp thuận thiết kế ngày 17/11/2026. Docker CLI
 có mặt, chưa xác minh daemon/image/isolation; runtime local chưa đồng bộ remote.
 Caps chưa calibration; chưa có kết quả live/research mới; novelty chưa xác lập.
 
@@ -84,8 +83,10 @@ Caps chưa calibration; chưa có kết quả live/research mới; novelty chưa
   tasks); diff check PASS. Fingerprint 182 file Python/JSON trong src/schema
   trước/sau khớp `5e9caa109b27e4e2b3155b850d835a27dac693c1a014093184b184be1fd7bf82`;
   đối chiếu 79 files local ngoài scope không đổi. Không chạy model/pytest/benchmark/CI.
-- Review Notes: chưa được Tech Lead nghiệm thu; không triển khai runtime.
+- Review Notes: Owner/Tech Lead APPROVED ngày 17/11/2026, cho chuyển DONE.
+  Phiên đóng chỉ cập nhật tài liệu/tracking, kiểm planning/diff; không chạy lại
+  tests/model/benchmark/CI hoặc triển khai runtime/M5-COORD-01.
 
 ## Handoff Notes
 
-Next action duy nhất: Tech Lead review ARCH-02 trước khi giao M5-COORD-01.
+Next action duy nhất: chờ Owner/Tech Lead giao M5-COORD-01.
