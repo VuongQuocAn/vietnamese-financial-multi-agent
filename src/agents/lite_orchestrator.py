@@ -897,13 +897,22 @@ class SupervisorLite:
         return plan, metadata, []
 
     def _adaptive_plan(self, question, context, sources):
-        from .coordinator_plan import adapt_plan, proposal_schema
+        from .coordinator_plan import (
+            adapt_plan,
+            grounding_issue,
+            output_schema,
+            preserve_question_plan,
+            proposal_schema,
+        )
 
         prompt = dict(
             instruction=(
                 "Lập một kế hoạch JSON {goals:[{text,mode}],tasks:[{goal_indexes,role,objective,input_handles,after}]}. "
                 "Chỉ goals là đầu ra người dùng hỏi; mode=value hoặc analysis. Giữ đủ các ý trong câu hỏi. "
-                "Mỗi goal một output: hai số liệu và một phép tính là ba goals, phép tính cũng mode=value. "
+                "Goal chỉ là đầu ra được hỏi. Lookup giữ nguyên câu hỏi trong một goal/value và một task; "
+                "không tính một thông tin được yêu cầu tra trực tiếp từ các đại lượng khác. "
+                "So sánh diễn biến không tự thêm tỷ lệ/phần trăm. Không tự thêm kỳ/chỉ tiêu. "
+                "Các phép tính trung gian cần thiết nằm trong task, không tự trở thành goal bắt buộc. "
                 "Giữ ràng buộc không suy nguyên nhân trong text goal kết quả, không tạo goal riêng cho nó. "
                 "goal_indexes và after là indexes 0-based trong hai arrays gốc; có thể trỏ task phía sau. "
                 "after khai các task có kết quả cần dùng. input_handles chỉ dùng S handles từ inventory; "
@@ -922,7 +931,8 @@ class SupervisorLite:
                 "task sau after:[index_task_đầu], input_handles:[] và objective nêu rõ dùng kết quả chọn "
                 "để truy xuất chỉ tiêu cùng kỳ. Backend có demand retrieval, selection max/min/max_abs "
                 "và exact context join; không cần dự đoán trước kỳ thắng. "
-                "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema."
+                "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema. "
+                "Mọi goal phải có task.goal_indexes sở hữu; một task có thể phục vụ nhiều goals. "
                 " FinancialCalculator xử lý add/subtract/multiply/divide, sum/mean, ratios, "
                 "percentage_of/change và so sánh. CHỈ khi cần primitive ngoài khả năng đó, "
                 "khai python_requirement: power, sqrt, root_finding, dispersion hoặc iterative_solver. "
@@ -930,35 +940,25 @@ class SupervisorLite:
                 "Objective Python phải nêu công thức được người dùng yêu cầu và đúng kỳ/nguồn."
             ),
             schema=proposal_schema(),
+            output_schema=output_schema(sources),
+            handle_namespaces=dict(
+                S="canonical source inventory",
+                T="backend tasks, never input_handles",
+                E="retrieved numeric evidence, Specialist only",
+                D="read-only document context, not numeric operands",
+            ),
+            source_context=getattr(self, "source_context", {}),
             example=dict(
                 goals=[
-                    dict(text="Số liệu A đúng kỳ", mode="value"),
-                    dict(text="Số liệu B đúng kỳ", mode="value"),
-                    dict(text="Kết quả phép tính dùng A và B", mode="value"),
+                    dict(text="Nguyên văn thông tin người dùng yêu cầu tra", mode="value"),
                 ],
                 tasks=[
                     dict(
                         goal_indexes=[0],
                         role="profitability",
-                        objective="Tra số liệu A từ nguồn phù hợp",
+                        objective="Tra đúng thông tin trong goal; giữ gap nếu chưa có nguồn",
                         input_handles=[],
                         after=[],
-                        python_requirement=None,
-                    ),
-                    dict(
-                        goal_indexes=[1],
-                        role="cash_flow_and_earnings_quality",
-                        objective="Tra số liệu B từ nguồn phù hợp",
-                        input_handles=[],
-                        after=[],
-                        python_requirement=None,
-                    ),
-                    dict(
-                        goal_indexes=[2],
-                        role="cash_flow_and_earnings_quality",
-                        objective="Dùng kết quả của task index0 và index1 để tính",
-                        input_handles=[],
-                        after=[0, 1],
                         python_requirement=None,
                     ),
                 ],
@@ -1000,6 +1000,18 @@ class SupervisorLite:
         if response.status != "success" or not isinstance(response.output, JSONOutput):
             return LitePlan(), metadata, ["supervisor_provider_failure"]
         plan, errors = adapt_plan(response.output.payload, sources)
+        issue = grounding_issue(question, plan) if not errors else None
+        self.adaptation_events = []
+        if errors or issue:
+            self.adaptation_events = [
+                dict(
+                    action="preserve_original_question",
+                    reasons=errors or [issue],
+                    raw_plan=response.output.payload,
+                )
+            ]
+            plan = preserve_question_plan(question, sources)
+            errors = []  # The bounded fallback owns the original goal; raw failure remains in trace.
         return plan, metadata, errors
 
 
@@ -1245,6 +1257,15 @@ class FinancialLiteOrchestrator:
                     self.composition or json_document_composition(self.catalog),
                     task.objective,
                 )
+                original = getattr(self, "request_source_context", {})
+                contexts = {
+                    c["reference"]["evidence"]["local_id"]: c
+                    for c in [*original.get("contexts", []), *source_context["contexts"]]
+                }
+                source_context["contexts"] = [
+                    dict(c, handle=f"D{i + 1}") for i, c in enumerate(contexts.values())
+                ]
+                self.workspace.tasks[task.task_id]["source_context"] = source_context["contexts"]
                 prompt["document_source_context"] = {
                     k: v for k, v in source_context.items() if k != "tool_calls"
                 }
@@ -1300,6 +1321,7 @@ class FinancialLiteOrchestrator:
                         prompt_observation(r) for r in full["selected_observations"]
                     ]
                     record["coordination"] = prompt_coordination(full["coordination"])
+                    record["source_context"] = full.get("source_context", [])
                 prompt["evidence_coordination"] = prompt_coordination(
                     self.workspace.tasks[task.task_id].get("coordination", {})
                 )
@@ -1488,6 +1510,22 @@ class FinancialLiteOrchestrator:
         # select supporting periods; a target year is not an operand-year filter.
         retrieval_context = context.model_copy(update={"period": None})
         sources = inventory(self.catalog, retrieval_context)
+        self.request_source_context = {}
+        if (
+            self.adaptive_coordinator
+            and len(self.catalog.descriptors) == 1
+            and self.catalog.descriptors[0].source_kind == "json"
+        ):
+            from ..evidence.json_catalog import json_document_composition
+            from ..tools.json_source_lookup import lookup_json_source_context
+
+            self.request_source_context = lookup_json_source_context(
+                self.catalog, self.composition or json_document_composition(self.catalog), question
+            )
+            if isinstance(self.supervisor, SupervisorLite):
+                self.supervisor.source_context = {
+                    k: v for k, v in self.request_source_context.items() if k != "tool_calls"
+                }
         plan, metadata, gaps = self.supervisor.plan(question, context, sources)
         output.usage.stages["planning"] = metadata
         output.trace.append(
@@ -1496,6 +1534,16 @@ class FinancialLiteOrchestrator:
             )
         )
         output.caveats.extend(gaps)
+        if isinstance(self.supervisor, SupervisorLite) and getattr(
+            self.supervisor, "adaptation_events", []
+        ):
+            output.trace.append(
+                StageExecution(
+                    stage="planning",
+                    outcome="original_question_fallback",
+                    reasons=[json.dumps(self.supervisor.adaptation_events, ensure_ascii=False)],
+                )
+            )
         workspace = None
         if self.integration_v2:
             if not self.adaptive_coordinator:
@@ -1957,7 +2005,7 @@ class FinancialLiteOrchestrator:
             join_observations,
             observation,
             propose,
-            resolve_demands,
+            resolve_demand_batches,
             select_observations,
         )
 
@@ -2001,7 +2049,9 @@ class FinancialLiteOrchestrator:
                 list(workspace.observations.values()),
                 available,
             )
-            handles, lineage = resolve_demands(proposal, task, workspace, sources)
+            handles, lineage = resolve_demand_batches(
+                proposal, state.get("retrieval_batches", []), task, workspace, sources
+            )
             additions = []
             expansion_error = None
             raw_expansion = state.get("expansion_proposal", [])
@@ -2016,6 +2066,7 @@ class FinancialLiteOrchestrator:
                 joins=[],
                 expansion_error=expansion_error,
                 expansion_proposal=raw_expansion,
+                retrieval_batches=state.get("retrieval_batches", []),
             )
             if proposal.selection:
                 # Demand-retrieve the entire declared domain rather than ranking a truncated prompt.
@@ -2056,8 +2107,11 @@ class FinancialLiteOrchestrator:
                     proposal.selection, list(workspace.observations.values()), sources
                 )
                 state["coordination"]["selection"] = record
+            demands = [d for batch in state.get("retrieval_batches", []) for d in batch]
             for tid in dict.fromkeys(
-                d.period_from_task for d in proposal.retrieve if d.period_from_task
+                d["period_from_task"]
+                for d in demands
+                if d.get("period_from_task") and d["source"] in sources
             ):
                 record = join_observations(workspace.task_results[tid], current)
                 state["coordination"]["joins"].append(record)

@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--ids", nargs="+", required=True)
+    parser.add_argument("--task", choices=("E2E-REMED-01", "E2E-REMED-02"), default="E2E-REMED-01")
     args = parser.parse_args()
     if not 1 <= len(set(args.ids)) <= 4 or len(args.ids) != len(set(args.ids)):
         parser.error("select at most four distinct affected inputs")
@@ -26,7 +27,7 @@ def main():
         args.output.resolve(),
         args.baseline.resolve(),
     )
-    if not output.is_relative_to(storage / "artifacts/evidence/E2E-REMED-01"):
+    if not output.is_relative_to(storage / "artifacts/evidence" / args.task):
         parser.error("output outside task evidence")
     if not baseline.is_relative_to(storage / "artifacts/evidence/E2E-VAL-01"):
         parser.error("baseline must be saved Pilot evidence")

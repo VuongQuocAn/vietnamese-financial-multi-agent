@@ -130,6 +130,21 @@ def propose(gateway, context, task, workspace, sources, observations, available_
         for tid in task.depends_on
     }
     schema = CoordinationProposal.model_json_schema()
+    dependency_ids = workspace.dependency_ids(task)
+    reusable = [
+        r["evidence_id"]
+        for tid in dependency_ids
+        for r in workspace.task_results[tid].get("selected_observations", [])
+    ]
+    schema["$defs"]["RetrievalDemand"]["properties"]["source"] = {
+        "enum": [
+            *sources,
+            *dependency_ids,
+            *[workspace.task_results[t]["handle"] for t in dependency_ids],
+            *reusable,
+        ],
+        "description": "S = retrieve a source, T/result/E from dependencies = reuse exact parent evidence; never arbitrary IDs.",
+    }
     schema["$defs"]["RetrievalDemand"]["properties"]["period_from_task"] = {
         "enum": [None, *task.depends_on],
         "description": "Chỉ task dependency đã có output; root phải null.",
@@ -144,6 +159,9 @@ def propose(gateway, context, task, workspace, sources, observations, available_
             "period_from_task CHỈ thuộc dependency_results; tuyệt đối không dùng task hiện tại hoặc task tương lai. "
             "Root không có dependencies: mọi period_from_task phải null. "
             "Không retrieve lại dữ liệu đã có nếu chỉ cần phép tính. "
+            "S handles là nguồn canonical; T/result handles là kết quả dependency, E là evidence đã retrieve. "
+            "Khi chỉ tính/so sánh evidence đã có từ dependency: retrieve=[], selection=null. "
+            "Mỗi lượt retrieve tối đa6 nguồn; backend giữ tất cả batch nếu phải lấy nhiều nguồn. "
             "selection chỉ dùng khi objective yêu cầu chọn lớn/nhỏ nhất: item canonical có thật, "
             "periods là TOÀN BỘ kỳ phải so sánh, comparator=max|min|max_abs|min_abs; "
             "không dùng selection để chọn operands của phép tính hoặc gộp nhiều chỉ tiêu. "
@@ -213,12 +231,79 @@ def propose(gateway, context, task, workspace, sources, observations, available_
     workspace.tasks[task.task_id]["expansion_proposal"] = payload.get("add_tasks", [])
     # An optional append patch is validated atomically on its own. A rejected
     # patch must not erase independent retrieval/selection outputs.
-    return CoordinationProposal.model_validate(payload | {"add_tasks": []}), metadata
+    batches = parse_retrieval_batches(payload)
+    workspace.tasks[task.task_id]["retrieval_batches"] = [
+        [d.model_dump(mode="json") for d in batch.retrieve] for batch in batches
+    ]
+    return batches[0], metadata
+
+
+def parse_retrieval_batches(payload):
+    """Validate all requested inputs before execution, max6 per batch, no truncation."""
+    requested = payload.get("retrieve", [])
+    if not isinstance(requested, list) or len(requested) > 16:
+        raise ValueError("demand_total_input_limit")
+    return [
+        CoordinationProposal.model_validate(
+            payload | {"retrieve": requested[i : i + 6], "add_tasks": []}
+        )
+        for i in range(0, max(1, len(requested)), 6)
+    ]
+
+
+def resolve_demand_batches(proposal, batches, task, workspace, sources):
+    handles, lineage = [], []
+    for demands in batches or [[d.model_dump(mode="json") for d in proposal.retrieve]]:
+        batch = CoordinationProposal(retrieve=[RetrievalDemand.model_validate(d) for d in demands])
+        selected, reused = resolve_demands(batch, task, workspace, sources)
+        handles.extend(selected)
+        lineage.extend(reused)
+    return list(dict.fromkeys(handles)), lineage
 
 
 def resolve_demands(proposal, task, workspace, sources):
     handles, lineage = [], []
     for demand in proposal.retrieve:
+        dependencies = workspace.dependency_ids(task)
+        parents = [
+            workspace.task_results[tid]
+            for tid in dependencies
+            if demand.source in {tid, workspace.task_results[tid]["handle"]}
+            or any(
+                r["evidence_id"] == demand.source
+                for r in workspace.task_results[tid].get("selected_observations", [])
+            )
+        ]
+        if parents:
+            if demand.period_from_task and demand.period_from_task not in dependencies:
+                raise ValueError("demand_dependency_unknown")
+            for parent in parents:
+                rows = parent.get("selected_observations", [])
+                if demand.source.startswith("E-"):
+                    rows = [r for r in rows if r["evidence_id"] == demand.source]
+                for row in rows:
+                    handles.extend(
+                        h
+                        for h, s in sources.items()
+                        if s["kind"] == "fact"
+                        and any(
+                            f.observation_identity().model_dump(mode="json")
+                            == row["reference"]["observation"]
+                            for f in s["records"]
+                        )
+                    )
+                lineage.append(
+                    dict(
+                        from_result={k: parent[k] for k in ("handle", "revision", "digest")},
+                        mode="reuse_exact_dependency",
+                        requested_handle=demand.source,
+                        selected_evidence_ids=[r["evidence_id"] for r in rows],
+                        source_context_handles=[
+                            c["handle"] for c in parent.get("source_context", [])
+                        ],
+                    )
+                )
+            continue
         source = sources.get(demand.source)
         if source is None or source["kind"] != "fact":
             raise ValueError("demand_source_unknown_or_not_fact")

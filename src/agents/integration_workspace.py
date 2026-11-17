@@ -210,7 +210,11 @@ class IntegrationWorkspace:
         """Immutable revision-1 proposal refs; source/proof closure still goes to M6."""
         state = self.tasks[task.task_id]
         state.update(
-            status="completed" if result.status == "generated" else result.status,
+            status="source_only"
+            if not result.candidates and state.get("source_context")
+            else "completed"
+            if result.status == "generated"
+            else result.status,
             candidate_statements=[c.content for c in result.candidates],
             candidate_evidence_ids=list(
                 dict.fromkeys(k for c in result.candidates for k in c.supporting_evidence_ids)
@@ -247,6 +251,7 @@ class IntegrationWorkspace:
             if result.candidates or state.get("coordination", {}).get("selection")
             else [],
             coordination=state.get("coordination", {}),
+            source_context=state.get("source_context", []),
         )
         if state.get("python_candidate"):
             record["python_candidate"] = state["python_candidate"]
@@ -259,10 +264,11 @@ class IntegrationWorkspace:
 
     def dependencies_ready(self, task):
         return all(
-            self.tasks.get(tid, {}).get("status") in {"completed", "partial"}
+            self.tasks.get(tid, {}).get("status") in {"completed", "partial", "source_only"}
             and (
                 self.task_results.get(tid, {}).get("candidate_ids")
                 or self.task_results.get(tid, {}).get("selected_observations")
+                or self.task_results.get(tid, {}).get("source_context")
             )
             for tid in task.depends_on
         )

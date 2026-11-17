@@ -97,6 +97,9 @@ def plan_document(gateway, request, requirements, *, feedback=None, reusable=())
                 "Bạn là Planner cho Document QA. Hiểu câu hỏi/context, lập requirements truy xuất BM25 "
                 "động bằng tiếng Việt; kind exact_text/entity_role/table_labels/source_excerpt. "
                 "Giữ target/label/kind của các yêu cầu gốc, có thể thay query và bổ sung yêu cầu còn thiếu. "
+                "Query là cụm danh từ ngắn có trong nguồn, không sao chép cả câu hỏi làm truy vấn. "
+                "Nếu conversation có dependency_results, dùng kết quả có nguồn để resolve đại từ/thực thể; "
+                "kết quả missing không xác định winner, không suy đoán. Context không là evidence để ACCEPT. "
                 "Không trả lời, không tạo bằng chứng hoặc suy đoán source IDs. "
                 "entity_role: truy xuất từng vai trò. source_excerpt: đọc đầy đủ điều kiện/ngoại lệ. "
                 "reasoning_required=true khi cần phân tích, false cho quotation/entity lookup đơn giản. "
@@ -142,6 +145,37 @@ def plan_fusion(gateway, request):
     )
     if request.integration_v2:
         plan = retain_response_constraints(plan, request.question)
+    # Preserve one identity for duplicate semantic work and redirect its dependency refs.
+    from ..evidence.search import normalize_search
+
+    seen, aliases, unique = {}, {}, []
+    for part in plan.requirements:
+        key = (
+            part.lane,
+            part.kind,
+            part.document_requirement.model_dump_json() if part.document_requirement else None,
+            normalize_search(part.original_span),
+            normalize_search(part.execution_question or part.original_span),
+        )
+        if key in seen:
+            aliases[part.requirement_id] = seen[key].requirement_id
+            seen[key].dependencies = list(
+                dict.fromkeys([*seen[key].dependencies, *part.dependencies])
+            )
+            seen[key].verification_requirements = list(
+                dict.fromkeys(
+                    [*seen[key].verification_requirements, *part.verification_requirements]
+                )
+            )
+        else:
+            seen[key] = part
+            unique.append(part)
+    for part in unique:
+        part.dependencies = list(dict.fromkeys(aliases.get(d, d) for d in part.dependencies))
+        part.verification_requirements = list(
+            dict.fromkeys(aliases.get(d, d) for d in part.verification_requirements)
+        )
+    plan.requirements = unique
     keys = {r.requirement_id for r in plan.requirements}
     if (
         plan.question != request.question

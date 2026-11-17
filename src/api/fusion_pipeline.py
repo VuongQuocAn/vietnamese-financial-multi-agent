@@ -252,6 +252,24 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
             document_snapshots=[],
             integration_lane=part.lane,
         )
+        dependency_results = [
+            dict(
+                requirement_id=prior["requirement_id"],
+                lane=prior["lane"],
+                status=prior["response"]["status"],
+                answer=prior["response"]["answer_vi"][:2000],
+                verified_claim_ids=prior["response"]["used_verified_claim_ids"],
+                citations=prior["response"]["citations"],
+                authority="query_context_only; verify any downstream claim independently",
+            )
+            for prior in bundle.lane_results
+            if prior["requirement_id"] in part.dependencies
+        ]
+        if dependency_results:
+            updates["conversation_context"] = [
+                *bound.conversation_context[-7:],
+                dict(dependency_results=dependency_results),
+            ]
         if part.lane == "financial":
             updates.update(
                 question=(part.execution_question or part.original_span) + f" năm {year}",

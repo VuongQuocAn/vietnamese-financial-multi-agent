@@ -1,5 +1,18 @@
 # Data contracts
 
+## E2E-REMED-02 — Planning/evidence routing
+
+Adaptive planner công bố root schema capped6tasks/16goals, S handles chỉ từ inventory.
+Sai schema/ownership hoặc added targets/periods rõ ràng được ghi raw trace; fallback
+một task/goal giữ nguyên toàn câu hỏi, không tạo semantic coverage. Exact item+period
+unique có thể sửa S ordinal chọn nhầm, giữ raw proposal trong provider trace.
+Demand tối đa16inputs chia batch<=6 validate toàn bộ trước thực thi, không cắt nguồn.
+T/result/E chỉ reuse exact evidence của dependency closure có digest; unknown vẫn chặn.
+D/source context được giữ trong TaskResult digest và truyền consumer; source_only
+chỉ cho phép downstream tiếp tục truy xuất, không có claim/canonical/ACCEPT authority.
+Fusion truyền parent response/verified refs như query context qua conversation_context
+hiện có và deduplicate cùng lane/span/execution, không tự chọn entity khi parent thiếu.
+
 ## E2E-REMED-01 — JSON source readiness
 
 Snapshot JSON giữ original bytes cùng parsed projection; scope đọc explicit title

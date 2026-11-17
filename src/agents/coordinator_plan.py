@@ -49,6 +49,72 @@ def proposal_schema():
     }
 
 
+class PlanProposal(FinancialModel):
+    goals: list[GoalProposal] = Field(min_length=1, max_length=16)
+    tasks: list[TaskProposal] = Field(min_length=1, max_length=6)
+
+
+def output_schema(sources):
+    schema = PlanProposal.model_json_schema()
+    schema["$defs"]["TaskProposal"]["properties"]["input_handles"]["items"] = {
+        "enum": list(sources)
+    }
+    return schema
+
+
+def preserve_question_plan(question, sources):
+    """One owned goal for an unparseable/drifting plan; never invent an omitted subquestion."""
+    targets = _targets(normalize(question))
+    relevant = [s for s in sources.values() if any(s["item"] == target for _, target in targets)]
+    role = next((r for s in relevant for r in s["roles"]), "profitability")
+    mode = (
+        "analysis"
+        if re.search(r"\b(dien bien|nhan xet|so sanh|giai thich)\b", normalize(question))
+        else "value"
+    )
+    return adapt_plan(
+        dict(
+            goals=[dict(text=question, mode=mode)],
+            tasks=[
+                dict(goal_indexes=[0], role=role, objective=question, input_handles=[], after=[])
+            ],
+        ),
+        sources,
+    )[0]
+
+
+def grounding_issue(question, plan):
+    """Reject clear added targets/years; this is not a semantic verifier."""
+    text = normalize(question)
+    targets = set(_targets(text))
+    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", question))
+    comparative = bool(
+        re.search(r"\b(so voi|so sanh|bien dong|tang truong|ky truoc|nam truoc|dau nam)\b", text)
+    )
+    for requirement in plan.requirements:
+        if targets and set(_targets(normalize(requirement.text))) - targets:
+            return "unrequested_target"
+        if (
+            not comparative
+            and years
+            and set(re.findall(r"\b(?:19|20|21)\d{2}\b", requirement.text)) - years
+        ):
+            return "unrequested_period"
+    # A source lookup without a canonical numeric target is not an invitation to compute.
+    if not targets and not re.search(
+        r"\b(tinh|chenh lech|ty le|ty suat|he so|trung binh|so sanh|lon nhat|nho nhat)\b",
+        re.sub(r"\buoc tinh\b", "", text),
+    ):
+        if (
+            len(plan.requirements) != 1
+            or normalize(plan.requirements[0].text) != text
+            or len(plan.tasks) != 1
+            or normalize(plan.tasks[0].objective) != text
+        ):
+            return "lookup_goal_changed"
+    return None
+
+
 def adapt_plan(payload, sources):
     from .lite_orchestrator import LitePlan, LiteTask
 
@@ -131,6 +197,21 @@ def adapt_plan(payload, sources):
                 raise ValueError("source_handle_unknown")
             if any(i < 0 or i >= len(raw_tasks) for i in task.after):
                 raise ValueError("task_reference_unknown")
+            # Exact goal/item/period resolution is stronger than a model's numeric S ordinal.
+            assigned = [requirements[i] for i in task.goal_indexes]
+            if len(assigned) == 1 and assigned[0].target_id and assigned[0].period:
+                goal = assigned[0]
+                correct = [
+                    h
+                    for h, s in sources.items()
+                    if s["item"] == goal.target_id and s["period"] == goal.period
+                ]
+                if (
+                    len(correct) == 1
+                    and task.input_handles
+                    and all(sources[h]["kind"] == "fact" for h in task.input_handles)
+                ):
+                    task.input_handles = correct
             tasks.append(
                 LiteTask(
                     task_id=tid,
