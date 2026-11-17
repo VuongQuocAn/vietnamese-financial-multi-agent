@@ -17,6 +17,13 @@ Replay thành công không cấp financial/goal authority. History/Ledger v2 lư
 proof và verified support; admission đối chiếu replay bundle, policy/semantic
 digest và goal binding. V1 vẫn đọc được, không rewrite ledger cũ.
 
+`python_units` suy chiều đơn vị từ AST arithmetic straight-line (không exec trên
+host): cộng/trừ phải cùng chiều, nhân/chia/power/sqrt truyền số mũ đơn vị,
+ln/exp chỉ nhận dimensionless. Declared output unit phải khớp. Constructs chưa
+hỗ trợ trả undetermined, không ACCEPT; chưa có dimensional proof cho loops,
+comprehensions/solver tổng quát. Check này không xác minh tên/định nghĩa tài chính
+hoặc phân biệt hai công thức cùng chiều; semantic vẫn cần thiết.
+
 Chỉ Python ACCEPT có verified goal binding mới được admit; thiếu support giữ truth
 decision độc lập và không phát hành. M7 đọc claim/citations như thường, không verifier
 mới. Missing proof/source hoặc worker failure giữ candidate chưa xác minh. Lineage

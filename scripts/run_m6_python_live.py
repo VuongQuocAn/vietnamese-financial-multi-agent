@@ -5,11 +5,13 @@ import json
 import subprocess
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 
 from vietnamese_financial_multi_agent.agents.orchestration_contracts import OrchestrationResult
 from vietnamese_financial_multi_agent.api.financial_qa_pipeline import FinancialQAPipeline
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.api.text_gateway import create_text_gateway
+from vietnamese_financial_multi_agent.core.llm_contracts import LLMResponse
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 from vietnamese_financial_multi_agent.core.persistence import atomic_json
 from vietnamese_financial_multi_agent.evidence.json_catalog import load_json_corpus_document
@@ -27,6 +29,7 @@ def main():
     parser.add_argument("--document-alias", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument("--saved-provider-events", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     args.output.mkdir(parents=True, exist_ok=False)
@@ -61,17 +64,44 @@ def main():
         )
         return
 
-    configured = create_text_gateway(root, provider="qwen")
+    saved_events = (
+        json.loads(args.saved_provider_events.read_text(encoding="utf-8"))
+        if args.saved_provider_events
+        else None
+    )
+    configured = (
+        SimpleNamespace(model=original.context.model, close=lambda: None)
+        if saved_events
+        else create_text_gateway(root, provider="qwen")
+    )
     events = []
 
     def transport(request):
         assert len(events) < 2 and request.request_id.startswith("m6-")
-        response = configured.adapter(request)
+        if saved_events:
+            saved = saved_events[len(events)]
+            wire = request.model_dump(mode="json")
+            for key in ("model", "messages", "generation", "output_spec", "constraints"):
+                assert wire[key] == saved["request"][key], "saved_semantic_input_changed:" + key
+            response = LLMResponse.model_validate_json(json.dumps(saved["response"])).model_copy(
+                update=dict(request_id=request.request_id, correlation=request.correlation)
+            )
+        else:
+            response = configured.adapter(request)
         events.append(
             dict(request=request.model_dump(mode="json"), response=response.model_dump(mode="json"))
         )
         atomic_json(args.output / "provider-events.json", events)
-        print(json.dumps(dict(call=len(events), status=response.status)), flush=True)
+        print(
+            json.dumps(
+                dict(
+                    call=len(events),
+                    status=response.status,
+                    saved_exact_response=bool(saved_events),
+                )
+            ),
+            flush=True,
+        )
         return response
 
     gateway = SharedLLMGateway({"qwen": transport})
@@ -203,8 +233,21 @@ def main():
                 saved_m5_sha256=digest(saved_wire),
                 source_hashes=before,
                 source_unchanged=before == after,
-                calls=len(events),
-                known_tokens=sum(e["response"]["usage"].get("total_tokens") or 0 for e in events),
+                calls=0 if saved_events else len(events),
+                saved_semantic_reuses=len(events) if saved_events else 0,
+                saved_provider_events_sha256=digest(
+                    args.saved_provider_events.read_text(encoding="utf-8")
+                )
+                if saved_events
+                else None,
+                known_tokens=0
+                if saved_events
+                else sum(e["response"]["usage"].get("total_tokens") or 0 for e in events),
+                reused_known_tokens=sum(
+                    e["response"]["usage"].get("total_tokens") or 0 for e in events
+                )
+                if saved_events
+                else 0,
                 unknown_usage=sum(
                     e["response"]["usage"].get("total_tokens") is None for e in events
                 ),

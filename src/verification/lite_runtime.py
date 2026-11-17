@@ -536,11 +536,22 @@ class LiteVerificationRuntime:
                 )
                 if replay:
                     from .python_proof import validate_python_history
+                    from .python_units import UnitNotProven, check_python_units
 
                     try:
+                        units = check_python_units(claim.python_execution.execution)
+                        self.validator._check(
+                            checked,
+                            "python_units",
+                            "pass",
+                            "python_output_dimensions_verified",
+                            expected=units,
+                        )
                         validate_python_history(proof)
+                    except UnitNotProven as error:
+                        self.validator._check(checked, "python_units", "undetermined", str(error))
                     except (ValueError, KeyError, TypeError, IndexError) as error:
-                        self.validator._check(checked, "python_execution", "fail", str(error))
+                        self.validator._check(checked, "python_units", "fail", str(error))
             else:
                 if claim.python_execution:
                     self.validator._check(

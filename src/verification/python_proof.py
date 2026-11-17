@@ -180,6 +180,14 @@ def validate_python_history(proof):
     python = claim.python_execution
     record, replay = python.execution, proof.python_replay
     execution = record["executions"][-1]
+    from .python_units import check_python_units
+
+    units = check_python_units(record)
+    if not any(
+        c.check_id == "python_units" and c.status == "pass" and c.expected == units
+        for c in proof.validation.claims[0].checks
+    ):
+        raise ValueError("python_unit_check_missing")
     owners = proof.goal_context["owner_task_ids"]
     if (
         not replay

@@ -127,7 +127,7 @@ def test_python_replay_goal_ledger_restart_and_m7(tmp_path):
 
 def test_python_wrong_code_operand_replay_and_unavailable_never_admitted(tmp_path):
     catalog, original, context, original_worker = python_case()
-    for mode in ("code", "operand", "replay", "unavailable"):
+    for mode in ("code", "operand", "replay", "unavailable", "unit"):
         batch, worker = original.model_copy(deep=True), deepcopy(original_worker)
         record = batch.claims[0].python_execution.execution
         if mode == "code":
@@ -140,14 +140,29 @@ def test_python_wrong_code_operand_replay_and_unavailable_never_admitted(tmp_pat
             batch.claims[0].python_execution.execution_sha256 = digest(record)
         elif mode == "replay":
             worker.execute.return_value["results"] = dict(rms="999")
-        else:
+        elif mode == "unavailable":
             worker.execute.return_value = dict(status="python_unavailable")
+        else:
+            execution = record["executions"][-1]
+            execution["code"] = execution["code"].replace(".sqrt()", "")
+            execution["code_digest"] = digest(execution["code"])
+            local_context = deepcopy(context)
+            local_context["tasks"]["python-task"]["python_candidate"] = record
+            result = local_context["task_results"]["python-task"]
+            result["python_candidate"] = record
+            result["digest"] = digest({k: v for k, v in result.items() if k != "digest"})
+            batch.claims[0].python_execution.execution_sha256 = digest(record)
         gateway = gateway_with_goals(["G1"])
         runtime = LiteVerificationRuntime(
             catalog, gateway, integration_v2=True, python_executor=worker
         )
-        history = runtime.verify(batch, integration_context=context)[0]
+        history = runtime.verify(
+            batch, integration_context=local_context if mode == "unit" else context
+        )[0]
         assert history.outcome.final.decision != "ACCEPT", mode
+        if mode == "unit":
+            assert "python_output_unit_mismatch" in history.outcome.final.reason_codes
+            assert history.proof.python_replay
         assert not gateway.generate.called
         assert VerifiedClaimRepository(tmp_path / mode).admit(history).status == "rejected"
 
