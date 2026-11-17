@@ -1,5 +1,12 @@
 # Trạng thái hiện tại
 
+## M7-ANSWER-01 — Grounded Natural Answer Generation
+
+**IN_PROGRESS**, Owner17/11/2026; baseline remote `fcd0675`, worktree riêng giữ local edits.
+[Spec](tasks/M7/M7-ANSWER-01.md). Tái sử dụng M7 Lite/Qwen từ saved M6/Ledger;
+không đổi ACCEPT/bindings; cap3calls, không OCR/Gemini/PDF/fullCI.
+Next action: hoàn tất targeted/live M7 validation.
+
 ## M6-PY-01 — Python Proof Verification
 
 **DONE — Owner xác nhận hoàn thành ngày17/11/2026**; implementation

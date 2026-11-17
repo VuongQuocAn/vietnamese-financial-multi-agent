@@ -163,7 +163,7 @@ def test_relevance_and_multi_period_not_coverage(admitted):
 @pytest.mark.parametrize(
     "variant", ["unknown_id", "fabricated_number", "paraphrase", "invalid_json"]
 )
-def test_known_errors_fallback_and_model_text_is_not_released(admitted, variant):
+def test_known_errors_fallback_and_supported_paraphrase_is_released(admitted, variant):
     request, entry = admitted
     key = entry.identity.verified_claim_id
     segment = dict(text=entry.content, claim_ids=[key])
@@ -178,9 +178,9 @@ def test_known_errors_fallback_and_model_text_is_not_released(admitted, variant)
     fields, trace = compose_lite(request, [entry], gateway=gateway)
     assert len(calls) == 1 and calls[0].output_spec.schema_ref is None
     assert fields["used_verified_claim_ids"] == [key]
-    if variant in {"paraphrase", "fabricated_number"}:
-        assert entry.content in fields["answer_vi"]
-        assert segment["text"] not in fields["answer_vi"]
+    if variant == "paraphrase":
+        assert segment["text"] in fields["answer_vi"]
+        assert trace["rendering_mode"] == "grounded_natural_answer"
         assert trace["llm_segments_released"] == 1 and not trace["fallback"]
         return
     assert entry.content in fields["answer_vi"]
