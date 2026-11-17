@@ -5,8 +5,14 @@ import json
 import subprocess
 from pathlib import Path
 
-from vietnamese_financial_multi_agent.agents.lite_orchestrator import FinancialLiteOrchestrator
-from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
+from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
+    FinancialLiteOrchestrator,
+    LitePlan,
+)
+from vietnamese_financial_multi_agent.agents.planner_contracts import (
+    PlannerContext,
+    PlannerLLMMetadata,
+)
 from vietnamese_financial_multi_agent.agents.python_agent import PythonAgent
 from vietnamese_financial_multi_agent.api.text_gateway import create_text_gateway
 from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway, _failure
@@ -18,6 +24,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--storage-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--call-cap", type=int, choices=range(1, 13), default=7)
+    parser.add_argument("--resume-calculator-from", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     args.output.mkdir(parents=True, exist_ok=False)
@@ -31,7 +39,7 @@ def main():
 
     def transport(request):
         nonlocal calls
-        if calls >= 12:
+        if calls >= args.call_cap:
             return _failure(request, "quota_exceeded")
         calls += 1
         response = configured.adapter(request)
@@ -66,6 +74,15 @@ def main():
     engine = FinancialLiteOrchestrator(
         catalog, gateway, integration_v2=True, adaptive_coordinator=True
     )
+    if args.resume_calculator_from:
+        saved = json.loads(args.resume_calculator_from.read_text(encoding="utf-8"))
+        saved_plan = LitePlan.model_validate_json(saved["trace"][0]["reasons"][0])
+
+        class SavedSupervisor:
+            def plan(self, question, context, sources):
+                return saved_plan.model_copy(deep=True), PlannerLLMMetadata(), []
+
+        engine.supervisor = SavedSupervisor()
     cases = [
         (
             "rms",
@@ -79,6 +96,8 @@ def main():
     outputs = {}
     try:
         for name, question in cases:
+            if args.resume_calculator_from and name != "calculator":
+                continue
             result = engine.run(question=question, context=context)
             outputs[name] = result
             save(name + ".json", result.model_dump(mode="json"))
@@ -88,6 +107,8 @@ def main():
                 ),
                 flush=True,
             )
+        if args.resume_calculator_from:
+            return
         # Same real retrieved operands; diagnostic explicitly asks first code to fail.
         matches = outputs["rms"].supervisor_result.evidence_bundle.facts
         question = (
@@ -128,7 +149,10 @@ def main():
                 calls=calls,
                 known_tokens=sum(e["response"]["usage"].get("total_tokens") or 0 for e in events),
                 worker=PythonExecutor().preflight(),
-                call_cap=12,
+                call_cap=args.call_cap,
+                saved_plan_sha256=digest(args.resume_calculator_from.read_text(encoding="utf-8"))
+                if args.resume_calculator_from
+                else None,
             ),
         )
 

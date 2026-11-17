@@ -18,12 +18,26 @@ from ..core.llm_contracts import (
 )
 from ..tools.financial_calculator import DynamicOperation
 from ..tools.python_execution import PythonExecutor, digest
+from ..tools.question_understanding import normalize
 from .evidence_coordination import observation
 from .planner_contracts import PlannerLLMMetadata
 
 # Missing primitives, not financial definitions. Ordinary operation DAGs stay in Calculator.
 PythonRequirement = Literal["power", "sqrt", "root_finding", "dispersion", "iterative_solver"]
 CALCULATOR_OPERATORS = list(DynamicOperation.model_fields["operator"].annotation.__args__)
+
+
+def requires_python(question, objective, requirement):
+    """Conservative capability gate grounded in the user's request, not just model routing."""
+    signals = {
+        "power": ("luy thua", "binh phuong", "can bac", "rms", "cagr", "kep", "power"),
+        "sqrt": ("can bac", "sqrt", "rms", "do lech chuan"),
+        "dispersion": ("do lech chuan", "phuong sai", "standard deviation", "variance"),
+        "root_finding": ("irr", "nghiem", "root", "noi hoan"),
+        "iterative_solver": ("lap", "solver", "toi uu", "hoi tu"),
+    }
+    terms = signals.get(requirement, ())
+    return all(any(term in normalize(text) for term in terms) for text in (question, objective))
 
 
 class AlgorithmConstant(FinancialModel):
@@ -99,34 +113,39 @@ class PythonAgent:
         record["preflight"] = ready
         if ready["status"] != "ready" or self.gateway is None:
             return dict(record, execution_status="python_unavailable"), metadata
+        instruction = (
+            "Return JSON {code,outputs,computation,constants}. code defines solve(data). "
+            "NO imports: Decimal is already available. NO I/O/network. "
+            "data[handle] IS a Decimal, not a dict: never access ['base_value']. "
+            "Return {output_key: Decimal_result}, never str(result). Do not call getcontext(). "
+            "Only Decimal, abs, all, any, enumerate, len, max, min, range, sorted, sum, zip; "
+            "Decimal.sqrt()/ln()/exp() are available. No float. "
+            "Use ONLY supplied data values for financial operands; never embed them as literals. "
+            "0,1,2,100 are permitted algorithm constants; declare others with value and purpose. "
+            "outputs maps requested output keys to proposed units. computation explains the formula. "
+            "constants is an array of {value: numeric string,purpose: explanation}; [] if none needed. "
+            "Scale already applied ONCE. Produce ONLY requested outputs. No verdict or invented sources."
+        )
+        first = next(iter(manifest))
         prompt = dict(
-            instruction=(
-                "Sinh JSON đúng schema cho Python capability. Chỉ tính từ data[handle] đã cung cấp. "
-                "Không chép số tiền/tỷ lệ từ operands vào code, không bịa dữ liệu, không I/O/import/network. "
-                "Code định nghĩa def solve(data): trả dict các output keys -> Decimal. "
-                "data chứa Decimal ở đơn vị cơ sở, scale ĐÃ áp một lần. Dùng Decimal, abs, all, any, "
-                "enumerate, len, max, min, range, sorted, sum, zip; Decimal.sqrt/ln/exp khả dụng. "
-                "Không dùng float. outputs ánh xạ output key -> đơn vị đề xuất. "
-                "computation giải thích công thức và constants; constants chỉ là hằng số thuật toán "
-                "có purpose, không được thay thế dữ liệu tài chính. 0,1,2,100 được phép trong code; "
-                "constants khác phải khai báo. Không sinh kết quả số, nguồn hay verdict. "
-                "Mọi output chỉ là candidate chờ M6 kiểm chứng độc lập."
-            ),
             schema=PythonProposal.model_json_schema(),
             objective=objective,
             missing_calculator_primitive=requirement,
             calculator_operators=CALCULATOR_OPERATORS,
-            operands={
-                k: {
-                    p: row[p]
-                    for p in ("label", "base_value", "unit", "context", "header", "verification")
-                }
+            data={key: row["base_value"] for key, row in manifest.items()},
+            shape_example=f'def solve(data):\n    x = data["{first}"]\n    return {{"result": x}}',
+            example_note="Only illustrates the function interface; implement the requested formula.",
+            operand_metadata={
+                k: {p: row[p] for p in ("label", "unit", "context", "header", "verification")}
                 for k, row in manifest.items()
             },
         )
         if len(json.dumps(prompt, ensure_ascii=False)) > 40000:
             return dict(record, execution_status="python_prompt_limit"), metadata
-        messages = [Message(role="system", content=json.dumps(prompt, ensure_ascii=False))]
+        messages = [
+            Message(role="system", content=instruction),
+            Message(role="user", content=json.dumps(prompt, ensure_ascii=False)),
+        ]
         tokens = dict(input_tokens=0, output_tokens=0, total_tokens=0)
         known_usage = True
         for attempt in range(2 if repair_available else 1):
@@ -194,7 +213,11 @@ class PythonAgent:
                     role="user",
                     content=json.dumps(
                         dict(
-                            instruction="Sửa code đúng một lần, giữ objective/operands/outputs và công thức.",
+                            instruction=(
+                                "Repair code ONCE. No imports/getcontext. Decimal is already "
+                                "available. data[handle] is Decimal. Return Decimal, not str. "
+                                "Keep the same operands, formula and output keys."
+                            ),
                             traceback=execution["traceback"],
                             input_digest=record["input_digest"],
                         ),

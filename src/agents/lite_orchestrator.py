@@ -46,7 +46,7 @@ from .orchestration_contracts import (
 )
 from .orchestrator import aggregate_candidates
 from .planner_contracts import PlannerLLMMetadata
-from .python_agent import PythonAgent, PythonRequirement
+from .python_agent import PythonAgent, PythonRequirement, requires_python
 from .routing_contracts import RoutingDecision
 from .specialist_common import (
     AnalysisProposal,
@@ -943,6 +943,7 @@ class SupervisorLite:
                         objective="Tra số liệu A từ nguồn phù hợp",
                         input_handles=[],
                         after=[],
+                        python_requirement=None,
                     ),
                     dict(
                         goal_indexes=[1],
@@ -950,6 +951,7 @@ class SupervisorLite:
                         objective="Tra số liệu B từ nguồn phù hợp",
                         input_handles=[],
                         after=[],
+                        python_requirement=None,
                     ),
                     dict(
                         goal_indexes=[2],
@@ -957,6 +959,7 @@ class SupervisorLite:
                         objective="Dùng kết quả của task index0 và index1 để tính",
                         input_handles=[],
                         after=[0, 1],
+                        python_requirement=None,
                     ),
                 ],
             ),
@@ -1107,23 +1110,31 @@ class FinancialLiteOrchestrator:
             period_roles=roles,
             balance_sheet=task.specialist == "liquidity_and_leverage",
         )
-        if self.adaptive_coordinator and task.python_requirement:
+        if (
+            self.adaptive_coordinator
+            and task.python_requirement
+            and requires_python(self.workspace.question, task.objective, task.python_requirement)
+        ):
             record, result.llm = PythonAgent(self.gateway).run(
                 objective=task.objective,
                 requirement=task.python_requirement,
                 matches=upstream.evidence_bundle.facts,
                 context=context,
-                repair_available=not self.workspace.tasks[task.task_id].get("repair_used", False),
+                repair_available=not self.workspace.repair_used,
             )
             state = self.workspace.tasks[task.task_id]
             state["python_candidate"] = record
             state["repair_used"] = record["calls"] > 1
+            self.workspace.repair_used |= state["repair_used"]
+            state["computation_route"] = "python"
             result.status = "partial"
             result.limitations.append("python_candidate_requires_M6-PY-01")
             if record["execution_status"] != "success":
                 result.missing_evidence.append(record["execution_status"])
             # Keep this proof out of the v1 claim adapter/ledger. M6-PY-01 owns admission.
             return result
+        if self.adaptive_coordinator:
+            self.workspace.tasks[task.task_id]["computation_route"] = "calculator"
         if self.integration_v2:
             for evidence in result.supporting_evidence:
                 evidence.evidence_id = evidence_handle(evidence)
@@ -1935,6 +1946,17 @@ class FinancialLiteOrchestrator:
             workspace.observations[row["evidence_id"]] = row
         current = [observation(f) for f in bundle.facts]
         state["selected_observations"] = current
+        if task.depends_on and task.python_requirement:
+            # Computation consumes the parent's tool-returned operands directly.
+            # No second LLM is needed to rediscover these immutable source handles.
+            state["coordination"] = dict(
+                input_mode="dependency_operands",
+                requested_python_requirement=task.python_requirement,
+                python_allowed=requires_python(
+                    workspace.question, task.objective, task.python_requirement
+                ),
+            )
+            return []
         # Scalar roots retain the existing zero-extra-call path.
         if (
             self.gateway is None

@@ -4,7 +4,11 @@ import os
 from unittest.mock import Mock, patch
 
 import pytest
-from vietnamese_financial_multi_agent.agents.python_agent import PythonAgent, input_manifest
+from vietnamese_financial_multi_agent.agents.python_agent import (
+    PythonAgent,
+    input_manifest,
+    requires_python,
+)
 from vietnamese_financial_multi_agent.tools.financial_retrieval import FinancialRetrievalTools
 from vietnamese_financial_multi_agent.tools.python_execution import PythonExecutor
 
@@ -92,17 +96,20 @@ def test_one_repair_uses_same_manifest_and_stops_after_second_failure():
 
 
 def test_coordinator_keeps_python_candidate_out_of_v1_claims_and_calculator_unchanged():
+    assert not requires_python("Cost divided by revenue", "compute percentage", "power")
+    assert requires_python("RMS revenue", "RMS from dependencies", "power")
     _, context, engine, _ = setup_engine()
     engine.adaptive_coordinator = True
     plan = engine.supervisor.plan.return_value[0]
     plan.tasks[0].python_requirement = "sqrt"
+    plan.tasks[0].objective = "Diagnostic RMS"
     diagnostic = dict(
         version="python_execution_proof_v1",
         status="candidate",
         financial_fact_verified=False,
         verification="requires_M6-PY-01",
         execution_status="success",
-        calls=1,
+        calls=2,
         results={"rms": "1"},
         executions=[],
     )
@@ -111,6 +118,7 @@ def test_coordinator_keeps_python_candidate_out_of_v1_claims_and_calculator_unch
     with patch.object(PythonAgent, "run", return_value=(diagnostic, PlannerLLMMetadata())) as run:
         output = engine.run(question="Diagnostic RMS", context=context)
     assert run.call_count == 1
+    assert engine.workspace.repair_used  # Shared request repair budget, including Python.
     python_result = output.integration_context["task_results"][plan.tasks[0].task_id]
     assert python_result["python_candidate"] == diagnostic
     assert python_result["candidates"] == []
