@@ -1,42 +1,44 @@
 # Handoff
 
 ## Active Task
-E2E-REMED-01 — Source & Scope Readiness
+E2E-REMED-02 — Planning & Evidence Routing
 
 ## Status
 REVIEW
 
 ## Last Verified State
-Implementation02093495863bec10424659bcad7175e69edad457; baseline f4d598e.
-JSON scope/composition/search và M5 source context có bindings.4QA duy nhất,
-18calls/102082tokens/0unknown; accuracy/coverage0/4→0/4,0citations phát hành.
+Implementation78a5e67202429cdd76556f883597abed35c939e4; baseline9fec038.
+4QA/4attempts,17calls/95473known tokens/1unknown timeout; accuracy/coverage0/4→0/4.
+Output cuối không runtime schema/unknown-handle errors;3câu fallback toàn câu hỏi.
 
 ## Completed Work
-Sửa selected scope options/title, qualifier tên/nêu riêng, JSON composition và
-UnderstoodCell column/pointers; D contexts không cấp numeric authority.
-186runtime blobs khớp commit;143raw/28imported/3Pilot hashes bất biến.
-80local files/52parent evidence nguyên byte; M6/M7 không đổi.
+Root schema/owned fallback, exact S binding, demand batches<=6/no truncation,
+exact T/result/E dependency reuse, D contexts trong result digests và fusion context.
+MH0001 live T1→T2/parent context tới document lane, không có released answer.
+186runtime blobs/146JSON/28imported/3Pilot hashes verified;80local/evidence cũ bất biến.
+5TaskResult digests/4owned Coordinator goals/14source-cell pointer occurrences khớp.
+M6/M7/evidence/data không đổi; không tuning/retest sau freeze.
 
 ## Remaining Work
-Tech Lead review binding/source fixes và phần readiness chưa giải quyết:
-planning/envelope/handles/query, canonical exclusion và JSON document authority.
-Không tự tiếp tục Pilot hoặc thay M6/M7.
+Tech Lead review fixes và giới hạn: raw model còn namespace/owner errors,
+fallback mất phân rã/role assignment; canonical target131 thiếu, M6 support/timeout.
+Không tự sửa canonical/M6 hoặc tiếp tục Pilot.
 
 ## Modified Files
-Evidence/scope/composition/search, source context tool/M5/API binding, retest runner,
-3controls, data-contracts và tracking/report. Không commit Gold/raw traces/dataset.
+Coordinator/M5/fusion planning/routing, runner/tests/contracts/tracking/report.
+Không commit raw traces/Gold/dataset, giữ checkout gốc.
 
 ## Tests
-3new controls PASS. Compatibility61PASS; QA/fusion71PASS/2legacy FAIL y hệt baseline.
-Ruff/planning/diff PASS; không fullsuite/fullCI/Gemini/OCR.
+3new controls,25targeted compatibility và fusion recheck PASS; Ruff/planning/diff PASS.
+Không fullsuite/fullCI/OCR/Gemini/API judge.
 
 ## Blockers
-Scope/composition gate đã qua nhưng cả4QA vẫn abstain. Chưa có financial readiness
-hoặc lợi ích Multi-Agent được chứng minh; JSON-only, chưa PDF-verified.
+Chưa có accuracy gain hoặc readiness Pilot; source-only không có numeric authority.
+M6 MH0001 timeout60s/unknown usage1,0released citations trong cả4QA.
 
 ## Git Checkpoint
-Publish main từ worktree riêng; SHA remote được xác minh trong publication receipt
-local. Checkout gốc9a3adba và local edits không đổi.
+Publish main từ worktree riêng; remote SHA xác minh trong local publication receipt.
+Checkout gốc9a3adba và local edits nguyên byte.
 
 ## Exact Next Action
-Tech Lead review binding/source fixes và các lỗi Planning/query/source handles/canonical eligibility còn lại trước khi cho phép tiếp tục Pilot45.
+Tech Lead review planning/routing fixes và lỗi còn lại trước khi cho phép tiếp tục ViFinBench Pilot.
