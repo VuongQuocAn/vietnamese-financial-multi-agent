@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-PY-01, M6-PY-01, M7-ANSWER-01
 - Estimated Complexity: S
@@ -70,6 +70,11 @@ Nguồn JSON-only/page-level chưa chứng minh scan/PDF accuracy. Worker/model 
 
 ## Implementation Evidence
 
+**DONE — Owner xác nhận ngày17/11/2026**; nghiệm thu implementation và evidence
+tại bàn giao `b4c84b3`, đã push main/remote SHA verified. Giữ các giới hạn đã báo.
+Phiên đóng chỉ tài liệu/tracking và planning/diff/Git; không sửa runtime hoặc
+chạy lại tests/Qwen/benchmark/CI, không triển khai E2E-VAL-01.
+
 Implementation `84ae70a9172dc63b105f57663a5dd2eb31d321f2`;
 [report](../../../docs/e2e-arch-02-full-pipeline-integration.md).
 Sửa API ép tắt Gateway M7 trong V2; giữ quyền M6/Ledger và flags/budget.
@@ -77,8 +82,8 @@ Sửa API ép tắt Gateway M7 trong V2; giữ quyền M6/Ledger và flags/budge
 natural/5refs; PY07 cross-role→Python/Docker→M6 replay/3ACCEPT/G1–G3→Ledger v2→
 M7 full3/3/8refs,99,037s. Giữ2partial/3không phát hành của mẫu unique, không GO Pilot.
 6targeted PASS;185runtime blobs khớp SHA,57JSON/80local files bất biến.
-Ruff/planning/diff; không fullCI/OCR/Gemini/benchmark. Chờ Tech Lead nghiệm thu.
+Ruff/planning/diff; không fullCI/OCR/Gemini/benchmark. Owner đã nghiệm thu.
 
 ## Handoff Notes
 
-Next action: Tech Lead review E2E-ARCH-02 trước quyết định chạy E2E-VAL-01.
+Next action: chờ Owner giao E2E-VAL-01.
