@@ -94,7 +94,7 @@ def prepare(root, storage, output):
     print(json.dumps(dict(prepared=len(cases), ids=[c["id"] for c in cases])), flush=True)
 
 
-def run(root, storage, output, ids):
+def run(root, storage, output, ids, *, corpus=None):
     receipt = json.loads((output / "receipt.json").read_bytes())
     assert sha(output / "questions-only.json") == receipt["question_manifest_sha256"]
     assert sha(Path(__file__)) == receipt["runner_sha256"]
@@ -104,6 +104,10 @@ def run(root, storage, output, ids):
         ("pilot_hashes", storage),
     ):
         assert all(sha(base / p) == h for p, h in receipt[key].items()), key
+    assert all(sha(storage / p) == h for p, h in receipt.get("imported_hashes", {}).items()), (
+        "imported_hashes"
+    )
+    corpus = corpus or storage / "artifacts/evidence/VFB-IMPORT-03/full-final"
     cases = json.loads((output / "questions-only.json").read_bytes())
     if ids and set(ids) - {c["id"] for c in cases}:
         raise ValueError("id_not_in_frozen_pilot_sample")
@@ -153,7 +157,7 @@ def run(root, storage, output, ids):
             try:
                 catalog = load_json_corpus_document(
                     storage / "ViFinBench/refined",
-                    storage / "artifacts/evidence/VFB-IMPORT-03/full-final",
+                    corpus,
                     case["document_alias"],
                 )
                 descriptor = catalog.descriptors[0]
@@ -234,12 +238,16 @@ def run(root, storage, output, ids):
             ),
             runtime_unchanged=all(sha(root / p) == h for p, h in receipt["runtime_hashes"].items()),
             pilot_unchanged=all(sha(storage / p) == h for p, h in receipt["pilot_hashes"].items()),
+            imported_unchanged=all(
+                sha(storage / p) == h for p, h in receipt.get("imported_hashes", {}).items()
+            ),
         )
         atomic_json(output / "receipt.json", receipt)
         assert (
             receipt["sources_unchanged"]
             and receipt["runtime_unchanged"]
             and receipt["pilot_unchanged"]
+            and receipt["imported_unchanged"]
         )
 
 

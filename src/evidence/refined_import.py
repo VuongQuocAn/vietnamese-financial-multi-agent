@@ -191,8 +191,8 @@ def import_refined_document(root: Path, document: str, *, projection_version=Non
             for i, b in enumerate(page["blocks"])
             if b["type"] != "table"
         ]
-        page_statement = resolve_statement_type(context)
         context = context_lines(context)
+        page_statement = resolve_statement_type(context)
         table_number = 0
         for bi, block in enumerate(page["blocks"]):
             pointer = f"/blocks/{bi}"
@@ -263,7 +263,7 @@ def import_refined_document(root: Path, document: str, *, projection_version=Non
             title = ContextEvidence(
                 raw_text=table.get("title", ""), provenance=[ref(base + "/title")]
             )
-            statement = resolve_statement_type([title])
+            statement = resolve_statement_type(context_lines([title]))
             statement_type = statement.statement_type or page_statement.statement_type
             report = dict(
                 table_id=table_id,
@@ -271,9 +271,10 @@ def import_refined_document(root: Path, document: str, *, projection_version=Non
                 statement_type=statement_type,
                 issues=issues,
                 observations=0,
+                skipped_row_indices=ragged,
             )
             table_reports.append(report)
-            if issues or statement_type is None:
+            if not table["rows"] or statement_type is None:
                 if statement_type is None:
                     report["issues"] = [*issues, "statement_unresolved"]
                 continue
@@ -298,13 +299,22 @@ def import_refined_document(root: Path, document: str, *, projection_version=Non
                 and not re.search(r"thuyet|^tm$|^stt$|^note", keys[i])
                 and (
                     periods[i].period.candidates
-                    or any(parse_vietnamese_number(r[i]) is not None for r in table["rows"])
+                    or any(
+                        parse_vietnamese_number(r[i]) is not None
+                        for r in table["rows"]
+                        if len(r) == len(headers)
+                    )
                 )
             ]
             unit_context = resolve_financial_context([*context, title])
             section = None
             section_pointer = None
             for ri, row in enumerate(table["rows"]):
+                # Do not let one malformed row discard other source-aligned
+                # rows. Never pad, shift columns or invent a missing cell.
+                if ri in ragged:
+                    section = section_pointer = None
+                    continue
                 label = row[label_col]
                 code = row[code_col].strip() if code_col is not None else None
                 if label.strip() and not code and all(not row[c].strip() for c in value_cols):

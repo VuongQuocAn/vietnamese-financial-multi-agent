@@ -64,6 +64,14 @@ ITEM_CATALOG = (
         "source-backed:DN/monetary-v1",
     ),
     ItemRule(
+        "b01.short_term_trade_receivables",
+        "B01",
+        "131",
+        ("Phải thu ngắn hạn của khách hàng",),
+        "source-backed:B01-DN/131",
+        requires_source_code=True,
+    ),
+    ItemRule(
         "b01.inventory_total",
         "B01",
         "140",
@@ -288,6 +296,8 @@ def _text(value: str) -> str:
 def _label(value: str, *, strip_ordinal: bool = False, strip_numeric_ordinal: bool = False) -> str:
     # Bounded punctuation/ordinal normalization; no fuzzy match, dropped words or accents.
     value = _text(value).replace("–", "-").replace("—", "-")
+    value = value.replace("&", "và")
+    value = re.sub(r"\bcc dịch vụ\b", "cung cấp dịch vụ", value)
     # Whitespace around an already exact printed formula is presentation only.
     # Preserve digits/operators/labels and the statement/source-code gates.
     value = re.sub(r"\s*([=+])\s*", r"\1", value)
@@ -316,12 +326,10 @@ def map_item_label(
             label_matches = (
                 _label(
                     evidence.raw_text,
-                    strip_ordinal=rule.requires_source_code,
+                    strip_ordinal=True,
                     strip_numeric_ordinal=True,
                 )
-                == _label(
-                    alias, strip_ordinal=rule.requires_source_code, strip_numeric_ordinal=True
-                )
+                == _label(alias, strip_ordinal=True, strip_numeric_ordinal=True)
                 if source_code is not None
                 else _text(evidence.raw_text) == _text(alias)
             )

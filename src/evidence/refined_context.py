@@ -24,6 +24,20 @@ def context_lines(items):
             title = re.match(r"báo cáo tài chính (hợp nhất|riêng)\b", line, re.I)
             if title:
                 result.append(projected(item, title.group()))
+            # A statement heading may print the reporting period on the same
+            # line. Keep the original pointer; an arbitrary mention is not a title.
+            statement = re.fullmatch(
+                r"(bảng cân đối kế toán|báo cáo tình hình tài chính|"
+                r"báo cáo kết quả hoạt động kinh doanh|báo cáo lưu chuyển tiền tệ)"
+                r"((?: hợp nhất| riêng)?(?: \(tiếp theo\))?)\s*[-–:]\s*"
+                r"((?:cho )?năm(?: tài chính)?(?: kết thúc(?: vào)? ngày .+| \d{4}))",
+                line.strip(),
+                re.I,
+            )
+            if statement:
+                period = projected(item, statement[3])
+                if resolve_financial_context([period]).period.status == "resolved":
+                    result.append(projected(item, statement[1] + statement[2]))
             # Presentation currency declaration, not merely bookkeeping currency.
             if re.search(r"báo cáo tài chính.*trình bày bằng.*đồng việt nam", line, re.I):
                 result.append(projected(item, "Đơn vị tính: đồng"))
