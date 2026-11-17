@@ -1253,6 +1253,15 @@ class FinancialLiteOrchestrator:
                     "Trong goal của analysis ghi task/result handle thực sự đã dùng và cách dùng. "
                     "Diễn giải từ dependency là premise chưa verified, phải đưa đủ nguồn vào candidate để M6 kiểm."
                 )
+            prompt["verification_feedback"] = self.workspace.tasks[task.task_id].get(
+                "repair_feedback", []
+            )
+            if prompt["verification_feedback"]:
+                prompt["repair_instruction"] = (
+                    "Sửa đúng lỗi M6 trong feedback, đối chiếu assigned_requirements và evidence. "
+                    "Đề xuất claim/phép tính có căn cứ; thiếu evidence thì giữ missing_information. "
+                    "Không tự cấp ACCEPT hoặc supported_requirement_ids."
+                )
             prompt["user_question"] = self.workspace.question
             analysis_schema = AnalysisProposal.model_json_schema()
             narrative_only = bool(prompt["assigned_requirements"]) and all(
@@ -1430,7 +1439,7 @@ class FinancialLiteOrchestrator:
             )
         )
         output.caveats.extend(gaps)
-        workspace, prepared = None, []
+        workspace = None
         if self.integration_v2:
             if not self.adaptive_coordinator:
                 retain_requested_periods(plan, question)
@@ -1484,6 +1493,14 @@ class FinancialLiteOrchestrator:
                     OrchestrationError(stage="planning", code="integration_plan_incomplete")
                 )
                 output.stop_conditions.extend(gaps)
+        self._active_plan = plan
+        self._last_output = self._run_tasks(question, context, sources, plan, output, gaps)
+        self._last_output.latency_ms = (perf_counter() - started) * 1000
+        return self._last_output
+
+    def _run_tasks(self, question, context, sources, plan, output, gaps, repair_ids=None):
+        started = perf_counter()
+        workspace, prepared = getattr(self, "workspace", None), []
         tools = FinancialRetrievalTools(self.catalog)
         calculator = FinancialCalculator(self.catalog)
         evidence_tools = EvidenceRetrievalTools(self.catalog)
@@ -1500,6 +1517,9 @@ class FinancialLiteOrchestrator:
                 structurally_valid=True, execution_eligible=True, disposition="valid"
             ),
         )
+        if repair_ids is not None:
+            all_upstream = output.supervisor_result
+            all_upstream.evidence_bundle = workspace.evidence
         output.supervisor_result = all_upstream
         output.routing_decision = RoutingDecision(
             question=question,
@@ -1507,6 +1527,8 @@ class FinancialLiteOrchestrator:
             selected_roles=list(dict.fromkeys(t.specialist for t in plan.tasks)),
         )
         for index, task in enumerate(plan.tasks):
+            if repair_ids is not None and task.task_id not in repair_ids:
+                continue
             execution = SpecialistExecution(
                 execution_id=task.task_id or f"m5-lite-{index}",
                 role=task.specialist,
@@ -1800,7 +1822,9 @@ class FinancialLiteOrchestrator:
                         ],
                         missing_inputs=result.missing_evidence,
                     )
-                    output.usage.stages[execution.execution_id] = result.llm
+                    output.usage.stages[
+                        execution.execution_id + ("_repair" if workspace.repair_used else "")
+                    ] = result.llm
                     output.missing_evidence.extend(
                         result.missing_evidence + result.limitations + bundle.limitations
                     )
@@ -1830,6 +1854,14 @@ class FinancialLiteOrchestrator:
                     )
                 )
         output.candidates, output.conflicts = aggregate_candidates(output.specialist_executions)
+        if repair_ids is not None:
+            renamed = {}
+            for candidate in output.candidates:
+                if any(o.execution_id in repair_ids for o in candidate.origins):
+                    renamed[candidate.candidate_id] = candidate.candidate_id + ":r2"
+                    candidate.candidate_id = renamed[candidate.candidate_id]
+            for conflict in output.conflicts:
+                conflict.candidate_ids = [renamed.get(cid, cid) for cid in conflict.candidate_ids]
         if workspace is not None:
             output.integration_context = workspace.export(output.candidates)
         output.status = (
@@ -1857,7 +1889,9 @@ class FinancialLiteOrchestrator:
                 if m.usage and getattr(m.usage, key) is not None
             ]
             setattr(output.usage, key, sum(known) if known else None)
-        output.latency_ms = (perf_counter() - started) * 1000
+        output.latency_ms = (output.latency_ms if repair_ids is not None else 0) + (
+            perf_counter() - started
+        ) * 1000
         return output
 
     def _coordinate_evidence(self, task, bundle, sources, context, output, retrieve):
@@ -1881,12 +1915,12 @@ class FinancialLiteOrchestrator:
         if (
             self.gateway is None
             or context.mode == "deterministic"
-            or not (task.depends_on or len(task.sources) > 1)
+            or not (task.depends_on or len(task.sources) > 1 or state.get("repair_feedback"))
         ):
             return []
         available = (
             []
-            if workspace.expansion_used
+            if workspace.expansion_used or workspace.repair_used
             else [f"T{i}" for i in range(1, 7) if f"T{i}" not in workspace.tasks]
         )
         try:
@@ -1985,15 +2019,15 @@ class FinancialLiteOrchestrator:
             raise
         finally:
             if "coordination_usage" in state:
-                output.usage.stages[task.task_id + "_evidence_demand"] = (
-                    PlannerLLMMetadata.model_validate(state["coordination_usage"])
-                )
+                output.usage.stages[
+                    task.task_id + ("_repair" if workspace.repair_used else "") + "_evidence_demand"
+                ] = PlannerLLMMetadata.model_validate(state["coordination_usage"])
 
     def _execute_task(self, task, execution, bundle, all_upstream, context, output):
         state = self.workspace.tasks[execution.execution_id]
         try:
             upstream = all_upstream.model_copy(deep=True)
-            if state.get("coordination"):
+            if self.adaptive_coordinator:
                 selected = state.get("selected_observations", [])
                 parents = [
                     r
@@ -2001,20 +2035,31 @@ class FinancialLiteOrchestrator:
                     for r in self.workspace.task_results[tid].get("selected_observations", [])
                 ]
                 permitted = {r["evidence_id"] for r in [*selected, *parents]}
-                if permitted:
-                    from .evidence_coordination import observation
+                from .evidence_coordination import observation
 
-                    upstream.evidence_bundle.facts = [
-                        f
-                        for f in upstream.evidence_bundle.facts
-                        if observation(f)["evidence_id"] in permitted
-                    ]
+                upstream.evidence_bundle.facts = [
+                    f
+                    for f in upstream.evidence_bundle.facts
+                    if observation(f)["evidence_id"] in permitted
+                ]
             upstream.status = "partial" if bundle.limitations else "completed"
             result = self._specialist(task, upstream, task.objective, context)
             execution.result, execution.llm = result, result.llm
             execution.status = result.status
+            if state.get("revision", 1) > 1:
+                previous = state.get("previous_candidate_ids", [])
+                state["candidate_revisions"] = [
+                    dict(
+                        candidate_id=c.candidate_id,
+                        parent_candidate_ids=previous,
+                        revision=state["revision"],
+                    )
+                    for c in result.candidates
+                ]
             self.workspace.record_result(task, result)
-            output.usage.stages[execution.execution_id] = result.llm
+            output.usage.stages[
+                execution.execution_id + ("_repair" if self.workspace.repair_used else "")
+            ] = result.llm
             output.missing_evidence.extend(
                 result.missing_evidence + result.limitations + bundle.limitations
             )

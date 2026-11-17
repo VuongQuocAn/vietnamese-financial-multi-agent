@@ -4,6 +4,7 @@ import ast
 import hashlib
 import json
 import re
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Literal
 
@@ -192,6 +193,7 @@ class IntegrationWorkspace:
     task_results: dict[str, dict] = field(default_factory=dict)
     observations: dict[str, dict] = field(default_factory=dict)
     expansion_used: bool = False
+    repair_used: bool = False
 
     def dependency_ids(self, task):
         """Keep transitive input closure even if a consumer names only its direct parent."""
@@ -225,10 +227,11 @@ class IntegrationWorkspace:
             {k: self.task_results[tid][k] for k in ("handle", "task_id", "revision", "digest")}
             for tid in task.depends_on
         ]
+        revision = state.get("revision", 1)
         record = dict(
-            handle=f"result:{task.task_id}:v1",
+            handle=f"result:{task.task_id}:v{revision}",
             task_id=task.task_id,
-            revision=1,
+            revision=revision,
             input_results=inputs,
             candidate_ids=[c.candidate_id for c in result.candidates],
             evidence_ids=state["candidate_evidence_ids"],
@@ -301,15 +304,15 @@ class IntegrationWorkspace:
         return dict(
             version="integration_v2",
             requirements=[r.model_dump(mode="json") for r in self.requirements],
-            tasks=self.tasks,
+            tasks=deepcopy(self.tasks),
             candidate_requirements=bindings,
             evidence_references=[f.reference.model_dump(mode="json") for f in self.evidence.facts],
             **(
                 {
-                    "task_results": self.task_results,
+                    "task_results": deepcopy(self.task_results),
                     "adaptive_coordinator": True,
                     "goal_errors": goal_errors,
-                    "observations": self.observations,
+                    "observations": deepcopy(self.observations),
                 }
                 if adaptive
                 else {}

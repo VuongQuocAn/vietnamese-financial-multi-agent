@@ -1133,6 +1133,42 @@ class FinancialQAPipeline:
                                 )
                             ),
                         )
+                        if bound.adaptive_coordinator and bound.integration_v2 and bound.m6_lite:
+                            from ..agents.verification_feedback import repair_once
+
+                            previous_stages = set(output.usage.stages)
+                            output, histories, repair = stage(
+                                "m5_repair",
+                                lambda: repair_once(m5, output, runtime, histories),
+                            )
+                            trace.adaptive_rounds.append(repair)
+                            trace.integration_context = output.integration_context
+                            trace.integration_context["technical_errors"] = [
+                                t.get("error", t["status"])
+                                for t in trace.integration_context.get("tasks", {}).values()
+                                if t["status"] in {"failed", "blocked", "technical_error"}
+                            ]
+                            trace.financial_execution = output.model_dump(mode="json")
+                            trace.agent_stages = [e.model_dump(mode="json") for e in output.trace]
+                            trace.candidate_count = len(histories)
+                            if output.supervisor_result:
+                                trace.tool_calls = [
+                                    dict(
+                                        request=e.bound_request,
+                                        result=e.response.model_dump(mode="json")
+                                        if e.response
+                                        else None,
+                                        tool=e.operation,
+                                        event=e.execution_kind,
+                                        status=e.final_state,
+                                        latency_ms=e.latency_ms,
+                                        reasons=e.reasons,
+                                    )
+                                    for e in output.supervisor_result.tool_trace
+                                ]
+                            for name, metadata in output.usage.stages.items():
+                                if name not in previous_stages:
+                                    usage(name, metadata)
                         if bound.m6_lite:
                             trace.verification_mode = "lite"
                             trace.m6_lite = runtime.summary

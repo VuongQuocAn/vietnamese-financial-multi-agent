@@ -155,7 +155,10 @@ def propose(gateway, context, task, workspace, sources, observations, available_
             "thiếu bước trong plan; mặc định add_tasks=[]. Không sửa goals. "
             "Role chỉ profitability|liquidity_and_leverage|cash_flow_and_earnings_quality; không dùng explanation. "
             "Các candidates là chưa verified; không dùng interpretation như canonical fact."
+            " Nếu có verification_feedback, sửa đúng nguồn/selection/join hoặc goal binding được chỉ ra; "
+            "đối chiếu goals, không lặp lại lựa chọn sai. Không có evidence thì không đoán."
         ),
+        verification_feedback=workspace.tasks[task.task_id].get("repair_feedback", []),
         question=workspace.question,
         task=task.model_dump(mode="json"),
         goals=[r.model_dump(mode="json") for r in workspace.requirements],

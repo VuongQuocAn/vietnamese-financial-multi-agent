@@ -1,5 +1,17 @@
 # Trạng thái hiện tại
 
+## M5-COORD-03 — Verification-Driven Feedback
+
+**REVIEW**, chưa commit; baseline remote `7cb4a03`, worktree riêng giữ local edits.
+[Spec](tasks/M5/M5-COORD-03.md), [report](../docs/m5-coord-03-live-validation.md).
+Một repair/request; final controlled live replay chỉT4 repair, reuse3M6 histories;
+3ACCEPT/2ABSTAIN→4ACCEPT→Ledger v2→M7 partial/18citations.3câu mới+1controlled
+replay,20actual calls/178629known tokens/1unknown;31targeted PASS.180runtime hashes
+khớp receipt cuối,57source JSON bất biến. Natural run trước sửa frontier kéo4tasks
+và rollback; còn G3 thiếu và M6 semantic binding G2 false-positive. Một smoke
+deterministic cũ thiếu binding cũng fail baseline. Không sửa M7/OCR/Gemini/full CI.
+Next action: Tech Lead review selective-repair evidence và các giới hạn M6/G3 trước nghiệm thu.
+
 ## M6-OBL-01 — Evidence Obligations & Goal Binding
 
 **DONE — Owner/Tech Lead xác nhận đạt phạm vi nghiệm thu ngày17/11/2026**; implementation `801a6fd32dbd20dc62babfb95fb80bc8a5a1b51b`.
