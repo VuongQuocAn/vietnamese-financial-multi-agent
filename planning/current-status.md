@@ -1,5 +1,18 @@
 # Trạng thái hiện tại
 
+## E2E-VAL-01 — ViFinBench Pilot
+
+**REVIEW**, implementation `2d96f1574551e4a38b80b668066be9940497da46`, baseline `d72f7c0`.
+[Spec](tasks/E2E/E2E-VAL-01.md), [report](../docs/e2e-val-01-vifinbench-pilot.md).
+Gate9/45:1correct/8abstain, accuracy/coverage11,11%,22calls; retest2SH vẫn abstain,
+5calls, candidate regression bị loại. Tổng27calls/145424tokens/0unknown.
+Runtime185files restored/khớp baseline;264JSON/3Pilot hashes và80local files
+bất biến.3new/2coordinator controls PASS,1legacy deterministic FAIL y hệt baseline.
+Traces/Gold/output/citations local riêng trước/sau. Dừng36Pilot còn lại vì planning,
+scope/composition, handles/eligibility và note retrieval; chưa sẵn sàng Full600.
+Không Full600/OCR/Gemini/PDF/fullCI; worktree riêng giữ checkout gốc.
+Next action: Tech Lead review gate9/45, RCA và thứ tự remediation trước khi cho phép chạy tiếp36Pilot.
+
 ## E2E-ARCH-02 — Full Pipeline Integration
 
 **DONE — Owner xác nhận ngày17/11/2026**, implementation `84ae70a9172dc63b105f57663a5dd2eb31d321f2`, baseline `28cabc4`.

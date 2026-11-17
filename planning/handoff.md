@@ -1,51 +1,39 @@
-# Handoff M7-ANSWER-01
+# Handoff
 
 ## Active Task
-
-M7-ANSWER-01
+E2E-VAL-01 — ViFinBench Pilot
 
 ## Status
-
-DONE
+REVIEW
 
 ## Last Verified State
-
-Owner xác nhận hoàn thành ngày17/11/2026.
-Implementation `5414b699e63758270d80cc36390ecc6eb7149134`; baseline remote `fcd0675`.
-185runtime hashes khớp final replay;24JSON nguồn bất biến; coverage/citations giữ nguyên.
+Implementation2d96f1574551e4a38b80b668066be9940497da46; baseline d72f7c0.
+Gate9/45:1correct/8abstain, accuracy/coverage11,11%. Retest2SH vẫn abstain;
+candidate regression bị loại,185runtime files restored/khớp Git baseline.
 
 ## Completed Work
-
-M7 Lite natural prose/Qwen, citations từ claim IDs và partial từ bindings M6.
-3actual calls/24442tokens;2full/1partial. Số tự thêm ở partial đã chặn;
-final exact saved-response replay0calls giữ2câu hợp lệ.30references/6exact bindings.
-[Report](../docs/m7-answer-01-live-validation.md).
+Runner Pilot-only và evaluator Gold hậu kiểm; per-QA report/trace/Ledger local.
+Tổng27calls/145424tokens/0unknown;264JSON/3Pilot hashes và80local files bất biến.
+RCA planning/handles/obligations/binding/scope/eligibility; dừng mở rộng36Pilot.
 
 ## Remaining Work
-
-Không còn công việc M7 trong phạm vi đã nghiệm thu; chưa triển khai E2E-ARCH-02.
+Tech Lead nghiệm thu gate9/45/RCA và thứ tự remediation; không tự chạy36/Full600.
 
 ## Modified Files
-
-M7 Lite/targeted tests, runner replay, planning checker/registry/spec/report.
-Worktree riêng; local edits trong checkout gốc giữ nguyên.
+Runner/evaluator/test mới và tracking; giữ80local files ngoài task.
 
 ## Tests
-
-28targeted PASS, Ruff lint/format/planning/diff đạt từ phiên triển khai.
-Phiên đóng chỉ planning/diff/Git; không chạy lại tests/API/fullCI/OCR/Gemini/PDF.
+3new controls +2coordinator controls PASS.1legacy deterministic FAIL y hệt baseline.
+Ruff/planning/diff; không fullsuite/CI/model judge.
 
 ## Blockers
-
-Không blocker triển khai. Giữ semantic-paraphrase/JSON-only limits và G2/G3 chưa verified.
-Bản cuối dùng saved-response replay, chưa fresh final Qwen.
+Chưa sẵn sàng Full600: MH/NU0/6 phát hành; scope/composition, nguồn thuyết minh,
+handles/schema/eligibility và planning drift. JSON-only, chưa PDF-verified.
 
 ## Git Checkpoint
-
-Implementation `5414b699e63758270d80cc36390ecc6eb7149134`, sau live baseline `45dca05`.
-Đã push main, remote SHA verified tại bàn giao `0d6daf1`; giữ checkout gốc có local edits.
-Evidence local: `artifacts/evidence/M7-ANSWER-01/live-v1/` và `final-replay/`.
+Implementation2d96f1574551e4a38b80b668066be9940497da46 được publish main từ
+worktree riêng, cùng report/tracking REVIEW; SHA remote xác minh ở receipt bàn giao
+local. Checkout gốc9a3adba/local edits nguyên byte.
 
 ## Exact Next Action
-
-Chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
+Tech Lead review gate9/45, RCA và thứ tự remediation trước khi cho phép chạy tiếp36Pilot.
