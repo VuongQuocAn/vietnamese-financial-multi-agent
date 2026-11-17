@@ -1,5 +1,11 @@
 # Trạng thái hiện tại
 
+## M5-PY-01 — Python Agent
+
+**IN_PROGRESS**, Owner giao17/11/2026; baseline `9a3adba`, worktree riêng giữ local edits.
+[Spec](tasks/M5/M5-PY-01.md). Gateway→Docker worker cô lập, manifest có nguồn và
+Python candidate trong Workspace; giữ M6/M7 và Calculator.
+Next action: hoàn tất targeted/live validation và bàn giao REVIEW.
 ## M6-GOAL-FIX-01 — Fix Incorrect Goal Binding
 
 **DONE — Owner xác nhận hoàn thành ngày17/11/2026**;

@@ -46,6 +46,7 @@ from .orchestration_contracts import (
 )
 from .orchestrator import aggregate_candidates
 from .planner_contracts import PlannerLLMMetadata
+from .python_agent import PythonAgent, PythonRequirement
 from .routing_contracts import RoutingDecision
 from .specialist_common import (
     AnalysisProposal,
@@ -225,6 +226,7 @@ class LiteTask(FinancialModel):
     task_id: str | None = None
     requirement_ids: list[str] = Field(default_factory=list, max_length=16)
     depends_on: list[str] = Field(default_factory=list, max_length=6)
+    python_requirement: PythonRequirement | None = None
 
 
 class LitePlan(FinancialModel):
@@ -921,6 +923,11 @@ class SupervisorLite:
                 "để truy xuất chỉ tiêu cùng kỳ. Backend có demand retrieval, selection max/min/max_abs "
                 "và exact context join; không cần dự đoán trước kỳ thắng. "
                 "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema."
+                " FinancialCalculator xử lý add/subtract/multiply/divide, sum/mean, ratios, "
+                "percentage_of/change và so sánh. CHỈ khi cần primitive ngoài khả năng đó, "
+                "khai python_requirement: power, sqrt, root_finding, dispersion hoặc iterative_solver. "
+                "Mọi task thông thường bỏ field này hoặc null. Không chọn Python chỉ vì nhiều bước. "
+                "Objective Python phải nêu công thức được người dùng yêu cầu và đúng kỳ/nguồn."
             ),
             schema=proposal_schema(),
             example=dict(
@@ -1100,6 +1107,23 @@ class FinancialLiteOrchestrator:
             period_roles=roles,
             balance_sheet=task.specialist == "liquidity_and_leverage",
         )
+        if self.adaptive_coordinator and task.python_requirement:
+            record, result.llm = PythonAgent(self.gateway).run(
+                objective=task.objective,
+                requirement=task.python_requirement,
+                matches=upstream.evidence_bundle.facts,
+                context=context,
+                repair_available=not self.workspace.tasks[task.task_id].get("repair_used", False),
+            )
+            state = self.workspace.tasks[task.task_id]
+            state["python_candidate"] = record
+            state["repair_used"] = record["calls"] > 1
+            result.status = "partial"
+            result.limitations.append("python_candidate_requires_M6-PY-01")
+            if record["execution_status"] != "success":
+                result.missing_evidence.append(record["execution_status"])
+            # Keep this proof out of the v1 claim adapter/ledger. M6-PY-01 owns admission.
+            return result
         if self.integration_v2:
             for evidence in result.supporting_evidence:
                 evidence.evidence_id = evidence_handle(evidence)

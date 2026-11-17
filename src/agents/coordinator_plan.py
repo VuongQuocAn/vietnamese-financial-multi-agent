@@ -10,6 +10,7 @@ from ..outputs.qa_composer import _targets
 from ..tools.question_understanding import normalize
 from .contracts import SpecialistRole
 from .integration_workspace import IntegrationRequirement
+from .python_agent import PythonRequirement
 
 
 class GoalProposal(FinancialModel):
@@ -32,6 +33,10 @@ class TaskProposal(FinancialModel):
     after: list[int] = Field(
         max_length=6,
         description="Indexes 0-based của tasks phải hoàn tất trước. Task độc lập: []. Task index2 dùng kết quả task0 và task1: [0,1]. Không chứa index của chính nó; không dùng số thứ tự 1-based.",
+    )
+    python_requirement: PythonRequirement | None = Field(
+        default=None,
+        description="Chỉ primitive Calculator chưa hỗ trợ; phép tính thông thường dùng null",
     )
 
 
@@ -135,6 +140,7 @@ def adapt_plan(payload, sources):
                     sources=list(dict.fromkeys(task.input_handles)),
                     depends_on=[f"T{i + 1}" for i in dict.fromkeys(task.after)],
                     use_graph=bool(task.after) or len(task.input_handles) > 1,
+                    python_requirement=task.python_requirement,
                 )
             )
         except (ValidationError, ValueError) as error:

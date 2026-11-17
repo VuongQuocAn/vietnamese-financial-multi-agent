@@ -248,6 +248,8 @@ class IntegrationWorkspace:
             else [],
             coordination=state.get("coordination", {}),
         )
+        if state.get("python_candidate"):
+            record["python_candidate"] = state["python_candidate"]
         record["digest"] = hashlib.sha256(
             json.dumps(record, sort_keys=True, ensure_ascii=False).encode()
         ).hexdigest()
