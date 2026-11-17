@@ -66,7 +66,8 @@ lực, không accuracy benchmark hoặc PDF-verified.
 
 ## Implementation Evidence
 
-Chưa commit; runtime178files khớp receipt live-release. [Report](../../../docs/m5-coord-02-live-validation.md).
+Implementation `1874166c3506994926a87f993458543d76a50806`;
+178runtime files trong commit khớp receipt live-release. [Report](../../../docs/m5-coord-02-live-validation.md).
 24targeted PASS;17Qwen calls/115085tokens. Final selection→retrieve→join→
 Calculator3,18%→M6 3ACCEPT; M7 verification_blocked vì thiếu goal bindings.
 Không sửa M6/M7, không OCR/PDF/benchmark; chờ Tech Lead nghiệm thu.
