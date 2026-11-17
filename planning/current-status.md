@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## ARCH-01a — Adaptive Evidence-Guided Multi-Agent Framework Review
+
+**REVIEW**, ngày 17/11/2026. [Báo cáo](../docs/arch-01-adaptive-multi-agent-review.md)
+và tracking được publish riêng theo Owner; giữ ARCH-01 DONE cũ. Baseline phân tích
+là working tree local `966b73a` + edits; bản publication trên remote `2b3c2ab`
+chỉ chứa tài liệu, không đưa bốn commits local ngoài phạm vi lên main. Code/source
+reports chưa publish không thuộc commit này. Evidence review tại report/registry;
+phiên publish không chạy lại tests hoặc CI thủ công, không triển khai ARCH-02.
+Next action: Tech Lead review và chốt bốn quyết định §6 để giao đặc tả ARCH-02.
+
 ## ViFinBench-P1A-Finalize — DONE, APPROVED WITH CAVEATS
 
 Tech Lead phê duyệt ngày13/11/2026; phạm vi nghiệm thu **Single-hop Pilot**.
