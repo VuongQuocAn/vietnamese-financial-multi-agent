@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M5
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: M5-COORD-01
 - Estimated Complexity: S
@@ -50,7 +50,7 @@ OCR/PDF/manual verification, benchmark rộng, thay đổi raw/canonical corpus.
 - [x] Selection giữ domain/header/kỳ/selector/quality, ties/dấu/null; join exact keys, cardinality/unmatched.
 - [x] Không promote raw evidence; lỗi chỉ chặn nhánh phụ thuộc, giữ kết quả độc lập.
 - [x] Targeted controls và live Qwen câu mới; lưu tools/agents/evidence/M6/M7.
-- [x] Commit/push main và xác minh SHA; REVIEW chờ Tech Lead.
+- [x] Commit/push main và xác minh SHA; Owner/Tech Lead xác nhận DONE ngày17/11/2026.
 
 ## Required Tests
 
@@ -70,8 +70,10 @@ Implementation `1874166c3506994926a87f993458543d76a50806`;
 178runtime files trong commit khớp receipt live-release. [Report](../../../docs/m5-coord-02-live-validation.md).
 24targeted PASS;17Qwen calls/115085tokens. Final selection→retrieve→join→
 Calculator3,18%→M6 3ACCEPT; M7 verification_blocked vì thiếu goal bindings.
-Không sửa M6/M7, không OCR/PDF/benchmark; chờ Tech Lead nghiệm thu.
+Owner/Tech Lead xác nhận DONE ngày17/11/2026; nghiệm thu trong phạm vi task,
+giữ các giới hạn M7/selection obligations đã báo. Phiên đóng chỉ tài liệu/tracking
+và planning/diff/Git, không sửa runtime hoặc chạy lại tests/Qwen/benchmark/CI.
 
 ## Handoff Notes
 
-Tech Lead review implementation và live trace; không tự chuyển DONE.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

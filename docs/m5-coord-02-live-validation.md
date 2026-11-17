@@ -1,10 +1,15 @@
 # M5-COORD-02 — Evidence-Guided Coordination
 
-Ngày17/11/2026 (Asia/Bangkok). **REVIEW**, chờ Tech Lead; implementation
+Ngày17/11/2026 (Asia/Bangkok). **DONE — Owner/Tech Lead xác nhận**; implementation
 [`1874166c3506994926a87f993458543d76a50806`](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/1874166c3506994926a87f993458543d76a50806)
 đã commit và xác minh178runtime hashes khớp receipt live-release.
 Baseline main `a12f0e9`, worktree riêng giữ các
 local edits ngoài task. Không thay runtime M6/M7, corpus, OCR hoặc PDF.
+
+Nghiệm thu năng lực phối hợp trong phạm vi M5-COORD-02 theo kết luận người dùng
+ngày17/11/2026; giữ nguyên evidence và giới hạn M7/goal bindings bên dưới. Phiên
+đóng chỉ cập nhật tài liệu/tracking và kiểm planning/diff/Git, không sửa runtime
+hoặc chạy lại tests/Qwen/benchmark/CI.
 
 ## Thay đổi
 
@@ -125,4 +130,4 @@ expansion sai và goal bindings còn hạn chế. Expansion hợp lệ mới có
 control, chưa live positive. Không gán kết quả lượt đầu cho code cuối hoặc tuyên
 bố đã giải quyết mọi câu tài chính nhiều bước.
 
-**Next action:** Tech Lead review implementation và trace ở trạng thái REVIEW.
+**Next action:** chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

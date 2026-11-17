@@ -2,7 +2,7 @@
 
 ## M5-COORD-02 — Evidence-Guided Coordination
 
-**REVIEW**, ngày17/11/2026; implementation `1874166c3506994926a87f993458543d76a50806`
+**DONE — Owner/Tech Lead xác nhận ngày17/11/2026**; implementation `1874166c3506994926a87f993458543d76a50806`
 đã push main/remote verified và xác minh178runtime hashes khớp receipt live-release.
 [Spec](tasks/M5/M5-COORD-02.md), [report](../docs/m5-coord-02-live-validation.md).
 Demand theo dependency output, selection/join records và bounded append patch;
@@ -12,8 +12,10 @@ resolve handle CFO2024 thành2025→Calculator3,18%→M6 3ACCEPT; M7 giữ
 verification_blocked vì thiếu verified goal bindings.178runtime/24JSON receipt
 cuối khớp,57source JSON bất biến. Chưa typed M6 selection obligations/raw-table
 entity joins/live positive expansion; không OCR/PDF/fullCI. Worktree riêng giữ
-local edits ngoài task, không tự nghiệm thu DONE.
-Next action: Tech Lead review implementation và live trace.
+local edits ngoài task. Nghiệm thu năng lực phối hợp trong phạm vi M5-COORD-02;
+giữ giới hạn M7/goal bindings đã báo. Phiên đóng chỉ tài liệu/tracking và kiểm
+planning/diff/Git, không sửa runtime hoặc chạy lại tests/Qwen/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## M5-COORD-01 — Adaptive Coordinator & Task DAG
 
