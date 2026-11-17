@@ -2,10 +2,15 @@
 
 ## M6-PY-01 — Python Proof Verification
 
-**IN_PROGRESS**; Owner giao17/11/2026. Baseline remote `cda39b0`, worktree riêng
-giữ local edits. [Spec](tasks/M6/M6-PY-01.md). Saved real RMS replay Docker khớp;
-31targeted compatibility PASS. Chưa commit/live Qwen, cap2calls.
-Next action: hoàn tất live verification và bàn giao REVIEW.
+**REVIEW**, Owner giao17/11/2026; implementation
+`95229f83be55ad43c8e61f2a88bcb7e59c5db6b9`, baseline remote `cda39b0`, worktree riêng
+giữ local edits. [Spec](tasks/M6/M6-PY-01.md), [report](../docs/m6-py-01-live-validation.md).
+2Qwen calls/18647tokens; final exact saved-semantic replay0calls. RMS replay khớp →
+M6 ACCEPT/G3 → Ledger v2 → M7 partial/3claims/8citations. Ca bỏ sqrt từng được Qwen
+false-positive; final dimension check chặn ABSTAIN/rejected.185runtime hashes khớp,
+24JSON bất biến;31targeted PASS. G1/G2 chưa có support; unknown AST giữ unverified,
+chưa fresh final Qwen/financial accuracy. Giữ M5/worker/Calculator/M7, không fullCI/OCR/PDF.
+Next action: Owner/Tech Lead review implementation và trace cuối cùng các giới hạn đã nêu.
 
 ## M5-PY-01 — Python Agent
 
