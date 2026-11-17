@@ -726,9 +726,7 @@ class FinancialQAPipeline:
             fields, metadata = stage(
                 "composer",
                 lambda: compose_lite(
-                    bound.model_copy(update={"allow_gateway": False})
-                    if bound.integration_v2
-                    else bound,
+                    bound,
                     selected,
                     gateway=self.gateway,
                     technical_errors=(
