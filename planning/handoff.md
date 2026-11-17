@@ -1,8 +1,8 @@
-# Handoff MODEL-CTX-01
+# Handoff M7-ANSWER-01
 
 ## Active Task
 
-MODEL-CTX-01
+M7-ANSWER-01
 
 ## Status
 
@@ -10,83 +10,40 @@ REVIEW
 
 ## Last Verified State
 
-20 scenarios/61 logical calls, Qwen14B/8B exact local; Llama gated unavailable.
-M7 input max 8.886, context_required max 12.982. 17 overflow/2 near ở 8K;
-61 FIT ở 16K và 32K non-thinking. Đề xuất thử Qwen8B 4-bit/16K, chưa GPU benchmark.
+Implementation `5414b699e63758270d80cc36390ecc6eb7149134`; baseline remote `fcd0675`.
+185runtime hashes khớp final replay;24JSON nguồn bất biến; coverage/citations giữ nguyên.
 
 ## Completed Work
 
-Provider payload reconstruction, tokenizer/component/graph/overflow analysis và
-architecture-specific VRAM estimates. CORE-PERIOD-01 DONE theo Tech Lead.
-[Report](../docs/model-ctx-01-llm-context-profiling.md).
+M7 Lite natural prose/Qwen, citations từ claim IDs và partial từ bindings M6.
+3actual calls/24442tokens;2full/1partial. Số tự thêm ở partial đã chặn;
+final exact saved-response replay0calls giữ2câu hợp lệ.30references/6exact bindings.
+[Report](../docs/m7-answer-01-live-validation.md).
 
 ## Remaining Work
 
-Tech Lead nghiệm thu MODEL-CTX-01; không tự triển khai Colab serving hoặc M8.
+Chờ nghiệm thu M7; không tự triển khai E2E-ARCH-02.
 
 ## Modified Files
 
-Profiling script/test/report, planning/checker và một CI test entry; không runtime/data.
+M7 Lite/targeted tests, runner replay, planning checker/registry/spec/report.
+Worktree riêng; local edits trong checkout gốc giữ nguyên.
 
 ## Tests
 
-3 targeted PASS; actual Qwen deterministic/template smoke 4 checks PASS;
-Ruff/planning/diff PASS. [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED.
+28targeted PASS, Ruff lint/format/planning/diff đạt. Không fullCI/OCR/Gemini/PDF.
 
 ## Blockers
 
-Không blocker cho profiling Qwen; Llama gated được ghi unavailable theo spec.
+Không blocker triển khai. Giữ semantic-paraphrase/JSON-only limits và G2/G3 chưa verified.
+Bản cuối dùng saved-response replay, chưa fresh final Qwen.
 
 ## Git Checkpoint
 
-Implementation [8b78f34](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/8b78f342433d639c09425e0cf513b6e14b82b3c5); [CI 42995134599](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42995134599) SUCCESS đúng implementation SHA; 234 Python PASS, Web/full regression SKIPPED. Raw artifacts ignored, source hashes unchanged.
+Implementation `5414b699e63758270d80cc36390ecc6eb7149134`, sau live baseline `45dca05`.
+Commit tracking riêng; publish fast-forward HEAD:main, giữ checkout gốc có local edits.
+Evidence local: `artifacts/evidence/M7-ANSWER-01/live-v1/` và `final-replay/`.
 
 ## Exact Next Action
 
-Tech Lead review MODEL-CTX-01 và quyết định task Colab serving.
-
-## Previous CORE-PERIOD-01 Handoff
-
-**Handoff CORE-PERIOD-01**
-
-**Active Task**
-
-CORE-PERIOD-01
-
-**Status**
-
-DONE
-
-**Last Verified State**
-
-Baseline 1fb2e39; request/M6 fix và M7 calculation display restoration; implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA.
-
-**Completed Work**
-
-Q5-C replay ABSTAIN→ACCEPT;20 real controls PASS;6 fresh E2E; L2 cuối phát hành đủ số.
-
-**Remaining Work**
-
-Đã nghiệm thu có giới hạn ngày 11/11/2026; giữ caveats Q5/C3 final M7 replay và generic partial coverage.
-
-**Modified Files**
-
-Chỉ các file thuộc CORE-PERIOD-01 và EF-CORE-03 approval; local edits khác giữ nguyên.
-
-**Tests**
-
-82 staged targeted trước M7;33 final M7 (12 overlap);Ruff/planning/diff checks.
-
-**Blockers**
-
-Không có blocker implementation; không tuyên bố financial accuracy toàn hệ thống.
-
-**Git Checkpoint**
-
-implementation [30710fe](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/commit/30710fed39abb1c84e712690d94180037241ac66) đã push main;[CI 42990278592](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/actions/runs/42990278592) SUCCESS đúng SHA.
-
-**Exact Next Action**
-
-Chờ Owner/Tech Lead giao nhiệm vụ mới.
-
-Quyết định: Tech Lead APPROVED — DONE có giới hạn. Phiên này chỉ docs/planning.
+Tech Lead review M7-ANSWER-01.

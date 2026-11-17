@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: M7
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: M7-LITE-02, M6-PY-01
 - Estimated Complexity: S
@@ -46,10 +46,10 @@ không OCR/Gemini/PDF/fullCI, không triển khai E2E-ARCH-02.
 
 ## Acceptance Criteria
 
-- [ ] Qwen tạo câu trả lời tiếng Việt tự nhiên trên câu hỏi thật.
-- [ ] Có ca full và partial, không thay coverage/bindings/ACCEPT.
-- [ ] Giữ exact source bindings, không thêm số liệu hoặc kết luận ngoài Ledger trong mẫu đã audit.
-- [ ] Tối đa3Qwen calls, targeted checks đạt; implementation SHA/live trace được ghi.
+- [x] Qwen tạo câu trả lời tiếng Việt tự nhiên trên câu hỏi thật.
+- [x] Có ca full và partial, không thay coverage/bindings/ACCEPT.
+- [x] Giữ exact source bindings, không thêm số liệu hoặc kết luận ngoài Ledger trong mẫu đã audit.
+- [x] Tối đa3Qwen calls, targeted checks đạt; implementation SHA/live trace được ghi.
 
 ## Required Tests
 
@@ -63,9 +63,14 @@ không thêm verifier M7 hoặc suy accuracy tổng quát. Giữ caveats JSON-on
 
 ## Implementation Evidence
 
-Đang triển khai, chưa commit.28targeted PASS trước bổ sung runner;
-live chưa gọi. Bằng chứng cuối sẽ được ghi sau validation.
+Implementation `5414b699e63758270d80cc36390ecc6eb7149134`;
+[report](../../../docs/m7-answer-01-live-validation.md).3actual Qwen calls/24442tokens,
+0retry/unknown.2full/1partial;30references/6exact bindings, coverage nguyên M6.
+Ca partial có unsupported number đã chặn; final giữ các câu hợp lệ bằng cùng
+numeric guard. Exact saved-response replay3ca/0API calls; không fresh final Qwen.
+28targeted PASS;185runtime/24JSON hashes bất biến, Ruff/planning/diff đạt.
+Giữ giới hạn semantic paraphrase, JSON-only và G2/G3 chưa verified; không fullCI/PDF.
 
 ## Handoff Notes
 
-Next action: hoàn tất targeted/live M7 validation trong cap3calls.
+Next action: Tech Lead review M7-ANSWER-01.
