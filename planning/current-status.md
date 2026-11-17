@@ -1,5 +1,16 @@
 # Trạng thái hiện tại
 
+## ARCH-02 — Technical Architecture Specification
+
+**REVIEW**, ngày 17/11/2026. [Đặc tả](../docs/arch-02-technical-specification.md)
+trên coordinator V2: Task DAG/shared workspace, wire nhỏ, Python isolation/proof,
+M6 obligations/một vòng local repair và M7 composition của propositions đã verify.
+Runtime đối chiếu `966b73a` + local edits; chưa commit, publish docs-only riêng
+trên remote main `5eea640`, giữ code/commits và thay đổi ngoài task.
+Planning PASS local161/publish145 tasks; diff/fingerprint182 code/schema PASS,
+79 files ngoài scope giữ nguyên. Không model/pytest/benchmark/CI; chưa mở implementation.
+Next action: Tech Lead review ARCH-02 trước khi giao M5-COORD-01.
+
 ## ARCH-01a — Adaptive Evidence-Guided Multi-Agent Framework Review
 
 **DONE — Tech Lead APPROVED ngày 17/11/2026**.
