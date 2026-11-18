@@ -13,10 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 package.__path__ = [str(ROOT / "src")]
 
 from run_vifinbench_pilot import run, sha  # noqa: E402
+from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest  # noqa: E402
 from vietnamese_financial_multi_agent.core.persistence import atomic_json  # noqa: E402
 
 
 def prepare(storage, output):
+    FinancialQARequest(
+        question="Validate run budget", max_provider_calls=10, request_timeout_seconds=600
+    )
     baseline_path = storage / "artifacts/evidence/QWEN-THINK-01/live-final/receipt.json"
     baseline = json.loads(baseline_path.read_bytes())
     manifest = storage / "artifacts/evidence/E2E-VAL-01/baseline-nine/questions-only.json"
@@ -92,7 +96,7 @@ def main():
     parser.add_argument("--storage-root", type=Path, required=True)
     args = parser.parse_args()
     storage = args.storage_root.resolve()
-    output = storage / "artifacts/evidence/E2E-STABILIZE-01/live-nine"
+    output = storage / "artifacts/evidence/E2E-STABILIZE-01/live-nine-final"
     (prepare if args.mode == "prepare" else validate)(storage, output)
 
 

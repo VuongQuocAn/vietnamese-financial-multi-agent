@@ -21,6 +21,12 @@ from .test_evidence_obligations import gateway_with_goals, selection_case
 
 
 def test_omitted_comparison_retains_original_question_and_valid_task_dependencies():
+    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
+
+    assert (
+        FinancialQARequest(question="Budget", request_timeout_seconds=600).request_timeout_seconds
+        == 600
+    )
     question = "Cuối năm 2030, phải thu ngắn hạn của khách hàng hay hàng tồn kho lớn hơn?"
     plan, errors = adapt_plan(
         dict(

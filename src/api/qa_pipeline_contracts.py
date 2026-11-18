@@ -23,7 +23,7 @@ class FinancialQARequest(VietnameseQARequest):
     force_refresh: bool = False
     execution_mode: Literal["auto", "gemini", "deterministic"] = "auto"
     max_provider_calls: int = Field(default=16, ge=1, le=32)
-    request_timeout_seconds: float = Field(default=180, ge=10, le=300)
+    request_timeout_seconds: float = Field(default=180, ge=10, le=600)
     conversation_context: list[dict] = Field(default_factory=list, max_length=8)
 
 

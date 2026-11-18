@@ -2,6 +2,9 @@
 
 ## E2E-STABILIZE-01 — Literal table quotation và verdict recovery
 
+Client request deadline cho phép tối đa600s (default180s giữ nguyên), vẫn giới hạn
+stage/calls qua RequestGateway; không thay model/server/context24K.
+
 Document kind `exact_text` có thể tìm cả text/table; source projection `literal_table`
 giữ nguyên bảng đã pin, headers và toàn bộ citations. Chỉ một dòng label khớp nguyên
 cụm query, đầy đủ cells mới thành quotation nguyên văn cùng headers; không chọn cực
