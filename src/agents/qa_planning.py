@@ -126,7 +126,11 @@ def plan_fusion(gateway, request):
                 "financial/document/relation/unsupported theo ý nghĩa câu hỏi. Không dùng nhiều financial "
                 "subrequests cho cùng mục tiêu phân tích: một câu phân tích giao toàn bộ cho financial Planner. "
                 "original_span giữ đúng phần câu hỏi; execution_question là nhu cầu rõ nghĩa, không thêm facts. "
-                "Document requirement phải có target,label,kind,query. kind của FusionRequirement dùng "
+                "Mỗi lane=document bắt buộc có document_requirement là object lồng bên trong "
+                "FusionRequirement, gồm target,label,kind,query; không đặt các field này ở root. "
+                "Nếu thuyết minh phụ thuộc khoản mục/năm đã chọn, dependencies phải trỏ "
+                "requirement financial chọn khoản mục/năm đó; không đoán kết quả. "
+                "kind của FusionRequirement dùng "
                 "fact/metric/interpretation/document_summary/source_context; không phê duyệt hoặc tạo số. "
                 "Không thay công ty, filing hoặc scope, không thêm tên công ty/năm chưa nêu. "
                 "Các phần độc lập không phụ thuộc nhau. relation phụ thuộc requirements nguồn."
@@ -204,4 +208,49 @@ def plan_fusion(gateway, request):
     for key in parts:
         visit(key)
     plan.requirements = [parts[key] for key in ordered]
+    return plan
+
+
+def fallback_fusion_plan(question):
+    """Keep one financial execution per identical user span and explicit anaphora."""
+    from ..tools.question_understanding import normalize
+    from .fusion_contracts import decompose
+
+    plan = decompose(question)
+    seen, aliases, unique = {}, {}, []
+    for part in plan.requirements:
+        key = (part.original_span, part.execution_question)
+        if part.lane == "financial" and key in seen:
+            prior = seen[key]
+            aliases[part.requirement_id] = prior.requirement_id
+            prior.kind, prior.target = "interpretation", None
+            prior.dependencies = list(dict.fromkeys([*prior.dependencies, *part.dependencies]))
+            prior.evidence_needs = list(
+                dict.fromkeys([*prior.evidence_needs, *part.evidence_needs])
+            )
+            prior.verification_requirements = list(
+                dict.fromkeys([*prior.verification_requirements, *part.verification_requirements])
+            )
+        else:
+            if part.lane == "financial":
+                seen[key] = part
+            unique.append(part)
+    preceding = []
+    for part in unique:
+        part.dependencies = list(dict.fromkeys(aliases.get(d, d) for d in part.dependencies))
+        part.verification_requirements = list(
+            dict.fromkeys(aliases.get(d, d) for d in part.verification_requirements)
+        )
+        if (
+            part.lane == "document"
+            and len(preceding) == 1
+            and re.search(
+                r"\b(?:khoan muc|chi tieu)\b.*\b(?:lon hon|nho hon)\b.*\bdo\b",
+                normalize(part.original_span),
+            )
+        ):
+            part.dependencies = list(dict.fromkeys([*part.dependencies, preceding[0]]))
+        if part.lane == "financial":
+            preceding.append(part.requirement_id)
+    plan.requirements = unique
     return plan

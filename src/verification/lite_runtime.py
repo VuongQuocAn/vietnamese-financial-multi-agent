@@ -702,6 +702,14 @@ class LiteVerificationRuntime:
             wire_rows.append(wire)
         payload = json.dumps(wire_rows, ensure_ascii=False)
         if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
+            if self.integration_v2 and 1 < len(proofs) <= 32:
+                # Lossless batches: every claim retains its complete source and
+                # dependency closure, digest and one verdict. The shared Gateway
+                # still bounds calls/time. Never truncate an oversized single row.
+                middle = len(proofs) // 2
+                self._semantic(proofs[:middle])
+                self._semantic(proofs[middle:])
+                return
             for p in proofs:
                 p.semantic_error = "semantic_payload_limit"
             return
@@ -845,7 +853,9 @@ class LiteVerificationRuntime:
         except Exception:
             error = "semantic_gateway_exception"
         self.provider_metadata.append(("semantic", metadata))
-        self.stage_latency_ms["semantic"] = (perf_counter() - start) * 1000
+        self.stage_latency_ms["semantic"] = (
+            self.stage_latency_ms.get("semantic", 0) + (perf_counter() - start) * 1000
+        )
         for proof, row in zip(proofs, rows, strict=True):
             proof.metadata = metadata
             proof.semantic = verdicts.get(row["claim_id"])

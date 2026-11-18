@@ -94,7 +94,7 @@ def prepare(root, storage, output):
     print(json.dumps(dict(prepared=len(cases), ids=[c["id"] for c in cases])), flush=True)
 
 
-def run(root, storage, output, ids, *, corpus=None):
+def run(root, storage, output, ids, *, corpus=None, response_hook=None):
     receipt = json.loads((output / "receipt.json").read_bytes())
     assert sha(output / "questions-only.json") == receipt["question_manifest_sha256"]
     assert sha(Path(__file__)) == receipt["runner_sha256"]
@@ -114,6 +114,8 @@ def run(root, storage, output, ids, *, corpus=None):
     receipt["worker"] = PythonExecutor().preflight()
     atomic_json(output / "receipt.json", receipt)
     configured = create_text_gateway(root, provider="qwen")
+    if response_hook is not None:
+        configured.adapter.client.event_hooks["response"].append(response_hook)
     used = len(list((output / "provider").glob("*.json")))
     current, first = None, used
 

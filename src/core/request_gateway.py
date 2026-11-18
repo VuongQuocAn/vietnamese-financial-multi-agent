@@ -1,7 +1,9 @@
 """One shared call/deadline budget across all agents and child QA lanes."""
 
+import os
 from time import perf_counter, sleep
 
+from .llm_contracts import RequestConstraints
 from .llm_gateway import SharedLLMGateway, _failure
 
 
@@ -36,6 +38,11 @@ class RequestGateway:
             self.exhausted = True
             return _failure(request, "timeout")
         bound = request.model_copy(deep=True)
+        # Opt-in client budget for a server already running Thinking. This does
+        # not change the server/template/model, and child lanes share the deadline.
+        if request.model.provider == "qwen" and os.environ.get("QWEN_THINKING_BUDGET") == "true":
+            bound.generation.max_output_tokens = max(bound.generation.max_output_tokens or 0, 8192)
+            bound.constraints = RequestConstraints(timeout_seconds=min(180, remaining))
         if bound.constraints:
             bound.constraints.timeout_seconds = min(
                 bound.constraints.timeout_seconds or remaining, remaining

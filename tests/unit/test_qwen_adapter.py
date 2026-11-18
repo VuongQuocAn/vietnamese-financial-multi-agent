@@ -68,7 +68,7 @@ def test_json_mapping_local_validation_and_partial():
         assert response.usage.input_tokens == 8 and response.usage.total_tokens is None
         assert response.cost.status == "unknown" and response.correlation == req.correlation
         assert seen[0]["max_tokens"] == 128 and seen[0]["stop"] == ["END"]
-        assert seen[0]["chat_template_kwargs"] == {"enable_thinking": False}
+        assert "chat_template_kwargs" not in seen[0]
         raw["choices"][0]["message"]["content"] = '{"ratio":3}'
         assert gateway.generate(req).output.validation_status == "schema_invalid"
         raw["choices"][0] = {"finish_reason": "length", "message": {"content": '{"ratio":'}}

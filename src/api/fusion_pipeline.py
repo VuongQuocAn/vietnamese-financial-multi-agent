@@ -205,7 +205,7 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     )
     trace.document_id, trace.company_id, trace.snapshot_id = document, company, snapshot
     trace.composition_id, trace.planner_intent = manifest.composition_id, "mixed"
-    from ..agents.qa_planning import plan_fusion
+    from ..agents.qa_planning import fallback_fusion_plan, plan_fusion
 
     try:
         plan = stage(
@@ -219,7 +219,7 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     except ValueError:
         trace.limitations.append("adaptive_fusion_planner_failed_source_only_fallback")
         trace.execution_events.append(dict(event="PROVIDER_DEGRADED", component="FusionPlanner"))
-        plan = FinancialMultiAgentOrchestrator.plan_fusion(request.question)
+        plan = fallback_fusion_plan(request.question)
     if len(plan.requirements) > 12:
         return stop("clarification_required", ["narrower_question_required"])
     bundle = EvidenceFusionBundle(

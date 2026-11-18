@@ -96,7 +96,6 @@ class QwenAdapter:
             model=request.model.model,
             messages=[{"role": m.role, "content": m.content} for m in request.messages],
             stream=False,
-            chat_template_kwargs={"enable_thinking": False},
         )
         spec = request.output_spec
         if spec is not None and spec.format == "json":
@@ -203,15 +202,40 @@ class QwenAdapter:
                 finish_reason="safety",
                 error=_error("safety", origin="provider"),
             )
-        text = choice["message"]["content"]
+        text = choice["message"].get("content")
+        # vLLM may separate reasoning_content, or return the template's think
+        # block inline (the opening tag may already be in the prompt). Only the
+        # final channel is eligible for JSON validation or downstream claims.
+        if isinstance(text, str):
+            text = text.strip()
+            if "</think>" in text:
+                text = text.split("</think>", 1)[1].strip()
+            if "<think>" in text:
+                text = ""
         if (
             choice["finish_reason"] not in {"stop", "length"}
             or not isinstance(text, str)
             or not text.strip()
-            or "<think>" in text
-            or choice["message"].get("reasoning_content")
         ):
-            raise ValueError
+            if choice["finish_reason"] == "length":
+                spec = request.output_spec
+                return LLMResponse(
+                    **base,
+                    status="partial",
+                    finish_reason="length",
+                    output=(
+                        parse_json_output("", schema_ref=spec.schema_ref)
+                        if spec is not None and spec.format == "json"
+                        else TextOutput(format="text", text="")
+                    ),
+                    error=_error("structured_output_invalid"),
+                )
+            return LLMResponse(
+                **base,
+                status="error",
+                finish_reason="error",
+                error=_error("structured_output_invalid"),
+            )
         spec = request.output_spec
         output = (
             parse_json_output(text, schema_ref=spec.schema_ref, allow_markdown_fence=True)

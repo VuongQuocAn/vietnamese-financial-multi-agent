@@ -1,5 +1,13 @@
 # Trạng thái hiện tại
 
+## QWEN-THINK-01 — Thinking Validation
+
+**IN_PROGRESS**, Owner18/11/2026; baseline remote `f6059f1`, worktree riêng.
+[Spec](tasks/QWEN/QWEN-THINK-01.md). Adapter final channel, lossless semantic
+batching, bounded opt-in Thinking budget và Fusion fallback dependency.29targeted
+PASS; không đổi notebook/server/model/context24K/EF-EG/M7 hoặc hạ chuẩn M6.
+Next action: freeze implementation và chạy đúng3QA/30calls cap, không tuning/retest.
+
 ## E2E-REMED-04 — Goal Binding & Document Evidence
 
 **DONE có giới hạn — Owner/Tech Lead chấp nhận kết quả kỹ thuật ngày17/11/2026**;
