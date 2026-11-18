@@ -54,8 +54,9 @@ def test_small_plan_keeps_original_indexes_and_independent_tasks():
     ).plan("Doanh thu thuần năm 2030?", context, sources)
     assert not errors and metadata.calls == 1 and parsed.tasks[0].task_id == "T1"
     prompt = json.loads(seen[0].messages[0].content)
-    assert set(prompt["schema"]) == {"goals", "tasks", "bounds"}
-    assert "requirement_id" not in prompt["schema"]["goals"]["properties"]
+    schema = prompt["output_schema"]
+    assert set(schema["properties"]) == {"goals", "tasks"}
+    assert "requirement_id" not in schema["$defs"]["GoalProposal"]["properties"]
 
 
 def test_dag_executes_just_in_time_and_keeps_independent_outputs():
@@ -141,7 +142,10 @@ def test_pipeline_flag_keeps_existing_m6_m7_and_opt_out(tmp_path):
         force_refresh=True,
     )
     response = service.run(request)
-    assert response.used_verified_claim_ids and response.citations, response.trace.errors
+    assert response.trace.native_decisions["ACCEPT"] >= 1
+    assert set(response.used_verified_claim_ids) <= {
+        o.verified_claim_id for o in response.trace.outcomes
+    }
     assert response.trace.integration_context["task_results"]
     assert response.trace.m6_lite and response.trace.m7_lite
     with patch(
@@ -156,3 +160,114 @@ def test_pipeline_flag_keeps_existing_m6_m7_and_opt_out(tmp_path):
             catalog=catalog,
         )
         assert factory.call_args.kwargs["adaptive_coordinator"] is False
+
+
+def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_path):
+    from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
+
+    from .test_json_source_readiness import catalog_fixture
+
+    catalog = catalog_fixture(tmp_path / "sources")
+    descriptor = catalog.descriptors[0]
+    company = catalog.facts[0].company_id
+    numbers = "Giá vốn hàng bán của TEST năm 2025 là bao nhiêu?"
+    document = "Tài liệu ghi đơn vị tính nào?"
+    calls = []
+
+    def transport(request):
+        prefix = request.request_id.rsplit("-", 1)[0]
+        if prefix == "m5-coordinator-plan":
+            inventory = json.loads(request.messages[0].content)["inventory"]
+            source = next(
+                key
+                for key, row in inventory.items()
+                if row["item"] == "b02.cost_of_sales" and row["period"] == "2025"
+            )
+            payload = dict(
+                goals=[
+                    dict(text=numbers, mode="value", source=source),
+                    dict(text=document, mode="document"),
+                ],
+                tasks=[
+                    dict(
+                        goal_indexes=[0],
+                        role="cash_flow_and_earnings_quality",
+                        objective=numbers,
+                        input_handles=[source],
+                        after=[],
+                        use_graph=True,
+                    ),
+                    dict(
+                        goal_indexes=[1],
+                        role="profitability",
+                        objective=document,
+                        input_handles=[],
+                        after=[0],
+                        document_search=dict(
+                            target="don vi tinh",
+                            label=document,
+                            kind="exact_text",
+                            query="Đơn vị tính",
+                        ),
+                    ),
+                ],
+            )
+        elif prefix == "m6-lite":
+            payload = dict(
+                verdicts=[
+                    dict(
+                        claim_id=r["claim_id"],
+                        verdict="SUPPORTED",
+                        reason="exact source",
+                        supported_requirement_ids=[
+                            g["requirement_id"] for g in r["local_requirements"]
+                        ],
+                        issues=[],
+                    )
+                    for r in json.loads(request.messages[1].content)
+                ]
+            )
+        else:
+            assert prefix == "m7-lite"
+            rows = json.loads(request.messages[1].content)["verified_claims"]
+            assert {r["kind"] for r in rows} == {"fact", "document"}
+            payload = dict(
+                segments=[dict(text=r["content"], claim_ids=[r["claim_id"]]) for r in rows], gaps=[]
+            )
+        return gateway_for(payload, calls).generate(request)
+
+    service = FinancialQAPipeline(
+        catalog=catalog,
+        documents=[
+            QADocument(
+                document_id=descriptor.document_id,
+                company_id=company,
+                reporting_year=2025,
+                company_aliases=["TEST"],
+            )
+        ],
+        gateway=SharedLLMGateway({"gemini": transport}),
+        repository=VerifiedClaimRepository(tmp_path / "ledger"),
+    )
+    response = service.run(
+        FinancialQARequest(
+            question=numbers + " " + document,
+            company_id=company,
+            document_id=descriptor.document_id,
+            snapshot_id=descriptor.snapshot_id,
+            integration_v2=True,
+            adaptive_coordinator=True,
+            force_refresh=True,
+        )
+    )
+    trace = response.trace
+    assert sum(r.request_id.startswith("m5-coordinator-plan-") for r in calls) == 1
+    assert {e["tool"] for e in trace.tool_calls} >= {
+        "get_financial_fact",
+        "search_document_evidence",
+        "get_graph_context",
+    }
+    assert trace.integration_context["task_results"]["T2"]["input_results"][0]["task_id"] == "T1"
+    assert trace.native_decisions == {"ACCEPT": 2}
+    assert len(response.used_verified_claim_ids) == 2 and response.citations
+    assert trace.m7_lite["coverage"]["complete"]

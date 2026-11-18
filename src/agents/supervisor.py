@@ -7,6 +7,7 @@ from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
+from ..evidence.search import DocumentSearchResponse
 from ..evidence.snapshots import MetricSnapshotClosure, SnapshotCatalog, SnapshotSelection
 from ..tools.evidence_retrieval import EvidenceRetrievalTools, EvidenceToolResponse
 from ..tools.financial_calculator import FinancialCalculationResponse, FinancialCalculator
@@ -61,6 +62,7 @@ ToolResponse = (
     | FinancialCalculationResponse
     | EvidenceToolResponse
     | GraphContextResponse
+    | DocumentSearchResponse
 )
 StepResponse = ToolResponse | SnapshotSelection | MetricSnapshotClosure | ExecutionEvidenceBundle
 

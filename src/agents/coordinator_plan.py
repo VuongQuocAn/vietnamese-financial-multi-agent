@@ -1,23 +1,21 @@
 """Small planning wire and stable task scheduling for the existing V2 runtime."""
 
-import re
 from typing import Literal
 
 from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
-from ..outputs.qa_composer import _targets
-from ..tools.goal_targets import target_groups
-from ..tools.question_understanding import normalize
 from .contracts import SpecialistRole
+from .document_qa_contracts import DocumentRequirement
 from .integration_workspace import IntegrationRequirement
 from .python_agent import PythonRequirement
 
 
 class GoalProposal(FinancialModel):
     text: str = Field(min_length=1, max_length=2000)
-    mode: Literal["value", "analysis"] = Field(
-        description="value: số liệu hoặc phép tính; analysis: nhận xét có nghĩa tài chính"
+    mode: Literal["value", "calculation", "analysis", "document"]
+    source: str | None = Field(
+        default=None, description="S handle của chính kết quả tra cứu, không dùng handle toán hạng"
     )
 
 
@@ -39,15 +37,12 @@ class TaskProposal(FinancialModel):
         default=None,
         description="Chỉ primitive Calculator chưa hỗ trợ; phép tính thông thường dùng null",
     )
-
-
-def proposal_schema():
-    """All fields required; source identities and internal contracts stay in Python."""
-    return {
-        "goals": GoalProposal.model_json_schema(),
-        "tasks": TaskProposal.model_json_schema(),
-        "bounds": {"goals": 16, "tasks": 6},
-    }
+    use_graph: bool = False
+    resolve_inputs: bool = Field(
+        default=False, description="Bổ sung nguồn chỉ khi cần quyết định từ kết quả dependency"
+    )
+    document_search: DocumentRequirement | None = None
+    query_from_dependencies: bool = False
 
 
 class PlanProposal(FinancialModel):
@@ -63,93 +58,13 @@ def output_schema(sources):
     return schema
 
 
-def preserve_question_plan(question, sources):
-    """One owned goal for an unparseable/drifting plan; never invent an omitted subquestion."""
-    targets = _targets(normalize(question))
-    relevant = [s for s in sources.values() if any(s["item"] == target for _, target in targets)]
-    role = next((r for s in relevant for r in s["roles"]), "profitability")
-    mode = (
-        "analysis"
-        if re.search(r"\b(dien bien|nhan xet|so sanh|giai thich)\b", normalize(question))
-        else "value"
-    )
-    return adapt_plan(
-        dict(
-            goals=[dict(text=question, mode=mode)],
-            tasks=[
-                dict(goal_indexes=[0], role=role, objective=question, input_handles=[], after=[])
-            ],
-        ),
-        sources,
-    )[0]
-
-
-def grounding_issue(question, plan):
-    """Reject clear added targets/years; this is not a semantic verifier."""
-    text = normalize(question)
-    targets = set(_targets(text))
-    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", question))
-    comparative = bool(
-        re.search(r"\b(so voi|so sanh|bien dong|tang truong|ky truoc|nam truoc|dau nam)\b", text)
-    )
-    for requirement in plan.requirements:
-        if targets and set(_targets(normalize(requirement.text))) - targets:
-            return "unrequested_target"
-        if (
-            not comparative
-            and years
-            and set(re.findall(r"\b(?:19|20|21)\d{2}\b", requirement.text)) - years
-        ):
-            return "unrequested_period"
-    # A source lookup without a canonical numeric target is not an invitation to compute.
-    if not targets and not re.search(
-        r"\b(tinh|chenh lech|ty le|ty suat|he so|trung binh|so sanh|lon nhat|nho nhat)\b",
-        re.sub(r"\buoc tinh\b", "", text),
-    ):
-        if (
-            len(plan.requirements) != 1
-            or normalize(plan.requirements[0].text) != text
-            or len(plan.tasks) != 1
-            or normalize(plan.tasks[0].objective) != text
-        ):
-            return "lookup_goal_changed"
-    return None
-
-
-def retain_requested_conclusion(question, plan, sources):
-    """Keep an omitted comparison/analysis as owned work, preserving the valid DAG."""
-    cues = r"\b(lon hon|nho hon|so sanh|dien bien|nhan xet|tong hop|cai thien)\b"
-    if not re.search(cues, normalize(question)) or any(
-        re.search(cues, normalize(r.text)) for r in plan.requirements
-    ):
-        return False
-    from .lite_orchestrator import LiteTask
-
-    retained = preserve_question_plan(question, sources)
-    goal = retained.requirements[0].model_copy(update={"requirement_id": "G-requested"})
-    plan.requirements.append(goal)
-    if len(plan.tasks) < 6:
-        plan.tasks.append(
-            LiteTask(
-                task_id="T-requested",
-                specialist=retained.tasks[0].specialist,
-                objective=question[:600],
-                requirement_ids=[goal.requirement_id],
-                depends_on=[t.task_id for t in plan.tasks],
-                use_graph=True,
-            )
-        )
-    # A full DAG leaves a visible unowned goal rather than claiming completion.
-    return True
-
-
 def adapt_plan(payload, sources):
     from .lite_orchestrator import LitePlan, LiteTask
 
     empty = LitePlan()
-    if not isinstance(payload, dict) or set(payload) != {"goals", "tasks"}:
+    if not isinstance(payload, dict):
         return empty, ["supervisor_invalid_envelope"]
-    goals, raw_tasks = payload["goals"], payload["tasks"]
+    goals, raw_tasks = payload.get("goals"), payload.get("tasks")
     if (
         not isinstance(goals, list)
         or not 1 <= len(goals) <= 16
@@ -157,99 +72,72 @@ def adapt_plan(payload, sources):
         or len(raw_tasks) > 6
     ):
         return empty, ["supervisor_invalid_envelope"]
-    try:
-        goals = [GoalProposal.model_validate(g, strict=True) for g in goals]
-    except ValidationError:
-        return empty, ["supervisor_invalid_goals"]
-    requirements = []
-    for index, goal in enumerate(goals):
-        # A uniquely named catalog concept may be bound by the existing resolver.
-        # Period/unit are not inferred from objective, source handle or filename.
-        groups = target_groups(normalize(goal.text)) if goal.mode == "value" else []
-        targets = [next(iter(group)) for group in groups if len(group) == 1]
-        target = targets[0] if len(groups) == len(targets) == 1 else None
-        selection_goal = any(
-            term in normalize(goal.text)
-            for term in (
-                "lon nhat",
-                "nho nhat",
-                "cao nhat",
-                "thap nhat",
-                "chon nam",
-                "nam nao",
-                "ky nao",
-            )
+    requirements, errors = {}, []
+    for index, raw in enumerate(goals):
+        gid = f"G{index + 1}"
+        try:
+            goal = GoalProposal.model_validate(raw, strict=True)
+            source = sources.get(goal.source)
+            if goal.source is not None and (source is None or goal.mode != "value"):
+                raise ValueError("goal_source_invalid")
+        except (ValidationError, ValueError) as error:
+            reason = "goal_schema_invalid" if isinstance(error, ValidationError) else str(error)
+            errors.append(f"supervisor_invalid_goal:{gid}:{reason}")
+            continue
+        requirements[index] = IntegrationRequirement(
+            requirement_id=gid,
+            text=goal.text,
+            kind=source["kind"]
+            if source
+            else "document"
+            if goal.mode == "document"
+            else "explanation",
+            target_id=source["item"] if source else None,
+            period=source["period"] if source else None,
+            answer_goal="analysis" if goal.mode == "analysis" else "value",
+            interpretation=goal.mode in {"analysis", "calculation"},
+            interpretation_topic="dynamic_calculation" if goal.mode == "calculation" else None,
+            reason="goal_context_unresolved" if goal.mode == "calculation" else None,
         )
-        if selection_goal:
-            # A scalar's truth cannot certify an extremum over a comparison domain.
-            # Preserve a gap until M6 has selection obligations; do not change M6 here.
-            target = None
-        years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", goal.text))
-        periods = {
-            s["period"]
-            for s in sources.values()
-            if target
-            and s["item"] == target[1]
-            and s["period"]
-            and (not years or s["period"][:4] in years)
-        }
-        requirements.append(
-            IntegrationRequirement(
-                requirement_id=f"G{index + 1}",
-                text=goal.text,
-                kind=target[0] if target else "explanation",
-                target_id=target[1] if target else None,
-                period=next(iter(periods)) if len(periods) == 1 else None,
-                answer_goal=goal.mode,
-                interpretation=goal.mode == "analysis" or target is None,
-                interpretation_topic="dynamic_calculation"
-                if goal.mode == "value" and target is None and not selection_goal
-                else None,
-                required_indicators=[item for kind, item in targets if kind == "fact"]
-                if target is None
-                else [],
-                reason="selection_requires_obligations"
-                if selection_goal
-                else None
-                if target
-                else "goal_context_unresolved",
-            )
-        )
-    tasks, blocked, errors = [], {}, []
+    tasks, blocked = [], {}
     for index, raw in enumerate(raw_tasks):
         tid = f"T{index + 1}"
         try:
             task = TaskProposal.model_validate(raw, strict=True)
-            if any(i < 0 or i >= len(goals) for i in task.goal_indexes):
+            assigned = [
+                requirements[i] for i in dict.fromkeys(task.goal_indexes) if i in requirements
+            ]
+            if len(assigned) != len(set(task.goal_indexes)):
+                errors.append(f"supervisor_unknown_goal_reference:{tid}")
+            if not assigned:
                 raise ValueError("goal_reference_unknown")
-            if set(task.input_handles) - sources.keys():
+            handles = [h for h in dict.fromkeys(task.input_handles) if h in sources]
+            if len(handles) != len(set(task.input_handles)):
+                errors.append(f"supervisor_unknown_source_handle:{tid}")
+            if (
+                task.input_handles
+                and not handles
+                and not (task.after or task.document_search or task.resolve_inputs)
+            ):
                 raise ValueError("source_handle_unknown")
             if any(i < 0 or i >= len(raw_tasks) for i in task.after):
                 raise ValueError("task_reference_unknown")
-            # Exact goal/item/period resolution is stronger than a model's numeric S ordinal.
-            assigned = [requirements[i] for i in task.goal_indexes]
-            if len(assigned) == 1 and assigned[0].target_id and assigned[0].period:
-                goal = assigned[0]
-                correct = [
-                    h
-                    for h, s in sources.items()
-                    if s["item"] == goal.target_id and s["period"] == goal.period
-                ]
-                if (
-                    len(correct) == 1
-                    and task.input_handles
-                    and all(sources[h]["kind"] == "fact" for h in task.input_handles)
-                ):
-                    task.input_handles = correct
+            if task.query_from_dependencies and not (task.after and task.document_search):
+                raise ValueError("document_query_dependency_missing")
+            if task.document_search and sum(r.kind == "document" for r in assigned) > 1:
+                raise ValueError("one_document_goal_per_search")
             tasks.append(
                 LiteTask(
                     task_id=tid,
                     specialist=task.role,
                     objective=task.objective,
-                    requirement_ids=[f"G{i + 1}" for i in dict.fromkeys(task.goal_indexes)],
-                    sources=list(dict.fromkeys(task.input_handles)),
+                    requirement_ids=[r.requirement_id for r in assigned],
+                    sources=handles,
                     depends_on=[f"T{i + 1}" for i in dict.fromkeys(task.after)],
-                    use_graph=bool(task.after) or len(task.input_handles) > 1,
+                    use_graph=task.use_graph,
+                    resolve_inputs=task.resolve_inputs,
+                    document_search=task.document_search,
+                    query_from_dependencies=task.query_from_dependencies,
                     python_requirement=task.python_requirement,
                 )
             )
@@ -263,35 +151,28 @@ def adapt_plan(payload, sources):
     owned = {rid for t in ordered for rid in t.requirement_ids if t.task_id not in blocked}
     errors.extend(
         f"goal_owner_unresolved:{r.requirement_id}"
-        for r in requirements
+        for r in requirements.values()
         if r.requirement_id not in owned
     )
-    return LitePlan(tasks=tasks, requirements=requirements, blocked_tasks=blocked), errors
+    return LitePlan(
+        tasks=tasks, requirements=list(requirements.values()), blocked_tasks=blocked
+    ), errors
 
 
 def schedule_tasks(tasks):
     """Stable Kahn order; cycles, unknown refs and their closures never execute."""
-    by_id = {t.task_id: t for t in tasks}
+    known = {t.task_id for t in tasks}
     ordered, done, remaining = [], set(), list(tasks)
     while remaining:
-        ready = [t for t in remaining if set(t.depends_on) <= done]
-        if not ready:
+        task = next((t for t in remaining if set(t.depends_on) <= done), None)
+        if task is None:
             break
-        task = min(
-            ready,
-            key=lambda t: (
-                min(
-                    (int(r[1:]) for r in t.requirement_ids if re.fullmatch(r"G\d+", r)), default=17
-                ),
-                tasks.index(t),
-            ),
-        )
         ordered.append(task)
         done.add(task.task_id)
         remaining.remove(task)
     blocked = {
         t.task_id: "task_reference_unknown"
-        if set(t.depends_on) - by_id.keys()
+        if set(t.depends_on) - known
         else "task_cycle_or_blocked_dependency"
         for t in remaining
     }

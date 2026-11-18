@@ -588,6 +588,7 @@ def generate_candidates(
     normalize_payload=None,
     operation_inputs_only=False,
     candidate_analyses=None,
+    numeric_fallback=True,
 ):
     if deterministic:
         # Existing typed numeric renderers; no model, interpretation or new calculation.
@@ -664,8 +665,12 @@ def generate_candidates(
                 )
             )
             payload = {
-                "claims": _numeric_proposals(result.supporting_evidence),
-                "missing_information": [],
+                "claims": _numeric_proposals(result.supporting_evidence)
+                if numeric_fallback
+                else [],
+                "missing_information": []
+                if numeric_fallback
+                else ["specialist_gateway_response_failed"],
             }
         else:
             payload = result.raw_output
@@ -697,8 +702,8 @@ def generate_candidates(
         # Only local, selected source facts are rendered; malformed model text
         # supplies no claim. These candidates still require ordinary native M6.
         payload = {
-            "claims": _numeric_proposals(result.supporting_evidence),
-            "missing_information": [],
+            "claims": _numeric_proposals(result.supporting_evidence) if numeric_fallback else [],
+            "missing_information": [] if numeric_fallback else ["specialist_proposal_invalid"],
         }
     missing = payload["missing_information"]
     if not isinstance(missing, list) or any(not isinstance(m, str) for m in missing):
@@ -708,7 +713,13 @@ def generate_candidates(
             )
         )
         missing = []
-    if not deterministic and not payload["claims"] and not missing and result.supporting_evidence:
+    if (
+        numeric_fallback
+        and not deterministic
+        and not payload["claims"]
+        and not missing
+        and result.supporting_evidence
+    ):
         # An unexplained empty model response supplies no rejection reason. Reuse
         # the existing numeric pathway only after source/metric selection gates;
         # keep the original model payload and send all candidates through M6.

@@ -32,7 +32,7 @@ def test_goal_alias_alternatives_do_not_grant_scalar_coverage():
     )
     assert not errors
     requirement = plan.requirements[0].model_dump(mode="json")
-    assert requirement["required_indicators"] == ["b01.short_term_trade_receivables"]
+    assert not requirement["required_indicators"]
     facts = [
         NS(kind="fact", canonical_item_id=key, unit="VND")
         for key in ["b01.short_term_trade_receivables", "b01.inventory_total"]

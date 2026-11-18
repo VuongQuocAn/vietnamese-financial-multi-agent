@@ -89,7 +89,7 @@ def _numbers_supported(text, claims):
                 (Decimal(step.result), Decimal(1), "%" if step.unit == "percent" else step.unit)
                 for step in proof.calculation.steps
             )
-        for evidence in e.accepted_claim.supporting_evidence:
+        for evidence in getattr(e.accepted_claim, "supporting_evidence", ()):
             if evidence.unit == "source_text":
                 # Raw table/text numbers are not independently admitted facts.
                 continue
@@ -650,12 +650,12 @@ def compose_lite(
                                 "operand_periods",
                             },
                         )
-                        for x in e.accepted_claim.supporting_evidence
+                        for x in getattr(e.accepted_claim, "supporting_evidence", ())
                     ],
                     proof=e.accepted_claim.reasoning.model_dump(
                         mode="json", include={"claim_type", "assumptions", "limitations"}
                     )
-                    if e.accepted_claim.reasoning
+                    if getattr(e.accepted_claim, "reasoning", None)
                     else None,
                     reasoning_calculation=_reasoning_calculation(e),
                     citations=[
@@ -663,7 +663,7 @@ def compose_lite(
                         for c in e.citations
                     ],
                     caveats=_public_notes(e.caveats),
-                    limitations=_public_notes(e.accepted_claim.missing_information),
+                    limitations=_public_notes(getattr(e.accepted_claim, "missing_information", [])),
                 )
                 for k, e in entries.items()
             ],

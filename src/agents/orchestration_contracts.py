@@ -7,6 +7,7 @@ from pydantic import Field, model_serializer
 from ..accounting.contracts import FinancialModel
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
 from .contracts import RiskSignal, SpecialistRole
+from .document_qa_contracts import DocumentCandidate
 from .planner_contracts import PlannerContext, PlannerLLMMetadata, PlannerResult
 from .routing_contracts import RoutingDecision, RoutingRequirement
 from .specialist_common import SpecialistCandidate, SpecialistEvidence, SpecialistResult
@@ -136,10 +137,13 @@ class OrchestrationResult(FinancialModel):
     latency_ms: float = 0.0
     financial_fact_verified: Literal[False] = False
     integration_context: dict = Field(default_factory=dict)
+    document_candidates: list[DocumentCandidate] = Field(default_factory=list)
 
     @model_serializer(mode="wrap")
     def serialize_integration(self, handler):
         wire = handler(self)
         if not self.integration_context:
             wire.pop("integration_context", None)
+        if not self.document_candidates:
+            wire.pop("document_candidates", None)
         return wire

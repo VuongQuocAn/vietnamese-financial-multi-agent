@@ -33,15 +33,20 @@ def test_dependent_demand_uses_parent_source_period_and_joins_new_evidence():
     second = child.sources[0]
     child.sources = []
     child.depends_on = [parent.task_id]
+    child.resolve_inputs = True
     seen = []
-    engine.gateway = gateway_for(
-        dict(
-            retrieve=[dict(source=second, period_from_task=parent.task_id)],
-            selection=None,
-            add_tasks=[dict(task_id="T3", role="invented")],
-        ),
-        seen,
-    )
+
+    class TaskGateway:
+        def generate(self, request):
+            if request.request_id.startswith("m5-evidence-demand"):
+                body = dict(
+                    retrieve=[dict(source=second, period_from_task=parent.task_id)], selection=None
+                )
+            else:
+                body = dict(claims=[], analyses=[], missing_information=[])
+            return gateway_for(body, seen).generate(request)
+
+    engine.gateway = TaskGateway()
     output = engine.run(
         question="Lấy kỳ của kết quả đầu rồi truy xuất chỉ tiêu thứ hai cùng kỳ", context=context
     )
@@ -51,7 +56,6 @@ def test_dependent_demand_uses_parent_source_period_and_joins_new_evidence():
     parent_result = trace["task_results"][parent.task_id]
     lineage = result["coordination"]["retrieval_lineage"][0]
     assert lineage["from_result"]["digest"] == parent_result["digest"]
-    assert result["coordination"]["expansion_error"] == "expansion_patch_rejected"
     assert lineage["value"] == parent_result["selected_observations"][0]["context"]["period"]
     join = result["coordination"]["joins"][0]
     assert join["status"] == "matched" and join["pairs"]
@@ -59,12 +63,14 @@ def test_dependent_demand_uses_parent_source_period_and_joins_new_evidence():
     assert len(output.supervisor_result.evidence_bundle.facts) == 2
     prompt = json.loads(seen[0].messages[0].content)
     assert prompt["dependency_results"][parent.task_id]["digest"] == parent_result["digest"]
-    assert len(prompt["observations"]) == 1  # Consumer has not prefetched its answer.
+    assert len(prompt["dependency_results"][parent.task_id]["selected_observations"]) == 1
     assert engine.workspace.dependency_ids(
         child.model_copy(update={"depends_on": [child.task_id]})
     ) == [child.task_id, parent.task_id]
     assert result["selected_observations"][0]["selectors"]
-    assert len(seen) == 1 and output.usage.calls == 1
+    assert sum(
+        r.request_id.startswith("m5-evidence-demand") for r in seen
+    ) == 1 and output.usage.calls == len(seen)
     assert catalog.facts[0].financial_fact_verified is False
 
 

@@ -4,10 +4,6 @@ import json
 from copy import deepcopy
 from types import SimpleNamespace
 
-from vietnamese_financial_multi_agent.agents.coordinator_plan import (
-    adapt_plan,
-    retain_requested_conclusion,
-)
 from vietnamese_financial_multi_agent.agents.document_qa_contracts import document_intent
 from vietnamese_financial_multi_agent.core.llm_contracts import parse_json_output
 from vietnamese_financial_multi_agent.evidence.document_claim_support import source_assertion
@@ -20,37 +16,13 @@ from vietnamese_financial_multi_agent.verification.lite_runtime import (
 from .test_evidence_obligations import gateway_with_goals, selection_case
 
 
-def test_omitted_comparison_retains_original_question_and_valid_task_dependencies(monkeypatch):
+def test_lossless_prompt_budget_keeps_sources(monkeypatch):
     from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 
     assert (
         FinancialQARequest(question="Budget", request_timeout_seconds=600).request_timeout_seconds
         == 600
     )
-    question = "Cuối năm 2030, phải thu ngắn hạn của khách hàng hay hàng tồn kho lớn hơn?"
-    plan, errors = adapt_plan(
-        dict(
-            goals=[dict(text="Tra số dư phải thu ngắn hạn của khách hàng", mode="value")],
-            tasks=[
-                dict(
-                    goal_indexes=[0],
-                    role="liquidity_and_leverage",
-                    objective="Tra số dư",
-                    input_handles=[],
-                    after=[],
-                )
-            ],
-        ),
-        {},
-    )
-    assert not errors
-    original = deepcopy(plan.tasks)
-    assert retain_requested_conclusion(question, plan, {})
-    assert plan.tasks[:-1] == original
-    assert plan.tasks[-1].depends_on == ["T1"]
-    assert plan.requirements[-1].text == question
-    assert plan.tasks[-1].requirement_ids == [plan.requirements[-1].requirement_id]
-    assert not retain_requested_conclusion(question, plan, {})
     from vietnamese_financial_multi_agent.core.llm_contracts import parse_llm_request
     from vietnamese_financial_multi_agent.core.llm_gateway import _failure
     from vietnamese_financial_multi_agent.core.prompt_payload import compact_prompt

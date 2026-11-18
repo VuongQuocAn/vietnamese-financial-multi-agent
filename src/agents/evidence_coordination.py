@@ -114,7 +114,7 @@ class CoordinationProposal(FinancialModel):
     add_tasks: list[ExpansionTask] = Field(default_factory=list, max_length=5)
 
 
-def propose(gateway, context, task, workspace, sources, observations, available_ids):
+def propose(gateway, context, task, workspace, sources):
     """One demand pass per task, no retries and the ordinary Gateway budget."""
 
     dependencies = {
@@ -130,6 +130,8 @@ def propose(gateway, context, task, workspace, sources, observations, available_
         for tid in task.depends_on
     }
     schema = CoordinationProposal.model_json_schema()
+    del schema["properties"]["add_tasks"]
+    del schema["$defs"]["ExpansionTask"]
     dependency_ids = workspace.dependency_ids(task)
     reusable = [
         r["evidence_id"]
@@ -166,33 +168,16 @@ def propose(gateway, context, task, workspace, sources, observations, available_
             "periods là TOÀN BỘ kỳ phải so sánh, comparator=max|min|max_abs|min_abs; "
             "không dùng selection để chọn operands của phép tính hoặc gộp nhiều chỉ tiêu. "
             "Backend so Decimal, giữ ties/null/conflicts và provenance. Không chọn winner bằng prose. "
-            "Sau khi có thông tin mới, có thể add_tasks đúng existing goals, dùng ID trong available_ids; "
-            "mỗi object {task_id,goal_indexes,role,objective,input_handles,after_tasks}. "
-            "after_tasks chỉ trỏ task hiện tại, dependencies đã có kết quả hoặc task mới. "
-            "Đọc existing_tasks: không add task trùng việc đã có. Chỉ mở rộng khi thông tin MỚI làm "
-            "thiếu bước trong plan; mặc định add_tasks=[]. Không sửa goals. "
-            "Role chỉ profitability|liquidity_and_leverage|cash_flow_and_earnings_quality; không dùng explanation. "
             "Các candidates là chưa verified; không dùng interpretation như canonical fact."
             " Nếu có verification_feedback, sửa đúng nguồn/selection/join hoặc goal binding được chỉ ra; "
             "đối chiếu goals, không lặp lại lựa chọn sai. Không có evidence thì không đoán."
         ),
         verification_feedback=workspace.tasks[task.task_id].get("repair_feedback", []),
-        question=workspace.question,
-        task=task.model_dump(mode="json"),
-        goals=[r.model_dump(mode="json") for r in workspace.requirements],
+        objective=task.objective,
         dependency_results=dependencies,
-        existing_tasks={
-            tid: {
-                k: s.get(k)
-                for k in ("objective", "depends_on", "status", "role", "requirement_ids")
-            }
-            for tid, s in workspace.tasks.items()
-        },
-        observations=[prompt_observation(r) for r in observations],
         inventory={h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()},
-        available_ids=available_ids,
         schema=schema,
-        empty_response_example={"retrieve": [], "selection": None, "add_tasks": []},
+        empty_response_example={"retrieve": [], "selection": None},
     )
     wire = json.dumps(prompt, ensure_ascii=False)
     if len(wire) > 48000:
@@ -228,9 +213,6 @@ def propose(gateway, context, task, workspace, sources, observations, available_
     payload = response.output.payload
     if not isinstance(payload, dict):
         raise ValueError("coordination_schema_invalid")
-    workspace.tasks[task.task_id]["expansion_proposal"] = payload.get("add_tasks", [])
-    # An optional append patch is validated atomically on its own. A rejected
-    # patch must not erase independent retrieval/selection outputs.
     batches = parse_retrieval_batches(payload)
     workspace.tasks[task.task_id]["retrieval_batches"] = [
         [d.model_dump(mode="json") for d in batch.retrieve] for batch in batches

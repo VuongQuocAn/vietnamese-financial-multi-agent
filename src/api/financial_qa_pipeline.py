@@ -390,6 +390,36 @@ class FinancialQAPipeline:
         )
         return bound, manifest, []
 
+    def _admit_documents(self, histories, response):
+        trace = response.trace
+        results = self.repository.admit_many(histories)
+        for history, result in zip(histories, results, strict=True):
+            decision = history.final
+            trace.outcomes.append(
+                CandidateOutcome(
+                    candidate_id=decision.original_claim.candidate_id,
+                    initial_decision=decision.decision,
+                    final_decision=decision.decision,
+                    reasons=decision.reasons,
+                    validation={
+                        k: "pass" if passed else "fail" for k, passed in decision.checks.items()
+                    },
+                    evidence_status="supported"
+                    if decision.checks["content_fidelity"]
+                    else "insufficient_evidence",
+                    logic_statuses=[
+                        "consistent"
+                        if decision.checks["relationship_support"]
+                        else "insufficient_context"
+                    ],
+                    admission_status=result.status,
+                    verified_claim_id=result.verified_claim_id,
+                )
+            )
+            if result.status == "stored":
+                response.newly_accepted_claims += 1
+        return results
+
     def _run_document(self, request, requirements, response, stage, stop, recovery_seen):
         trace = response.trace
         bound, manifest, reasons = stage("context", lambda: self._document_context(request))
@@ -573,33 +603,7 @@ class FinancialQAPipeline:
                         trace.provider_errors.extend(
                             r["error_code"] for r in recovery if "error_code" in r
                         )
-                    results = stage("admission", lambda: self.repository.admit_many(histories))
-                    for history, result in zip(histories, results, strict=True):
-                        decision = history.final
-                        trace.outcomes.append(
-                            CandidateOutcome(
-                                candidate_id=decision.original_claim.candidate_id,
-                                initial_decision=decision.decision,
-                                final_decision=decision.decision,
-                                reasons=decision.reasons,
-                                validation={
-                                    k: "pass" if passed else "fail"
-                                    for k, passed in decision.checks.items()
-                                },
-                                evidence_status="supported"
-                                if decision.checks["content_fidelity"]
-                                else "insufficient_evidence",
-                                logic_statuses=[
-                                    "consistent"
-                                    if decision.checks["relationship_support"]
-                                    else "insufficient_context"
-                                ],
-                                admission_status=result.status,
-                                verified_claim_id=result.verified_claim_id,
-                            )
-                        )
-                        if result.status == "stored":
-                            response.newly_accepted_claims += 1
+                    results = stage("admission", lambda: self._admit_documents(histories, response))
                     trace.native_decisions = dict(Counter(o.final_decision for o in trace.outcomes))
                     response.rejected_claims = sum(r.status == "rejected" for r in results)
                     response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
@@ -706,6 +710,7 @@ class FinancialQAPipeline:
         bound, ledger, query = None, None, None
         lite_releasing = False
         lite_technical_failure = False
+        document_bindings = {}
 
         def release_lite():
             nonlocal lite_releasing
@@ -723,6 +728,11 @@ class FinancialQAPipeline:
                     bound.document_id, bound.snapshot_id
                 ),
             )
+            selected.extend(
+                entry
+                for key in document_bindings
+                if (entry := self.repository.get(key)) is not None
+            )
             if bound.integration_v2:
                 from ..verification.evidence_obligations import current_goal_support
                 from ..verification.lite_contracts import LiteVerificationHistoryV2
@@ -733,6 +743,8 @@ class FinancialQAPipeline:
                     )
                     if isinstance(entry.history, LiteVerificationHistoryV2)
                     and entry.history.proof.batch.question == bound.question
+                    else document_bindings[entry.identity.verified_claim_id]
+                    if entry.identity.verified_claim_id in document_bindings
                     else trace.integration_context.get("supported_requirements", {}).get(
                         entry.identity.accepted_candidate_id, []
                     )
@@ -871,7 +883,17 @@ class FinancialQAPipeline:
             )
 
         try:
-            intent, requirements = document_intent(request.question)
+            coordinated = (
+                request.adaptive_coordinator
+                and request.integration_v2
+                and request.integration_lane is None
+                and request.execution_mode != "deterministic"
+                and request.allow_gateway
+                and self.gateway is not None
+            )
+            intent, requirements = (
+                ("other", []) if coordinated else document_intent(request.question)
+            )
             if request.integration_lane == "financial":
                 intent = "other"
             elif request.integration_lane == "document":
@@ -879,11 +901,15 @@ class FinancialQAPipeline:
             from ..agents.fusion_contracts import is_mixed
             from .fusion_pipeline import run_fusion
 
-            if request.integration_lane is None and (
-                request.integration_v2
-                and intent in {"document", "mixed"}
-                or is_mixed(request.question)
-                and not request.m7_lite
+            if (
+                not coordinated
+                and request.integration_lane is None
+                and (
+                    request.integration_v2
+                    and intent in {"document", "mixed"}
+                    or is_mixed(request.question)
+                    and not request.m7_lite
+                )
             ):
                 return run_fusion(self, request, response, stage, stop, recovery_seen=recovery_seen)
             if intent == "mixed" and not request.m7_lite:
@@ -1038,6 +1064,7 @@ class FinancialQAPipeline:
                             e.role
                             for e in output.trace
                             if e.stage == "specialist_execution"
+                            and e.outcome != "blocked"
                             and any(
                                 x.role == e.role
                                 and (bound.m5_lite or (x.llm.calls and x.llm.status == "success"))
@@ -1098,7 +1125,7 @@ class FinancialQAPipeline:
                         batch.issues = [
                             i for i in batch.issues if i.code != "duplicate_candidate_id"
                         ]
-                    trace.candidate_count = len(batch.claims)
+                    trace.candidate_count = len(batch.claims) + len(output.document_candidates)
                     # Reject foreign identities/citations before semantic calls or writes.
                     if not bound.m6_lite and any(
                         (c.company_id, c.document_id, c.snapshot_id)
@@ -1149,7 +1176,12 @@ class FinancialQAPipeline:
                                 )
                             ),
                         )
-                        if bound.adaptive_coordinator and bound.integration_v2 and bound.m6_lite:
+                        if (
+                            bound.adaptive_coordinator
+                            and bound.integration_v2
+                            and bound.m6_lite
+                            and not coordinated
+                        ):
                             from ..agents.verification_feedback import repair_once
 
                             previous_stages = set(output.usage.stages)
@@ -1285,6 +1317,69 @@ class FinancialQAPipeline:
                         response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
                         ledger.cache.clear()
                         stage("ledger_reload", lambda: ledger.find_claims(query))
+                    if output.document_candidates:
+                        trace.document_candidates = [
+                            c.model_dump(mode="json") for c in output.document_candidates
+                        ]
+                        manifest = m5.composition
+                        tools = EvidenceRetrievalTools.from_composition(
+                            manifest,
+                            m5.document_repository,
+                            document_id=manifest.logical_document_id,
+                            composition_id=manifest.composition_id,
+                        )
+                        document_histories = stage(
+                            "m6_document",
+                            lambda: VerificationRuntime.verify_document(
+                                output.document_candidates,
+                                EvidenceContextBuilder(tools=tools),
+                                manifest,
+                                bound.company_id,
+                                bound.snapshot_id
+                                if manifest.financial_snapshot.source_kind == "json"
+                                else None,
+                            ),
+                        )
+                        old_count = len(trace.outcomes)
+                        stage(
+                            "admission_document",
+                            lambda: self._admit_documents(document_histories, response),
+                        )
+                        verified_parents = {
+                            origin.candidate_id
+                            for candidate in output.candidates
+                            if any(
+                                o.candidate_id == candidate.candidate_id and o.verified_claim_id
+                                for o in trace.outcomes[:old_count]
+                            )
+                            and trace.integration_context.get("supported_requirements", {}).get(
+                                candidate.candidate_id
+                            )
+                            for origin in candidate.origins
+                        }
+                        for outcome in trace.outcomes[old_count:]:
+                            if not outcome.verified_claim_id:
+                                continue
+                            for state in trace.integration_context["tasks"].values():
+                                if outcome.candidate_id not in state.get(
+                                    "document_candidate_ids", []
+                                ):
+                                    continue
+                                dependency = state.get("document_dependency")
+                                if (
+                                    dependency
+                                    and dependency["candidate_id"] not in verified_parents
+                                ):
+                                    continue
+                                document_bindings.setdefault(outcome.verified_claim_id, []).append(
+                                    state["document_goal"]
+                                )
+                        trace.native_decisions = dict(
+                            Counter(o.final_decision for o in trace.outcomes)
+                        )
+                        response.rejected_claims = trace.native_decisions.get("ABSTAIN", 0)
+                        response.deferred_claims = trace.native_decisions.get("INVESTIGATE", 0)
+                        ledger.cache.clear()
                     if output.conflicts and not bound.m6_lite:
                         return stop("verification_blocked", ["unresolved_candidate_conflicts"])
                     response.mode = "PARTIAL_REUSE_AND_REFRESH" if existing_ids else "BLOCKED"

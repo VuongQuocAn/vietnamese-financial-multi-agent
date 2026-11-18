@@ -32,6 +32,8 @@ from . import cash_flow_earnings_quality_specialist as cash
 from . import liquidity_leverage_specialist as liquidity
 from . import profitability_specialist as profit
 from .contracts import PlanValidation, SpecialistRole
+from .document_qa import document_candidates, document_operations
+from .document_qa_contracts import DocumentRequirement
 from .grounded_observations import observation_proposal
 from .integration_workspace import (
     INTERPRETATION_TERMS,
@@ -228,6 +230,9 @@ class LiteTask(FinancialModel):
     requirement_ids: list[str] = Field(default_factory=list, max_length=16)
     depends_on: list[str] = Field(default_factory=list, max_length=6)
     python_requirement: PythonRequirement | None = None
+    resolve_inputs: bool = False
+    document_search: DocumentRequirement | None = None
+    query_from_dependencies: bool = False
 
 
 class LitePlan(FinancialModel):
@@ -348,21 +353,20 @@ def inventory(catalog, context):
                 "B02": "profitability",
                 "B03": "cash_flow_and_earnings_quality",
             }.get(fact.context.statement_type)
-            if role:
-                key = ("fact", fact.canonical_item_id, fact.context.period)
-                entry = entries.setdefault(
-                    key,
-                    dict(
-                        kind="fact",
-                        item=fact.canonical_item_id,
-                        period=fact.context.period,
-                        label=fact.context.raw_item_label or fact.canonical_item_id,
-                        roles=[role],
-                        records=[],
-                    ),
-                )
-                if fact not in entry["records"]:
-                    entry["records"].append(fact)
+            key = ("fact", fact.canonical_item_id, fact.context.period)
+            entry = entries.setdefault(
+                key,
+                dict(
+                    kind="fact",
+                    item=fact.canonical_item_id,
+                    period=fact.context.period,
+                    label=fact.context.raw_item_label or fact.canonical_item_id,
+                    roles=[role] if role else [],
+                    records=[],
+                ),
+            )
+            if fact not in entry["records"]:
+                entry["records"].append(fact)
     available = {(s["item"], s["period"]) for s in entries.values()}
     for metric in catalog.metrics:
         if (metric.request.document_id, metric.request.snapshot_id) != (
@@ -898,88 +902,45 @@ class SupervisorLite:
         return plan, metadata, []
 
     def _adaptive_plan(self, question, context, sources):
-        from .coordinator_plan import (
-            adapt_plan,
-            grounding_issue,
-            output_schema,
-            preserve_question_plan,
-            proposal_schema,
-            retain_requested_conclusion,
-        )
+        from .coordinator_plan import adapt_plan, output_schema
 
         prompt = dict(
             instruction=(
-                "Lập một kế hoạch JSON {goals:[{text,mode}],tasks:[{goal_indexes,role,objective,input_handles,after}]}. "
-                "Chỉ goals là đầu ra người dùng hỏi; mode=value hoặc analysis. Giữ đủ các ý trong câu hỏi. "
-                "Goal chỉ là đầu ra được hỏi. Lookup giữ nguyên câu hỏi trong một goal/value và một task; "
-                "không tính một thông tin được yêu cầu tra trực tiếp từ các đại lượng khác. "
-                "So sánh diễn biến không tự thêm tỷ lệ/phần trăm. Không tự thêm kỳ/chỉ tiêu. "
-                "Các phép tính trung gian cần thiết nằm trong task, không tự trở thành goal bắt buộc. "
-                "Giữ ràng buộc không suy nguyên nhân trong text goal kết quả, không tạo goal riêng cho nó. "
-                "goal_indexes và after là indexes 0-based trong hai arrays gốc; có thể trỏ task phía sau. "
-                "after khai các task có kết quả cần dùng. input_handles chỉ dùng S handles từ inventory; "
-                "[] nếu chưa chọn nguồn, hoặc dùng evidence từ dependencies. Không sinh IDs, requirements, "
-                "metadata hay đáp án. Một task cho tra số đơn giản. Nhiều bước hoặc domains: giao từng phần "
-                "cho specialist phù hợp rồi task phụ thuộc dùng kết quả và bằng chứng của các task trước. "
-                "Role: profitability cho lợi nhuận/chi phí; liquidity_and_leverage cho tài sản/nợ/vốn; "
-                "cash_flow_and_earnings_quality cho dòng tiền. Không gọi domain không cần. "
-                "Task tổng hợp do một trong ba role này đảm nhiệm; không thêm agent. "
-                "Objective tiếng Việt nêu rõ việc cần làm, từng kỳ/chỉ tiêu; không đổi nghĩa câu hỏi. "
-                "Nếu inventory có metric đúng định nghĩa thì chọn metric; không thay công thức. "
-                "after=[] cho task chỉ tra nguồn độc lập. Tuyệt đối không phụ thuộc chính task đó. "
-                "Trước khi trả, kiểm mọi after theo vị trí 0,1,2,... trong tasks và không có vòng lặp. "
-                "Đọc label và period của từng handle, không lấy số thứ tự gần đúng hoặc toàn inventory. "
-                "Khi cần chọn kỳ/thực thể trước rồi tìm chỉ tiêu khác: task đầu retrieve đủ miền so sánh; "
-                "task sau after:[index_task_đầu], input_handles:[] và objective nêu rõ dùng kết quả chọn "
-                "để truy xuất chỉ tiêu cùng kỳ. Backend có demand retrieval, selection max/min/max_abs "
-                "và exact context join; không cần dự đoán trước kỳ thắng. "
-                "Tối đa 6 tasks và 16 goals; không thêm field ngoài schema. "
-                "Mọi goal phải có task.goal_indexes sở hữu; một task có thể phục vụ nhiều goals. "
-                " FinancialCalculator xử lý add/subtract/multiply/divide, sum/mean, ratios, "
-                "percentage_of/change và so sánh. CHỈ khi cần primitive ngoài khả năng đó, "
-                "khai python_requirement: power, sqrt, root_finding, dispersion hoặc iterative_solver. "
-                "Mọi task thông thường bỏ field này hoặc null. Không chọn Python chỉ vì nhiều bước. "
-                "Objective Python phải nêu công thức được người dùng yêu cầu và đúng kỳ/nguồn."
+                "Bạn là Coordinator. Lập đúng một kế hoạch JSON gồm goals và tasks. "
+                "Goals ghi đủ từng đầu ra người dùng yêu cầu, gồm kỳ, đối tượng và cách tính. "
+                "mode=value cho tra trực tiếp (source là S handle chính xác nếu biết), "
+                "calculation cho phép tính mới, analysis cho nhận xét/so sánh, document cho bằng chứng thuyết minh. "
+                "Bước trung gian là task, không phải goal mới. "
+                "Mỗi task có goal_indexes và after là index 0-based trong hai mảng gốc. "
+                "Giao một role trong schema; mọi role dùng cùng Financial Tools, BM25 và EF-EG. "
+                "Tra cứu đơn giản dùng một task. Khi nhiều miền hoặc nhiều bước, giao các task độc lập "
+                "lấy dữ liệu rồi task phụ thuộc tính toán hoặc tổng hợp từ kết quả và nguồn của chúng. "
+                "Chọn đúng input_handles theo label và period. Dùng [] khi inputs đã có từ after; "
+                "dùng resolve_inputs=true chỉ khi cần chọn nguồn tài chính từ dữ liệu thực thi mới. "
+                "Đặt use_graph=true khi cần quan hệ EF-EG hoặc đường truy vết. "
+                "Thuyết minh dùng document_search: kind, label (nghĩa vụ cần chứng minh), target "
+                "(tên chủ đề), query (cụm từ ngắn xuất hiện trong tài liệu), selection_period nếu "
+                "kind=table_selection (ngày ISO). Với table_selection phụ thuộc vào khoản mục thắng "
+                "từ một phép greater/less của task cha, đặt query_from_dependencies=true. "
+                "Task cha phải tạo proof greater/less trên hai số dư cùng kỳ. "
+                "Task có thể dùng cả nguồn tài chính và document_search. "
+                "FinancialCalculator thực thi phép tính chuẩn; python_requirement chỉ dùng cho "
+                "primitive ngoài khả năng Calculator. Không trả đáp án hoặc phê duyệt claim. "
+                "Tối đa 16 goals, 6 tasks. Không tạo vòng lặp. Bỏ field tùy chọn nếu không dùng."
             ),
-            schema=proposal_schema(),
             output_schema=output_schema(sources),
-            handle_namespaces=dict(
-                S="canonical source inventory",
-                T="backend tasks, never input_handles",
-                E="retrieved numeric evidence, Specialist only",
-                D="read-only document context, not numeric operands",
-            ),
-            source_context=getattr(self, "source_context", {}),
-            example=dict(
-                goals=[
-                    dict(text="Nguyên văn thông tin người dùng yêu cầu tra", mode="value"),
-                ],
-                tasks=[
-                    dict(
-                        goal_indexes=[0],
-                        role="profitability",
-                        objective="Tra đúng thông tin trong goal; giữ gap nếu chưa có nguồn",
-                        input_handles=[],
-                        after=[],
-                        python_requirement=None,
-                    ),
-                ],
-            ),
             context={
                 k: getattr(context, k)
                 for k in ("company_id", "document_id", "snapshot_id", "period", "reporting_scope")
             },
+            conversation_context=context.conversation_context,
             inventory={
                 h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()
             },
         )
         payload = json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
-            return (
-                preserve_question_plan(question, sources),
-                PlannerLLMMetadata(),
-                ["supervisor_payload_limit"],
-            )
+            return LitePlan(), PlannerLLMMetadata(), ["supervisor_payload_limit"]
         response = self.gateway.generate(
             LLMRequest(
                 contract_version="llm_gateway_v1",
@@ -1004,26 +965,8 @@ class SupervisorLite:
             provenance=response.provenance,
         )
         if response.status != "success" or not isinstance(response.output, JSONOutput):
-            return (
-                preserve_question_plan(question, sources),
-                metadata,
-                ["supervisor_provider_failure"],
-            )
+            return LitePlan(), metadata, ["supervisor_provider_failure"]
         plan, errors = adapt_plan(response.output.payload, sources)
-        issue = grounding_issue(question, plan) if not errors else None
-        self.adaptation_events = []
-        if errors or issue:
-            self.adaptation_events = [
-                dict(
-                    action="preserve_original_question",
-                    reasons=errors or [issue],
-                    raw_plan=response.output.payload,
-                )
-            ]
-            plan = preserve_question_plan(question, sources)
-            errors = []  # The bounded fallback owns the original goal; raw failure remains in trace.
-        if retain_requested_conclusion(question, plan, sources):
-            self.adaptation_events.append(dict(action="retain_requested_conclusion"))
         return plan, metadata, errors
 
 
@@ -1137,7 +1080,10 @@ class FinancialLiteOrchestrator:
         if (
             self.adaptive_coordinator
             and task.python_requirement
-            and requires_python(self.workspace.question, task.objective, task.python_requirement)
+            and (
+                self.model_coordinated
+                or requires_python(self.workspace.question, task.objective, task.python_requirement)
+            )
         ):
             record, result.llm = PythonAgent(self.gateway).run(
                 objective=task.objective,
@@ -1257,42 +1203,9 @@ class FinancialLiteOrchestrator:
                 for r in self.workspace.requirements
                 if r.requirement_id in task.requirement_ids
             ]
-            if (
-                len(self.catalog.descriptors) == 1
-                and self.catalog.descriptors[0].source_kind == "json"
-            ):
-                from ..evidence.json_catalog import json_document_composition
-                from ..tools.json_source_lookup import lookup_json_source_context
-
-                cache = getattr(self, "_source_context_cache", {})
-                key = normalize(task.objective)
-                cached = key in cache
-                if not cached:
-                    cache[key] = lookup_json_source_context(
-                        self.catalog,
-                        self.composition or json_document_composition(self.catalog),
-                        task.objective,
-                    )
-                source_context = dict(cache[key], cache_reused=cached)
-                original = getattr(self, "request_source_context", {})
-                contexts = {
-                    c["reference"]["evidence"]["local_id"]: c
-                    for c in [*original.get("contexts", []), *source_context["contexts"]]
-                }
-                source_context["contexts"] = [
-                    dict(c, handle=f"D{i + 1}") for i, c in enumerate(contexts.values())
-                ]
-                self.workspace.tasks[task.task_id]["source_context"] = source_context["contexts"]
-                prompt["document_source_context"] = {
-                    k: v for k, v in source_context.items() if k != "tool_calls"
-                }
-                result.trace.append(
-                    SpecialistTrace(
-                        stage="selection",
-                        outcome="document_source_context",
-                        reasons=[json.dumps(source_context, ensure_ascii=False)],
-                    )
-                )
+            prompt["document_source_context"] = self.workspace.tasks[task.task_id].get(
+                "source_context", []
+            )
             prompt["shared_tasks"] = {
                 key: dict(
                     status=state["status"],
@@ -1313,42 +1226,14 @@ class FinancialLiteOrchestrator:
                 if key in task.depends_on
             }
             if self.adaptive_coordinator:
-                from .evidence_coordination import prompt_coordination, prompt_observation
-
-                prompt["dependency_results"] = {
+                prompt["dependency_sources"] = {
                     tid: {
-                        k: self.workspace.task_results[tid][k]
-                        for k in (
-                            "handle",
-                            "task_id",
-                            "revision",
-                            "digest",
-                            "input_results",
-                            "candidate_ids",
-                            "evidence_ids",
-                            "verification",
-                        )
+                        key: self.workspace.task_results[tid][key]
+                        for key in ("handle", "digest", "source_context")
                     }
                     for tid in self.workspace.dependency_ids(task)
-                    if tid in self.workspace.task_results
+                    if self.workspace.task_results[tid]["source_context"]
                 }
-                for tid, record in prompt["dependency_results"].items():
-                    full = self.workspace.task_results[tid]
-                    record["selected_observations"] = [
-                        prompt_observation(r) for r in full["selected_observations"]
-                    ]
-                    record["coordination"] = prompt_coordination(full["coordination"])
-                    record["source_context"] = full.get("source_context", [])
-                prompt["evidence_coordination"] = prompt_coordination(
-                    self.workspace.tasks[task.task_id].get("coordination", {})
-                )
-                prompt["instruction"] += (
-                    " dependency_results chứa kết quả trung gian có version và đầy đủ nguồn/proof. "
-                    "Dùng kết quả này để thực hiện objective; khi tính tiếp, replay các operations "
-                    "từ nguồn fact có cùng evidence_id trước khi dùng output, không coi candidate là verified. "
-                    "Trong goal của analysis ghi task/result handle thực sự đã dùng và cách dùng. "
-                    "Diễn giải từ dependency là premise chưa verified, phải đưa đủ nguồn vào candidate để M6 kiểm."
-                )
             prompt["verification_feedback"] = self.workspace.tasks[task.task_id].get(
                 "repair_feedback", []
             )
@@ -1425,15 +1310,31 @@ class FinancialLiteOrchestrator:
                 "Nguồn page-level vẫn có trang; graph chỉ thể hiện nguồn/cấu trúc, không nhân quả. "
                 "Thiếu evidence chỉ báo missing_information trong scope được giao."
             )
+        if self.model_coordinated:
+            prompt["instruction"] = (
+                "Bạn là Specialist. Làm đúng objective cho assigned_requirements, với evidence, "
+                "shared_tasks và document context. Trả JSON theo response_schema. "
+                "Tra trực tiếp: chọn evidence_id trong numeric_choices. "
+                "Tính toán: analysis có evidence_ids là facts đầu vào, operations theo schema. "
+                "Calculator thực hiện phép tính; dùng percentage_of cho tỷ trọng và "
+                "percentage_change với [kỳ mới,kỳ gốc] cho biến động. "
+                "Khi task phụ thuộc cần đối chiếu hai số dư, dùng greater hoặc less trên hai "
+                "facts cùng kỳ để lưu proof; statement viết kết luận tương ứng. "
+                "Phân tích: viết các nhận định độc lập dưới analyses, mỗi nhận định dẫn đủ evidence_ids. "
+                "Không tự tính số hoặc bịa nguồn. Kết quả dependency là đề xuất chưa verified; "
+                "dùng lại facts và replay phép tính từ nguồn khi cần. M6 kiểm chứng mọi claim."
+            )
+            prompt["response_schema"]["properties"]["analyses"]["maxItems"] = 8
         deterministic = self.gateway is None or context.mode == "deterministic"
         observation = None
         if self.integration_v2:
             assigned = [
                 r for r in self.workspace.requirements if r.requirement_id in task.requirement_ids
             ]
-            observation = observation_proposal(
-                assigned, result.supporting_evidence, self.workspace.question
-            )
+            if not self.model_coordinated:
+                observation = observation_proposal(
+                    assigned, result.supporting_evidence, self.workspace.question
+                )
             if observation is not None:
                 deterministic = True
             if self.adaptive_coordinator and self.workspace.tasks[task.task_id].get(
@@ -1463,11 +1364,30 @@ class FinancialLiteOrchestrator:
                 for r in assigned
             ):
                 deterministic = True
+                if self.model_coordinated:
+                    result.supporting_evidence = [
+                        e
+                        for e in result.supporting_evidence
+                        if any(
+                            r.target_id
+                            == (
+                                e.canonical_item_id
+                                if e.kind == "fact"
+                                else e.calculation.formula_id
+                            )
+                            and (not r.period or r.period == e.period)
+                            for r in assigned
+                        )
+                    ]
         if (
             len(json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":")))
             + len(question)
             > 48000
         ):
+            if self.model_coordinated and not deterministic:
+                result.status = "abstained"
+                result.limitations.append("specialist_payload_limit")
+                return result
             deterministic = True
             result.limitations.append("specialist_payload_limit_numeric_fallback")
         generate_candidates(
@@ -1483,6 +1403,7 @@ class FinancialLiteOrchestrator:
             normalize_payload=normalize_candidate_envelope if self.integration_v2 else None,
             operation_inputs_only=self.integration_v2,
             candidate_analyses=[observation] if observation is not None else None,
+            numeric_fallback=not self.model_coordinated,
         )
         for candidate in result.candidates:
             if candidate.reasoning:
@@ -1496,7 +1417,7 @@ class FinancialLiteOrchestrator:
                                 reasons=[relation["id"], candidate.reasoning.goal],
                             )
                         )
-        if self.integration_v2:
+        if self.integration_v2 and not self.model_coordinated:
             # Numeric source candidates survive a failed/empty prose branch.
             numeric = SpecialistResult(
                 question=task.objective,
@@ -1531,24 +1452,11 @@ class FinancialLiteOrchestrator:
         # select supporting periods; a target year is not an operand-year filter.
         retrieval_context = context.model_copy(update={"period": None})
         sources = inventory(self.catalog, retrieval_context)
-        self.request_source_context = {}
-        self._source_context_cache = {}
-        if (
+        self.model_coordinated = (
             self.adaptive_coordinator
-            and len(self.catalog.descriptors) == 1
-            and self.catalog.descriptors[0].source_kind == "json"
-        ):
-            from ..evidence.json_catalog import json_document_composition
-            from ..tools.json_source_lookup import lookup_json_source_context
-
-            self.request_source_context = lookup_json_source_context(
-                self.catalog, self.composition or json_document_composition(self.catalog), question
-            )
-            self._source_context_cache[normalize(question)] = self.request_source_context
-            if isinstance(self.supervisor, SupervisorLite):
-                self.supervisor.source_context = {
-                    k: v for k, v in self.request_source_context.items() if k != "tool_calls"
-                }
+            and self.gateway is not None
+            and context.mode != "deterministic"
+        )
         plan, metadata, gaps = self.supervisor.plan(question, context, sources)
         output.usage.stages["planning"] = metadata
         output.trace.append(
@@ -1557,37 +1465,24 @@ class FinancialLiteOrchestrator:
             )
         )
         output.caveats.extend(gaps)
-        if isinstance(self.supervisor, SupervisorLite) and getattr(
-            self.supervisor, "adaptation_events", []
-        ):
-            output.trace.append(
-                StageExecution(
-                    stage="planning",
-                    outcome="original_question_fallback",
-                    reasons=[json.dumps(self.supervisor.adaptation_events, ensure_ascii=False)],
-                )
-            )
         workspace = None
         if self.integration_v2:
             if not self.adaptive_coordinator:
                 retain_requested_periods(plan, question)
                 preserve_explicit_facts(plan, question, sources)
-            targets = resolve_requirements(plan, sources)
+            targets = {} if self.model_coordinated else resolve_requirements(plan, sources)
             if not self.adaptive_coordinator:
                 preserve_answer_goal(plan, question, targets)
-            # Composite tasks need source/operand relations even if the model
-            # omits the optional flag. This is retrieval policy, not a verdict.
-            for task in plan.tasks:
-                assigned = [
-                    r for r in plan.requirements if r.requirement_id in task.requirement_ids
-                ]
-                if task.depends_on or any(
-                    r.interpretation_topic == "dynamic_calculation"
-                    or len(r.required_indicators) > 1
-                    or len(r.reasoning_periods) > 1
-                    for r in assigned
-                ):
-                    task.use_graph = True
+                for task in plan.tasks:
+                    assigned = [
+                        r for r in plan.requirements if r.requirement_id in task.requirement_ids
+                    ]
+                    task.use_graph |= bool(task.depends_on) or any(
+                        r.interpretation_topic == "dynamic_calculation"
+                        or len(r.required_indicators) > 1
+                        or len(r.reasoning_periods) > 1
+                        for r in assigned
+                    )
             requirements = plan.requirements or [
                 IntegrationRequirement(
                     requirement_id="R-unresolved", text=question, kind="unsupported"
@@ -1757,24 +1652,19 @@ class FinancialLiteOrchestrator:
                         bundle.sources_and_lineage.append(sources_response)
 
             try:
-                selected = task.sources or next(
-                    (
-                        t.sources
-                        for t in fallback_plan(task.objective, sources).tasks
-                        if t.specialist == task.specialist
-                    ),
-                    [],
-                )
-                if (
-                    self.adaptive_coordinator
-                    and task.depends_on
-                    and self.gateway is not None
-                    and context.mode != "deterministic"
-                ):
-                    selected = []
+                selected = task.sources
+                if not selected and not self.model_coordinated:
+                    selected = next(
+                        (
+                            t.sources
+                            for t in fallback_plan(task.objective, sources).tasks
+                            if t.specialist == task.specialist
+                        ),
+                        [],
+                    )
                 for handle in dict.fromkeys(selected):
                     resolved = handle
-                    if self.integration_v2:
+                    if self.integration_v2 and not self.model_coordinated:
                         periods = {
                             period
                             for r in workspace.requirements
@@ -1818,23 +1708,34 @@ class FinancialLiteOrchestrator:
                                         if fact.observation_identity() == operand.observation:
                                             retrieve(fact)
                 if self.adaptive_coordinator:
-                    additions = self._coordinate_evidence(
-                        task, bundle, sources, context, output, retrieve
-                    )
-                    plan.tasks.extend(additions)
+                    try:
+                        self._coordinate_evidence(task, bundle, sources, context, output, retrieve)
+                    except ValueError as error:
+                        bundle.limitations.append(str(error))
+                    if task.document_search:
+                        try:
+                            self._search_document(task, context, output, call)
+                        except ValueError as error:
+                            bundle.limitations.append(str(error))
                 bundle.claim_fact_references = [f.reference for f in bundle.facts]
                 if self.graph_enabled and task.use_graph:
-                    starts = list(
-                        dict.fromkeys(
-                            [c.metric_id for c in bundle.calculations if c.metric_id]
-                            + [
-                                graph_id(
-                                    "source_fact", f.record.observation_identity().model_dump()
-                                )
-                                for f in bundle.facts
-                            ]
+                    starts = [c.metric_id for c in bundle.calculations if c.metric_id]
+                    starts.extend(
+                        graph_id("source_fact", f.record.observation_identity().model_dump())
+                        for f in bundle.facts
+                    )
+                    if self.adaptive_coordinator:
+                        starts.extend(
+                            graph_id("source_fact", row["reference"]["observation"])
+                            for tid in workspace.dependency_ids(task)
+                            for row in workspace.task_results[tid]["selected_observations"]
                         )
-                    )[:6]
+                    if task.document_search and self.composition is not None:
+                        starts.extend(
+                            graph_id(hit["reference"]["kind"], hit["reference"]["evidence"])
+                            for hit in workspace.tasks[task.task_id].get("source_context", [])
+                        )
+                    starts = list(dict.fromkeys(starts))[:6]
                     if not starts and not (self.adaptive_coordinator and task.depends_on):
                         bundle.limitations.append("graph_no_valid_starting_nodes")
                     for node_id in starts:
@@ -1885,6 +1786,10 @@ class FinancialLiteOrchestrator:
                         if response.status != "found":
                             bundle.limitations.extend(response.reasons)
                 if workspace is not None:
+                    if self.model_coordinated:
+                        workspace.tasks[task.task_id]["graph_requests"] = [
+                            g.request.model_dump_json() for g in bundle.graph_contexts
+                        ]
                     workspace.merge(bundle)
                     if self.adaptive_coordinator:
                         all_upstream.evidence_bundle = workspace.evidence
@@ -2001,7 +1906,7 @@ class FinancialLiteOrchestrator:
                 or any(e.status != "generated" for e in output.specialist_executions)
                 else "completed"
             )
-            if output.candidates
+            if output.candidates or output.document_candidates
             else "blocked"
         )
         output.trace.append(StageExecution(stage="candidate_aggregation", outcome=output.status))
@@ -2022,9 +1927,62 @@ class FinancialLiteOrchestrator:
         ) * 1000
         return output
 
+    def _search_document(self, task, context, output, call):
+        manifest = self.composition
+        if manifest is None or self.document_repository is None:
+            raise ValueError("document_composition_unavailable")
+        requirement = task.document_search
+        if task.query_from_dependencies:
+            from .document_dependency import comparison_query
+
+            requirement = comparison_query(requirement, self.workspace, task)
+        tools = EvidenceRetrievalTools.from_composition(
+            manifest,
+            self.document_repository,
+            document_id=manifest.logical_document_id,
+            composition_id=manifest.composition_id,
+        )
+        pinned_snapshot = (
+            context.snapshot_id if manifest.financial_snapshot.source_kind == "json" else None
+        )
+        operation = document_operations([requirement], manifest, pinned_snapshot)[0]
+        try:
+            result = call(operation.operation, operation.request, tools.search_document_evidence)
+        finally:
+            tools.close_search()
+        if result.status != "found":
+            raise ValueError("document_search_" + result.status)
+        from .document_qa_contracts import DocumentEvidenceBundle
+
+        state = self.workspace.tasks[task.task_id]
+        state["source_context"] = [
+            dict(
+                text=getattr(hit.evidence.record, "text", None),
+                reference=hit.evidence.reference.model_dump(mode="json"),
+                citations=[c.model_dump(mode="json") for c in hit.evidence.citations],
+                cells=[cell.model_dump(mode="json") for cell in hit.cells],
+            )
+            for hit in result.matches
+        ]
+        owners = [
+            r.requirement_id
+            for r in self.workspace.requirements
+            if r.requirement_id in task.requirement_ids and r.kind == "document"
+        ]
+        if owners:
+            candidates = document_candidates(
+                DocumentEvidenceBundle(operation=operation, result=result),
+                context.company_id,
+                manifest,
+            )
+            state["document_goal"] = owners[0]
+            state["document_candidate_ids"] = [c.candidate_id for c in candidates]
+            output.document_candidates.extend(
+                c for c in candidates if c not in output.document_candidates
+            )
+
     def _coordinate_evidence(self, task, bundle, sources, context, output, retrieve):
         from .evidence_coordination import (
-            expansion_tasks,
             join_observations,
             observation,
             propose,
@@ -2039,56 +1997,18 @@ class FinancialLiteOrchestrator:
             workspace.observations[row["evidence_id"]] = row
         current = [observation(f) for f in bundle.facts]
         state["selected_observations"] = current
-        if task.depends_on and task.python_requirement:
-            # Computation consumes the parent's tool-returned operands directly.
-            # No second LLM is needed to rediscover these immutable source handles.
-            state["coordination"] = dict(
-                input_mode="dependency_operands",
-                requested_python_requirement=task.python_requirement,
-                python_allowed=requires_python(
-                    workspace.question, task.objective, task.python_requirement
-                ),
-            )
-            return []
-        # Scalar roots retain the existing zero-extra-call path.
-        if (
-            self.gateway is None
-            or context.mode == "deterministic"
-            or not (task.depends_on or len(task.sources) > 1 or state.get("repair_feedback"))
-        ):
-            return []
-        available = (
-            []
-            if workspace.expansion_used or workspace.repair_used
-            else [f"T{i}" for i in range(1, 7) if f"T{i}" not in workspace.tasks]
-        )
+        if not self.model_coordinated or not task.resolve_inputs:
+            return
         try:
-            proposal, _ = propose(
-                self.gateway,
-                context,
-                task,
-                workspace,
-                sources,
-                list(workspace.observations.values()),
-                available,
-            )
+            proposal, _ = propose(self.gateway, context, task, workspace, sources)
             handles, lineage = resolve_demand_batches(
                 proposal, state.get("retrieval_batches", []), task, workspace, sources
             )
-            additions = []
-            expansion_error = None
-            raw_expansion = state.get("expansion_proposal", [])
-            try:
-                additions = expansion_tasks(raw_expansion, task, workspace, sources, available)
-            except ValueError:
-                expansion_error = "expansion_patch_rejected"
             state["coordination"] = dict(
                 proposal=proposal.model_dump(mode="json"),
                 retrieval_lineage=lineage,
                 selected_handles=handles,
                 joins=[],
-                expansion_error=expansion_error,
-                expansion_proposal=raw_expansion,
                 retrieval_batches=state.get("retrieval_batches", []),
             )
             if proposal.selection:
@@ -2121,6 +2041,7 @@ class FinancialLiteOrchestrator:
                     for r in workspace.observations.values()
                     if json.dumps(r["reference"]["observation"], separators=(",", ":"))
                     in current_refs
+                    or r in current
                 ]
                 if handles
                 else current
@@ -2141,27 +2062,6 @@ class FinancialLiteOrchestrator:
                 if record["status"] != "matched":
                     raise ValueError("join_" + record["status"])
             state["selected_observations"] = current
-            if additions:
-                workspace.expansion_used = True
-                state["coordination"]["expansion"] = [t.model_dump(mode="json") for t in additions]
-                for added in additions:
-                    workspace.tasks[added.task_id] = dict(
-                        requirement_ids=added.requirement_ids,
-                        depends_on=added.depends_on,
-                        objective=added.objective,
-                        role=added.specialist,
-                        revision=1,
-                        status="pending",
-                    )
-            return additions
-        except Exception as error:
-            # Branch failure does not erase independent outputs.
-            state.update(
-                status="failed",
-                error=str(error) if isinstance(error, ValueError) else "coordination_failed",
-                selected_observations=[],
-            )
-            raise
         finally:
             if "coordination_usage" in state:
                 output.usage.stages[
@@ -2172,23 +2072,52 @@ class FinancialLiteOrchestrator:
         state = self.workspace.tasks[execution.execution_id]
         try:
             upstream = all_upstream.model_copy(deep=True)
+            dependencies = self.workspace.dependency_ids(task)
             if self.adaptive_coordinator:
-                selected = state.get("selected_observations", [])
-                parents = [
-                    r
-                    for tid in self.workspace.dependency_ids(task)
-                    for r in self.workspace.task_results[tid].get("selected_observations", [])
-                ]
-                permitted = {r["evidence_id"] for r in [*selected, *parents]}
                 from .evidence_coordination import observation
 
+                permitted = {
+                    row["evidence_id"]
+                    for record in [
+                        state,
+                        *(self.workspace.task_results[tid] for tid in dependencies),
+                    ]
+                    for row in record.get("selected_observations", [])
+                }
                 upstream.evidence_bundle.facts = [
                     f
                     for f in upstream.evidence_bundle.facts
                     if observation(f)["evidence_id"] in permitted
                 ]
+                if self.model_coordinated:
+                    metric_ids = {c.metric_id for c in bundle.calculations}
+                    for tid in dependencies:
+                        metric_ids.update(self.workspace.tasks[tid].get("metric_ids", ()))
+                    upstream.evidence_bundle.calculations = [
+                        c for c in self.workspace.evidence.calculations if c.metric_id in metric_ids
+                    ]
+                    graph_requests = set(state.get("graph_requests", ()))
+                    for tid in dependencies:
+                        graph_requests.update(self.workspace.tasks[tid].get("graph_requests", ()))
+                    upstream.evidence_bundle.graph_contexts = [
+                        g
+                        for g in self.workspace.evidence.graph_contexts
+                        if g.request.model_dump_json() in graph_requests
+                    ]
             upstream.status = "partial" if bundle.limitations else "completed"
-            result = self._specialist(task, upstream, task.objective, context)
+            state["metric_ids"] = [c.metric_id for c in bundle.calculations]
+            assigned = [
+                r for r in self.workspace.requirements if r.requirement_id in task.requirement_ids
+            ]
+            if task.document_search and assigned and all(r.kind == "document" for r in assigned):
+                result = SpecialistResult(
+                    question=task.objective,
+                    role=task.specialist,
+                    upstream_status=upstream.status,
+                    status="generated" if state.get("document_candidate_ids") else "abstained",
+                )
+            else:
+                result = self._specialist(task, upstream, task.objective, context)
             execution.result, execution.llm = result, result.llm
             execution.status = result.status
             if state.get("revision", 1) > 1:
@@ -2201,7 +2130,7 @@ class FinancialLiteOrchestrator:
                     )
                     for c in result.candidates
                 ]
-            self.workspace.record_result(task, result)
+            self.workspace.record_result(task, result, retain_sources=self.model_coordinated)
             output.usage.stages[
                 execution.execution_id + ("_repair" if self.workspace.repair_used else "")
             ] = result.llm

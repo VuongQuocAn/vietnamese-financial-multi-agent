@@ -206,12 +206,15 @@ class IntegrationWorkspace:
             pending.extend(r["task_id"] for r in self.task_results[tid]["input_results"])
         return found
 
-    def record_result(self, task, result):
+    def record_result(self, task, result, *, retain_sources=False):
         """Immutable revision-1 proposal refs; source/proof closure still goes to M6."""
         state = self.tasks[task.task_id]
         state.update(
             status="source_only"
-            if not result.candidates and state.get("source_context")
+            if not result.candidates
+            and (
+                state.get("source_context") or retain_sources and state.get("selected_observations")
+            )
             else "completed"
             if result.status == "generated"
             else result.status,
@@ -248,10 +251,11 @@ class IntegrationWorkspace:
             ],
             verification="unverified_candidates",
             selected_observations=state.get("selected_observations", [])
-            if result.candidates or state.get("coordination", {}).get("selection")
+            if retain_sources or result.candidates or state.get("coordination", {}).get("selection")
             else [],
             coordination=state.get("coordination", {}),
             source_context=state.get("source_context", []),
+            document_candidate_ids=state.get("document_candidate_ids", []),
         )
         if state.get("python_candidate"):
             record["python_candidate"] = state["python_candidate"]
@@ -269,6 +273,7 @@ class IntegrationWorkspace:
                 self.task_results.get(tid, {}).get("candidate_ids")
                 or self.task_results.get(tid, {}).get("selected_observations")
                 or self.task_results.get(tid, {}).get("source_context")
+                or self.task_results.get(tid, {}).get("document_candidate_ids")
             )
             for tid in task.depends_on
         )
