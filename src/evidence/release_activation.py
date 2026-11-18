@@ -45,10 +45,25 @@ class ReleaseSelections(FinancialModel):
 class SelectedRepositories:
     def __init__(self, original, selected):
         self.original, self.selected = original, selected
+        # Superseded documents must not expose their original JSON snapshot.
+        self.descriptors = [
+            d for d in getattr(original, "descriptors", ()) if d.document_id not in selected
+        ]
+        digests = {digest for d in self.descriptors for digest in d.json_pages.values()}
+        self.json_sources = {
+            digest: value
+            for digest, value in getattr(original, "json_sources", {}).items()
+            if digest in digests
+        }
+        self.json_source_bytes = {
+            digest: raw
+            for digest, raw in getattr(original, "json_source_bytes", {}).items()
+            if digest in digests
+        }
 
-    def list_by_document(self, document_id):
+    def list_by_document(self, document_id, snapshot_id=None):
         repository = self.selected.get(document_id, self.original)
-        return repository.list_by_document(document_id)
+        return repository.list_by_document(document_id, snapshot_id)
 
 
 def select_active_releases(manifests, repository):
