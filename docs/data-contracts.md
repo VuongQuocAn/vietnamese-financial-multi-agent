@@ -5,6 +5,8 @@ root khi không có xung đột, giữ nguyên query/handles và raw response. T
 kiểu sai và lựa chọn mâu thuẫn vẫn bị schema loại. Cap demand là 2.500 token
 cho Thinking cùng JSON, bằng plan/claim; RequestGateway giữ giới hạn context 24K.
 `found` chỉ xác nhận tìm được record, không cấp eligibility khi thiếu unit/scale.
+Projection nhãn bảng đọc `UnderstoodCell.col`, giữ `column` của unified/extraction;
+không đổi labels, selectors hoặc authority của candidate/M6.
 
 ## E2E-STABILIZE-01 — Literal table quotation và verdict recovery
 

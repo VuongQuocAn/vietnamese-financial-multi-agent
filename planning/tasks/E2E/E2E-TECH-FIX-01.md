@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: QWEN-THINK-01
 - Estimated Complexity: S
@@ -28,6 +28,7 @@ QWEN-THINK-01 đã DONE; Owner cho phép bắt đầu task sửa kỹ thuật t�
 ## Outputs
 
 Runtime sửa nhỏ, targeted offline tests và báo cáo tối đa ba live probes một lượt.
+[Báo cáo và giới hạn](../../../docs/e2e-tech-fix-01-live.md).
 
 ## Allowed Changes
 
@@ -42,9 +43,9 @@ HTTP 524 ghi riêng; không retry probes hoặc mở FIX theo accuracy.
 
 ## Acceptance Criteria
 
-- [ ] Lỗi kỹ thuật đã xử lý hoặc phân loại rõ bằng trace/offline evidence.
-- [ ] Tối đa ba live probes, mỗi probe một lượt; báo calls/tokens và giới hạn.
-- [ ] Commit/push main, xác minh SHA, giữ local edits và bàn giao REVIEW.
+- [x] Lỗi kỹ thuật đã xử lý hoặc phân loại rõ bằng trace/offline evidence.
+- [x] Đúng ba live probes, mỗi probe một lượt; báo calls/tokens và giới hạn.
+- [x] Commit/push main, xác minh SHA, giữ local edits và bàn giao REVIEW.
 
 ## Implementation Steps
 
@@ -58,13 +59,22 @@ Ruff, planning checker và git diff --check; không full CI.
 
 ## Risks and Blockers
 
-HTTP 524 thuộc endpoint; thiếu unit/scale và lựa chọn nguồn/suy luận Qwen vẫn
-có thể làm abstain. Không sửa logic để tăng accuracy.
+HTTP 524 thuộc endpoint; lượt mới 0/18. Facts NR-0006 thiếu unit/scale trong
+corpus pin. Qwen còn chọn nguồn/kind/query hoặc evidence IDs sai; không sửa
+logic để tăng accuracy. Mapping ô bảng cuối chỉ offline verified, chưa fresh live.
 
 ## Implementation Evidence
 
-Chưa commit. 8 targeted offline controls PASS; chưa chạy live.
+Implementation cuối `6b181024135bc252abe1f07e45a419e48a01f6e1`; ba probes trên
+`a8db198acd43212edf9f98c0e297ee5dd9fa73bf`. Sửa cấu trúc use_graph, cap demand
+2.500/context24K và mapping UnderstoodCell.col. 8 targeted PASS trước live,
+6 targeted PASS sau mapping và exact saved-search replay không AttributeError.
+18 calls/82.749 tokens, 18 HTTP200, 0 thiếu usage; MH-0006 partial/7 citations,
+SH-0001 M6/M7/6 citations; SH-0013 live internal_error được sửa mapping offline,
+còn model không tạo claim. 190 runtime blobs và pins/local edits đã xác minh.
+Không lặp probe, không full CI/gate9/Pilot45 hoặc thay corpus/Gold/model/Colab.
 
 ## Handoff Notes
 
-Next action — hoàn tất offline validation rồi chạy tối đa ba live probes.
+Next action — Tech Lead review runtime đã freeze để chuyển Pilot 45, chấm theo
+Gold/rubric ViFinBench; không tiếp tục FIX nhằm tăng accuracy.

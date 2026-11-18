@@ -2,11 +2,16 @@
 
 ## E2E-TECH-FIX-01 — Loại bỏ lỗi implementation trước Benchmark
 
-**IN_PROGRESS** — baseline `3a08371`, worktree riêng. Chuẩn hóa boolean
-`use_graph` sai tầng, cap demand 2.500 trong context 24K; phân loại NR-0006
-thiếu unit/scale, không nới M6 hoặc sửa corpus. 8 targeted offline controls PASS.
-[Spec](tasks/E2E/E2E-TECH-FIX-01.md).
-Next action — freeze implementation rồi chạy tối đa ba live probes một lượt.
+**REVIEW** — implementation `6b181024135bc252abe1f07e45a419e48a01f6e1`.
+[Spec](tasks/E2E/E2E-TECH-FIX-01.md), [báo cáo](../docs/e2e-tech-fix-01-live.md).
+Sửa use_graph sai tầng, cap demand 2.500/context24K và UnderstoodCell.col.
+NR-0006 thiếu unit/scale trong facts pin; giữ corpus/M6/Gold/model/Colab.
+8 targeted trước live và 6 sau mapping PASS. Đúng 3 probes trên `a8db198`:
+18 calls/82.749 tokens, 18 HTTP200, 13 citations; MH-0006 partial và SH-0001
+qua M6/M7. SH-0013 AttributeError được sửa offline; chưa fresh live mapping cuối.
+190 runtime blobs/pins/local edits đã xác minh; không chạy lại probe/gate9/fullCI.
+Next action — Tech Lead review runtime freeze để chuyển Pilot45 theo Gold/rubric
+ViFinBench; không tiếp tục FIX nhằm tăng accuracy.
 
 ## E2E-GATE-09 — Ổn định Qwen và kiểm thử 9 QA
 
