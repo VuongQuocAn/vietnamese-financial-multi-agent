@@ -146,6 +146,36 @@ def test_partial_verdict_repair_preserves_verified_proof_and_blocks_unverified(t
         is None
     )
 
+    from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
+
+    handle_gateway = gateway_with_goals(["G1"])
+    handle_generate = handle_gateway.generate.side_effect
+
+    def unknown_handle(request):
+        response = handle_generate(request)
+        payload = response.output.payload
+        # Unknown handles never bind by spelling, order or verdict content.
+        for verdict in payload["verdicts"]:
+            if verdict["claim_id"] != "C1" or handle_gateway.generate.call_count > 1:
+                verdict["claim_id"] = "C999"
+        return response.model_copy(update=dict(output=parse_json_output(json.dumps(payload))))
+
+    handle_gateway.generate.side_effect = unknown_handle
+    handles = LiteVerificationRuntime(
+        catalog,
+        handle_gateway,
+        integration_v2=True,
+        model=ModelIdentity(provider="qwen", model="test-model"),
+    )
+    checked = handles.verify(batch, integration_context=context)
+    first_rows = json.loads(handle_gateway.generate.call_args_list[0].args[0].messages[-1].content)
+    assert [row["claim_id"] for row in first_rows] == ["C1", "C2"]
+    assert checked[0].outcome.final.decision == "ACCEPT"
+    assert checked[0].proof.semantic.claim_id == batch.claims[0].candidate_id
+    assert VerifiedClaimRepository(tmp_path / "handles").admit(checked[0]).status == "stored"
+    assert checked[1].outcome.final.decision == "INVESTIGATE"
+    assert handle_gateway.generate.call_count == 2
+
 
 def test_duration_routes_to_literal_source_row_without_promoting_raw_numbers():
     intent, requirements = document_intent(

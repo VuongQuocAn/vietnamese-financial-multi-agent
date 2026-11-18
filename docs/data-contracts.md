@@ -10,6 +10,10 @@ báo. Wire M5/M6 chia sẻ nguyên object nguồn bị lặp qua `shared_payload
 `shared_ref`, có quy tắc giải reference; expand trả nguyên payload, không cắt
 nguồn/caveats, đổi digest proof hoặc quyền xác minh. HTTP400 của một provider call
 không latch lỗi cho các nhánh độc lập; vẫn giữ lỗi và giới hạn tổng calls/deadline.
+M6 Qwen/V2 dùng claim handles ngắn C1/C2 trong từng request, ánh xạ exact về
+candidate_id gốc sau khi nhận verdict. Unknown/duplicate handles vẫn thiếu verdict;
+không fuzzy-match hash sai, không lấy thứ tự hoặc nội dung verdict để đoán claim.
+Trace lưu map theo request_id; proof/digest/ledger tiếp tục dùng identity gốc.
 
 Document kind `exact_text` có thể tìm cả text/table; source projection `literal_table`
 giữ nguyên bảng đã pin, headers và toàn bộ citations. Chỉ một dòng label khớp nguyên

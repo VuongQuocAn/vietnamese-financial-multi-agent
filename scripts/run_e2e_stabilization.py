@@ -27,8 +27,11 @@ def prepare(storage, output):
     manifest = storage / "artifacts/evidence/E2E-VAL-01/baseline-nine/questions-only.json"
     cases = json.loads(manifest.read_bytes())
     assert len(cases) == 9 and len({c["id"] for c in cases}) == 9
-    prior = storage / "artifacts/evidence/E2E-STABILIZE-01/live-nine-final"
-    prior_used = len(list((prior / "provider").glob("*.json")))
+    priors = [
+        storage / "artifacts/evidence/E2E-STABILIZE-01" / name
+        for name in ("live-nine-final", "live-release")
+    ]
+    prior_used = sum(len(list((prior / "provider").glob("*.json"))) for prior in priors)
     assert prior_used < 90
     output.mkdir(parents=True, exist_ok=False)
     for folder in ("provider", "results"):
@@ -67,7 +70,10 @@ def prepare(storage, output):
                 if p.is_file()
             },
             prior_evidence_hashes={
-                p.relative_to(storage).as_posix(): sha(p) for p in prior.rglob("*") if p.is_file()
+                p.relative_to(storage).as_posix(): sha(p)
+                for prior in priors
+                for p in prior.rglob("*")
+                if p.is_file()
             },
             prior_attempts=prior_used,
             task_total_call_cap=90,
@@ -135,7 +141,7 @@ def main():
     parser.add_argument("--storage-root", type=Path, required=True)
     args = parser.parse_args()
     storage = args.storage_root.resolve()
-    output = storage / "artifacts/evidence/E2E-STABILIZE-01/live-release"
+    output = storage / "artifacts/evidence/E2E-STABILIZE-01/final-nine"
     (prepare if args.mode == "prepare" else validate)(storage, output)
 
 

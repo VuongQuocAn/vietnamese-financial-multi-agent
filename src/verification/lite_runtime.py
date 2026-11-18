@@ -413,6 +413,7 @@ class LiteVerificationRuntime:
         self.stage_latency_ms = {}
         self.summary = {}
         self.semantic_recoveries = []
+        self.wire_claim_handles = []
         self.python_executor = python_executor or PythonExecutor()
 
     def verify(self, batch, *, integration_context=None, **_):
@@ -652,6 +653,7 @@ class LiteVerificationRuntime:
             semantic_candidate_count=len(pending),
             semantic_calls=len(self.provider_metadata),
             semantic_recoveries=self.semantic_recoveries,
+            wire_claim_handles=self.wire_claim_handles,
             decisions={
                 state: sum(h.outcome.final.decision == state for h in histories)
                 for state in ("ACCEPT", "INVESTIGATE", "ABSTAIN")
@@ -708,9 +710,18 @@ class LiteVerificationRuntime:
             semantic_payload(p.batch, p.batch.claims[0], getattr(p, "goal_context", None))
             for p in proofs
         ]
+        # Exact request-local handles avoid asking the model to copy opaque
+        # storage hashes. Canonical proof identity and digest remain unchanged.
+        wire_ids = {
+            row["claim_id"]: f"C{i + 1}"
+            if self.integration_v2 and self.model.provider == "qwen"
+            else row["claim_id"]
+            for i, row in enumerate(rows)
+        }
         wire_rows = []
         for row, p in zip(rows, proofs, strict=True):
             wire = dict(row)
+            wire["claim_id"] = wire_ids[row["claim_id"]]
             if self.integration_v2 and not isinstance(p, LiteProofV2):
                 keys = self.integration_context.get("candidate_requirements", {}).get(
                     p.batch.claims[0].candidate_id, []
@@ -837,6 +848,17 @@ class LiteVerificationRuntime:
                 "nguyên văn tên gọi. Không bind chỉ vì cùng đơn vị hoặc cùng giá trị."
             )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
+        if any(original != handle for original, handle in wire_ids.items()):
+            request.messages[0].content += (
+                " claim_id trong verdict phải chép đúng handle C1/C2/... của row đầu vào, "
+                "không dùng IDs evidence, requirement hoặc tự tạo/biến đổi ID. "
+            )
+            self.wire_claim_handles.append(
+                dict(
+                    request_id=request.request_id,
+                    handles={handle: original for original, handle in wire_ids.items()},
+                )
+            )
         verdicts, error = {}, "semantic_provider_failure"
         can_repair = False
         try:
@@ -871,10 +893,14 @@ class LiteVerificationRuntime:
                 )
                 for p in proofs:
                     cid = p.batch.claims[0].candidate_id
-                    matches = [v for v in items if isinstance(v, dict) and v.get("claim_id") == cid]
+                    matches = [
+                        v
+                        for v in items
+                        if isinstance(v, dict) and v.get("claim_id") == wire_ids[cid]
+                    ]
                     if len(matches) == 1:
                         try:
-                            wire = dict(matches[0])
+                            wire = dict(matches[0], claim_id=cid)
                             if isinstance(p, LiteProofV2):
                                 verdict = GoalSemanticVerdict.model_validate(wire)
                                 allowed = p.goal_context["proposed_requirement_ids"]

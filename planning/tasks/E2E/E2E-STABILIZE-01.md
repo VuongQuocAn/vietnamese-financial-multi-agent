@@ -65,7 +65,9 @@ Thinking có thể thiếu verdict/binding hoặc reasoning chưa đủ; abstain
 chấp nhận. Timeout chung client600s/câu, stage180s, output8192 như THINK; không đổi
 model/context/server; output base8192 được clamp theo ước lượng chars/2 và reserve1024.
 Missing-verdict repair tối đa1, không retry timeout. Một lượt dở15attempts được giữ
-riêng vì HTTP400/payload; final còn75calls tối đa, không mở vòng FIX sau final.
+riêng vì HTTP400/payload. Lượt sau29attempts lộ lỗi model chép sai hash claim
+lặp lại; thêm exact wire handles C1/C2, không nới identity matching. Tổng44attempts
+trước final, còn46calls tối đa trong cap90; giữ các lượt dở, không sửa sau final9QA.
 
 ## Implementation Evidence
 
