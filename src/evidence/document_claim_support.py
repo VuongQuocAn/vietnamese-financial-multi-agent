@@ -48,7 +48,9 @@ def _label_cells(record):
     return [
         (i, cell)
         for i, cell in enumerate(getattr(record.structure, "cells", []))
-        if cell.row is not None and cell.column == column and cell.text
+        if cell.row is not None
+        and getattr(cell, "column", getattr(cell, "col", None)) == column
+        and cell.text
     ]
 
 

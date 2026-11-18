@@ -14,6 +14,7 @@ from vietnamese_financial_multi_agent.agents.integration_workspace import Integr
 from vietnamese_financial_multi_agent.agents.specialist_common import _fact_error
 from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
 from vietnamese_financial_multi_agent.core.request_gateway import RequestGateway
+from vietnamese_financial_multi_agent.evidence.document_claim_support import document_projection
 from vietnamese_financial_multi_agent.evidence.json_catalog import json_fact_bound
 from vietnamese_financial_multi_agent.tools.financial_retrieval import (
     FinancialRetrievalTools,
@@ -72,8 +73,22 @@ def test_demand_thinking_budget_is_stage_bounded_within_24k(monkeypatch):
         assert json.loads(bound.messages[0].content)["inventory"]["S1"]["label"] == "x" * size
 
 
-def test_found_json_fact_still_requires_source_unit_and_bound_provenance(tmp_path):
+def test_found_json_fact_and_table_bindings_keep_source_contracts(tmp_path):
     catalog = catalog_fixture(tmp_path)
+    table = next(e for e in catalog.evidence if e.kind == "table" and e.structure.cells)
+    # Refined JSON imports UnderstoodCell.col, while extraction/unified use column.
+    labels = [cell.text for cell in table.structure.cells if cell.col == 0 and cell.text]
+    assert document_projection(table) == {"labels": labels}
+    legacy = SimpleNamespace(
+        kind="table",
+        structure=SimpleNamespace(
+            cells=[
+                SimpleNamespace(row=0, column=0, text="Original label"),
+                SimpleNamespace(row=0, column=1, text="123"),
+            ]
+        ),
+    )
+    assert document_projection(legacy) == {"labels": ["Original label"]}
     fact = next(f for f in catalog.facts if f.value.unit and json_fact_bound(catalog, f))
 
     def retrieve():
