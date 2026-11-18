@@ -113,7 +113,6 @@ class DocumentSearchDemand(FinancialModel):
     kind: DocumentKind
     goal_id: str | None = None
     selection_period: str | None = None
-    from_comparison: bool = False
 
 
 class CoordinationProposal(FinancialModel):
@@ -173,9 +172,7 @@ def propose(gateway, context, task, workspace, sources):
             "retrieve hoặc document_search. Đặt use_graph=true nếu cần EF-EG để lần theo nguồn "
             "hoặc quan hệ giữa dữ liệu; use_graph nằm ở root, ngoài document_search. "
             "Dùng document_search cho BM25 khi cần nội dung văn bản, bảng hoặc thuyết minh. "
-            "query là cụm từ ngắn có trong tài liệu. Chọn kind=table_selection cho yêu cầu "
-            "chọn đối tượng cực trị trong bảng và selection_period là ngày ISO nếu biết. "
-            "Nếu chủ đề bảng do phép so sánh của dependency quyết định, đặt from_comparison=true. "
+            "document_search.kind follows the provided schema. "
             "Đặt goal_id là ID được giao khi BM25 phục vụ trực tiếp goal đó; bỏ qua cho bước trung gian. "
             "selection chỉ dùng để tìm cực trị của cùng chỉ tiêu qua nhiều kỳ. Khai toàn bộ kỳ. "
             "Các mục tùy chọn có thể bỏ. Không trả đáp án hay tự tạo handle."

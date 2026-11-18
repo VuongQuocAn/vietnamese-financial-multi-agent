@@ -40,7 +40,7 @@ report writer/Ledger refactor lớn. Không coi 12/12 Qwen PASS là điều ki�
   render ACCEPT, nêu tên phần chưa đáp ứng, không thêm calculations hoặc nhận định.
   Không cần reorder LLM call trong profile tối thiểu.
 - [financial_qa_pipeline.py](../src/api/financial_qa_pipeline.py),
-  [fusion_pipeline.py](../src/api/fusion_pipeline.py): mixed/document V2 vào cơ chế
+  [fusion_pipeline.py](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/src/api/fusion_pipeline.py): mixed/document V2 vào cơ chế
   composition/fusion hiện có dù bật M7 Lite; subrequest được ghim financial/document
   lane để không phân rã lại đệ quy. Document source verification/final fusion composer
   vẫn tái sử dụng code hiện có, chưa thay toàn bộ document/report coverage bằng V2.

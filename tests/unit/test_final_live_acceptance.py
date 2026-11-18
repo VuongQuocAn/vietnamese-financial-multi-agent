@@ -102,7 +102,7 @@ def test_goal_operations_distinguish_planning_steps_from_verified_arithmetic():
         citations=[],
     )
     result = NS(supporting_evidence=[first, prior], candidates=[candidate])
-    _check_assignment(result, NS(citations=[]), NS(supporting_references=["r1", "r2"]))
+    _check_assignment(result, citations=[], supporting_references=["r1", "r2"])
     candidate.period = "2028"
     with pytest.raises(ValueError, match="candidate_provenance_outside_assignment"):
-        _check_assignment(result, NS(citations=[]), NS(supporting_references=["r1", "r2"]))
+        _check_assignment(result, citations=[], supporting_references=["r1", "r2"])

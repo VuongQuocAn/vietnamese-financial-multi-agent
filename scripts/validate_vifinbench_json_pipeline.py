@@ -1,4 +1,4 @@
-"""Offline refined import -> persisted JSON catalog -> Financial Tools/M5; no API."""
+"""Offline refined import -> persisted JSON catalog -> Financial Tools/EF-EG; no API."""
 
 import argparse
 import csv
@@ -11,10 +11,7 @@ from time import perf_counter
 from import_vifinbench_refined import PILOT_DOCUMENTS, check_fidelity
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     DOMAINS,
-    FinancialLiteOrchestrator,
-    SupervisorLite,
 )
-from vietnamese_financial_multi_agent.agents.planner_contracts import PlannerContext
 from vietnamese_financial_multi_agent.core.persistence import atomic_json
 from vietnamese_financial_multi_agent.evidence.graph import build_graph, validate_graph
 from vietnamese_financial_multi_agent.evidence.json_catalog import (
@@ -34,16 +31,6 @@ from vietnamese_financial_multi_agent.tools.financial_retrieval import (
     FinancialRetrievalTools,
     GetFinancialFactRequest,
 )
-
-
-class OfflineGraphSupervisor(SupervisorLite):
-    """Existing lexical plan with explicit graph use for this offline smoke."""
-
-    def plan(self, question, context, sources):
-        plan, metadata, gaps = super().plan(question, context, sources)
-        for task in plan.tasks:
-            task.use_graph = True
-        return plan, metadata, gaps
 
 
 def discover_documents(root):
@@ -136,8 +123,6 @@ def write_coverage(output, summaries):
         "facts_with_unit",
         "eligible_mapped_facts",
         "financial_lookups",
-        "m5_status",
-        "m5_candidates",
         "graph_nodes",
         "graph_edges",
     ]
@@ -275,42 +260,6 @@ def validate(root, output, documents=PILOT_DOCUMENTS, *, projection_version=None
             )
             assert calculation.standard_metric is False
             assert calculation.steps and calculation.steps[-1].result is not None
-        m5 = None
-        if catalog.facts:
-            available = (
-                eligible or [f for f in catalog.facts if f.canonical_item_id] or catalog.facts
-            )
-            focus = next(
-                (f for f in available if f.canonical_item_id == "b02.net_revenue"), available[0]
-            )
-            question = smoke_question(focus)
-            m5 = FinancialLiteOrchestrator(catalog, supervisor=OfflineGraphSupervisor()).run(
-                question=question,
-                context=PlannerContext(
-                    document_id=focus.document_id,
-                    snapshot_id=focus.snapshot_id,
-                    company_id=focus.company_id,
-                    period=focus.context.period,
-                    mode="deterministic",
-                ),
-            )
-            assert not m5.candidates or eligible, m5.model_dump_json()
-            assert all(not c.financial_fact_verified for c in m5.candidates)
-            if eligible:
-                assert m5.candidates, m5.model_dump_json()
-                assert m5.supervisor_result and any(
-                    t.operation == "get_graph_context" for t in m5.supervisor_result.tool_trace
-                )
-        else:
-            m5 = FinancialLiteOrchestrator(catalog).run(
-                question="Dữ liệu tài chính của tài liệu này?",
-                context=PlannerContext(
-                    document_id=manifest["document_id"],
-                    snapshot_id=manifest["snapshot_id"],
-                    mode="deterministic",
-                ),
-            )
-            assert not m5.candidates
         fidelity = check_fidelity(root, manifest, catalog.facts, catalog.evidence)
         atomic_json(
             target / "pipeline-probes.json",
@@ -319,7 +268,6 @@ def validate(root, output, documents=PILOT_DOCUMENTS, *, projection_version=None
                 excluded_fact=excluded_probe.model_dump(mode="json") if excluded_probe else None,
                 document_retrieval=retrieval,
                 calculation=calculation.model_dump(mode="json") if calculation else None,
-                m5=m5.model_dump(mode="json") if m5 else None,
                 pdf_verified=False,
                 model_calls=0,
             ),
@@ -344,11 +292,6 @@ def validate(root, output, documents=PILOT_DOCUMENTS, *, projection_version=None
             fidelity=fidelity,
             financial_lookups=len(lookups),
             calculation="computed" if calculation else "no_eligible_pair",
-            m5_status=m5.status if m5 else "no_eligible_facts",
-            m5_candidates=len(m5.candidates) if m5 else 0,
-            m5_tool_operations=dict(Counter(t.operation for t in m5.supervisor_result.tool_trace))
-            if m5 and m5.supervisor_result
-            else {},
             restart_exact=True,
             seconds=round(perf_counter() - started, 3),
         )

@@ -70,9 +70,14 @@ def mismatched_period_case():
         dict(requirement_id="wrong_item", text=f"Lợi nhuận sau thuế năm {claim.period}"),
         dict(requirement_id="wrong_year", text=f"Doanh thu thuần năm {int(claim.period) - 2}"),
     ]
+    # Simulate structured constraints declared by the LLM, not Python parsing prose.
+    context["requirements"][0].update(kind="fact", target_id="b02.net_revenue", period=claim.period)
+    context["requirements"][1].update(period=selected[0]["context"]["period"])
+    context["requirements"][2].update(kind="fact", target_id="b02.profit_after_tax")
+    context["requirements"][3].update(period=str(int(claim.period) - 2))
     ids = [r["requirement_id"] for r in context["requirements"]]
     context["candidate_requirements"] = {claim.candidate_id: ids}
-    runtime = LiteVerificationRuntime(catalog, gateway_with_goals(ids), integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals(ids))
     history = runtime.verify(batch, integration_context=context)[0]
     return context, history, runtime
 
@@ -145,13 +150,15 @@ def test_correct_calculation_keeps_only_goal_with_matching_operator_order_and_un
         ),
     ]
     ids = [r["requirement_id"] for r in requirements]
+    requirements[2]["reasoning_operations"] = ["subtract"]
+    requirements[3]["requested_unit"] = "percent"
+    # Operand-order meaning belongs to M6's semantic verdict; typed op/unit mismatches remain deterministic.
     runtime = LiteVerificationRuntime(
-        SnapshotCatalog(**data), gateway_with_goals(ids), integration_v2=True
+        SnapshotCatalog(**data), gateway_with_goals(["valid", "wrong_operator", "wrong_unit"])
     )
     history = runtime.verify(
         batch,
         integration_context=dict(
-            adaptive_coordinator=True,
             requirements=requirements,
             candidate_requirements={batch.claims[0].candidate_id: ids},
         ),

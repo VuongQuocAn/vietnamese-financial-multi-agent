@@ -51,9 +51,7 @@ def test_partial_plan_preserves_valid_goals_and_dependencies():
         ],
     )
     seen = []
-    supervisor = SupervisorLite(
-        gateway_for(payload, seen), integration_v2=True, adaptive_coordinator=True
-    )
+    supervisor = SupervisorLite(gateway_for(payload, seen))
     plan, metadata, errors = supervisor.plan(question, context, sources)
     assert metadata.calls == len(seen) == 1
     assert [r.requirement_id for r in plan.requirements] == ["G1", "G3"]
@@ -169,8 +167,6 @@ def test_source_only_dependency_retains_exact_context_digest_and_reaches_consume
         catalog,
         Mock(generate=generate),
         supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
-        integration_v2=True,
-        adaptive_coordinator=True,
         graph_enabled=False,
         composition=json_document_composition(catalog),
         document_repository=catalog,

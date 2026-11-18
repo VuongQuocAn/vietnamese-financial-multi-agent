@@ -88,7 +88,6 @@ def selection_case():
     )
     record["digest"] = content_digest(record)
     context = dict(
-        adaptive_coordinator=True,
         tasks={tid: dict(depends_on=[])},
         task_results={tid: record},
         requirements=[dict(requirement_id="G1", text="Chọn năm doanh thu cao hơn")],
@@ -114,7 +113,7 @@ def gateway_with_goals(goals):
 
 def test_selection_binding_roundtrip_and_stale_goal_rejected(tmp_path):
     catalog, batch, context = selection_case()
-    runtime = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]), integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]))
     history = runtime.verify(batch, integration_context=context)[0]
     assert history.outcome.final.decision == "ACCEPT"
     assert runtime.summary["supported_requirements"] == {batch.claims[0].candidate_id: ["G1"]}
@@ -154,7 +153,7 @@ def test_selection_binding_roundtrip_and_stale_goal_rejected(tmp_path):
 
 def test_truth_is_independent_of_goal_support_and_feedback_is_scoped():
     catalog, batch, context = selection_case()
-    runtime = LiteVerificationRuntime(catalog, gateway_with_goals([]), integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals([]))
     history = runtime.verify(batch, integration_context=context)[0]
     assert history.outcome.final.decision == "ACCEPT"
     feedback = runtime.summary["feedback"][0]
@@ -169,13 +168,10 @@ def test_truth_is_independent_of_goal_support_and_feedback_is_scoped():
     data, calculation_batch = reasoning_case()
     candidate = calculation_batch.claims[0]
     context = dict(
-        adaptive_coordinator=True,
         requirements=[dict(requirement_id="G", text="Another formula")],
         candidate_requirements={candidate.candidate_id: ["G"]},
     )
-    arithmetic = LiteVerificationRuntime(
-        SnapshotCatalog(**data), gateway_with_goals([]), integration_v2=True
-    )
+    arithmetic = LiteVerificationRuntime(SnapshotCatalog(**data), gateway_with_goals([]))
     assert (
         arithmetic.verify(calculation_batch, integration_context=context)[0].outcome.final.decision
         == "ACCEPT"
@@ -195,9 +191,7 @@ def test_truth_is_independent_of_goal_support_and_feedback_is_scoped():
         return response.model_copy(update=dict(output=parse_json_output(json.dumps(payload))))
 
     bad_formula_gateway.generate.side_effect = reject
-    wrong = LiteVerificationRuntime(
-        SnapshotCatalog(**data), bad_formula_gateway, integration_v2=True
-    )
+    wrong = LiteVerificationRuntime(SnapshotCatalog(**data), bad_formula_gateway)
     assert (
         wrong.verify(calculation_batch, integration_context=context)[0].outcome.final.decision
         == "ABSTAIN"
@@ -224,7 +218,7 @@ def test_selection_and_join_replay_block_tampered_sources_domain_and_pairs():
     original["tasks"][tid]["depends_on"] = ["parent"]
     original["tasks"]["parent"] = dict(depends_on=[])
     original["task_results"]["parent"] = previous
-    positive = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]), integration_v2=True)
+    positive = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]))
     assert (
         positive.verify(batch, integration_context=original)[0].outcome.final.decision == "ACCEPT"
     )
@@ -238,7 +232,7 @@ def test_selection_and_join_replay_block_tampered_sources_domain_and_pairs():
         else:
             record["coordination"]["joins"][0]["pairs"] = []
         record["digest"] = content_digest({k: v for k, v in record.items() if k != "digest"})
-        runtime = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]), integration_v2=True)
+        runtime = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]))
         assert (
             runtime.verify(batch, integration_context=context)[0].outcome.final.decision != "ACCEPT"
         )

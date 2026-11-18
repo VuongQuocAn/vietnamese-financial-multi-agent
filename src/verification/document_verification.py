@@ -1,16 +1,28 @@
 """M6 document checks, critic decisions and replayable proof."""
 
+import json
 from typing import Literal
+from uuid import uuid4
 
 from pydantic import Field
 
 from ..accounting.contracts import FinancialModel
 from ..agents.document_qa_contracts import DocumentCandidate
+from ..agents.planner_contracts import PlannerLLMMetadata
+from ..core.llm_contracts import (
+    GenerationParameters,
+    JSONOutput,
+    LLMRequest,
+    Message,
+    OutputSpec,
+    RequestConstraints,
+)
 from ..evidence.composition import payload_sha256
 from ..evidence.contracts import is_json_reference
 from ..evidence.document_claim_support import consecutive, source_assertion
 from .evidence_context import EvidenceContextBuilder
 from .evidence_contracts import EvidenceContext
+from .lite_contracts import GoalSemanticVerdict
 
 
 class DocumentDecision(FinancialModel):
@@ -34,6 +46,10 @@ class DocumentDecision(FinancialModel):
 class DocumentVerificationHistory(FinancialModel):
     version: Literal["document_verification_history_v1"] = "document_verification_history_v1"
     final: DocumentDecision
+    goal_context: dict = Field(default_factory=dict)
+    semantic: GoalSemanticVerdict | None = None
+    semantic_input_sha256: str | None = None
+    metadata: PlannerLLMMetadata = Field(default_factory=PlannerLLMMetadata)
 
 
 def judge_document(claim, contexts):
@@ -113,7 +129,15 @@ def judge_document(claim, contexts):
 
 
 def verify_document_claim(
-    claim, builder: EvidenceContextBuilder, manifest, company_id, snapshot_id
+    claim,
+    builder: EvidenceContextBuilder,
+    manifest,
+    company_id,
+    snapshot_id,
+    *,
+    gateway=None,
+    model=None,
+    goal_context=None,
 ):
     pinned = {
         pin.identity.model_dump_json()
@@ -132,4 +156,54 @@ def verify_document_claim(
         )
     ):
         return DocumentVerificationHistory(final=judge_document(claim, []))
-    return DocumentVerificationHistory(final=judge_document(claim, builder.build_document(claim)))
+    history = DocumentVerificationHistory(
+        final=judge_document(claim, builder.build_document(claim)), goal_context=goal_context or {}
+    )
+    if history.final.decision != "ACCEPT" or not history.goal_context or gateway is None:
+        return history
+    payload = dict(
+        claim=claim.model_dump(mode="json"),
+        evidence=[e.model_dump(mode="json") for e in history.final.evidence],
+        **history.goal_context,
+    )
+    history.semantic_input_sha256 = payload_sha256(payload)
+    response = gateway.generate(
+        LLMRequest(
+            contract_version="llm_gateway_v1",
+            request_id="m6-document-" + uuid4().hex,
+            model=model,
+            messages=[
+                Message(
+                    role="system",
+                    content=(
+                        "You are M6. Determine which goals this exact quotation actually answers, "
+                        "including completeness, qualifications and source context. An exact quote "
+                        "does not establish relevance. Do not infer new facts. Return one verdict "
+                        "as JSON {verdicts:[...]} using this schema: "
+                        + json.dumps(GoalSemanticVerdict.model_json_schema())
+                    ),
+                ),
+                Message(role="user", content=json.dumps(payload, ensure_ascii=False)),
+            ],
+            generation=GenerationParameters(temperature=0, max_output_tokens=1800),
+            output_spec=OutputSpec(format="json"),
+            constraints=RequestConstraints(timeout_seconds=45),
+        )
+    )
+    history.metadata = PlannerLLMMetadata(
+        calls=1,
+        status=response.status,
+        model=model,
+        usage=response.usage,
+        cost=response.cost,
+        error=response.error,
+        provenance=response.provenance,
+    )
+    if response.status == "success" and isinstance(response.output, JSONOutput):
+        try:
+            verdicts = response.output.payload["verdicts"]
+            if len(verdicts) == 1:
+                history.semantic = GoalSemanticVerdict.model_validate(verdicts[0])
+        except (ValueError, TypeError, KeyError):
+            pass
+    return history

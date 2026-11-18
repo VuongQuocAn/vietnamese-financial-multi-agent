@@ -25,10 +25,10 @@ def complete_declared_list(texts):
     return declared is None or sum(is_list_item(t) for t in texts) == declared
 
 
-def document_projection(record, *, selection=False, literal=False):
+def document_projection(record, *, literal=False):
     if record.kind == "text":
         return {"text": record.raw_text} if record.raw_text and len(record.raw_text) <= 6000 else {}
-    if selection or literal:
+    if literal:
         # Full saved table, including excluded aggregates. Never a cropped top-k row set.
         table = record.source_metadata.get("original_table")
         if (
@@ -36,7 +36,7 @@ def document_projection(record, *, selection=False, literal=False):
             and not record.structural_issues
             and not record.source_metadata.get("ragged_row_indices")
         ):
-            return {"selection_table" if selection else "literal_table": table}
+            return {"literal_table": table}
         return {}
     # Only labeled, indexed rows. Unplaced totals and numeric cells are excluded.
     labels = [cell.text for _, cell in _label_cells(record)]
@@ -54,10 +54,10 @@ def _label_cells(record):
     ]
 
 
-def document_citations(record, citations, *, selection=False, literal=False):
+def document_citations(record, citations, *, literal=False):
     if record.kind == "text":
         return citations
-    if selection or literal:
+    if literal:
         return citations
     primary = {a.reference.source_pointer for a in record.sources if a.reference}
     labels = {
@@ -77,38 +77,14 @@ def _contains(text, query):
 
 
 def excerpt_topic_matches(text, query):
-    """Keep noun phrases intact; permit an explicit predicate before its subject.
-
-    This establishes relevance of a verbatim quotation, never an inferred claim.
-    Reordered predicates must occur in the same sentence as the exact subject.
-    """
-    if _contains(text, query):
-        return True
-    parts = re.split(r"\s+và\s+", query, flags=re.I)
-    if len(parts) > 1:
-        return all(_contains(text, part) for part in parts)
-    match = re.match(r"^(khấu hao|phân bổ|ghi nhận)\s+(.+)$", query, flags=re.I)
-    return bool(match) and any(
-        _contains(sentence, match[1]) and _contains(sentence, match[2])
-        for sentence in re.split(r"[.;\n]", text)
-    )
+    """Literal retrieval matching only; M6 owns semantic relevance."""
+    return _contains(text, query)
 
 
 def source_assertion(requirement, projections):
     """Return exact quotations, protected display and optional explicit relationship."""
     if not projections or any(not value for value in projections):
         return None
-    duration = re.search(
-        r"\bthoi (?:gian|han) (?:khau hao|phan bo|su dung)\b", normalize_search(requirement.label)
-    )
-
-    def has_duration(text):
-        return bool(re.search(r"\d+\s*(?:[-–]\s*\d+\s*)?(?:nam|thang)\b", normalize_search(text)))
-
-    if requirement.kind == "table_selection":
-        from .document_table_selection import table_assertion
-
-        return table_assertion(requirement, projections)
     if (
         requirement.kind == "exact_text"
         and len(projections) == 1
@@ -122,14 +98,6 @@ def source_assertion(requirement, projections):
         ]
         if len(rows) != 1 or not all(isinstance(c, str) and c.strip() for c in rows[0]):
             return None
-        if duration and (
-            not has_duration(" ".join(rows[0][1:]))
-            or not re.search(
-                r"\b(khau hao|phan bo|su dung)\b",
-                normalize_search(table.get("title", "") + " " + " ".join(table.get("columns", []))),
-            )
-        ):
-            return None
         # Literal row plus original headers: no numerical interpretation,
         # selection or canonical promotion. M6 replays the same pinned table.
         quotes = [" | ".join(table.get("columns", [])), " | ".join(rows[0])]
@@ -142,56 +110,28 @@ def source_assertion(requirement, projections):
         if len(projections) != 1:
             return None
         labels = projections[0].get("labels", [])
-        if (
-            labels
-            and all(_contains(label, "tiền") for label in labels)
-            and any(_contains(label, requirement.query) for label in labels)
-        ):
+        if labels and any(_contains(label, requirement.query) for label in labels):
             return (
                 labels,
-                "Các khoản mục đọc được trong bảng tiền gồm " + ", ".join(labels) + ".",
+                " | ".join(labels),
                 None,
             )
         return None
     texts = [p.get("text", "") for p in projections]
     if not all(texts):
         return None
-    if duration and not has_duration(" ".join(texts)):
-        return None
     if requirement.kind == "entity_role":
         if len(texts) != 1:
             return None
         match = re.fullmatch(r"([^:\n]+):\s*([^:\n]+)", texts[0].strip())
-        if (
-            match
-            and normalize_search(match[1]) in {requirement.target, requirement.target + " bieu"}
-            and re.fullmatch(r"[^\W\d_]+(?: +[^\W\d_]+){1,5}", match[2])
-            and all(word[0].isupper() for word in match[2].split())
-        ):
+        if match and normalize_search(match[1]) in {
+            requirement.target,
+            requirement.target + " bieu",
+        }:
             return texts, f"Tài liệu ghi «{texts[0]}».", match[2]
         return None
-    # Opinion needs the complete qualified opinion section. Search alone cannot
-    # certify its boundaries or any omitted qualifications.
-    topic_matches = (
-        excerpt_topic_matches(" ".join(texts), requirement.query)
-        if requirement.kind == "source_excerpt"
-        else _contains(texts[0], requirement.query)
-    )
-    if requirement.target == "y kien kiem toan" or not topic_matches:
-        return None
-    if requirement.target == "nhan vien quan ly chu chot":
-        if not texts[-1].rstrip().endswith(".") or any(
-            t.rstrip().endswith(".") for t in texts[:-1]
-        ):
-            return None
-    elif requirement.kind == "source_excerpt":
-        # A heading alone does not answer what a note says. Keep complete,
-        # contiguous verbatim source text; no synthesized financial relation.
-        if len(" ".join(texts)) < len(requirement.query) + 30 or not texts[-1].rstrip().endswith(
-            (".", ";", ":")
-        ):
-            return None
-    elif len(texts) != 1:
+    # Exact source text may be quoted independently of whether it answers a goal.
+    if requirement.kind != "source_excerpt" and len(texts) != 1:
         return None
     return texts, "Tài liệu ghi «" + " ".join(texts) + "»", None
 

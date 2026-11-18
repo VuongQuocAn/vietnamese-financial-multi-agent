@@ -441,9 +441,6 @@ def main():
                             FinancialQARequest(
                                 question=question,
                                 **scope,
-                                m5_lite=True,
-                                m6_lite=True,
-                                m7_lite=True,
                                 m5_graph=enabled,
                                 force_refresh=True,
                                 execution_mode="gemini",

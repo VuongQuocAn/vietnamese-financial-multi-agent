@@ -11,7 +11,6 @@ from ..tools.financial_calculator import (
     render_dynamic,
 )
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
-from ..tools.question_understanding import comparison_periods
 from .contracts import CandidateClaim, VerificationInput
 from .logic_rules import _limitation_remainder, assertion_category
 from .numeric import extract_assertion, fold
@@ -63,14 +62,7 @@ class DeterministicFinancialValidator:
         self._calculator = FinancialCalculator(self._catalog)
 
     def _requested_periods(self, batch, claim):
-        if getattr(self, "integration_v2", False):
-            # The question may mix fiscal-year comparisons and closing balances.
-            # Canonical replay below still checks each declared source period,
-            # period type, operand relation and any explicit request pin.
-            return (
-                {s.period for s in claim.supporting_evidence} if claim.reasoning else {claim.period}
-            )
-        return comparison_periods(batch.question)
+        return {s.period for s in claim.supporting_evidence} if claim.reasoning else {claim.period}
 
     def validate(self, batch: VerificationInput) -> ValidationResult:
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
@@ -262,11 +254,7 @@ class DeterministicFinancialValidator:
         across = proof.calculation and any(
             step.operation.period_relation == "across_periods" for step in proof.calculation.steps
         )
-        if (
-            len(periods) > 1
-            and not across
-            and (not getattr(self, "integration_v2", False) or proof.claim_type == "derived_fact")
-        ):
+        if len(periods) > 1 and (not across) and (proof.claim_type == "derived_fact"):
             self._check(result, "context", "fail", "reasoning_period_relation_missing")
         for index, (source, statement) in enumerate(
             zip(sources, claim.analysis_premises, strict=True)
@@ -317,13 +305,10 @@ class DeterministicFinancialValidator:
                     {
                         s.evidence_id: s.reference
                         for s in sources
-                        if s.kind == "fact"
-                        and (
-                            not getattr(self, "integration_v2", False) or s.evidence_id in input_ids
-                        )
+                        if s.kind == "fact" and s.evidence_id in input_ids
                     },
                     [s.operation for s in computation.steps],
-                    independent_branches=getattr(self, "integration_v2", False),
+                    independent_branches=True,
                 )
                 if computation != expected:
                     raise ValueError("dynamic_replay_mismatch")

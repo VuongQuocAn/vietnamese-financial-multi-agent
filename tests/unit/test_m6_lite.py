@@ -84,7 +84,7 @@ def test_facts_calculations_and_invalid_claims_are_independent(tmp_path):
     results = repository.admit_many(histories)
     assert results[0].status == "stored" and all(r.status == "rejected" for r in results[1:])
     assert len(VerifiedClaimRepository(tmp_path).list_all()) == 1
-    assert not FinancialQARequest(question="test").m6_lite
+    assert "m6_lite" not in FinancialQARequest.model_fields
 
 
 def test_dynamic_relations_and_proof_tampering_are_checked_by_python(tmp_path):
@@ -135,12 +135,16 @@ def test_single_semantic_batch_admission_and_provider_failure_keep_facts(tmp_pat
         company_id=owner.company_id,
         document_id=owner.document_id,
         snapshot_id=owner.snapshot_id,
-        m5_lite=True,
-        m6_lite=True,
-        m7_lite=True,
     )
     selected, _ = select_claims(request, entries)
-    released, metadata = compose_lite(request, selected)
+    released, metadata = compose_lite(
+        request,
+        selected,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in selected},
+        ),
+    )
     assert set(released["used_verified_claim_ids"]) == {
         e.identity.verified_claim_id for e in entries
     }

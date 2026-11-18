@@ -19,17 +19,12 @@ from ..core.llm_contracts import (
     RequestConstraints,
 )
 from ..tools.financial_calculator import render_dynamic
-from ..tools.question_understanding import ITEM_RULES, comparison_periods, normalize
+from ..tools.question_understanding import ITEM_RULES
 from .citation_contracts import CitationReference
 from .citation_renderer import _digest, _identity, _locator, _reference_text
 from .qa_composer import (
-    INTERPRETATION_TERMS,
-    _matches_target,
     _public_notes,
-    _targets,
-    understand_requirements,
 )
-from .qa_contracts import QARequirement
 
 GAP_TEXT = {
     "A": "Chưa có dữ liệu nguồn khả dụng trong phạm vi đã chọn.",
@@ -229,219 +224,6 @@ def _readable_verified_text(entry):
     return _verified_text(entry)
 
 
-def _coverage(request, entries):
-    """Match presentation obligations to M6 ACCEPT; never approve a new claim."""
-    # Numeric separators are not sentence/goal boundaries in a copied value.
-    question = re.sub(r"(?<=\d)[.,](?=\d)", "", request.question)
-    requirements = request.answer_requirements or understand_requirements(question)
-    if not request.answer_requirements:
-        requirements = _lite_requirements(question, requirements)
-    goals = []
-    for requirement in requirements:
-        text = normalize(requirement.text)
-        targets = [key for kind, key in _targets(text) if kind == "fact"]
-        periods = sorted(comparison_periods(requirement.text))
-        if (
-            requirement.kind == "unsupported"
-            and targets
-            and len(periods) >= 2
-            and ("%" in text or "phan tram" in text)
-        ):
-            # Explicit same-filing percentage comparison: a derived proof covers
-            # it; the legacy single-period parser's unsupported flag does not.
-            goals.extend(
-                QARequirement(
-                    requirement_id=f"{requirement.requirement_id}-{index}",
-                    text=requirement.text,
-                    kind="fact",
-                    target_id=target,
-                    interpretation=True,
-                    interpretation_topic="dynamic_calculation",
-                    required_indicators=[target],
-                    reasoning_operations=["percentage_change"],
-                    reasoning_periods=periods,
-                )
-                for index, target in enumerate(targets)
-            )
-        elif (
-            requirement.kind == "unsupported"
-            and not _targets(text)
-            and re.search(r"\b(?:ty le|chi so|ket qua) (?:do|nay)\b", text)
-            and any(term in text for term in INTERPRETATION_TERMS)
-            and any(r.interpretation and r.target_id for r in requirements)
-        ):
-            # A deictic explanation continues the typed interpretation goal
-            # already inferred from its parent, rather than an unknown formula.
-            continue
-        else:
-            goals.append(requirement)
-    rows = []
-    for goal in goals:
-        matches = []
-        for entry in entries:
-            matching_entry = entry
-            if goal.kind == "metric" and not entry.accepted_claim.calculation:
-                metric = next(
-                    (
-                        s.calculation
-                        for s in entry.accepted_claim.supporting_evidence
-                        if s.calculation and s.calculation.formula_id == goal.target_id
-                    ),
-                    None,
-                )
-                if metric is not None:
-                    # Existing matcher reads the root metric field. Project the
-                    # same admitted supporting metric, without mutating proof.
-                    matching_entry = entry.model_copy(deep=True)
-                    matching_entry.accepted_claim.calculation = metric
-            if goal.kind == "limitations":
-                covered = bool(
-                    entry.caveats
-                    or entry.accepted_claim.missing_information
-                    or (
-                        entry.accepted_claim.reasoning
-                        and entry.accepted_claim.reasoning.limitations
-                    )
-                )
-            else:
-                matching_goal = goal
-                proof = entry.accepted_claim.reasoning
-                if (
-                    goal.interpretation_topic == "dynamic_calculation"
-                    and proof
-                    and proof.calculation
-                ):
-                    actual = [s.operation.operator for s in proof.calculation.steps]
-                    if goal.reasoning_operations and set(goal.reasoning_operations) <= set(actual):
-                        # Additional admitted steps do not erase the requested
-                        # operation. Source items and periods are still matched.
-                        matching_goal = goal.model_copy(update={"reasoning_operations": actual})
-                covered = goal.kind not in {"unsupported", "ambiguous"} and _matches_target(
-                    matching_entry, matching_goal
-                )
-            if covered and goal.interpretation_topic == "dynamic_calculation":
-                covered = set(goal.required_indicators) == {
-                    s.canonical_item_id
-                    for s in entry.accepted_claim.supporting_evidence
-                    if s.kind == "fact"
-                }
-            if covered:
-                matches.append(entry.identity.verified_claim_id)
-        rows.append(
-            dict(
-                requirement_id=goal.requirement_id,
-                kind=goal.kind,
-                target_id=goal.target_id,
-                interpretation=goal.interpretation,
-                required=goal.required,
-                verified_claim_ids=matches,
-            )
-        )
-    return dict(
-        complete=bool(rows)
-        and all(not row["required"] or row["verified_claim_ids"] for row in rows),
-        requirements=rows,
-    )
-
-
-def _lite_requirements(question, requirements):
-    """Retain inherited scalar/comparison goals within the bound filing.
-
-    The single-target baseline parser rejects multiple years before detecting
-    their targets. Reconstruct only explicit catalog goals, never unknown or
-    causal requests, and require accepted proof for every comparison endpoint.
-    """
-    all_targets = [key for kind, key in _targets(normalize(question)) if kind == "fact"]
-    periods = sorted(comparison_periods(question))
-    result = []
-    for r in requirements:
-        text = normalize(r.text)
-        targets = [key for kind, key in _targets(text) if kind == "fact"]
-        comparison = any(
-            w in text
-            for w in ("so voi", "chenh lech", "bien dong", "cao hon", "thap hon", "tang hay giam")
-        )
-        if (
-            r.kind == "unsupported"
-            and r.reason
-            in {
-                "cross_document_comparison_blocked_D03_B10",
-                "semantic_intent_requires_gateway",
-            }
-            and (targets or comparison and len(all_targets) == 1)
-        ):
-            targets = targets or all_targets
-            operation = (
-                "percentage_change"
-                if "phan tram" in text or "%" in r.text
-                else (
-                    "subtract"
-                    if any(w in text for w in ("chenh lech", "bao nhieu vnd", "phep tru"))
-                    else None
-                )
-            )
-            for target in targets:
-                if operation:
-                    result.append(
-                        QARequirement(
-                            requirement_id=r.requirement_id + target,
-                            text=r.text,
-                            kind="fact",
-                            target_id=target,
-                            interpretation=True,
-                            interpretation_topic="dynamic_calculation",
-                            required_indicators=[target],
-                            reasoning_operations=[operation],
-                            reasoning_periods=periods,
-                        )
-                    )
-                else:
-                    result.append(
-                        QARequirement(
-                            requirement_id=r.requirement_id + target,
-                            text=r.text,
-                            kind="fact",
-                            target_id=target,
-                            interpretation=True,
-                            interpretation_topic="metric_meaning",
-                            required_indicators=targets,
-                            reasoning_periods=periods,
-                        )
-                    )
-            continue
-        if r.kind == "unsupported" and not targets and result:
-            # Presentation follow-ups inherit targets; they add no unknown fact.
-            if re.match(r"^neu (?:so lieu|phep tinh|phep tru)\b", text):
-                continue
-            if re.search(r"\bdau (?:duong|am)\b", text):
-                parents = [g for g in result if g.kind == "fact" and g.target_id]
-                if len(parents) == 1:
-                    result.append(
-                        parents[0].model_copy(
-                            update=dict(
-                                requirement_id=r.requirement_id,
-                                text=r.text,
-                                interpretation=True,
-                                interpretation_topic="metric_meaning",
-                            )
-                        )
-                    )
-                    continue
-        result.append(r)
-    # A request for two years needs both facts, even when the first conjunct
-    # omits the years. Distinct source periods cannot satisfy each other.
-    expanded = []
-    for r in result:
-        if len(periods) >= 2 and r.kind == "fact" and not r.interpretation:
-            expanded.extend(
-                r.model_copy(update=dict(requirement_id=r.requirement_id + p, period=p))
-                for p in periods
-            )
-        else:
-            expanded.append(r)
-    return expanded
-
-
 def _projection(segments, selected):
     """Page labels for readers; exact per-claim source IDs remain in trace."""
     entries = {e.identity.verified_claim_id: e for e in selected}
@@ -565,36 +347,33 @@ def compose_lite(
     gateway=None,
     technical_errors=(),
     source_available=True,
-    coverage_context=None,
+    coverage_context,
 ):
     """Return public fields and auditable metadata; at most one generate(), no retry."""
     from ..agents.integration_workspace import answer_coverage
 
     started = perf_counter()
-    if coverage_context is not None:
-        verified = coverage_context.get("verified_requirements", {})
-        supported = coverage_context.get("supported_requirements", {})
-        bound = [
-            e
-            for e in selected
-            if verified.get(
-                e.identity.verified_claim_id, supported.get(e.identity.accepted_candidate_id, [])
-            )
-        ]
-        refs = {
-            r.model_dump_json()
-            for e in bound
-            for r in getattr(e.accepted_claim, "fact_references", [])
-        }
-        selected = [
-            e
-            for e in selected
-            if e in bound
-            or (
-                e.identity.kind == "fact"
-                and any(r.model_dump_json() in refs for r in e.accepted_claim.fact_references)
-            )
-        ]
+    verified = coverage_context.get("verified_requirements", {})
+    supported = coverage_context.get("supported_requirements", {})
+    bound = [
+        e
+        for e in selected
+        if verified.get(
+            e.identity.verified_claim_id, supported.get(e.identity.accepted_candidate_id, [])
+        )
+    ]
+    refs = {
+        r.model_dump_json() for e in bound for r in getattr(e.accepted_claim, "fact_references", [])
+    }
+    selected = [
+        e
+        for e in selected
+        if e in bound
+        or (
+            e.identity.kind == "fact"
+            and any(r.model_dump_json() in refs for r in e.accepted_claim.fact_references)
+        )
+    ]
     entries = {e.identity.verified_claim_id: e for e in selected}
     trace = dict(
         selected_claims=list(entries),
@@ -623,11 +402,7 @@ def compose_lite(
         payload = dict(
             question=request.question,
             conversation_context=request.conversation_context,
-            verified_coverage=(
-                answer_coverage(coverage_context, selected)
-                if coverage_context is not None
-                else _coverage(request, selected)
-            ),
+            verified_coverage=(answer_coverage(coverage_context, selected)),
             goal_bindings=(coverage_context or {}).get("verified_requirements", {}),
             verified_claims=[
                 dict(
@@ -795,7 +570,7 @@ def compose_lite(
             gaps.append(dict(type="C", text=GAP_TEXT["C"]))
     if selected and trace["calls"] and not segments:
         trace["fallback"] = True
-    if coverage_context is not None and not segments:
+    if not segments:
         segments = [
             dict(text=_readable_verified_text(entry), claim_ids=[key])
             for key, entry in entries.items()
@@ -844,24 +619,17 @@ def compose_lite(
     if not selected:
         gap_type = "B" if source_available else "A"
         gaps.append(dict(type=gap_type, text=GAP_TEXT[gap_type]))
-    if coverage_context is not None and trace["rendering_mode"] == "accepted_claims":
+    if trace["rendering_mode"] == "accepted_claims":
         segments = _group_verified_segments(segments, entries, coverage_context)
     released_ids = {key for segment in segments for key in segment["claim_ids"]}
     released_entries = [e for key, e in entries.items() if key in released_ids]
-    if coverage_context is not None:
-        trace["coverage"] = answer_coverage(coverage_context, released_entries)
-    else:
-        trace["coverage"] = _coverage(request, released_entries)
+    trace["coverage"] = answer_coverage(coverage_context, released_entries)
     if selected and not trace["coverage"]["complete"]:
-        missing = (
-            [
-                row["text"]
-                for row in trace["coverage"]["requirements"]
-                if row.get("required", True) and not row["verified_claim_ids"]
-            ]
-            if coverage_context is not None
-            else []
-        )
+        missing = [
+            row["text"]
+            for row in trace["coverage"]["requirements"]
+            if row.get("required", True) and (not row["verified_claim_ids"])
+        ]
         gaps.append(
             dict(type="B", text="Chưa đáp ứng: " + "; ".join(missing) if missing else GAP_TEXT["B"])
         )

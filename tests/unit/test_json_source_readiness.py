@@ -178,8 +178,6 @@ def test_m5_receives_readonly_source_context_without_new_numeric_handles(tmp_pat
         catalog,
         Mock(generate=generate),
         supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
-        integration_v2=True,
-        adaptive_coordinator=True,
         composition=json_document_composition(catalog),
         document_repository=catalog,
     )

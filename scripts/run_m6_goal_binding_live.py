@@ -107,7 +107,6 @@ def run(root, source, output):
             catalog,
             SharedLLMGateway({"qwen": transport}),
             model=configured.model,
-            integration_v2=True,
         )
         histories = []
         for claims in chunks:

@@ -50,9 +50,9 @@ def test_small_plan_keeps_original_indexes_and_independent_tasks():
     context.mode = "gemini"
     valid = dict(wire, tasks=[task])
     seen = []
-    parsed, metadata, errors = SupervisorLite(
-        gateway_for(valid, seen), integration_v2=True, adaptive_coordinator=True
-    ).plan("Doanh thu thuần năm 2030?", context, sources)
+    parsed, metadata, errors = SupervisorLite(gateway_for(valid, seen)).plan(
+        "Doanh thu thuần năm 2030?", context, sources
+    )
     assert not errors and metadata.calls == 1 and parsed.tasks[0].task_id == "T1"
     prompt = json.loads(seen[0].messages[0].content)
     schema = prompt["output_schema"]
@@ -69,7 +69,6 @@ def test_small_plan_keeps_original_indexes_and_independent_tasks():
 
 def test_dag_executes_just_in_time_and_keeps_independent_outputs():
     _, context, engine, _ = setup_engine()
-    engine.adaptive_coordinator = True
     plan = engine.supervisor.plan.return_value[0]
     first, second = plan.tasks
     first.depends_on = [second.task_id]
@@ -124,7 +123,10 @@ def test_dag_executes_just_in_time_and_keeps_independent_outputs():
     assert workspace["task_results"]["T2"]["evidence"][0]["reference"]
 
 
-def test_pipeline_flag_keeps_existing_m6_m7_and_opt_out(tmp_path):
+def test_single_pipeline_requires_coordinator_and_rejects_legacy_switches(tmp_path):
+    import pytest
+    from pydantic import ValidationError
+
     catalog, context, _, _ = setup_engine()
     service = FinancialQAPipeline(
         catalog=catalog,
@@ -139,42 +141,26 @@ def test_pipeline_flag_keeps_existing_m6_m7_and_opt_out(tmp_path):
         repository=VerifiedClaimRepository(tmp_path),
     )
     request = FinancialQARequest(
-        question="Doanh thu thuần TEST năm 2030 là bao nhiêu?",
+        question="Doanh thu TEST 2030?",
         company_id=context.company_id,
         document_id=context.document_id,
         snapshot_id=context.snapshot_id,
-        integration_v2=True,
-        adaptive_coordinator=True,
-        execution_mode="deterministic",
         allow_gateway=False,
-        force_refresh=True,
+        execution_mode="deterministic",
     )
     response = service.run(request)
-    assert response.trace.native_decisions["ACCEPT"] >= 1
-    assert set(response.used_verified_claim_ids) <= {
-        o.verified_claim_id for o in response.trace.outcomes
-    }
-    assert response.trace.integration_context["task_results"]
-    assert response.trace.m6_lite and response.trace.m7_lite
-    with patch(
-        "vietnamese_financial_multi_agent.agents.lite_orchestrator.FinancialLiteOrchestrator",
-        wraps=__import__(
-            "vietnamese_financial_multi_agent.agents.lite_orchestrator",
-            fromlist=["FinancialLiteOrchestrator"],
-        ).FinancialLiteOrchestrator,
-    ) as factory:
-        service._m5(
-            request.model_copy(update={"adaptive_coordinator": False, "m5_lite": True}),
-            catalog=catalog,
-        )
-        assert factory.call_args.kwargs["adaptive_coordinator"] is False
+    assert not response.trace.native_decisions and not response.used_verified_claim_ids
+    assert response.trace.integration_context["requirements"][0]["kind"] == "unsupported"
+    assert not response.trace.provider_calls
+    for flag in ("integration_v2", "adaptive_coordinator", "m5_lite", "m6_lite", "m7_lite"):
+        with pytest.raises(ValidationError):
+            FinancialQARequest.model_validate(dict(question="x", **{flag: True}))
 
 
 def test_specialist_can_request_a_calculator_metric_with_operand_provenance():
     from vietnamese_financial_multi_agent.agents.lite_orchestrator import inventory
 
     catalog, context, engine, _ = setup_engine()
-    engine.adaptive_coordinator = True
     context.mode = "gemini"
     sources = inventory(catalog, context)
     metric = next(handle for handle, source in sources.items() if source["kind"] == "metric")
@@ -249,6 +235,21 @@ def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_pat
             prompt = json.loads(request.messages[0].content)
             handle = prompt["numeric_choices"][0]["evidence_id"]
             payload = dict(claims=[handle], analyses=[], missing_information=[])
+        elif prefix == "m6-document":
+            row = json.loads(request.messages[1].content)
+            payload = dict(
+                verdicts=[
+                    dict(
+                        claim_id=row["claim"]["candidate_id"],
+                        verdict="SUPPORTED",
+                        reason="Exact source answers the goal",
+                        supported_requirement_ids=[
+                            g["requirement_id"] for g in row["local_requirements"]
+                        ],
+                        issues=[],
+                    )
+                ]
+            )
         elif prefix == "m6-lite":
             payload = dict(
                 verdicts=[
@@ -286,17 +287,21 @@ def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_pat
         gateway=SharedLLMGateway({"gemini": transport}),
         repository=VerifiedClaimRepository(tmp_path / "ledger"),
     )
-    response = service.run(
+    from vietnamese_financial_multi_agent.api.conversations import ConversationService
+
+    conversation = ConversationService(service)
+    session = conversation.create()
+    response = conversation.send(
+        session.conversation_id,
         FinancialQARequest(
             question=numbers + " " + document,
             company_id=company,
             document_id=descriptor.document_id,
             snapshot_id=descriptor.snapshot_id,
-            integration_v2=True,
-            adaptive_coordinator=True,
             force_refresh=True,
-        )
+        ),
     )
+    response = response.response
     trace = response.trace
     assert sum(r.request_id.startswith("m5-coordinator-plan-") for r in calls) == 1
     assert {e["tool"] for e in trace.tool_calls} >= {
@@ -309,3 +314,33 @@ def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_pat
     assert trace.native_decisions == {"ACCEPT": 2}
     assert len(response.used_verified_claim_ids) == 2 and response.citations
     assert trace.m7_lite["coverage"]["complete"]
+
+    followup = conversation.send(
+        session.conversation_id,
+        FinancialQARequest(question="Repeat those findings.", force_refresh=True),
+    )
+    assert followup.original_question == followup.resolved_question == "Repeat those findings."
+    assert followup.response.used_verified_claim_ids and followup.response.citations
+    plans = [r for r in calls if r.request_id.startswith("m5-coordinator-plan-")]
+    history = json.loads(plans[-1].messages[0].content)["conversation_context"]
+    assert history[0]["question"] == numbers + " " + document
+    assert history[0]["verified_claim_ids"] == response.used_verified_claim_ids
+
+    import pytest
+    from vietnamese_financial_multi_agent.verification.document_verification import (
+        DocumentVerificationHistory,
+    )
+    from vietnamese_financial_multi_agent.verification.ledger import (
+        LedgerAdmissionError,
+        build_verified_claim,
+    )
+
+    document_entry = next(
+        e
+        for e in service.repository.list_all()
+        if isinstance(e.history, DocumentVerificationHistory)
+    )
+    tampered = document_entry.history.model_copy(deep=True)
+    tampered.goal_context["question"] = "Changed request"
+    with pytest.raises(LedgerAdmissionError, match="document_goal_proof_invalid"):
+        build_verified_claim(tampered)

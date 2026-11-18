@@ -250,7 +250,7 @@ def run_cases(root, output, cases, source, oracle, *, live=False, adapter=None, 
                 "tools.financial_retrieval.FinancialRetrievalTools.find_financial_facts",
                 "unverified_retrieval",
             ),
-            ("agents.orchestrator.FinancialMultiAgentOrchestrator.run", "unverified_retrieval"),
+            ("agents.lite_orchestrator.FinancialLiteOrchestrator.run", "unverified_retrieval"),
         ):
             guards.enter_context(patch("vietnamese_financial_multi_agent." + target, forbid(label)))
         for case in cases:

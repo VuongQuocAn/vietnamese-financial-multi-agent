@@ -67,6 +67,25 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
         claim = decision.original_claim
         if decision != judge_document(claim, decision.evidence) or decision.decision != "ACCEPT":
             raise LedgerAdmissionError("document_proof_not_accepted_on_replay")
+        if history.semantic is not None:
+            expected = payload_sha256(
+                dict(
+                    claim=claim.model_dump(mode="json"),
+                    evidence=[e.model_dump(mode="json") for e in decision.evidence],
+                    **history.goal_context,
+                )
+            )
+            allowed = {
+                r["requirement_id"] for r in history.goal_context.get("local_requirements", [])
+            }
+            if (
+                history.metadata.status != "success"
+                or history.metadata.calls != 1
+                or history.semantic.claim_id != claim.candidate_id
+                or history.semantic_input_sha256 != expected
+                or not set(history.semantic.supported_requirement_ids) <= allowed
+            ):
+                raise LedgerAdmissionError("document_goal_proof_invalid")
         seed = VerifiedDocumentIdentity(
             verified_claim_id="",
             source_result_sha256=payload_sha256(
@@ -81,7 +100,7 @@ def build_verified_claim(history: VerificationHistory | DocumentVerificationHist
             composition_id=claim.composition_id,
             composition_sha256=claim.composition_sha256,
             content_sha256=hashlib.sha256(claim.content.encode()).hexdigest(),
-            final_decision_sha256=verification_input_digest(decision),
+            final_decision_sha256=verification_input_digest(history),
             policy_version=decision.policy_version,
         )
         identity = seed.model_copy(

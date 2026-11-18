@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 
 import pytest
-from vietnamese_financial_multi_agent.agents.lite_orchestrator import fallback_plan
 from vietnamese_financial_multi_agent.evidence.json_catalog import load_json_corpus_document
 from vietnamese_financial_multi_agent.evidence.refined_import import import_refined_document
 
@@ -67,6 +66,12 @@ def test_discover_refined_documents_ignores_other_inputs(tmp_path):
     assert not facts[0].company_id
 
 
+def test_corpus_runner_rejects_output_inside_source(tmp_path):
+    source(tmp_path)
+    with pytest.raises(ValueError, match="source_output_overlap"):
+        runner.validate(tmp_path, tmp_path / "output")
+
+
 def test_corpus_runner_persists_two_documents_and_loads_index(tmp_path):
     root, output = tmp_path / "refined", tmp_path / "bundle"
     page = source(root)
@@ -89,8 +94,8 @@ def test_corpus_runner_persists_two_documents_and_loads_index(tmp_path):
     )
     assert [s["document_alias"] for s in summary] == ["TST_2025", "TXT_2025"]
     assert summary[0]["eligible_mapped_facts"] == summary[0]["financial_lookups"] == 1
-    assert summary[0]["m5_candidates"] and summary[0]["restart_exact"]
-    assert summary[1]["facts"] == 0 and summary[1]["m5_candidates"] == 0
+    assert summary[0]["restart_exact"]
+    assert summary[1]["facts"] == 0
     assert all(s["orphan_nodes"] == 0 for s in summary)
     assert (output / "coverage.csv").is_file()
     catalog = load_json_corpus_document(root, output, "TST_2025")
@@ -100,17 +105,6 @@ def test_corpus_runner_persists_two_documents_and_loads_index(tmp_path):
     assert runner.smoke_question(focus).startswith("Tổng nợ phải trả")
     focus.context.period = None
     assert runner.smoke_question(focus) == "Tổng nợ phải trả là bao nhiêu?"
-    assert not fallback_plan(
-        "Tổng nợ phải trả năm 2025 là bao nhiêu?",
-        {
-            "S1": dict(
-                label="Tổng nợ phải trả",
-                period=None,
-                item="b01.total_liabilities",
-                roles=["liquidity_and_leverage"],
-            )
-        },
-    ).tasks
     assert catalog.descriptors[0].snapshot_id.endswith(":test-corpus")
     assert json.loads((output / "summary.json").read_bytes())["source_hashes_unchanged"]
     with pytest.raises(FileExistsError):
@@ -120,9 +114,3 @@ def test_corpus_runner_persists_two_documents_and_loads_index(tmp_path):
     path.write_text(path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     with pytest.raises(ValueError, match="json_import_manifest_changed"):
         load_json_corpus_document(root, output, "TST_2025")
-
-
-def test_corpus_runner_rejects_output_inside_source(tmp_path):
-    source(tmp_path)
-    with pytest.raises(ValueError, match="source_output_overlap"):
-        runner.validate(tmp_path, tmp_path / "output")

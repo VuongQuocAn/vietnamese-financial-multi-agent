@@ -50,7 +50,15 @@ def test_admitted_steps_values_and_denominator_reach_m7_verbatim(tmp_path):
     text = f"Chỉ tiêu giảm {str(magnitude).replace('.', ',')}% so với kỳ gốc."
     gateway, calls = gateway_for(dict(segments=[dict(text=text, claim_ids=[key])], gaps=[]))
     request = FinancialQARequest(question="Mức thay đổi so với kỳ gốc?")
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     payload = json.loads(calls[0].messages[-1].content)["verified_claims"][0]
     calculation = payload["reasoning_calculation"]
     step = calculation["steps"][0]

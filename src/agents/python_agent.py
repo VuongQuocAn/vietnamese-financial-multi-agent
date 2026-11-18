@@ -18,26 +18,12 @@ from ..core.llm_contracts import (
 )
 from ..tools.financial_calculator import DynamicOperation
 from ..tools.python_execution import PythonExecutor, digest
-from ..tools.question_understanding import normalize
 from .evidence_coordination import observation
 from .planner_contracts import PlannerLLMMetadata
 
 # Missing primitives, not financial definitions. Ordinary operation DAGs stay in Calculator.
 PythonRequirement = Literal["power", "sqrt", "root_finding", "dispersion", "iterative_solver"]
 CALCULATOR_OPERATORS = list(DynamicOperation.model_fields["operator"].annotation.__args__)
-
-
-def requires_python(question, objective, requirement):
-    """Conservative capability gate grounded in the user's request, not just model routing."""
-    signals = {
-        "power": ("luy thua", "binh phuong", "can bac", "rms", "cagr", "kep", "power"),
-        "sqrt": ("can bac", "sqrt", "rms", "do lech chuan"),
-        "dispersion": ("do lech chuan", "phuong sai", "standard deviation", "variance"),
-        "root_finding": ("irr", "nghiem", "root", "noi hoan"),
-        "iterative_solver": ("lap", "solver", "toi uu", "hoi tu"),
-    }
-    terms = signals.get(requirement, ())
-    return all(any(term in normalize(text) for term in terms) for text in (question, objective))
 
 
 class AlgorithmConstant(FinancialModel):

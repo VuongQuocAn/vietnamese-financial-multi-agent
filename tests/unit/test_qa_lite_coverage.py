@@ -17,7 +17,15 @@ def test_model_gap_does_not_override_satisfied_goal(admitted):
             gaps=[dict(type="B", text="There is no verified finding.")],
         )
     )
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert fields["status"] in {"completed", "completed_with_caveats"}
     assert trace["coverage"]["complete"] and not trace["gaps"]
     assert trace["proposed_gaps"] and len(calls) == 1
@@ -32,7 +40,15 @@ def test_missing_requested_evidence_is_partial_even_when_model_reports_no_gaps(a
             gaps=[],
         )
     )
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert fields["status"] == "partial_verified_coverage"
     assert {g["type"] for g in trace["gaps"]} == {"B"}
     missing = [r for r in trace["coverage"]["requirements"] if not r["verified_claim_ids"]]
@@ -54,10 +70,26 @@ def test_accepted_dynamic_calculation_covers_only_its_requested_periods(tmp_path
             gaps=[dict(type="B", text="Missing percentage calculation.")],
         )
     )
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert fields["status"] in {"completed", "completed_with_caveats"}
     assert trace["coverage"]["complete"]
     request.question = question.replace(target, str(int(target) + 1))
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert fields["status"] == "partial_verified_coverage"
     assert not trace["coverage"]["complete"]

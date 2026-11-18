@@ -1,21 +1,14 @@
 """QA-Fix-02 offline controls; synthetic fixtures are not financial evaluation."""
 
-import json
-from unittest.mock import Mock
-
 import pytest
-from google.genai import errors, types
+from google.genai import errors
 from vietnamese_financial_multi_agent.agents import (
     AdaptiveSpecialistRouter,
-    FinancialMultiAgentOrchestrator,
     PlannerContext,
     RiskAwareSupervisor,
 )
-from vietnamese_financial_multi_agent.core.gemini_adapter import GeminiAdapter
-from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 
 from .test_financial_qa import gateway_for
-from .test_gemini_adapter import sdk_response
 from .test_query_planner import planner
 
 ROLES = ["profitability", "liquidity_and_leverage", "cash_flow_and_earnings_quality"]
@@ -127,61 +120,8 @@ def test_missing_evidence_blocks_recovery_instead_of_computing_zero():
     assert data.facts  # Original catalog untouched.
 
 
-def provider_pipeline(outcomes, *, attempts=2, timeout=60):
-    client = Mock()
-    client.models.generate_content.side_effect = outcomes
-    gateway = SharedLLMGateway({"gemini": GeminiAdapter(client)})
-    instance = planner(gateway=gateway)
-    supervisor, router = Mock(), Mock()
-    orchestrator = FinancialMultiAgentOrchestrator(
-        planner=instance, supervisor=supervisor, router=router, specialists={}
-    )
-    context = PlannerContext(provider_attempt_limit=attempts, provider_timeout_seconds=timeout)
-    return client, instance, supervisor, router, orchestrator, context
-
-
 def api_error(code):
     return errors.APIError(code, {"error": {"code": code, "message": "synthetic provider failure"}})
-
-
-def test_503_then_success_retains_attempt_provenance_usage_and_latency():
-    raw = planner()._deterministic("Doanh thu TEST 2030")
-    client, instance, _, _, _, context = provider_pipeline(
-        [
-            api_error(503),
-            sdk_response(
-                json.dumps(raw),
-                usage_metadata=types.GenerateContentResponseUsageMetadata(
-                    prompt_token_count=9, candidates_token_count=2, total_token_count=11
-                ),
-            ),
-        ]
-    )
-    result = instance.plan("Doanh thu TEST 2030", context)
-    assert (
-        result.status == "planned"
-        and client.models.generate_content.call_count == result.llm.calls == 2
-    )
-    assert len(result.llm.attempts) == 2
-    assert result.llm.attempts[0].response.error.provider_error_code == "http_503"
-    assert result.llm.attempts[0].response.error.origin == "provider"
-    assert result.llm.attempts[1].response.status == "success"
-    assert result.llm.latency_ms >= sum(a.latency_ms for a in result.llm.attempts)
-    assert result.llm.usage.total_tokens == 11
-    configs = [c.kwargs["config"] for c in client.models.generate_content.call_args_list]
-    assert configs[1].http_options.timeout < configs[0].http_options.timeout
-    # Use the real supervisor/router; absent Specialist only stops its own stage.
-    completed_planner = Mock()
-    completed_planner.plan.return_value = result
-    orchestration = FinancialMultiAgentOrchestrator(
-        planner=completed_planner,
-        supervisor=RiskAwareSupervisor(instance._catalog),
-        router=AdaptiveSpecialistRouter(),
-        specialists={},
-    )
-    output = orchestration.run(question=result.question, context=context)
-    assert output.usage.calls == 2 and output.usage.calls_with_unknown_tokens == 1
-    assert output.usage.total_tokens == 11
 
 
 def test_omission_and_approved_metric_substitution_require_clarification():
@@ -226,54 +166,3 @@ def test_valid_clarification_reason_is_preserved_when_operations_are_deliberatel
     assert result.status == "clarification_required" and not result.plan
     assert result.effective_proposal.missing_information == raw["missing_information"]
     assert result.query.missing_information == raw["missing_information"]
-
-
-@pytest.mark.parametrize(
-    "outcomes,attempts,category,count",
-    [
-        ([api_error(503), api_error(503)], 2, "provider_unavailable", 2),
-        ([api_error(503)], 1, "provider_unavailable", 1),
-        ([api_error(429)], 2, "rate_limit", 1),
-        ([api_error(401)], 2, "authentication", 1),
-        ([api_error(403)], 2, "authorization", 1),
-        ([sdk_response("bad json")], 2, "structured_output_invalid", 1),
-        ([TimeoutError()], 2, "timeout", 1),
-    ],
-)
-def test_provider_failure_does_not_fake_downstream(outcomes, attempts, category, count):
-    client, _, supervisor, router, orchestrator, context = provider_pipeline(
-        outcomes, attempts=attempts
-    )
-    output = orchestrator.run(question="Doanh thu TEST 2030", context=context)
-    assert (
-        output.status == "failed"
-        and client.models.generate_content.call_count == output.usage.calls == count
-    )
-    assert output.planner_result.llm.error.category == category
-    assert category in output.stop_conditions
-    assert output.usage.calls_with_unknown_tokens == count and output.usage.total_tokens is None
-    supervisor.execute.assert_not_called()
-    router.route.assert_not_called()
-    assert not output.candidates and not output.specialist_executions
-    assert all(
-        t.outcome == "skipped"
-        for t in output.trace
-        if t.stage in {"supervisor", "routing", "specialist_execution", "candidate_aggregation"}
-    )
-
-
-def test_503_retry_obeys_total_timeout(monkeypatch):
-    from vietnamese_financial_multi_agent.core import llm_gateway
-
-    elapsed = [0.0]
-    monkeypatch.setattr(llm_gateway, "perf_counter", lambda: elapsed[0])
-    client, instance, _, _, _, context = provider_pipeline([], timeout=1)
-
-    def expired(**kwargs):
-        elapsed[0] = 2.0
-        raise api_error(503)
-
-    client.models.generate_content.side_effect = expired
-    result = instance.plan("Doanh thu TEST 2030", context)
-    assert result.status == "failed" and result.llm.calls == 1
-    assert client.models.generate_content.call_count == 1

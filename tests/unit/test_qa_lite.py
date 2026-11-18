@@ -15,7 +15,6 @@ from vietnamese_financial_multi_agent.outputs.qa_lite import (
 )
 from vietnamese_financial_multi_agent.verification.ledger import build_verified_claim
 
-from .test_financial_qa_pipeline import setup
 from .test_verified_claim_ledger import history_for
 
 
@@ -29,7 +28,6 @@ def admitted():
         document_id=i.document_id,
         snapshot_id=i.snapshot_id,
         period=i.period,
-        m7_lite=True,
     )
     return request, entry
 
@@ -175,7 +173,15 @@ def test_known_errors_fallback_and_supported_paraphrase_is_released(admitted, va
         segment["text"] = "Theo số liệu được xác minh, " + entry.content.replace(" là ", " đạt ")
     body = dict(segments=[segment], gaps=[]) if variant != "invalid_json" else {"wrong": True}
     gateway, calls = gateway_for(body, malformed=variant == "invalid_json")
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert len(calls) == 1 and calls[0].output_spec.schema_ref is None
     assert fields["used_verified_claim_ids"] == [key]
     if variant == "paraphrase":
@@ -199,7 +205,15 @@ def test_known_errors_fallback_and_supported_paraphrase_is_released(admitted, va
 def test_provider_failure_has_c_gap_and_no_retry(admitted, error):
     request, entry = admitted
     gateway, calls = gateway_for(error=error)
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert len(calls) == 1 and trace["calls"] == 1
     assert {g["type"] for g in trace["gaps"]} == {"C"}
     assert fields["used_verified_claim_ids"] and fields["citations"]
@@ -229,7 +243,14 @@ def test_page_references_keep_exact_per_claim_source_bindings(admitted):
         citation.source.reference.source_pointer += f"/variant-{number}"
         e.decision.supporting_citations = [citation]
         e.accepted_claim.citations = [citation]
-    fields, trace = compose_lite(request, [entry, other])
+    fields, trace = compose_lite(
+        request,
+        [entry, other],
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry, other]},
+        ),
+    )
     assert len(fields["citations"]) == 1
     reference = fields["citations"][0]
     assert len(reference.source_citations) == 2
@@ -259,7 +280,15 @@ def test_valid_segment_survives_other_bad_segment_and_omission(admitted):
             gaps=[],
         )
     )
-    fields, trace = compose_lite(request, [entry, other], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry, other],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry, other]},
+        ),
+    )
     assert len(trace["rejected_segments"]) == 1
     assert trace["segments"][0] == dict(text=entry.content, claim_ids=[key])
     assert fields["used_verified_claim_ids"] == [key, "other-accepted"]
@@ -271,7 +300,15 @@ def test_selected_findings_are_preserved_when_model_omits_one(admitted):
     other.identity.verified_claim_id = "other-accepted"
     key = entry.identity.verified_claim_id
     gateway, _ = gateway_for(dict(segments=[dict(text=entry.content, claim_ids=[key])], gaps=[]))
-    fields, trace = compose_lite(request, [entry, other], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry, other],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry, other]},
+        ),
+    )
     assert fields["used_verified_claim_ids"] == [key, "other-accepted"]
     assert set(trace["selected_claims"]) == {key, "other-accepted"}
     assert trace["fallback"] and not trace["gaps"]
@@ -280,35 +317,27 @@ def test_selected_findings_are_preserved_when_model_omits_one(admitted):
 def test_empty_ledger_does_not_invent_sources_or_call_provider(admitted):
     request, _ = admitted
     gateway, calls = gateway_for({})
-    fields, trace = compose_lite(request, [], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in []},
+        ),
+    )
     assert not calls and not fields["citations"] and not fields["used_verified_claim_ids"]
     assert trace["gaps"][0]["type"] == "B"
-    _, missing_source = compose_lite(request, [], source_available=False)
-    assert missing_source["gaps"][0]["type"] == "A"
-
-
-def test_lite_fresh_cache_refresh_failure_and_legacy_compatibility(tmp_path):
-    service, request, repo, m5, result = setup(tmp_path)
-    legacy = service.run(request)
-    assert legacy.trace.answer_mode == "legacy" and not request.m7_lite
-    lite_request = request.model_copy(update={"m7_lite": True, "allow_gateway": False})
-    cached = service.run(lite_request)
-    assert cached.used_verified_claim_ids == legacy.used_verified_claim_ids
-    assert cached.trace.answer_mode == "lite" and cached.citations
-    assert cached.status == "completed_with_caveats"
-    before = repo._path().read_bytes()
-    result.status = "failed"
-    failed = service.run(
-        lite_request.model_copy(update={"force_refresh": True, "execution_mode": "deterministic"})
+    _, missing_source = compose_lite(
+        request,
+        [],
+        source_available=False,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in []},
+        ),
     )
-    assert failed.used_verified_claim_ids == cached.used_verified_claim_ids
-    assert repo._path().read_bytes() == before
-    assert any(g["type"] == "C" for g in failed.trace.m7_lite["gaps"])
-    # API wire round-trip keeps all existing fields and source locators.
-    assert type(failed).model_validate_json(failed.model_dump_json()) == failed
-    fresh_service, fresh_request, _, _, _ = setup(tmp_path / "fresh")
-    fresh = fresh_service.run(fresh_request.model_copy(update={"m7_lite": True}))
-    assert fresh.newly_accepted_claims == 1 and fresh.used_verified_claim_ids
+    assert missing_source["gaps"][0]["type"] == "A"
 
 
 def test_current_request_claims_survive_broad_question_but_keep_scope_checks(admitted):

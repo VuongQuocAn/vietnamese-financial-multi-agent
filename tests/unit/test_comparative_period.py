@@ -129,12 +129,18 @@ def test_m7_restores_omitted_accepted_comparison_without_new_verification():
     history = LiteVerificationRuntime(SnapshotCatalog(**data)).verify(batch)[0]
     entry = build_verified_claim(history)
     key = entry.identity.verified_claim_id
-    request = FinancialQARequest(
-        question="So sánh doanh thu hai năm", m7_lite=True, allow_gateway=True
-    )
+    request = FinancialQARequest(question="So sánh doanh thu hai năm", allow_gateway=True)
     omitted = "Biến động doanh thu đã được tính toán từ các kỳ được cung cấp."
     gateway, calls = gateway_for(dict(segments=[dict(text=omitted, claim_ids=[key])], gaps=[]))
-    fields, trace = compose_lite(request, [entry], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert len(calls) == 1
     assert trace["restored_calculation_claims"] == [key]
     assert trace["llm_segments_released"] == 1
@@ -143,5 +149,13 @@ def test_m7_restores_omitted_accepted_comparison_without_new_verification():
     assert all(c.bound_verified_claim_ids == [key] for c in fields["citations"])
     complete = _proof_text(entry)
     gateway, _ = gateway_for(dict(segments=[dict(text=complete, claim_ids=[key])], gaps=[]))
-    _, trace = compose_lite(request, [entry], gateway=gateway)
+    _, trace = compose_lite(
+        request,
+        [entry],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+        ),
+    )
     assert trace["restored_calculation_claims"] == []

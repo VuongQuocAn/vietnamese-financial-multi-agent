@@ -271,9 +271,6 @@ def live(output, cases, arms, retry_technical=False, tag=None):
                         FinancialQARequest(
                             question=questions[case],
                             **scope,
-                            m5_lite=True,
-                            m6_lite=True,
-                            m7_lite=True,
                             m5_graph=arm == "C",
                             force_refresh=True,
                             execution_mode="gemini",

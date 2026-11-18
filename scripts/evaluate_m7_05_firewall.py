@@ -442,7 +442,7 @@ def evaluate(root, output, oracle_path):
             "core.llm_gateway.SharedLLMGateway.generate",
             "tools.financial_calculator.FinancialCalculator.calculate_financial_metric",
             "tools.financial_retrieval.FinancialRetrievalTools.find_financial_facts",
-            "agents.orchestrator.FinancialMultiAgentOrchestrator.run",
+            "agents.lite_orchestrator.FinancialLiteOrchestrator.run",
         ):
             guards.enter_context(patch("vietnamese_financial_multi_agent." + target, forbid))
         for case in oracle["scenarios"]:

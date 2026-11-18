@@ -72,7 +72,6 @@ def python_case():
     )
     result["digest"] = digest(result)
     context = dict(
-        adaptive_coordinator=True,
         tasks={
             tid: dict(
                 role="profitability", requirement_ids=["G1"], depends_on=[], python_candidate=record
@@ -97,9 +96,7 @@ def python_case():
 
 def test_python_replay_goal_ledger_restart_and_m7(tmp_path):
     catalog, batch, context, worker = python_case()
-    runtime = LiteVerificationRuntime(
-        catalog, gateway_with_goals(["G1"]), integration_v2=True, python_executor=worker
-    )
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals(["G1"]), python_executor=worker)
     history = runtime.verify(batch, integration_context=context)[0]
     assert history.outcome.final.decision == "ACCEPT"
     assert (
@@ -153,9 +150,7 @@ def test_python_wrong_code_operand_replay_and_unavailable_never_admitted(tmp_pat
             result["digest"] = digest({k: v for k, v in result.items() if k != "digest"})
             batch.claims[0].python_execution.execution_sha256 = digest(record)
         gateway = gateway_with_goals(["G1"])
-        runtime = LiteVerificationRuntime(
-            catalog, gateway, integration_v2=True, python_executor=worker
-        )
+        runtime = LiteVerificationRuntime(catalog, gateway, python_executor=worker)
         history = runtime.verify(
             batch, integration_context=local_context if mode == "unit" else context
         )[0]
@@ -183,13 +178,11 @@ def test_replay_success_does_not_prove_financial_formula_or_goal(tmp_path):
         return response
 
     gateway.generate.side_effect = reject_formula
-    runtime = LiteVerificationRuntime(catalog, gateway, integration_v2=True, python_executor=worker)
+    runtime = LiteVerificationRuntime(catalog, gateway, python_executor=worker)
     history = runtime.verify(batch, integration_context=context)[0]
     assert history.proof.python_replay and history.outcome.final.decision == "ABSTAIN"
     assert VerifiedClaimRepository(tmp_path / "formula").admit(history).status == "rejected"
-    runtime = LiteVerificationRuntime(
-        catalog, gateway_with_goals([]), integration_v2=True, python_executor=worker
-    )
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals([]), python_executor=worker)
     history = runtime.verify(batch, integration_context=context)[0]
     assert history.outcome.final.decision == "ACCEPT"  # truth and goal coverage stay separate
     assert VerifiedClaimRepository(tmp_path / "goal").admit(history).status == "rejected"

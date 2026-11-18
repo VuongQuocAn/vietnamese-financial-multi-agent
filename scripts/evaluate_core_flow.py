@@ -156,9 +156,6 @@ def main():
         request = FinancialQARequest(
             question=question,
             **scope,
-            m5_lite=True,
-            m6_lite=True,
-            m7_lite=True,
             force_refresh=True,
             execution_mode="gemini" if args.live else "deterministic",
             allow_gateway=args.live,

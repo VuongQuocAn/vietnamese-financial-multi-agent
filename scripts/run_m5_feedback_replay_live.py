@@ -84,9 +84,7 @@ def replay(root, output, source):
 
     class ReplayPipeline(FinancialQAPipeline):
         def _m5(self, request, *, catalog=None, **_):
-            engine = FinancialLiteOrchestrator(
-                catalog, self.gateway, integration_v2=True, adaptive_coordinator=True
-            )
+            engine = FinancialLiteOrchestrator(catalog, self.gateway)
             workspace = engine.workspace = IntegrationWorkspace(
                 [IntegrationRequirement.model_validate(r) for r in context["requirements"]],
                 question=original.question,

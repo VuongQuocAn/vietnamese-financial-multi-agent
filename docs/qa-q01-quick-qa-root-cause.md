@@ -3,7 +3,7 @@
 Ngày 05/11/2026 (Asia/Bangkok). **DONE — APPROVED theo quyết định nghiệm thu**,
 chấp nhận implementation `6b245b53b4a17d94279717a214428b3638bb52a6`; không phải M8,
 benchmark chính thức hoặc nghiệm thu chất lượng tài chính toàn hệ thống.
-[Task](../planning/tasks/QA/QA-Q01.md), [QA-only runner](../scripts/run_qa_q01.py).
+[Task](../planning/tasks/QA/QA-Q01.md), [QA-only runner](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/scripts/run_qa_q01.py).
 
 ## A. Executive Summary
 

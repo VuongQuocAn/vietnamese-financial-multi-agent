@@ -5,7 +5,6 @@ from copy import deepcopy
 from types import SimpleNamespace
 
 import httpx
-from vietnamese_financial_multi_agent.agents.qa_planning import fallback_fusion_plan
 from vietnamese_financial_multi_agent.core.llm_contracts import (
     RequestConstraints,
     parse_llm_request,
@@ -91,19 +90,6 @@ def test_thinking_budget_clamps_deadline_and_fallback_keeps_dependency(monkeypat
         adapter.close()
     assert gateway.generate(req).status == "error" and len(calls) == 1
 
-    question = (
-        "Cuối năm 2030, phải thu ngắn hạn của khách hàng hay hàng tồn kho có số dư lớn hơn? "
-        "Trong thuyết minh của khoản mục lớn hơn đó, đối tượng nêu tên riêng lớn nhất là ai?"
-    )
-    plan = fallback_fusion_plan(question)
-    financial = [r for r in plan.requirements if r.lane == "financial"]
-    document = [r for r in plan.requirements if r.lane == "document"]
-    assert len(financial) == len(document) == 1
-    assert financial[0].original_span in question
-    assert financial[0].execution_question == financial[0].original_span
-    assert document[0].dependencies == [financial[0].requirement_id]
-    assert document[0].document_requirement is not None
-
 
 def test_semantic_batch_split_preserves_full_closure_digest_and_ledger(monkeypatch, tmp_path):
     import vietnamese_financial_multi_agent.verification.lite_runtime as module
@@ -124,7 +110,7 @@ def test_semantic_batch_split_preserves_full_closure_digest_and_ledger(monkeypat
 
     monkeypatch.setattr(module, "semantic_payload", payload)
     gateway = gateway_with_goals(["G1"])
-    runtime = LiteVerificationRuntime(catalog, gateway, integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway)
     histories = runtime.verify(batch, integration_context=deepcopy(context))
     assert gateway.generate.call_count == 2
     assert len(runtime.provider_metadata) == 2
@@ -147,7 +133,7 @@ def test_semantic_batch_split_preserves_full_closure_digest_and_ledger(monkeypat
         module, "semantic_payload", lambda *args: dict(original(*args), retained="x" * 49000)
     )
     blocked_gateway = gateway_with_goals(["G1"])
-    blocked = LiteVerificationRuntime(catalog, blocked_gateway, integration_v2=True)
+    blocked = LiteVerificationRuntime(catalog, blocked_gateway)
     blocked_histories = blocked.verify(batch, integration_context=context)
     assert blocked_gateway.generate.call_count == 0
     assert all(h.proof.semantic_error == "semantic_payload_limit" for h in blocked_histories)

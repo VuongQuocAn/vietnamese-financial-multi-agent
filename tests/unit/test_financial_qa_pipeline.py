@@ -3,7 +3,6 @@
 from unittest.mock import Mock
 
 import pytest
-from vietnamese_financial_multi_agent.agents import PlannerContext
 from vietnamese_financial_multi_agent.agents.orchestration_contracts import CandidateConflict
 from vietnamese_financial_multi_agent.api.financial_qa_pipeline import FinancialQAPipeline
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
@@ -14,7 +13,7 @@ from vietnamese_financial_multi_agent.tools import QADocument
 from vietnamese_financial_multi_agent.verification import VerifiedClaimRepository
 
 from .test_m4_execution import fixture
-from .test_orchestrator import inputs, metric_specialist, pipeline
+from .test_orchestrator import pipeline
 from .test_verified_claim_ledger import history_for
 
 QUESTION = "Biên lợi nhuận gộp TEST năm 2030?"
@@ -22,9 +21,8 @@ QUESTION = "Biên lợi nhuận gộp TEST năm 2030?"
 
 def setup(tmp_path):
     data = fixture()
-    p, s = inputs()
-    m5, *_ = pipeline(p, s, {"profitability": metric_specialist([])})
-    result = m5.run(question=QUESTION, context=PlannerContext(mode="deterministic"))
+    m5, context = pipeline()
+    result = m5.run(question=QUESTION, context=context)
     document = QADocument(
         document_id=data["descriptors"][0].document_id,
         company_id=data["facts"][0].company_id,

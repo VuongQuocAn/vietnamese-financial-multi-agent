@@ -128,7 +128,7 @@ def test_selected_document_period_and_single_verified_followup(tmp_path):
     state = conversation.history(state.conversation_id)
     followup = "Vậy tỷ lệ đó có chứng minh doanh nghiệp đang mất khả năng thanh toán không?"
     bound, _, inherited, _, _, clarification = conversation._resolve(
-        state, FinancialQARequest(question=followup, m5_lite=True, m7_lite=True)
+        state, FinancialQARequest(question=followup)
     )
     assert clarification is None and followup in bound.question
     assert "verified_claim_reference" in inherited

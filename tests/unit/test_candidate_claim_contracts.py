@@ -5,7 +5,7 @@ from typing import get_args
 
 import pytest
 from pydantic import ValidationError
-from vietnamese_financial_multi_agent.agents import PlannerContext, aggregate_candidates
+from vietnamese_financial_multi_agent.agents import aggregate_candidates
 from vietnamese_financial_multi_agent.agents.specialist_common import SpecialistCandidate
 from vietnamese_financial_multi_agent.verification import (
     CandidateClaim,
@@ -16,14 +16,13 @@ from vietnamese_financial_multi_agent.verification import (
     to_verification_input,
 )
 
-from .test_orchestrator import inputs, metric_specialist, pipeline
+from .test_orchestrator import pipeline
 
 
 @pytest.fixture(scope="module")
 def original_result():
-    p, s = inputs()
-    instance, _, _, _ = pipeline(p, s, {"profitability": metric_specialist([])})
-    return instance.run(question=p.question, context=PlannerContext(mode="deterministic"))
+    instance, context = pipeline()
+    return instance.run(question="Synthetic metric", context=context)
 
 
 def test_metric_payload_roundtrip_pending_and_no_shared_mutation(original_result):
@@ -33,7 +32,7 @@ def test_metric_payload_roundtrip_pending_and_no_shared_mutation(original_result
     assert batch == to_verification_input(source)
     assert VerificationInput.model_validate_json(batch.model_dump_json()) == batch
     assert not batch.issues
-    assert batch.source_plan_id == source.planner_result.plan.plan_id
+    assert batch.question == source.question
     claim, original = batch.claims[0], source.candidates[0]
     assert claim.candidate_id == claim.provenance.m5_candidate_id == original.candidate_id
     assert claim.model_dump(include=set(SpecialistCandidate.model_fields)) == original.model_dump(
@@ -70,6 +69,7 @@ def test_partial_multiple_origins_with_local_ids_and_conflicts_preserved(origina
     competing = first.model_copy(deep=True)
     competing.execution_id = "competing-execution"
     competing.result.candidates[0].content = "Synthetic conflicting proposition"
+    competing.result.supporting_evidence[0].value = "999"
     source.specialist_executions = [first, duplicate, competing]
     source.candidates, source.conflicts = aggregate_candidates(source.specialist_executions)
     source.status, source.missing_evidence = "partial", ["missing-CFO"]

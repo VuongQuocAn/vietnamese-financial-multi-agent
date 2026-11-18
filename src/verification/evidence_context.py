@@ -24,7 +24,6 @@ class EvidenceContextBuilder:
                 ref,
                 i,
                 document=True,
-                selection=claim.requirement.kind == "table_selection",
                 literal=claim.requirement.kind == "exact_text",
             )
             for i, ref in enumerate(claim.references)
@@ -52,7 +51,7 @@ class EvidenceContextBuilder:
             )
         return contexts
 
-    def _resolve(self, ref, index, *, document=False, selection=False, literal=False):
+    def _resolve(self, ref, index, *, document=False, literal=False):
         if ref.kind in {"metric", "lineage"}:
             result = self._tools.get_metric_evidence_lineage(
                 GetMetricEvidenceLineageRequest(metric_id=ref.record_id)
@@ -96,10 +95,8 @@ class EvidenceContextBuilder:
         if document and isinstance(record, (TextEvidence, TableEvidence)):
             from ..evidence.document_claim_support import document_citations, document_projection
 
-            context.content = document_projection(record, selection=selection, literal=literal)
-            context.citations = document_citations(
-                record, context.citations, selection=selection, literal=literal
-            )
+            context.content = document_projection(record, literal=literal)
+            context.citations = document_citations(record, context.citations, literal=literal)
             if context.content:
                 context.content["request_id"] = record.source_metadata.get("request_id")
                 if record.snapshot_id.startswith("correction:"):

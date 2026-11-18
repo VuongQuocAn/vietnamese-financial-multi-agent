@@ -97,7 +97,7 @@ def test_partial_verdict_repair_preserves_verified_proof_and_blocks_unverified(t
         return response
 
     gateway.generate.side_effect = partial
-    runtime = LiteVerificationRuntime(catalog, gateway, integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway)
     histories = runtime.verify(batch, integration_context=context)
     assert len(sent) == 2 and sent[1] == ["second"]
     assert histories[0].outcome.final.decision == "ACCEPT"
@@ -139,7 +139,6 @@ def test_partial_verdict_repair_preserves_verified_proof_and_blocks_unverified(t
     handles = LiteVerificationRuntime(
         catalog,
         handle_gateway,
-        integration_v2=True,
         model=ModelIdentity(provider="qwen", model="test-model"),
     )
     checked = handles.verify(batch, integration_context=context)

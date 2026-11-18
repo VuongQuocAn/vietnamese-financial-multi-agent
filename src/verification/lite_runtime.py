@@ -20,9 +20,7 @@ from ..core.llm_contracts import (
     parse_json_output,
 )
 from ..core.prompt_payload import compact_prompt
-from ..outputs.qa_composer import _targets
 from ..tools.python_execution import PythonExecutor
-from ..tools.question_understanding import normalize
 from .contracts import VerificationInput
 from .decision_contracts import (
     LiteDecisionTrace,
@@ -45,7 +43,7 @@ from .lite_contracts import (
     LiteVerificationHistoryV2,
     SemanticVerdict,
 )
-from .numeric import NumericAssertion, extract_assertion, fold
+from .numeric import NumericAssertion, extract_assertion
 from .validation_contracts import ClaimValidationResult, ValidationResult, verification_input_digest
 from .validators import DeterministicFinancialValidator
 
@@ -282,15 +280,14 @@ def decide(proof):
 
 
 class LiteFinancialValidator(DeterministicFinancialValidator):
-    def __init__(self, catalog, *, integration_v2=False):
+    def __init__(self, catalog):
         super().__init__(catalog)
-        self.integration_v2 = integration_v2
 
     def _assertion(self, claim, statement):
         return self._typed_assertion(claim, statement) or super()._assertion(claim, statement)
 
     def _typed_assertion(self, claim, statement):
-        if self.integration_v2 and claim.kind == "fact" and len(claim.supporting_evidence) == 1:
+        if claim.kind == "fact" and len(claim.supporting_evidence) == 1:
             source = claim.supporting_evidence[0]
             # Unknown prose is not a typed assertion. A source label outside the
             # existing grammar must be the exact independently stored row label.
@@ -399,11 +396,10 @@ class LiteFinancialValidator(DeterministicFinancialValidator):
 
 
 class LiteVerificationRuntime:
-    def __init__(
-        self, catalog, gateway=None, *, model=None, integration_v2=False, python_executor=None
-    ):
-        self.validator = LiteFinancialValidator(catalog, integration_v2=integration_v2)
-        self.integration_v2 = integration_v2
+    def __init__(self, catalog, gateway=None, *, model=None, python_executor=None):
+        self.validator = LiteFinancialValidator(
+            catalog,
+        )
         self.integration_context = {}
         self.requirement_support = {}
         self.builder = EvidenceContextBuilder(catalog)
@@ -429,29 +425,13 @@ class LiteVerificationRuntime:
             for cid, ids in self.integration_context.get("candidate_requirements", {}).items()
             if dynamic_goals.intersection(ids)
         }
-        # A model's target_id is not proof that a true scalar answers its text.
-        # Exact public aliases can bind deterministically; other fact goals need
-        # the existing semantic batch, preserving factual ACCEPT independently.
-        requirements = {
-            r["requirement_id"]: r for r in self.integration_context.get("requirements", [])
-        }
-        for claim in batch.claims:
-            if claim.kind != "fact":
-                continue
-            for rid in self.integration_context.get("candidate_requirements", {}).get(
-                claim.candidate_id, []
-            ):
-                requirement = requirements.get(rid, {})
-                text = normalize(requirement.get("text", ""))
-                explicit = {item for kind, item in _targets(text) if kind == "fact"}
-                if not any(
-                    source.canonical_item_id in explicit
-                    or bool(normalize(source.label))
-                    and normalize(source.label) in text
-                    for source in claim.supporting_evidence
-                    if source.kind == "fact"
-                ):
-                    semantic_bindings.add(claim.candidate_id)
+        # M6 resolves whether each fact answers its assigned goal text.
+        semantic_bindings.update(
+            claim.candidate_id
+            for claim in batch.claims
+            if claim.kind == "fact"
+            and self.integration_context.get("candidate_requirements", {}).get(claim.candidate_id)
+        )
         batch = VerificationInput.model_validate_json(batch.model_dump_json())
         start = perf_counter()
         proofs, pending = [], []
@@ -461,12 +441,8 @@ class LiteVerificationRuntime:
             if sum(x.candidate_id == c.candidate_id for x in batch.claims) > 1
         }
         for claim in batch.claims:
-            local = (
-                batch.model_copy(update={"claims": []}).model_copy(
-                    deep=True, update={"claims": [claim]}
-                )
-                if self.integration_v2
-                else batch.model_copy(deep=True, update={"claims": [claim]})
+            local = batch.model_copy(update={"claims": []}).model_copy(
+                deep=True, update={"claims": [claim]}
             )
             if len({c.period[:4] for c in batch.claims}) > 1:
                 # Preserve the multi-period guard's meaning when validating one
@@ -490,22 +466,9 @@ class LiteVerificationRuntime:
                 )
                 contexts = []
             checked = validation.claims[0]
-            if self.integration_v2:
-                self.validator._check(checked, "integration_v2", "pass", "typed_source_profile")
-                if self.validator._typed_assertion(claim, claim.content):
-                    self.validator._check(
-                        checked, "typed_assertion", "pass", "exact_typed_rendering"
-                    )
-                if re.search(
-                    r"\b(?:khong co|khong du|chua co|thieu) (?:du |day du )?(?:thong tin|du lieu|so lieu|bang chung)\b",
-                    fold(claim.content),
-                ):
-                    self.validator._check(
-                        checked,
-                        "absence_scope",
-                        "undetermined",
-                        "retrieval_miss_is_not_corpus_absence",
-                    )
+            self.validator._check(checked, "integration_v2", "pass", "typed_source_profile")
+            if self.validator._typed_assertion(claim, claim.content):
+                self.validator._check(checked, "typed_assertion", "pass", "exact_typed_rendering")
             # Bind canonical source availability independently, even when values match.
             valid = bool(contexts) and all(c.available for c in contexts)
             valid = valid and claim.candidate_id not in duplicate_ids
@@ -522,11 +485,7 @@ class LiteVerificationRuntime:
                     self.validator._check(
                         checked, "lite_scope", "undetermined", "requested_scope_unresolved"
                     )
-            context = (
-                goal_context(self.integration_context, claim)
-                if self.integration_v2 and self.integration_context.get("adaptive_coordinator")
-                else None
-            )
+            context = goal_context(self.integration_context, claim)
             if context is not None:
                 for check, status, reason, tid in replay_obligations(
                     self.validator._catalog, local, context
@@ -605,19 +564,17 @@ class LiteVerificationRuntime:
                 needs_binding = False
             if context is None:
                 needs_binding = (
-                    self.integration_v2
-                    and (
-                        claim.kind == "fact"
-                        and claim.candidate_id in semantic_bindings
-                        or claim.kind == "supported_interpretation"
+                    claim.kind == "fact"
+                    and claim.candidate_id in semantic_bindings
+                    or (
+                        claim.kind == "supported_interpretation"
                         and (
                             not (claim.reasoning and claim.reasoning.claim_type == "derived_fact")
                             or claim.candidate_id in semantic_bindings
                         )
                     )
-                    and self.integration_context.get("candidate_requirements", {}).get(
-                        claim.candidate_id
-                    )
+                ) and self.integration_context.get("candidate_requirements", {}).get(
+                    claim.candidate_id
                 )
             if state == "SEMANTIC" or state == "ACCEPT" and needs_binding:
                 pending.append(proof)
@@ -670,38 +627,16 @@ class LiteVerificationRuntime:
                 for h in histories
             ],
         )
-        if self.integration_v2:
-            self.summary["supported_requirements"] = {
-                h.outcome.final.candidate_id: supported_goals(h.proof, h.outcome.final)
-                for h in histories
-                if h.outcome.final.decision == "ACCEPT"
-            }
-            self.summary["feedback"] = [
-                feedback(h.proof, h.outcome.final)
-                for h in histories
-                if isinstance(h.proof, LiteProofV2)
-            ]
-            if not self.integration_context.get("adaptive_coordinator"):
-                proposed = self.integration_context.get("candidate_requirements", {})
-                self.summary["supported_requirements"] = {
-                    h.outcome.final.candidate_id: (
-                        self.requirement_support.get(h.outcome.final.candidate_id, [])
-                        if h.proof.semantic is not None and h.proof.semantic.verdict == "SUPPORTED"
-                        else []
-                        if h.outcome.final.candidate_id in semantic_bindings
-                        or h.outcome.final.original_claim.kind == "supported_interpretation"
-                        and not (
-                            h.outcome.final.original_claim.reasoning
-                            and h.outcome.final.original_claim.reasoning.claim_type
-                            == "derived_fact"
-                            and h.outcome.final.candidate_id not in semantic_bindings
-                        )
-                        else proposed.get(h.outcome.final.candidate_id, [])
-                    )
-                    for h in histories
-                    if h.outcome.final.decision == "ACCEPT"
-                }
-
+        self.summary["supported_requirements"] = {
+            h.outcome.final.candidate_id: supported_goals(h.proof, h.outcome.final)
+            for h in histories
+            if h.outcome.final.decision == "ACCEPT"
+        }
+        self.summary["feedback"] = [
+            feedback(h.proof, h.outcome.final)
+            for h in histories
+            if isinstance(h.proof, LiteProofV2)
+        ]
         return histories
 
     def _semantic(self, proofs, *, repair=False):
@@ -712,17 +647,12 @@ class LiteVerificationRuntime:
         ]
         # Exact request-local handles avoid asking the model to copy opaque
         # storage hashes. Canonical proof identity and digest remain unchanged.
-        wire_ids = {
-            row["claim_id"]: f"C{i + 1}"
-            if self.integration_v2 and self.model.provider == "qwen"
-            else row["claim_id"]
-            for i, row in enumerate(rows)
-        }
+        wire_ids = {row["claim_id"]: f"C{i + 1}" for i, row in enumerate(rows)}
         wire_rows = []
         for row, p in zip(rows, proofs, strict=True):
             wire = dict(row)
             wire["claim_id"] = wire_ids[row["claim_id"]]
-            if self.integration_v2 and not isinstance(p, LiteProofV2):
+            if not isinstance(p, LiteProofV2):
                 keys = self.integration_context.get("candidate_requirements", {}).get(
                     p.batch.claims[0].candidate_id, []
                 )
@@ -750,10 +680,10 @@ class LiteVerificationRuntime:
                 )
                 for e in p.batch.claims[0].supporting_evidence
             ]
-            wire_rows.append(compact_prompt(wire) if self.integration_v2 else wire)
+            wire_rows.append(compact_prompt(wire))
         payload = json.dumps(wire_rows, ensure_ascii=False, separators=(",", ":"))
-        if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
-            if self.integration_v2 and 1 < len(proofs) <= 32:
+        if len(payload) > 48000 or len(rows) > 32:
+            if 1 < len(proofs) <= 32:
                 # Lossless batches: every claim retains its complete source and
                 # dependency closure, digest and one verdict. The shared Gateway
                 # still bounds calls/time. Never truncate an oversized single row.
@@ -802,51 +732,50 @@ class LiteVerificationRuntime:
             output_spec=OutputSpec(format="json"),
             constraints=RequestConstraints(timeout_seconds=60),
         )
-        if self.integration_v2:
-            request.messages[0].content += (
-                " Nếu một row có shared_payload_objects, giải mọi object {shared_ref:P...} "
-                "bằng bảng đó, kể cả references lồng nhau, trước khi kiểm chứng. P chỉ là "
-                "wire reference giữ nguyên dữ liệu, không là evidence_id hay quyền ACCEPT. "
-            )
-            request.messages[0].content = request.messages[0].content.replace(
-                '"reason":"..."}',
-                '"reason":"...","supported_requirement_ids":[]}',
-            )
-            request.messages[0].content += (
-                " python_execution chứa code/computation/constants/operands và output đã replay "
-                "trong Docker; replay chỉ chứng minh toán tái lập, KHÔNG chứng minh công thức "
-                "tài chính đúng. Phải đọc code, kiểm từng operand/cột/kỳ/scale, công thức, "
-                "constants, đơn vị đầu ra và nghĩa kết quả với câu hỏi gốc/local goal. "
-                "Bác code thực hiện công thức khác, kể cả computation prose tự khai đúng. "
-                "Không coi outputs label/objective là authority. Nếu cần selection/domain/join "
-                "mà evidence_obligations chưa đủ thì INSUFFICIENT. "
-                " Kiểm chứng riêng từng statement, không đòi nó giải toàn câu hỏi. "
-                "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
-                "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "
-                "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
-                "Local requirement cũng phải đúng ý câu hỏi gốc; không bind một chỉ tiêu "
-                "khác mà Supervisor tự thêm/thay thế dù số đó có nguồn chính xác. "
-                "Field supported_requirement_ids bắt buộc trong mọi verdict, dùng đúng IDs "
-                "từ local_requirements, không dùng IDs claim/evidence hoặc tự tạo ID. "
-                " Thêm issues:[{check,reason_code,input_refs}] khi thiếu/sai, check chỉ dùng "
-                "source|period|selection|entity_join|formula|goal_support|semantic_conclusion. "
-                "input_refs chỉ dùng evidence_id trong payload; reason_code ngắn dạng snake_case. "
-                "evidence_obligations là record selection/join đã replay nguồn và phép chọn; "
-                "kiểm item/domain/kỳ/comparator/join có đúng câu hỏi gốc và local goal không. "
-                "Scalar của năm được chọn chỉ hỗ trợ selection goal khi đúng toàn domain, comparator "
-                "và ties; không đòi statement scalar lặp chữ cao/thấp nhất khi record đã chứng minh. "
-                "Calculation downstream phải dùng đúng các rows được chọn/join và đúng công thức goal. "
-                "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
-                "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
-                " answer_goal=analysis/synthesis/limitation yêu cầu nhận xét chứ không chỉ số "
-                "hoặc định nghĩa công thức. Chỉ bind synthesis khi statement liên kết tất cả "
-                "các chỉ tiêu yêu cầu và có giới hạn cụ thể khi được hỏi; caveat nguồn chung "
-                "không thay nhận xét. Không bind giới hạn nếu câu không thể hiện giới hạn đó."
-                " Với dynamic_calculation, so định nghĩa/phép toán trong text yêu cầu với "
-                "operand_bindings và calculations. Statement do backend viết biểu thức có thể "
-                "đáp ứng tên chỉ tiêu khi biểu thức đúng định nghĩa được hỏi; không đòi khớp "
-                "nguyên văn tên gọi. Không bind chỉ vì cùng đơn vị hoặc cùng giá trị."
-            )
+        request.messages[0].content += (
+            " Nếu một row có shared_payload_objects, giải mọi object {shared_ref:P...} "
+            "bằng bảng đó, kể cả references lồng nhau, trước khi kiểm chứng. P chỉ là "
+            "wire reference giữ nguyên dữ liệu, không là evidence_id hay quyền ACCEPT. "
+        )
+        request.messages[0].content = request.messages[0].content.replace(
+            '"reason":"..."}',
+            '"reason":"...","supported_requirement_ids":[]}',
+        )
+        request.messages[0].content += (
+            " python_execution chứa code/computation/constants/operands và output đã replay "
+            "trong Docker; replay chỉ chứng minh toán tái lập, KHÔNG chứng minh công thức "
+            "tài chính đúng. Phải đọc code, kiểm từng operand/cột/kỳ/scale, công thức, "
+            "constants, đơn vị đầu ra và nghĩa kết quả với câu hỏi gốc/local goal. "
+            "Bác code thực hiện công thức khác, kể cả computation prose tự khai đúng. "
+            "Không coi outputs label/objective là authority. Nếu cần selection/domain/join "
+            "mà evidence_obligations chưa đủ thì INSUFFICIENT. "
+            " Kiểm chứng riêng từng statement, không đòi nó giải toàn câu hỏi. "
+            "Nếu claim đúng nhưng không đáp ứng local_requirements vẫn SUPPORTED, "
+            "thêm supported_requirement_ids:[] vào verdict. Chỉ liệt kê requirement ID "
+            "khi nội dung claim đáp ứng đúng mục tiêu/đơn vị/ý nghĩa của nó. "
+            "Local requirement cũng phải đúng ý câu hỏi gốc; không bind một chỉ tiêu "
+            "khác mà Supervisor tự thêm/thay thế dù số đó có nguồn chính xác. "
+            "Field supported_requirement_ids bắt buộc trong mọi verdict, dùng đúng IDs "
+            "từ local_requirements, không dùng IDs claim/evidence hoặc tự tạo ID. "
+            " Thêm issues:[{check,reason_code,input_refs}] khi thiếu/sai, check chỉ dùng "
+            "source|period|selection|entity_join|formula|goal_support|semantic_conclusion. "
+            "input_refs chỉ dùng evidence_id trong payload; reason_code ngắn dạng snake_case. "
+            "evidence_obligations là record selection/join đã replay nguồn và phép chọn; "
+            "kiểm item/domain/kỳ/comparator/join có đúng câu hỏi gốc và local goal không. "
+            "Scalar của năm được chọn chỉ hỗ trợ selection goal khi đúng toàn domain, comparator "
+            "và ties; không đòi statement scalar lặp chữ cao/thấp nhất khi record đã chứng minh. "
+            "Calculation downstream phải dùng đúng các rows được chọn/join và đúng công thức goal. "
+            "Thiếu thông tin của nhánh khác không bác claim đúng của nhánh này. "
+            "Retrieval miss không chứng minh toàn corpus thiếu dữ liệu."
+            " answer_goal=analysis/synthesis/limitation yêu cầu nhận xét chứ không chỉ số "
+            "hoặc định nghĩa công thức. Chỉ bind synthesis khi statement liên kết tất cả "
+            "các chỉ tiêu yêu cầu và có giới hạn cụ thể khi được hỏi; caveat nguồn chung "
+            "không thay nhận xét. Không bind giới hạn nếu câu không thể hiện giới hạn đó."
+            " Với dynamic_calculation, so định nghĩa/phép toán trong text yêu cầu với "
+            "operand_bindings và calculations. Statement do backend viết biểu thức có thể "
+            "đáp ứng tên chỉ tiêu khi biểu thức đúng định nghĩa được hỏi; không đòi khớp "
+            "nguyên văn tên gọi. Không bind chỉ vì cùng đơn vị hoặc cùng giá trị."
+        )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
         if any(original != handle for original, handle in wire_ids.items()):
             request.messages[0].content += (
@@ -874,7 +803,7 @@ class LiteVerificationRuntime:
                 latency_ms=(perf_counter() - start) * 1000,
             )
             raw = semantic_output(response)
-            can_repair = self.integration_v2 and response.status in {"success", "malformed"}
+            can_repair = response.status in {"success", "malformed"}
             if raw is not None:
                 if response.status != "success":
                     # Transport remains malformed in provider traces. This stage
@@ -918,15 +847,14 @@ class LiteVerificationRuntime:
                                     raise ValueError("semantic_unknown_binding_or_input")
                                 verdicts[cid] = verdict
                             else:
-                                if self.integration_v2:
-                                    supported = wire.pop("supported_requirement_ids", [])
-                                    allowed = self.integration_context.get(
-                                        "candidate_requirements", {}
-                                    ).get(cid, [])
-                                    if isinstance(supported, list) and all(
-                                        key in allowed for key in supported
-                                    ):
-                                        self.requirement_support[cid] = supported
+                                supported = wire.pop("supported_requirement_ids", [])
+                                allowed = self.integration_context.get(
+                                    "candidate_requirements", {}
+                                ).get(cid, [])
+                                if isinstance(supported, list) and all(
+                                    key in allowed for key in supported
+                                ):
+                                    self.requirement_support[cid] = supported
                                 verdicts[cid] = SemanticVerdict.model_validate(wire)
                         except ValueError:
                             pass

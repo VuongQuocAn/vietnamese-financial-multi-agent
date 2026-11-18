@@ -107,7 +107,6 @@ def main():
                 model=configured.model,
                 execution_mode="gemini",
                 allow_gateway=True,
-                m7_lite=True,
                 max_provider_calls=1,
             )
             fields, trace = compose_lite(

@@ -36,7 +36,7 @@ from .orchestration_contracts import (
     StageExecution,
 )
 from .orchestration_projection import build_specialist_context
-from .orchestrator import FinancialMultiAgentOrchestrator, aggregate_candidates
+from .orchestrator import aggregate_candidates
 from .planner_contracts import (
     PlannerContext,
     PlannerLLMMetadata,
@@ -71,7 +71,6 @@ __all__ = [
     "CandidateConflict",
     "CandidateOrigin",
     "EvidenceProjection",
-    "FinancialMultiAgentOrchestrator",
     "GeminiUsageSummary",
     "OrchestrationError",
     "OrchestrationResult",

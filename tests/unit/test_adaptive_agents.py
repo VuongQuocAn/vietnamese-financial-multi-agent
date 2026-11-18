@@ -1,21 +1,13 @@
 """Focused synthetic controls; live research evidence is recorded separately."""
 
-from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from vietnamese_financial_multi_agent.agents.adaptive_controller import AdaptiveFinancialController
 from vietnamese_financial_multi_agent.agents.planner_contracts import (
     PlannerContext,
     PlannerProposal,
-    SpecialistAssignment,
 )
 from vietnamese_financial_multi_agent.core.request_gateway import RequestGateway
-from vietnamese_financial_multi_agent.verification.adaptive_judge import (
-    AdaptiveJudge,
-    JudgeFeedback,
-    JudgeIssue,
-)
 
 from .test_financial_qa import gateway_for
 from .test_llm_gateway import request
@@ -55,60 +47,6 @@ def test_auto_planner_preserves_dynamic_selection_and_tool_only(reasoning):
         assert routed.selected_roles == ["profitability"]
 
 
-@pytest.mark.parametrize("verdict", ["REVISION_NEEDED", "JUDGE_ERROR"])
-def test_feedback_reaches_planner_and_stops_at_two_revisions(monkeypatch, verdict):
-    import vietnamese_financial_multi_agent.agents.adaptive_controller as module
-
-    proposals = [
-        PlannerProposal(
-            intent="direct_fact",
-            reasoning_required=True,
-            assignments=[SpecialistAssignment(role="profitability", task=f"affected_task_{i}")],
-        )
-        for i in range(3)
-    ]
-    outputs = [
-        SimpleNamespace(
-            status="completed",
-            supervisor_result=None,
-            planner_result=SimpleNamespace(effective_proposal=p, model_dump=lambda **_: {}),
-            specialist_executions=[],
-        )
-        for p in proposals
-    ]
-    m5 = Mock()
-    m5.run.side_effect = outputs
-    monkeypatch.setattr(module, "to_verification_input", lambda _: None)
-    runtime = Mock(provider_metadata=[], stage_latency_ms={})
-    runtime.verify.return_value = []
-    monkeypatch.setattr(module, "VerificationRuntime", lambda *a, **kw: runtime)
-    feedback = JudgeFeedback(
-        assessment=verdict,
-        revision_required=verdict == "REVISION_NEEDED",
-        issues=[
-            JudgeIssue(
-                issue_type="MISSING_EVIDENCE",
-                explanation="Need CFO",
-                required_evidence=["b03.operating_cash_flow"],
-                suggested_action="REQUEST_ADDITIONAL_EVIDENCE",
-            )
-        ],
-    )
-    judge = Mock(latency_ms=1)
-    judge.assess.return_value = feedback
-    monkeypatch.setattr(module, "AdaptiveJudge", lambda *a: judge)
-    controller = AdaptiveFinancialController(m5, None, SimpleNamespace(exhausted=False), None)
-    controller.run("question", PlannerContext(mode="auto"))
-    count = 3 if verdict == "REVISION_NEEDED" else 1
-    assert len(controller.rounds) == judge.assess.call_count == m5.run.call_count == count
-    assert all(call.kwargs == {"allow_revision": False} for call in runtime.verify.call_args_list)
-    if count == 3:
-        context = m5.run.call_args_list[1].kwargs["context"]
-        assert context.feedback["issues"][0]["required_evidence"] == ["b03.operating_cash_flow"]
-        assert context.previous_proposal == proposals[0]
-        assert controller.rounds[-1]["stop_reason"] == "revision_or_request_budget_exhausted"
-
-
 def test_shared_gateway_budget_counts_only_actual_transport_calls():
     gateway = Mock()
     gateway.generate.side_effect = lambda req: __import__(
@@ -118,70 +56,6 @@ def test_shared_gateway_budget_counts_only_actual_transport_calls():
     assert budget.generate(request()).status == "success"
     assert budget.generate(request("second")).status == "error"
     assert gateway.generate.call_count == len(budget.events) == 1 and budget.exhausted
-
-
-def test_retrieved_inventory_survives_failed_specialist_and_repeated_feedback_stops(monkeypatch):
-    import vietnamese_financial_multi_agent.agents.adaptive_controller as module
-    from vietnamese_financial_multi_agent.verification.adaptive_judge import (
-        evidence_inventory,
-        ground_feedback,
-    )
-
-    from .test_adaptive_router import inputs
-
-    _, supervisor = inputs("Doanh thu TEST 2030")
-    proposals = [
-        PlannerProposal(
-            intent="direct_fact",
-            reasoning_required=True,
-            assignments=[SpecialistAssignment(role="profitability", task=f"repair-{i}")],
-        )
-        for i in range(3)
-    ]
-    outputs = [
-        SimpleNamespace(
-            status="partial",
-            supervisor_result=supervisor,
-            specialist_executions=[],
-            planner_result=SimpleNamespace(effective_proposal=p, model_dump=lambda **_: {}),
-        )
-        for p in proposals
-    ]
-    inventory = evidence_inventory(outputs[0], [])
-    assert inventory[0]["indicator"] == "b02.net_revenue"
-    feedback = JudgeFeedback(
-        assessment="REVISION_NEEDED",
-        revision_required=True,
-        issues=[
-            JudgeIssue(
-                issue_type="MISSING_EVIDENCE",
-                explanation="Need revenue",
-                required_evidence=["b02.net_revenue"],
-                suggested_action="REQUEST_ADDITIONAL_EVIDENCE",
-            )
-        ],
-    )
-    grounded = ground_feedback(feedback.model_copy(deep=True), inventory)
-    assert grounded.issues[0].issue_type == "EVIDENCE_NOT_USED"
-    assert grounded.issues[0].suggested_action == "REVISE_ANALYSIS"
-    missing = feedback.model_copy(deep=True)
-    missing.issues[0].required_evidence = ["b03.operating_cash_flow"]
-    assert ground_feedback(missing, inventory).issues[0].evidence_state == "NOT_RETRIEVED"
-    m5 = Mock()
-    m5.run.side_effect = outputs
-    monkeypatch.setattr(module, "to_verification_input", lambda _: None)
-    monkeypatch.setattr(
-        module,
-        "VerificationRuntime",
-        lambda *a, **kw: SimpleNamespace(
-            verify=lambda *a, **kw: [], provider_metadata=[], stage_latency_ms={}
-        ),
-    )
-    monkeypatch.setattr(AdaptiveJudge, "assess", lambda *a: feedback.model_copy(deep=True))
-    controller = AdaptiveFinancialController(m5, None, None, None)
-    controller.run("q", PlannerContext(mode="auto"))
-    assert m5.run.call_count == 2
-    assert controller.rounds[-1]["stop_reason"] == "retrieved_evidence_not_used_after_revision"
 
 
 def test_invalid_analysis_does_not_erase_numeric_claim_or_inflate_replan_context():
@@ -292,40 +166,6 @@ def test_analysis_numeric_proof_bridge_keeps_native_release_authority(tmp_path, 
         assert all(a.status == "consistent" for a in logic.claims[0].assertions)
 
 
-def test_judge_pass_cannot_promote_native_m6_rejection(monkeypatch):
-    import vietnamese_financial_multi_agent.agents.adaptive_controller as module
-
-    proposal = PlannerProposal(intent="direct_fact", reasoning_required=True)
-    output = SimpleNamespace(
-        status="completed",
-        supervisor_result=None,
-        specialist_executions=[],
-        planner_result=SimpleNamespace(effective_proposal=proposal, model_dump=lambda **_: {}),
-    )
-    rejected = SimpleNamespace(
-        outcome=SimpleNamespace(
-            parent_candidate_id="bad",
-            final=SimpleNamespace(
-                candidate_id="bad",
-                decision="INVESTIGATE",
-                original_claim=SimpleNamespace(kind="fact"),
-            ),
-        )
-    )
-    monkeypatch.setattr(module, "to_verification_input", lambda _: None)
-    monkeypatch.setattr(
-        module,
-        "VerificationRuntime",
-        lambda *a, **kw: SimpleNamespace(
-            verify=lambda *a, **kw: [rejected], provider_metadata=[], stage_latency_ms={}
-        ),
-    )
-    monkeypatch.setattr(AdaptiveJudge, "assess", lambda *a: JudgeFeedback(assessment="PASS"))
-    controller = AdaptiveFinancialController(Mock(run=lambda **_: output), None, None, None)
-    _, histories = controller.run("q", PlannerContext(mode="auto"))
-    assert histories == [rejected] and histories[0].outcome.final.decision == "INVESTIGATE"
-
-
 def test_analysis_premises_keep_decimal_source_and_semantic_gates():
     from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
     from vietnamese_financial_multi_agent.verification import DeterministicFinancialValidator
@@ -393,56 +233,3 @@ def test_same_filing_year_echo_and_periods_stay_bound():
         "2029",
         "2030",
     }
-
-
-def test_singleton_document_envelope_and_shared_revision_judge_limits():
-    from vietnamese_financial_multi_agent.agents.qa_planning import (
-        DocumentPlan,
-        plan_fusion,
-        structured_call,
-    )
-    from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
-    from vietnamese_financial_multi_agent.core.fake_llm_transport import FakeLLMTransport
-    from vietnamese_financial_multi_agent.core.llm_contracts import ModelIdentity
-
-    payload = dict(
-        requirements=[dict(target="source", label="source", kind="exact_text", query="source")],
-        selection_reason="lookup",
-    )
-    result = structured_call(
-        gateway_for([payload], []),
-        ModelIdentity(provider="gemini", model="test"),
-        DocumentPlan,
-        dict(question="source"),
-        "document-planner",
-    )
-    assert result.requirements[0].target == "source"
-    planned = plan_fusion(
-        gateway_for(
-            dict(
-                question="source",
-                requirements=[
-                    dict(
-                        requirement_id="relation",
-                        original_span="source",
-                        lane="relation",
-                        kind="source_context",
-                        dependencies=["fact"],
-                    ),
-                    dict(
-                        requirement_id="fact", original_span="source", lane="financial", kind="fact"
-                    ),
-                ],
-            ),
-            [],
-        ),
-        FinancialQARequest(question="source"),
-    )
-    assert [r.requirement_id for r in planned.requirements] == ["fact", "relation"]
-    gateway = Mock(generate=lambda req: FakeLLMTransport()(req))
-    budget = RequestGateway(gateway, max_calls=10, timeout_seconds=10)
-    assert budget.reserve_revision() and budget.reserve_revision() and not budget.reserve_revision()
-    for index in range(3):
-        assert budget.generate(request(f"adaptive-judge-{index}")).status == "success"
-    assert budget.generate(request("document-judge-fourth")).status == "error"
-    assert budget.judge_calls == len(budget.events) == 3

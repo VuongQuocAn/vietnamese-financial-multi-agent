@@ -16,9 +16,7 @@ from ..evidence.search import (
 from .document_topics import source_topics
 from .planner_contracts import PlannerOperation
 
-DocumentKind = Literal[
-    "exact_text", "entity_role", "table_labels", "source_excerpt", "table_selection"
-]
+DocumentKind = Literal["exact_text", "entity_role", "table_labels", "source_excerpt"]
 ROLES = {
     "nguoi lap": "Người lập",
     "ke toan truong": "Kế toán trưởng",
@@ -78,20 +76,6 @@ def document_intent(question):
     """Recognize supported source requests and preserve separate role requirements."""
     text = normalize_search(question)
     specs = []
-    named_selection = re.search(
-        r"\b(doi tuong|khach hang|cong ty|ten rieng)\b", text
-    ) and re.search(r"\b(lon nhat|nho nhat)\b", text)
-    if named_selection and "thuyet minh" in text:
-        subject = re.search(r"thuyết minh\s+(.+?)\s+cuối năm\s+(\d{4})", question, re.I)
-        return "document", [
-            DocumentRequirement(
-                target=text,
-                label=question,
-                kind="table_selection",
-                query=subject[1] if subject else question,
-                selection_period=subject[2] + "-12-31" if subject else None,
-            )
-        ]
 
     def add(label, kind, query):
         specs.append(

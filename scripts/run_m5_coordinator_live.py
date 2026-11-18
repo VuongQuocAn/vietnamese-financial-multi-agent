@@ -65,7 +65,6 @@ def prepare(root, output, ids, call_cap, cases=None):
             question_manifest_sha256=digest(output / "questions-only.json"),
             settings=dict(
                 provider="qwen",
-                adaptive_coordinator=True,
                 max_calls_per_question=8,
                 total_call_cap=call_cap,
                 timeout_seconds=300,

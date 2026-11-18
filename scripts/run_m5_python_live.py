@@ -71,9 +71,7 @@ def main():
         mode="gemini",
         provider_timeout_seconds=60,
     )
-    engine = FinancialLiteOrchestrator(
-        catalog, gateway, integration_v2=True, adaptive_coordinator=True
-    )
+    engine = FinancialLiteOrchestrator(catalog, gateway)
     if args.resume_calculator_from:
         saved = json.loads(args.resume_calculator_from.read_text(encoding="utf-8"))
         saved_plan = LitePlan.model_validate_json(saved["trace"][0]["reasons"][0])

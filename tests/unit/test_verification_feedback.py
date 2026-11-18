@@ -149,7 +149,7 @@ def test_repair_reuses_independent_accept_reverifies_new_version_and_releases(tm
 
     engine._specialist = specialize
     output = engine.run(question="probe", context=context)
-    runtime = LiteVerificationRuntime(catalog, owned_goal_gateway(), integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, owned_goal_gateway())
     histories = runtime.verify(
         to_verification_input(output), integration_context=output.integration_context
     )
@@ -209,7 +209,7 @@ def test_identical_repair_stops_without_second_m6_and_budget_preserves_partial()
     catalog, context, engine, _ = setup_engine()
     engine.adaptive_coordinator = True
     output = engine.run(question="probe", context=context)
-    runtime = LiteVerificationRuntime(catalog, gateway_with_goals([]), integration_v2=True)
+    runtime = LiteVerificationRuntime(catalog, gateway_with_goals([]))
     histories = runtime.verify(
         to_verification_input(output), integration_context=output.integration_context
     )
@@ -240,7 +240,7 @@ def test_identical_repair_stops_without_second_m6_and_budget_preserves_partial()
 
     other._specialist = worsen
     first = other.run(question="probe", context=context)
-    verifier = LiteVerificationRuntime(catalog, gateway_with_goals([]), integration_v2=True)
+    verifier = LiteVerificationRuntime(catalog, gateway_with_goals([]))
     first_histories = verifier.verify(
         to_verification_input(first), integration_context=first.integration_context
     )

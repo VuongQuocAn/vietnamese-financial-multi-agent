@@ -1,5 +1,30 @@
 # Trạng thái hiện tại
 
+## ARCH-CONSOLIDATE-01A — Tinh giản codebase OFFLINE
+
+**REVIEW — OFFLINE**, tiếp tục trên diff đã audit theo Owner. Chưa commit;
+baseline `c59ac2836b5e5f18b8404662e3772f46f8c65d32`, giữ worktree hiện có.
+Một đường API: Coordinator → Specialists → Tools/EF-EG → M6 → Ledger → M7.
+Bỏ hai orchestrator cũ, sáu routing fields và fallback lexical; giữ tools,
+provenance, Decimal, EF-EG, citations và lịch sử follow-up nguyên văn.
+M6 document dùng lại GoalSemanticVerdict và Gateway hiện có: bổ sung bốn trường
+proof vào history hiện có để lưu/replay binding; không thêm class/schema/agent.
+Không thêm routing flag. M7 chỉ chiếu bindings M6 và kiểm tra integrity khi render.
+
+Python: src 190→184 file; toàn repository 476→458 file; runtime 54.748→50.579 dòng.
+Xóa 6 module runtime/12 scripts; không tạo file Python. Tests giữ các controls
+độc lập; chuyển fixtures sang engine hiện hành và khôi phục riêng test corpus
+persistence bị xóa quá rộng. Số hàm test 1.276→1.244, không phải số test đã chạy.
+25 targeted PASS; smoke saved-response Non-Thinking PASS, 1 ACCEPT/13 citations,
+network bị chặn, inputs đối chiếu hash bất biến, ledger trong thư mục tạm.
+Không API/OCR/benchmark/full CI hoặc sửa corpus/artifacts/runtime freeze `6b181024`.
+
+Giới hạn: không còn selector cực trị bảng theo mẫu câu; chưa xác minh năng lực
+thay thế trên dữ liệu live. Thiếu Gateway không tự sinh plan/claim. Các công cụ
+nghiên cứu độc lập và proof formats cũ còn giữ; không chứng nhận toàn test suite,
+compatibility toàn bộ ledger lịch sử hoặc chất lượng suy luận/financial accuracy.
+Next action: Tech Lead review diff OFFLINE; không tự bắt đầu live/giai đoạn B.
+
 ## E2E-TECH-FIX-01 — Loại bỏ lỗi implementation trước Benchmark
 
 **DONE — Tech Lead APPROVED với giới hạn ngày 18/11/2026**.

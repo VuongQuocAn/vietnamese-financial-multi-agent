@@ -454,7 +454,7 @@ request/response, durable provider-ledgers, saved Q07 replay, integrity,
 tests-before/final và independent-audit.json. Raw dataset không commit.
 Delivery checkpoint local ghi implementation SHA, CI và current validation;
 SHA/CI cuối được bàn giao trực tiếp cho Tech Lead, không tạo checkpoint commit.
-[Fresh runner](../scripts/run_qa_fix_02.py), [independent audit](../scripts/audit_qa_fix_02.py).
+[Fresh runner](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/scripts/run_qa_fix_02.py), [independent audit](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/scripts/audit_qa_fix_02.py).
 
 ## H. Next Action
 

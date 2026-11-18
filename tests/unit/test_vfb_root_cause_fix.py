@@ -7,14 +7,10 @@ from unittest.mock import Mock
 from vietnamese_financial_multi_agent.accounting.context_resolution import ContextEvidence
 from vietnamese_financial_multi_agent.accounting.item_mapping import map_item_label
 from vietnamese_financial_multi_agent.agents.document_qa_contracts import document_intent
-from vietnamese_financial_multi_agent.agents.integration_workspace import IntegrationRequirement
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     FinancialLiteOrchestrator,
-    LitePlan,
-    LiteTask,
     SupervisorLite,
     inventory,
-    resolve_requirements,
 )
 from vietnamese_financial_multi_agent.agents.planner_contracts import (
     PlannerContext,
@@ -24,10 +20,8 @@ from vietnamese_financial_multi_agent.api.financial_qa_pipeline import Financial
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
 from vietnamese_financial_multi_agent.tools import QADocument
-from vietnamese_financial_multi_agent.verification.lite_runtime import LiteVerificationRuntime
 
 from .test_financial_qa import gateway_for
-from .test_financial_validators import batch_for
 from .test_json_pipeline import fixture as json_fixture
 from .test_m4_execution import fixture
 
@@ -67,7 +61,7 @@ def test_supervisor_keeps_graph_guidance_and_composite_retrieval_is_executed():
         ],
     )
     seen = []
-    plan, metadata, errors = SupervisorLite(gateway_for(payload, seen), integration_v2=True).plan(
+    plan, metadata, errors = SupervisorLite(gateway_for(payload, seen)).plan(
         "Tính tỷ trọng từ hai nguồn", context, sources
     )
     assert not errors and metadata.calls == 1
@@ -77,7 +71,7 @@ def test_supervisor_keeps_graph_guidance_and_composite_retrieval_is_executed():
     assert "requirement_schema" in prompt and "response_example" in prompt
     context.mode = "deterministic"
     supervisor = Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), [])))
-    result = FinancialLiteOrchestrator(catalog, supervisor=supervisor, integration_v2=True).run(
+    result = FinancialLiteOrchestrator(catalog, supervisor=supervisor).run(
         question="Tính tỷ trọng từ hai nguồn", context=context
     )
     assert plan.tasks[0].use_graph
@@ -120,64 +114,7 @@ def test_source_alias_gates_cash_routing_and_json_scope(tmp_path):
         document_id=fact.document_id,
         snapshot_id=fact.snapshot_id,
         company_id=fact.company_id,
-        integration_v2=True,
     )
     assert pipeline._lite_context(request)[1] is None
     scope.evidence_status = "insufficient"
     assert pipeline._lite_context(request)[1] == "clarification_required"
-
-
-def test_true_fact_cannot_bind_unrelated_model_goal_without_semantic_support():
-    data = fixture()
-    batch = batch_for(data)
-    claim = batch.claims[0]
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
-    context = dict(
-        requirements=[
-            dict(
-                requirement_id="R1",
-                text="Khoản nợ riêng của khách hàng là bao nhiêu?",
-                kind="fact",
-                target_id=claim.supporting_evidence[0].canonical_item_id,
-                answer_goal="value",
-            )
-        ],
-        candidate_requirements={claim.candidate_id: ["R1"]},
-    )
-    histories = runtime.verify(batch, integration_context=context)
-    assert histories[0].outcome.final.decision == "ACCEPT"  # true source-bound fact remains true
-    assert runtime.summary["supported_requirements"][claim.candidate_id] == []
-    assert runtime.summary["semantic_candidate_count"] == 1
-    source = claim.supporting_evidence[0]
-    context["requirements"][0]["text"] = f"Nêu {source.label} kỳ {source.period}"
-    runtime.verify(batch, integration_context=context)
-    assert runtime.summary["semantic_candidate_count"] == 0
-    assert runtime.summary["supported_requirements"][claim.candidate_id] == ["R1"]
-    plan = LitePlan(
-        requirements=[
-            IntegrationRequirement(
-                requirement_id="R1",
-                text=f"{source.label} năm {source.period} là bao nhiêu?",
-                kind="fact",
-                target_id=source.canonical_item_id,
-                period=source.period,
-                interpretation=True,
-            )
-        ],
-        tasks=[
-            LiteTask(
-                task_id="T1", specialist="profitability", objective="Tra số", requirement_ids=["R1"]
-            )
-        ],
-    )
-    sources = inventory(
-        SnapshotCatalog(**data),
-        PlannerContext(
-            document_id=source.document_id,
-            snapshot_id=source.snapshot_id,
-            company_id=source.company_id,
-            period=source.period,
-        ),
-    )
-    resolve_requirements(plan, sources)
-    assert not plan.requirements[0].interpretation

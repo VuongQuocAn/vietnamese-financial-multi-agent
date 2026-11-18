@@ -49,7 +49,7 @@ def main():
     python_claims = [c for c in batch.claims if c.python_execution]
     assert len(python_claims) == 1
     if args.offline:
-        runtime = LiteVerificationRuntime(catalog, integration_v2=True)
+        runtime = LiteVerificationRuntime(catalog)
         histories = runtime.verify(batch, integration_context=original.integration_context)
         atomic_json(args.output / "histories.json", [h.model_dump(mode="json") for h in histories])
         atomic_json(args.output / "summary.json", runtime.summary)
@@ -121,12 +121,7 @@ def main():
             company_id=original.context.company_id,
             document_id=original.context.document_id,
             snapshot_id=original.context.snapshot_id,
-            integration_v2=True,
             # Reuse the exact saved adaptive Workspace; do not schedule M5 repairs.
-            adaptive_coordinator=False,
-            m5_lite=True,
-            m6_lite=True,
-            m7_lite=True,
             execution_mode="gemini",
             model=configured.model,
             allow_gateway=True,
@@ -189,9 +184,7 @@ def main():
         result["digest"] = digest({k: v for k, v in result.items() if k != "digest"})
         wrong_batch = to_verification_input(wrong)
         wrong_batch.claims = [c for c in wrong_batch.claims if c.python_execution]
-        runtime = LiteVerificationRuntime(
-            catalog, gateway, model=configured.model, integration_v2=True
-        )
+        runtime = LiteVerificationRuntime(catalog, gateway, model=configured.model)
         histories = runtime.verify(wrong_batch, integration_context=context)
         admission = VerifiedClaimRepository(args.output / "wrong-ledger").admit(histories[0])
         atomic_json(

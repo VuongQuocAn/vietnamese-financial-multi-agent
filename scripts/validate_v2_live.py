@@ -20,7 +20,6 @@ def live_request(original, model):
     return FinancialQARequest.model_validate(
         dict(
             original,
-            integration_v2=True,
             model=model,
             force_refresh=True,
             max_provider_calls=8,

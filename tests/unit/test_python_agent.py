@@ -7,7 +7,6 @@ import pytest
 from vietnamese_financial_multi_agent.agents.python_agent import (
     PythonAgent,
     input_manifest,
-    requires_python,
 )
 from vietnamese_financial_multi_agent.tools.financial_retrieval import FinancialRetrievalTools
 from vietnamese_financial_multi_agent.tools.python_execution import PythonExecutor
@@ -96,8 +95,6 @@ def test_one_repair_uses_same_manifest_and_stops_after_second_failure():
 
 
 def test_coordinator_keeps_python_candidate_out_of_v1_claims_and_calculator_unchanged():
-    assert not requires_python("Cost divided by revenue", "compute percentage", "power")
-    assert requires_python("RMS revenue", "RMS from dependencies", "power")
     _, context, engine, _ = setup_engine()
     engine.adaptive_coordinator = True
     plan = engine.supervisor.plan.return_value[0]

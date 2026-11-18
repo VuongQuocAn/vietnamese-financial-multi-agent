@@ -98,7 +98,7 @@ flowchart TD
 Nguồn chính: [financial_qa_pipeline.py](../src/api/financial_qa_pipeline.py),
 `FinancialQAPipeline._m5` (89), `_lite_context` (276), `_run_document` (369),
 `_run` (669), route (818–834), refresh (888 trở đi);
-[fusion_pipeline.py](../src/api/fusion_pipeline.py), `run_fusion`.
+[fusion_pipeline.py](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/src/api/fusion_pipeline.py), `run_fusion`.
 
 | Thành phần thực tế | Quyết định và giới hạn quan sát được |
 | --- | --- |
@@ -114,7 +114,7 @@ Nguồn chính: [financial_qa_pipeline.py](../src/api/financial_qa_pipeline.py),
 
 Ngoài source ở sơ đồ: [orchestrator.py](../src/agents/orchestrator.py),
 `_check_assignment`, `aggregate_candidates`, `FinancialMultiAgentOrchestrator`;
-[adaptive_controller.py](../src/agents/adaptive_controller.py), `run`;
+[adaptive_controller.py](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/blob/c59ac2836b5e5f18b8404662e3772f46f8c65d32/src/agents/adaptive_controller.py), `run`;
 [runtime.py](../src/verification/runtime.py), `_checks/verify`;
 [ledger.py](../src/verification/ledger.py), `build_verified_claim/validate_entry`;
 [qa_lite.py](../src/outputs/qa_lite.py), `compose_lite`;

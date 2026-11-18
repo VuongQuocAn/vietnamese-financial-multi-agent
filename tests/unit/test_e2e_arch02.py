@@ -24,9 +24,7 @@ def test_v2_pipeline_preserves_answer_gateway_and_verified_bindings(
 ):
     catalog, context, _, _ = setup_engine()
     question = "Doanh thu thuần TEST năm 2030 là bao nhiêu?"
-    output = FinancialLiteOrchestrator(catalog, integration_v2=True, adaptive_coordinator=True).run(
-        question=question, context=context
-    )
+    output = FinancialLiteOrchestrator(catalog).run(question=question, context=context)
     calls = []
 
     def transport(request):
@@ -82,8 +80,6 @@ def test_v2_pipeline_preserves_answer_gateway_and_verified_bindings(
             company_id=context.company_id,
             document_id=context.document_id,
             snapshot_id=context.snapshot_id,
-            integration_v2=True,
-            adaptive_coordinator=True,
             execution_mode=mode,
             allow_gateway=allow_gateway,
             force_refresh=True,

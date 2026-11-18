@@ -4,7 +4,6 @@ Only provenance mechanics live here; each specialist owns its domain and prose.
 """
 
 import json
-import re
 from decimal import Decimal
 from time import perf_counter
 from typing import Any, Literal
@@ -477,13 +476,6 @@ def select_evidence(
             )
         )
     result.supporting_evidence = _unique(result.supporting_evidence)
-    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", result.question))
-    if years and bundle.claim_fact_references is None:
-        result.supporting_evidence = [
-            e
-            for e in result.supporting_evidence
-            if (e.period[:4] if balance_sheet else e.period) in years
-        ]
     # Planner permits 32 indicators and 8 approved metrics. A larger digest must
     # not discard every independently usable source.
     if len(result.supporting_evidence) > 40:

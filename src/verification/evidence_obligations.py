@@ -1,8 +1,5 @@
 """M6 replay of existing M5 selection/join records and scoped feedback."""
 
-import re
-from types import SimpleNamespace
-
 from ..agents.evidence_coordination import (
     SelectionDemand,
     content_digest,
@@ -12,10 +9,7 @@ from ..agents.evidence_coordination import (
 )
 from ..agents.lite_orchestrator import inventory
 from ..agents.planner_contracts import PlannerContext
-from ..outputs.qa_composer import _reasoning_matches, _targets
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
-from ..tools.goal_targets import target_groups
-from ..tools.question_understanding import normalize
 
 
 def goal_context(context, claim):
@@ -140,174 +134,28 @@ def replay_obligations(catalog, batch, context):
 
 
 def goal_binding_issue(proof, requirement):
-    """Reject concrete goal contradictions; semantic SUPPORTED is still necessary.
-
-    Use saved, replayed evidence and existing aliases/operation matching, including
-    historical V2 entries. This does not change the claim's truth decision.
-    """
+    """Check only declared typed constraints; M6's semantic verdict owns goal meaning."""
     if not requirement:
         return "goal_context_missing"
     claim = proof.batch.claims[0]
-    text = normalize(requirement["text"])
-    facts = [s for s in claim.supporting_evidence if s.kind == "fact"]
-    targets = _targets(text)
     items = set(requirement.get("required_indicators", []))
-    groups = [{key for kind, key in group if kind == "fact"} for group in target_groups(text)]
-    groups = [group for group in groups if group]
-    available = {s.canonical_item_id for s in facts}
-    if any(not group.intersection(available) for group in groups):
-        return "goal_indicator_mismatch"
     if requirement.get("kind") == "fact" and requirement.get("target_id"):
         items.add(requirement["target_id"])
-    if not items <= available:
+    if not items <= {s.canonical_item_id for s in claim.supporting_evidence if s.kind == "fact"}:
         return "goal_indicator_mismatch"
-    items.update(key for group in groups for key in group.intersection(available))
-    calculation = claim.reasoning.calculation if claim.reasoning else None
-    python = claim.python_execution
-    periods = (
-        {r["context"]["period"] for r in python.execution["operands"].values()}
-        if python
-        else {o.period for o in calculation.operands.values()}
-        if calculation
-        else {claim.period}
-    )
-    pinned = requirement.get("period")
-    years = set(re.findall(r"\b(?:19|20|21)\d{2}\b", text))
-    if pinned and claim.period != pinned or years and any(p[:4] not in years for p in periods):
+    if requirement.get("period") and claim.period != requirement["period"]:
         return "goal_period_mismatch"
-    selections = [
-        r
-        for r in proof.goal_context.get("task_results", {}).values()
-        if r.get("coordination", {}).get("selection")
-    ]
-    relative = any(
-        term in text
-        for term in (
-            "cung nam",
-            "cung ky",
-            "nam da chon",
-            "ky da chon",
-            "nam vua chon",
-            "ky vua chon",
-        )
-    )
-    if relative and not (pinned or years):
-        selected_periods = {
-            tuple(sorted({row["context"]["period"] for row in r["selected_observations"]}))
-            for r in selections
-        }
-        if len(selected_periods) != 1 or not periods <= set(next(iter(selected_periods))):
-            return "goal_selected_period_mismatch"
-    selecting = "chon" in text and any(
-        term in text
-        for term in (
-            "lon hon",
-            "cao hon",
-            "lon nhat",
-            "cao nhat",
-            "nho hon",
-            "thap hon",
-            "nho nhat",
-            "thap nhat",
-        )
-    )
-    if selecting:
-        relevant = [
-            r for r in selections if r["coordination"]["selection"]["selection"]["item"] in items
-        ]
-        if not relevant or not any(
-            s.reference.model_dump(mode="json") == row["reference"]
-            for r in relevant
-            for row in r["selected_observations"]
-            for s in facts
-        ):
-            return "goal_selection_mismatch"
-        comparator = (
-            "min"
-            if any(t in text for t in ("nho hon", "thap hon", "nho nhat", "thap nhat"))
-            else "max"
-        )
-        comparator += "_abs" if "tuyet doi" in text else ""
-        if any(
-            r["coordination"]["selection"]["selection"]["comparator"] != comparator
-            for r in relevant
-        ):
-            return "goal_comparator_mismatch"
-    if requirement.get("answer_goal", "value") != "value":
-        return None  # Interpretation meaning remains with the existing semantic pass.
-    operation = re.search(r"\b(tru|chia|cong|nhan)\b", text)
-    dynamic = requirement.get("interpretation_topic") == "dynamic_calculation"
-    comparing = re.search(r"\b(lon hon|nho hon|cao hon|thap hon|bang nhau)\b", text) and (
-        " hay " in f" {text} " or re.search(r"\b(khoan muc|chi tieu) nao\b", text)
-    )
-    if comparing and (
-        not calculation
-        or calculation.steps[-1].operation.operator not in {"greater", "less", "equal"}
-    ):
-        return "goal_comparison_mismatch"
-    if not dynamic and not calculation and len(items) < 2:
-        operation = None
-    if (dynamic or operation) and not python:
-        if not calculation or not _reasoning_matches(
-            claim.reasoning,
-            SimpleNamespace(
-                text=requirement["text"],
-                reasoning_operations=requirement.get("reasoning_operations", []),
-                requested_unit=requirement.get("requested_unit"),
-            ),
-        ):
-            return "goal_formula_mismatch"
-        if operation:
-            expected = {
-                "tru": {"subtract"},
-                "chia": {"ratio", "divide", "percentage_of"},
-                "cong": {"sum", "add"},
-                "nhan": {"multiply"},
-            }[operation[0]]
-            step = calculation.steps[-1]
-            if step.operation.operator not in expected:
-                return "goal_formula_mismatch"
-            sides = [text[: operation.start()], text[operation.end() :]]
-            for side, key in zip(sides, step.operation.inputs, strict=False):
-                wanted = {key for kind, key in _targets(side) if kind == "fact"}
-                operand = calculation.operands.get(key)
-                if (
-                    len(wanted) == 1
-                    and operand
-                    and not any(
-                        s.reference == operand.reference and s.canonical_item_id in wanted
-                        for s in facts
-                    )
-                ):
-                    return "goal_operand_order_mismatch"
-    metric_targets = {key for kind, key in targets if kind == "metric"}
-    if requirement.get("kind") == "metric" and requirement.get("target_id"):
-        metric_targets.add(requirement["target_id"])
-    calculations = [
-        c for c in [claim.calculation, *(s.calculation for s in claim.supporting_evidence)] if c
-    ]
-    if (
-        metric_targets
-        and not python
-        and (
-            not calculations
-            and not calculation
-            or calculations
-            and not metric_targets.intersection(c.formula_id for c in calculations)
-        )
+    calculation = claim.reasoning.calculation if claim.reasoning else None
+    operations = requirement.get("reasoning_operations", [])
+    if operations and (
+        not calculation or not set(operations) <= {s.operation.operator for s in calculation.steps}
     ):
         return "goal_formula_mismatch"
     unit = requirement.get("requested_unit")
-    if "phan tram" in text or "%" in requirement["text"]:
-        unit = "percent"
-    actual_units = (
-        {python.execution["executions"][-1]["outputs"][python.output_key]}
-        if python
-        else {calculation.steps[-1].unit}
-        if calculation
-        else {s.unit for s in claim.supporting_evidence}
+    units = (
+        {calculation.steps[-1].unit} if calculation else {s.unit for s in claim.supporting_evidence}
     )
-    if unit and unit not in actual_units:
+    if unit and unit not in units:
         return "goal_unit_mismatch"
     return None
 

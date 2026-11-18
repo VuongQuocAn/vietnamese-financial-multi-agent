@@ -57,16 +57,6 @@ LIMITATIONS = [
     "Chưa đủ dữ liệu để xác nhận các điều chỉnh dòng tiền hoặc nguyên nhân chênh lệch.",
     "Báo cáo kết quả kinh doanh và lưu chuyển tiền tệ có nguồn riêng; phạm vi báo cáo vẫn chưa được xác nhận.",
 ]
-UNAPPROVED = (
-    r"\b(?:cfo (?:net income|tren loi nhuan(?: sau thue)?)|cash conversion ratio|"
-    r"accrual ratio|free cash flow|fcf|cfo margin|cash flow coverage|earnings quality score|"
-    r"ty (?:le|so) (?:cfo|dong tien(?: hoat dong)? kinh doanh) (?:tren )?loi nhuan|"
-    r"dong tien tu do|ty le don tich|diem chat luong loi nhuan)\b"
-)
-INDEPENDENT_FACT = (
-    r"\b(?:cfo|dong tien|luu chuyen tien|loi nhuan truoc thue|loi nhuan sau thue|"
-    r"tien va tuong duong tien)\b"
-)
 
 
 class CashFlowEarningsQualityProposal(FinancialModel):
@@ -345,15 +335,7 @@ class CashFlowEarningsQualitySpecialist:
             if re.search(r"\b(?:quy|thang|ban nien)\b", normalize(question)):
                 result.missing_evidence.append("non_annual_period_unsupported")
                 return result
-            text = normalize(question)
-            unsupported = [] if reasoning_assignment else re.findall(UNAPPROVED, text)
-            result.missing_evidence.extend("unsupported_capability:" + name for name in unsupported)
-            if not reasoning_assignment and re.search(
-                r"chat luong loi nhuan|thao tung|ben vung|nguyen nhan|cash bridge", text
-            ):
-                result.missing_evidence.append("earnings_quality_or_reconciliation_not_established")
-            if not unsupported or re.search(INDEPENDENT_FACT, re.sub(UNAPPROVED, "", text)):
-                self._select(upstream, result, years, scopes, periods)
+            self._select(upstream, result, years, scopes, periods)
             if not result.supporting_evidence:
                 result.missing_evidence.append("no_usable_cash_flow_profit_evidence")
                 return result

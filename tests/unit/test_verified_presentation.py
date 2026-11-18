@@ -29,7 +29,15 @@ def test_m7_presents_only_accepted_statements_with_or_without_legacy_text(admitt
         {"claim_ids": [key], "text": "Tài sản tài trợ cho nợ; chắc chắn mất thanh khoản, 999%."},
     ):
         gateway, calls = gateway_for({"segments": [segment], "gaps": []})
-        fields, trace = compose_lite(request, [entry], gateway=gateway)
+        fields, trace = compose_lite(
+            request,
+            [entry],
+            gateway=gateway,
+            coverage_context=dict(
+                requirements=[dict(requirement_id="G1", text="Verified findings")],
+                verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry]},
+            ),
+        )
         assert entry.content in fields["answer_vi"]
         assert "tài trợ" not in fields["answer_vi"] and "999%" not in fields["answer_vi"]
         assert fields["used_verified_claim_ids"] == [key] and not trace["rejected_segments"]

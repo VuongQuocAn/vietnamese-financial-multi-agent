@@ -11,13 +11,7 @@ from ..outputs.qa_contracts import QARequirement, VietnameseQARequest
 
 
 class FinancialQARequest(VietnameseQARequest):
-    integration_v2: bool = False
-    adaptive_coordinator: bool = False
-    integration_lane: Literal["financial", "document"] | None = None
-    m5_lite: bool = False
     m5_graph: bool = True
-    m6_lite: bool = False
-    m7_lite: bool = False
     allow_gateway: bool = True
     request_id: str = Field(default_factory=lambda: str(uuid4()), min_length=1)
     force_refresh: bool = False
@@ -47,9 +41,9 @@ class CandidateOutcome(FinancialModel):
 
 class PipelineTrace(FinancialModel):
     integration_context: dict = Field(default_factory=dict)
-    verification_mode: Literal["legacy", "lite"] = "legacy"
+    verification_mode: Literal["lite"] = "lite"
     m6_lite: dict = Field(default_factory=dict)
-    answer_mode: Literal["legacy", "lite"] = "legacy"
+    answer_mode: Literal["lite"] = "lite"
     m7_lite: dict = Field(default_factory=dict)
     answer_requirements: list[QARequirement] = Field(default_factory=list)
     adaptive_rounds: list[dict] = Field(default_factory=list)

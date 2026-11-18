@@ -233,7 +233,7 @@ def evaluate(root, output, ledger_root, mode):
             "tools.financial_retrieval.FinancialRetrievalTools.find_financial_facts",
             "unverified_sources",
         ),
-        ("agents.orchestrator.FinancialMultiAgentOrchestrator.run", "unverified_sources"),
+        ("agents.lite_orchestrator.FinancialLiteOrchestrator.run", "unverified_sources"),
     ):
         guards.enter_context(patch("vietnamese_financial_multi_agent." + target, forbid(label)))
     try:

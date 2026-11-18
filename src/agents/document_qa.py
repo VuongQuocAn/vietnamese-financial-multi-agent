@@ -56,7 +56,7 @@ def _excerpt_groups(bundle):
             if evidence is match.evidence:
                 primaries.append((key, order))
     query = normalize_search(bundle.operation.requirement.query)
-    heading_query = re.sub(r"^ghi nhan ", "", query)
+    heading_query = query
     groups, seen = [], set()
     # Neighbors already belong to the bounded retrieved pool. A continuation
     # paragraph can be more relevant than the primary heading on another page.
@@ -110,7 +110,7 @@ def document_operations(requirements, manifest, snapshot_id):
                 snapshot_id=snapshot_id,
                 query=r.query,
                 evidence_type="table"
-                if r.kind in {"table_labels", "table_selection"}
+                if r.kind == "table_labels"
                 else "both"
                 if r.kind == "exact_text"
                 else "text",
@@ -144,17 +144,6 @@ def document_candidates(bundle, company_id, manifest):
         if not match.evidence.citations:
             continue
         groups = [excerpt] if excerpt is not None else [[match.evidence]]
-        if requirement.target == "nhan vien quan ly chu chot":
-            neighbors = {n.order: n.evidence for n in match.neighbors}
-            # Only the forward neighbors following the primary in the saved source.
-            pointer = match.evidence.citations[0].source.reference.source_pointer or ""
-            if pointer.rsplit("/", 1)[-1].isdigit():
-                order = int(pointer.rsplit("/", 1)[-1])
-                for length in (1, 2):
-                    if all(order + i in neighbors for i in range(1, length + 1)):
-                        groups.append(
-                            [match.evidence, *(neighbors[order + i] for i in range(1, length + 1))]
-                        )
         for group in groups:
             if (
                 any(
@@ -170,11 +159,8 @@ def document_candidates(bundle, company_id, manifest):
                 or not consecutive([e.citations for e in group])
             ):
                 continue
-            selection = requirement.kind == "table_selection"
             literal = requirement.kind == "exact_text"
-            source = [
-                document_projection(e.record, selection=selection, literal=literal) for e in group
-            ]
+            source = [document_projection(e.record, literal=literal) for e in group]
             assertion = source_assertion(requirement, source)
             if assertion is None and (
                 requirement.kind != "entity_role"
@@ -202,9 +188,7 @@ def document_candidates(bundle, company_id, manifest):
                 citations=[
                     c
                     for e in group
-                    for c in document_citations(
-                        e.record, e.citations, selection=selection, literal=literal
-                    )
+                    for c in document_citations(e.record, e.citations, literal=literal)
                 ],
                 quotations=quotes,
                 caveats=sorted({issue for e in group for issue in e.issues}),

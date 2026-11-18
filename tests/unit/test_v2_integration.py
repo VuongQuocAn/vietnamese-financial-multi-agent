@@ -5,19 +5,13 @@ from unittest.mock import Mock, patch
 
 from vietnamese_financial_multi_agent.agents.integration_workspace import (
     IntegrationRequirement,
-    IntegrationWorkspace,
-    matches_requirement,
 )
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     FinancialLiteOrchestrator,
     LitePlan,
     LiteTask,
-    SupervisorLite,
-    integration_plan,
     inventory,
     normalize_candidate_envelope,
-    preserve_answer_goal,
-    resolve_requirements,
     resolve_source,
 )
 from vietnamese_financial_multi_agent.agents.planner_contracts import (
@@ -26,14 +20,13 @@ from vietnamese_financial_multi_agent.agents.planner_contracts import (
 )
 from vietnamese_financial_multi_agent.api.financial_qa_pipeline import FinancialQAPipeline
 from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
-from vietnamese_financial_multi_agent.core.llm_contracts import JSONOutput, parse_json_output
+from vietnamese_financial_multi_agent.core.llm_contracts import parse_json_output
 from vietnamese_financial_multi_agent.evidence import SnapshotCatalog
 from vietnamese_financial_multi_agent.tools import QADocument
 from vietnamese_financial_multi_agent.verification.ledger import validate_entry
 from vietnamese_financial_multi_agent.verification.ledger_repository import VerifiedClaimRepository
 from vietnamese_financial_multi_agent.verification.lite_runtime import LiteVerificationRuntime
 
-from .test_financial_qa import gateway_for
 from .test_m4_execution import fixture
 from .test_m6_lite import semantic_gateway
 from .test_multihop_reasoning import reasoning_case
@@ -149,60 +142,9 @@ def setup_engine():
     return (
         catalog,
         context,
-        FinancialLiteOrchestrator(catalog, supervisor=supervisor, integration_v2=True),
+        FinancialLiteOrchestrator(catalog, supervisor=supervisor),
         requirements,
     )
-
-
-def test_plan_retains_valid_requirements_and_tasks_with_explicit_failure():
-    _, _, engine, _ = setup_engine()
-    plan = engine.supervisor.plan.return_value[0]
-    wire = plan.model_dump(mode="json")
-    wire["use_graph"] = False  # Saved C01 transport shape: unrelated root field.
-    wire["tasks"].append({"specialist": "invented"})
-    parsed, errors = integration_plan(wire)
-    assert len(parsed.tasks) == 2 and parsed.requirements == plan.requirements
-    assert errors == ["supervisor_invalid_task:T3", "requirement_plan_incomplete"]
-    fenced = '```json\n{"tasks": []}\n```'
-    assert parse_json_output(fenced, allow_markdown_fence=True).payload == {"tasks": []}
-    parsed_output = parse_json_output(fenced, allow_markdown_fence=True)
-    assert JSONOutput.model_validate_json(parsed_output.model_dump_json()) == parsed_output
-    assert parse_json_output(fenced).validation_status == "invalid_json"
-    assert parse_json_output(fenced + " trailing", allow_markdown_fence=True).payload is None
-    catalog, context, _, _ = setup_engine()
-    context.mode = "gemini"
-    seen = []
-    supervisor = SupervisorLite(
-        gateway_for(plan.model_dump(mode="json"), seen), integration_v2=True
-    )
-    decoded, _, errors = supervisor.plan("TEST 2030", context, inventory(catalog, context))
-    assert not errors and decoded.requirements == plan.requirements
-    prompt = json.loads(seen[0].messages[0].content)
-    assert "{requirements:[...],tasks:[...]}" in prompt["instruction"]
-    assert "Không DAG, approval, coverage" not in prompt["instruction"]
-    service = FinancialQAPipeline(catalog=SnapshotCatalog([]), documents=[], repository=Mock())
-    with patch("vietnamese_financial_multi_agent.api.fusion_pipeline.run_fusion") as fusion:
-        service.run(
-            FinancialQARequest(
-                question="Lợi nhuận sau thuế TEST năm 2030 và chính sách chi phí đi vay trong thuyết minh?",
-                integration_v2=True,
-                execution_mode="deterministic",
-                allow_gateway=False,
-            )
-        )
-        assert fusion.call_count == 1
-        assert fusion.call_args.args[1].m7_lite  # Presentation flag cannot bypass mixed routing.
-        fusion.reset_mock()
-        service.run(
-            FinancialQARequest(
-                question="Lợi nhuận sau thuế TEST năm 2030 và chính sách chi phí đi vay trong thuyết minh?",
-                integration_v2=True,
-                integration_lane="financial",
-                execution_mode="deterministic",
-                allow_gateway=False,
-            )
-        )
-        assert not fusion.called  # A bound lane is never decomposed recursively.
 
 
 def test_shared_evidence_ids_and_task_outputs_survive_sibling_failure():
@@ -267,7 +209,6 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
             question="Doanh thu thuần và lợi nhuận gộp TEST năm 2030?",
             document_id=context.document_id,
             snapshot_id=context.snapshot_id,
-            integration_v2=True,
             execution_mode="deterministic",
             allow_gateway=False,
         )
@@ -303,7 +244,7 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
         return response.model_copy(update={"output": parse_json_output(json.dumps(body))})
 
     gateway.generate.side_effect = assess
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway)
     histories = runtime.verify(
         batch,
         integration_context=dict(
@@ -327,7 +268,6 @@ def test_pipeline_preserves_requirements_through_native_m6_ledger_and_m7(tmp_pat
             question="Doanh thu thuần TEST năm 2030?",
             document_id=context.document_id,
             snapshot_id=context.snapshot_id,
-            integration_v2=True,
             execution_mode="deterministic",
             allow_gateway=False,
         )
@@ -371,7 +311,6 @@ def test_v2_m6_reuses_detached_request_catalog_and_preserves_input(tmp_path):
                 question="Doanh thu thuần và lợi nhuận gộp TEST năm 2030?",
                 document_id=context.document_id,
                 snapshot_id=context.snapshot_id,
-                integration_v2=True,
                 execution_mode="deterministic",
                 allow_gateway=False,
             )
@@ -385,7 +324,7 @@ def test_v2_m6_reuses_detached_request_catalog_and_preserves_input(tmp_path):
     sibling.candidate_id += "-sibling"
     sibling.provenance.m5_candidate_id = sibling.candidate_id
     batch.claims.append(sibling)
-    histories = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True).verify(batch)
+    histories = LiteVerificationRuntime(SnapshotCatalog(**data)).verify(batch)
     assert all(h.outcome.final.decision == "ACCEPT" for h in histories)
     histories[0].proof.batch.caveats.append("mutated by caller")
     assert "mutated by caller" not in histories[1].proof.batch.caveats
@@ -457,7 +396,6 @@ def test_inventory_resolution_uses_period_and_pins_without_role_ownership():
     )
     engine = FinancialLiteOrchestrator(
         catalog,
-        integration_v2=True,
         supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
     )
     result = engine.run(question=req.text, context=context)
@@ -469,115 +407,6 @@ def test_inventory_resolution_uses_period_and_pins_without_role_ownership():
         fact.context.period
     }
     assert any(result.integration_context["candidate_requirements"].values())
-
-
-def test_dynamic_requirement_binding_checks_formula_order_period_unit_and_goal():
-    for formula, operator in (
-        ("debt_to_assets", "divide"),
-        ("revenue_yoy", "percentage_change"),
-        ("gross_margin", "ratio"),
-    ):
-        data, batch = balance_reasoning_case(formula, operator)
-        claim = batch.claims[0]
-        sources = inventory(
-            SnapshotCatalog(**data), batch.context.model_copy(update={"period": None})
-        )
-        handle = next(h for h, s in sources.items() if s["kind"] == "metric")
-        req = IntegrationRequirement(
-            requirement_id="R1",
-            text="Tính chỉ tiêu",
-            kind="metric",
-            target_id=handle,
-            period=claim.period,
-            interpretation=True,
-            interpretation_topic="metric_meaning",
-            requested_unit=claim.reasoning.calculation.steps[-1].unit,
-        )
-        plan = LitePlan(requirements=[req])
-        target = resolve_requirements(plan, sources)["R1"]
-        assert req.target_id == formula and matches_requirement(claim, req, target)
-        for update in (
-            dict(period="1900"),
-            dict(requested_unit="USD"),
-            dict(text="Diễn giải ý nghĩa chỉ tiêu"),
-            dict(required_indicators=["wrong.item"]),
-            dict(reasoning_periods=["1900"]),
-        ):
-            assert not matches_requirement(claim, req.model_copy(update=update), target)
-        wrong = claim.model_copy(deep=True)
-        wrong.reasoning.calculation.steps[-1].operation.inputs.reverse()
-        assert not matches_requirement(wrong, req, target)
-
-        other = target.copy()
-        other["records"] = [target["records"][0].model_copy(deep=True)]
-        other["records"][0].definition.compatibility.operands[0].canonical_item_id = "another.item"
-        assert not matches_requirement(claim, req, other)
-        # A numeric derived proof is bound in Python even without an extra
-        # semantic verdict; only M6 ACCEPT may make the proposed binding usable.
-        context = dict(
-            requirements=[req.model_dump()], candidate_requirements={claim.candidate_id: ["R1"]}
-        )
-        runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
-        assert (
-            runtime.verify(batch, integration_context=context)[0].outcome.final.decision == "ACCEPT"
-        )
-        assert runtime.summary["supported_requirements"] == {claim.candidate_id: ["R1"]}
-
-
-def test_dynamic_goal_without_catalog_name_still_requires_m6_semantic_binding():
-    data, batch = balance_reasoning_case("debt_to_assets", "ratio")
-    claim = batch.claims[0]
-    sources = inventory(SnapshotCatalog(**data), batch.context)
-    requirement = IntegrationRequirement(
-        requirement_id="dynamic",
-        text="Tính tỷ số nợ phải trả chia tổng tài sản",
-        kind="metric",
-        target_id="unregistered_name",
-        period=claim.period,
-        interpretation=True,
-        interpretation_topic="dynamic_calculation",
-        required_indicators=[s.canonical_item_id for s in claim.supporting_evidence],
-        requested_unit="ratio",
-    )
-    task = LiteTask(
-        task_id="T",
-        specialist="liquidity_and_leverage",
-        objective=requirement.text,
-        requirement_ids=["dynamic"],
-        sources=[],
-    )
-    requirement.requested_unit = "lần"
-    resolve_requirements(LitePlan(requirements=[requirement], tasks=[task]), sources)
-    assert requirement.requested_unit == "ratio"
-    assert {sources[h]["item"] for h in task.sources} == set(requirement.required_indicators)
-    assert requirement.target_id is None and requirement.reason == "source_unknown"
-    assert matches_requirement(claim, requirement)
-    for mutation in (
-        dict(requested_unit="USD"),
-        dict(period="1900"),
-        dict(reason="source_ambiguous"),
-        dict(required_indicators=["wrong.item"]),
-    ):
-        assert not matches_requirement(claim, requirement.model_copy(update=mutation))
-    ctx = dict(
-        requirements=[requirement.model_dump()],
-        candidate_requirements={claim.candidate_id: [requirement.requirement_id]},
-    )
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
-    runtime.verify(batch, integration_context=ctx)
-    assert not runtime.summary["supported_requirements"][claim.candidate_id]
-    gateway = semantic_gateway()
-    original = gateway.generate.side_effect
-
-    def confirm(request):
-        response = original(request)
-        response.output.payload["verdicts"][0]["supported_requirement_ids"] = ["dynamic"]
-        return response
-
-    gateway.generate.side_effect = confirm
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
-    runtime.verify(batch, integration_context=ctx)
-    assert runtime.summary["supported_requirements"][claim.candidate_id] == ["dynamic"]
 
 
 def test_claim_local_periods_keep_exact_source_and_content_guards():
@@ -594,7 +423,7 @@ def test_claim_local_periods_keep_exact_source_and_content_guards():
     fact.content = fact.content.replace(" kỳ ", " tại ngày ")
     fact.candidate_id = fact.provenance.m5_candidate_id = "F1"
     batch.claims.append(fact)
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data))
     assert all(h.outcome.final.decision == "ACCEPT" for h in runtime.verify(batch))
     for update in (
         dict(period="2029-12-31"),
@@ -630,34 +459,6 @@ def test_claim_local_periods_keep_exact_source_and_content_guards():
     assert runtime.verify(wrong_name)[0].outcome.final.decision != "ACCEPT"
 
 
-def test_original_commentary_goal_has_dependent_owner_and_cannot_bind_a_number():
-    catalog, context, engine, _ = setup_engine()
-    sources = inventory(catalog, context)
-    for question in (
-        "Nhận xét hai chỉ tiêu và nêu giới hạn khi đánh giá.",
-        "Phân tích tổng hợp, không suy nguyên nhân từ biến động.",
-        "Đặt hai kết quả bên cạnh nhau và nêu hạn chế.",
-    ):
-        plan = engine.supervisor.plan.return_value[0].model_copy(deep=True)
-        targets = resolve_requirements(plan, sources)
-        preserve_answer_goal(plan, question, targets)
-        goal = plan.requirements[-1]
-        assert goal.text == question and goal.answer_goal == "synthesis"
-        assert set(goal.required_indicators) == {f.canonical_item_id for f in catalog.facts}
-        task = plan.tasks[-1]
-        assert task.depends_on == ["T1", "T2"] and goal.requirement_id in task.requirement_ids
-        preserve_answer_goal(plan, question, targets)
-        assert len(plan.tasks) == 3 and len(plan.requirements) == 3
-        data, batch = reasoning_case()
-        claim = batch.claims[0]
-        assert not matches_requirement(claim, goal)  # derived arithmetic is not commentary
-        claim.reasoning.claim_type = "reasoned_conclusion"
-        claim.reasoning.goal = question
-        assert matches_requirement(claim, goal)
-        claim.supporting_evidence = claim.supporting_evidence[:1]
-        assert not matches_requirement(claim, goal)
-
-
 def test_multiperiod_commentary_still_requires_semantic_truth_and_goal_support():
     data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
     claim = batch.claims[0]
@@ -672,15 +473,14 @@ def test_multiperiod_commentary_still_requires_semantic_truth_and_goal_support()
         answer_goal="analysis",
         required_indicators=["b02.net_revenue"],
     )
-    assert matches_requirement(claim, req)
     ctx = dict(
         requirements=[req.model_dump()],
         candidate_requirements={claim.candidate_id: [req.requirement_id]},
     )
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data))
     assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "INVESTIGATE"
     gateway = semantic_gateway()
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway)
     assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "ACCEPT"
     assert runtime.summary["supported_requirements"] == {claim.candidate_id: []}
     # Correct statement alone is not full-answer coverage; M6 must affirm the goal too.
@@ -692,118 +492,9 @@ def test_multiperiod_commentary_still_requires_semantic_truth_and_goal_support()
         return response
 
     gateway.generate.side_effect = confirm
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway, integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), gateway)
     assert runtime.verify(batch, integration_context=ctx)[0].outcome.final.decision == "ACCEPT"
     assert runtime.summary["supported_requirements"] == {claim.candidate_id: [req.requirement_id]}
-
-
-def test_provider_goal_shorthand_and_catalog_operand_periods_survive_missing_model_periods():
-    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
-    catalog = SnapshotCatalog(**data)
-    context = batch.context.model_copy(update={"mode": "deterministic"})
-    sources = inventory(catalog, context)
-    metric = next(h for h, s in sources.items() if s["kind"] == "metric")
-    facts = [h for h, s in sources.items() if s["kind"] == "fact"]
-    wire = dict(
-        requirements=[
-            dict(
-                requirement_id="R1",
-                text="Tính tăng trưởng",
-                kind="metric",
-                target_id=metric,
-                period="2030",
-                interpretation=True,
-                required_indicators=facts,
-            ),
-            dict(
-                requirement_id="R2",
-                text="Nhận xét",
-                kind="analysis",
-                aspect="analysis",
-                required_indicators=["R1"],
-                answer_goal="analysis",
-            ),
-        ],
-        tasks=[
-            dict(
-                task_id="T1",
-                specialist="profitability",
-                objective="Tính tăng trưởng",
-                requirement_ids=["R1"],
-                sources=facts,
-            ),
-            dict(
-                task_id="T2",
-                specialist="profitability",
-                objective="Nhận xét",
-                requirement_ids=["R2"],
-                sources=["T1"],
-                depends_on=["T1"],
-            ),
-        ],
-    )
-    plan, errors = integration_plan(wire)
-    assert not errors and plan.tasks[1].sources == []
-    engine = FinancialLiteOrchestrator(
-        catalog,
-        integration_v2=True,
-        supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
-    )
-    result = engine.run(
-        question="Nhận xét tăng trưởng doanh thu năm 2030 so với 2029", context=context
-    )
-    assert {f.record.context.period for f in result.supervisor_result.evidence_bundle.facts} == {
-        "2029",
-        "2030",
-    }
-    assert not result.errors
-    assert any(r["answer_goal"] != "value" for r in result.integration_context["requirements"])
-
-
-def test_shared_proof_can_satisfy_numeric_goal_owned_by_another_task():
-    from vietnamese_financial_multi_agent.agents.orchestration_contracts import (
-        AggregatedCandidate,
-        CandidateOrigin,
-    )
-    from vietnamese_financial_multi_agent.agents.specialist_common import SpecialistCandidate
-
-    data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
-    claim = batch.claims[0]
-    sources = inventory(SnapshotCatalog(**data), batch.context)
-    req = IntegrationRequirement(
-        requirement_id="R-value",
-        text="Tính tăng trưởng",
-        kind="metric",
-        target_id="revenue_yoy",
-        period=claim.period,
-        interpretation=True,
-        interpretation_topic="metric_meaning",
-        requested_unit="percent",
-    )
-    targets = resolve_requirements(LitePlan(requirements=[req]), sources)
-    aggregate = AggregatedCandidate(
-        **{k: getattr(claim, k) for k in SpecialistCandidate.model_fields},
-        origins=[
-            CandidateOrigin(
-                role="profitability",
-                execution_id="T-synthesis",
-                candidate_id=claim.candidate_id,
-                original_content=claim.content,
-                supporting_evidence=claim.supporting_evidence,
-            )
-        ],
-        origin_roles=["profitability"],
-        supporting_evidence=claim.supporting_evidence,
-        supporting_references=claim.fact_references,
-    )
-    workspace = IntegrationWorkspace(
-        [req], targets=targets, tasks={"T-synthesis": {"requirement_ids": ["R-comment"]}}
-    )
-    assert workspace.export([aggregate])["candidate_requirements"][claim.candidate_id] == [
-        "R-value"
-    ]
-    req.requested_unit = "USD"
-    assert workspace.export([aggregate])["candidate_requirements"][claim.candidate_id] == []
 
 
 def test_v2_inferred_question_date_is_not_an_explicit_pin_on_annual_facts(tmp_path):
@@ -825,7 +516,6 @@ def test_v2_inferred_question_date_is_not_an_explicit_pin_on_annual_facts(tmp_pa
         question="Doanh thu thuần và lợi nhuận gộp TEST năm 2030, đối chiếu tại 31/12/2030?",
         document_id=context.document_id,
         snapshot_id=context.snapshot_id,
-        integration_v2=True,
         execution_mode="deterministic",
         allow_gateway=False,
     )
@@ -908,9 +598,7 @@ def test_aggregation_keeps_declared_premise_order_and_m6_owner():
     assert aggregated[0].supporting_evidence == claim.supporting_evidence
     batch.claims[0].supporting_evidence = aggregated[0].supporting_evidence
     assert (
-        LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
-        .verify(batch)[0]
-        .outcome.final.decision
+        LiteVerificationRuntime(SnapshotCatalog(**data)).verify(batch)[0].outcome.final.decision
         == "ACCEPT"
     )
 
@@ -920,7 +608,7 @@ def test_v2_readable_arithmetic_preserves_sign_period_and_citations():
     from vietnamese_financial_multi_agent.verification.ledger import build_verified_claim
 
     data, batch = balance_reasoning_case("revenue_yoy", "percentage_change")
-    runtime = LiteVerificationRuntime(SnapshotCatalog(**data), integration_v2=True)
+    runtime = LiteVerificationRuntime(SnapshotCatalog(**data))
     entry = build_verified_claim(runtime.verify(batch)[0])
     key = entry.identity.verified_claim_id
     context = dict(

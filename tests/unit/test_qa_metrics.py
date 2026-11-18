@@ -94,31 +94,3 @@ def test_live_runner_persists_provider_failure_without_retry(tmp_path):
     assert gateway.generate.call_count == 1
     assert runner.read(tmp_path / "provider-events.json")[0]["status"] == "error"
     assert events[0]["elapsed_seconds"] >= 0
-
-
-def test_mixed_no_inference_constraint_is_scope_not_retrieval():
-    from vietnamese_financial_multi_agent.agents.fusion_contracts import FusionPlan
-    from vietnamese_financial_multi_agent.agents.qa_planning import (
-        response_constraints,
-        retain_response_constraints,
-    )
-
-    question = "Nêu doanh thu và chính sách. Không suy ra nguyên nhân từ chính sách."
-    plan = FusionPlan(
-        question=question,
-        requirements=[
-            dict(requirement_id="R1", original_span="Nêu doanh thu", lane="financial", kind="fact"),
-            dict(requirement_id="R2", original_span="Chính sách", lane="document", kind="document"),
-            dict(
-                requirement_id="R3",
-                original_span=response_constraints(question)[0],
-                lane="financial",
-                kind="interpretation",
-                dependencies=["R2"],
-            ),
-        ],
-    )
-    assert len(retain_response_constraints(plan, question).requirements) == 2
-    assert response_constraints("Không có số liệu. Nêu doanh thu.") == []
-    plan.requirements[0].original_span = "Không suy ra nguyên nhân và tính tăng trưởng"
-    assert len(retain_response_constraints(plan, question).requirements) == 2

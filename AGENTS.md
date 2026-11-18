@@ -1,5 +1,13 @@
 # Quy tắc làm việc của Codex
 
+## Checkout làm việc duy nhất
+
+- Mọi task mới làm trực tiếp trong `D:\DuAnCNTT\multi_agent` trên branch `main`.
+- Không tự tạo Git worktree, clone hoặc checkout phụ.
+- Nếu xung đột hoặc local edits khiến không thể thao tác an toàn, dừng ở
+  `BLOCKED` và báo Project Owner.
+- Không tự reset, stash, clean hoặc ghi đè thay đổi hiện có.
+
 Áp dụng toàn repository. Tài liệu tiếng Việt; identifiers/tên code bằng tiếng Anh.
 Python 3.11+, ưu tiên Modular Monolith. DACNTT là prototype nghiên cứu Multi-Agent
 thích ứng cho báo cáo tài chính, độc lập với LLM provider, chạy local single-user;

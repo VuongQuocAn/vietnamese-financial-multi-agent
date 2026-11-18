@@ -79,7 +79,15 @@ def test_numbers_must_belong_to_cited_claim_and_model_cannot_emit_citation(admit
             gaps=[],
         )
     )
-    fields, trace = compose_lite(request, [entry, other], gateway=gateway)
+    fields, trace = compose_lite(
+        request,
+        [entry, other],
+        gateway=gateway,
+        coverage_context=dict(
+            requirements=[dict(requirement_id="G1", text="Verified findings")],
+            verified_requirements={e.identity.verified_claim_id: ["G1"] for e in [entry, other]},
+        ),
+    )
     assert [s["reason"] for s in trace["rejected_segments"]] == [
         "unsupported_number",
         "invalid_answer_text_or_citation",
