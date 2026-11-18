@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## ARCH-SIMPLIFY-01 — Đơn giản hóa điều phối Multi-Agent
+
+**REVIEW** — implementation `5cb38bd4853c7bbbe054a79ea18c54ba2b2d1408`.
+[Spec](tasks/ARCH/ARCH-SIMPLIFY-01.md), [kết quả live](../docs/arch-simplify-01-live.md).
+M5 dùng một plan Qwen cho DAG và chia sẻ Financial Tools, BM25, EF-EG qua workspace.
+37 targeted PASS. Ba QA Pilot chạy một lượt mỗi câu, 0 đúng, 0 partial, 3 abstain,
+0 citations. Cả ba dừng ở lập kế hoạch do thiếu task hoặc goal source sai.
+3 API calls, 14.158 tokens và 248,767 s. Next action — Tech Lead review để quyết
+định chuyển sang `E2E-GATE-09`.
+
 ## E2E-STABILIZE-01 — Ổn định Pipeline để chạy Benchmark
 
 **REVIEW — Owner yêu cầu dừng18/11/2026**; implementation
