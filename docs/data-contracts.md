@@ -4,6 +4,12 @@
 
 Client request deadline cho phép tối đa600s (default180s giữ nguyên), vẫn giới hạn
 stage/calls qua RequestGateway; không thay model/server/context24K.
+Profile Thinking ước lượng bảo thủ ceil(prompt chars/2), reserve1024 tokens rồi
+clamp output budget vào24576; không coi đây là token count do tokenizer/provider
+báo. Wire M5/M6 chia sẻ nguyên object nguồn bị lặp qua `shared_payload_objects`/
+`shared_ref`, có quy tắc giải reference; expand trả nguyên payload, không cắt
+nguồn/caveats, đổi digest proof hoặc quyền xác minh. HTTP400 của một provider call
+không latch lỗi cho các nhánh độc lập; vẫn giữ lỗi và giới hạn tổng calls/deadline.
 
 Document kind `exact_text` có thể tìm cả text/table; source projection `literal_table`
 giữ nguyên bảng đã pin, headers và toàn bộ citations. Chỉ một dòng label khớp nguyên

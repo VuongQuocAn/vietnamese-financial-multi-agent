@@ -16,6 +16,7 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..core.prompt_payload import compact_prompt
 from ..evidence.graph import graph_id
 from ..tools.evidence_retrieval import EvidenceRetrievalTools, GetEvidenceSourcesRequest
 from ..tools.financial_calculator import CalculateFinancialMetricRequest, FinancialCalculator
@@ -856,7 +857,7 @@ class SupervisorLite:
                 ],
             )
             prompt.update(contract)
-        payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
+        payload = json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
             return fallback_plan(question, sources), metadata, ["supervisor_payload_limit_fallback"]
         request = LLMRequest(
@@ -972,7 +973,7 @@ class SupervisorLite:
                 h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()
             },
         )
-        payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
+        payload = json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
             return (
                 preserve_question_plan(question, sources),
@@ -1463,7 +1464,8 @@ class FinancialLiteOrchestrator:
             ):
                 deterministic = True
         if (
-            len(json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))) + len(question)
+            len(json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":")))
+            + len(question)
             > 48000
         ):
             deterministic = True

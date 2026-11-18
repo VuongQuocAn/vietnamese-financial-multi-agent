@@ -42,7 +42,8 @@ Gold/M7/Obligations hoặc nới ACCEPT; không OCR/Gemini/fullCI/36Pilot/Full60
 
 1. Replay saved traces; sửa lỗi tổng quát, không hardcode QA/company/answer.
 2. Targeted controls, freeze runtime; một run9QA, cap90calls/10mỗi QA/retries0.
-3. Hậu kiểm accuracy/coverage, technical/valid abstain, latency/tokens/traces;
+3. Nếu live lộ lỗi payload đơn giản: giữ lượt dở, sửa một lần rồi final9QA;
+   tổng cap90calls gồm cả lượt dở. Hậu kiểm accuracy/coverage/latency/tokens/traces;
    commit/push main và REVIEW. Không vòng FIX vô hạn sau live.
 
 ## Acceptance Criteria
@@ -62,7 +63,9 @@ saved traces/real-JSON replay và9QA integration. Ruff/planning/diff; không ful
 
 Thinking có thể thiếu verdict/binding hoặc reasoning chưa đủ; abstain hợp lệ được
 chấp nhận. Timeout chung client600s/câu, stage180s, output8192 như THINK; không đổi
-model/context/server. Missing-verdict repair tối đa1, không retry timeout.
+model/context/server; output base8192 được clamp theo ước lượng chars/2 và reserve1024.
+Missing-verdict repair tối đa1, không retry timeout. Một lượt dở15attempts được giữ
+riêng vì HTTP400/payload; final còn75calls tối đa, không mở vòng FIX sau final.
 
 ## Implementation Evidence
 

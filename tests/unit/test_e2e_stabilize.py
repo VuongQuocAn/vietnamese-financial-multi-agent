@@ -20,7 +20,7 @@ from vietnamese_financial_multi_agent.verification.lite_runtime import (
 from .test_evidence_obligations import gateway_with_goals, selection_case
 
 
-def test_omitted_comparison_retains_original_question_and_valid_task_dependencies():
+def test_omitted_comparison_retains_original_question_and_valid_task_dependencies(monkeypatch):
     from vietnamese_financial_multi_agent.api.qa_pipeline_contracts import FinancialQARequest
 
     assert (
@@ -51,6 +51,50 @@ def test_omitted_comparison_retains_original_question_and_valid_task_dependencie
     assert plan.requirements[-1].text == question
     assert plan.tasks[-1].requirement_ids == [plan.requirements[-1].requirement_id]
     assert not retain_requested_conclusion(question, plan, {})
+    from vietnamese_financial_multi_agent.core.llm_contracts import parse_llm_request
+    from vietnamese_financial_multi_agent.core.llm_gateway import _failure
+    from vietnamese_financial_multi_agent.core.prompt_payload import compact_prompt
+    from vietnamese_financial_multi_agent.core.request_gateway import RequestGateway
+
+    from .test_llm_gateway import request
+
+    source = dict(
+        identity="source", selectors=["/cells/" + str(i) for i in range(50)], caveats=["uncertain"]
+    )
+    payload = dict(
+        graph_context=[source, source],
+        dependency_results=dict(source=source),
+        instruction="Keep original goals",
+    )
+    packed = compact_prompt(payload)
+    assert len(json.dumps(packed)) < len(json.dumps(payload))
+
+    def expand(value):
+        if isinstance(value, dict):
+            if set(value) == {"shared_ref"}:
+                return expand(packed["shared_payload_objects"][value["shared_ref"]])
+            return {k: expand(v) for k, v in value.items()}
+        return [expand(v) for v in value] if isinstance(value, list) else value
+
+    assert {
+        k: expand(v)
+        for k, v in packed.items()
+        if k not in {"shared_payload_objects", "payload_reference_rule"}
+    } == payload
+    req = parse_llm_request(request(provider="qwen", model="test-model"))
+    req.messages[-1].content = "x" * 44000
+    seen = []
+
+    def generate(bound):
+        seen.append(bound)
+        return _failure(bound, "timeout")
+
+    monkeypatch.setenv("QWEN_THINKING_BUDGET", "true")
+    RequestGateway(SimpleNamespace(generate=generate), max_calls=1, timeout_seconds=600).generate(
+        req
+    )
+    assert 0 < seen[0].generation.max_output_tokens < 8192
+    assert seen[0].messages == req.messages
 
 
 def test_partial_verdict_repair_preserves_verified_proof_and_blocks_unverified(tmp_path):

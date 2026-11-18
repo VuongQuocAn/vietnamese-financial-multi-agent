@@ -21,6 +21,7 @@ from ..core.llm_contracts import (
     OutputSpec,
     RequestConstraints,
 )
+from ..core.prompt_payload import compact_prompt
 from ..evidence.contracts import is_json_reference
 from ..evidence.graph import graph_id
 from ..evidence.retrieval import EvidenceCitation, RetrievalReference
@@ -630,7 +631,9 @@ def generate_candidates(
             messages=[
                 Message(
                     role="system",
-                    content=json.dumps(prompt, ensure_ascii=False, separators=(",", ":")),
+                    content=json.dumps(
+                        compact_prompt(prompt), ensure_ascii=False, separators=(",", ":")
+                    ),
                 ),
                 Message(role="user", content=result.question),
             ],

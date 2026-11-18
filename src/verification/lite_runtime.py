@@ -19,6 +19,7 @@ from ..core.llm_contracts import (
     RequestConstraints,
     parse_json_output,
 )
+from ..core.prompt_payload import compact_prompt
 from ..outputs.qa_composer import _targets
 from ..tools.python_execution import PythonExecutor
 from ..tools.question_understanding import normalize
@@ -738,7 +739,7 @@ class LiteVerificationRuntime:
                 )
                 for e in p.batch.claims[0].supporting_evidence
             ]
-            wire_rows.append(wire)
+            wire_rows.append(compact_prompt(wire) if self.integration_v2 else wire)
         payload = json.dumps(wire_rows, ensure_ascii=False, separators=(",", ":"))
         if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
             if self.integration_v2 and 1 < len(proofs) <= 32:
@@ -791,6 +792,11 @@ class LiteVerificationRuntime:
             constraints=RequestConstraints(timeout_seconds=60),
         )
         if self.integration_v2:
+            request.messages[0].content += (
+                " Nếu một row có shared_payload_objects, giải mọi object {shared_ref:P...} "
+                "bằng bảng đó, kể cả references lồng nhau, trước khi kiểm chứng. P chỉ là "
+                "wire reference giữ nguyên dữ liệu, không là evidence_id hay quyền ACCEPT. "
+            )
             request.messages[0].content = request.messages[0].content.replace(
                 '"reason":"..."}',
                 '"reason":"...","supported_requirement_ids":[]}',

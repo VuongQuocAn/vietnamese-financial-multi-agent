@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import re
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -26,6 +27,9 @@ def prepare(storage, output):
     manifest = storage / "artifacts/evidence/E2E-VAL-01/baseline-nine/questions-only.json"
     cases = json.loads(manifest.read_bytes())
     assert len(cases) == 9 and len({c["id"] for c in cases}) == 9
+    prior = storage / "artifacts/evidence/E2E-STABILIZE-01/live-nine-final"
+    prior_used = len(list((prior / "provider").glob("*.json")))
+    assert prior_used < 90
     output.mkdir(parents=True, exist_ok=False)
     for folder in ("provider", "results"):
         (output / folder).mkdir()
@@ -62,11 +66,19 @@ def prepare(storage, output):
                 for p in (storage / "artifacts/evidence" / name).rglob("*")
                 if p.is_file()
             },
-            settings=dict(total_call_cap=90, per_question_cap=10, timeout_seconds=600, retries=0),
+            prior_evidence_hashes={
+                p.relative_to(storage).as_posix(): sha(p) for p in prior.rglob("*") if p.is_file()
+            },
+            prior_attempts=prior_used,
+            task_total_call_cap=90,
+            settings=dict(
+                total_call_cap=90 - prior_used, per_question_cap=10, timeout_seconds=600, retries=0
+            ),
             client_profile=dict(
                 QWEN_THINKING_BUDGET="true",
                 stage_timeout_seconds=180,
-                max_output_tokens_floor=8192,
+                max_output_tokens_base=8192,
+                prompt_token_estimate="ceil(chars/2), reserve1024, output clamped inside24576",
                 context_changed=False,
                 template_override=False,
             ),
@@ -79,12 +91,39 @@ def validate(storage, output):
     receipt = json.loads((output / "receipt.json").read_bytes())
     assert sha(Path(__file__)) == receipt["stabilization_runner_sha256"]
     os.environ["QWEN_THINKING_BUDGET"] = "true"
+    wire = []
+
+    def observe(response):
+        response.read()
+        event = dict(http_status=response.status_code)
+        try:
+            raw = response.json()
+            if response.status_code == 200:
+                choice = raw.get("choices", [{}])[0]
+                content = choice.get("message", {}).get("content") or ""
+                event.update(
+                    finish_reason=choice.get("finish_reason"), inline_thinking="</think>" in content
+                )
+            else:
+                # Whitelisted diagnostics only; never serialize server messages,
+                # which can echo inputs or credentials.
+                message = str(raw.get("error", raw.get("detail", ""))).lower()
+                event["context_length_error"] = bool(
+                    re.search(
+                        r"context length|max_model_len|maximum context|maximum model", message
+                    )
+                )
+        except ValueError:
+            event["non_json_response"] = True
+        wire.append(event)
+        atomic_json(output / "wire-summary.json", wire)
+
     try:
-        run(ROOT, storage, output, None, corpus=storage / receipt["corpus"])
+        run(ROOT, storage, output, None, corpus=storage / receipt["corpus"], response_hook=observe)
     finally:
         checks = {
             key: all(sha(storage / p) == h for p, h in receipt[key].items())
-            for key in ("local_hashes", "parent_evidence_hashes")
+            for key in ("local_hashes", "parent_evidence_hashes", "prior_evidence_hashes")
         }
         atomic_json(output / "preservation.json", checks)
         assert all(checks.values()), checks
@@ -96,7 +135,7 @@ def main():
     parser.add_argument("--storage-root", type=Path, required=True)
     args = parser.parse_args()
     storage = args.storage_root.resolve()
-    output = storage / "artifacts/evidence/E2E-STABILIZE-01/live-nine-final"
+    output = storage / "artifacts/evidence/E2E-STABILIZE-01/live-release"
     (prepare if args.mode == "prepare" else validate)(storage, output)
 
 

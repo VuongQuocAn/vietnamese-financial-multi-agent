@@ -41,7 +41,14 @@ class RequestGateway:
         # Opt-in client budget for a server already running Thinking. This does
         # not change the server/template/model, and child lanes share the deadline.
         if request.model.provider == "qwen" and os.environ.get("QWEN_THINKING_BUDGET") == "true":
-            bound.generation.max_output_tokens = max(bound.generation.max_output_tokens or 0, 8192)
+            # Conservative client estimate for Vietnamese/JSON prompts. Reserve
+            # room inside the unchanged 24K context, rather than adding an 8K
+            # floor unconditionally to a nearly full prompt. Never crop sources.
+            prompt_chars = sum(len(message.content) for message in bound.messages)
+            available = max(256, 24576 - (prompt_chars + 1) // 2 - 1024)
+            bound.generation.max_output_tokens = min(
+                max(bound.generation.max_output_tokens or 0, 8192), available
+            )
             bound.constraints = RequestConstraints(timeout_seconds=min(180, remaining))
         if bound.constraints:
             bound.constraints.timeout_seconds = min(
@@ -56,6 +63,10 @@ class RequestGateway:
         if (
             response.status != "success"
             and response.error
+            and not (
+                response.error.origin == "provider"
+                and response.error.provider_error_code == "http_400"
+            )
             and response.error.category
             not in {
                 "structured_output_invalid",
