@@ -1,5 +1,14 @@
 # Trạng thái hiện tại
 
+## ARCH-SIMPLIFY-02 — Contract tối giản cho Coordinator
+
+**REVIEW** — implementation `25df8ebb184fc118373da68cfe0ef0808830d3f2`.
+[Spec](tasks/ARCH/ARCH-SIMPLIFY-02.md), [báo cáo live](../docs/arch-simplify-02-live.md).
+Specialists chọn công cụ sau bước lập DAG. 20 targeted PASS. Single-hop đi qua
+M5–M7 và phát hành 6 citations. Multi-hop và Mixed timeout. 9 API calls, 20.463
+tokens ghi nhận và 2 calls thiếu usage. EF-EG đã chạy offline, còn chờ trace
+live. Next action — Tech Lead quyết định chuyển sang `E2E-GATE-09`.
+
 ## ARCH-SIMPLIFY-01 — Đơn giản hóa điều phối Multi-Agent
 
 **REVIEW** — implementation `5cb38bd4853c7bbbe054a79ea18c54ba2b2d1408`.
