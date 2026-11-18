@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QWEN
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: E2E-REMED-04
 - Estimated Complexity: S
@@ -53,6 +53,7 @@ Gemini/Pilot/Full600/fullCI; không đổi EF-EG/M7, không nới M6/Obligations
 - [x] Targeted controls và đúng3QA thật; không vượt giới hạn task.
 - [x] Báo accuracy/coverage/latency/tokens/calls/lỗi, nêu giới hạn so sánh.
 - [x] Evidence/dataset/local edits nguyên trạng, commit/push main, REVIEW.
+- [x] Owner xác nhận DONE ngày18/11/2026 cho phạm vi validation, giữ kết quả và giới hạn đã báo.
 
 ## Required Tests
 
@@ -74,8 +75,11 @@ baseline f6059f1. [Report](../../../docs/qwen-think-01-thinking-validation.md):
 1unknown,716,230s.10HTTP200 có inline Thinking;M6 timeout/invalid JSON và retrieval
 miss vẫn chặn đáp án.264JSON/115pins/3Pilot/272parent/80local hashes bất biến;
 Ruff/planning/diff đạt. Không retest/Non-thinking/Gemini/OCR/fullCI.
-REVIEW chờ nghiệm thu; không coi negative probe là readiness hoặc DONE.
+Owner xác nhận DONE ngày18/11/2026 cho phạm vi Thinking validation; không coi
+negative probe là readiness hoặc bằng chứng Thinking cải thiện QA. Bàn giao
+`77bec8f` đã push main/remote SHA verified. Phiên đóng chỉ tài liệu/tracking,
+planning/diff và Git; không sửa runtime hoặc chạy lại tests/API/benchmark/CI.
 
 ## Handoff Notes
 
-Next action: Tech Lead review probe âm tính, regression NR và giới hạn budget/routing trước khi giao việc tiếp theo.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.

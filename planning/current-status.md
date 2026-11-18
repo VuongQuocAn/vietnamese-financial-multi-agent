@@ -2,7 +2,7 @@
 
 ## QWEN-THINK-01 — Thinking Validation
 
-**REVIEW**, Owner18/11/2026; implementation `80ffc468ad3a40c8eca859fb8f19da3f273e4aac`,
+**DONE — Owner xác nhận ngày18/11/2026**; implementation `80ffc468ad3a40c8eca859fb8f19da3f273e4aac`,
 baseline remote `f6059f1`, worktree riêng. [Spec](tasks/QWEN/QWEN-THINK-01.md),
 [report](../docs/qwen-think-01-thinking-validation.md). Adapter final channel,
 lossless semantic batching/budget/Fusion fallback;37unique PASS/1baseline FAIL.
@@ -11,7 +11,11 @@ lossless semantic batching/budget/Fusion fallback;37unique PASS/1baseline FAIL.
 comparison/deadline, NR M6 JSON sai, SH retrieval miss.189runtime Git blobs,
 264JSON/115pins/3Pilot/272parent/80local hashes verified; giữ notebook/server/
 model/context24K/EF-EG/M7/Obligations. Không retest/Non-thinking/OCR/Gemini/fullCI.
-Next action: Tech Lead review probe âm tính, regression NR và giới hạn budget/routing trước khi giao việc tiếp theo.
+Nghiệm thu phạm vi Thinking validation; giữ kết quả âm tính và các giới hạn trên,
+không xác nhận Thinking cải thiện QA hoặc readiness Pilot. Bàn giao `77bec8f` đã
+push main/remote verified. Phiên đóng chỉ cập nhật tài liệu/tracking, planning/diff
+và Git; không sửa runtime hoặc chạy lại tests/API/benchmark/CI.
+Next action: chờ Owner/Tech Lead giao nhiệm vụ tiếp theo.
 
 ## E2E-REMED-04 — Goal Binding & Document Evidence
 
