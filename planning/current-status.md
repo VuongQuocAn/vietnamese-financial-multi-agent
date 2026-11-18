@@ -1,5 +1,13 @@
 # Trạng thái hiện tại
 
+## E2E-TECH-FIX-01 — Loại bỏ lỗi implementation trước Benchmark
+
+**IN_PROGRESS** — baseline `3a08371`, worktree riêng. Chuẩn hóa boolean
+`use_graph` sai tầng, cap demand 2.500 trong context 24K; phân loại NR-0006
+thiếu unit/scale, không nới M6 hoặc sửa corpus. 8 targeted offline controls PASS.
+[Spec](tasks/E2E/E2E-TECH-FIX-01.md).
+Next action — freeze implementation rồi chạy tối đa ba live probes một lượt.
+
 ## E2E-GATE-09 — Ổn định Qwen và kiểm thử 9 QA
 
 **REVIEW** — implementation `5022a42e9634dc6718e562b65f8122cfc8834441`.

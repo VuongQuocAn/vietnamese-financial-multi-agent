@@ -1,5 +1,11 @@
 # Data contracts
 
+E2E-TECH-FIX-01: demand parser chuyển boolean `document_search.use_graph` về
+root khi không có xung đột, giữ nguyên query/handles và raw response. Trường lạ,
+kiểu sai và lựa chọn mâu thuẫn vẫn bị schema loại. Cap demand là 2.500 token
+cho Thinking cùng JSON, bằng plan/claim; RequestGateway giữ giới hạn context 24K.
+`found` chỉ xác nhận tìm được record, không cấp eligibility khi thiếu unit/scale.
+
 ## E2E-STABILIZE-01 — Literal table quotation và verdict recovery
 
 Client request deadline cho phép tối đa600s (default180s giữ nguyên), vẫn giới hạn

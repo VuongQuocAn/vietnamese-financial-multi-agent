@@ -171,7 +171,7 @@ def propose(gateway, context, task, workspace, sources):
             "Dùng lại facts và kết quả từ dependency_results. Chỉ dùng period_from_task khi "
             "cần tra chỉ tiêu theo kỳ thực tế của dependency. Root cần dữ liệu phải yêu cầu "
             "retrieve hoặc document_search. Đặt use_graph=true nếu cần EF-EG để lần theo nguồn "
-            "hoặc quan hệ giữa dữ liệu. "
+            "hoặc quan hệ giữa dữ liệu; use_graph nằm ở root, ngoài document_search. "
             "Dùng document_search cho BM25 khi cần nội dung văn bản, bảng hoặc thuyết minh. "
             "query là cụm từ ngắn có trong tài liệu. Chọn kind=table_selection cho yêu cầu "
             "chọn đối tượng cực trị trong bảng và selection_period là ngày ISO nếu biết. "
@@ -193,7 +193,7 @@ def propose(gateway, context, task, workspace, sources):
             h: {k: s[k] for k in ("kind", "item", "label", "period")} for h, s in sources.items()
         },
         schema=schema,
-        empty_response_example={"retrieve": [], "selection": None},
+        empty_response_example={"retrieve": [], "selection": None, "use_graph": False},
     )
     wire = json.dumps(prompt, ensure_ascii=False)
     if len(wire) > 48000:
@@ -207,7 +207,9 @@ def propose(gateway, context, task, workspace, sources):
                 Message(role="system", content=wire),
                 Message(role="user", content=task.objective),
             ],
-            generation=GenerationParameters(temperature=0.0, max_output_tokens=1200),
+            # Thinking and final JSON share this cap, as in plan/claim generation.
+            # RequestGateway still bounds it to the remaining 24K context.
+            generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),
             output_spec=OutputSpec(format="json"),
             constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
         )
@@ -238,6 +240,16 @@ def propose(gateway, context, task, workspace, sources):
 
 def parse_retrieval_batches(payload):
     """Validate all requested inputs before execution, max6 per batch, no truncation."""
+    search = payload.get("document_search")
+    if isinstance(search, dict) and type(search.get("use_graph")) is bool:
+        graph = search["use_graph"]
+        if "use_graph" not in payload or payload["use_graph"] is graph:
+            # Relocate an unambiguous tool option without changing the model's
+            # choice/query/handles. Conflicts and unknown fields still fail schema.
+            payload = payload | {
+                "use_graph": graph,
+                "document_search": {k: v for k, v in search.items() if k != "use_graph"},
+            }
     requested = payload.get("retrieve", [])
     if not isinstance(requested, list) or len(requested) > 16:
         raise ValueError("demand_total_input_limit")
