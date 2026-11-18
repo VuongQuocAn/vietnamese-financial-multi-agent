@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## E2E-GATE-09 — Ổn định Qwen và kiểm thử 9 QA
+
+**REVIEW** — implementation `5022a42e9634dc6718e562b65f8122cfc8834441`.
+[Spec](tasks/E2E/E2E-GATE-09.md), [báo cáo](../docs/e2e-gate-09-live.md).
+Client dùng cap Thinking 180 s theo deadline còn lại và giữ context 24K.
+11 targeted PASS. Hai probes và 9/9 QA một lượt trên SHA đã freeze.
+1 correct, 2 partial, 0 incorrect, 6 abstain, 2 HTTP 524 và 0 client timeout.
+40 API calls, 139.517 tokens ghi nhận, 2 calls thiếu usage, 20 citations.
+Next action — Tech Lead quyết định Pilot 45.
+
 ## ARCH-SIMPLIFY-02 — Contract tối giản cho Coordinator
 
 **REVIEW** — implementation `25df8ebb184fc118373da68cfe0ef0808830d3f2`.
