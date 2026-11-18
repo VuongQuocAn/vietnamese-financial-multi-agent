@@ -1,8 +1,9 @@
 # Quy tắc làm việc của Codex
 
 Áp dụng toàn repository. Tài liệu tiếng Việt; identifiers/tên code bằng tiếng Anh.
-Python 3.11+, ưu tiên Modular Monolith. Đây là dự án nghiên cứu học thuật AI,
-báo cáo tài chính và Multi-Agent, local single-user prototype.
+Python 3.11+, ưu tiên Modular Monolith. DACNTT là prototype nghiên cứu Multi-Agent
+thích ứng cho báo cáo tài chính, độc lập với LLM provider, chạy local single-user;
+không phải sản phẩm enterprise.
 
 ## Research-First, Minimal Engineering, Low Codex Quota
 
@@ -16,6 +17,42 @@ Thứ tự ưu tiên:
 
 Không mặc định tiêu chuẩn enterprise/production khi task không yêu cầu. Quy trình
 này áp dụng cho công việc mới từ W-04; giữ nguyên evidence M0–M2/W-01–W-03.
+
+## ARCH-GUARD-01 — Ranh giới kiến trúc Research MVP
+
+1. **LLM-independent:** Coordinator và Specialists hiểu câu hỏi, lập goals/DAG,
+   chọn công cụ, truy xuất evidence và suy luận. Đổi Qwen/Gemini/GPT/model khác
+   qua cấu hình/adapter hiện có, không sửa logic nghiệp vụ theo provider.
+2. **Python deterministic:** Python chỉ điều phối thực thi, xử lý dependencies,
+   gọi Tools/EF-EG, tính toán Decimal, kiểm tra định danh và provenance. Không dùng
+   Regex, từ khóa hoặc if-else để quyết định ngữ nghĩa câu hỏi thay LLM.
+3. **Một pipeline chính:** Coordinator → Specialists → Tools/EF-EG → M6 →
+   Verified Ledger → M7. Không tạo pipeline, Agent, adapter hay framework song song.
+   Khi thay implementation cũ, phải xem xét loại bỏ phần bị thay thế.
+4. **Verification:** M6 kiểm chứng claims và bằng chứng; M7 chỉ tổng hợp claims
+   đã kiểm chứng. Không thêm tầng kiểm chứng trùng lặp.
+5. **Chống hardcode:** Không viết logic riêng theo QA ID, Gold, tên doanh nghiệp,
+   câu hỏi mẫu hoặc cách diễn đạt cụ thể; không sửa từng câu benchmark để tăng
+   accuracy. Cho phép canonical accounting mappings, chuẩn hóa định dạng, kiểm tra
+   schema, provenance và phép tính deterministic.
+
+Mọi task thay đổi runtime phải:
+
+- Ưu tiên sửa/xóa code hiện có; hạn chế thêm file, helper, contract hoặc fallback.
+- Báo cáo số file thay đổi, dòng code thêm/xóa và nhánh logic/cờ cấu hình thêm/bỏ.
+  Giải thích từng abstraction mới; từ chối phần không cần thiết.
+- Phân biệt lỗi implementation, model reasoning và thiếu evidence. Tests PASS
+  không đủ nếu vi phạm ranh giới kiến trúc.
+- Kiểm thử tập trung trên dữ liệu thật trong phạm vi/ngân sách được giao; tránh
+  full CI hoặc vòng FIX/RETEST không cần thiết.
+
+DONE cần chức năng hoạt động, đúng ranh giới kiến trúc và không tăng độ phức tạp
+vô lý; vẫn cần Tech Lead nghiệm thu theo quy tắc bên dưới.
+
+Sau ARCH-GUARD-01: freeze runtime `6b18102` → Pilot 45 theo Gold/rubric ViFinBench
+→ RAG Baseline → thay đổi LLM → Ablation Study. Không tự mở vòng FIX mới để cải
+thiện từng QA hoặc tự bắt đầu bước tiếp theo. Quy tắc mới không làm thay đổi kết
+quả thực nghiệm đã lưu và không tự cấp phép sửa/refactor runtime hiện tại.
 
 ## Phạm vi, trạng thái và Git
 
