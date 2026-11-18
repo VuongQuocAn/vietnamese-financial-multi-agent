@@ -98,6 +98,25 @@ def document_intent(question):
             DocumentRequirement(target=normalize_search(label), label=label, kind=kind, query=query)
         )
 
+    duration = re.search(
+        r"(?:thời gian|thời hạn)\s+(?:khấu hao|phân bổ|sử dụng)\s+(.+?)\s+"
+        r"(?:trong khoảng|khoảng|là|bao nhiêu|như thế nào)",
+        question,
+        re.I,
+    )
+    if duration:
+        add(duration[1], "exact_text", duration[1])
+        specs[-1].label = question
+    credit_term = re.search(r"\bthoi (?:gian|han)\b.*\b(?:han muc|hop dong)\b", text)
+    if credit_term and not specs:
+        # The whole contract clause remains the obligation; the short source
+        # phrase supplies retrieval terms, never an inferred maturity date.
+        add(
+            question,
+            "exact_text",
+            "thời hạn cấp hạn mức" if "thoi han" in text else "thời gian cấp hạn mức",
+        )
+
     signer = bool(re.search(r"\b(nguoi ky|ai ky|chu ky|ky bao cao)\b", text))
     roles = [key for key in ROLES if re.search(rf"\b{key}\b", text)]
     for key in roles or (list(ROLES) if signer else []):
@@ -129,6 +148,8 @@ def document_intent(question):
             outside_quotes,
         )
     )
+    if duration or credit_term:
+        mixed = False
     if policy_question and not re.search(
         r"\b(bao nhieu|so tien|so du|ty le|ty suat|he so|roe|roa|ebitda)\b", outside_quotes
     ):

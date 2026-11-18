@@ -17,6 +17,7 @@ from ..core.llm_contracts import (
     ModelIdentity,
     OutputSpec,
     RequestConstraints,
+    parse_json_output,
 )
 from ..outputs.qa_composer import _targets
 from ..tools.python_execution import PythonExecutor
@@ -142,6 +143,29 @@ def payload_digest(payload):
     return hashlib.sha256(
         json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()
     ).hexdigest()
+
+
+def semantic_output(response):
+    """Recover only redundant closing delimiters after a complete JSON document.
+
+    No fields, verdicts, bindings or incomplete objects are invented. The normal
+    strict decoder still rejects duplicate keys; every verdict uses its old schema.
+    """
+    if not isinstance(response.output, JSONOutput):
+        return None
+    if response.status == "success":
+        return response.output.payload
+    if response.status != "malformed":
+        return None
+    text = response.output.raw_text.strip()
+    try:
+        _, end = json.JSONDecoder().raw_decode(text)
+    except ValueError:
+        return None
+    if not text[end:] or any(c not in "}] \r\n\t" for c in text[end:]):
+        return None
+    output = parse_json_output(text[:end])
+    return output.payload if output.validation_status == "json_valid" else None
 
 
 def deterministic_state(claim, validation):
@@ -387,6 +411,7 @@ class LiteVerificationRuntime:
         self.provider_metadata = []
         self.stage_latency_ms = {}
         self.summary = {}
+        self.semantic_recoveries = []
         self.python_executor = python_executor or PythonExecutor()
 
     def verify(self, batch, *, integration_context=None, **_):
@@ -563,6 +588,19 @@ class LiteVerificationRuntime:
             needs_binding = bool(
                 context and (context["proposed_requirement_ids"] or context["task_results"])
             )
+            if (
+                context
+                and claim.kind == "fact"
+                and context["local_requirements"]
+                and all(
+                    goal_binding_issue(proof, r)
+                    in {"goal_comparison_mismatch", "goal_unit_mismatch", "goal_indicator_mismatch"}
+                    for r in context["local_requirements"]
+                )
+            ):
+                # Keep deterministic truth, with zero goal coverage. A semantic
+                # call cannot repair an operand/unit/comparison mismatch anyway.
+                needs_binding = False
             if context is None:
                 needs_binding = (
                     self.integration_v2
@@ -612,6 +650,7 @@ class LiteVerificationRuntime:
             ),
             semantic_candidate_count=len(pending),
             semantic_calls=len(self.provider_metadata),
+            semantic_recoveries=self.semantic_recoveries,
             decisions={
                 state: sum(h.outcome.final.decision == state for h in histories)
                 for state in ("ACCEPT", "INVESTIGATE", "ABSTAIN")
@@ -662,7 +701,7 @@ class LiteVerificationRuntime:
 
         return histories
 
-    def _semantic(self, proofs):
+    def _semantic(self, proofs, *, repair=False):
         start = perf_counter()
         rows = [
             semantic_payload(p.batch, p.batch.claims[0], getattr(p, "goal_context", None))
@@ -700,15 +739,15 @@ class LiteVerificationRuntime:
                 for e in p.batch.claims[0].supporting_evidence
             ]
             wire_rows.append(wire)
-        payload = json.dumps(wire_rows, ensure_ascii=False)
+        payload = json.dumps(wire_rows, ensure_ascii=False, separators=(",", ":"))
         if len(payload) > (48000 if self.integration_v2 else 16000) or len(rows) > 32:
             if self.integration_v2 and 1 < len(proofs) <= 32:
                 # Lossless batches: every claim retains its complete source and
                 # dependency closure, digest and one verdict. The shared Gateway
                 # still bounds calls/time. Never truncate an oversized single row.
                 middle = len(proofs) // 2
-                self._semantic(proofs[:middle])
-                self._semantic(proofs[middle:])
+                self._semantic(proofs[:middle], repair=repair)
+                self._semantic(proofs[middle:], repair=repair)
                 return
             for p in proofs:
                 p.semantic_error = "semantic_payload_limit"
@@ -793,6 +832,7 @@ class LiteVerificationRuntime:
             )
         metadata = PlannerLLMMetadata(calls=1, model=self.model, status="error")
         verdicts, error = {}, "semantic_provider_failure"
+        can_repair = False
         try:
             response = self.gateway.generate(request)
             metadata = PlannerLLMMetadata(
@@ -805,8 +845,17 @@ class LiteVerificationRuntime:
                 provenance=response.provenance,
                 latency_ms=(perf_counter() - start) * 1000,
             )
-            if response.status == "success" and isinstance(response.output, JSONOutput):
-                raw = response.output.payload
+            raw = semantic_output(response)
+            can_repair = self.integration_v2 and response.status in {"success", "malformed"}
+            if raw is not None:
+                if response.status != "success":
+                    # Transport remains malformed in provider traces. This stage
+                    # has parsed the complete document and records that recovery.
+                    metadata.status = "success"
+                    metadata.error = None
+                    self.semantic_recoveries.append(
+                        dict(action="redundant_json_closer", request_id=request.request_id)
+                    )
                 items = (
                     raw
                     if isinstance(raw, list)
@@ -870,3 +919,14 @@ class LiteVerificationRuntime:
                     for rid in proof.semantic.supported_requirement_ids
                     if not goal_binding_issue(proof, requirements.get(rid))
                 ]
+        missing = [p for p in proofs if p.semantic is None]
+        if missing and can_repair and not repair:
+            # Exactly one repair for missing verdicts, never resend verified rows
+            # or retry timeouts. Shared Gateway enforces the same call/deadline cap.
+            self.semantic_recoveries.append(
+                dict(
+                    action="missing_verdict_once",
+                    claim_ids=[p.batch.claims[0].candidate_id for p in missing],
+                )
+            )
+            self._semantic(missing, repair=True)

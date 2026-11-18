@@ -628,7 +628,10 @@ def generate_candidates(
             request_id=prefix + "-" + uuid4().hex,
             model=model,
             messages=[
-                Message(role="system", content=json.dumps(prompt, ensure_ascii=False)),
+                Message(
+                    role="system",
+                    content=json.dumps(prompt, ensure_ascii=False, separators=(",", ":")),
+                ),
                 Message(role="user", content=result.question),
             ],
             generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),

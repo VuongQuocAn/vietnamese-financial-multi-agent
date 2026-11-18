@@ -1,5 +1,13 @@
 # Trạng thái hiện tại
 
+## E2E-STABILIZE-01 — Ổn định Pipeline để chạy Benchmark
+
+**IN_PROGRESS**, Owner giao18/11/2026; baseline remote `bdf2fd7`, worktree riêng
+giữ local edits. [Spec](tasks/E2E/E2E-STABILIZE-01.md). Đang sửa tổng quát theo
+saved traces M5/routing/M6/payload; targeted controls rồi đúng9QA cố định, không
+ngưỡng accuracy và không mở chuỗi REMED tiếp. Không đổi M7/raw/EF-EG/Obligations.
+Next action: hoàn tất targeted validation và chạy9QA.
+
 ## QWEN-THINK-01 — Thinking Validation
 
 **DONE — Owner xác nhận ngày18/11/2026**; implementation `80ffc468ad3a40c8eca859fb8f19da3f273e4aac`,

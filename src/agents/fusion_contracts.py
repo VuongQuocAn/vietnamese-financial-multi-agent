@@ -51,7 +51,15 @@ def decompose(question):
 
     result = []
     document_context = False
-    for span in requirement_spans(question):
+    intent, specs = document_intent(question)
+    # A single literal lookup is one source obligation. Splitting its company
+    # name or subject at "và" manufactures unsupported subquestions.
+    spans = (
+        [question]
+        if intent == "document" and len(specs) == 1 and specs[0].kind == "exact_text"
+        else requirement_spans(question)
+    )
+    for span in spans:
         if not span.strip():
             continue
         text = normalize(span)

@@ -1,5 +1,19 @@
 # Data contracts
 
+## E2E-STABILIZE-01 — Literal table quotation và verdict recovery
+
+Document kind `exact_text` có thể tìm cả text/table; source projection `literal_table`
+giữ nguyên bảng đã pin, headers và toàn bộ citations. Chỉ một dòng label khớp nguyên
+cụm query, đầy đủ cells mới thành quotation nguyên văn cùng headers; không chọn cực
+trị, tính toán hay promote canonical. M6 resolve lại composition/hash/references,
+toàn citations và nội dung chính xác như cũ; không đổi ACCEPT/Obligations/M7.
+
+M6 chỉ phục hồi JSON hoàn chỉnh có dấu đóng thừa cuối chuỗi, không dựng field/verdict;
+strict parser vẫn loại duplicate keys. Một repair chỉ gửi các claim thiếu verdict,
+không gửi lại proof đã verified; timeout không retry, dùng budget chung. Scalar có
+hard mismatch với goal vẫn giữ deterministic truth và zero goal support, không gọi
+semantic vô ích. Proof/digest/schema/ledger admission và nguồn raw giữ nguyên.
+
 ## E2E-REMED-04 — Goal alternatives và source-table candidate
 
 Goal parser giữ các aliases cùng span như các khả năng thay thế, không tự chọn

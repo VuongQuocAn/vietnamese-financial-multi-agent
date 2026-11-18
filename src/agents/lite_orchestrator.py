@@ -903,6 +903,7 @@ class SupervisorLite:
             output_schema,
             preserve_question_plan,
             proposal_schema,
+            retain_requested_conclusion,
         )
 
         prompt = dict(
@@ -973,7 +974,11 @@ class SupervisorLite:
         )
         payload = json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
-            return LitePlan(), PlannerLLMMetadata(), ["supervisor_payload_limit"]
+            return (
+                preserve_question_plan(question, sources),
+                PlannerLLMMetadata(),
+                ["supervisor_payload_limit"],
+            )
         response = self.gateway.generate(
             LLMRequest(
                 contract_version="llm_gateway_v1",
@@ -998,7 +1003,11 @@ class SupervisorLite:
             provenance=response.provenance,
         )
         if response.status != "success" or not isinstance(response.output, JSONOutput):
-            return LitePlan(), metadata, ["supervisor_provider_failure"]
+            return (
+                preserve_question_plan(question, sources),
+                metadata,
+                ["supervisor_provider_failure"],
+            )
         plan, errors = adapt_plan(response.output.payload, sources)
         issue = grounding_issue(question, plan) if not errors else None
         self.adaptation_events = []
@@ -1012,6 +1021,8 @@ class SupervisorLite:
             ]
             plan = preserve_question_plan(question, sources)
             errors = []  # The bounded fallback owns the original goal; raw failure remains in trace.
+        if retain_requested_conclusion(question, plan, sources):
+            self.adaptation_events.append(dict(action="retain_requested_conclusion"))
         return plan, metadata, errors
 
 
@@ -1252,11 +1263,16 @@ class FinancialLiteOrchestrator:
                 from ..evidence.json_catalog import json_document_composition
                 from ..tools.json_source_lookup import lookup_json_source_context
 
-                source_context = lookup_json_source_context(
-                    self.catalog,
-                    self.composition or json_document_composition(self.catalog),
-                    task.objective,
-                )
+                cache = getattr(self, "_source_context_cache", {})
+                key = normalize(task.objective)
+                cached = key in cache
+                if not cached:
+                    cache[key] = lookup_json_source_context(
+                        self.catalog,
+                        self.composition or json_document_composition(self.catalog),
+                        task.objective,
+                    )
+                source_context = dict(cache[key], cache_reused=cached)
                 original = getattr(self, "request_source_context", {})
                 contexts = {
                     c["reference"]["evidence"]["local_id"]: c
@@ -1446,7 +1462,10 @@ class FinancialLiteOrchestrator:
                 for r in assigned
             ):
                 deterministic = True
-        if len(json.dumps(prompt, ensure_ascii=False)) + len(question) > 48000:
+        if (
+            len(json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))) + len(question)
+            > 48000
+        ):
             deterministic = True
             result.limitations.append("specialist_payload_limit_numeric_fallback")
         generate_candidates(
@@ -1511,6 +1530,7 @@ class FinancialLiteOrchestrator:
         retrieval_context = context.model_copy(update={"period": None})
         sources = inventory(self.catalog, retrieval_context)
         self.request_source_context = {}
+        self._source_context_cache = {}
         if (
             self.adaptive_coordinator
             and len(self.catalog.descriptors) == 1
@@ -1522,6 +1542,7 @@ class FinancialLiteOrchestrator:
             self.request_source_context = lookup_json_source_context(
                 self.catalog, self.composition or json_document_composition(self.catalog), question
             )
+            self._source_context_cache[normalize(question)] = self.request_source_context
             if isinstance(self.supervisor, SupervisorLite):
                 self.supervisor.source_context = {
                     k: v for k, v in self.request_source_context.items() if k != "tool_calls"

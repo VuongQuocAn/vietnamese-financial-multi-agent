@@ -338,7 +338,15 @@ class FinancialQAPipeline:
         )
 
     def _document_context(self, request):
-        parsed, issues = understand(request.question)
+        # A date attached to a contract identifies source text, not a requested
+        # financial reporting period. Keep the original question for retrieval.
+        context_question = re.sub(
+            r"(hợp đồng\s+(?:ngày|ký ngày))\s+\d{1,2}/\d{1,2}/\d{4}",
+            r"\1",
+            request.question,
+            flags=re.I,
+        )
+        parsed, issues = understand(context_question)
         if set(issues) & {
             "cross_document_comparison_blocked_D03_B10",
             "non_annual_period_unsupported",

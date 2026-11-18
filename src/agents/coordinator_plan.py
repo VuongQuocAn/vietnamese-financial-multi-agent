@@ -116,6 +116,33 @@ def grounding_issue(question, plan):
     return None
 
 
+def retain_requested_conclusion(question, plan, sources):
+    """Keep an omitted comparison/analysis as owned work, preserving the valid DAG."""
+    cues = r"\b(lon hon|nho hon|so sanh|dien bien|nhan xet|tong hop|cai thien)\b"
+    if not re.search(cues, normalize(question)) or any(
+        re.search(cues, normalize(r.text)) for r in plan.requirements
+    ):
+        return False
+    from .lite_orchestrator import LiteTask
+
+    retained = preserve_question_plan(question, sources)
+    goal = retained.requirements[0].model_copy(update={"requirement_id": "G-requested"})
+    plan.requirements.append(goal)
+    if len(plan.tasks) < 6:
+        plan.tasks.append(
+            LiteTask(
+                task_id="T-requested",
+                specialist=retained.tasks[0].specialist,
+                objective=question[:600],
+                requirement_ids=[goal.requirement_id],
+                depends_on=[t.task_id for t in plan.tasks],
+                use_graph=True,
+            )
+        )
+    # A full DAG leaves a visible unowned goal rather than claiming completion.
+    return True
+
+
 def adapt_plan(payload, sources):
     from .lite_orchestrator import LitePlan, LiteTask
 

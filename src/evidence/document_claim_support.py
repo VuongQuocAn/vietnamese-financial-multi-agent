@@ -25,10 +25,10 @@ def complete_declared_list(texts):
     return declared is None or sum(is_list_item(t) for t in texts) == declared
 
 
-def document_projection(record, *, selection=False):
+def document_projection(record, *, selection=False, literal=False):
     if record.kind == "text":
         return {"text": record.raw_text} if record.raw_text and len(record.raw_text) <= 6000 else {}
-    if selection:
+    if selection or literal:
         # Full saved table, including excluded aggregates. Never a cropped top-k row set.
         table = record.source_metadata.get("original_table")
         if (
@@ -36,7 +36,7 @@ def document_projection(record, *, selection=False):
             and not record.structural_issues
             and not record.source_metadata.get("ragged_row_indices")
         ):
-            return {"selection_table": table}
+            return {"selection_table" if selection else "literal_table": table}
         return {}
     # Only labeled, indexed rows. Unplaced totals and numeric cells are excluded.
     labels = [cell.text for _, cell in _label_cells(record)]
@@ -52,10 +52,10 @@ def _label_cells(record):
     ]
 
 
-def document_citations(record, citations, *, selection=False):
+def document_citations(record, citations, *, selection=False, literal=False):
     if record.kind == "text":
         return citations
-    if selection:
+    if selection or literal:
         return citations
     primary = {a.reference.source_pointer for a in record.sources if a.reference}
     labels = {
@@ -96,10 +96,46 @@ def source_assertion(requirement, projections):
     """Return exact quotations, protected display and optional explicit relationship."""
     if not projections or any(not value for value in projections):
         return None
+    duration = re.search(
+        r"\bthoi (?:gian|han) (?:khau hao|phan bo|su dung)\b", normalize_search(requirement.label)
+    )
+
+    def has_duration(text):
+        return bool(re.search(r"\d+\s*(?:[-–]\s*\d+\s*)?(?:nam|thang)\b", normalize_search(text)))
+
     if requirement.kind == "table_selection":
         from .document_table_selection import table_assertion
 
         return table_assertion(requirement, projections)
+    if (
+        requirement.kind == "exact_text"
+        and len(projections) == 1
+        and projections[0].get("literal_table")
+    ):
+        table = projections[0]["literal_table"]
+        rows = [
+            row
+            for row in table.get("rows", [])
+            if row and isinstance(row[0], str) and _contains(row[0], requirement.query)
+        ]
+        if len(rows) != 1 or not all(isinstance(c, str) and c.strip() for c in rows[0]):
+            return None
+        if duration and (
+            not has_duration(" ".join(rows[0][1:]))
+            or not re.search(
+                r"\b(khau hao|phan bo|su dung)\b",
+                normalize_search(table.get("title", "") + " " + " ".join(table.get("columns", []))),
+            )
+        ):
+            return None
+        # Literal row plus original headers: no numerical interpretation,
+        # selection or canonical promotion. M6 replays the same pinned table.
+        quotes = [" | ".join(table.get("columns", [])), " | ".join(rows[0])]
+        if table.get("title"):
+            quotes.insert(0, table["title"])
+        if not all(quotes):
+            return None
+        return quotes, "Tài liệu ghi «" + " ; ".join(quotes) + "»", None
     if requirement.kind == "table_labels":
         if len(projections) != 1:
             return None
@@ -117,6 +153,8 @@ def source_assertion(requirement, projections):
         return None
     texts = [p.get("text", "") for p in projections]
     if not all(texts):
+        return None
+    if duration and not has_duration(" ".join(texts)):
         return None
     if requirement.kind == "entity_role":
         if len(texts) != 1:

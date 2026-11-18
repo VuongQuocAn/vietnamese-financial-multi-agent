@@ -207,11 +207,23 @@ def run_fusion(pipeline, request, response, stage, stop, *, recovery_seen=None):
     trace.composition_id, trace.planner_intent = manifest.composition_id, "mixed"
     from ..agents.qa_planning import fallback_fusion_plan, plan_fusion
 
+    literal_plan = fallback_fusion_plan(request.question)
+    single_literal = (
+        len(literal_plan.requirements) == 1
+        and literal_plan.requirements[0].lane == "document"
+        and literal_plan.requirements[0].document_requirement.kind == "exact_text"
+    )
+    if single_literal:
+        trace.execution_events.append(
+            dict(event="DETERMINISTIC_COMPONENT_EXECUTED", component="SingleDocumentRouting")
+        )
     try:
         plan = stage(
             "fusion_planning",
             lambda: (
-                plan_fusion(pipeline.gateway, request)
+                literal_plan
+                if single_literal
+                else plan_fusion(pipeline.gateway, request)
                 if request.execution_mode != "deterministic" and request.allow_gateway
                 else FinancialMultiAgentOrchestrator.plan_fusion(request.question)
             ),
