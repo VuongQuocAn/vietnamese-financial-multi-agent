@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: QWEN
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: E2E-REMED-04
 - Estimated Complexity: S
@@ -48,11 +48,11 @@ Gemini/Pilot/Full600/fullCI; không đổi EF-EG/M7, không nới M6/Obligations
 
 ## Acceptance Criteria
 
-- [ ] Không ép Non-thinking; reasoning không thành final output/JSON.
-- [ ] Payload giữ nguồn/dependency, budget chung và fallback giữ công việc/quan hệ.
-- [ ] Targeted controls và tối đa3QA thật; không vượt giới hạn task.
-- [ ] Báo accuracy/coverage/latency/tokens/calls/lỗi, nêu giới hạn so sánh.
-- [ ] Evidence/dataset/local edits nguyên trạng, commit/push main, REVIEW.
+- [x] Không ép Non-thinking; reasoning không thành final output/JSON.
+- [x] Payload giữ nguồn/dependency, budget chung và fallback giữ công việc/quan hệ.
+- [x] Targeted controls và đúng3QA thật; không vượt giới hạn task.
+- [x] Báo accuracy/coverage/latency/tokens/calls/lỗi, nêu giới hạn so sánh.
+- [x] Evidence/dataset/local edits nguyên trạng, commit/push main, REVIEW.
 
 ## Required Tests
 
@@ -67,9 +67,15 @@ Một claim riêng vượt48K vẫn chặn; không cắt evidence để đạt c
 
 ## Implementation Evidence
 
-Chưa commit;37unique targeted PASS,1legacy FAIL (`operand_bindings` ở
-test_qwen_generalization) tái hiện y hệt baseline f6059f1. Live chưa chạy.
+Implementation `80ffc468ad3a40c8eca859fb8f19da3f273e4aac`,189runtime Git blobs đã
+xác minh.37unique targeted PASS,1legacy FAIL (`operand_bindings`) tái hiện đúng
+baseline f6059f1. [Report](../../../docs/qwen-think-01-thinking-validation.md):
+3QA/11calls, accuracy/coverage0% (saved33,33%),0citations;79.813known tokens/
+1unknown,716,230s.10HTTP200 có inline Thinking;M6 timeout/invalid JSON và retrieval
+miss vẫn chặn đáp án.264JSON/115pins/3Pilot/272parent/80local hashes bất biến;
+Ruff/planning/diff đạt. Không retest/Non-thinking/Gemini/OCR/fullCI.
+REVIEW chờ nghiệm thu; không coi negative probe là readiness hoặc DONE.
 
 ## Handoff Notes
 
-Next action: chạy tối đa3QA trên implementation đã freeze rồi bàn giao REVIEW.
+Next action: Tech Lead review probe âm tính, regression NR và giới hạn budget/routing trước khi giao việc tiếp theo.
