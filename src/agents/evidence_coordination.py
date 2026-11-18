@@ -18,6 +18,7 @@ from ..core.llm_contracts import (
     RequestConstraints,
 )
 from .contracts import SpecialistRole
+from .document_qa_contracts import DocumentKind
 from .planner_contracts import PlannerLLMMetadata
 
 
@@ -107,9 +108,19 @@ class ExpansionTask(FinancialModel):
     after_tasks: list[str] = Field(min_length=1, max_length=6)
 
 
+class DocumentSearchDemand(FinancialModel):
+    query: str = Field(min_length=1, max_length=600)
+    kind: DocumentKind
+    goal_id: str | None = None
+    selection_period: str | None = None
+    from_comparison: bool = False
+
+
 class CoordinationProposal(FinancialModel):
     retrieve: list[RetrievalDemand] = Field(default_factory=list, max_length=6)
     selection: SelectionDemand | None = None
+    use_graph: bool = False
+    document_search: DocumentSearchDemand | None = None
     # Additions reuse the ordinary task wire, with backend-preallocated IDs.
     add_tasks: list[ExpansionTask] = Field(default_factory=list, max_length=5)
 
@@ -123,9 +134,10 @@ def propose(gateway, context, task, workspace, sources):
             for k in ("handle", "task_id", "revision", "digest", "verification")
         }
         | {
+            "candidate_statements": workspace.tasks[tid].get("candidate_statements", []),
             "selected_observations": [
                 prompt_observation(r) for r in workspace.task_results[tid]["selected_observations"]
-            ]
+            ],
         }
         for tid in task.depends_on
     }
@@ -153,29 +165,33 @@ def propose(gateway, context, task, workspace, sources):
     }
     prompt = dict(
         instruction=(
-            "Điều phối truy xuất bằng evidence thực tế, không trả đáp án. Chỉ JSON theo schema. "
-            "Chỉ làm objective của task hiện tại. Không làm trước task sau. "
-            "retrieve chọn S handle đúng item/kỳ từ inventory. Nếu cần dữ liệu cùng kỳ với output "
-            "đã chọn của dependency, period_from_task là task ID đó; backend lấy kỳ từ selected_observations "
-            "và chọn đúng item cùng kỳ, không lấy kỳ trong objective làm evidence. "
-            "period_from_task CHỈ thuộc dependency_results; tuyệt đối không dùng task hiện tại hoặc task tương lai. "
-            "Root không có dependencies: mọi period_from_task phải null. "
-            "Không retrieve lại dữ liệu đã có nếu chỉ cần phép tính. "
-            "S handles là nguồn canonical; T/result handles là kết quả dependency, E là evidence đã retrieve. "
-            "Khi chỉ tính/so sánh evidence đã có từ dependency: retrieve=[], selection=null. "
-            "Mỗi lượt retrieve tối đa6 nguồn; backend giữ tất cả batch nếu phải lấy nhiều nguồn. "
-            "selection chỉ dùng khi objective yêu cầu chọn lớn/nhỏ nhất: item canonical có thật, "
-            "periods là TOÀN BỘ kỳ phải so sánh, comparator=max|min|max_abs|min_abs; "
-            "không dùng selection để chọn operands của phép tính hoặc gộp nhiều chỉ tiêu. "
-            "Backend so Decimal, giữ ties/null/conflicts và provenance. Không chọn winner bằng prose. "
-            "Các candidates là chưa verified; không dùng interpretation như canonical fact."
-            " Nếu có verification_feedback, sửa đúng nguồn/selection/join hoặc goal binding được chỉ ra; "
-            "đối chiếu goals, không lặp lại lựa chọn sai. Không có evidence thì không đoán."
+            "Bạn là Specialist. Chọn công cụ để thực hiện objective và trả JSON theo schema. "
+            "retrieve chọn từng S handle đúng chỉ tiêu và kỳ từ inventory. Fact gọi Financial Tools, "
+            "metric gọi Calculator; nếu phải tính mới, lấy đủ facts làm toán hạng. "
+            "Dùng lại facts và kết quả từ dependency_results. Chỉ dùng period_from_task khi "
+            "cần tra chỉ tiêu theo kỳ thực tế của dependency. Root cần dữ liệu phải yêu cầu "
+            "retrieve hoặc document_search. Đặt use_graph=true nếu cần EF-EG để lần theo nguồn "
+            "hoặc quan hệ giữa dữ liệu. "
+            "Dùng document_search cho BM25 khi cần nội dung văn bản, bảng hoặc thuyết minh. "
+            "query là cụm từ ngắn có trong tài liệu. Chọn kind=table_selection cho yêu cầu "
+            "chọn đối tượng cực trị trong bảng và selection_period là ngày ISO nếu biết. "
+            "Nếu chủ đề bảng do phép so sánh của dependency quyết định, đặt from_comparison=true. "
+            "Đặt goal_id là ID được giao khi BM25 phục vụ trực tiếp goal đó; bỏ qua cho bước trung gian. "
+            "selection chỉ dùng để tìm cực trị của cùng chỉ tiêu qua nhiều kỳ. Khai toàn bộ kỳ. "
+            "Các mục tùy chọn có thể bỏ. Không trả đáp án hay tự tạo handle."
         ),
         verification_feedback=workspace.tasks[task.task_id].get("repair_feedback", []),
+        role=task.specialist,
         objective=task.objective,
+        goals={
+            r.requirement_id: r.text
+            for r in workspace.requirements
+            if r.requirement_id in task.requirement_ids
+        },
         dependency_results=dependencies,
-        inventory={h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()},
+        inventory={
+            h: {k: s[k] for k in ("kind", "item", "label", "period")} for h, s in sources.items()
+        },
         schema=schema,
         empty_response_example={"retrieve": [], "selection": None},
     )
@@ -287,7 +303,7 @@ def resolve_demands(proposal, task, workspace, sources):
                 )
             continue
         source = sources.get(demand.source)
-        if source is None or source["kind"] != "fact":
+        if source is None or (demand.period_from_task is not None and source["kind"] != "fact"):
             raise ValueError("demand_source_unknown_or_not_fact")
         resolved = demand.source
         if demand.period_from_task is not None:
@@ -440,7 +456,7 @@ def join_observations(parent, current):
 
 def expansion_tasks(raw, task, workspace, sources, available_ids):
     """One atomic append-only expansion within the original six-task budget."""
-    from .coordinator_plan import TaskProposal, schedule_tasks
+    from .coordinator_plan import schedule_tasks
     from .lite_orchestrator import LiteTask
 
     if not raw:
@@ -466,23 +482,21 @@ def expansion_tasks(raw, task, workspace, sources, available_ids):
         after = entry["after_tasks"]
         if not isinstance(after, list) or not after or any(t not in allowed for t in after):
             raise ValueError("expansion_dependency_invalid")
-        wire = TaskProposal.model_validate(
-            {k: v for k, v in entry.items() if k not in {"task_id", "after_tasks"}} | {"after": []}
-        )
+
         if (
-            any(i < 0 or i >= len(workspace.requirements) for i in wire.goal_indexes)
-            or set(wire.input_handles) - sources.keys()
+            any(i < 0 or i >= len(workspace.requirements) for i in entry["goal_indexes"])
+            or set(entry["input_handles"]) - sources.keys()
         ):
             raise ValueError("expansion_reference_invalid")
         tasks.append(
             LiteTask(
                 task_id=entry["task_id"],
-                specialist=wire.role,
-                objective=wire.objective,
+                specialist=entry["role"],
+                objective=entry["objective"],
                 requirement_ids=[
-                    workspace.requirements[i].requirement_id for i in wire.goal_indexes
+                    workspace.requirements[i].requirement_id for i in entry["goal_indexes"]
                 ],
-                sources=wire.input_handles,
+                sources=entry["input_handles"],
                 depends_on=after,
                 use_graph=True,
             )

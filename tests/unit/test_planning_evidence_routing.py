@@ -32,23 +32,22 @@ from .test_json_source_readiness import catalog_fixture
 from .test_v2_integration import setup_engine
 
 
-def test_partial_plan_preserves_goals_and_sources_without_semantic_fallback():
+def test_partial_plan_preserves_valid_goals_and_dependencies():
     catalog, context, _, _ = setup_engine()
     context.mode = "gemini"
     sources = inventory(catalog, context)
-    known = next(iter(sources))
     question = "Đối chiếu hai chỉ tiêu rồi giải thích kết quả"
     base = dict(role="profitability", objective="Tra số liệu", after=[])
     payload = dict(
         goals=[
-            dict(text="Tra chỉ tiêu đã chọn", mode="value", source=known),
-            dict(text="Yêu cầu sai schema", mode="unknown"),
-            dict(text="Nhận xét quan hệ giữa hai chỉ tiêu", mode="analysis"),
+            dict(text="Tra chỉ tiêu đã chọn"),
+            dict(text=""),
+            dict(text="Nhận xét quan hệ giữa hai chỉ tiêu"),
         ],
         tasks=[
-            dict(base, goal_indexes=[0, 1], input_handles=[known, "S999"]),
-            dict(base, goal_indexes=[1], input_handles=[]),
-            dict(base, goal_indexes=[2], input_handles=[], after=[0]),
+            dict(base, goal_indexes=[0, 1]),
+            dict(base, goal_indexes=[1]),
+            dict(base, goal_indexes=[2], after=[0]),
         ],
     )
     seen = []
@@ -59,11 +58,11 @@ def test_partial_plan_preserves_goals_and_sources_without_semantic_fallback():
     assert metadata.calls == len(seen) == 1
     assert [r.requirement_id for r in plan.requirements] == ["G1", "G3"]
     assert [t.task_id for t in plan.tasks] == ["T1", "T3"]
-    assert plan.tasks[0].sources == [known]
+    assert not plan.tasks[0].sources and plan.tasks[0].resolve_inputs
     assert plan.tasks[1].depends_on == ["T1"]
     assert plan.blocked_tasks == {"T2": "goal_reference_unknown"}
     assert "supervisor_invalid_goal:G2:goal_schema_invalid" in errors
-    assert "supervisor_unknown_source_handle:T1" in errors
+    assert "supervisor_unknown_goal_reference:T1" in errors
     assert (
         json.loads(seen[0].messages[0].content)["output_schema"]["properties"]["tasks"]["maxItems"]
         == 6
@@ -141,31 +140,29 @@ def test_source_only_dependency_retains_exact_context_digest_and_reaches_consume
         model=ModelIdentity(provider="gemini", model="test"),
         mode="gemini",
     )
-    sources = inventory(catalog, context)
     from vietnamese_financial_multi_agent.evidence.json_catalog import json_document_composition
 
-    base = dict(role="profitability", objective="Đơn vị tính", input_handles=[])
-    search = dict(target="đơn vị tính", label="Đơn vị tính", kind="exact_text", query="đơn vị tính")
+    base = dict(role="profitability", objective="Đơn vị tính")
     plan, errors = adapt_plan(
         dict(
-            goals=[dict(text="Tra nội dung được công bố", mode="analysis")],
-            tasks=[
-                dict(base, goal_indexes=[0], after=[], document_search=search),
-                dict(base, goal_indexes=[0], after=[0]),
-            ],
-        ),
-        sources,
+            goals=[dict(text="Tra nội dung được công bố")],
+            tasks=[dict(base, goal_indexes=[0], after=[]), dict(base, goal_indexes=[0], after=[0])],
+        )
     )
     assert not errors
     captured = []
 
     def generate(request):
         captured.append(request)
-        payload = (
-            dict(retrieve=[dict(source="T1")], selection=None, add_tasks=[])
-            if request.request_id.startswith("m5-evidence-demand")
-            else dict(claims=[], analyses=[], missing_information=["no canonical target"])
-        )
+        if request.request_id.startswith("m5-evidence-demand"):
+            prompt = json.loads(request.messages[0].content)
+            payload = (
+                dict(retrieve=[dict(source="T1")])
+                if prompt["dependency_results"]
+                else dict(document_search=dict(kind="exact_text", query="đơn vị tính"))
+            )
+        else:
+            payload = dict(claims=[], analyses=[], missing_information=["no canonical target"])
         return gateway_for(payload, []).generate(request)
 
     engine = FinancialLiteOrchestrator(

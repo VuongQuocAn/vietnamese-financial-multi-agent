@@ -25,27 +25,28 @@ def test_small_plan_keeps_original_indexes_and_independent_tasks():
         goal_indexes=[0],
         role="profitability",
         objective="Tra doanh thu",
-        input_handles=[next(iter(sources))],
         after=[],
     )
     wire = dict(
-        goals=[dict(text="Doanh thu thuần năm 2030", mode="value")],
+        goals=[dict(text="Doanh thu thuần năm 2030")],
         tasks=[dict(task, after=[2]), dict(task, role="invented"), task],
     )
-    plan, errors = adapt_plan(wire, sources)
+    plan, errors = adapt_plan(wire)
     assert [t.task_id for t in plan.tasks] == ["T1", "T3"]
     assert [t.task_id for t in schedule_tasks(plan.tasks)[0]] == ["T3", "T1"]
     assert plan.blocked_tasks == {"T2": "task_schema_invalid"} and errors
     assert plan.requirements[0].requirement_id == "G1"
     cyclic = deepcopy(wire)
     cyclic["tasks"][2]["after"] = [0]
-    assert set(adapt_plan(cyclic, sources)[0].blocked_tasks) == {"T1", "T2", "T3"}
+    assert set(adapt_plan(cyclic)[0].blocked_tasks) == {"T1", "T2", "T3"}
     unknown = deepcopy(wire)
     unknown["tasks"][0]["after"] = [42]
-    parsed, _ = adapt_plan(unknown, sources)
+    parsed, _ = adapt_plan(unknown)
     assert [t.task_id for t in schedule_tasks(parsed.tasks)[0]] == ["T3"]
-    assert not adapt_plan(dict(wire, goals=[dict(text="x", mode="invented")]), sources)[0].tasks
-    assert not adapt_plan(dict(wire, tasks=wire["tasks"] * 3), sources)[0].tasks
+    assert not adapt_plan(dict(wire, goals=[dict(text="")]))[0].tasks
+    assert not adapt_plan(dict(wire, tasks=wire["tasks"] * 3))[0].tasks
+    missing, errors = adapt_plan(dict(wire, tasks=[]))
+    assert not missing.tasks and errors == ["goal_owner_unresolved:G1"]
     context.mode = "gemini"
     valid = dict(wire, tasks=[task])
     seen = []
@@ -56,7 +57,14 @@ def test_small_plan_keeps_original_indexes_and_independent_tasks():
     prompt = json.loads(seen[0].messages[0].content)
     schema = prompt["output_schema"]
     assert set(schema["properties"]) == {"goals", "tasks"}
-    assert "requirement_id" not in schema["$defs"]["GoalProposal"]["properties"]
+    assert set(schema["$defs"]["GoalProposal"]["properties"]) == {"text"}
+    assert set(schema["$defs"]["TaskProposal"]["properties"]) == {
+        "goal_indexes",
+        "role",
+        "objective",
+        "after",
+    }
+    assert "inventory" not in prompt and schema["properties"]["tasks"]["minItems"] == 1
 
 
 def test_dag_executes_just_in_time_and_keeps_independent_outputs():
@@ -162,6 +170,40 @@ def test_pipeline_flag_keeps_existing_m6_m7_and_opt_out(tmp_path):
         assert factory.call_args.kwargs["adaptive_coordinator"] is False
 
 
+def test_specialist_can_request_a_calculator_metric_with_operand_provenance():
+    from vietnamese_financial_multi_agent.agents.lite_orchestrator import inventory
+
+    catalog, context, engine, _ = setup_engine()
+    engine.adaptive_coordinator = True
+    context.mode = "gemini"
+    sources = inventory(catalog, context)
+    metric = next(handle for handle, source in sources.items() if source["kind"] == "metric")
+    plan, errors = adapt_plan(
+        dict(
+            goals=[dict(text="Biên lợi nhuận gộp")],
+            tasks=[
+                dict(goal_indexes=[0], role="profitability", objective="Tra biên gộp", after=[])
+            ],
+        )
+    )
+    assert not errors
+    engine.supervisor.plan.return_value = plan, engine.supervisor.plan.return_value[1], []
+    engine.gateway = gateway_for(dict(retrieve=[dict(source=metric)]), [])
+    with patch.object(
+        engine,
+        "_specialist",
+        return_value=SpecialistResult(
+            question="Tra biên gộp", role="profitability", upstream_status="completed"
+        ),
+    ):
+        output = engine.run(question="Biên lợi nhuận gộp là bao nhiêu?", context=context)
+    tools = output.supervisor_result.tool_trace
+    calculation = next(t.response for t in tools if t.operation == "calculate_financial_metric")
+    assert calculation.trace.operands
+    assert any(t.operation == "get_evidence_sources" for t in tools)
+    assert output.integration_context["task_results"]["T1"]["selected_observations"]
+
+
 def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_path):
     from vietnamese_financial_multi_agent.core.llm_gateway import SharedLLMGateway
 
@@ -177,41 +219,36 @@ def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_pat
     def transport(request):
         prefix = request.request_id.rsplit("-", 1)[0]
         if prefix == "m5-coordinator-plan":
-            inventory = json.loads(request.messages[0].content)["inventory"]
-            source = next(
-                key
-                for key, row in inventory.items()
-                if row["item"] == "b02.cost_of_sales" and row["period"] == "2025"
-            )
             payload = dict(
-                goals=[
-                    dict(text=numbers, mode="value", source=source),
-                    dict(text=document, mode="document"),
-                ],
+                goals=[dict(text=numbers), dict(text=document)],
                 tasks=[
                     dict(
                         goal_indexes=[0],
                         role="cash_flow_and_earnings_quality",
                         objective=numbers,
-                        input_handles=[source],
                         after=[],
-                        use_graph=True,
                     ),
-                    dict(
-                        goal_indexes=[1],
-                        role="profitability",
-                        objective=document,
-                        input_handles=[],
-                        after=[0],
-                        document_search=dict(
-                            target="don vi tinh",
-                            label=document,
-                            kind="exact_text",
-                            query="Đơn vị tính",
-                        ),
-                    ),
+                    dict(goal_indexes=[1], role="profitability", objective=document, after=[0]),
                 ],
             )
+        elif prefix == "m5-evidence-demand":
+            prompt = json.loads(request.messages[0].content)
+            if prompt["role"] == "cash_flow_and_earnings_quality":
+                source = next(
+                    key
+                    for key, row in prompt["inventory"].items()
+                    if row["item"] == "b02.cost_of_sales" and row["period"] == "2025"
+                )
+                payload = dict(retrieve=[dict(source=source)], use_graph=True)
+            else:
+                assert "T1" in prompt["dependency_results"]
+                payload = dict(
+                    document_search=dict(kind="exact_text", query="Đơn vị tính", goal_id="G2")
+                )
+        elif prefix == "m5-lite-cash_flow_and_earnings_quality":
+            prompt = json.loads(request.messages[0].content)
+            handle = prompt["numeric_choices"][0]["evidence_id"]
+            payload = dict(claims=[handle], analyses=[], missing_information=[])
         elif prefix == "m6-lite":
             payload = dict(
                 verdicts=[
@@ -268,6 +305,7 @@ def test_mixed_request_runs_one_plan_and_releases_m6_claims_with_sources(tmp_pat
         "get_graph_context",
     }
     assert trace.integration_context["task_results"]["T2"]["input_results"][0]["task_id"] == "T1"
+    assert sum(r.request_id.startswith("m5-evidence-demand-") for r in calls) == 2
     assert trace.native_decisions == {"ACCEPT": 2}
     assert len(response.used_verified_claim_ids) == 2 and response.citations
     assert trace.m7_lite["coverage"]["complete"]

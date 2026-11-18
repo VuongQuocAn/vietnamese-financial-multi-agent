@@ -735,7 +735,7 @@ class SupervisorLite:
             and self.gateway is not None
             and context.mode != "deterministic"
         ):
-            return self._adaptive_plan(question, context, sources)
+            return self._adaptive_plan(question, context)
         metadata = PlannerLLMMetadata(status="deterministic")
         if self.gateway is None or context.mode == "deterministic":
             plan = fallback_plan(question, sources)
@@ -901,42 +901,35 @@ class SupervisorLite:
             return fallback_plan(question, sources), metadata, ["supervisor_invalid_json_fallback"]
         return plan, metadata, []
 
-    def _adaptive_plan(self, question, context, sources):
-        from .coordinator_plan import adapt_plan, output_schema
+    def _adaptive_plan(self, question, context):
+        from .coordinator_plan import PlanProposal, adapt_plan
 
         prompt = dict(
             instruction=(
-                "Bạn là Coordinator. Lập đúng một kế hoạch JSON gồm goals và tasks. "
-                "Goals ghi đủ từng đầu ra người dùng yêu cầu, gồm kỳ, đối tượng và cách tính. "
-                "mode=value cho tra trực tiếp (source là S handle chính xác nếu biết), "
-                "calculation cho phép tính mới, analysis cho nhận xét/so sánh, document cho bằng chứng thuyết minh. "
-                "Bước trung gian là task, không phải goal mới. "
-                "Mỗi task có goal_indexes và after là index 0-based trong hai mảng gốc. "
-                "Giao một role trong schema; mọi role dùng cùng Financial Tools, BM25 và EF-EG. "
-                "Tra cứu đơn giản dùng một task. Khi nhiều miền hoặc nhiều bước, giao các task độc lập "
-                "lấy dữ liệu rồi task phụ thuộc tính toán hoặc tổng hợp từ kết quả và nguồn của chúng. "
-                "Chọn đúng input_handles theo label và period. Dùng [] khi inputs đã có từ after; "
-                "dùng resolve_inputs=true chỉ khi cần chọn nguồn tài chính từ dữ liệu thực thi mới. "
-                "Đặt use_graph=true khi cần quan hệ EF-EG hoặc đường truy vết. "
-                "Thuyết minh dùng document_search: kind, label (nghĩa vụ cần chứng minh), target "
-                "(tên chủ đề), query (cụm từ ngắn xuất hiện trong tài liệu), selection_period nếu "
-                "kind=table_selection (ngày ISO). Với table_selection phụ thuộc vào khoản mục thắng "
-                "từ một phép greater/less của task cha, đặt query_from_dependencies=true. "
-                "Task cha phải tạo proof greater/less trên hai số dư cùng kỳ. "
-                "Task có thể dùng cả nguồn tài chính và document_search. "
-                "FinancialCalculator thực thi phép tính chuẩn; python_requirement chỉ dùng cho "
-                "primitive ngoài khả năng Calculator. Không trả đáp án hoặc phê duyệt claim. "
-                "Tối đa 16 goals, 6 tasks. Không tạo vòng lặp. Bỏ field tùy chọn nếu không dùng."
+                "Bạn là Coordinator. Lập một kế hoạch JSON có goals và tasks. "
+                "Mỗi goal ghi một đầu ra được hỏi, giữ đối tượng, kỳ và điều kiện. "
+                "Mỗi goal phải có ít nhất một task trong goal_indexes; tasks không được rỗng. "
+                "Một yêu cầu tra cứu đơn giản chỉ cần một goal và một task. "
+                "Tách các đầu ra tài chính và thuyết minh độc lập thành goals riêng. "
+                "Các bước trung gian phục vụ goal hiện có. Ghi công việc cụ thể trong objective. "
+                "after liệt kê các task cần hoàn tất trước; task độc lập dùng []. "
+                "goal_indexes và after dùng index từ 0. Không tạo vòng lặp. "
+                "Specialist tự chọn công cụ và nguồn. Chỉ trả kế hoạch."
             ),
-            output_schema=output_schema(sources),
-            context={
-                k: getattr(context, k)
-                for k in ("company_id", "document_id", "snapshot_id", "period", "reporting_scope")
+            output_schema=PlanProposal.model_json_schema(),
+            example={
+                "goals": [{"text": "Chỉ tiêu và kỳ người dùng yêu cầu"}],
+                "tasks": [
+                    {
+                        "goal_indexes": [0],
+                        "role": "profitability",
+                        "objective": "Tra chỉ tiêu đúng kỳ",
+                        "after": [],
+                    }
+                ],
             },
+            context={k: getattr(context, k) for k in ("company_id", "period", "reporting_scope")},
             conversation_context=context.conversation_context,
-            inventory={
-                h: {k: v for k, v in s.items() if k != "records"} for h, s in sources.items()
-            },
         )
         payload = json.dumps(compact_prompt(prompt), ensure_ascii=False, separators=(",", ":"))
         if len(payload) + len(question) > 48000:
@@ -966,7 +959,7 @@ class SupervisorLite:
         )
         if response.status != "success" or not isinstance(response.output, JSONOutput):
             return LitePlan(), metadata, ["supervisor_provider_failure"]
-        plan, errors = adapt_plan(response.output.payload, sources)
+        plan, errors = adapt_plan(response.output.payload)
         return plan, metadata, errors
 
 
@@ -1528,11 +1521,18 @@ class FinancialLiteOrchestrator:
         calculator = FinancialCalculator(self.catalog)
         evidence_tools = EvidenceRetrievalTools(self.catalog)
         graph_tools, graph_error = None, None
-        if self.graph_enabled and any(t.use_graph for t in plan.tasks):
+        graph_initialized = False
+
+        def prepare_graph():
+            nonlocal graph_tools, graph_error, graph_initialized
+            if graph_initialized:
+                return
+            graph_initialized = True
             try:
                 graph_tools = self._graph_tools(context)
             except ValueError as error:
                 graph_error = str(error)
+
         all_upstream = SupervisorResult(
             plan_id=None,
             status="completed",
@@ -1651,6 +1651,27 @@ class FinancialLiteOrchestrator:
                         )
                         bundle.sources_and_lineage.append(sources_response)
 
+            def lookup(source, bundle=bundle):
+                for record in source["records"]:
+                    if source["kind"] == "fact":
+                        retrieve(record)
+                    else:
+                        calc = call(
+                            "calculate_financial_metric",
+                            CalculateFinancialMetricRequest(
+                                metric_id=record.metric_id,
+                                document_id=context.document_id,
+                                snapshot_id=context.snapshot_id,
+                            ),
+                            calculator.calculate_financial_metric,
+                        )
+                        bundle.calculations.append(calc)
+                        if calc.trace:
+                            for operand in calc.trace.operands:
+                                for fact in self.catalog.facts:
+                                    if fact.observation_identity() == operand.observation:
+                                        retrieve(fact)
+
             try:
                 selected = task.sources
                 if not selected and not self.model_coordinated:
@@ -1688,28 +1709,10 @@ class FinancialLiteOrchestrator:
                     ):
                         bundle.limitations.append("unknown_or_foreign_source:" + handle)
                         continue
-                    for record in source["records"]:
-                        if source["kind"] == "fact":
-                            retrieve(record)
-                        else:
-                            calc = call(
-                                "calculate_financial_metric",
-                                CalculateFinancialMetricRequest(
-                                    metric_id=record.metric_id,
-                                    document_id=context.document_id,
-                                    snapshot_id=context.snapshot_id,
-                                ),
-                                calculator.calculate_financial_metric,
-                            )
-                            bundle.calculations.append(calc)
-                            if calc.trace:
-                                for operand in calc.trace.operands:
-                                    for fact in self.catalog.facts:
-                                        if fact.observation_identity() == operand.observation:
-                                            retrieve(fact)
+                    lookup(source)
                 if self.adaptive_coordinator:
                     try:
-                        self._coordinate_evidence(task, bundle, sources, context, output, retrieve)
+                        self._coordinate_evidence(task, bundle, sources, context, output, lookup)
                     except ValueError as error:
                         bundle.limitations.append(str(error))
                     if task.document_search:
@@ -1719,6 +1722,7 @@ class FinancialLiteOrchestrator:
                             bundle.limitations.append(str(error))
                 bundle.claim_fact_references = [f.reference for f in bundle.facts]
                 if self.graph_enabled and task.use_graph:
+                    prepare_graph()
                     starts = [c.metric_id for c in bundle.calculations if c.metric_id]
                     starts.extend(
                         graph_id("source_fact", f.record.observation_identity().model_dump())
@@ -1953,35 +1957,42 @@ class FinancialLiteOrchestrator:
         if result.status != "found":
             raise ValueError("document_search_" + result.status)
         from .document_qa_contracts import DocumentEvidenceBundle
+        from .evidence_coordination import content_digest
 
         state = self.workspace.tasks[task.task_id]
         state["source_context"] = [
             dict(
-                text=getattr(hit.evidence.record, "text", None),
+                handle="D-" + content_digest(hit.evidence.reference.model_dump(mode="json"))[:20],
+                text=hit.snippet,
                 reference=hit.evidence.reference.model_dump(mode="json"),
                 citations=[c.model_dump(mode="json") for c in hit.evidence.citations],
                 cells=[cell.model_dump(mode="json") for cell in hit.cells],
             )
             for hit in result.matches
         ]
-        owners = [
-            r.requirement_id
-            for r in self.workspace.requirements
-            if r.requirement_id in task.requirement_ids and r.kind == "document"
-        ]
-        if owners:
+        goal_id = state.get("document_goal")
+        if goal_id is None and not task.resolve_inputs:
+            goal_id = next(
+                (
+                    r.requirement_id
+                    for r in self.workspace.requirements
+                    if r.requirement_id in task.requirement_ids and r.kind == "document"
+                ),
+                None,
+            )
+        if goal_id:
             candidates = document_candidates(
                 DocumentEvidenceBundle(operation=operation, result=result),
                 context.company_id,
                 manifest,
             )
-            state["document_goal"] = owners[0]
+            state["document_goal"] = goal_id
             state["document_candidate_ids"] = [c.candidate_id for c in candidates]
             output.document_candidates.extend(
                 c for c in candidates if c not in output.document_candidates
             )
 
-    def _coordinate_evidence(self, task, bundle, sources, context, output, retrieve):
+    def _coordinate_evidence(self, task, bundle, sources, context, output, lookup):
         from .evidence_coordination import (
             join_observations,
             observation,
@@ -2001,6 +2012,31 @@ class FinancialLiteOrchestrator:
             return
         try:
             proposal, _ = propose(self.gateway, context, task, workspace, sources)
+            task.use_graph |= proposal.use_graph
+            search = proposal.document_search
+            if search:
+                goal = next(
+                    (
+                        r
+                        for r in workspace.requirements
+                        if r.requirement_id == search.goal_id
+                        and r.requirement_id in task.requirement_ids
+                    ),
+                    None,
+                )
+                task.document_search = DocumentRequirement(
+                    target=search.query,
+                    label=goal.text if goal else task.objective,
+                    kind=search.kind,
+                    query=search.query,
+                    selection_period=search.selection_period,
+                )
+                task.query_from_dependencies = search.from_comparison
+                if goal:
+                    goal.kind = "document"
+                    state["document_goal"] = goal.requirement_id
+                elif search.goal_id is not None:
+                    bundle.limitations.append("document_goal_reference_unknown")
             handles, lineage = resolve_demand_batches(
                 proposal, state.get("retrieval_batches", []), task, workspace, sources
             )
@@ -2020,32 +2056,33 @@ class FinancialLiteOrchestrator:
                     and s["item"] == proposal.selection.item
                     and s["period"] in proposal.selection.periods
                 )
-            for handle in dict.fromkeys(handles):
-                for fact in sources[handle]["records"]:
-                    if not any(
-                        f.reference.observation == fact.observation_identity()
-                        for f in [*workspace.evidence.facts, *bundle.facts]
-                    ):
-                        retrieve(fact)
-            for match in bundle.facts:
-                row = observation(match)
-                workspace.observations[row["evidence_id"]] = row
-            current_refs = {
-                f.observation_identity().model_dump_json()
-                for h in handles
-                for f in sources[h]["records"]
+            known_facts = {
+                f.reference.observation.model_dump_json() for f in workspace.evidence.facts
             }
-            current = (
-                [
-                    r
-                    for r in workspace.observations.values()
-                    if json.dumps(r["reference"]["observation"], separators=(",", ":"))
-                    in current_refs
-                    or r in current
-                ]
-                if handles
-                else current
-            )
+            reused = set()
+            for handle in dict.fromkeys(handles):
+                source = sources[handle]
+                if source["kind"] == "fact":
+                    reused.update(
+                        f.observation_identity().model_dump_json() for f in source["records"]
+                    )
+                    source = source | {
+                        "records": [
+                            f
+                            for f in source["records"]
+                            if f.observation_identity().model_dump_json() not in known_facts
+                        ]
+                    }
+                lookup(source)
+            current = [observation(f) for f in bundle.facts]
+            for row in current:
+                workspace.observations[row["evidence_id"]] = row
+            current = [
+                row
+                for row in workspace.observations.values()
+                if row in current
+                or json.dumps(row["reference"]["observation"], separators=(",", ":")) in reused
+            ]
             if proposal.selection:
                 current, record = select_observations(
                     proposal.selection, list(workspace.observations.values()), sources

@@ -4,10 +4,8 @@ import json
 from unittest.mock import Mock
 
 import pytest
-from vietnamese_financial_multi_agent.agents.coordinator_plan import adapt_plan
 from vietnamese_financial_multi_agent.agents.lite_orchestrator import (
     FinancialLiteOrchestrator,
-    inventory,
 )
 from vietnamese_financial_multi_agent.agents.planner_contracts import (
     PlannerContext,
@@ -132,8 +130,24 @@ def test_m5_receives_readonly_source_context_without_new_numeric_handles(tmp_pat
     catalog = catalog_fixture(tmp_path)
     captured = []
 
-    def reject(request):
+    def generate(request):
         captured.append(request)
+        if request.request_id.startswith("m5-evidence-demand"):
+            from .test_financial_qa import gateway_for
+
+            prompt = json.loads(request.messages[0].content)
+            source = next(
+                key
+                for key, row in prompt["inventory"].items()
+                if row["item"] == "b02.cost_of_sales" and row["period"] == "2025"
+            )
+            return gateway_for(
+                dict(
+                    retrieve=[dict(source=source)],
+                    document_search=dict(kind="exact_text", query="đơn vị tính"),
+                ),
+                [],
+            ).generate(request)
         return _failure(request, "provider_unavailable")
 
     d = catalog.descriptors[0]
@@ -141,42 +155,44 @@ def test_m5_receives_readonly_source_context_without_new_numeric_handles(tmp_pat
         company_id=catalog.facts[0].company_id,
         document_id=d.document_id,
         snapshot_id=d.snapshot_id,
-        model=ModelIdentity(provider="qwen", model="test"),
+        model=ModelIdentity(provider="gemini", model="test"),
         mode="gemini",
     )
+    from vietnamese_financial_multi_agent.agents.coordinator_plan import adapt_plan
+
     plan, errors = adapt_plan(
         dict(
-            goals=[dict(text="Nhận xét giới hạn của giá vốn hàng bán năm 2025", mode="analysis")],
+            goals=[dict(text="Nhận xét giới hạn của giá vốn hàng bán năm 2025")],
             tasks=[
                 dict(
-                    goal_indexes=[0],
                     role="profitability",
                     objective="Giá vốn hàng bán năm 2025",
-                    input_handles=["S1"],
+                    goal_indexes=[0],
                     after=[],
                 )
             ],
-        ),
-        inventory(catalog, context),
+        )
     )
     assert not errors
     engine = FinancialLiteOrchestrator(
         catalog,
-        Mock(generate=reject),
+        Mock(generate=generate),
         supervisor=Mock(plan=Mock(return_value=(plan, PlannerLLMMetadata(), []))),
         integration_v2=True,
+        adaptive_coordinator=True,
+        composition=json_document_composition(catalog),
+        document_repository=catalog,
     )
     result = engine.run(question="Giá vốn hàng bán năm 2025 là bao nhiêu?", context=context)
     prompts = [
         json.loads(r.messages[0].content) for r in captured if r.request_id.startswith("m5-lite-")
     ]
-    assert prompts and prompts[0]["document_source_context"]["contexts"], result.model_dump_json()[
-        :4000
-    ]
-    context = prompts[0]["document_source_context"]
+    assert prompts and prompts[0]["document_source_context"], result.errors
+    source_context = prompts[0]["document_source_context"]
     assert all(
-        c["handle"].startswith("D") and not c["financial_fact_verified"]
-        for c in context["contexts"]
+        c["handle"].startswith("D-")
+        and c["text"]
+        and all(not citation["financial_fact_verified"] for citation in c["citations"])
+        for c in source_context
     )
-    assert "not numeric evidence_ids" in context["authority"]
     assert all(not e["id"].startswith("D") for e in prompts[0]["evidence"])

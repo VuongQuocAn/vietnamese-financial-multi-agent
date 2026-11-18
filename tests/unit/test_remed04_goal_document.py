@@ -17,18 +17,16 @@ def test_goal_alias_alternatives_do_not_grant_scalar_coverage():
     assert {("fact", "b01.inventory_total"), ("fact", "b01.inventory_gross")} in groups
     plan, errors = adapt_plan(
         dict(
-            goals=[dict(text=text, mode="value")],
+            goals=[dict(text=text)],
             tasks=[
                 dict(
                     goal_indexes=[0],
                     role="liquidity_and_leverage",
                     objective=text,
-                    input_handles=[],
                     after=[],
                 )
             ],
-        ),
-        {},
+        )
     )
     assert not errors
     requirement = plan.requirements[0].model_dump(mode="json")

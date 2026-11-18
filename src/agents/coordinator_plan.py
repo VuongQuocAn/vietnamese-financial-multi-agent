@@ -1,22 +1,14 @@
 """Small planning wire and stable task scheduling for the existing V2 runtime."""
 
-from typing import Literal
-
 from pydantic import Field, ValidationError
 
 from ..accounting.contracts import FinancialModel
 from .contracts import SpecialistRole
-from .document_qa_contracts import DocumentRequirement
 from .integration_workspace import IntegrationRequirement
-from .python_agent import PythonRequirement
 
 
 class GoalProposal(FinancialModel):
     text: str = Field(min_length=1, max_length=2000)
-    mode: Literal["value", "calculation", "analysis", "document"]
-    source: str | None = Field(
-        default=None, description="S handle của chính kết quả tra cứu, không dùng handle toán hạng"
-    )
 
 
 class TaskProposal(FinancialModel):
@@ -25,24 +17,10 @@ class TaskProposal(FinancialModel):
     )
     role: SpecialistRole
     objective: str = Field(min_length=1, max_length=600)
-    input_handles: list[str] = Field(
-        max_length=16,
-        description="S handles đúng label và kỳ trong inventory; [] để dùng nguồn từ dependencies",
-    )
     after: list[int] = Field(
         max_length=6,
         description="Indexes 0-based của tasks phải hoàn tất trước. Task độc lập: []. Task index2 dùng kết quả task0 và task1: [0,1]. Không chứa index của chính nó; không dùng số thứ tự 1-based.",
     )
-    python_requirement: PythonRequirement | None = Field(
-        default=None,
-        description="Chỉ primitive Calculator chưa hỗ trợ; phép tính thông thường dùng null",
-    )
-    use_graph: bool = False
-    resolve_inputs: bool = Field(
-        default=False, description="Bổ sung nguồn chỉ khi cần quyết định từ kết quả dependency"
-    )
-    document_search: DocumentRequirement | None = None
-    query_from_dependencies: bool = False
 
 
 class PlanProposal(FinancialModel):
@@ -50,15 +28,7 @@ class PlanProposal(FinancialModel):
     tasks: list[TaskProposal] = Field(min_length=1, max_length=6)
 
 
-def output_schema(sources):
-    schema = PlanProposal.model_json_schema()
-    schema["$defs"]["TaskProposal"]["properties"]["input_handles"]["items"] = {
-        "enum": list(sources)
-    }
-    return schema
-
-
-def adapt_plan(payload, sources):
+def adapt_plan(payload):
     from .lite_orchestrator import LitePlan, LiteTask
 
     empty = LitePlan()
@@ -77,27 +47,11 @@ def adapt_plan(payload, sources):
         gid = f"G{index + 1}"
         try:
             goal = GoalProposal.model_validate(raw, strict=True)
-            source = sources.get(goal.source)
-            if goal.source is not None and (source is None or goal.mode != "value"):
-                raise ValueError("goal_source_invalid")
-        except (ValidationError, ValueError) as error:
-            reason = "goal_schema_invalid" if isinstance(error, ValidationError) else str(error)
-            errors.append(f"supervisor_invalid_goal:{gid}:{reason}")
+        except ValidationError:
+            errors.append(f"supervisor_invalid_goal:{gid}:goal_schema_invalid")
             continue
         requirements[index] = IntegrationRequirement(
-            requirement_id=gid,
-            text=goal.text,
-            kind=source["kind"]
-            if source
-            else "document"
-            if goal.mode == "document"
-            else "explanation",
-            target_id=source["item"] if source else None,
-            period=source["period"] if source else None,
-            answer_goal="analysis" if goal.mode == "analysis" else "value",
-            interpretation=goal.mode in {"analysis", "calculation"},
-            interpretation_topic="dynamic_calculation" if goal.mode == "calculation" else None,
-            reason="goal_context_unresolved" if goal.mode == "calculation" else None,
+            requirement_id=gid, text=goal.text, kind="explanation"
         )
     tasks, blocked = [], {}
     for index, raw in enumerate(raw_tasks):
@@ -111,34 +65,16 @@ def adapt_plan(payload, sources):
                 errors.append(f"supervisor_unknown_goal_reference:{tid}")
             if not assigned:
                 raise ValueError("goal_reference_unknown")
-            handles = [h for h in dict.fromkeys(task.input_handles) if h in sources]
-            if len(handles) != len(set(task.input_handles)):
-                errors.append(f"supervisor_unknown_source_handle:{tid}")
-            if (
-                task.input_handles
-                and not handles
-                and not (task.after or task.document_search or task.resolve_inputs)
-            ):
-                raise ValueError("source_handle_unknown")
             if any(i < 0 or i >= len(raw_tasks) for i in task.after):
                 raise ValueError("task_reference_unknown")
-            if task.query_from_dependencies and not (task.after and task.document_search):
-                raise ValueError("document_query_dependency_missing")
-            if task.document_search and sum(r.kind == "document" for r in assigned) > 1:
-                raise ValueError("one_document_goal_per_search")
             tasks.append(
                 LiteTask(
                     task_id=tid,
                     specialist=task.role,
                     objective=task.objective,
                     requirement_ids=[r.requirement_id for r in assigned],
-                    sources=handles,
                     depends_on=[f"T{i + 1}" for i in dict.fromkeys(task.after)],
-                    use_graph=task.use_graph,
-                    resolve_inputs=task.resolve_inputs,
-                    document_search=task.document_search,
-                    query_from_dependencies=task.query_from_dependencies,
-                    python_requirement=task.python_requirement,
+                    resolve_inputs=True,
                 )
             )
         except (ValidationError, ValueError) as error:
