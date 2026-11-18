@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Dependencies: QWEN-THINK-01
 - Estimated Complexity: S
@@ -65,6 +65,10 @@ logic để tăng accuracy. Mapping ô bảng cuối chỉ offline verified, ch�
 
 ## Implementation Evidence
 
+Tech Lead APPROVED — DONE với các giới hạn đã ghi nhận ngày 18/11/2026.
+Bàn giao `e5b102f` đã push main/remote verified. Phiên đóng chỉ tài liệu/tracking,
+planning/diff/Git; không đổi runtime, chạy lại tests/API/benchmark/CI.
+
 Implementation cuối `6b181024135bc252abe1f07e45a419e48a01f6e1`; ba probes trên
 `a8db198acd43212edf9f98c0e297ee5dd9fa73bf`. Sửa cấu trúc use_graph, cap demand
 2.500/context24K và mapping UnderstoodCell.col. 8 targeted PASS trước live,
@@ -76,5 +80,5 @@ Không lặp probe, không full CI/gate9/Pilot45 hoặc thay corpus/Gold/model/C
 
 ## Handoff Notes
 
-Next action — Tech Lead review runtime đã freeze để chuyển Pilot 45, chấm theo
-Gold/rubric ViFinBench; không tiếp tục FIX nhằm tăng accuracy.
+Next action — chờ giao Pilot 45 trên runtime đã freeze, chấm theo Gold/rubric
+ViFinBench; không tiếp tục FIX nhằm tăng accuracy.

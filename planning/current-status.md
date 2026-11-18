@@ -2,7 +2,9 @@
 
 ## E2E-TECH-FIX-01 — Loại bỏ lỗi implementation trước Benchmark
 
-**REVIEW** — implementation `6b181024135bc252abe1f07e45a419e48a01f6e1`.
+**DONE — Tech Lead APPROVED với giới hạn ngày 18/11/2026**.
+Implementation `6b181024135bc252abe1f07e45a419e48a01f6e1`, bàn giao `e5b102f`
+đã push main và xác minh remote.
 [Spec](tasks/E2E/E2E-TECH-FIX-01.md), [báo cáo](../docs/e2e-tech-fix-01-live.md).
 Sửa use_graph sai tầng, cap demand 2.500/context24K và UnderstoodCell.col.
 NR-0006 thiếu unit/scale trong facts pin; giữ corpus/M6/Gold/model/Colab.
@@ -10,7 +12,9 @@ NR-0006 thiếu unit/scale trong facts pin; giữ corpus/M6/Gold/model/Colab.
 18 calls/82.749 tokens, 18 HTTP200, 13 citations; MH-0006 partial và SH-0001
 qua M6/M7. SH-0013 AttributeError được sửa offline; chưa fresh live mapping cuối.
 190 runtime blobs/pins/local edits đã xác minh; không chạy lại probe/gate9/fullCI.
-Next action — Tech Lead review runtime freeze để chuyển Pilot45 theo Gold/rubric
+Phiên đóng chỉ cập nhật tài liệu/tracking, kiểm planning/diff/Git; không đổi
+runtime hoặc chạy lại tests/probes/benchmark/CI. Giữ nguyên các giới hạn trên.
+Next action — chờ giao Pilot45 trên runtime đã freeze, chấm theo Gold/rubric
 ViFinBench; không tiếp tục FIX nhằm tăng accuracy.
 
 ## E2E-GATE-09 — Ổn định Qwen và kiểm thử 9 QA

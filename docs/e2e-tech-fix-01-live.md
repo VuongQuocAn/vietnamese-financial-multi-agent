@@ -1,6 +1,9 @@
 # E2E-TECH-FIX-01 — Lỗi kỹ thuật trước Benchmark
 
-**REVIEW** — implementation cuối `6b181024135bc252abe1f07e45a419e48a01f6e1`.
+**DONE — Tech Lead APPROVED với giới hạn ngày 18/11/2026**.
+Implementation cuối `6b181024135bc252abe1f07e45a419e48a01f6e1`; bàn giao `e5b102f`
+đã push main và xác minh remote. Phiên đóng chỉ tài liệu/tracking và kiểm
+planning/diff/Git; không sửa runtime hoặc chạy lại tests/API/benchmark/CI.
 Ba probes chạy trên `a8db198acd43212edf9f98c0e297ee5dd9fa73bf`; baseline `3a08371`.
 Ngày 18/11/2026 (Asia/Bangkok). Worktree riêng giữ local edits checkout gốc.
 
@@ -69,5 +72,5 @@ lượng model, metadata corpus và mapping chưa live lại được giữ rõ 
 Receipts, saved-trace audit, provider traces và outputs lưu local tại
 `artifacts/evidence/E2E-TECH-FIX-01/`; không commit dữ liệu/secrets.
 
-Next action — Tech Lead review runtime đã freeze để chuyển Pilot 45, chấm theo
-Gold/rubric ViFinBench; không tiếp tục FIX nhằm tăng accuracy.
+Next action — chờ giao Pilot 45 trên runtime đã freeze, chấm theo Gold/rubric
+ViFinBench; không tiếp tục FIX nhằm tăng accuracy.
