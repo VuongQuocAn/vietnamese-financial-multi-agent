@@ -55,6 +55,7 @@ def test_lossless_prompt_budget_keeps_sources(monkeypatch):
     } == payload
     req = parse_llm_request(request(provider="qwen", model="test-model"))
     req.messages[-1].content = "x" * 44000
+    req.generation.max_output_tokens = 4096
     seen = []
 
     def generate(bound):
@@ -65,7 +66,9 @@ def test_lossless_prompt_budget_keeps_sources(monkeypatch):
     RequestGateway(SimpleNamespace(generate=generate), max_calls=1, timeout_seconds=600).generate(
         req
     )
-    assert 0 < seen[0].generation.max_output_tokens < 8192
+    assert seen[0].constraints.timeout_seconds == 180
+    assert 0 < seen[0].generation.max_output_tokens < 4096
+    assert req.generation.max_output_tokens == 4096
     assert seen[0].messages == req.messages
 
 

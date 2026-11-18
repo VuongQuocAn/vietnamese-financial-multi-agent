@@ -6,7 +6,10 @@ from types import SimpleNamespace
 
 import httpx
 from vietnamese_financial_multi_agent.agents.qa_planning import fallback_fusion_plan
-from vietnamese_financial_multi_agent.core.llm_contracts import parse_llm_request
+from vietnamese_financial_multi_agent.core.llm_contracts import (
+    RequestConstraints,
+    parse_llm_request,
+)
 from vietnamese_financial_multi_agent.core.qwen_adapter import QwenAdapter, QwenSettings
 from vietnamese_financial_multi_agent.core.request_gateway import RequestGateway
 from vietnamese_financial_multi_agent.verification.lite_runtime import LiteVerificationRuntime
@@ -73,12 +76,19 @@ def test_thinking_budget_clamps_deadline_and_fallback_keeps_dependency(monkeypat
         calls.append(bound)
         return baseline
 
-    monkeypatch.setenv("QWEN_THINKING_BUDGET", "true")
+    monkeypatch.delenv("QWEN_THINKING_BUDGET", raising=False)
+    req.generation.max_output_tokens = 1800
+    req.constraints = RequestConstraints(timeout_seconds=60)
     gateway = RequestGateway(SimpleNamespace(generate=generate), max_calls=1, timeout_seconds=90)
     gateway.generate(req)
-    assert 1 < calls[0].constraints.timeout_seconds <= 90
-    assert calls[0].generation.max_output_tokens == 8192
-    assert req.generation.max_output_tokens != 8192
+    adapter = QwenAdapter(QwenSettings("https://test.invalid/v1", "secret", "test-model"))
+    try:
+        payload, timeout = adapter._payload(calls[0])
+        assert 60 < timeout <= 90
+        assert payload["max_tokens"] == req.generation.max_output_tokens == 1800
+        assert req.constraints.timeout_seconds == 60
+    finally:
+        adapter.close()
     assert gateway.generate(req).status == "error" and len(calls) == 1
 
     question = (

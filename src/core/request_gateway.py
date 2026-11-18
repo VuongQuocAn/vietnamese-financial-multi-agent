@@ -38,16 +38,16 @@ class RequestGateway:
             self.exhausted = True
             return _failure(request, "timeout")
         bound = request.model_copy(deep=True)
-        # Opt-in client budget for a server already running Thinking. This does
-        # not change the server/template/model, and child lanes share the deadline.
-        if request.model.provider == "qwen" and os.environ.get("QWEN_THINKING_BUDGET") == "true":
-            # Conservative client estimate for Vietnamese/JSON prompts. Reserve
-            # room inside the unchanged 24K context, rather than adding an 8K
-            # floor unconditionally to a nearly full prompt. Never crop sources.
+        # The Qwen adapter forwards this stage timeout to HTTPX. Keep one
+        # deadline across lanes and the agent's own Thinking + final token cap.
+        if (
+            request.model.provider == "qwen"
+            and os.environ.get("QWEN_THINKING_BUDGET", "true") == "true"
+        ):
             prompt_chars = sum(len(message.content) for message in bound.messages)
             available = max(256, 24576 - (prompt_chars + 1) // 2 - 1024)
             bound.generation.max_output_tokens = min(
-                max(bound.generation.max_output_tokens or 0, 8192), available
+                bound.generation.max_output_tokens or 4096, available
             )
             bound.constraints = RequestConstraints(timeout_seconds=min(180, remaining))
         if bound.constraints:

@@ -943,7 +943,7 @@ class SupervisorLite:
                     Message(role="system", content=payload),
                     Message(role="user", content=question),
                 ],
-                generation=GenerationParameters(temperature=0.0, max_output_tokens=1800),
+                generation=GenerationParameters(temperature=0.0, max_output_tokens=2500),
                 output_spec=OutputSpec(format="json"),
                 constraints=RequestConstraints(timeout_seconds=context.provider_timeout_seconds),
             )
