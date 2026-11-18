@@ -2,11 +2,18 @@
 
 ## E2E-STABILIZE-01 — Ổn định Pipeline để chạy Benchmark
 
-**IN_PROGRESS**, Owner giao18/11/2026; baseline remote `bdf2fd7`, worktree riêng
-giữ local edits. [Spec](tasks/E2E/E2E-STABILIZE-01.md). Đang sửa tổng quát theo
-saved traces M5/routing/M6/payload; targeted controls rồi đúng9QA cố định, không
-ngưỡng accuracy và không mở chuỗi REMED tiếp. Không đổi M7/raw/EF-EG/Obligations.
-Next action: hoàn tất targeted validation và chạy9QA.
+**REVIEW — Owner yêu cầu dừng18/11/2026**; implementation
+`7b06babef9cad02c8ad894c3c0adb7f1babd5221`.
+[Spec](tasks/E2E/E2E-STABILIZE-01.md), [report](../docs/e2e-stabilize-01-benchmark-readiness.md).
+Giữ mọi lượt dở, không QA/API/FIX thêm. M5 goal/DAG, document routing/proof,
+M6 JSON recovery/exact wire handles, lossless payload/budget;15targeted PASS cuối,
+nhóm rộng41PASS/2baseline FAIL. Tổng59attempts/325648known tokens/6unknown;
+15QA attempts hoàn tất/7IDs, code cuối4/9:2correct1partial1abstain.
+190runtime/264JSON/115pins/3Pilot/80local cùng parent/prior evidence verified;
+63citation/pointer occurrences resolve. Còn HTTP524, document/release và model
+goal/domain/join; NR fix chưa live retest. Chưa xác nhận readiness Pilot45,
+không ngưỡng accuracy hoặc tự DONE; giữ checkout gốc/M7/Obligations/raw.
+Next action: Tech Lead review bàn giao và quyết định Pilot45, không tiếp tục REMED theo từng QA.
 
 ## QWEN-THINK-01 — Thinking Validation
 

@@ -3,7 +3,7 @@
 ## Metadata
 
 - Milestone: E2E
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Dependencies: QWEN-THINK-01
 - Estimated Complexity: S
@@ -48,11 +48,11 @@ Gold/M7/Obligations hoặc nới ACCEPT; không OCR/Gemini/fullCI/36Pilot/Full60
 
 ## Acceptance Criteria
 
-- [ ] Mục tiêu/dependencies/phân công không mất qua planning/fallback.
+- [x] Có control giữ mục tiêu/dependencies/roles qua fallback; còn giới hạn semantic planning đã báo.
 - [ ] Routing tới dữ liệu hiện hữu, giữ provenance và M6 kiểm lại nguồn.
-- [ ] JSON/verdict thiếu/timeout không xóa proof đã verified; không tự ACCEPT.
-- [ ] Đúng9QA/runtime/corpus, agent/tool traces và metrics; không ngưỡng accuracy.
-- [ ] Báo lỗi phức tạp còn lại; implementation SHA/commit/push verified, REVIEW.
+- [x] JSON/verdict thiếu/timeout có controls giữ proof; unknown handles không tự ACCEPT.
+- [ ] 9QA/runtime/corpus chưa hoàn tất; Owner yêu cầu dừng, không chạy bù.
+- [x] Báo giới hạn và implementation SHA; bàn giao REVIEW, push/remote verify tại bàn giao.
 
 ## Required Tests
 
@@ -71,8 +71,18 @@ trước final, còn46calls tối đa trong cap90; giữ các lượt dở, khô
 
 ## Implementation Evidence
 
-Chưa commit; đang targeted validation. Evidence local riêng E2E-STABILIZE-01.
+Implementation `7b06babef9cad02c8ad894c3c0adb7f1babd5221`;
+[report](../../../docs/e2e-stabilize-01-benchmark-readiness.md).15targeted PASS cuối;
+41PASS/2baseline FAIL trước. Owner yêu cầu dừng18/11/2026: không QA/API/FIX thêm.
+Tổng59attempts/56responses/325648known tokens/6unknown;3calls ngắt chưa response.
+15QA attempts hoàn tất/7IDs; code cuối4/9 (2correct1partial1abstain), không score9QA.
+190runtime/264JSON/115pins/3Pilot/80local và parent/prior hashes verified;
+63citation/pointer occurrences resolve. Giữ mọi artifacts/lượt dở; không sửa M7/
+Obligations/raw/server/model/context. Chưa xác nhận readiness Pilot45; không ngưỡng accuracy.
+Chỉ audit offline/Ruff/planning/diff sau stop, không chạy lại tests/model/fullCI.
 
 ## Handoff Notes
 
-Next action: hoàn tất targeted validation và chạy9QA đã cố định.
+Owner stop thay yêu cầu chạy đủ9 bằng bàn giao thực tế; giữ phần chưa nghiệm thu.
+Không tự DONE, không mở vòng FIX/REMED mới.
+Next action: Tech Lead review bàn giao và quyết định Pilot45, không tiếp tục REMED theo từng QA.
