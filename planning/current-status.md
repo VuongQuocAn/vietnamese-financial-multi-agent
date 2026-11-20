@@ -1,5 +1,30 @@
 # Trạng thái hiện tại
 
+## AGENT-EFFICIENCY-01
+
+**REVIEW**, 20/11/2026; [kết quả](../docs/agent-efficiency-01.md).
+Audit29 calls:5 thêm nguồn/2 Calculator/13 Tool lặp/9 finals. Coordinator theo
+nghĩa vụ bằng chứng; loop bỏ chốt turn4, giữ Calculator history, dự trữ1/3 calls/
+time M6 và phân biệt budget_exhausted/API failure. Runtime4 files +96/−24.
+5 controls mới PASS qua các lượt; nhóm validation13 PASS có real-source Ledger/M7
+smoke. Không đổi M6 conditions/live/commit/push; chưa đo savings, planning CHAT-01 cũ.
+Next action: Tech Lead nghiệm thu thay đổi offline và quyết định có cấp phép live validation hay không.
+
+## QWEN-E2E-05
+
+Provider rerun Owner cấp phép: **REVIEW**, T4x2/TP2/VRAM0,7,34 HTTP200/
+165.559 tokens/1.568,036s. SH Abstain, MH Technical Failure do cap12 chặn semantic
+tiếp theo (không HTTP lỗi), NR Partial:2 operands đúng, thiếu ratio1,09.
+M6 riêng: SH49,023s; MH document16,986s; NR29,416s (semantic16,328s).
+Runtime/source hashes khớp lượt đầu, raw giữ riêng `QWEN-E2E-05/provider-rerun/`.
+
+**REVIEW**, 20/11/2026; [kết quả/latency](../docs/qwen-e2e-05.md).
+SH-0018/MH-0017/NR-0018 đều Technical Failure (EngineCore500/gateway502).
+7 calls/3.871 known tokens,5 thiếu usage;326,096s E2E. Freeze trước Gold.
+Đã lưu từng call/API/Tools/stages; M6 NOT_EXECUTED, chưa đo latency thực thi.
+Runtime/source hashes không đổi; không FIX/retry/commit/push.
+Next action: Tech Lead nghiệm thu rerun và các giới hạn budget/goal chưa hoàn thành.
+
 ## ARCH-CONSOLIDATE-01A — Tinh giản codebase OFFLINE
 
 **REVIEW — OFFLINE**, tiếp tục trên diff đã audit theo Owner. Chưa commit;

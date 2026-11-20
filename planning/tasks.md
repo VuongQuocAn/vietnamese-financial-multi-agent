@@ -41,6 +41,25 @@ quy tắc planning và CI tối thiểu; SHA/validation/next action tại
 
 ## Registry
 
+**AGENT-EFFICIENCY-01 — REVIEW**, 20/11/2026; [kết quả](../docs/agent-efficiency-01.md).
+Audit29 calls:5 thêm nguồn/2 Calculator/13 Tool lặp/9 finals. Sửa Coordinator,
+bỏ chốt turn4, giữ Calculator history cho Agent final, dự trữ1/3 calls/time M6;
+budget_exhausted khác API failure. Runtime4 files +96/−24; M6 conditions không đổi.
+5 controls mới PASS qua các lượt; nhóm validation13 PASS gồm protocol/real-source
+Ledger/M7 smoke. Không live/commit/push; chưa đo savings. Planning lỗi CHAT-01 cũ.
+Next action: Tech Lead nghiệm thu thay đổi offline và quyết định có cấp phép live validation hay không.
+
+**QWEN-E2E-05 — REVIEW**, 20/11/2026; [kết quả/latency](../docs/qwen-e2e-05.md).
+3 QA SH-0018/MH-0017/NR-0018: cả3 Technical Failure, provider500/502;
+7 calls/3.871 known tokens (5 thiếu usage)/326,096s E2E. Freeze trước Gold.
+Per-call API/tokens/Tools/stages đã lưu; M6 NOT_EXECUTED, chưa đo latency thực thi.
+Runtime/source hashes giữ nguyên, không FIX/retry/commit/push; planning lỗi CHAT-01 cũ.
+Owner-authorized provider rerun T4x2/TP2/VRAM0,7:34 HTTP200/165.559 tokens/
+1.568,036s; SH Abstain/MH Technical Failure do call budget/NR Partial thiếu ratio.
+M6 riêng49,023/16,986/29,416s; semantic2 HTTP calls +1 attempt bị chặn trước HTTP.
+Runtime/source hashes giữ nguyên; raw riêng provider-rerun, không FIX/commit/push.
+Next action: Tech Lead nghiệm thu rerun và các giới hạn budget/goal chưa hoàn thành.
+
 M3 Preflight — Research Alignment (2026-10-29): **DONE**; Tech Lead APPROVED
 implementation `18ff8e07c18f137e392abf6eae69fbe81d57cbac`.
 [PR #9](https://github.com/VuongQuocAn/vietnamese-financial-multi-agent/pull/9)
