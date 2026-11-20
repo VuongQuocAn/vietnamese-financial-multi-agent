@@ -1,5 +1,15 @@
 # Trạng thái hiện tại
 
+## QWEN-E2E-06
+
+**REVIEW**, 20/11/2026; [kết quả trước/sau](../docs/qwen-e2e-06.md).
+30 HTTP200/107.002 tokens/1.084,562s; calls34→30, Specialists29→21, M6 2→6.
+SH Incorrect vì citation Giá gốc thay Giá trị hợp lý dù số cùng750triệu; MH
+Abstain sau đủ4 semantic calls; NR Partial, không analysis ratio. Accuracy0%,
+coverage66,67%, TF0%. Cả3 dùng hết7 Specialist slots, chưa chứng minh chốt sớm.
+Runtime/inputs/config freeze PASS; không FIX/retry/commit runtime, raw giữ riêng.
+Next action: Tech Lead đánh giá tradeoff giảm Specialist calls với lỗi planning/grounding và NR chưa có ratio claim.
+
 ## AGENT-EFFICIENCY-01
 
 **REVIEW**, 20/11/2026; [kết quả](../docs/agent-efficiency-01.md).

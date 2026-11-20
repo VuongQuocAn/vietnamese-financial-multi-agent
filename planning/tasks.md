@@ -41,6 +41,14 @@ quy tắc planning và CI tối thiểu; SHA/validation/next action tại
 
 ## Registry
 
+**QWEN-E2E-06 — REVIEW**, 20/11/2026; [kết quả trước/sau](../docs/qwen-e2e-06.md).
+Một batch3 QA,30 HTTP200/107.002 tokens/1.084,562s; calls34→30, Specialists29→21,
+M6 2→6. SH Incorrect (số đúng nhưng Giá gốc≠Giá trị hợp lý); MH Abstain sau đủ4
+semantic calls; NR Partial, giữ Calculator history nhưng không analysis ratio.
+Accuracy0%, coverage66,67%, TF0%; cả3 dùng hết M5 slots, chưa chứng minh chốt sớm.
+Freeze runtime/inputs/config PASS; không FIX/retry/runtime commit; raw riêng.
+Next action: Tech Lead đánh giá tradeoff giảm Specialist calls với lỗi planning/grounding và NR chưa có ratio claim.
+
 **AGENT-EFFICIENCY-01 — REVIEW**, 20/11/2026; [kết quả](../docs/agent-efficiency-01.md).
 Audit29 calls:5 thêm nguồn/2 Calculator/13 Tool lặp/9 finals. Sửa Coordinator,
 bỏ chốt turn4, giữ Calculator history cho Agent final, dự trữ1/3 calls/time M6;
