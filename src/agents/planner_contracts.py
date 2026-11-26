@@ -199,6 +199,7 @@ class PlannerContext(FinancialModel):
     reporting_scope: Literal["separate", "consolidated"] | None = None
     period: Identity | None = None
     mode: Literal["auto", "gemini", "deterministic"] = "gemini"
+    coordinator_interface: Literal["simple"] | None = None
     feedback: dict | None = None
     previous_proposal: PlannerProposal | None = None
     reusable_results: list[dict] = Field(default_factory=list)
@@ -212,7 +213,13 @@ class PlannerContext(FinancialModel):
     @model_serializer(mode="wrap")
     def serialize_context(self, handler):
         wire = handler(self)
-        for key in ("feedback", "previous_proposal", "reusable_results", "conversation_context"):
+        for key in (
+            "feedback",
+            "previous_proposal",
+            "reusable_results",
+            "conversation_context",
+            "coordinator_interface",
+        ):
             if not wire.get(key):
                 wire.pop(key, None)
         return wire

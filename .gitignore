@@ -95,3 +95,8 @@ node_modules/
 *.tsbuildinfo
 playwright-report/
 test-results/
+
+# External benchmark data and generated source projections
+/ViFinBench/refined/
+/ViFinBench/neutral/
+/ViFinBench/benchmark/**/*.jsonl

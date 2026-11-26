@@ -18,7 +18,7 @@ from .llm_contracts import (
     parse_llm_request,
     parse_llm_response,
 )
-from .llm_schema_validation import LocalSchemaRegistry
+from .llm_schema_validation import LocalSchemaRegistry, schema_issues
 
 
 class LLMTransport(Protocol):
@@ -174,13 +174,17 @@ class SharedLLMGateway:
                     status=status,
                 )
                 if not valid:
-                    response.status = "partial" if response.status == "partial" else "malformed"
+                    response.status, response.finish_reason = "error", "error"
                     response.error = GatewayError(
                         category="schema_mismatch",
                         code="schema_mismatch",
                         origin="gateway",
                         retryability="not_retryable",
+                        validation_issues=schema_issues(
+                            self._schema_registry.schema_for(output.schema_ref), output.payload
+                        ),
                     )
+                    response.output = None
                 return parse_llm_response(response)
             except Exception:
                 return _failure(bound, "schema_mismatch")

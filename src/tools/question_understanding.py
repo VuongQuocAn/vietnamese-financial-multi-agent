@@ -38,6 +38,8 @@ FORMULA_LABELS = {
 EXTRA_ALIASES = {
     "b01.total_assets": ("tổng tài sản",),
     "b01.total_liabilities": ("tổng nợ", "nợ phải trả"),
+    "b01.inventory_total": ("hàng tồn kho sau dự phòng", "hàng tồn kho thuần"),
+    "b01.inventory_gross": ("hàng tồn kho trước dự phòng",),
     "b02.net_revenue": ("doanh thu", "doanh thu thuần"),
     "b02.gross_profit": ("lợi nhuận gộp",),
     "b02.profit_after_tax": ("lãi sau thuế", "lợi nhuận sau thuế", "LNST"),
@@ -46,6 +48,8 @@ EXTRA_ALIASES = {
         "dòng tiền thuần từ hoạt động kinh doanh",
         "dòng tiền từ hoạt động kinh doanh",
     ),
+    "b03.investing_cash_flow": ("dòng tiền thuần từ hoạt động đầu tư",),
+    "b03.financing_cash_flow": ("dòng tiền thuần từ hoạt động tài chính",),
 }
 ITEM_RULES = {r.canonical_item_id: r for r in ITEM_CATALOG}
 

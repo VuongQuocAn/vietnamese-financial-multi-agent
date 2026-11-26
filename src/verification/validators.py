@@ -7,7 +7,9 @@ from ..evidence.contracts import assess_fact_consistency
 from ..evidence.snapshots import SnapshotCatalog
 from ..tools.financial_calculator import (
     CalculateFinancialMetricRequest,
+    DynamicOperand,
     FinancialCalculator,
+    execute_dynamic,
     render_dynamic,
 )
 from ..tools.financial_retrieval import FinancialRetrievalTools, GetFinancialFactRequest
@@ -301,37 +303,23 @@ class DeterministicFinancialValidator:
         if computation:
             try:
                 input_ids = {key for step in computation.steps for key in step.operation.inputs}
-                expected = self._calculator.calculate_dynamic(
+                # Every source premise was independently checked above. Replay
+                # its exact numeric fields without M4's accounting-context policy;
+                # failed/missing source checks still block this candidate below.
+                expected = execute_dynamic(
                     {
-                        s.evidence_id: s.reference
+                        s.evidence_id: DynamicOperand(
+                            **{k: getattr(s, k) for k in DynamicOperand.model_fields}
+                        )
                         for s in sources
                         if s.kind == "fact" and s.evidence_id in input_ids
                     },
                     [s.operation for s in computation.steps],
-                    independent_branches=True,
                 )
                 if computation != expected:
                     raise ValueError("dynamic_replay_mismatch")
-                # A change relative to the base uses target first, base second.
-                # Bind direct change operands to the same canonical indicator;
-                # replay still owns the arithmetic, denominator and source guards.
-                by_id = {s.evidence_id: s for s in sources}
-                for step in computation.steps:
-                    op = step.operation
-                    if op.period_relation != "across_periods" or op.operator not in {
-                        "subtract",
-                        "percentage_change",
-                        "relative_difference",
-                    }:
-                        continue
-                    if all(key in by_id for key in op.inputs):
-                        target, base = (by_id[key] for key in op.inputs)
-                        if target.period != base.period and (
-                            target.period < base.period
-                            or not target.canonical_item_id
-                            or target.canonical_item_id != base.canonical_item_id
-                        ):
-                            raise ValueError("reasoning_comparison_operand_mismatch")
+                # Replay the declared order exactly. Indicator equivalence and
+                # whether this direction answers the question belong to semantics.
                 self._check(
                     result,
                     "dynamic_calculation",
@@ -563,9 +551,6 @@ class DeterministicFinancialValidator:
                 refs=refs,
             )
             return
-        if target is None:
-            self._check(result, "numeric", "undetermined", "canonical_item_unresolved", refs=refs)
-            return
         if assertion.target != target:
             self._check(
                 result,
@@ -765,7 +750,8 @@ class DeterministicFinancialValidator:
                 k
                 for k in expected
                 if k not in {"value", "scale"}
-                and expected[k] is not None
+                and (expected[k] is not None or k == "canonical_item_id")
+                and not (k == "canonical_item_id" and observed[k] is None)
                 and expected[k] != observed[k]
             ]
             fields += [
@@ -775,17 +761,14 @@ class DeterministicFinancialValidator:
             ]
             if evidence.citations != match.citations:
                 fields.append("citations")
+            missing = any(v is None for k, v in expected.items() if k != "canonical_item_id")
             add(
                 "supporting_fact",
-                "fail"
-                if fields
-                else "undetermined"
-                if any(v is None for v in expected.values())
-                else "pass",
+                "fail" if fields else "undetermined" if missing else "pass",
                 "supporting_fact_mismatch"
                 if fields
                 else "supporting_fact_context_missing"
-                if any(v is None for v in expected.values())
+                if missing
                 else "supporting_fact_matches_canonical",
                 expected=expected,
                 observed=observed,

@@ -174,11 +174,24 @@ class OutputSpec(ContractModel):
     format: Literal["text", "json"]
     schema_ref: SchemaReference | None = None
     strict: bool | None = None
+    # Per-request decoding hint for adapters supporting inline schemas (Qwen).
+    # Domain parsers remain responsible for validation; no schema attestation.
+    json_schema: dict[str, JsonValue] | None = None
+    grammar: str | None = Field(default=None, min_length=1)
 
     @model_validator(mode="after")
     def consistent(self) -> "OutputSpec":
-        if self.format == "text" and (self.schema_ref is not None or self.strict is not None):
+        if self.format == "text" and (
+            self.schema_ref is not None
+            or self.strict is not None
+            or self.json_schema is not None
+            or self.grammar is not None
+        ):
             raise ValueError("Text cannot request schema enforcement")
+        if self.json_schema is not None and self.schema_ref is not None:
+            raise ValueError("Use one schema source")
+        if self.grammar is not None and self.json_schema is None:
+            raise ValueError("JSON grammar requires its validation schema")
         if self.strict is not None and self.schema_ref is None:
             raise ValueError("Strictness requires schema reference")
         return self
@@ -386,6 +399,7 @@ ErrorCategory = Literal[
     "authorization",
     "rate_limit",
     "quota_exceeded",
+    "context_budget_exceeded",
     "provider_unavailable",
     "timeout",
     "network",
@@ -395,6 +409,14 @@ ErrorCategory = Literal[
     "internal",
     "unknown_provider",
 ]
+
+
+class SchemaIssue(ContractModel):
+    code: str = Field(max_length=64)
+    path: list[Annotated[str, Field(max_length=64)] | int] = Field(max_length=8)
+    schema_path: list[Annotated[str, Field(max_length=64)] | int] = Field(
+        default_factory=list, max_length=16
+    )
 
 
 class GatewayError(ContractModel):
@@ -419,6 +441,7 @@ class GatewayError(ContractModel):
         | None
     ) = None
     retry_after_seconds: NonNegativeNumber | None = None
+    validation_issues: list[SchemaIssue] = Field(default_factory=list, max_length=4)
 
     @model_validator(mode="after")
     def consistent(self) -> "GatewayError":

@@ -4,7 +4,36 @@ import json
 from collections import Counter
 
 
-def compact_prompt(payload):
+def document_view(view):
+    """Lossless wire projection; retain the original view in Python."""
+    result = dict(view)
+    cells = view.get("cells", [])
+    if cells and view.get("text") == "\n".join(c[2] or "" for c in cells):
+        result.pop("text")
+    sources = view.get("numeric_sources", {})
+    if sources:
+        columns = list(next(iter(sources.values())))
+        # Dictionary encoding shares repeated labels/periods/headers, without
+        # inferring that any metadata is recoverable from table cell text.
+        if all(list(row) == columns for row in sources.values()):
+            values = {key: [] for key in columns}
+            rows = {}
+            for handle, row in sources.items():
+                indices = []
+                for key in columns:
+                    if row[key] not in values[key]:
+                        values[key].append(row[key])
+                    indices.append(values[key].index(row[key]))
+                rows[handle] = indices
+            result["numeric_sources"] = dict(columns=columns, values=values, sources=rows)
+            result["numeric_source_rule"] = (
+                "sources[S][i] là index trong values[columns[i]]; "
+                "giữ nguyên S handle, tọa độ cell, label, period và header."
+            )
+    return result
+
+
+def compact_prompt(payload, *, extra_fields=()):
     fields = {
         "graph_context",
         "dependency_results",
@@ -18,7 +47,7 @@ def compact_prompt(payload):
         "facts",
         "evidence_bindings",
         "operand_bindings",
-    }
+    }.union(extra_fields)
     counts, identities, objects = Counter(), {}, {}
 
     def signature(value):

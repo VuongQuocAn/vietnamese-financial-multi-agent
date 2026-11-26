@@ -161,7 +161,20 @@ def resolve_financial_context(evidence: Iterable[ContextEvidence]) -> ContextRes
                 periods.append(_candidate(parsed[0], item, parsed[1]))
             if match := re.fullmatch(r"đơn vị(?: tính)?\s*:\s*(.+)", text):
                 raw_unit = match[1]
-                scales = {"đồng": "1", "vnd": "1", "nghìn đồng": "1000", "triệu đồng": "1000000"}
+                scales = {
+                    "đồng": "1",
+                    "vnd": "1",
+                    "vnđ": "1",
+                    **{
+                        f"{prefix} {currency}": scale
+                        for prefix, scale in (
+                            ("nghìn", "1000"),
+                            ("ngàn", "1000"),
+                            ("triệu", "1000000"),
+                        )
+                        for currency in ("đồng", "vnd", "vnđ")
+                    },
+                }
                 value = FinancialContext()
                 issues = ["unsupported_unit"]
                 if raw_unit in scales:

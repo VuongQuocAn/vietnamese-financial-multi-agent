@@ -2,7 +2,7 @@
 
 import re
 
-from ..evidence.search import normalize_search
+from ..evidence.search import normalize_search, text_pointer_position
 
 OCR_CAVEAT = "Trích từ bản nhận dạng đã lưu, với vị trí chứng cứ ở cấp độ nguồn ghi nhận."
 SOURCE_LIMIT = "Nội dung phản ánh tài liệu đã lưu."
@@ -96,11 +96,18 @@ def source_assertion(requirement, projections):
             for row in table.get("rows", [])
             if row and isinstance(row[0], str) and _contains(row[0], requirement.query)
         ]
-        if len(rows) != 1 or not all(isinstance(c, str) and c.strip() for c in rows[0]):
+        columns = table.get("columns", [])
+        if (
+            len(rows) != 1
+            or not columns
+            or len(rows[0]) != len(columns)
+            or not all(isinstance(c, str) for c in (*columns, *rows[0]))
+            or not rows[0][0].strip()
+        ):
             return None
         # Literal row plus original headers: no numerical interpretation,
         # selection or canonical promotion. M6 replays the same pinned table.
-        quotes = [" | ".join(table.get("columns", [])), " | ".join(rows[0])]
+        quotes = [" | ".join(columns), " | ".join(rows[0])]
         if table.get("title"):
             quotes.insert(0, table["title"])
         if not all(quotes):
@@ -145,13 +152,10 @@ def consecutive(citations):
         return False
     if len(refs) == 1:
         return True
-    pointers = [
-        re.fullmatch(r"(/(?:text_elements|context)/)(\d+)", r.source_pointer or "") for r in refs
-    ]
+    pointers = [text_pointer_position(r.source_pointer) for r in refs]
     return (
         all(pointers)
-        and len({p[1] for p in pointers}) == 1
+        and len({p[0] for p in pointers}) == 1
         and all(r.anchor.page == refs[0].anchor.page for r in refs)
-        and [int(p[2]) for p in pointers]
-        == list(range(int(pointers[0][2]), int(pointers[0][2]) + len(refs)))
+        and [p[1] for p in pointers] == list(range(pointers[0][1], pointers[0][1] + len(refs)))
     )

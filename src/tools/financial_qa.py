@@ -62,6 +62,22 @@ class QADocument(FinancialModel):
     company_aliases: list[str] = Field(min_length=1)
     reporting_year: int = Field(ge=1900, le=2200)
 
+    @classmethod
+    def from_json_corpus(cls, catalog):
+        (descriptor,) = catalog.descriptors
+        aliases = {catalog.json_sources[d]["document_id"] for d in descriptor.json_pages.values()}
+        (alias,) = aliases
+        ticker, year = alias.rsplit("_", 1)
+        companies = {fact.company_id for fact in catalog.facts if fact.company_id}
+        if len(companies) > 1:
+            raise ValueError("ambiguous_filing_company")
+        return cls(
+            document_id=descriptor.document_id,
+            company_id=next(iter(companies), "vifinbench:" + ticker),
+            company_aliases=[ticker],
+            reporting_year=int(year),
+        )
+
 
 class QAContext(FinancialModel):
     document_id: str | None = None

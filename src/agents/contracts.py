@@ -45,7 +45,11 @@ StopCondition = Literal[
     "execution_limit_reached",
 ]
 SpecialistRole = Literal[
-    "profitability", "liquidity_and_leverage", "cash_flow_and_earnings_quality"
+    "profitability",
+    "liquidity_and_leverage",
+    "cash_flow_and_earnings_quality",
+    "retrieval",
+    "reasoning",
 ]
 RiskCode = Literal[
     "missing_evidence",

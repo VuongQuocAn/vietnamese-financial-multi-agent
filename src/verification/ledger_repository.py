@@ -13,7 +13,7 @@ from .ledger_contracts import (
     VerifiedClaimLedgerSnapshot,
     VerifiedClaimQuery,
 )
-from .lite_contracts import LiteVerificationHistory
+from .lite_contracts import LiteVerificationHistory, LiteVerificationHistoryV2
 from .validation_contracts import verification_input_digest
 
 
@@ -132,6 +132,13 @@ class VerifiedClaimRepository:
 
     @staticmethod
     def _source_eligible(entry):
+        if isinstance(entry.history, LiteVerificationHistoryV2):
+            semantic = entry.history.proof.semantic
+            from .lite_runtime import direct_fact_goals
+
+            return bool(direct_fact_goals(entry.history.proof)) or (
+                semantic is not None and semantic.verdict == "SUPPORTED"
+            )
         if entry.identity.kind != "document":
             return True
         from ..evidence.document_corrections import document_source_issues

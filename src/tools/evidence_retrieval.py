@@ -96,9 +96,11 @@ class EvidenceRetrievalTools:
     """
 
     def __init__(self, catalog: SnapshotCatalog):
-        from ..evidence.snapshots import isolated_catalog
-
-        self._catalog = isolated_catalog(catalog)
+        # Detach once at the public boundary. Internal tools share only this
+        # request-owned snapshot; public result models still leave as deep copies.
+        self._catalog = (
+            catalog if getattr(catalog, "_request_snapshot", False) else catalog.request_snapshot()
+        )
         self._api = self._catalog.api
         self._financial = FinancialRetrievalTools(self._catalog)
         self._selections = {}

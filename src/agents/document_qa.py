@@ -14,7 +14,7 @@ from ..evidence.document_claim_support import (
     is_list_item,
     source_assertion,
 )
-from ..evidence.search import SearchDocumentEvidenceRequest, normalize_search
+from ..evidence.search import SearchDocumentEvidenceRequest, normalize_search, text_source_order
 from .document_qa_contracts import DocumentCandidate, DocumentSearchOperation
 
 
@@ -38,20 +38,9 @@ def _excerpt_groups(bundle):
     pools, primaries = {}, []
     for match in bundle.result.matches:
         for evidence in [match.evidence, *(n.evidence for n in match.neighbors)]:
-            if not evidence.citations:
+            if not evidence.citations or not (position := text_source_order(evidence.record)):
                 continue
-            ref = evidence.citations[0].source.reference
-            pointer = re.fullmatch(r"(/(?:text_elements|context)/)(\d+)", ref.source_pointer or "")
-            if pointer is None:
-                continue
-            key = (
-                evidence.record.document_id,
-                evidence.record.snapshot_id,
-                evidence.record.source_metadata.get("request_id"),
-                ref.anchor.page.model_dump_json(),
-                pointer[1],
-            )
-            order = int(pointer[2])
+            key, order = position
             pools.setdefault(key, {})[order] = evidence
             if evidence is match.evidence:
                 primaries.append((key, order))
@@ -111,9 +100,9 @@ def document_operations(requirements, manifest, snapshot_id):
                 query=r.query,
                 evidence_type="table"
                 if r.kind == "table_labels"
-                else "both"
-                if r.kind == "exact_text"
-                else "text",
+                else "text"
+                if r.kind == "source_excerpt"
+                else "both",
                 top_k=5,
                 context_radius=12 if r.kind == "source_excerpt" else 3,
             ),

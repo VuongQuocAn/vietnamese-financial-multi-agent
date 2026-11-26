@@ -10,13 +10,18 @@ from ..evidence.retrieval import EvidenceCitation, RetrievalReference
 from ..evidence.search import DocumentSearchResponse
 from ..evidence.snapshots import MetricSnapshotClosure, SnapshotCatalog, SnapshotSelection
 from ..tools.evidence_retrieval import EvidenceRetrievalTools, EvidenceToolResponse
-from ..tools.financial_calculator import FinancialCalculationResponse, FinancialCalculator
+from ..tools.financial_calculator import (
+    DynamicCalculation,
+    FinancialCalculationResponse,
+    FinancialCalculator,
+)
 from ..tools.financial_retrieval import (
     FinancialFactMatch,
     FinancialRetrievalTools,
     FinancialToolResponse,
 )
 from ..tools.graph_retrieval import GraphContextResponse
+from ..tools.hybrid_rag import HybridEvidenceResponse
 from .contracts import (
     TOOL_CONTRACTS,
     EvidencePlan,
@@ -60,9 +65,11 @@ class ExecutionEvidenceBundle(FinancialModel):
 ToolResponse = (
     FinancialToolResponse
     | FinancialCalculationResponse
+    | DynamicCalculation
     | EvidenceToolResponse
     | GraphContextResponse
     | DocumentSearchResponse
+    | HybridEvidenceResponse
 )
 StepResponse = ToolResponse | SnapshotSelection | MetricSnapshotClosure | ExecutionEvidenceBundle
 

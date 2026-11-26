@@ -61,12 +61,15 @@ class FinancialFactMatch(RetrievalMatch):
     source_review: SourceReviewLookup
     reporting_scope: ReportingScopeResolution
     json_source_bound: bool = False
+    json_source_issue: str | None = None
 
     @model_serializer(mode="wrap")
     def preserve_pdf_payload(self, handler):
         value = handler(self)
         if not self.json_source_bound:
             value.pop("json_source_bound", None)
+        if self.json_source_issue is None:
+            value.pop("json_source_issue", None)
         return value
 
 
@@ -175,17 +178,22 @@ class FinancialRetrievalTools:
         return self._catalog.get_reporting_scope(descriptor.document_id, descriptor.snapshot_id)
 
     def _fact_matches(self, result, scope):
-        from ..evidence.json_catalog import json_fact_bound
+        from ..evidence.json_catalog import json_fact_issue
 
-        return [
-            FinancialFactMatch(
-                **match.model_dump(),
-                source_review=self._api.get_source_review(match.reference.observation),
-                reporting_scope=scope,
-                json_source_bound=json_fact_bound(self._catalog, match.record),
+        matches = []
+        for match in result.matches:
+            json_source = match.record.source_metadata.get("source_kind") == "refined_json"
+            issue = json_fact_issue(self._catalog, match.record) if json_source else None
+            matches.append(
+                FinancialFactMatch(
+                    **match.model_dump(),
+                    source_review=self._api.get_source_review(match.reference.observation),
+                    reporting_scope=scope,
+                    json_source_bound=json_source and issue is None,
+                    json_source_issue=issue,
+                )
             )
-            for match in result.matches
-        ]
+        return matches
 
     @staticmethod
     def _finish(response):

@@ -3,9 +3,10 @@
 from collections.abc import Iterable
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_serializer, model_validator
 
 from ..accounting.contracts import FinancialModel
+from ..accounting.item_mapping import _label
 from .contracts import (
     CanonicalFinancialFact,
     EvidenceAnchor,
@@ -43,12 +44,20 @@ class EvidenceQuery(FinancialModel):
     snapshot_id: Identity | None = None
     company_id: Identity | None = None
     canonical_item_id: Identity | None = None
+    source_label: Identity | None = None
     statement_type: Literal["B01", "B02", "B03", "B09"] | None = None
     period: Identity | None = None
     period_type: Identity | None = None
     reporting_scope: Literal["separate", "consolidated"] | None = None
     source_page: int | None = Field(default=None, ge=1)
     evidence_type: Literal["fact", "text", "table"] | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_query(self, handler):
+        wire = handler(self)
+        if self.source_label is None:
+            wire.pop("source_label", None)
+        return wire
 
 
 class CanonicalCoverage(FinancialModel):
@@ -328,10 +337,22 @@ class EvidenceRetrieval:
                 f
                 for f in candidates
                 if any(
-                    c.pdf_page == query.source_page
+                    (
+                        c.source.reference.anchor.page.page
+                        if c.source.reference and is_json_reference(c.source.reference)
+                        else c.pdf_page
+                    )
+                    == query.source_page
                     and "source_identity_mismatch" not in c.limitations
                     for c in [self._citation(s, (f.document_id, f.snapshot_id)) for s in f.sources]
                 )
+            ]
+        if query.source_label is not None:
+            label = _label(query.source_label, strip_ordinal=True)
+            candidates = [
+                f
+                for f in candidates
+                if label and _label(f.context.raw_item_label or "", strip_ordinal=True) == label
             ]
         before_period = candidates
         if query.period is not None:
@@ -372,6 +393,7 @@ class EvidenceRetrieval:
             for f in (
                 "company_id",
                 "canonical_item_id",
+                "source_label",
                 "statement_type",
                 "period",
                 "period_type",

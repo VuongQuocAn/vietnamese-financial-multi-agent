@@ -234,6 +234,26 @@ class SnapshotCatalog:
         snapshot.api._lineage_cache = {}
         return snapshot
 
+    def add_request_json_facts(self, facts):
+        """Register source-bound projections in the detached catalog used by M4 and M6."""
+        import hashlib
+
+        if not getattr(self, "_request_snapshot", False):
+            raise ValueError("document_cell_requires_request_snapshot")
+        current = {fact.observation_identity() for fact in self.facts}
+        added = [fact for fact in facts if fact.observation_identity() not in current]
+        if not added:
+            return
+        for fact in added:
+            key = fact.observation_identity().model_dump_json()
+            self.json_fact_pins[key] = hashlib.sha256(fact.model_dump_json().encode()).hexdigest()
+        self.facts.extend(added)
+        self.api = EvidenceRetrieval(
+            self.facts, self.evidence, self.metrics, graph=self.graph, source_reviews=self.reviews
+        )
+        self.api._lineage_cache = {}
+        self._entry_cache.clear()
+
     def get_reporting_scope(self, document_id, snapshot_id):
         """Separate read-only context overlay; không thay metric/fact compatibility."""
         descriptors = [

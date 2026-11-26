@@ -16,12 +16,16 @@ dependencies = [
     "Pillow>=11,<13",
     "google-genai==2.33.0",
     "httpx>=0.28,<1",
+    "python-dotenv>=1,<2",
     "jsonschema>=4.26,<5",
     "tzdata>=2025.2",
     "pypdfium2>=4.30,<6",
 ]
 
 [project.optional-dependencies]
+rag = ["numpy>=1.26,<3", "onnxruntime>=1.20,<2", "huggingface-hub>=0.27,<2", "tokenizers==0.22.1"]
+qwen = ["tokenizers==0.22.1", "Jinja2>=3.1,<4"]
+benchmark = ["sympy>=1.14,<2"]
 dev = [
     "pytest>=8,<10",
     "ruff>=0.9,<1",
@@ -41,9 +45,11 @@ packages = [
     "vietnamese_financial_multi_agent.agents",
     "vietnamese_financial_multi_agent.verification",
     "vietnamese_financial_multi_agent.outputs",
-    "vietnamese_financial_multi_agent.api",
 ]
 include-package-data = false
+
+[tool.setuptools.package-data]
+"vietnamese_financial_multi_agent.agents" = ["*_GUIDE.md"]
 
 [tool.setuptools.package-dir]
 vietnamese_financial_multi_agent = "src"

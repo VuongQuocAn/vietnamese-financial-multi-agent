@@ -29,13 +29,17 @@ def context_lines(items):
             statement = re.fullmatch(
                 r"(bảng cân đối kế toán|báo cáo tình hình tài chính|"
                 r"báo cáo kết quả hoạt động kinh doanh|báo cáo lưu chuyển tiền tệ)"
-                r"((?: hợp nhất| riêng)?(?: \(tiếp theo\))?)\s*[-–:]\s*"
-                r"((?:cho )?năm(?: tài chính)?(?: kết thúc(?: vào)? ngày .+| \d{4}))",
+                r"((?: hợp nhất| riêng)?(?: \(tiếp theo\))?)(?:\s*[-–:]\s*|\s+)"
+                r"((?:cho )?năm(?: tài chính)?(?: kết thúc(?: vào)? ngày .+| \d{4})"
+                r"|ngày \d{1,2} tháng \d{1,2} năm \d{4})",
                 line.strip(),
                 re.I,
             )
             if statement:
-                period = projected(item, statement[3])
+                raw = statement[3]
+                period = projected(
+                    item, "Tại " + raw if raw.casefold().startswith("ngày ") else raw
+                )
                 if resolve_financial_context([period]).period.status == "resolved":
                     result.append(projected(item, statement[1] + statement[2]))
             # Presentation currency declaration, not merely bookkeeping currency.
@@ -80,9 +84,11 @@ def header_context(header, page_context, statement, document_context):
         date = re.match(r"(?:tại ngày\s+)?(\d{1,2}/\d{1,2}/\d{4})(?=$|\s|[(-])", line, re.I)
         if date:
             items.append(projected(header, "Tại ngày " + date[1]))
-        year = re.match(r"(năm(?: tài chính)? \d{4})(?=$|\s|\()", line, re.I)
+        year = re.match(r"năm(?: tài chính)? (\d{4})(?=$|\s|\()", line, re.I)
+        if not year and statement in {"B02", "B03"}:
+            year = re.fullmatch(r"((?:19|20|21)\d{2})(?:\s*\([^()]+\))?", line.strip())
         if year:
-            items.append(projected(header, year[1]))
+            items.append(projected(header, "Năm " + year[1]))
         relative = re.fullmatch(
             r"(số cuối năm|số đầu năm|năm nay|năm trước)(?:\s*\([^)]*\))?", line.strip(), re.I
         )
@@ -116,10 +122,9 @@ def header_context(header, page_context, statement, document_context):
 def header_unit(header):
     key = text_key(header.raw_text)
     for token, raw in [
-        ("trieu dong", "triệu đồng"),
-        ("nghin dong", "nghìn đồng"),
+        (r"trieu (?:dong|vnd)", "triệu đồng"),
+        (r"(?:nghin|ngan) (?:dong|vnd)", "nghìn đồng"),
         ("vnd", "VND"),
-        ("vnđ", "VND"),
     ]:
         if re.search(r"\b" + token + r"\b", key):
             return resolve_financial_context([projected(header, "Đơn vị tính: " + raw)])

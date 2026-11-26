@@ -4,6 +4,7 @@ import re
 import sqlite3
 import unicodedata
 from collections import defaultdict
+from itertools import zip_longest
 from time import perf_counter
 from typing import Literal
 
@@ -21,6 +22,40 @@ def normalize_search(text: str) -> str:
     return " ".join(
         re.findall(r"[^\W_]+", "".join(c for c in text if not unicodedata.combining(c)))
     )
+
+
+def rank_search_candidates(candidates, queries, *, top_k=20):
+    """Interleave BM25 hits for question/objective/goals without dropping a query."""
+    handles = list(candidates)
+    db = sqlite3.connect(":memory:")
+    try:
+        db.execute("CREATE VIRTUAL TABLE candidates USING fts5(body)")
+        db.executemany(
+            "INSERT INTO candidates(body) VALUES (?)",
+            [(normalize_search(candidates[handle]),) for handle in handles],
+        )
+        rankings = []
+        for query in dict.fromkeys(normalize_search(q) for q in queries):
+            terms = list(dict.fromkeys(query.split()))
+            if terms:
+                expression = " OR ".join('"' + term + '"' for term in terms)
+                rankings.append(
+                    [
+                        handles[rowid - 1]
+                        for (rowid,) in db.execute(
+                            "SELECT rowid FROM candidates WHERE candidates MATCH ? "
+                            "ORDER BY bm25(candidates), rowid LIMIT ?",
+                            (expression, top_k),
+                        )
+                    ]
+                )
+        return list(
+            dict.fromkeys(
+                handle for group in zip_longest(*rankings) for handle in group if handle is not None
+            )
+        )
+    finally:
+        db.close()
 
 
 class SearchDocumentEvidenceRequest(FinancialModel):
@@ -92,10 +127,25 @@ def _location(record):
     return source.anchor.page, source.source_pointer or ""
 
 
-def _order(record):
+def text_pointer_position(pointer):
+    """Return the source array and index for an original text selector."""
+    fields = (pointer or "").split("/")
+    match fields:
+        case ["", "text_elements" | "context" as family, index]:
+            pass
+        case ["", "blocks" as family, index, "text"]:
+            pass
+        case _:
+            return None
+    if index.isascii() and index.isdecimal():
+        return family, int(index)
+    return None
+
+
+def text_source_order(record):
     page, pointer = _location(record)
-    match = re.fullmatch(r"(/text_elements/|/context/)(\d+)", pointer)
-    if not match:
+    position = text_pointer_position(pointer)
+    if position is None:
         return None
     # Source boundaries include original request, page image and pointer family.
     return (
@@ -103,8 +153,8 @@ def _order(record):
         record.snapshot_id,
         page.model_dump_json(),
         record.source_metadata.get("request_id"),
-        match[1],
-    ), int(match[2])
+        position[0],
+    ), position[1]
 
 
 def _cells(record):
@@ -149,14 +199,14 @@ class EvidenceSearchIndex:
         self._units = []
         groups = defaultdict(dict)
         for record in self.catalog.evidence:
-            if record.kind == "text" and (order := _order(record)):
+            if record.kind == "text" and (order := text_source_order(record)):
                 groups[order[0]][order[1]] = record
         self._groups = groups
         for record in self.catalog.evidence:
             neighbors = []
             if record.kind == "text":
                 body = record.raw_text or ""
-                if order := _order(record):
+                if order := text_source_order(record):
                     group, number = order
                     for step in (-1, 1):
                         for distance in range(1, 4):
@@ -260,7 +310,11 @@ class EvidenceSearchIndex:
         for _, rowid, score, terms, phrase, hint in ranked[: request.top_k]:
             record, body, cells, neighbors = self._units[rowid - 1]
             primary = self.catalog.api.get_evidence(record.evidence_identity()).matches[0]
-            if record.kind == "text" and request.context_radius != 3 and (order := _order(record)):
+            if (
+                record.kind == "text"
+                and request.context_radius != 3
+                and (order := text_source_order(record))
+            ):
                 neighbors = []
                 group, number = order
                 for step in (-1, 1):
@@ -277,11 +331,9 @@ class EvidenceSearchIndex:
                 )
                 for order, n in neighbors
             ]
-            selected_cells = [
-                c for c in cells if any(t in normalize_search(c.text or "").split() for t in terms)
-            ]
-            rows = {c.row for c in selected_cells if c.row is not None}
-            selected_cells = [c for c in cells if c in selected_cells or c.row in rows]
+            # A table hit is one source unit. Matching a header must retain its
+            # data rows and original cell pointers for the Specialist's selection.
+            selected_cells = cells
             snippet = (
                 body if record.kind == "text" else "\n".join(c.text or "" for c in selected_cells)
             )
